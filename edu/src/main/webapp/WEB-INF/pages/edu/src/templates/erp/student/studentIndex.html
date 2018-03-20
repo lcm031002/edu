@@ -1,0 +1,252 @@
+<div class="erp student-index" ng-controller="erp_StudentIndexController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">学员主页{{student.student_name ? '/' + student.student_name:''}}</span>
+      <div class="pull-right form form-inline mr15" style="padding-top: 7px;">
+        <klc-student-typeahead style="width: 450px; height: 30px; " 
+          on-select="onStudentSelect($item)"></klc-student-typeahead>
+        <button class="btn btn-primary">查看学员</button>
+      </div>
+    </div>
+    <!-- 学员基本信息 -->
+    <div class="panel-body student-info">
+      <div class="avatar-wrapper pull-left">
+        <a href="javascript:void(0);" ng-click="gotoBasicInfo()" title="单击查看学员基本信息">
+          <img style="width: 100%;" src="{{student.head_pic?student.head_pic:'img/erp/student-default.png'}}" />
+        </a>
+      </div>
+      <div class="main-panel">
+        <div class="main-info">
+          <span class="name mr20">{{student.student_name}}（{{student.grade_name}}）</span>
+          <span class="integral mr20 cur" style="color: #ffb33f;" title="会员积分" ui-sref="studentMgrIntegral">
+            <i class="iconfont icon-integral i-text-warning"></i> {{student.integral?student.integral:0}} 积分
+          </span>
+          <span class="mr20">{{student.branch_name}}</span>
+          <span class="mr20">
+            <i class="iconfont icon-Mobile_phone text-primary"></i>
+              {{ student.phone ? student.relation_name +  '：' + student.phone : '手机号为空'}}
+              <span ng-if="student.phone">
+                 <a ng-if='!student.phone_verify || student.phone_verify != 1' href="javascript:void(0)" ng-click="showVerifyPhone()">短信验证</a>
+                 <span ng-if='student.phone_verify && student.phone_verify == 1' style="color:#1b8cf2">已验证</span>
+              </span>
+          </span>
+          <span class="mr20">{{'推荐人：' + (student.referrals?student.referrals:'无')}}</span>
+          <span class="edit cur mr20" ui-sref="studentMgrBasicInfo">
+            <i class="glyphicon glyphicon-edit i-text-danger"></i> 编辑
+          </span>
+        </div>
+        <div class="other-info">
+          <span class="addr">
+            <i class="iconfont icon-campus text-primary"></i>
+              {{student.city_name}}
+            <span ng-if="student.attend_school_name && student.city_name">/</span> {{student.attend_school_name}}
+          </span>
+          <span class="encoding">
+            <i class="iconfont icon-Student_code text-primary"></i>
+              {{student.encoding || '学员编码为空'}}
+            </span>
+          <span class="encoding">
+            <i class="iconfont icon-Student_code text-primary"></i>
+              {{student.login_no || '未同步到APP'}}
+            </span>
+          <span class="teacher">
+            咨询师：
+            <span class="text-warning cur" ui-sref="studentMgrConsultingtube" title="单击去设置咨询师"> 
+              {{!studentIndexCounselors.CONSULTANT_NAME?"未指定":studentIndexCounselors.CONSULTANT_NAME}}
+            </span>
+          </span>
+          <span>
+            学管师：
+            <span class="text-warning cur" ui-sref="studentMgrConsultingtube" title="单击去设置学管师">
+              {{!studentIndexCounselors.LEARNINGMGR_NAME?"未指定":studentIndexCounselors.LEARNINGMGR_NAME}}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-unstyled dashboard">
+    <li class="account-info container-fluid" style="padding: 20px 40px;">
+      <div class="row">
+        <div class="col-sm-4 text-center">
+          <div class="cur account-type" ui-sref="studentAccountQuery"><div class="account-value">&yen;{{studentIndexAccount.STORE_ACCOUNT}}</div>储值账户</div>
+        </div>
+        <div class="col-sm-4 text-center border-divider">
+          <div class="cur account-type" ui-sref="studentAccountQuery"> <div class="account-value">&yen;{{studentIndexAccount.FROZEN_ACCOUNT}}</div>冻结账户</div>
+        </div>
+        <div class="col-sm-4 text-center">
+          <div class="cur account-type" ui-sref="studentAccountQuery"><div class="account-value">&yen;{{studentIndexAccount.REFUND_ACCOUNT}}</div>退费账户</div>
+        </div>
+      </div>
+    </li>
+    <!-- <li class="account" style="width: 360px;">
+      <div class="account-info">
+        <span class="num pull-left text-warning" style="font-size: 40px;">&yen;{{studentIndexAccount.STORE_ACCOUNT}} </span>
+        <button class="btn btn-primary pull-right" ui-sref="studentAccountQuery">帐户详情</button>
+
+        <div class="clearfix"></div>
+      </div>
+      <div class="account-op">
+        <span class="cur" ui-sref="studentAccountRecharge">充值</span>|
+        <span class="cur" ui-sref="studentAccountTransfer">转账</span>|
+        <span class="cur" ui-serf="studentAccountClaim">
+          <a style="color: #666;" href="#/studentMgr/studentMgrAccount/studentAccountClaim">理赔</a>
+        </span>
+      </div> -->
+    </li>
+    <li class="account-detail {{student.product_line == 2 ? 'cols-4':''}}">
+      <div class="block" ui-sref="studentMgrListening">
+        <span class="title">{{studentIndexAccount.LISTENING_COUNT}}</span>
+        <span class="subtitle">试听次数</span>
+      </div>
+      <div class="divider"></div>
+      <div class="block" ui-sref="studentMgrOrders">
+        <span class="title">{{studentIndexAccount.UNPAYMENT}}</span>
+        <span class="subtitle">未缴金额</span>
+      </div>
+      <div class="divider"></div>
+      <div class="block" ui-sref="studentMgrOrders">
+        <span class="title">{{studentIndexAccount.PAYMENT}}</span>
+        <span class="subtitle">剩余课时</span>
+      </div>
+      <div class="divider" ng-if="student.product_line == 2"></div>
+      <div class="block" ui-sref="studentMgrOrders" ng-if="student.product_line == 2">
+        <span class="title">{{studentIndexAccount.COURSESCHEDULECOUNT}}</span>
+        <span class="subtitle">剩余可排课时</span>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+    <div class="clearfix"></div>
+  </ul>
+  <div class="container-fluid dashboard panel">
+    <div class="row">
+      <div class="col-sm-1" ui-sref="ordersMgrOrders">
+        <div class="shortcut cur">
+          <div class="i-wrapper i-bg-danger">
+            <i class="iconfont icon-sign_up"></i>
+          </div>
+          <div class="title">学员报班</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="col-sm-1" ui-sref="studentMgrAttendance">
+        <div class="shortcut cur">
+          <div class="i-wrapper i-bg-primary">
+            <i class="iconfont icon-stdudents_checkingIn"></i>
+          </div>
+          <div class="title">学员考勤</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="col-sm-1" ui-sref="studentMgrYDYSchedule">
+        <div class="shortcut cur">
+          <div class="i-wrapper i-bg-success">
+            <i class="iconfont icon-orders_coursePlans"></i>
+          </div>
+          <div class="title">学员排课</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="col-sm-1" ui-sref="classesRefund">
+        <div class="shortcut cur">
+          <div class="i-wrapper i-bg-warning">
+            <i class="iconfont icon-orders_returnPremium"></i>
+          </div>
+          <div class="title">学员退费</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="col-sm-1" ui-sref="orderChangeTransfer">
+        <div class="shortcut cur">
+          <div class="i-wrapper i-bg-danger">
+            <i class="iconfont icon-orders_changeClass"></i>
+          </div>
+          <div class="title">学员转班</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="col-sm-1" ui-sref="classesFrozen">
+        <div class="shortcut cur">
+          <div class="i-wrapper i-bg-primary">
+            <i class="iconfont icon-orders_frozen"></i>
+          </div>
+          <div class="title">学员冻结</div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="col-sm-2 text-center account-op">
+        <span class="cur text-primary" ui-sref="studentAccountRecharge">充值</span>
+      </div>
+      <div class="col-sm-2 text-center account-op">
+        <span class="cur text-primary" ui-sref="studentAccountTransfer">转账</span>
+      </div>
+      <div class="col-sm-2 text-center account-op">
+        <span class="cur text-primary" ui-serf="studentAccountClaim"><a class="text-primary" href="#/studentMgr/studentMgrAccount/studentAccountClaim">理赔</a></span>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-primary" id="anpai" ng-if="studentId">
+    <div class="panel-heading">
+      <span class="title">报班记录</span>
+    </div>
+    <div class="panel-body">
+      <div>
+        <ul id="anpaispan" class="nav nav-tabs">
+          <li class="{{queryHistoryType==0?'active':''}}" ng-click="changeOrderType(0)"><a href="javascript:void(0);">按报班单</a></li>
+          <li class="{{queryHistoryType==1?'active':''}}" ng-click="changeOrderType(1)"><a href="javascript:void(0);">班级课</a></li>
+          <li class="{{queryHistoryType==2?'active':''}}" ng-click="changeOrderType(2)"><a href="javascript:void(0);">一对一</a></li>
+          <li class="{{queryHistoryType==3?'active':''}}" ng-click="changeOrderType(3)"><a href="javascript:void(0);">晚辅导</a></li>
+        </ul>
+      </div>
+      <div>
+        <!--按报班单-->
+        <div class="trend-content {{queryHistoryType==0?'show':'hide'}}">
+          <div ng-include="studentOrdersUrl"></div>
+        </div>
+        <!--班级课-->
+        <div class="trend-content" ng-show="queryHistoryType==1">
+          <div ng-include="studentOrderBJKUrl"></div>
+        </div>
+        <!--一对一-->
+        <div class="trend-content" ng-show="queryHistoryType==2">
+          <div ng-include="studentOrderYDYUrl"></div>
+        </div>
+        <!--晚辅-->
+        <div class="trend-content" ng-show="queryHistoryType==3">
+          <div ng-include="studentOrderWFDUrl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 填写手机验证码模态框 -->
+  <div class="modal fade" style="z-index:1041"
+       id="studentIndex_validPhoneModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#1b8cf2">
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+          <h4 class="modal-title">验证手机</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-inline">
+            <div class="form-group" style="text-align: center;width:100%">
+              <label class="control-label">验证码:</label>
+              <input type="text" ng-model="inputPhoneCode"/>
+              <a ng-show='timer<=0' href="javascript:void(0)" ng-click="waitAndSendMessage()">重新发送</a>
+              <span ng-show='timer>0'>倒计时<span style="color:orange">{{timer}}</span></span>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"
+                  ng-click="validPhone()">确认
+          </button>
+          <button type="button" class="btn btn-primary"
+                  ng-click="cancleValidPhone()">取消
+          </button>
+        </div>
+      </div>
+    </div>
+</div>

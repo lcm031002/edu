@@ -1,0 +1,41 @@
+<div ng-controller="PostDutyCtrl">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading">
+      <span class="title">岗位管理</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button type="button" style="margin-bottom: 5px;" class="btn btn-primary btn-circle" ng-click="toAddPostDutyPanel()"><i class="iconfont icon-add"></i> 添加</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <table class="table table-striped table-hover table-bordered">
+      <tr>
+        <th>岗位名称</th>
+        <th>备注</th>
+        <th>id</th>
+        <th>操作</th>
+      </tr>
+      <tr ng-repeat="postDuty in postDutyList" ng-if="postDutyList && postDutyList.length">
+        <td>{{postDuty.duty_name}}</td>
+        <!-- <td>{{postDuty.post_name}}</td>
+        <td>{{postDuty.rank_code}}</td> -->
+        <td>{{postDuty.remark}}</td>
+        <td>{{postDuty.id}}</td>
+        <td>
+          <a ng-click="toUpdateItem(postDuty)" href="javascript:void(0)">修改</a>
+        </td>
+      </tr>
+      <tr ng-if="!postDutyList||!postDutyList.length">
+        <td colspan="4">暂无数据</td>
+      </tr>
+      <tr ng-if="isLoading == 'loading...'">
+        <td colspan="4" align="center">
+          <img src="img/icons/big_load.gif">
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div ng-include="'templates/hrm/post/post_duty_info.html'"></div>
+</div>

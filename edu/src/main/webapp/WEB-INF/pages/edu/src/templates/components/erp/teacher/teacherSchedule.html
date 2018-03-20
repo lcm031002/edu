@@ -1,0 +1,123 @@
+<!-- <div class="teacher-schedule" ng-app="teacherSchedule" ng-controller="erp_courseScheduleController">     -->
+  <div class="teacher-schedule teacher-week-schedule ovs">
+    <div class="teacher-schedule__side">
+      <!-- 教师搜索框 -->
+      <div class="teacher-seach">
+        <div class="input-group">
+          <input id="teacher_name" type="text" class="form-control" placeholder="输入教师姓名/编码" ng-model="teacher_name">
+          <span class="input-group-btn">
+              <button type="submit" class="btn btn-primary" ng-click="queryTeacher()">
+                <i class="iconfont icon-search"></i> 
+              </button>
+            <!-- <button class="btn btn-default" type="button">
+              <i class="glyphicon glyphicon-search"></i>
+            </button> -->
+          </span>
+        </div>
+        <ul uib-pagination 
+          total-items="paginationConf.totalItems" 
+          ng-model="paginationConf.currentPage" 
+          max-size="1" class="pagination-sm" 
+          boundary-link-numbers="false" rotate="true"
+          previous-text="<" next-text=">"
+          ng-click="queryTeacher()">
+        </ul>
+        <div class="fr mt-20" style="font-size:12px;">共{{(paginationConf.totalItems / paginationConf.itemsPerPage) | number:0}}页</div>
+      </div>
+      <!-- 教师列表 -->
+      <!-- <div class="teacher-list" ng-controller="teacherListCtr"> -->
+      <div class="teacher-list">
+        <ul class="teacher-list__wrap">
+          <li class="teacher-list__item" ng-repeat="item in teacherListed" 
+          ng-class="{'cur': showOperatorBtn, 'teacher-lis-on': item.checked}"
+          ng-click="getTeacher(item)">
+            <img src="{{item.photo == null ?'img/erp/default-teacher-avatar.png' : item.photo}}" alt="" class="teacher-list__avatar">
+            <h3 class="teacher-list__name">
+              {{item.teacher_name}}
+              <!-- <span class="teacher-list__en-name">{{item.encoding}}</span> -->
+            </h3>
+            <p class="teacher-list__des">{{item.encoding}}</p>            
+            <p class="teacher-list__des">{{item.subject_name}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="teacher-schedule__content">
+      <div class="teacher-profile">
+        <div class="teacher-profile__l">
+          <img src="{{teacherDetail.photo || 'img/erp/default-teacher-avatar.png'}}" alt="" class="teacher-profile__avatar">
+        </div>
+        <div class="teacher-profile__r">
+          <div class="teacher-profile__name">{{teacherDetail.teacher_name}}老师的日程安排
+            <a class="teacher-profile__link" href="tel:{{teacherDetail.phone}}" target="_blank">{{teacherDetail.phone}}</a>
+            <!-- <button type="button" class="btn btn-primary " ng-click="okChoose()">选择老师</button> -->
+          </div>
+          <div class="teacher-profile__des">{{teacherDetail.bu_name}} {{teacherDetail.bu_name?'|':''}} {{teacherDetail.subject_name}}</div>
+        </div>
+      </div>
+      <!-- 教师日历 -->
+       <div class="teacher-calendar" data-ng-init="showTime()">
+        <div class="teacher-change-month">
+          <div class="fl">{{curFrom}}-{{curTo}}</div>
+          <button type="button" class="btn btn-default" ng-click="prevWeek()">
+            <i class="glyphicon glyphicon-menu-left"></i>上一周
+          </button>
+          <button type="button" class="btn btn-default" ng-click="nextWeek()">
+            下一周<i class="glyphicon glyphicon-menu-right"></i>
+          </button>
+          <button type="button" class="btn btn-default" ng-click="curWeek()">返回今天</button>
+          <!-- <button type="button" class="btn btn-primary" ng-click="onShare()">分享日程</button> -->
+        </div>
+        <!-- <div class="teacher-calendar-time_courses" style="top:{{topCourse}}px;left:{{leftCourse}}px;">
+          <div class="teacher-calendar-time_course {{course.schedStatusName=='正'?'on':'pre'}}" 
+            ng-repeat="course in courseList" 
+            style="left:{{course.xAxis}}px;top:{{course.yAxis}}px;height:{{course.courseLen}}px;"
+            data-toggle="tooltip" data-placement="left" data-html="true"
+            title="[{{course.schedStatusName}}]{{course.subjectName}}
+上课时间:{{course.courseDate}}   {{course.startTime}}-{{course.endTime}}
+上课地点:{{course.branchName}}
+学生姓名:{{course.studentName}}">
+            <label>{{course.shortBranchName || course.branchName}}</label>
+          </div>                
+        </div> -->
+        <div class="teacher-calendar-time_courses" style="top:{{topCourse}}px;">
+          <div class="teacher-calendar-time_course {{course.schedStatusName=='正'?'on':'pre'}}" 
+            ng-repeat="course in courseList" 
+            style="left:{{course.xAxis}}px;top:{{course.yAxis}}px;height:{{course.courseLen}}px;">
+            <label>{{course.shortBranchName || course.branchName}}</label>
+          </div>  
+          <div class="teacher-calendar-time_course more" 
+              ng-repeat="more in courseAllList" 
+              uib-popover-template="'moreCourse.html'"
+              popover-placement="auto right"
+              popover-trigger="'mouseenter'"
+              style="left:{{more.x}}px;top:{{more.y}}px;height:35px;">
+              <script type="text/ng-template" id="moreCourse.html">
+                <div class="form-group pop_course" ng-repeat="course in more.moreList">
+                  <p ng-if="course.schedStatusName">[{{course.schedStatusName}}]{{course.subjectName}}</p>
+                  <p ng-if="course.branchName">上课地点:{{course.branchName}}</p>
+                  <p ng-if="course.gradeName">年级:{{course.gradeName}}</p>
+                  <p ng-if="course.courseAdmin">学管师:{{course.courseAdmin || ''}}</p>        
+                  <p ng-if="course.studentName">学生姓名:{{course.studentName || ''}}</p>                  
+                  <p ng-if="course.attendTypeName">考勤类型:{{course.attendTypeName}}</p>                  
+                </div>
+              </script>
+          </div>
+        </div>
+        <table class="table table-bordered" style="table-layout:fixed">
+          <thead>
+            <tr class="teacher-week_title" on-size-changed="logResize">
+              <th ng-hide="optype=='view'" class="week-time">时间段</th>
+              <th ng-repeat="arr in weekList">{{arr}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="time in timeList">
+              <td class="teacher-week_design"><label>{{time}}:00</label></td>
+              <td ng-repeat="arr in weekList" class="teacher-week_design"></td>       
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

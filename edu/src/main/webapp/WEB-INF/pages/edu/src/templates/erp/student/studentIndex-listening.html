@@ -1,0 +1,280 @@
+<!-- 试听记录 -->
+<div class="erp student listening" ng-controller="erp_studentListeningController">
+    
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">学员试听</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <div class="form-inline">
+                    <button class="btn btn-primary btn-circle"
+                        ng-click="openSelectCourseWindow()">
+                        <i class="iconfont icon-add"></i> 新增试听
+                    </button>
+                </div>
+            </div>
+            <hr>
+            <div class="search-panel">
+                <rd-date-picker-range
+                    ng-start-date="searchParams.startDate"
+                    ng-end-date="searchParams.endDate"
+                    ng-date-change="queryListeningResults()"
+                >
+                    <button class="btn btn-primary" ng-click="queryListeningResults()">
+                        <i class="iconfont icon-search"></i> 搜索
+                    </button>
+                </rd-date-picker-range>
+            </div>
+        </div>
+    </div>
+    <!--时间轴 end-->
+    <!-- 数据展示_start -->
+    <div class="table-panel">
+        <div ng-switch on="Listening.product_line">
+            <!-- 班级课_start -->
+            <div ng-switch-when="1">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>课程编号</th>
+                            <th>课程名</th>
+                            <th>课程季</th>
+                            <th>科目</th>
+                            <th>教师</th>
+                            <th>上下课时间/日期</th>
+                            <th>试听课次</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="isLoading=='isLoading'">
+                            <td colspan="8" align="center"><img src="img/erp/loading2.gif"></td>
+                        </tr>
+                        <tr ng-if="isLoading!='isLoading'&& (!ListeningResults||!ListeningResults.length)">
+                            <td colspan="8" align="center">无数据.</td>
+                        </tr>
+                        <tr ng-repeat="Result in ListeningResults">
+                            <td>{{Result.COURSE_NO}}</td>
+                            <td>{{Result.COURSE_NAME}}</td>
+                            <td>{{Result.COURSE_SEASON_NAME}}</td>
+                            <td>{{Result.SUBJECT_NAME}}</td>
+                            <td>{{Result.TEACHER_NAME}}</td>
+                            <td>{{Result.START_TIME}}-{{Result.END_TIME}}/
+                                <em class="grey-num">{{Result.LISTENING_DATE}}</em>
+                            </td>
+                            <td><em class="yellow-num">{{Result.COURSE_TIMES}}</em></td>
+                            <td>{{Result.REMARK}}</td>
+                            <td>
+                                <span ng-if="Result.PAY_STATUS != 1 && Result.PAY_STATUS != 2">
+                                    <em class="blue-detail" ng-click="agree(Result)">[报班]</em>
+                                    <em class="blue-detail ml10" ng-click="toOpenUpdateListeningPanel(Result)">[拒缴]</em>
+                                </span>
+                                <span ng-if="Result.PAY_STATUS == 1">
+                                    <em class="grey-num">已报班</em>
+                                </span>
+                                <span ng-if="Result.PAY_STATUS == 2" title="{{Result.REMARK}}">
+                                    <em class="grey-num">已拒缴</em>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <!-- 班级课_end-->
+            <!-- 一对一_start-->
+            <div ng-switch-when="2">
+                <dl>
+                    <dt class="p-aud-tit">
+                        <span class="p-aud-tcell1 fw fl">课程编号</span>
+                        <span class="p-aud-tcell3 fw fl">科目</span>
+                        <span class="p-aud-tcell3 fw fl">教师</span>
+                        <span class="p-aud-tcell4 fw fl">上下课时间/日期</span>
+                        <span class="p-aud-tcell6 fw fl">校区</span>
+                        <span class="p-aud-tcell5 fw fl">操作</span>
+                    </dt>
+                    <div ng-if="isLoading=='loading...'">
+                        <img src="img/erp/loading2.gif" style="margin-left: 280px;">
+                     </div>
+                    <dd class="p-aud-con bd-top {{$index%2==0?'con-bg2':''}}" ng-repeat="Result in ListeningResults">
+                        <span class="p-aud-ccell1 mt15 fl" title="{{Result.course_name}}">{{Result.course_no}}</span>
+                        <span class="p-aud-ccell3 mt15 fl">{{Result.subject_name}}</span>
+                        <span class="p-aud-ccell3 mt15 fl">{{Result.teacher_name}}</span>
+                        <span class="p-aud-ccell4 mt15 fl">{{Result.start_time}}-{{Result.end_time}}/
+                                      <em class="grey-num">{{Result.listening_date}}</em>
+                        </span>
+                        <span class="p-aud-ccell6 mt15 fl">{{Result.branch_name}}</span>
+                        <span class="p-aud-ccell5 mt15 fl" ng-if="Result.pay_status != 1 && Result.pay_status != 2">
+                            <em class="blue-detail" ng-click="agree(Result)">[报班]</em>
+                            <em class="blue-detail ml10" ng-click="openRemark(Result)">[拒缴]</em>
+                        </span>
+                        <span class="p-aud-ccell5 mt15 fl" ng-if="Result.pay_status == 1">
+                            <em class="grey-num">已报班</em>
+                        </span>
+                        <span class="p-aud-ccell5 mt15 fl" ng-if="Result.pay_status == 2" title="{{Result.remark}}">
+                            <em class="grey-num">已拒缴</em>
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+            <!-- 一对一_end-->
+            <!-- 晚辅导_start-->
+            <div ng-switch-when="3">
+                <dl>
+                    <dt class="p-aud-tit">
+                        <span class="p-aud-tcell1 fw fl">课程编号</span>
+                        <span class="p-aud-tcell4 fw ml50 fl">上下课时间/日期</span>
+                        <span class="p-aud-tcell6 fw ml50 fl">校区</span>
+                        <span class="p-aud-tcell5 fw ml50 fl">操作</span>
+                    </dt>
+                    <div ng-if="isLoading=='loading...'">
+                        <img src="img/erp/loading2.gif" style="margin-left: 280px;">
+                     </div>
+                    <dd class="p-aud-con bd-top {{$index%2==0?'con-bg2':''}}" ng-repeat="Result in ListeningResults">
+                        <span class="p-aud-ccell1 mt15 fl" title="{{Result.course_name}}">{{Result.course_no}}</span>
+                        <span class="p-aud-ccell4 mt15 ml50 fl">{{Result.start_time}}-{{Result.end_time}}/
+                                           <em class="grey-num">{{Result.listening_date}}</em>
+                        </span>
+                        <span class="p-aud-ccell6 mt15 ml50 fl">{{Result.branch_name}}</span>
+                        <span class="p-aud-ccell5 mt15 ml50 fl" ng-if="Result.pay_status != 1 && Result.pay_status != 2">
+                            <em class="blue-detail" ng-click="agree(Result)">[报班]</em>
+                            <em class="blue-detail ml10" ng-click="openRemark(Result)">[拒缴]</em>
+                        </span>
+                        <span class="p-aud-ccell5 mt15 ml50 fl" ng-if="Result.pay_status == 1">
+                            <em class="grey-num">已报班</em>
+                        </span>
+                        <span class="p-aud-ccell5 mt15 ml50 fl" ng-if="Result.pay_status == 2" title="{{Result.remark}}">
+                            <em class="grey-num">已拒缴</em>
+                        </span>
+
+                    </dd>
+                </dl>
+            </div>
+            <!-- 晚辅导_end-->
+        </div>
+        <div class="contact-list-bottom mt10 bd-top con-bg2">
+            <span class="fr mr10">
+
+                <em ng-if="_end>0">{{_begin}}-{{_end}}条 ,共{{_total}}条</em>
+                <em class="blue-detail ml10" ng-click="begin()">首页</em>
+                <em class="blue-detail ml10" ng-click="up()">上一页</em>
+                <em class="blue-detail ml10" ng-click="down()">下一页</em>
+                <em class="blue-detail ml10" ng-click="end()">尾页</em>
+            </span>
+        </div>
+    </div>
+    <!-- 数据展示_end-->
+    <!--选择课程 开始-->
+    <div class="modal klxx-modal-primary" id="selectCourseWindow" style="z-index: 1041;">
+        <div class="modal-dialog modal-xlg" >
+            <div class="modal-content">
+                <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">课程选择</h4>
+                </div>
+                <div class="modal-body">
+                <div class="toolbar">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <select class="form-control" ng-change="changeBranch()" ng-model="selectedBranch" ng-options="branch.org_name for branch in branchList">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" ng-change="changeSeason()"  ng-model="selectedTimeSeason" ng-options="timeSeason.course_season_name for timeSeason in timeSeasonList">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" ng-change="changeGrade()"   ng-model="selectedGrade" ng-options="grade.grade_name for grade in gradeList" title="修改年级可以到学生中心进行修改">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" ng-model="selectedSubject" ng-options="subject.name for subject in subjectList">
+                            </select>
+                            <div class="btn btn-primary" ng-click="querySelectedCourse()"><i class="iconfont icon-search"></i>搜索</div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>课程</th>
+                            <th>年级</th>
+                            <th>科目</th>
+                            <th>教师</th>
+                            <th>人数</th>
+                            <th>时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr  ng-repeat="course in toSelectingCourseList" ng-if="toSelectingCourseList&&toSelectingCourseList.length">
+                            <td>{{course.course_name}}</td>
+                            <td>{{course.grade_name}}</td>
+                            <td>{{course.subject_name}}</td>
+                            <td>{{course.teacher_name}}</td>
+                            <td>{{course.actual_people_count?course.actual_people_count:0}}/{{course.people_count?course.people_count:0}}</td>
+                            <td>{{course.start_time}}~{{course.end_time}}</td>
+                            <td ng-click="selectCourseItem(course)">
+                                <!-- Single button -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        试听 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li ng-repeat="courseTime in course.courseTimesList" ng-if="course.isLoadingCourseTime!='isLoadingCourseTime'">
+                                            <a href="javascript:void(0);" ng-click="postListeningCourseTime(course,courseTime)">第{{courseTime.course_times}}节,时间：{{courseTime.course_date}}，老师：{{courseTime.teacher_name}}</a>
+                                        </li>
+                                        <li ng-if="course.isLoadingCourseTime=='isLoadingCourseTime'"><img src="img/erp/loading2.gif"></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-if="isLoading=='isLoading'">
+                            <td align="center" colspan="7">
+                                <img src="img/erp/loading2.gif">
+                            </td>
+                        </tr>
+                        <tr ng-if="isLoading!='isLoading'&&(!toSelectingCourseList||!toSelectingCourseList.length)">
+                            <td colspan="7" align="center">
+                                暂无数据
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                </div>
+                <div class="modal-footer">
+                    <ng-pagination conf="pageConf"></ng-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--选择课程 结束-->
+
+    <!-- 数据展示_end-->    
+    <div class="modal klxx-modal-primary" id="updateListeningModal" style="z-index: 1041;">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">试听拒缴</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <textarea rows="5" class="form-control" 
+                            ng-model="selectedUpdateListeningResult.remark"
+                            placeholder="请输入拒缴原因"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn btn-primary" ng-click="updateListening()" >保存</div>
+                    <div class="btn btn-default" ng-click="toCloseUpdateListeningPanel()">关闭</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--选择课程 结束-->
+
+</div>

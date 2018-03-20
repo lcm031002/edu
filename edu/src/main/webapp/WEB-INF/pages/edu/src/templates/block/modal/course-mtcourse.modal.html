@@ -1,0 +1,138 @@
+<rd-modal ng-form="mtcourseForm">
+  <rd-modal-title>双师课{{optype=='add'?'添加':'修改'}}</rd-modal-title>
+  <rd-modal-body>
+    <div class="form form-horizontal {{courseDetail.type == 3 ? 'forbid_grey' : ''}}">
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">课程名称</label>
+        <div class="col-sm-4">
+          <input type="text" name="course_name" class="form-control" ng-model="courseDetail.course_name" required>
+          <div ng-messages="mtcourseForm.course_name.$error" ng-if="mtcourseForm.course_name.$touched">
+            <p ng-message="required">请输入课程名称</p>
+          </div>
+        </div>
+        <label class="col-sm-2 control-label required">单价</label>
+        <div class="col-sm-4">
+          <input type="number" class="form-control" name="unit_price" ng-model="courseDetail.unit_price" required ng-disabled="true">
+          <div ng-messages="mtcourseForm.unit_price.$error" ng-if="mtcourseForm.unit_price.$touched">
+            <p ng-message="required">请输入单价</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">课时数量</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="course_count" ng-model="courseDetail.course_count" required ng-disabled="true">
+          <div ng-messages="mtcourseForm.course_count.$error" ng-if="mtcourseForm.course_count.$touched">
+            <p ng-message="required">请输入课时数量</p>
+          </div>
+        </div>
+        <label class="col-sm-2 control-label required"> 老师</label>
+        <div class="col-sm-4">
+          <div class="input-group">
+            <div class="form-control" type="text">
+              <span>{{courseDetail.teacher_name}} </span>
+            </div>
+            <span class="input-group-btn" 
+              kl-teacher-dropdown kl-selected="setMtCourseTeacher(teacher)" searchparam="{}">
+              <button class="btn btn-primary">选择</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">已选课程</label>
+        <div class="col-sm-10 text-right">
+          <span class="input-group pull-right" kl-course-dropdown kl-selected="insertCourse(course)">
+            <button class="btn btn-primary" style="border-radius: 4px;"><i class="iconfont icon-operation_add" ></i> 添加</button>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-12">
+          <table class="table table-bordered">
+            <tr>
+              <th width="10%">课程ID</th>
+              <th>课程名称</th>
+              <th width="14%">教师名称</th>
+              <th width="14%">教师编码</th>
+              <th width="15%">辅导老师名称</th>
+              <th width="15%">辅导老师编码</th>
+              <th width="12%">操作</th>
+            </tr>
+            <tr ng-repeat="item in modalCourseList">
+              <td>{{item.id}}</td>
+              <td>{{item.course_name}}</td>
+              <td>{{item.teacher_name}}</td>
+              <td>{{item.teacher_code}}</td>
+              <td>{{item.assteacher_name}}</td>
+              <td>{{item.assteacher_code}}</td>
+              <td><sapn class="cur" ng-click="removeCourse(item)"><i class="iconfont icon-delete text-danger"></i> 删除
+          </sapn></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">开课日期</label>
+        <div class="col-sm-4">
+          <rd-date-picker-popup ng-model="courseDetail.start_date" required disabled="true"></rd-date-picker-popup>
+        </div>
+        <label class="col-sm-2 control-label required">结课日期</label>
+        <div class="col-sm-4">
+          <rd-date-picker-popup ng-model="courseDetail.end_date" required disabled="true"></rd-date-picker-popup>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">上课时间</label>
+        <div class="col-sm-4">
+          <kl-timepicker ng-model="courseDetail.start_time" required disabled="true"></kl-timepicker>
+        </div>
+        <label class="col-sm-2 control-label required">下课时间</label>
+        <div class="col-sm-4">
+          <kl-timepicker ng-model="courseDetail.end_time" required disabled="true"></kl-timepicker>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required ">上课周期</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="courseDetail.attend_class_period" required ng-disabled="true">
+        </div>
+        <label class="col-sm-2 control-label required">课时长度</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="courseDetail.hour_len" required ng-disabled="true">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">校区</label>
+        <div class="col-sm-4">
+          <select class=form-control ng-model="courseDetail.branch_id" ng-options="branch.id as branch.org_name for branch in branchList" required ng-disabled="courseDetail.id && courseDetail.type == 4"></select>
+        </div>
+        <label class="col-sm-2 control-label required">类型</label>
+        <div class="col-sm-4">
+          <select class="form-control" ng-model="courseDetail.type" ng-options="courseType.id as courseType.name for courseType in courseTypeList" required ng-disabled="courseDetail.id && courseDetail.type == 4">
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">课程状态</label>
+        <div class="col-sm-4">
+          <select class=form-control ng-model="courseDetail.status" ng-options="status.id as status.name for status in statusList"></select>
+        </div>
+        <label class="col-sm-2 control-label" ng-if="courseDetail.type == 4">运营类型</label>
+        <div class="col-sm-4" ng-if="courseDetail.type == 4">
+          <select class=form-control ng-model="courseDetail.operation_type" ng-options="operationType.id as operationType.name for operationType in operationTypeList"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">课程介绍</label>
+        <div class="col-sm-10">
+          <textarea rows="4" class=form-control ng-model="courseDetail.description" ng-disabled="true"></textarea>
+        </div>
+      </div>
+    </div>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+    <button type="button" class="btn btn-primary" ng-disabled="mtcourseForm.$invalid" ng-click="handleModalConfirm()" ng-if="courseDetail.type != 3">确定</button>
+  </rd-modal-footer>
+</rd-modal>

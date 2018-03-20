@@ -1,0 +1,50 @@
+<table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th ng-if="showOperatorBtn">操作</th>
+        <th>校区</th>
+        <th>申请单据</th>
+        <th>学员姓名</th>
+        <th>学员编码</th>
+        <th>上课日期</th>
+        <th>科目</th>
+        <th>周几</th>
+        <th>上课时间</th>
+        <th>下课时间</th>
+        <th>老师名称</th>
+        <th>老师编码</th>
+        <th>老师电话</th>
+        <th>老师性别</th>
+        <th>排课状态</th>
+        <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in applyPlanList track by $index"
+        ng-click="onItemClick(item)"
+        ng-class="{'cur': !showOperatorBtn, 'success': item.checked}"
+        >
+        <td ng-if="showOperatorBtn">
+          <button class="btn btn-primary btn-xs"
+            ng-click="handlePutSchedPlanSatus(item, 2)">正常排课</button>
+          <button class="btn btn-warning btn-xs"
+            ng-click="handlePutSchedPlanSatus(item, 3)">压单</button>
+        </td>
+        <td>{{item.branchName}}</td>
+        <td>{{item.applyNo}}</td>
+        <td>{{item.studentName}}</td>
+        <td>{{item.studentEncoding}}</td>
+        <td>{{item.courseDate | date:'yyyy-MM-dd'}}</td>
+        <td>{{item.subjectName}}</td>
+        <td>{{item.weekday}}</td>
+        <td>{{item.startTime}}</td>
+        <td>{{item.endTime}}</td>
+        <td>{{item.teacherName}}</td>
+        <td>{{item.teacherEncoding}}</td>
+        <td>{{item.teacherPhone}}</td>
+        <td>{{item.teacherGender}}</td>
+        <td ng-class="{2: 'text-success', 3:'text-danger'}[item.status]">{{item.statusName}}</td>
+        <td>{{item.remark}}</td>
+      </tr>
+    </tbody>
+  </table>

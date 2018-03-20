@@ -1,0 +1,45 @@
+<div class="row"  ng-controller="TasksCtrl">
+    <div class="col-lg-12">
+        <rd-widget>
+            <rd-widget-header icon="fa-tasks" title="待处理资源">
+                <div class="pull-right fa-hover" >
+                    <a href="#" class="dropdown-toggle" ng-click="refresh()" title="刷新">
+                        <i class="fa fa-refresh" ></i>
+                    </a>
+                    <a href="#" class="dropdown-toggle" title="缩小" ng-click="extend('')">
+                        <i class="fa fa-compress"></i>
+                    </a>
+                </div>
+            </rd-widget-header>
+            <rd-widget-body classes=" no-padding">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        	<tr><th class="text-center">资源编号</th><th>称呼<th>姓名</th><th>手机</th><th>资源内容</th><th>操作</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr  ng-repeat="item in items">
+                          <td class="text-center">{{item.serial_no}}</td><td>{{item.resc.call}}</td><td>{{item.resc.name}}</td><td>{{item.resc.mp}}</td><td>{{item.talk_content}}</td>
+                         <td>
+                             <a ng-if="item.status==2" href="index#rescRec_proc/{{item.serial_no}}"  class="btn btn-sm btn-info" target="_blank"><i class="fa fa-tty"></i>  去处理</a>
+<!--                              <a ng-if="item.status==1&&item.branch_id" href="index#rescRec_distribute/{{item.serial_no}}"  class="btn btn-sm btn-info" target="_blank"><i class="fa fa-users"></i>  去分配</a>
+	                         <form class="form-inline" ng-if="!item.branch_id">
+	                                <select class="form-control" ng-model="item.branch" ng-options="b.branchName for b in branchs track by b.branchId"><option value=""/></select>
+	                                <span class="form_btn" ng-click="distBranch(item)" title="分配"><i class="fa fa-arrow-right"></i></span> 
+	                         </form>     -->                         
+                         </td>
+                         </tr>
+                         <tr  ng-if="isPerformanceLoading=='loading...'"  style="vertical-align: middle;text-align: center;">
+                          <td class="text-center" colspan="5">
+                           	<img src="../img/loading2.gif"  >
+                          </td>
+                         </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+    
+    
+</div>

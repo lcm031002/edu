@@ -1,0 +1,180 @@
+.erp.course-upload table.course-validate {width: 3600px;}
+.erp.course-upload table.course-validate th{width: 120px; text-align: center;}
+
+.erp.ydy-ladder .ladder-detail table.table-form{width: 100%}
+.erp.ydy-ladder .ladder-detail table.table-form>tbody>tr>td{padding: 5px;}
+.erp.ydy-ladder .ladder-detail table.table-form>tbody>tr>td:nth-child(2n+1){text-align: right;}
+
+.erp .stu-sched-plan,
+.erp .stu-sched-analysis {
+  .dl-horizontal {
+    dt {
+      width: 100px;
+      color: #000;
+    }
+    dd {
+      margin-left: 120px;
+      color: #333;
+      .form-control, .input-group {
+        max-width: 450px;
+      }
+      textarea.form-control{
+        overflow: hidden;
+      }
+    }
+  }
+  table.score-list {
+    td.score-wrapper {
+      height: 30px;
+      cursor: pointer;
+      position: relative;
+      .score-op {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0px;
+        line-height: 30px;
+        background-color: rgba(0, 0, 0, 0.8);
+        text-align: center;
+        transition: height .5s;
+        overflow: hidden;
+      }
+      &:hover {
+        .score-op {
+          height: 30px;
+        }
+      }
+    }
+  }
+  table.req-list {
+    td.req-wrapper {
+      height: 40px;
+      cursor: pointer;
+      position: relative;
+      .req-op {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0px;
+        line-height: 40px;
+        background-color: rgba(0, 0, 0, 0.8);
+        text-align: center;
+        transition: height .5s;
+        overflow: hidden;
+      }
+      &:hover {
+        .req-op {
+          height: 40px;
+          i.iconfont {
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+  }
+  table.stu-sched {
+    td.idle,  td.not-idle {
+      cursor: pointer;
+    }
+    td.idle {
+      border-bottom-width: 0;
+      background-color: rgba(27, 140, 242, 0.60);
+    }
+  }
+}
+ 
+.erp .stu-sched-plan{
+  dl{
+    margin-bottom:5px;
+  }
+  table{
+    margin-bottom: 0;
+  }
+}
+
+.forbid_grey,.forbid_grey a{
+  pointer-events: none;
+  cursor: not-allowed;
+  // background-color: #eee;
+  color:#ccc;
+}
+
+.erp.scheduling-ydy-apply.add_ydyschedule{
+  &>.panel>.panel-heading{
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  klc-erp-course-stu-sched-apply-detail .table-panel{
+    padding-top:0;
+  }
+}
+
+.erp.scheduling-ydy-apply klc-erp-course-stu-sched-base-info-match .table-bordered>tbody>tr>td{
+  line-height: 1.5;
+}
+
+.erp.scheduling-ydy-print{
+  .success{
+    padding: 8px 0 0;
+    .col-sm-12{
+      padding: 0 13px 8px 13px;
+      .form-inline{
+        width: 100%;
+        float: left;
+      }
+      .form-inline>.form-group{
+        margin-right: 0;
+        span{
+          color: #999;
+        }
+        @media (min-width: 1070px) {
+          .col-lg-2 {
+            width: 33%;
+          }
+        }
+        @media (min-width: 1920px) {
+          .col-lg-2 {
+            width: 16.66666667%
+          }
+        }
+      }
+    }
+  }
+}
+
+.form-inline>.content_br{
+  display: none;
+}
+// 取消min-width的限制
+@media screen and  (min-width: 1600px){
+  .form-inline .input-label.unwid{
+    min-width:unset;
+  }
+  .form-inline .form-control.set_width{
+    width:170px;
+  }
+  .form-inline .form-control.set_two_width{
+    width:160px;
+  }
+  .form-inline>.content_br{
+    display: block;
+  }
+}
+//一对一匹配
+@media screen and  (max-width: 1550px){
+  .match-right{
+    margin-right: -5%;
+    width: 48.6%;
+    margin-left: -2%;
+  }
+}
+@media (max-width: 1199px){
+  .matchb {
+    margin-right:30%;
+   }
+   .martchtop{
+     margin-top:12px;
+   }
+}

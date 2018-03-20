@@ -1,0 +1,29 @@
+1、成功定义和发布一个流程，需要完成以下动作：
+（1）使用eclipse的jpdl插件，制作和定义一个jpdl的流程包；
+（2）向数据库中插入流程节点的信息；
+流程角色定义（JBPM4_EXT_PROCESSROLE_DEF）
+create table JBPM4_EXT_PROCESSROLE_DEF
+(
+   id                   numeric not null,
+   process_key          varchar(50) comment '发布流程时写入结点处理的角色',
+   process_task         varchar(50),
+   remark               varchar(500),
+   primary key (id)
+);
+（3）业务系统完成流程节点待选的角色预置；
+业务角色分配映射表（JBPM4_EXT_BUSINESSROL_MAPPING）
+create table JBPM4_EXT_BUSINESSROL_MAPPING
+(
+   id                   numeric not null,
+   process_key          varchar(50) comment '发布流程时写入结点处理的角色',
+   process_task         varchar(50),
+   business_role        varchar(50),
+   isdefault            numeric,
+   primary key (id)
+);
+（4）业务系统对于权限分派存在其他要求的，可以重写下任务分派实现类；
+com.ebusiness.workflow.modules.assign.DefaultAssignTask
+默认实现：任务处理，默认取业务角色分配映射表（JBPM4_EXT_BUSINESSROL_MAPPING）中定义的节点角色进行处理；
+如果分配的角色为多个，则自动定义为分组任务；
+如果分配的角色为一个，则分配该角色；
+任务委托：流程任务处理人委托表（JBPM4_EXT_BUSINESS_ENTRUST）存储预置的任务委托设置信息

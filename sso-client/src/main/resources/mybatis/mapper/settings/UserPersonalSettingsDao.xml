@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ebusiness.cas.client.dao.UserPersonalSettingsDao">
+	<resultMap type="com.ebusiness.cas.client.common.model.UserPersonalSettings"
+		id="pojoMap">
+		<id property="id" column="id" />
+		<result property="userId" column="USER_ID" />
+		<result property="paramName" column="PARAM_NAME" />
+		<result property="paramVal" column="PARAM_VAL" />
+	</resultMap>
+	<insert id="addSettings" parameterType="com.ebusiness.cas.client.common.model.UserPersonalSettings">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      		SELECT seq_user_personal_settings.nextval AS id from dual
+   		</selectKey>
+		insert into user_personal_settings (id,user_id,param_name,param_val) 
+		values
+		(
+			#{id,jdbcType=NUMERIC},
+			#{userId,jdbcType=NUMERIC},
+		   #{paramName,jdbcType=VARCHAR},
+		   #{paramVal,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="delete" parameterType="com.ebusiness.cas.client.common.model.UserPersonalSettings">
+		delete from user_personal_settings
+		where user_id = #{userId,jdbcType=NUMERIC}
+		<if test="paramName!=null">
+			and param_name = #{paramName,jdbcType=VARCHAR}
+		</if>
+	</delete>
+	<select id="queryUserSettings" resultMap="pojoMap" parameterType="com.ebusiness.cas.client.common.model.UserPersonalSettings">
+		select id,user_id,param_name,param_val
+		from user_personal_settings
+		where 1=1
+		<if test="userId!=null">
+		and user_id = #{userId,jdbcType=NUMERIC}
+		</if>
+		<if test="paramName!=null">
+			and param_name = #{paramName,jdbcType=VARCHAR}
+		</if>
+	</select>
+</mapper>

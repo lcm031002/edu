@@ -1,0 +1,27 @@
+
+<div class="row" ng-controller="FullCalendarCtrl">
+    <div class="col-lg-12" >
+        <rd-widget>
+            <rd-widget-header icon="fa-calendar" title="工作日历">
+                <div class="pull-right fa-hover" >
+                	 <a href="javascript:void(0)" class="dropdown-toggle" title="增加" ng-click="openReminder();"   data-toggle="dropdown" >
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="dropdown-toggle" ng-click="fresh()" title="刷新"   data-toggle="dropdown">
+                        <i class="fa fa-refresh" ></i>
+                    </a>
+                    <a href="#/" class="dropdown-toggle" title="缩小" ng-click="extend('')"   data-toggle="dropdown">
+                        <i class="fa fa-compress"></i>
+                    </a>
+                </div>
+            </rd-widget-header>
+            <rd-widget-body >
+                <div ng-if="isPerformanceLoading=='loading...'"  style="vertical-align: middle;text-align: center;">
+                    <img src="../img/loading2.gif"  >
+                </div>
+                <div id='calendar' class="calendar"></div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+    <div ng-include="'templates/openDialog.html'"></div>
+</div>

@@ -1,0 +1,279 @@
+<div class="erp student-score" ng-controller="StudentScoreController">
+  <div class="mb10">
+    <div class="student-brief">
+      <div class="brief-info">
+        <div class="avatar avatar-80">
+          <img src="{{student.head_pic?student.head_pic:'img/erp/student-default.png'}}" alt="">
+        </div>
+        <span class="student-name mr15">{{student.student_name}}</span>
+        <span class="text-muted">{{student.grade_name || '未知年级'}}，
+          {{student.branch_name || '未知校区'}}，
+          {{student.phone || '手机号为空'}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">成绩档案</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="handleAddScore()">
+          <i class="iconfont icon-add"></i>
+          添加成绩
+        </button>
+      </div>
+      <hr>
+      <div class="search-bar form form-inline">
+        <div class="form-group">
+          年级：
+          <kl-grade-select grade-id="searchParam.gradeId"></kl-grade-select>
+        </div>
+        <div class="form-group">
+          学期：
+          <select class="form-control" ng-model="searchParam.term" ng-options="item.code as item.name for item in schoolTermList"></select>
+        </div>
+        <div class="form-group">
+          考试类型：
+          <select class="form-control" ng-model="searchParam.examType" ng-options="item.code as item.name for item in examTypeList"></select>
+          <button class="btn btn-primary" ng-click="doSearch()">
+            <i class="iconfont icon-search"></i>
+            查询
+          </button>
+        </div>
+        <!-- <div class="form-group">
+          考试科目：
+          <kl-subject-select subject-id="searchParam.subjectId"></kl-subject-select>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="ov-a">
+      <table class="table table-striped" style="min-width: 1200px;">
+        <thead>
+          <tr>
+            <th width="50"></th>
+            <th>创建日期</th>
+            <th>所在学校</th>
+            <th>年级</th>
+            <th>学期</th>
+            <th>考试类型</th>
+            <th>排名类型</th>
+            <th>名次</th>
+            <th>排名类型</th>
+            <th>名次</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat-start="score in scoreList track by score.id">
+            <td>
+              <i style="font-size:18px;" class="iconfont cur 
+                {{ score.showDetailList ? 'iconfont icon-public_shrink i-text-danger' 
+                  : 'icon-public_spread i-text-warning'}}" ng-click="score.showDetailList = !score.showDetailList"></i>
+
+            </td>
+            <td>{{score.submitDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{score.schoolName}}</td>
+            <td>{{score.gradeName}}</td>
+            <td>{{score.termName}}</td>
+            <td>{{score.examTypeName}}</td>
+            <td>{{score.studentScoreRankingList[0].scoreRankingTypeName}}</td>
+            <td>{{score.studentScoreRankingList[0].ranking}}</td>
+            <td>{{score.studentScoreRankingList[1].scoreRankingTypeName}}</td>
+            <td>{{score.studentScoreRankingList[1].ranking}}</td>
+            <td>
+              <button class="btn btn-xs btn-primary" ng-click="handleEditScore(score)">修改</button>
+              <button class="btn btn-xs btn-danger" ng-click="handleDeleteScore(score)">删除</button>
+            </td>
+          </tr>
+          <tr ng-repeat-end ng-if="score.studentScoreList && score.studentScoreList.length>0" ng-show="score.showDetailList">
+            <td></td>
+            <td colspan="8">
+              <table class="table table-bordered table-striped">
+                <tr>
+                  <th>科目</th>
+                  <th>教师</th>
+                  <th>成绩</th>
+                  <th>满分</th>
+                  <th>年段排名</th>
+                  <th>班级排名</th>
+                  <th>进步情况</th>
+                  <th>备注</th>
+                </tr>
+                <tr ng-repeat="item in score.studentScoreList">
+                  <td>{{item.subjectName}}</td>
+                  <td>{{item.teacherName}}</td>
+                  <td>{{item.score}}</td>
+                  <td>{{item.fullMark}}</td>
+                  <td>{{item.ranking}}</td>
+                  <td>{{item.classRanking}}</td>
+                  <td>{{progressMap[item.progress]}}</td>
+                  <td>{{item.remark}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-pagination conf="pageConf"></ng-pagination>
+  </div>
+  <script type="text/ng-template" id="studentScoreDetail.html">
+    <rd-modal>
+      <rd-modal-title>成绩档案</rd-modal-title>
+      <rd-modal-body>
+        <div ng-form="forms.score" class="form form-horizontal" style="padding-right: 20px;">
+          <div class="form-group">
+            <label class="col-sm-2 control-label required">所在学校</label>
+            <div class="col-sm-4">
+              <input class="form-control" type="text" name="school" placeholder="输入要查询的学校" typeahead-select-on-blur="true" ng-model="school"
+                uib-typeahead="school as school.school_name for school in getSchools($viewValue)" typeahead-loading="loadingSchools"
+                typeahead-no-results="schoolNoResults" required>
+              <div>
+                <i ng-show="loadingSchools" class="glyphicon glyphicon-refresh text-primary">
+                  </i>
+                <span ng-show="schoolNoResults " class="text-warning">
+                    <i class="glyphicon glyphicon-remove text-warning"></i> 查询不到对应的学校
+                  </span>
+                <div class="text-warning" ng-messages="forms.score.school.$error" ng-if="forms.score.school.$touched">
+                  <p ng-message="required">学校必填</p>
+                </div>
+              </div>
+            </div>
+            <label class="col-sm-2 control-label required">年级</label>
+            <div class="col-sm-4">
+              <kl-grade-select grade-id="score.gradeId" required></kl-grade-select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label required">学期</label>
+            <div class="col-sm-4">
+              <select class="form-control" ng-model="score.term" 
+                ng-options="item.code as item.name for item in schoolTermList"
+                required></select>
+            </div>
+            <label class="col-sm-2 control-label required">考试类型</label>
+            <div class="col-sm-4">
+              <select class="form-control" ng-model="score.examType" 
+                ng-options="item.code as item.name for item in examTypeList"
+                required></select>
+            </div>
+          </div>
+        </div>
+        <div class="table-panel">
+          <div class="ov-a">
+            <table class="table table-striped" style="min-width: 1250px;{{score.studentScoreList.length > 0?'min-height:160px':''}}"  ng-if="score.studentScoreList && score.studentScoreList.length > 0">
+              <thead>
+                <tr>
+                <th width="60">序号</th>
+                <th width="120">科目</th>
+                <th width="160">教师</th>
+                <th width="100">成绩</th>
+                <th width="100">卷面满分</th>
+                <th width="100">年段排名</th>
+                <th width="100">班级排名</th>
+                <th width="110">进步情况</th>
+                <th width="140">备注</th>
+                <th width="80">操作</th>
+              </tr>
+            </thead>
+            <tbody class="form">
+              <tr ng-repeat = "item in score.studentScoreList track by $index">
+                <td>{{$index + 1}}</td>
+                <td>
+                  <kl-subject-select subject-id="item.subjectId" class="input-sm" required></kl-subject-select>
+                </td>
+                <td>
+                  <klc-teacher-typeahead
+                    teacher-type="3"
+                    teacher-id="item.teacherId"
+                    teacher-name="item.teacherName"
+                    ></klc-teacher-typeahead>
+                </td>
+                <td>
+                  <input type="number" class="form-control input-sm"
+                    ng-model="item.score"
+                    placeholder="成绩" required>
+                </td>
+                <td>
+                  <input type="number" class="form-control input-sm" ng-model="item.fullMark"
+                    placeholder="满分" required>
+                </td>
+                <td>
+                  <input type="number" class="form-control input-sm" ng-model="item.ranking"
+                    placeholder="年段排名">
+                </td>
+                <td>
+                  <input type="number" class="form-control input-sm" ng-model="item.classRanking"
+                         placeholder="班级排名">
+                </td>
+                <td>
+                  <select ng-model="item.progress" class="form-control input-sm"
+                    placeholder="进步情况" ng-options="item.value as item.label for item in progressList">
+                  </select>
+                </td>
+                <td>
+                  <input type="text" class="form-control input-sm" ng-model="item.remark"
+                         placeholder="备注">
+                </td>
+                <td style="line-height:32px;">
+                  <i class="iconfont icon-delete i-text-danger cur"
+                    ng-click="deleteScoreItem($index)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <button class="btn btn-primary" ng-click="addScoreItem()">
+            <i class="iconfont icon-add"></i>
+            新增单科成绩
+          </button>
+        </div>
+
+        <div class="table-panel">
+          <div class="ov-a">
+            <table class="table table-striped" ng-if="score.studentScoreRankingList && score.studentScoreRankingList.length > 0">
+              <thead>
+              <tr>
+                <th width="60">序号</th>
+                <th width="120">排名类型</th>
+                <th width="160">名次</th>
+                <th width="80">操作</th>
+              </tr>
+              </thead>
+              <tbody class="form">
+              <tr ng-repeat = "item in score.studentScoreRankingList track by $index">
+                <td>{{$index + 1}}</td>
+                <td>
+                  <select ng-model="item.scoreRankingType" class="form-control input-sm"
+                        placeholder="排名类型" ng-options="item.code as item.name for item in scoreRankingTypeList">
+                  </select>
+                </td>
+                <td>
+                  <input type="number" class="form-control input-sm"
+                         ng-model="item.ranking"
+                         placeholder="名次" required>
+                </td>
+                <td>
+                  <i class="iconfont icon-delete i-text-danger cur"
+                     ng-click="deleteScoreRankingItem($index)"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-primary" ng-click="addScoreRankingItem()">
+            <i class="iconfont icon-add"></i>
+            新增综合排名信息
+          </button>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+        <button class="btn btn-primary" ng-click="onOk()" ng-disabled="!forms.score.$valid">确定</button>
+      </rd-modal-footer>
+    </rd-modal>
+  </script>
+</div>

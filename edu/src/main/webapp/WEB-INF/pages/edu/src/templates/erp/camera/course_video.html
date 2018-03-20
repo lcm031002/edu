@@ -1,0 +1,85 @@
+<div ng-controller="erp_courseVideoController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">课次视频信息</span></div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="handleExportExcel()">
+                    <i class="iconfont icon-public_export"></i>导出
+                </button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <div class="form form-inline">
+                    <div class="form-group m-0">
+                        <rd-date-picker-range 
+                          label-name="'上课日期'"
+                          ng-start-date="searchParam.p_beginDate"
+                          ng-end-date="searchParam.p_endDate"
+                          ng-default-range ="'lastWeek'"
+                          ng-date-change="query()">
+                        </rd-date-picker-range>
+                    </div>
+                    <div class="form-group">
+                        校区类型：
+                        <select class="form-control" 
+                            ng-model="searchParam.p_orgKind"
+                            ng-options="org.code as org.name for org in dictOrgKindList">
+                            <option value="">全部</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary iconfont icon-search" ng-click="query()"> 查询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-striped  min-width-1300">
+            <colgroup>
+                <col width="10%">  <!-- 课次名称 -->
+                <col width="4%">
+                <col width="6%">   
+                <col width="6%">
+                <col width="6%">
+                <col width="18%">   <!-- 视频编号 -->
+                <col width="6%">
+                <col width="5%">
+                <col width="6%">
+                <col width="33%">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>课程名称</th>
+                <th>课次</th>
+                <th>上课日期</th>
+                <th>上课时间</th>
+                <th>下课时间</th>
+                <th>视频编号</th>
+                <th>视频序号</th>
+                <th>清晰度</th>
+                <th>视频类型</th>
+                <th>播放地址</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="video in videoList" ng-if="videoList && videoList.length">
+                <td class="word_break">{{video.courseName}}</td>
+                <td>{{video.courseTimes}}</td>
+                <td>{{video.courseDate}}</td>
+                <td>{{video.startTime}}</td>
+                <td>{{video.endTime}}</td>
+                <td class="word_break">{{video.videoNo}}</td>
+                <td>{{video.seq}}</td>
+                <td>{{video.ratioName}}</td>
+                <td>{{video.type}}</td>
+                <td class="word_break">{{video.url}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues && (videoList == null || videoList.length == 0)">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+    </div>
+</div>

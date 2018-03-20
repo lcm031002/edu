@@ -1,0 +1,50 @@
+<div class="erp" ng-controller="erp_attendanceBJKDetailsController">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading"><span class="title">课程视频</span></div>
+  </div>
+  <div class="table-panel" ng-if="broadType">
+    <table class="table">
+      <col width="6%" />
+      <col width="30%" />
+      <col width="10%" />
+      <col width="10%" />
+      <col width="10%" />
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>视频ID</th>
+          <th>清晰度</th>
+          <th>视频类型</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="video in videoList" ng-if="!loadStatues && videoList && videoList.length">
+          <td>{{video.seq}}</td>
+          <td>{{video.videoNo}}</td>
+          <td>{{video.ratioName}}</td>
+          <td>{{video.type}}</td>
+          <td><a href="javascript:void(0);" ng-click="broadCast(video.url)">播放</a></td>          
+        </tr>
+        <tr ng-if="!loadStatues  && (videoList == null || videoList.length == 0)">
+          <td colspan="5" align="center">
+            <div class="no-data"></div>
+            暂无数据.
+          </td>
+        </tr>
+        <tr ng-if="loadStatues">
+          <td colspan="5" align="center">
+            <img src="img/erp/loading2.gif">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-panel text-center" ng-if="!broadType">
+    <video  controls="controls" autoplay="autoplay" ng-src="{{videoUrlFun(broadUrl)}}" >
+    </video>
+     <div class="mt-15">
+        <button type="button" class="btn btn-default" ng-click="close()">返回</button>
+     </div>
+  </div>
+</div>

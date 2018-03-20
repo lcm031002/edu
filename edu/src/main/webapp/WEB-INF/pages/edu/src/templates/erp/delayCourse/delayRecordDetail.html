@@ -1,0 +1,84 @@
+<div class="erp" ng-controller="erp_delayRecordDetailController">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading"><span class="title"><kl-header-go-back></kl-header-go-back>延课单-详情</span></div>
+  </div>
+  <div class="table-panel">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>操作</th>
+        <th>课程名称</th>
+        <th>编码</th>
+        <th>延课课次</th>
+        <th>延课前上课日期</th>
+        <th>延课后上课日期</th>
+        <th>开课日期</th>
+        <th>结课日期</th>
+        <th>双师课程名称</th>
+        <th>双师课程类型</th>
+        <!--<th>双师同步结果</th>-->
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="delayRecordCourseDetail in delayRecordCourseDetailList"
+          ng-if="delayRecordCourseDetailList && delayRecordCourseDetailList.length">
+        <td><a href="javascript:void(0);" ng-click="listDelayCourseSchedulingChangeInfo(delayRecordCourseDetail.id)">延课详情</a></td>
+        <td>{{delayRecordCourseDetail.courseName}}</td>
+        <td>{{delayRecordCourseDetail.courseNo}}</td>
+        <td>{{delayRecordCourseDetail.courseTime}}</td>
+        <td>{{delayRecordCourseDetail.courseDateBeforeDelay}}</td>
+        <td>{{delayRecordCourseDetail.courseDateAfterDelay}}</td>
+        <td>{{delayRecordCourseDetail.startDateAfterDelay}}</td>
+        <td>{{delayRecordCourseDetail.endDateAfterDelay}}</td>
+        <td>{{delayRecordCourseDetail.mtCourseName}}</td>
+        <td>{{delayRecordCourseDetail.typeName}}</td>
+        <!--<td class="text-success" ng-if=" !delayRecordCourseDetail.synErrorMessage">成功</td>-->
+        <!--<td class="text-success" ng-if=" delayRecordCourseDetail.synErrorMessage">{{'失败：' + delayRecordCourseDetail.synErrorMessage}}</td>-->
+      </tr>
+      </tbody>
+    </table>
+    <ng-pagination conf="paginationConf"></ng-pagination>
+
+  </div>
+
+  <div id="delayRecordCourseSchedullingChangeInfo" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="width:800px">
+        <div class="modal-header" style="background-color:#1b8cf2;text-align: center">
+          <h4 class="modal-title" style="color:#ffffff;">延课课次变动详情</h4>
+        </div>
+          <div  style="max-height:500px;overflow-y: auto" >
+            <table class="table table-hover" style="border:solid 1px #ddd;text-align: center">
+              <thead style="background-color:#dfdfdf">
+              <tr>
+                <td>课次</td>
+                <td>延课前上课日期</td>
+                <td>延课后上课日期</td>
+                <td>延课前上课时间</td>
+                <td>延课后上课时间</td>
+                <td>延课前下课时间</td>
+                <td>延课后下课时间</td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="courseSchedullingChangeInfo in courseSchedullingChangeInfoList" style="color:{{courseSchedullingChangeInfo.delayCourseTime?'red':'black'}}">
+                <td>{{courseSchedullingChangeInfo.courseTime}}</td>
+                <td>{{courseSchedullingChangeInfo.courseDateBeforeDelay}}</td>
+                <td>{{courseSchedullingChangeInfo.courseDateAfterDelay}}</td>
+                <td>{{courseSchedullingChangeInfo.startTimeBeforeDelay}}</td>
+                <td>{{courseSchedullingChangeInfo.startTimeAfterDelay}}</td>
+                <td>{{courseSchedullingChangeInfo.endTimeBeforeDelay}}</td>
+                <td>{{courseSchedullingChangeInfo.endTimeAfterDelay}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <div style="text-align: left"><span>备注：红色部分为发生延课的课次</span></div>
+            <button type="button" class="btn btn-primary center-block" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.modal -->
+</div>

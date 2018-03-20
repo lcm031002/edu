@@ -1,0 +1,137 @@
+<div class="report {{loadStatues!=false?'':'min-width-2500'}}" ng-controller="report_teacherWorkloadController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">培英班教师工作量表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar" style="width: 80vw;">
+                <div class="form form-inline">
+                    <div class="form-group m-0">
+                        <rd-date-picker-range ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date"
+                            ng-default-range="searchParam.default_range">
+                        </rd-date-picker-range>
+                    </div>
+                    <div class="form-group">
+                        日期字段：
+                        <select class="form-control" ng-model="searchParam.p_isCourseTime">
+                            <option value="true">排课日期</option>
+                            <option value="false">考勤日期</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <span class="input-label">课程名称：</span>
+                        <input type="text" class="form-control" 
+                            placeholder="请输入课程名称"
+                            ng-model="searchParam.p_course_name" 
+                            autocomplete="off"> 
+                    </div>
+                    <div class="form-group m-0 mr-20">
+                        <rd-branch ng-bu-id="searchParam.p_bu_id" 
+                            ng-branch-id="searchParam.p_branch_id" 
+                            ng-value-change="onBranchChange()">
+                        </rd-branch>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label required">教师类型：</span>
+                        <select class="form-control" ng-model="searchParam.p_teacher_type">
+                            <option value="1">主讲老师</option>
+                            <option value="2">辅导老师</option>
+                        </select>
+                    </div>
+                    <div class="form-group"> 
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button>
+                        <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="60"/>
+            <col width="140"/>
+            <col width="120"/>   <!-- 教师编号-->
+            <col width="110"/>   
+            <col width="90"/>
+            <col width="120"/>     <!-- 辅导教师编号-->
+            <col width="110"/>  
+            <col width="100"/>
+            <col width="130"/>
+            <col width="160"/>  <!-- 课程名称-->
+            <col width="100"/> 
+            <col width="80"/>
+            <col width="60"/>   <!-- 课次-->
+            <col width="90"/>
+            <col width="110"/>  <!-- 正常上课学生数-->
+            <col width="100"/>
+            <col width="100"/>
+            <col width="100"/>
+            <col width="110"/>  <!-- 试听拒缴学生数-->
+            <col width="90"/>
+            <col width="90"/>
+            <col width="120"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>课程校区</th>
+                <th>教师编号</th>
+                <th>教师ID</th>
+                <th>教师姓名</th>
+                <th>辅导教师编号</th>
+                <th>辅导教师ID</th>
+                <th>辅导教师姓名</th>
+                <th>课程编码</th>
+                <th>课程名称</th>
+                <th>上课日期</th>
+                <th>上课时长</th>
+                <th>课次</th>
+                <th>出勤学生数</th>
+                <th>正常上课学生数</th>
+                <th>挂起学生数</th>
+                <th>应到学生数</th>
+                <th>试听学生数</th>
+                <th>试听拒缴学生数</th>
+                <th>年级</th>
+                <th>科目</th>
+                <th>教研组</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1}}</td>
+                <td>{{data.course_branch_name}}</td>
+                <td>{{data.teacher_code}}</td>
+                <td>{{data.teacher_id}}</td>
+                <td>{{data.teacher_name}}</td>
+                <td>{{data.assteacher_code}}</td>
+                <td>{{data.assteacher_id}}</td>
+                <td>{{data.assteacher_name}}</td>
+                <td>{{data.course_no}}</td>
+                <td>{{data.course_name}}</td>
+                <td>{{data.schedule_date}}</td>
+                <td>{{data.hour_length}}</td>
+                <td>{{data.course_time}}</td>
+                <td>{{data.attend_students_num}}</td>
+                <td><a href="?courseId={{data.course_id}}&courseTime={{data.course_time}}&isCourseTime={{searchParam.p_isCourseTime}}&startDate={{searchParam.p_start_date}}&endDate={{searchParam.p_end_date}}#/orders/classesReports/classesTeacherWorkloadAttendStudents" target="_blank">{{data.normal_attend_students_num}}</a></td>
+                <td>{{data.hangup_students_num}}</td>
+                <td><a href="?courseId={{data.course_id}}&courseTime={{data.course_time}}#/orders/classesReports/classesTeacherWorkloadOrderStudents" target="_blank">{{data.tobe_students_num}}</a></td>
+                <td>{{data.listening_students_num}}</td>
+                <td>{{data.listen_rejection_students_num}}</td>
+                <td>{{data.grade_name}}</td>
+                <td>{{data.subject_name}}</td>
+                <td>{{data.teacher_group_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

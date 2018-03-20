@@ -1,0 +1,71 @@
+<div ng-controller="erp_StudentTraceInfoController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">教师课堂反馈</span>
+		</div>
+
+		<div class="panel-body operation-panel">
+			<div class="toolbar">
+				<rd-date-picker-range ng-start-date="searchParam.p_start_date" ng-end-date="searchParam.p_end_date"
+									  ng-default-range="searchParam.default_range">
+					<button class="btn btn-primary" ng-click="exportCourseInfo()">
+						<i class="iconfont icon-add"></i> 导出课堂反馈详情
+					</button>
+				</rd-date-picker-range>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">学员跟踪信息管理</span>
+		</div>
+
+		<div class="panel-body operation-panel">
+			<div class="toolbar">
+				<button class="btn btn-primary" ng-click="query()">
+					<i class="iconfont icon-refresh"></i> 刷新
+				</button>
+				<button class="btn btn-primary" ng-click="addStudentTrace()">
+					<i class="iconfont icon-add"></i> 添加
+				</button>
+			</div>
+		</div>
+	</div>
+	<!--main form end-->
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>操作</th>
+					<th>沟通日期</th>
+					<th>沟通时间</th>
+					<th>沟通对象</th>
+					<th>沟通类型</th>
+					<th>沟通目的/备注</th>
+					<th>是否有附件</th>
+					<th>创建时间</th>
+					<th>创建用户</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="info in studentTraceInfoList"
+					ng-if="studentTraceInfoList && studentTraceInfoList.length">
+					<td>
+						<a href="?studentId={{studentId}}&id={{info.id}}&opType=view#/studentMgr/studentTraceInfoAdd">详情</a>
+						<a href="?studentId={{studentId}}&id={{info.id}}#/studentMgr/studentTraceInfoAdd">编辑</a>
+					</td>
+					<td>{{info.traceDate}}</td>
+					<td>{{info.traceTime}}</td>
+					<td>{{info.relationName}}</td>
+					<td>{{info.traceTypeName}}</td>
+					<td>{{info.tracePurpose}}</td>
+					<td>{{info.hasAttach}}</td>
+					<td>{{info.create_time | date:'yyyy-MM-dd HH:mm'}}</td>
+					<td>{{info.create_user_name}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+	</div>
+</div>

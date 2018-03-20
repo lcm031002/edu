@@ -1,0 +1,65 @@
+<div class="form-horizontal table-panel">
+  <div class="hide">
+    <input type="text" ng-model='courseDetail.id'>
+  </div>
+  <div class="form-group-inline">
+    <label class="col-sm-2 control-label">周期：</label>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" ng-model="attendPeriod.period">
+    </div>
+    <label class="col-sm-2 control-label">排课课时：</label>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" ng-model="attendPeriod.hour_len">
+    </div>
+    <label class="col-sm-2 control-label">开始日期：</label>
+    <div class="col-sm-4">
+      <rd-date-picker-popup ng-model="attendPeriod.start_date"></rd-date-picker-popup>
+    </div>
+    <label class="col-sm-2 control-label">截止日期：</label>
+    <div class="col-sm-4">
+      <rd-date-picker-popup ng-model="attendPeriod.end_date"></rd-date-picker-popup>
+    </div>
+
+    <label class="col-sm-2 control-label required">时间档期</label>
+    <div class="col-sm-4">
+      <button ng-repeat="period in tpScheduleTimeList " ng-click="onTpScheduleTimeChange(period)" ng-class="{true: 'btn-primary',false:'btn-default'}[period.checked]"
+        class="btn btn-sm mr10">{{period.name}}</button>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">学管师：</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" ng-disabled="true" ng-model="studentIndexCounselors.LEARNINGMGR_NAME">
+      </div>
+    </div>
+    <label class="col-sm-2 control-label">上课时间：</label>
+    <div class="col-sm-4">
+      <kl-timepicker ng-model="attendTime.start_time"></kl-timepicker>
+    </div>
+    <label class="col-sm-2 control-label">下课时间：</label>
+    <div class="col-sm-4">
+      <kl-timepicker ng-model="attendTime.end_time"></kl-timepicker>
+    </div>
+    <label class="col-sm-2 control-label">科目：</label>
+    <div class="col-sm-4">
+      <kl-subject-select subject="attendPeriod.subject"></kl-subject-select>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">上课教师：</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="form-control" type="text">
+            <span>{{scheduleSelectedTeacher.teacher_name}} </span>
+          </div>
+          <span class="input-group-btn" kl-teacher-dropdown kl-selected="onSelectTeacher(teacher)" searchparam="{}">
+                  <button class="btn btn-primary">选择</button>
+                </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+  <hr>
+  <button class="btn btn-primary" ng-click="addScheduleByPeriod()">确定添加</button>
+</div>

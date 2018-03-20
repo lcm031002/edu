@@ -1,0 +1,163 @@
+<style>
+<!--
+.processes {
+	width: 100%;
+}
+
+.cur {
+	cursor: pointer;
+}
+
+.dropdown:hover {
+	color: #000;
+}
+
+.float_right {
+	margin-left: 18%;;
+}
+
+.button {
+	margin-right: 65px;
+}
+
+.message {
+	width: 100%;
+}
+
+thead {
+	background: none repeat scroll 0 0 #6b6f71;
+	height: 35px;
+}
+
+thead tr {
+	width: 90%;
+}
+
+th,td {
+	min-width: 120px;
+	text-align: center;
+	color: #fff;
+}
+
+td {
+	color: #000;
+	height: 35px;
+}
+
+.task_operator {
+	width: 300px;
+}
+
+.about-us-one-row {
+	padding: 5px 0;
+}
+
+td {
+	font-size: 14px;
+	font-family: "微软雅黑";
+}
+
+th {
+	font-size: 16px;
+	font-family: "微软雅黑";
+}
+
+.operator {
+	margin: 5px;;
+}
+
+.data_row:hover {
+	background-color: #fff;
+}
+
+.col77 {
+	
+}
+
+.tfr {
+	text-align: right;
+}
+
+.tfl {
+	text-align: left;
+}
+.body_table{
+	width:100%;
+}
+td table{
+	width:100%;
+}
+-->
+</style>
+<div class="col-md-8 about-us-column-right processes">
+	<h3>流程列表</h3>
+	<div class="row about-us-one-row">
+		<div>
+			<table class="body_table">
+				<thead>
+					<tr>
+						<th class="tfl">流程id</th>
+						<th class="tfl">流程key</th>
+						<th class="tfl">流程名称</th>
+						<th>发布id</th>
+						<th>描述</th>
+						<th>状态</th>
+						<th class="task_operator">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="data_row" style="border-bottom: 1px #000;"
+						ng-repeat="process in drocessDefList">
+						<td colspan="7">
+							<table>
+								<tr>
+									<td class="col1 tfl"><a href="{{task.task_workspace}}"
+									target="_blank">{{process.id}}</a></td>
+									<td class="col2 tfl">{{process.key}}</td>
+									<td class="col3 tfl">{{process.name}}{{'V'+process.version}}</td>
+									<td class="col4">{{process.deploymentid}}</td>
+									<td class="col4 tfl">{{process.description}}</td>
+									<td class="col2" ng-if="process.suspended==true">已停止</td>
+									<td class="col2" ng-if="process.suspended==false">运行中</td>
+									<td class="col5 task_operator">
+										<a href="javascript:void(0)"
+										class="operator" ng-click="processInstanceSub(process)" ng-if="process.instanceList==null"><span
+											class="cur">实例管理[+]</span></a>
+										<a href="javascript:void(0)"
+										class="operator" ng-click="processInstanceSub(process)" ng-if="process.instanceList!=null"><span
+											class="cur">实例管理[-]</span></a>
+										<a href="javascript:void(0)"
+										class="operator" ng-click="startProcess(process)"><span
+											class="cur">发起流程</span></a> 
+											<a href="javascript:void(0)"
+										class="operator" ng-click="delProcess(process)"><span class=" cur">删除流程</span></a>
+										
+										<a href="javascript:void(0)"
+										class="operator" ng-click="delProcessForce(process)"><span class=" cur">强删除流程</span></a>
+									</td>
+								</tr>
+								<tr ng-if="process.instanceList!=null">
+									<td colspan="7">
+										<table>
+											<tbody>
+												<tr><td>实例</td><td>name</td><td>状态</td><td>操作</td></tr>
+												<tr ng-repeat="instance in process.instanceList">
+													<td>{{instance.id}}</td>
+													<td>{{instance.name}}</td>
+													<td>{{instance.state}}</td>
+													<td>
+													<!-- <a class="operator" href="javascript:void(0)" ng-click="processInstanceRedo(process,instance)">redo</a> -->
+													<a class="operator" href="javascript:void(0)" ng-click="processInstanceDelete(process,instance)">删除</a></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

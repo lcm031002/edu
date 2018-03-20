@@ -1,0 +1,120 @@
+<div class="report" ng-controller="report_courseAnalysisController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">班级分析报表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <span class="input-label">校区：</span>
+                        <kl-branch-select bu-id="searchParam.buId"
+                                          branch-id="searchParam.branchId">
+                        </kl-branch-select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">课程名称：</span>
+                        <input type="text" class="form-control" placeholder="请输入课程编码/名称"
+                               ng-model="searchParam.courseInfo" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">教师：</span>
+                        <div class="form-group">
+                          <klc-teacher-typeahead 
+                            teacher-type="3" 
+                            teacher-id="searchParam.teacherId" 
+                            teacher-name="searchParam.teacherName">
+                          </klc-teacher-typeahead>
+                        </div>
+                    </div>
+                    <br class="content_br">
+                    <div class="form-group">
+                        <span class="input-label">日期类型：</span>
+                        <select class="form-control" ng-model="searchParam.dateType">
+                            <option value="1">结课日期</option>
+                            <option value="2">结账日期</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <rd-date-picker-range ng-start-date="searchParam.startDate" ng-end-date="searchParam.endDate"
+                                              ng-default-range="searchParam.default_range" ng-btn-tag="searchParam.btnTag">
+                            <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button>
+                            <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                        </rd-date-picker-range>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-stripped {{loadStatues!=false?'':'min-width-2200'}}">
+            <col width="160"/>
+            <col width="180"/>
+            <col width="90"/>
+            <col width="90"/>   <!-- 应到人数-->
+            <col width="90"/>
+            <col width="100"/>
+            <col width="100"/>
+            <col width="240"/>   <!-- 上课周期-->
+            <col width="150"/>
+            <col width="120"/>
+            <col width="100"/>
+            <col width="90"/>  <!-- 开课日期-->
+            <col width="90"/>
+            <col width="120"/>
+            <col width="120"/>
+            <col width="120"/>
+            <thead>
+            <tr>
+                <th>课程名称</th>
+                <th>课程编码</th>
+                <th>在读人数</th>
+                <th>应到人数</th>
+                <th>差异人数</th>
+                <th>中文教师</th>
+                <th>外文教师</th>
+                <th>上课周期</th>
+                <th>校区</th>
+                <th>科目</th>
+                <th>辅导老师</th>
+                <th>开课日期</th>
+                <th>结课日期</th>
+                <th>结账开始日期</th>
+                <th>结账结束日期</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{data.courseName}}</td>
+                <td>{{data.courseNo}}</td>
+                <td>{{data.attendStudentCount}}</td>
+                <td>{{data.studentCount}}</td>
+                <td>{{data.diffCount}}</td>
+                <td>{{data.teacherNameCn}}</td>
+                <td>{{data.teacherNameEn}}</td>
+                <td>{{data.attendClassPeriod}}</td>
+                <td>{{data.branchName}}</td>
+                <td>{{data.subjectName}}</td>
+                <td>{{data.assTeacherName}}</td>
+                <td>{{data.startDate}}</td>
+                <td>{{data.endDate}}</td>
+                <td>{{data.settleAccountsStartDate}}</td>
+                <td>{{data.settleAccountsEndDate}}</td>
+                <td><a href="?courseId={{data.id}}#/orders/classesScheduleCourse">查看课次详情</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+        <div>备注：在读人数：已报班该课程且状态为在读的学生人数，应到人数：已报名该课程的学生人数，差异人数：应到人数-在读人数</div>
+    </div>
+    
+    <ng-pagination conf="paginationConf" ng-if="!loadStatues && dataList != null && dataList.length != 0"></ng-pagination>
+</div>

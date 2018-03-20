@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process description="订单手工作废审批流程处理_2C" key="erpv5.DXB_order_menucancel_2C" name="订单手工作废审批-2层" version="400" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="85,29,48,48" name="start1">
+      <transition to="订单作废，主管审批"/>
+   </start>
+   <task g="18,161,180,52" name="订单作废，主管审批">
+      <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition g="-70,-25" name="审批不通过，订单作废失效" to="end2"/>
+      <transition g="7,-11" name="审批通过，财务部审批" to="财务部审批"/>
+   </task>
+   <task g="19,270,180,52" name="财务部审批">
+   	  <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+   	  </assignment-handler>
+      <transition g="-93,-22" name="同意订单作废" to="订单作废处理"/>
+      <transition g="-50,-22" name="审批不通过" to="end2"/>
+   </task>
+   <end g="86,470,48,48" name="end1"/>
+   <end g="339,164,48,48" name="end2"/>
+   <java class="com.modules.work_flow.controller.ServiceAPI" g="32,373,154,52" method="doOrderChange_3" name="订单作废处理">
+      <arg><object expr="#{remark_order}"/></arg>
+      <arg><object expr="#{order_id}"/></arg>
+      <arg><object expr="#{laststep_user_id}"/></arg>
+      <transition to="end1"/>
+   </java>
+</process>

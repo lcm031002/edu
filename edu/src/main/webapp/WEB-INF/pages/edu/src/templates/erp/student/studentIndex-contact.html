@@ -1,0 +1,99 @@
+<div class="erp" ng-controller="erp_studentCenterContactController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">联系人列表</span>
+            <small>（<i class="glyphicon glyphicon-exclamation-sign text-primary"></i> 最多添加10个联系人，你可以再添加{{10-contactRelList.length}}个联系人）</small>
+        </div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="toAddStudentContact()">
+        	<i class="iconfont icon-add"></i> 新增</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-primary" id="contactList">
+        <div class="panel-heading">
+            <span class="title">
+			联系人列表
+		</span>
+        </div>
+        <div class="table-panel">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>联系人姓名</th>
+                        <th>联系人关系</th>
+                        <th>联系人电话</th>
+                        <th>联系人备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tr ng-repeat="contact in contactRelList">
+                    <td>{{contact.link_name}}</td>
+                    <td>{{contact.relation_name}}</td>
+                    <td>{{contact.link_phone}}</td>
+                    <td>{{contact.remark}}</td>
+                    <td>
+
+                        <button ng-if="contact.default_phone==1" class="btn btn-success btn-sm" disabled ng-click="toDefault(contact)">设为默认</button>
+                        <button ng-if="contact.default_phone!=1" class="btn btn-success btn-sm" ng-click="toDefault(contact)">设为默认</button>
+                        <button class="btn btn-warning btn-sm" ng-click="toUpdate(contact)">修改</button>
+                        <button ng-if="contact.default_phone==1" class="btn btn-danger btn-sm" disabled ng-click="deleteConfirm(contact)">删除</button>
+                        <button ng-if="contact.default_phone!=1" class="btn btn-danger btn-sm" ng-click="deleteConfirm(contact)">删除</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal klxx-modal-primary" style="z-index: 1049;" id="studentContactModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{optype=="add"? "添加":"编辑"}}联系人</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 required">
+								联系人关系
+							</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" ng-model="studentContact.relationModel" ng-options="relation.label for relation in RelationList" ng-change="defalutContactName(studentContact)">
+			        	</select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+								联系人姓名
+							</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" ng-model="studentContact.link_name" ng-blur="link_nameBlur()" ng-focus="link_nameFocus()" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 required">
+								联系人电话
+							</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" value="" type="text" ng-model="studentContact.link_phone" ng-blur="link_phoneBlur()" ng-focus="link_phoneFocus()" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+								联系人备注
+							</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" value="" type="text" ng-model="studentContact.remark" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" ng-click="onCloseModal()">关闭</button>
+                    <button class="btn btn-primary" ng-click="onSaveContact()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>报班单打印</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font: 12px Arial;
+      background: #f3f3f3;
+    }
+
+    #main {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .content {
+      padding: 100mm 15mm 20mm 20mm;
+    }
+
+    .content table {
+      color: #000;
+      font-weight: 400;
+      border-spacing: 0;
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .content table .title {
+      text-align: left;
+    }
+
+    .content table td {
+      padding: 5px;
+    }
+
+    .content table .thd {
+      font-weight: bold;
+    }
+
+    .tal {
+      text-align: left !important;
+    }
+
+    .tb-box {
+      display: table;
+      width: 100%;
+    }
+
+    .tb-box__row {
+      display: table-row;
+    }
+
+    .tb-box__col {
+      display: table-cell;
+      text-align: center;
+      padding: 0 5px;
+      font-weight: 400
+    }
+    .print-btn {
+      width: 50px;
+      height: 50px;
+      background: url(print_btn.png) no-repeat center center #fff;
+      border-radius: 4px;
+      position: fixed;
+      top: 300px;
+      left: 50%;
+      margin-left: 460px;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+    .print-btn:hover {
+      background-color: #f0f0f0f0
+    }
+    @media print {
+      @page {
+        size: A4;
+        margin: 5mm;
+      }
+      body {
+        background: #fff
+      }
+      .print-btn{
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="print-btn" onclick="printPage()"></div>
+<div id="main">
+  <div class="content" id="content">
+    <table>
+      <tbody>
+      <tr>
+        <td colspan="2" class="thd">学员编号</td>
+        <td colspan="2" class="thd">学员APPID</td>
+        <td class="thd">学员姓名</td>
+      </tr>
+      <tr>
+        <td colspan="2">{{studentInfo.encoding}}</td>
+        <td colspan="2">{{studentInfo.login_no}}</td>
+        <td>{{studentInfo.student_name}}</td>
+      </tr>
+      <tr>
+        <td class="thd">单据编号</td>
+        <td class="thd">业务类型</td>
+        <td class="thd">业务校区</td>
+        <td class="thd">经办人</td>
+        <td class="thd">业务日期</td>
+      </tr>
+      <tr>
+        <td>{{encoding}}</td>
+        <td>报班</td>
+        <td>{{branch_name}}</td>
+        <td>{{employee_name}}</td>
+        <td>{{dateFormate(create_time)}}</td>
+      </tr>
+      <tr>
+        <td class="thd">编号</td>
+        <td class="thd" colspan="2">远程商品名称</td>
+        <td class="thd">报班课时</td>
+        <td class="thd">报班总金额</td>
+      </tr>
+      <tr v-for="(item,index) in details" :key="index">
+        <td>{{index+1}}</td>
+        <td colspan="2">{{item.course_name}}</td>
+        <td>{{item.course_total_count}}</td>
+        <td>{{item.discount_sum_price}}</td>
+      </tr>
+      <tr>
+        <td class="thd tal">优惠金额：{{sum_price-actual_price}}</td>
+        <td class="thd" colspan="2">实际需缴费金额：￥{{sum_price}}</td>
+        <td class="thd" colspan="2">已缴费金额：￥{{actual_price}}</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="thd tal" style="vertical-align:text-bottom">
+          缴费明细:
+        </td>
+        <td colspan="3" class="thd tal">
+          <div class="tb-box">
+            <div class="tb-box__row" v-for="(item,index) in payment.details" :key="index">
+              <div class="tb-box__col">{{index+1}}</div>
+              <div class="tb-box__col">{{item.payment_way_str}}</div>
+              <div class="tb-box__col">￥{{item.staffappprem}}</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="thd tal" colspan="5">以上优惠均需报整期课程并消耗完毕，若产生退费/冻结，则优惠取消</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+<script>
+    var vPage =new Vue({
+        el: '#content',
+        data: {
+            studentInfo: {
+                encoding: '3123123',
+                login_no: 13123123,
+                student_name: 'xiaoxiao'
+            },
+            encoding: '单据编码',
+            branch_name: '业务校区',
+            employee_name: '经办人',
+            create_time: '业务日期',
+            details: [
+                {
+                    course_name: '课程商品名称',
+                    course_total_count: '报班课时',
+                    discount_sum_price: '报班总金额'
+                }
+            ],
+            sum_price: '实际需缴费金额',
+            actual_price: '已缴费金额',
+            payment: {
+                details: [
+                    {
+                        payment_way_str: 'fff',
+                        staffappprem: 'cxcvxcv'
+                    }
+                ]
+            }
+        },
+        mounted () {
+            var data = JSON.parse(window.localStorage.getItem('baobanData'))
+            this.studentInfo= data.studentInfo
+            this.encoding= data.encoding
+            this.branch_name=data.branch_name
+            this.employee_name=data.employee_name
+            this.create_time=data.create_time
+            this.details=data.details
+            this.sum_price=data.sum_price
+            this.actual_price=data.actual_price
+            this.payment.details=data.payment.details
+        },
+        methods: {
+            dateFormate(t) {
+                var date = new Date(t)
+                var y = date.getFullYear()
+                var m = date.getMonth() + 1
+                if (m < 10) m = '0'+m
+                var d = date.getDate()
+                if(d < 10) d = '0' +d
+                return y+'-'+m+'-'+d
+            }
+        }
+    })
+    function printPage() {
+        if (vPage._isMounted) {
+            window.print()
+        }
+    }
+</script>
+</body>
+
+</html>

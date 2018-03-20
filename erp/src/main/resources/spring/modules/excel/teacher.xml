@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<workbook> 
+   <worksheet name="Sheet1"> 
+    <section startRow="0" endRow="3"/> 
+    <loop startRow="4" endRow="4" items="teacherList" var="teacher" varType="com.ebusiness.erp.model.TeacherExcel"> 
+	    <section startRow="1" endRow="1"> 
+		    <mapping row="1" col="0">teacher.employee_encoding</mapping> 
+		    <mapping row="1" col="1">teacher.teacher_encoding</mapping> 
+		    <mapping row="1" col="2">teacher.teacher_name</mapping> 
+		    <mapping row="1" col="3">teacher.nickname</mapping> 
+		    <mapping row="1" col="4">teacher.teacher_age</mapping> 
+		    <mapping row="1" col="5">teacher.seniority</mapping>
+		    <mapping row="1" col="6">teacher.teacher_type</mapping>
+		    <mapping row="1" col="7">teacher.status</mapping>
+		    <mapping row="1" col="8">teacher.sex</mapping>
+		    <mapping row="1" col="9">teacher.phone</mapping>
+		    <mapping row="1" col="10">teacher.is_pluralistic</mapping>
+		    <mapping row="1" col="11">teacher.subject_names</mapping>
+		    <mapping row="1" col="12">teacher.bu_name</mapping>
+		    <mapping row="1" col="13">teacher.email</mapping>
+		    <mapping row="1" col="14">teacher.description</mapping>
+	    </section> 
+	    <loopbreakcondition> 
+	     <rowcheck offset="0">
+	        <cellcheck offset="1"></cellcheck> 
+	     </rowcheck> 
+	    </loopbreakcondition> 
+    </loop> 
+    </worksheet> 
+</workbook>

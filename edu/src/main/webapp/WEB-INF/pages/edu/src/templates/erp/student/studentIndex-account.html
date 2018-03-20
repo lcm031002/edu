@@ -1,0 +1,128 @@
+<div class="erp student account-info" ng-controller="erp_StudentIndexAccountController" >
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <span class="title">
+            账户详情
+        </span>
+    </div>
+    <div class="panel-body container-fluid">
+        <div class="dashboard">
+            <div class="info">
+                <div class="title text-muted">储值账户</div>
+                <div class="account text-warning">{{studentIndexAccount.STORE_ACCOUNT.toString().split('.')[0]}}<small>.{{studentIndexAccount.STORE_ACCOUNT.toString().split('.')[1] || '00'}}元</small></div>
+                <a class="btn btn-warning" 
+                    href="#/studentMgr/studentMgrAccount/studentAccountRecharge" target="_blank">立即充值</a>
+            </div>
+            <div class="info divider">
+                <div class="title text-muted">冻结账户</div>
+                <div class="account">{{studentIndexAccount.FROZEN_ACCOUNT.toString().split('.')[0]}}<small>.{{studentIndexAccount.FROZEN_ACCOUNT.toString().split('.')[1] || '00'}}元</small></div>
+            </div>
+            <div class="info">
+                <div class="title text-muted">退费账户</div>
+                <div class="account">{{studentIndexAccount.REFUND_ACCOUNT.toString().split('.')[0]}}<small>.{{studentIndexAccount.REFUND_ACCOUNT.toString().split('.')[1] || '00'}}元</small></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="table-panel">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="{{Page.change_account_type==item.value ? 'active':''}}" 
+            ng-repeat="item in changeAccountTypeList">
+            <a href="javascript:void(0);" ng-click="queryAccountList(item.value)">{{item.label}}</a>
+        </li>
+    </ul>
+    <div class="table-panel date-picker">
+        <rd-date-picker-range
+            ng-start-date="dateRange.start_date"
+            ng-end-date="dateRange.end_date"
+            ng-default-range="dateRange.defaultRange"
+            ng-date-change="queryAccountList()"
+            >
+        </rd-date-picker-range>
+    </div>
+    <div ng-if="studentId" class="table-panel" style="display:block;">
+    	<div style="overflow:scroll;">
+            <table class="table table-striped table-hover" style="min-width:1210px;word-break: break-all;">
+                <col width="3%"/>
+                <col width="8%"/>
+                <col width="8%"/>
+                <col width="10%"/> <!--交易校区-->
+                <col width="3%"/>
+                <col width="5%"/>
+                <col width="5%"/>  <!--转账学员(对方)-->
+                <col width="5%"/>
+                <col width="5%"/>
+                <col width="5%"/>  <!--变更前金额-->
+                <col width="5%"/>
+                <col width="5%"/>
+                <col width="5%"/>
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>交易时间</th>
+                        <th>摘要</th>
+                        <th>交易校区</th>
+                        <th>操作人</th>
+                        <th>订单编号</th>
+                        <th>对方学员(转账)</th>
+                        <th>备注</th>
+                        <th>客户账号</th>
+                        <th>变更前金额</th>
+                        <th>变更金额</th>
+                        <th ng-if="Page.change_account_type != 2 && Page.change_account_type != 3">储值账户</th>
+                        <th ng-if="Page.change_account_type == 2">冻结账户</th>
+                        <th ng-if="Page.change_account_type == 3">退费账户</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in accountDataList">
+                        <td>{{$index+1}}</td>
+                        <td>{{row.business_time}}</td>
+                        <td>{{row.change_type_name}}
+                            <font style="color:red;" ng-if="row.pay_name">【{{row.pay_name}}】</font>
+                            <a ng-if="row.change_type == 6 || row.change_type == 0" href="javascript:void(0);" style="color: blue;" ng-click="print(row.dynamic_id , row.change_type )">打印</a>
+                        </td>
+                        <td>{{row.business_branch}}</td>
+                        <td>{{row.input_user_name}}</td>
+                        <td>
+                            <span><a href="?studentId={{studentId}}&orderId={{row.order_id}}#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank">{{row.order_no}}</a></span>
+                        </td>
+                        <td>
+                            <span><a href="?studentId={{row.transfer_student_id}}#/studentMgr/studentMgrIndex" target="_blank">{{row.transfer_student}}</a></span>
+                        </td>
+                        <td>{{row.remark}}</td>
+                        <td>{{row.card_no}}</td>
+                        <td>{{row.pre_amount}}</td>
+                        <td>{{row.change_amount}}</td>
+                        <td ng-if="Page.change_account_type != 2 && Page.change_account_type != 3">{{(row.account_type != 2 && row.account_type != 3) ? row.next_amount : 0}}</td>
+                        <td ng-if="Page.change_account_type == 2">{{row.account_type == 2 ? row.next_amount : 0}}</td>
+                        <td ng-if="Page.change_account_type == 3">{{row.account_type == 3 ? row.next_amount : 0}}</td>
+                        <td>{{row.auditstatusname}}</td>
+                    </tr>
+                    <tr ng-if="isLoading!='isLoading' && (!accountDataList||!accountDataList.length)">
+                        <td colspan="12" align="center">
+                            暂无数据.
+                        </td>
+                    </tr>
+                    <tr ng-if="isLoading=='isLoading'" >
+                        <td colspan="12" align="center">
+                            <img src="img/erp/loading2.gif">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    	</div>
+    	<div class="contact-list-bottom bd-top con-bg2">
+    		<span class="fr mr10">
+    			{{_begin}}-{{_end}}条，共{{_total}}条
+    			<em class="blue-detail ml10" ng-click="begin()">首页</em>
+    			<em class="blue-detail ml10" ng-click="up()">上一页</em>
+    			<em class="blue-detail ml10" ng-click="down()">下一页</em>
+    			<em class="blue-detail ml10" ng-click="end()">末页</em>
+    		</span>
+    	</div>
+    </div>
+</div>
+</div>

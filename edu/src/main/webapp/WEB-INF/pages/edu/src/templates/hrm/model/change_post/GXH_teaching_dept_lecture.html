@@ -1,0 +1,164 @@
+                   <div ng-if="openPanel=='3'" class="container">
+                   		<p>&nbsp;</p>
+                   		<p>&nbsp;</p>
+					  <div align="center">
+					  		<h2>快乐学习个性化教学部试讲评价表</h2>
+					  </div>
+					  <p>&nbsp;</p>
+					  <div align="left">第
+					      <input ng-model="selecteditem.times" type="text" size="5" /> 
+					    	  次试讲评价
+					  </div>
+					  <div class="form-group ">
+				  		<strong>
+				  			 <div class="form-group fl col-sm-6">
+							     <label class="fl" style="line-height: 34px;">授课教师：</label>
+							    <div class="input-group">
+					              <input type="text" class="form-control" ng-model="selecteditem.employeeName"/>
+					                  <p   ng-show="(!selecteditem.employeeId||selecteditem.employeeId=='')&&isSbumitting==true"
+							               class="help-block" style="color:#a94442" desc="教师姓名不能为空">教师姓名不能为空........</p> 
+					               <span class="input-group-addon"  id="showSpan" ng-click="showEmployeeQuery()">
+					                 <i class="fa fa-edit"></i></span>
+					                 <!-- 隐藏账户所属员工Id -->
+					                 <input type="hidden" ng-model="selecteditem.employeeId" na-value="selecteditem.employeeId" > 
+					                   <div class="associatebox" ng-if="showQuery==true" >
+					                  <ul >
+					                <div class="input-group drop-field"  ng-controller="TooltipDemoCtrl" >         
+					                <input type="text" class="form-control ng-pristine ng-valid ng-touched" 
+					                 ng-model="searchInfo" 
+					                 ng-class="{'has-error' : !selecteditem.employeeId}"
+					                 id="employee_search_info"
+					                 ng-change="queryEmployeeInfo()"
+					                 tooltip-placement="top" 
+							         tooltip-placement="{dynamicTooltip}}" 
+							         uib-tooltip="{{dynamicTooltip}}"  
+							         tooltip-enable="!selecteditem.employeeId"
+					                 placeholder="请输入教师姓名或编码....">
+					                 <span id="selectSpan" class="input-group-addon"   ng-click="queryEmployeeInfo()">
+					                 <i class="fa fa-search"></i></span>
+					                 </div>
+					                 <!-- 迭代员工 -->
+					                   <li ng-if="onGoingQuery==true" ng-repeat="employee in employeeList" ng-click="selectedEmployee(employee)">
+					                   {{employee.ENCODING}}-{{employee.EMPLOYEE_NAME}}</li>
+					                         </ul>
+					                     </div>
+					            </div>
+					   		  </div>
+				  			
+				  		</strong>
+					  </div>
+					  <p>&nbsp;</p>
+					  <p>&nbsp;</p>
+					  <div align="left">
+						<table  border="1">
+						  <tr>
+						    <th width="16%"> <div align="center"><strong>授课教师</strong><br />
+						    </div></th>
+						    <th width="16%">{{selecteditem.employeeName}}</th>
+						    <th width="16%"> <div align="center"><strong>年级科目</strong><br />
+						    </div></th>
+						    <th width="16%"><input type="text" class="form-control" ng-model="selecteditem.className"/></th>
+						    <th width="16%"> <div align="center"><strong>导师姓名</strong></div></th>
+						    <th width="16%"><input type="text" class="form-control" ng-model="selecteditem.tutor"/></th>
+						  </tr>
+						  <tr>
+						    <th height="42" scope="row"> <div align="center"><strong>听课教师</strong><br />
+						    </div></th>
+						    <td><input type="text" class="form-control" ng-model="selecteditem.teacher_class"/></td>
+						    <td> <div align="center"><strong>听课日期</strong><br />    
+						    </div></td>
+						    <td>
+						    	<div class="form-group  fl">	
+									<div class=" input-group fl" ng-controller="DatepickerDemoCtrl">
+												<input type="text" 
+												 ng-model="selecteditem.class_date" placeholder="请输入入职时间" required
+												uib-datepicker-popup="{{format}}"
+			                                   current-text="今天"
+			                                   close-text="关闭"
+			                                   clear-text="清理"
+			                                   is-open="opened"
+			                                   ng-readonly="true"
+			                                   id="entryDate"/>
+			                                  		<span class="input-group-btn">
+						                            <button type="button" class="btn btn-default" ng-click="open($event)">
+						                                <i class="glyphicon glyphicon-calendar"></i>
+						                            </button>
+						                        </span>
+											</div>
+								</div>
+						    </td>
+						    <td> <div align="center"><strong>评价分数<br />
+						      （满分 100 分）</strong><br />    
+						    </div>
+						      <!--EndFra>><!--EndFragment--></td>
+						    <td><input type="text" class="form-control" ng-model="selecteditem.score" /></td>
+						  </tr>
+						  <tr>
+						    <th> <div align="center"><strong>讲授主题</strong><br />
+						        <br />
+						    </div></th>
+						    <td colspan="5"><input type="text" class="form-control" ng-model="selecteditem.theme"/></td>
+						    </tr>
+						  <tr ng-if="step==1||step==2">
+						    <th> <div align="center"><strong>听课评价</strong><br />
+						        <br />
+						    </div></th>
+						    <td colspan="5">
+						    	<div class="form-group">
+			                        <label ng-if="step==1" class="col-lg-2 control-label">可选操作</label>
+			                        <label ng-if="step!=1" class="col-lg-2 control-label">审批结果</label>
+			                        <div class="col-lg-10">
+			                            <div class="btn-group">
+			                                <label ng-if="step==1" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+			                                <label ng-if="step!=1">{{handler_opinionList[0]}}</label>
+			                            </div>
+			                        </div>
+			                    </div>
+						    	<div>
+			                    	<label class="col-lg-2 control-label">评价：</label>
+			                    	<div class="col-lg-10">
+					                    <textarea ng-model="remark[0]" class="form-control" style="width: 300px;height: 100px;">
+										</textarea>
+									</div>
+								</div>
+						    	
+						    </td>
+						  </tr>
+						  <tr ng-if="step==2">
+						    <th><div align="center"><strong>导师跟进评语</strong></div></th>
+						    <td colspan="5">
+						    	<div class="form-group">
+			                        <label ng-if="step==2" class="col-lg-2 control-label">可选操作</label>
+			                        <label ng-if="step!=2" class="col-lg-2 control-label">审批结果</label>
+			                        <div class="col-lg-10">
+			                            <div class="btn-group">
+			                                <label ng-if="step==2" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+			                                <label ng-if="step!=2">{{handler_opinionList[1]}}</label>
+			                            </div>
+			                        </div>
+			                    </div>
+						    	<div>
+			                    	<label class="col-lg-2 control-label">操作备注</label>
+			                    	<div class="col-lg-10">
+					                    <textarea ng-model="remark[1]" class="form-control" style="width: 300px;height: 100px;">
+										</textarea>
+									</div>
+								</div>
+						    </td>
+						    </tr>
+						</table>
+					</div>
+					<div align="left" class="form-group">
+						<div style="float:left;"><strong>评价说明：			</strong></div> 
+						<div style="float:left;">
+							<div align="left">
+								<strong>1. 备课思路是否清晰：备学生、备教材、备内容，内容有效、例题针对、考题剖析实用；<br/>
+										2. 讲解思路是否清晰、表达流畅、讲解有微创新或有吸引力；<br />
+									    3. 是否有设计课堂互动；<br />
+									    4. 是否有安排对学生吸收情况的检验并整理反馈。			    
+						    	</strong>
+						    </div>
+						</div>
+					</div>
+				</div>
+		

@@ -1,0 +1,89 @@
+<div class="crm" ng-controller="crmGcRptSceneGcController">
+	<div class="panel panel-primary">
+		<div class="panel-heading font-bold">
+			<span class="title">现场成单率统计</span>
+		</div>
+		<div class="panel-body operation-panel">
+			<div class="toolbar">
+				<button type="submit" class="btn btn-primary btn-circle "
+					ng-click="exp()">
+					<i class="iconfont icon-public_export"></i>导出
+				</button>
+			</div>
+			<hr>
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						团队：<select class="form-control" ng-model="selectedCompany"
+							name="selectedCompany"
+							ng-options="company.text for company in companys"
+							ng-change="changeCompany(company)"></select>
+					</div>
+					<div class="form-group">
+						学校：<select class="form-control" ng-model="selectedSchool"
+							name="selectedSchool" ng-options="sch.text for sch in schs"></select>
+					</div>
+					<div class="form-group">
+						开始日期：<input type="text" class="form-control Wdate cursor_pointer"
+							onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+							ng-model="searchParam.p_start_date" name="cdt_start_date"
+							id="cdt_start_date" />
+					</div>
+					<div class="form-group">
+						结束日期：<input type="text" class="form-control Wdate cursor_pointer"
+							onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+							ng-model="searchParam.p_end_date" name="cdt_end_date"
+							id="cdt_end_date" />
+					</div>
+					<button type="submit" class="btn btn-sm btn-primary"
+						ng-click="cdtSearch()">
+						<i class="iconfont icon-search"></i> 查询
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+				   <th>团队</th>
+           		   <th>校区</th>
+           		   <th>月份</th>
+		           <th>咨询师</th>
+		           <th>成功报班数</th>
+		           <th>到访总量</th>
+		           <th>现场成单率</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="isLoading=='loading'">
+					<td colspan="9" rowspan="10" align="center"><img alt="" src="img/crm/loading2.gif"></td>
+				</tr>
+				<tr ng-repeat="rec in reportData" ng-if="isLoading!='loading'"
+						ng-class="{even:!$even,odd:!$odd}">
+					 <td>{{rec.BU_NAME}}</td>
+		             <td>{{rec.BRANCH_NAME}}</td>
+		             <td>{{rec.MONTH}}</td>
+		             <td>{{rec.EMPLOYEE_NAME}}</td>
+		             <td>{{rec.ALL_NUMBER}}</td>
+		             <td>{{rec.ORDER_NUMBER}}</td>
+		             <td>{{rec.RESCONRATE}}</td>
+					</tr>
+			</tbody>
+		</table>
+		<div class="container-fluid ng-isolate-scope"
+			ng-show="reportData.length <1">
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<div class="no-data"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<div style="margin: 0 auto">暂无数据</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

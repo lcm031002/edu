@@ -1,0 +1,152 @@
+<div ng-controller="erp_orderController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">订单单据</span></div>
+		<div class="panel-body">
+			<div class="searchbar">
+				<rd-branch 
+					ng-bu-id="searchParam.bu_id"
+					ng-branch-id="searchParam.branch_id"
+					ng-value-change="onBranchChange()"
+				></rd-branch>
+				<form class="form-inline">
+					<div class="form-group">
+						业务模式：<select class="form-control" 
+							ng-model="searchParam.business_type"
+							ng-options="businessType.key as businessType.value for businessType in businessTypeList"></select>
+					</div>
+					<div class="form-group">
+						学生：<input type="text" autocomplete="off"  placeholder="可输入学生姓名,编码,手机号" 
+							ng-model="searchParam.student_name" class="form-control" />
+					</div>
+					<div class="form-group">
+						订单：<input type="text" class="form-control" placeholder="可输入订单编号,订单ID"
+							ng-model="searchParam.order_no" autocomplete="off">
+					</div>
+					<button class="btn btn-primary" ng-click="handleQueryOrder()"><i class="iconfont icon-search"></i> 搜索</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<script type="text/ng-template" id="erpTorderModal.html">
+		<div class="modal-header">
+			<h3 class="modal-title">订单详情</h3>
+		</div>
+		<div class="modal-body" style="overflow-x: scroll;">
+			<table class="table table-striped" style="min-width: 1600px;">
+				<thead>
+					<tr>
+						<th>课程</th>
+						<th>原单价</th>
+						<th>原总价</th>
+						<th>现单价</th>
+						<th>现总价</th>
+						<th>折扣金额</th>
+						<th>折扣</th>
+						<th>预结转</th>
+						<th>报班课时</th>
+						<th>剩余课时</th>
+						<th>剩余费用</th>
+						<th>退费标示</th>
+						<th>创建人</th>
+						<th>创建时间</th>
+						<th>修改人</th>
+						<th>修改时间</th>
+					</tr>
+					<tr ng-repeat="orderCouse in orderCourseList" ng-if="orderCourseList && orderCourseList">
+						<td>{{orderCouse.course_name}}</td>
+						<td>{{orderCouse.former_unit_price}}</td>
+						<td>{{orderCouse.former_sum_price}}</td>
+						<td>{{orderCouse.discount_unit_price}}</td>
+						<td>{{orderCouse.discount_sum_price}}</td>
+						<td>{{orderCouse.discount_amount}}</td>
+						<td>{{orderCouse.discount_rate}}</td>
+						<td>{{orderCouse.manage_fee}}</td>
+						<td>{{orderCouse.course_total_count}}</td>
+						<td>{{orderCouse.course_surplus_count}}</td>
+						<td>{{orderCouse.surplus_cost}}</td>
+						<td>{{orderCouse.quit_flag}}</td>
+						<td>{{orderCouse.create_user_name}}</td>
+						<td>{{orderCouse.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+						<td>{{orderCouse.update_user_name}}</td>
+						<td>{{orderCouse.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" ng-click="ok()">确定</button>
+		</div>
+	</script>
+	<!-- Modal -->
+	<script type="text/ng-template" id="CancelTorderModal.html">
+		<div class="modal-header">
+			<h3 class="modal-title">订单作废</h3>
+		</div>
+		<div class="modal-body" style="overflow-x: scroll;">
+			<table class="table table-striped" style="min-width: 800px;">
+				<thead>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">作废原因：</label>
+									<div class="col-sm-10">
+										<textarea class="form-control" rows="4"
+											ng-model="remark"></textarea>
+									</div>
+					</div>
+				</thead>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" ng-click="ok()">确定</button>
+		</div>
+	</script>
+	<div class="table-panel" style="overflow-x: auto;" ng-cloak>
+		<table class="table table-striped" ng-class="{'min-width-1700': orderList && orderList.length}">
+			<thead>
+				<tr>
+					<th width="180">操作</th>
+					<th style="width: 80px;">订单ID</th>
+					<th style="width: 80px;">订单编号</th>
+					<th style="width: 80px;">订单类型</th>
+					<th style="min-width: 150px;">学生</th>
+					<th>总金额</th>
+					<th style="width: 80px;">实际金额</th>
+					<th style="width: 80px;">业务模式</th>
+					<th style="width: 80px;">制单人</th>
+					<th>校区</th>
+					<th>团队</th>
+					<th style="width: 80px;">地区</th>
+					<th style="width: 80px;">发票状态</th>
+					<th style="width: 80px;">创建人</th>
+					<th width="120" style="width: 100px;">创建时间</th>
+					<th style="width: 80px;">审批人</th>
+					<th width="120" style="width: 100px;">审批时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="order in orderList" ng-if="orderList && orderList">
+					<td><span class="cur" ng-click="queryOrderDetail(order.id)"><i class="iconfont text-primary icon-view"></i>详情</span>&nbsp;&nbsp;
+					       <span class="cur" ng-click="handleCancelOrder(order.id)"><i class="iconfont text-danger icon-cancellation"></i>作废</span>&nbsp;&nbsp;
+						   <span class="cur" ng-click="printOrder(order)"><i class="iconfont text-primary icon-print"></i>打印</span>&nbsp;&nbsp;</td>
+					<td>{{order.id}}</td>
+					<td>{{order.order_no}}</td>
+					<td>{{orderType(order.order_type)}}</td>
+					<td>{{order.student_name_id_encoding}}</td>
+					<td>{{order.fee_amount}}</td>
+					<td>{{order.actural_amount}}</td>
+					<td>{{businessType(order.business_type)}}</td>
+					<td>{{order.create_user_name}}</td>
+					<td>{{order.branch_name}}</td>
+					<td>{{order.bu_name}}</td>
+					<td>{{order.city_name}}</td>
+					<td>{{order.invoice_status=='1'?'已开':'未开'}}</td>
+					<td>{{order.create_user_name}}</td>
+					<td>{{order.create_date | date:'yyyy-MM-dd'}}</td>
+					<td>{{order.audit_name || ''}}</td>
+					<td>{{order.audit_date | date:'yyyy-MM-dd'}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<ng-pagination conf="paginationConf" style="background: #fff; padding: 0 20px;"></ng-pagination>
+</div>

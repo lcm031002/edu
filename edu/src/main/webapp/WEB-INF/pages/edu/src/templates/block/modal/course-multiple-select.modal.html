@@ -1,0 +1,100 @@
+<rd-modal class="erp">
+  <rd-modal-title>选择课程</rd-modal-title>
+  <rd-modal-body>
+    <dl class="dl-horizontal course-conditions">
+      <dt>业务线：</dt>
+      <dd>
+        <kl-multi-tags>
+          <a class="condition_item {{business_type == bt.value ?'condition_item_checked':''}}" ng-click="selectBusinessType(bt.value)" ng-repeat="bt in business_types">{{bt.label}}</a>
+        </kl-multi-tags>
+      </dd>
+      <dt>开课校区：</dt>
+      <dd>
+        <kl-multi-tags>
+          <a class="condition_item {{selectedBranch.id== branch.id?'condition_item_checked':''}}" ng-click="selectBranch(branch)" ng-repeat="branch in branchList">{{branch.org_name}}</a>
+        </kl-multi-tags>
+      </dd>
+      <dt>课程季 :</dt>
+      <dd>
+        <kl-multi-tags>
+          <a class="condition_item {{selectedTimeSeason== null?'condition_item_checked':''}}" ng-click="selectSeason(null)">不限</a>
+          <a class="condition_item {{selectedTimeSeason.id== season.id?'condition_item_checked':''}}" ng-click="selectSeason(season)" ng-repeat="season in timeSeasonList">
+                {{season.course_season_name}}
+            </a>
+        </kl-multi-tags>
+      </dd>
+      <dt>年级 :</dt>
+      <dd>
+        <kl-multi-tags>
+          <a class="condition_item {{selectedGrade== null?'condition_item_checked':''}}" ng-click="selectGrade(null)">不限</a> <a class="condition_item {{selectedGrade.id== grade.id?'condition_item_checked':''}}" ng-click="selectGrade(grade)" ng-repeat="grade in gradeList">{{grade.grade_name}}</a>
+        </kl-multi-tags>
+      </dd>
+      <dt>科目 :</dt>
+      <dd>
+        <kl-multi-tags>
+          <a class="condition_item {{selectedSubject== null?'condition_item_checked':''}}" ng-click="selectSubject(null)">不限</a> <a class="condition_item {{selectedSubject.id== subject.id?'condition_item_checked':''}}" ng-click="selectSubject(subject)" ng-repeat="subject in subjectList">{{subject.name}}</a>
+        </kl-multi-tags>
+      </dd>
+    </dl>
+    <table class="table table-striped table-hover table-bordered">
+      <tr>
+        <th>
+          <input type="checkbox" 
+          ng-model="tableConf.selectAll"
+          ng-true-value="true" ng-false-value="false"
+          ng-change="onCheckAllChange()">
+        </th>
+        <th>
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label class="col-sm-2" style="top:5px;">课程</label>
+              <div class="col-sm-10 " style="width:200px;">
+                <input type=text class=form-control placeholder="快速检索课程" ng-change="querySelectingCourse()" id="courseSearchInfo" ng-model="searchInfo">
+              </div>
+            </div>
+          </div>
+        </th>
+        <th>单价</th>
+        <th>课次</th>
+        <th>年段</th>
+        <th>教师</th>
+        <th>操作</th>
+      </tr>
+      <tr ng-repeat="course in toSelectingCourseList" ng-if="toSelectingCourseList && toSelectingCourseList.length" ng-click=checked(course)>
+        <td>
+          <input type="checkbox" 
+            ng-model="course.checked" 
+            ng-true-value="true" ng-false-value="false"
+            ng-change="onCourseCheckedChange(course)">
+        </td>
+        <td ng-click="course.showDetail=!course.showDetail" class="cur">
+          <p><i ng-show="course.showDetail" class="iconfont icon-public_shrink i-text-danger"></i>
+            <i ng-show="!course.showDetail" class="iconfont icon-public_spread i-text-warning"></i> {{course.course_name}}
+          </p>
+          <p ng-show="course.showDetail">{{course.course_no}}</p>
+          <p ng-show="course.showDetail">上课期间：{{course.start_date}}~{{course.end_date}}</p>
+          <p ng-show="course.showDetail">上课时间：{{course.start_time}}~{{course.end_time}}</p>
+        </td>
+        <td>{{course.unit_price}}</td>
+        <td>{{course.course_count}}</td>
+        <td>{{course.grade_name}}</td>
+        <td>{{course.teacher_name}}</td>
+        <td>
+          <button class="btn btn-default" href=javascript:void(0) ng-click=$close([course])><i class="iconfont icon-diandian"></i>添加</button>
+        </td>
+      </tr>
+      <tr ng-if="isQuerySelectingCourse == 'isQuerySelectingCourse'">
+        <td colspan="8" align="center">
+          <img src="img/erp/loading2.gif">
+        </td>
+      </tr>
+      <tr ng-if=!toSelectingCourseList||!toSelectingCourseList.length>
+        <td colspan=8 align=center>没有数据.</td>
+      </tr>
+    </table>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button class="btn btn-default" ng-click="$dismiss()">关闭</button>
+     <button class="btn btn-primary" ng-click="onOk()">确定</button> 
+  </rd-modal-footer>
+</rd-modal>

@@ -1,0 +1,83 @@
+<div class="report" ng-controller="report_surplusAmountFeeController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">剩余课时费用表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <div class="form form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id" ng-branch-id="searchParam.p_branch_id" ng-value-change="onBranchChange()">
+                        <div class="form-group">
+                             学员：
+                            <input type="text" class="form-control" placeholder="请输入学员姓名或编码"
+                                   ng-model="searchParam.p_student_info" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <span class="input-label">业务模式：</span>
+                            <select class="form-control" ng-model="searchParam.p_business_type">
+                                <option value="1">培英班</option>
+                                <option value="2">一对一</option>
+                                <option value="3">晚辅导</option>
+                            </select>  
+                            <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button>
+                            <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                        </div>
+                    </rd-branch>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-stripped min-width-1300">
+            <col width="4%"/>
+            <col width="13%"/>
+            <col width="12%"/>
+            <col width="12%"/>
+            <col width="14%"/>
+            <col width="6%"/>
+            <col width="15%"/>
+            <col width="6%"/>
+            <col width="6%"/>
+            <col width="6%"/>
+            <col width="6%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>报班单号</th>
+                <th>业务校区</th>
+                <th>业绩校区</th>
+                <th>学员编码</th>
+                <th>学员姓名</th>
+                <th>课程名称</th>
+                <th>剩余课时</th>
+                <th>当前单价</th>
+                <th>预结转</th>
+                <th>剩余金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td class="word_break">{{data.order_no}}</td>
+                <td>{{data.branch_name}}</td>
+                <td>{{data.performance_branch_name}}</td>
+                <td class="word_break">{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+                <td>{{data.course_name}}</td>
+                <td>{{data.remain_coursetime}}</td>
+                <td>{{data.unit_price}}</td>
+                <td>{{data.forward_transfer}}</td>
+                <td>{{data.surplus_amount}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

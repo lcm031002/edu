@@ -1,0 +1,98 @@
+<div ng-controller="erp_wfdComboController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">晚辅导套餐</span>
+        </div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="handleAdd()"><i class="iconfont icon-add"></i> 添加</button>
+                <button class="btn btn-primary btn-circle"
+                        ng-click="handleImport()"><i class="iconfont icon-teachers_leadIn"></i>导入</button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <span class="input-label">校区：</span>
+                        <select class="form-control"
+                                ng-model="searchParam.p_branch_id"
+                                ng-options="branch.id as branch.org_name for branch in branchList">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">套餐类型：</span>
+                        <select class="form-control"
+                                ng-model="searchParam.p_combo_type"
+                                ng-options="type.id as type.name for type in comboTypeList">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">套餐名称：</span>
+                        <input type="text" class="form-control" placeholder="可输入套餐名称"
+                               ng-model="searchParam.p_combo_name" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">年级：</span>
+                        <select class="form-control"
+                                ng-model="searchParam.p_grade_id"
+                                ng-options="grade.id as grade.grade_name for grade in gradeList">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" ng-click="handleQuery()"><i class="fa fa-search"></i> 搜索
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>操作</th>
+                <th>套餐名称</th>
+                <th>年级</th>
+                <th>状态</th>
+                <th>套餐类型</th>
+                <th>课次数</th>
+                <th>价格</th>
+                <th>所属校区</th>
+                <th>所属地区</th>
+                <th>创建用户</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td><a href="javascript:void(0);" ng-click="handleUpdate(data)">修改</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0);" ng-click="handleDelete(data)">删除</a></td>
+                <td>{{data.combo_name}}</td>
+                <td>{{data.grade_name}}</td>
+                <td>
+                    <input type="checkbox"
+                           bs-switch
+                           ng-model="data.status"
+                           switch-change="onStatusChange(data)"
+                           ng-true-value="1"
+                           ng-false-value="2"
+                    >
+                </td>
+                <td>{{data.combo_type == 1 ? '月卡' : '次卡'}}</td>
+                <td>{{data.course_count}}</td>
+                <td>{{data.price}}</td>
+                <td>{{data.branch_name}}</td>
+                <td>{{data.city_name}}</td>
+                <td>{{data.create_user_name}}</td>
+                <td>{{data.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+    </div>
+</div>

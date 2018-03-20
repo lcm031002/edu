@@ -1,0 +1,51 @@
+<div class="erp" ng-controller="erp_StudentOrdersYdyController">
+
+    <div class="trend-top-tit">
+        <select class="trend-topt selectMonth"  >
+            <option value="{{item.value}}" ng-repeat="item in selectMonthModel" ng-click="selectMonth(item)">{{item.label}}</option>
+        </select>
+    </div>
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>编码</th>
+                <th>年级</th>
+                <th>报班课时</th>
+                <th>转入</th>
+                <th>转出</th>
+                <th>冻结</th>
+                <th>退费</th>
+                <th>考勤</th>
+                <th>剩余可排课时</th>
+                <th>剩余可用课时</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="isLoading=='isLoading'">
+                <td colspan="11" align="center">
+                    <img src="img/erp/loading2.gif">
+                </td>
+            </tr>
+            <tr  ng-if="isLoading!='isLoading' && (!courseYDYInfoList||!courseYDYInfoList.length)">
+                <td colspan="11" align="center">
+                    无数据.
+                </td>
+            </tr>
+            <tr ng-repeat="courseYDYInfo in courseYDYInfoList" ng-if="isLoading!='isLoading'" >
+                <td>{{courseYDYInfo.course_name}}</td>
+                <td>{{courseYDYInfo.course_no}}</td>
+                <td>{{courseYDYInfo.grade_name}}</td>
+                <td>{{courseYDYInfo.course_total_count}}</td>
+                <td>{{courseYDYInfo.change_in}}</td>
+                <td>{{courseYDYInfo.change_out}}</td>
+                <td>{{courseYDYInfo.course_lock}}</td>
+                <td>{{courseYDYInfo.course_quit_times}}</td>
+                <td>{{courseYDYInfo.course_attend_times}}</td>
+                <td>{{courseYDYInfo.course_cnt}}</td>
+                <td>{{courseYDYInfo.course_surplus_count}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-pagination conf="paginationConf"></ng-pagination>
+</div>

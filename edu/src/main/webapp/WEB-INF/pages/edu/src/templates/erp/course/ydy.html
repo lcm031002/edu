@@ -1,0 +1,200 @@
+<div ng-controller="erp_courseYdyController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">1对1课程</span></div>
+        <div class="panel-body operation-panel">
+
+            <div class="searchbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        校区：<select class="form-control"
+                                   ng-model="searchParam.branch_id"
+                                   ng-options="branch.id as branch.org_name for branch in branchList">
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        状态：<select class="form-control"
+                                   ng-model="searchParam.status"
+                                   ng-options="status.id as status.name for status in statusList">
+                        <option value="">-- 全部 --</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        年级：<select class="form-control"
+                                   ng-model="searchParam.grade_id"
+                                   ng-options="grade.id as grade.grade_name for grade in gradeList">
+                        <option value="">-- 全部 --</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        课程：<input type="text" class="form-control" placeholder="可输入课程编码,课程名称,课程ID"
+                                  ng-model="searchParam.course_name" autocomplete="off">
+                    </div>
+                    <button class="btn btn-primary" ng-click="query()">搜索</button>
+                </form>
+            </div>
+            <hr>
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle"
+                        ng-click="addCourse()">
+                    <i class="iconfont icon-add"></i>添加
+                </button>
+                <button class="btn btn-primary btn-circle"
+                        ng-click="batchChangeStatus(1)">
+                    <i class="iconfont icon-operation_shelve"></i>上架
+                </button>
+                <button class="btn btn-primary btn-circle"
+                        ng-click="batchChangeStatus(2)">
+                    <i class="iconfont icon-operation_off-shelve"></i>下架
+                </button>
+                <button class="btn btn-primary btn-circle"
+                        ng-click="handleImportClass()">
+                    <i class="iconfont icon-teachers_leadIn"></i>导入
+                </button>
+                <button class="btn btn-primary btn-circle"
+                        ng-click="batchChangeStatus(0)">
+                    <i class="iconfont icon-delete"></i>删除
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <div class="ov-a">
+            <table class="table table-striped min-width-1500">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" ng-model="selectAllFlag">
+                        </th>
+                        <th width="55">操作</th>
+                        <th width="80">ID</th>
+                        <th width="190">名称</th>
+                        <th width="100">编码</th>
+                        <th>校区</th>
+                        <th width="80">年级</th>
+                        <th width="80">状态</th>
+                        <th width="95">创建时间</th>
+                        <th width="95">修改时间</th>
+                        <th width="95">单价</th>
+                        <th width="95">开课日期</th>
+                        <th width="95">结课日期</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="course in courseList"
+                    ng-if="!loadStatues && courseList && courseList.length">
+                    <th><input type="checkbox" ng-model="course.selectItemFlag"></th>
+                    <td><a href="javascript:void(0);"
+                           ng-click="updateCourse(course)">修改</a>&nbsp;&nbsp;</td>
+                    <td>{{course.id}}</td>
+                    <td>{{course.course_name}}</td>
+                    <td>{{course.course_no}}</td>
+                    <td>{{course.is_all==1 ? '所有校区':course.branch_names}}</td>
+                    <td>{{course.grade_name}}</td>
+                    <td>
+                        <input type="checkbox"
+                               bs-switch
+                               ng-model="course.status"
+                               ng-true-value="1"
+                               ng-false-value="2"
+                               switch-change="onStatusChange(course)"
+                        >
+                    </td>
+                    <td>{{course.create_time | date :'yyyy-MM-dd'}}</td>
+                    <td>{{course.update_time | date :'yyyy-MM-dd'}}</td>
+                    <td>{{course.unit_price}}</td>
+                    <td>{{course.start_date}}</td>
+                    <td>{{course.end_date}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+
+    </div>
+    <script type="text/ng-template" id="ydy_modal.html">
+        <rd-modal>
+            <rd-modal-title>一对一课程{{optype}}</rd-modal-title>
+            <rd-modal-body>
+                <form class="form-horizontal">
+                    <div class="hide">
+                        <input type="text" ng-model='courseDetail.id'>
+                    </div>
+                    <div class="form-group-inline">
+                        <label class="col-sm-2 control-label ">课程编码：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model='courseDetail.course_no' ng-readonly="true">
+                        </div>
+                        <label class="col-sm-2 control-label required" >课程名称：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="courseDetail.course_name" required
+                                   ng-required/>
+                        </div>
+                        <label class="col-sm-2 control-label required" >年级：</label>
+                        <div class="col-sm-4">
+                            <select class=form-control ng-model="courseDetail.grade_id"
+                                    ng-options="grade.id as grade.grade_name for grade in gradeList"></select>
+                        </div>
+                        <label class="col-sm-2 control-label required" >单价：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="courseDetail.unit_price">
+                        </div>
+                        <label class="col-sm-2 control-label required" >开课日期：</label>
+                        <div class="col-sm-4">
+                            <rd-date-picker-popup ng-model="courseDetail.start_date"></rd-date-picker-popup>
+                        </div>
+                        <label class="col-sm-2 control-label required">结课日期：</label>
+                        <div class="col-sm-4">
+                            <rd-date-picker-popup ng-model="courseDetail.end_date"></rd-date-picker-popup>
+                        </div>
+                        <label class="col-sm-2 control-label required">课时长度(分钟)：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="courseDetail.hour_len" required
+                                   ng-required/>
+                        </div>
+                        <label class="col-sm-2 control-label">销售类型：</label>
+                        <div class="col-sm-4">
+                            <select class=form-control ng-model="courseDetail.product_type"
+                                    ng-options="product.product_type as product.product_type_name for product in productTypeList"></select>
+                        </div>
+                        <label class="col-sm-2 control-label">是否应用所有校区：</label>
+                        <div class="col-sm-4">
+                            <select class=form-control ng-model="courseDetail.is_all"
+                                    ng-options="(+isAll.id) as isAll.name for isAll in isAllList"></select>
+                        </div>
+                    </div>
+                    <div class="table-panel ov-a" style="max-height:250px;" ng-hide="courseDetail.is_all">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><input type="checkbox" ng-click="switchSelectAll($event)"></th>
+                                <th > <label class=" required">校区</label></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="branch in relationBranchList"
+                                ng-show="relationBranchList && relationBranchList.length">
+                                <td><input type="checkbox" ng-model="branch.selectFlag"></td>
+                                <td>{{branch.org_name}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row form-horizontal mt15">
+                        <label class="col-sm-2 control-label">描述：</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" ng-model="courseDetail.description"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </rd-modal-body>
+            <rd-modal-footer>
+                <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+                <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+            </rd-modal-footer>
+        </rd-modal>
+    </script>
+
+</div>

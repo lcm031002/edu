@@ -1,0 +1,618 @@
+<div class="erp student basic-info" ng-controller="erp_studentCenterInfoController">
+
+    <div class="table-panel">
+        <div class="pull-left text-center mr20">
+            <div class="avatar">
+                <a href="#/student/{{studentId}}">
+                    <img src="{{student.head_pic?student.head_pic:'img/erp/student-default.png'}}" />
+                </a>
+            </div>
+            <button class="btn btn-warning mt10" ng-click="showUploadModal()">修改头像</button>
+        </div>
+        <div class="form form-inline mt20">
+            <p>
+                <span>姓名：</span>
+                <span ng-hide="dis_student_name">{{student.student_name}}</span>
+                <span class="ml70">咨询师：</span>
+                <span>{{!studentIndexCounselors.CONSULTANT_NAME?"未指定":studentIndexCounselors.CONSULTANT_NAME}}</span>
+                <span class="text-primary ml20">
+          <i class="iconfont icon-modify"></i>
+          <a href="#/studentMgr/studentMgrConsultingtube" target="_blank">修改</a>
+        </span>
+                <span class="ml70">学管师：</span>
+                <span>{{!studentIndexCounselors.LEARNINGMGR_NAME?"未指定":studentIndexCounselors.LEARNINGMGR_NAME}}</span>
+                <span class="text-primary cur ml20">
+          <i class="iconfont icon-modify"></i>
+          <a href="#/studentMgr/studentMgrConsultingtube" target="_blank">修改</a>
+        </span>
+            </p>
+            <p>
+                <span>学员编号：</span><span>{{student.encoding}}</span>
+                <span class="ml20">APP登录名：</span><span>{{student.login_no}}</span>
+                <span class="ml20">校区：</span><span>{{student.branch_name}}</span>
+            </p>
+            <p>
+                <span>等级积分：</span><span class="text-warning">{{student.integral?student.integral:0}}</span>分
+                <span class="ml20"><a href="javascript:void(0)" ng-click="queryReferenceStudentHt(student.id)">历史推荐人</a></span>
+                <span class="ml20"><a href="javascript:void(0)" ng-click="showRecorderModal(student.id)">报备人</a></span>
+            </p>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="table-panel mt20 detail-info">
+        <dl class="dl-horizontal" ng-hide="disModifyDetail">
+            <dt>
+                <span class="text-primary cur ml70" ng-click="showModifyDetail()">
+                    <i class="iconfont icon-modify"></i> 修改
+                </span>
+            </dt>
+            <dd>
+                <div class="text-primary cur text-center width-200 fl" ng-click="synToDouble(student)">
+                    <i class="iconfont icon-modify"></i> 同步双师
+                </div>
+                <span class="text-primary cur ml10" ng-click="resetPasswordDouble(student)">
+                    <i class="iconfont icon-modify"></i> 重置密码
+                </span>
+            </dd>
+            <dt>姓名：</dt>
+            <dd>
+                <div class="width-200 fl">{{student.student_name}}</div>
+                <span class="text-primary cur ml10" ng-click="showNameRecordModal(student.id)">姓名修改记录</span>
+            </dd>
+            <dt>性别：</dt>
+            <dd>{{student.sex_name}}</dd>
+            <dt>生日：</dt>
+            <dd>{{student.birthday}}</dd>
+            <dt>就读学校：</dt>
+            <dd>{{student.attend_school_name}}</dd>
+            <dt>年级：</dt>
+            <dd>
+                <div class="width-200 fl">{{student.grade_name}}</div>
+                <span class="text-primary cur ml10" ng-click="showGradeRecordModal(student.id)">年级修改记录</span>
+            </dd>
+            <dt>学习状态：</dt>
+            <dd>
+                <select ng-disabled="true" ng-model="student.student_status" ng-options="student_status.code as student_status.name for student_status in StudentStatusList"></select>
+                <span class="text-primary cur ml10" style="padding-left: 113px" ng-click="showStatusRecordModal(student.id)">状态修改记录</span>
+            </dd>
+            <dt>推荐人：</dt>
+            <dd>{{student.referrals?student.referrals:'无'}}</dd>
+            <dt>所属地区：</dt>
+            <dd>{{student.city_name}}</dd>
+            <dt>家庭住址：</dt>
+            <dd>{{student.address || '未填写'}}</dd>
+            <dt>邮箱：</dt>
+            <dd>{{student.email || '未填写'}}</dd>
+            <dt>QQ：</dt>
+            <dd>{{student.qq || '未填写'}}</dd>
+            <dt>同步双师状态：</dt>
+            <dd>{{student.syn_exception||'未同步'}}</dd>
+        </dl>
+        <div class="form detail-info modify-detail" ng-show="disModifyDetail">
+            <dl class="dl-horizontal">
+                <dt>姓名：</dt>
+                <dd>
+                    <input class="form-control" type="text" ng-model="studentCopy.student_name">
+                </dd>
+                <dt>性别：</dt>
+                <dd>
+                    <select class="form-control" ng-model="studentCopy.sex" ng-options="sex.value as sex.label for sex in SexList"></select>
+                </dd>
+                <dt>生日：</dt>
+                <dd>
+                    <rd-date-picker-popup ng-model="studentCopy.birthday"></rd-date-picker-popup>
+                </dd>
+                <dt>就读学校：</dt>
+                <dd>
+                    <div class="pos-r">
+                        <input class="form-control" type="text" name="school" placeholder="输入要查询的学校" ng-model="selectedInfo.school" uib-typeahead="school as school.school_name for school in getSchools($viewValue)" typeahead-loading="loadingSchools" typeahead-no-results="schoolNoResults"
+                            required>
+                        <i class="iconfont icon-search form-control-feedback"></i>
+                        <div>
+                            <i ng-show="loadingSchools" class="glyphicon glyphicon-refresh text-primary"></i>
+                            <span ng-show="schoolNoResults " class="text-warning">
+                <i class="glyphicon glyphicon-remove text-warning"></i> 查询不到对应的学校
+              </span>
+                            <div class="text-warning" ng-messages="studentForm.school.$error" ng-if="studentForm.school.$touched">
+                                <p ng-message="required">学校必填</p>
+                            </div>
+                        </div>
+                    </div>
+                </dd>
+                <dt>年级：</dt>
+                <dd>
+                    <div class="pos-r">
+                        <input class="form-control" type="text" name="grade" placeholder="输入要查询的年级" ng-model="selectedInfo.grade" typeahead-loading="loadingGrades" typeahead-no-results="gradeNoResults" uib-typeahead="grade as grade.grade_name for grade in getGrades($viewValue)"
+                            required>
+                        <i class="iconfont icon-search form-control-feedback"></i>
+                        <div>
+                            <i ng-show="loadingGrades" class="glyphicon glyphicon-refresh text-primary"></i>
+                            <span ng-show="gradeNoResults" class="text-warning">
+                <i class="glyphicon glyphicon-remove text-warning" ></i>查询不到对应的年级
+              </span>
+                            <div class="text-warning" ng-messages="studentForm.grade.$error" ng-if="studentForm.grade.$touched">
+                                <p ng-message="required">年级必填</p>
+                            </div>
+                        </div>
+                    </div>
+                </dd>
+
+                <dt>推荐人：</dt>
+                <dd>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="recommend" ng-model="studentCopy.recommender" placeholder="请输入推荐学员名称" typeahead-loading="loadingRecommender" typeahead-select-on-blur="true" typeahead-no-results="recommenderNoResults" uib-typeahead="recommender as recommender.studentShortInfo for recommender in getRecommender($viewValue)">
+                        <i class="iconfont icon-search form-control-feedback"></i>
+                    </div>
+                </dd>
+                <dt>学习状态：</dt>
+                <dd>
+                    <select class="form-control" ng-model="studentCopy.student_status" ng-options="student_status.code as student_status.name for student_status in StudentStatusList"></select></dd>
+                <dt>所属地区：</dt>
+                <dd>{{studentCopy.city_name}}</dd>
+                <dt>家庭住址：</dt>
+                <dd>
+                    <textarea class="form-control" ng-model="studentCopy.address" cols="30" rows="4"></textarea>
+                </dd>
+                <dt>邮箱：</dt>
+                <dd><input class="form-control" type="text" ng-model="studentCopy.email"></dd>
+                <dt>QQ：</dt>
+                <dd><input class="form-control" type="text" ng-model="studentCopy.qq"></dd>
+                <dd>
+                    <button class="btn btn-primary mr20" ng-click="saveModifyDetail()" ng-disabled="saveCtrl">确定</button>
+                    <button class="btn btn-default" ng-click="cancelModifyDetail()">取消</button>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+
+    <div ng-if="tabPanel == 'weChat'">
+        <table border="0" width="550" style="margin-top:20px;">
+            <tr>
+                <td>&nbsp;</td>
+                <td width="180">
+                    <div style="float:left">
+                        <img src="img/erp/logo.png" width="42" height="39" />
+                    </div>
+                    <div class="title">微信扫描二维码</div>
+                </td>
+                <td>
+                    <span class="cur bar-btn btn-download" title="下载二维码图片" ng-click="downloadQr()">
+            <span class="b-before"></span>下载
+                    <i></i>
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <table border="0" width="350">
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <a href="{{qrSrc}}" target="_blank">
+                        <img ng-src="{{qrSrc}}" id="qrImg" style="width:320px;height:320px;" class="cur" hidefocus="true" />
+                    </a>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div class="cz-window cz-win" style="display: none; top: 20px; border-color: #000093; overflow: auto;" id="studentInfoDialog" data-ng-init="initStudentInfoDialog()">
+        <div class="cz-window-tit bd">
+            <span class="yellow-num ml10 fl">修改图像</span> <i class="cz-window-close mt10 mr10 fr" ng-click="closeStudentInfoDialog()"></i>
+        </div>
+        <script type="text/javascript">
+            function savePicUrl(imgPath) {
+                var student_id = $('#_student_id').val();
+                if (isEmpty(student_id) || isEmpty(imgPath)) {
+                    alert("学生编号/路径为空, 无法修改");
+                    return;
+                }
+                var obj = {};
+                obj.student_id = student_id;
+                obj.head_pic = imgPath;
+                toolAjax(genWebContext() + "/web/studentManager/studentInfo/toUpdateHeadPic",
+                    'post', obj, savePicUrlCallBack, 'json');
+            }
+
+            function savePicUrlCallBack(data) {
+                if (data.status == 0) {
+                    alert("修改失败:" + data.errMsg);
+                    return;
+                }
+                $('div#studentInfoDialog').hide(0);
+                window.location.reload();
+            }
+        </script>
+        <input type="hidden" id="_student_id" />
+        <iframe style="margin: 0; display: block" frameborder="0" scrolling="no" width="99%" height="90%" id="pic"> </iframe>
+    </div>
+    <!-- 输入验证码 -->
+    <style ng-if="openDialog == 'open.dialog.verifyCode'">
+        .openDialog-window {
+            width: 472px;
+            height: auto;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            position: fixed;
+            left: 35%;
+            top: 35%;
+            z-index: 1000;
+            background: #fff;
+            -webkit-box-shadow: #666 0px 0px 10px;
+            -moz-box-shadow: #666 0px 0px 10px;
+            box-shadow: #666 0px 0px 10px;
+        }
+    </style>
+    <div ng-click="closeVerifyCode()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);" ng-if="openDialog == 'open.dialog.verifyCode'"></div>
+    <div class="openDialog-window" ng-if="openDialog == 'open.dialog.verifyCode'">
+        <div class="window-tit">
+            <span class="ml10 fl">提示: 短息已发,请输入验证码！</span>
+            <i class="cz-window-close mt10 mr10 fr" ng-click="closeVerifyCode()"></i>
+        </div>
+        <form class="window-content">
+            <div class="con-list cl">
+                <span class="fw ml20 dp fl"> 验证码</span>：
+                <input type="text" ng-model="student.input_verify_code" required />
+                <div class="window-btn" style="display: inline;">
+                    <span ng-hide="student.verify_resend">请在[<font style="color: red;">{{student.verify_time}}</font>]秒内输入验证码!</span>
+                    <a class="window-btn-resetbd ml10 cur" ng-show="student.verify_resend">
+                        <span class="window-btn-reset" ng-click="showVerifyPhone()">重发</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+        <div class="window-btn" align="center">
+            <a class="btn btn-default" href="javascript:void(0);" ng-click="verifyPhone()">
+                <span class="window-btn-send">确认</span>
+            </a>
+        </div>
+    </div>
+    <!-- start 学员历史推荐人查询框 -->
+    <div>
+        <div class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" id="reference_student_ht_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">学员历史推荐人</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>推荐人</th>
+                                        <th>操作人</th>
+                                        <th>操作时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="student in referenceStudentList" ng-if="referenceStudentList && referenceStudentList.length">
+                                        <td>{{student.reference_student_name?student.reference_student_name:'无'}}</td>
+                                        <td>{{student.operator}}</td>
+                                        <td>{{student.create_time | date :'yyyy-MM-dd HH:mm'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- end 学员历史推荐人查询框 -->
+    <!-- start 学员报备人查询框 -->
+    <div>
+        <div class="modal fade klxx-modal-primary" style="z-index:1049" tabindex="-1" 
+          role="dialog" id="student_recorder_modal" data-backdrop="static">
+            <style>
+                .klxx.modal-open>.modal {
+                    top: 150px;
+                }
+            </style>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">学员报备人</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-primary" style="margin-bottom: 10px;">
+                            <div class="panel-body">
+                                <div class="toolbar">
+
+                                    <div class="row" ng-if="!studentRecorderList || !studentRecorderList.length">
+                                        <div class="col-sm-2"><span>生效日期：</span></div>
+                                        <rd-date-picker-popup class="col-sm-7" ng-model="recorderStartDate.val"></rd-date-picker-popup>
+                                        <div class="col-sm-5"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2"><span>报备人：</span></div>
+                                        <div class="col-sm-7">
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="recorder" ng-model="recorder" placeholder="请输入报备人名称" typeahead-loading="loadingRecorder" typeahead-select-on-blur="true" typeahead-no-results="recorderNoResults" uib-typeahead="recorder as recorder.RECORDERINFO for recorder in getRecorderList($viewValue)">
+                                                <i class="iconfont icon-search form-control-feedback"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button type="button" class="btn btn-default btn-primary" ng-click="addRecorder()">添加报备人</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>用户名</th>
+                                        <th>姓名</th>
+                                        <th>生效时间</th>
+                                        <th>失效时间</th>
+                                        <th>添加时间</th>
+                                        <th>创建用户</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="studentRecorder in studentRecorderList" ng-if="studentRecorderList && studentRecorderList.length">
+                                        <td>{{studentRecorder.username}}</td>
+                                        <td>{{studentRecorder.employeeName}}</td>
+                                        <td>{{studentRecorder.startDate | date :'yyyy-MM-dd'}}</td>
+                                        <td>{{studentRecorder.endDate | date :'yyyy-MM-dd'}}</td>
+                                        <td>{{studentRecorder.createTime | date :'yyyy-MM-dd HH:mm'}}</td>
+                                        <td>{{studentRecorder.createUserName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <ng-pagination conf="recorderPaginationConf"></ng-pagination>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- end 学员报备人查询框 -->
+    <!-- start 学员姓名修改记录 -->
+    <div>
+        <div class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" id="name_record_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">学员姓名修改记录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>原学员姓名</th>
+                                        <th>现学员姓名</th>
+                                        <th>操作人</th>
+                                        <th>操作时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="!(studentNameRecorderList && studentNameRecorderList.length)">
+                                        <td colspan="4" align="center">
+                                            <div class="no-data"></div>
+                                            暂无数据.
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="student in studentNameRecorderList" ng-if="studentNameRecorderList && studentNameRecorderList.length">
+                                        <td>{{student.originalStudentName}}</td>
+                                        <td>{{student.studentName}}</td>
+                                        <td>{{student.operatorName}}</td>
+                                        <td>{{student.updateTime}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- end 学员姓名修改记录 -->
+    <!-- start 学员年级修改记录 -->
+    <div>
+        <div class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" id="grade_record_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">学员年级修改记录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>原学员年级</th>
+                                        <th>现学员年级</th>
+                                        <th>操作人</th>
+                                        <th>操作时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="!(studentGradeRecorderList && studentGradeRecorderList.length)">
+                                        <td colspan="4" align="center">
+                                            <div class="no-data"></div>
+                                            暂无数据.
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="student in studentGradeRecorderList" ng-if="studentGradeRecorderList && studentGradeRecorderList.length">
+                                        <td>{{student.originalStudentGrade}}</td>
+                                        <td>{{student.studentGrade}}</td>
+                                        <td>{{student.operatorName}}</td>
+                                        <td>{{student.updateTime}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- end 学员年级修改记录 -->
+    <!--start 学员状态修改记录-->
+    <div>
+        <div class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" id="status_record_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">学员状态修改记录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>变更前</th>
+                                    <th>变更后</th>
+                                    <th>操作人</th>
+                                    <th>操作时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-if="!(studentStatusRecorderList && studentStatusRecorderList.length)">
+                                    <td colspan="4" align="center">
+                                        <div class="no-data"></div>
+                                        暂无数据.
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="student in studentStatusRecorderList" ng-if="studentStatusRecorderList && studentStatusRecorderList.length">
+                                    <td>{{student.beforeStatusName}}</td>
+                                    <td>{{student.afterStatusName}}</td>
+                                    <td>{{student.updateUserName}}</td>
+                                    <td>{{student.updateTime}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!--end 学员状态修改记录-->
+    <!--
+  <div class="con-tit">
+    <div class="fr">
+      <span class=""><a
+        href="javascript:void(0);" ng-click="selectPanel('basicInfo')">基本信息</a></span> <em
+        class="ml5">|</em> <span class="blue-detail ml5"><a
+        href="javascript:void(0);"  ng-click="selectPanel('weChat')">二维码</a></span>
+    </div>
+  </div> 
+  <div ng-if="tabPanel == 'basicInfo'" class="con-bd con-bg1 mt15">
+    <div class="con-pd">
+      <div class="person-photo fl">
+        <div class="photo-c">
+          <a href="#/student/{{studentId}}"><img src="{{student.head_pic?student.head_pic:'img/erp/student01.jpg'}}" /></a>
+        </div>
+        <div class="photo-btn mt10 cur" ng-click="updateHead()">修改头像</div>
+      </div>
+      <div class="person-info fl ml20">
+        <div class="info-c">
+          <div class="info-c1 fl">
+            <span>姓名：</span> <span class="info-name fw" ng-hide="dis_student_name">{{student.student_name}}</span>
+            <input class="info-namec" type="text" ng-model="student._student_name" ng-show="dis_student_name" ng-change="actionSwitch(act_student_name, 'student_name')" /> <span class="blue-detail ml20" ng-click="operStudentInfo(act_student_name, 'student_name')">{{act_student_name}}</span>
+          </div>
+          <div class="info-c1 ml90 fl">
+            <span>性别：</span> <span class="info-name fw" ng-hide="dis_sex">{{student.sex_name}}</span>
+            <select class="info-namec" ng-model="student._sex" ng-show="dis_sex" ng-change="actionSwitch(act_sex, 'sex')" ng-options="sex.value as sex.label for sex in SexList"></select>
+            <span class="blue-detail ml20" ng-click="operStudentInfo(act_sex, 'sex')">{{act_sex}}</span>
+          </div>
+          <div class="ml90 fl">
+            <span>出生年月：</span> <span class="fw" ng-hide="dis_birthday" style="width: 80px; line-height: 16px;">{{student.birthday}}</span>
+            <input type="text" id="student_birthday" ng-show="dis_birthday" value="{{student.birthday}}" class="trend-toptc" style="width: 60px; line-height: 16px; height: 16px;" onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd',readOnly:true})" />
+            <span class="blue-detail ml20" ng-click="operStudentInfo(act_birthday, 'birthday')">{{act_birthday}}</span>
+          </div>
+        </div>
+        <div class="info-c mt15 cl  fl">
+          <span>学员编号：</span><span class="fw">{{student.encoding}}</span>
+        </div>
+        <div class="info-c mt15 pt cl fl">
+          <span class="fl">等级积分：</span>
+          <span class="green-color fw ml10 fl">
+            {{student.integral?student.integral:0}}</span> <span class="fl">分</span>
+          <i class="level-ico dp ml5 fl"></i>
+        </div>
+        <div class="info-c mt15 cl fl">
+          <span>学管师：</span> <span class="fw">{{student.govern.name}}</span> <span class="blue-detail ml20"><a
+            href="#/studentMgr/studentMgrConsultingtube" target="_blank">修改</a></span>
+          <span class="ml70">咨询师：</span> <span class="fw">{{student.counselor.name}}
+          </span><span class="blue-detail ml20"><a
+            href="#/studentMgr/studentMgrConsultingtube" target="_blank">修改</a></span>
+        </div>
+      </div>
+      <div class="cl"></div>
+    </div>
+  </div>
+  <div ng-if="tabPanel == 'basicInfo'" class="con-bd bd-top-none">
+    <p class="contact-list con-bg1" id="p_attend_school">
+      <span class="list-left fw ml20 dp fl">就读学校：</span>
+      <input type="text" ng-model="student._attend_school" ng-change="actionSwitch(act_attend_school, 'attend_school')" />
+      <div ng-hide="!dis_school" style="background: #fff; margin-left: 220px; position: absolute; height: 150px; z-index: 1000; overflow-x: hidden; overflow-y: scroll; width: 150px; margin-top: -10px;">
+        <a style="display: block;" ng-repeat="school in schoolResult" href="javascript:void(0)" ng-click="selectSchool(school)">{{school.school_name}}</a>
+      </div>
+    </p>
+    <p class="contact-list con-bg2 asswitch">
+      <span class="list-left fw ml20 dp fl">年级：</span>
+      <input ng-model="student._grade" ng-change="actionSwitch(act_grade, 'grade')" />
+      <div ng-hide="!dis_gradeResult" style="background: #fff; margin-left: 220px; position: absolute; height: 150px; z-index: 1000; overflow-x: hidden; overflow-y: scroll; width: 150px; margin-top: -10px;">
+        <a style="display: block;" ng-repeat="grade in gradeResult" href="javascript:void(0)" ng-click="selectGrade(grade)">{{grade.grade_name}}</a>
+      </div>
+    </p>
+    <p class="contact-list con-bg1 asswitch">
+      <span class="list-left fw ml20 dp fl">学习状态：</span>
+      <select ng-model="student.student_status" ng-options="student_status.value as student_status.label for student_status in StudentStatusList"></select>
+    </p>
+    <p class="contact-list con-bg2 asswitch">
+      <span class="list-left fw ml20 dp fl">所属地区：</span>
+      <select ng-model="student.city_id" ng-options="city.id as city.org_name for city in cityResult"></select>
+    </p>
+    <p class="contact-list con-bg1 asswitch">
+      <span class="list-left fw ml20 dp fl">家庭住址：</span>
+      <input type="text" style="width: 250px" ng-model="student.address" />
+    </p>
+    <p class="contact-list con-bg2 asswitch">
+      <span class="list-left fw ml20 dp fl"></span>
+      <input type="button" style="width: 100px" ng-click="saveStudent()" value="保存" />
+    </p>
+  </div>
+  -->

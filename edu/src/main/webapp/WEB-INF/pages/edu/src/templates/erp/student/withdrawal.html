@@ -1,0 +1,101 @@
+<rd-modal>
+  <rd-modal-title>账户取款</rd-modal-title>
+  <rd-modal-body>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">当前团队：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" ng-model="withDrawalInfo.bu_name" ng-readonly="true" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">学员姓名：</label>
+        <div class="col-sm-4">
+          <div class="input-group  btn-group">
+            <input type="text" class="form-control" ng-model="withDrawalInfo.student_name" ng-readonly="true" />
+            <span class="input-group-btn  dropdown-toggle" data-toggle="dropdown">
+              <button class="btn btn-default" type="button" ng-if="isRefundWithDraw != 'true'">
+                  <i class="fa fa-search"></i>
+              </button>
+            </span>
+            <div class="dropdown-menu pull-right" role="menu" style="padding: 10px;">
+              <div align="center" style="margin-bottom: 15px;">
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="queryParam.search_info" ng-change="changeSearchInfo()" />
+                </div>
+              </div>
+              <div  style="height: 320px; overflow-x: hidden; overflow-y: scroll;">
+
+                <table class="table table-hover">
+                  <tr ng-repeat="student in queryParam.studentList" ng-if="isLoadingStudentList != 'isLoadingStudentList' && queryParam.studentList && queryParam.studentList.length">
+                    <td ng-click="selectStudent(student)">{{student.student_name}}，{{student.encoding}}<span ng-if="student.phone">，手机号：{{student.phone}}</span></td>
+                  </tr>
+                  <tr ng-if="isLoadingStudentList != 'isLoadingStudentList' && (!queryParam.studentList || !queryParam.studentList.length)">
+                    <td style="text-align: center;">没有找到学生.</td>
+                  </tr>
+                  <tr ng-if="isLoadingStudentList == 'isLoadingStudentList'">
+                    <td align="center"><img src="img/erp/loading2.gif"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label class="col-sm-2 control-label">学员编码：</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="withDrawalInfo.student_encoding" title="{{withDrawalInfo.student_encoding}}" ng-readonly="true" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">账户类型：</label>
+        <div class="col-sm-4">
+          <select class="form-control" ng-model="withDrawalInfo.accountType" ng-options="accountType.id as accountType.name for accountType in accountType_list" ng-change="changeAccountType()" ng-disabled="{{isRefundWithDraw}}"></select>
+        </div>
+        <label class="col-sm-2 control-label">账户余额：</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="studentAccount.money" ng-readonly="true" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">退费单据：</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" ng-model="withDrawalInfo.encoding" ng-change="queryRefundInfo()" ng-disabled="withDrawalInfo.accountType==2 || withDrawalInfo.accountType==3"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">取款方式：</label>
+        <div class="col-sm-4">
+          <select class="form-control" ng-model="withDrawalInfo.pay_mode" ng-options="payMode.id as payMode.name for payMode in payMode_list"  ng-change="payModeFunc()"></select>
+        </div>
+        <label class="col-sm-2 control-label" ng-show="isShow">卡号：</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="withDrawalInfo.student_card"  ng-show="isShow">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">金额：</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="withDrawalInfo.fee_amount" ng-readonly="{{isRefundWithDraw}}" />
+        </div>
+        <label class="col-sm-2 control-label">手续费：</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="withDrawalInfo.moneyfee" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">备注：</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" rows="4" ng-model="withDrawalInfo.remark"></textarea>
+        </div>
+      </div>
+      <!-- 
+      <div class="text-center text-danger" ng-if="withDrawalInfo.accountType == 3 && isRefundWithDraw == 'false'">
+        <span>提示：退费账户取款请到【财务管理-退费单据】操作。</span>
+      </div>
+       -->
+    </form>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">提交</button>
+  </rd-modal-footer>
+</rd-modal>

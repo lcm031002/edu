@@ -1,0 +1,101 @@
+<div class="nav" ng-controller="LeftNavCtrl" ng-if="curSystem!=null">
+    <div class="navbar_title" ng-if="!student">
+        <i class="{{curSystem.icon}}"></i> {{curSystem.name}}
+        <!--<a href="javascript:void(0)" ng-click="">厦门XXXXXX公司 <i class="fa fa-caret-square-o-down"></i></a>-->
+        <i class="fa fa-angle-double-right cur nav_arrow pull-right" 
+            ng-if="isNavDown==false" ng-click="downNav()"></i>
+        <i class="fa fa-angle-double-down cur nav_arrow pull-right" 
+            ng-if="isNavDown==true" ng-click="downNav()"></i>
+    </div>
+
+    <div class="navbar_title" ng-if="student">
+        <i class="{{curSystem.icon}}"></i> {{student.student_name}}
+        <!--<a href="javascript:void(0)" ng-click="">厦门XXXXXX公司 <i class="fa fa-caret-square-o-down"></i></a>-->
+        <i class="fa fa-angle-double-right cur nav_arrow pull-right" ng-if="isNavDown==false" ng-click="downNav()"></i>
+        <i class="fa fa-angle-double-down cur nav_arrow pull-right" ng-if="isNavDown==true" ng-click="downNav()"></i>
+    </div>
+
+    <div class="navbar-subject-grade" style="text-align: center; border-bottom: 1px solid #f2f2f2;" ng-show="curSystem.value === 'questionBankMgr'">
+        <select ng-model="selectedSubject" ng-options="subject.id as subject.valueName for subject in subjectList" class="m5 w-150 form-control input-sm"></select>
+         <select ng-model="selectedGrade" ng-options="grade.id as grade.gradeName for grade in gradeList" class="m5 w-150 form-control input-sm"></select>
+    </div>
+    <!--在响应式设计里边，小屏幕设备展示的效果-->
+    <div class="nav_body_min" ng-if="isNavDown==true">
+        <nav class="navi ng-scope">
+            <ul class="nav ng-scope">
+                <li class="line dk"></li>
+                <li class="{{(leftNavMenu.active=='true'|| curNavSystem.key==leftNavMenu.key)?'active nav_active':''}} {{leftNavMenu.type=='line'?'line dk hidden-folded':''}} {{leftNavMenu.open?'navopen':''}} " ng-repeat="leftNavMenu in curSystem.menus" ng-show="leftNavMenu.showMenu!='false'">
+                    <a href="" class="auto" ng-if="leftNavMenu.type!='line'" ng-click="selectNav(leftNavMenu)">
+                       <span class="pull-right text-muted">
+                            <i class="fa fa-fw fa-angle-right text" ng-if="!leftNavMenu.open"></i>
+                            <i class="fa fa-fw fa-angle-down text-active" ng-if="leftNavMenu.open"></i>
+                        </span>
+                        <i class="{{leftNavMenu.icon}}"></i>
+                        <span class="ng-scope" translate="aside.nav.DASHBOARD">{{leftNavMenu.name}}</span>
+                    </a>
+                    <ul class="nav nav-sub dk " ng-if="leftNavMenu.open&&leftNavMenu.type!='line'" >
+                        <li class="nav_bar_li {{(navMenu.active=='true'|| curNavSystem.key==navMenu.key)?'nav-sub-header active nav_active':''}}" ng-repeat="navMenu in leftNavMenu.menus"  ng-click="selectNav(navMenu)" ng-show="navMenu.showMenu!='false'">
+                            <a href="">
+                                <i class="{{navMenu.icon}}" ng-if="leftNavMenu.open"></i>
+                                <span class="ng-scope" translate="aside.nav.DASHBOARD">{{navMenu.name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+    <!--在响应式设计里边，大屏幕设备展示的效果-->
+    <div class="nav_body">
+        <nav class="navi ng-scope">
+            <ul class="nav ng-scope">
+                <li ng-repeat="leftNavMenu in curSystem.menus" 
+                    class="{{(leftNavMenu.active=='true'|| curNavSystem.key==leftNavMenu.key)
+                    ? 'active nav_active' : ''}} 
+                    {{leftNavMenu.type=='line'?'line dk hidden-folded':''}} 
+                    {{leftNavMenu.open?'navopen':''}} " 
+                    ng-show="leftNavMenu.showMenu!='false'">
+
+                    <a href="" class="auto" 
+                        ng-if="leftNavMenu.type!='line'&&leftNavMenu.type=='$state'" 
+                        ng-click="selectNav(leftNavMenu)">
+                       <span class="pull-right text-muted">
+                            <i class="fa fa-fw fa-angle-right text" ng-if="!leftNavMenu.open"></i>
+                            <i class="fa fa-fw fa-angle-down text-active" ng-if="leftNavMenu.open"></i>
+                        </span>
+                        <i class="{{leftNavMenu.icon}}"></i>
+                        <span class="ng-scope" translate="aside.nav.DASHBOARD">{{leftNavMenu.name}}</span>
+                    </a>
+
+                    <ul class="nav nav-sub dk" ng-if="leftNavMenu.open&&leftNavMenu.type!='line'&&leftNavMenu.type=='$state'" >
+                        <li  class="nav_bar_li {{(navMenu.active=='true'|| curNavSystem.key==navMenu.key)?'nav-sub-header active nav_active':''}}" ng-repeat="navMenu in leftNavMenu.menus"  ng-click="selectNav(navMenu)" ng-show="navMenu.showMenu!='false'">
+                            <a href="javascript:void(0);">
+                                <i class="iconfont icon-common_circle"></i>
+                                <span class="ng-scope" translate="aside.nav.DASHBOARD">{{navMenu.name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <a href="{{leftNavMenu.href}}" class="auto" ng-if="leftNavMenu.type=='$Plugin'" ng-click="selectNav(leftNavMenu)" target="_blank">
+                       <span class="pull-right text-muted">
+                            <i class="fa fa-fw fa-angle-right text" ng-if="!leftNavMenu.open"></i>
+                            <i class="fa fa-fw fa-angle-down text-active" ng-if="leftNavMenu.open"></i>
+                        </span>
+                        <i class="{{leftNavMenu.icon}}"></i>
+                        <span class="ng-scope" translate="aside.nav.DASHBOARD">{{leftNavMenu.name}}</span>
+                    </a>
+                    <ul class="nav nav-sub dk" ng-if="leftNavMenu.open==true && leftNavMenu.type=='$Plugin'" >
+                        <li class="nav_bar_li " ng-repeat="navMenu in leftNavMenu.menus" ng-show="navMenu.showMenu!='false'">
+                            <a href="{{navMenu.href}}" target="_blank">
+                                <i class="{{navMenu.icon}}" ng-if="leftNavMenu.open"></i>
+                                <span class="ng-scope" translate="aside.nav.DASHBOARD">{{navMenu.name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

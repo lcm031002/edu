@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+    <context:component-scan base-package="com.ebusiness.erp.task">
+	</context:component-scan>
+	
+    <task:scheduler id="taskScheduler" pool-size="100" />
+
+    <task:scheduled-tasks scheduler="taskScheduler">
+        <!-- 暑假节点，升级学生年级信息；每年七月一日晚21:30执行 -->
+        <task:scheduled ref="upgradeStudentGradeService" method="upgradeStudentGrade" cron="00 30 21 1 7 ?"/>
+        
+        <!-- 秋季开学，升级学生年级信息；每年九月一日晚21:30执行 -->
+        <task:scheduled ref="upgradeStudentGradeService" method="upgradeStudentGrade2" cron="00 30 21 1 9 ?"/>
+        
+        <!-- 晚辅导套餐自动考勤：每天凌晨1点执行 -->
+        <task:scheduled ref="wfdAutoAttendance" method="wfdAutoAttendance" cron="0 1 1 * * ?"/>
+        
+        <!-- 重置单据编号序列：每天凌晨0点执行 -->
+        <task:scheduled ref="invoicesSequenceService" method="updateInvoicesSequence" cron="59 59 23 * * ?"/>
+        
+        <!-- 自动下架到期课程：每天凌晨1点执行 -->
+        <task:scheduled ref="courseService" method="stopOutCourse" cron="0 1 1 * * ?"/>
+        
+        <!-- 自动下架到期优惠规则：每天凌晨1点执行 -->
+        <task:scheduled ref="privilegeRuleService" method="stopOutPrivilegeRule" cron="0 1 1 * * ?"/>
+        
+         <!-- 自动停用到期的优惠活动：每天凌晨1点执行 -->
+        <task:scheduled ref="activityService" method="stopEbActivity" cron="0  1 1  *  * ?"/>
+        
+        <!-- 自动失效过期的通告：每天凌晨1点执行 -->
+        <task:scheduled ref="noticeService" method="invalidNotice" cron="0 1 1 * * ?"/>
+
+    </task:scheduled-tasks>
+</beans>    

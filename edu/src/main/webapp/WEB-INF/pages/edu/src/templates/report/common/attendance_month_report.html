@@ -1,0 +1,74 @@
+<div class="report" ng-controller="report_attendanceMonthController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">月度消耗表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id" ng-branch-id="searchParam.p_branch_id" ng-value-change="onBranchChange()">
+                        <div class="form-group">
+                            <span class="input-label">月份：</span>
+                            <input type="text" class="Wdate cursor_pointer form-control"
+                                   onfocus="WdatePicker({dateFmt:'yyyy年MM月'})"
+                                   id="p_yearMonth"
+                                   autocomplete="off"
+                                   ng-model="searchParam.p_yearMonth"
+                                   ng-change="" />   
+                                   
+                            <!-- <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button> -->
+                            <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                        </div>
+                    </rd-branch>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="3%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="17%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>学员编码</th>
+                <th>学员姓名</th>
+                <th>业务校区</th>
+                <th>本月新增金额</th>
+                <th>本月新增课时</th>
+                <th>本月消耗金额</th>
+                <th>本月消耗课时</th>
+                <th>本月理赔基金</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td>{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+                <td>{{data.branch_name}}</td>
+                <td>{{data.month_order_amount}}</td>
+                <td>{{data.month_order_course_length}}</td>
+                <td>{{data.month_attend_amount}}</td>
+                <td>{{data.month_attend_course_length}}</td>
+                <td>{{data.month_lipei}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

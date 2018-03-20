@@ -1,0 +1,78 @@
+<div class="report" ng-controller="report_busAttendMonthController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">月度分类考勤表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <span class="input-label">团队：</span>
+                    <kl-bu-select bu-id="searchParam.p_bu_id"></kl-bu-select>
+                    <span class="input-label">月份：</span>
+                    <input type="text" class="Wdate cursor_pointer form-control"
+                           onfocus="WdatePicker({dateFmt:'yyyy年MM月'})"
+                           id="p_yearMonth"
+                           autocomplete="off"
+                           ng-model="searchParam.p_yearMonth"
+                           ng-change=""/>   
+                           
+                    <!-- <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button> -->
+                    <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="3%"/>
+            <col width="10%"/>
+            <col width="7%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>学员编码</th>
+                <th>学员姓名</th>
+                <th>合计金额</th>
+                <th>合计课时</th>
+                <th>大小班金额</th>
+                <th>大小班课时</th>
+                <th>1对1金额</th>
+                <th>1对1课时</th>
+                <th>晚辅导金额</th>
+                <th>晚辅导课时</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td>{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+                <td>{{data.sum_amount}}</td>
+                <td>{{data.sum_count}}</td>
+                <td>{{data.bjk_amount}}</td>
+                <td>{{data.bjk_count}}</td>
+                <td>{{data.ydy_amount}}</td>
+                <td>{{data.ydy_count}}</td>
+                <td>{{data.wfd_amount}}</td>
+                <td>{{data.wfd_count}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

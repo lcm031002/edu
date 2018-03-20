@@ -1,0 +1,52 @@
+<div ng-controller="erp_TeacherIndexController">
+	<div class="panel panel-default" style="margin-bottom: 10px;">
+		<div class="panel-heading font-bold">
+			<h3 class="panel-title">教师信息</h3>
+		</div>
+		<div class="panel-body">
+			<div class="tool_bar">
+				<button ng-if="editStatus" type="button" style="margin-bottom: 5px;"
+					class="btn btn-default" ng-click="editTeacherInfo()">
+					<i class="fa fa-edit"></i>修改
+				</button>
+				<button ng-if="!editStatus" type="button" style="margin-bottom: 5px;"
+					class="btn btn-default" ng-click="updateTeacherInfo()">
+					<i class="fa fa-save"></i>保存
+				</button>
+			</div>
+			<form class="form-horizontal" role="form" style="color: #483D8B;margin-top:5px">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">老师姓名：
+						<span>{{teacherDetail.teacher_name}}</span>
+					</label> 
+					<label  class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">编码：
+						<span>{{teacherDetail.encoding}}</span>
+					</label> 
+					<label  class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">性别：
+						<select ng-model="teacherDetail.sex" ng-options="x.sex as x.desc for x in sexSelect" ng-disabled="editStatus">
+						</select>
+					</label> 
+					<label  class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">创建时间：
+						<span>{{teacherDetail.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">老师状态：
+						<select ng-model="teacherDetail.status" ng-options="x.status as x.desc for x in statusSelect" ng-disabled="editStatus">
+						</select>
+					</label> 
+					<label class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">电话：
+						<input type="text" value="{{teacherDetail.phone}}" ng-model="teacherDetail.phone" ng-disabled="editStatus"></label>
+					<label class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">描述：
+						<input type="text" value="{{teacherDetail.description}}" ng-model="teacherDetail.description" ng-disabled="editStatus">
+					</label>
+					<label class="col-sm-2 control-label" style="text-align: left;margin-left: 30px;">修改时间：
+						<span>{{teacherDetail.update_time|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+						</label>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!--main form end-->
+	<div></div>
+</div>

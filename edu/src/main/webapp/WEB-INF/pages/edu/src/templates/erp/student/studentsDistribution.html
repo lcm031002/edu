@@ -1,0 +1,123 @@
+<div class="container-fluid" 
+  ng-controller="erp_studentDistributeController">
+  <div class="row">
+    <div class="col-lg-8 col-md-6 col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="title">资源转出</span>
+        </div>
+        <div class="panel-body">
+          <div class="toolbar">
+            <div class="form-inline">
+              <div class="form-group pull-right">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="学管师信息模糊查询" ng-model="searchCounselorFrom">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary"
+                      ng-click="queryCounselorFrom()">
+                      <i class="fa fa-search"></i>搜索
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 140px; padding-left: 32px;">学管师</th>
+              <th>学生姓名</th>
+              <th>学生编号</th>
+              <th>是否有效</th>
+              <th style="width: 100px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in resArray"
+              ng-if="!loadStatues && resArray && resArray.length">
+              <td ng-if="!item.isStu" class="cursor_pointer"
+                style="padding-left: 32px; text-indent: -22px;" 
+                ng-click="toggleRes(item)">
+                <i class="iconfont" 
+                  ng-class="{true: 'icon-public_shrink i-text-danger', false: 'icon-public_spread i-text-warning'}[item.showStu == true]" ng-if="!item.isStu"></i> {{item.emp_name}} </td>
+              <td colspan="{{item.isStu ? 1 : 3}}"></td>
+              <td ng-if="item.isStu">{{item.student_name}}</td>
+              <td ng-if="item.isStu">{{item.encoding}}</td>
+              <td ng-if="item.isStu">{{item.valid_name}}</td>
+              <td>
+                <span class="cursor_pointer"
+                 ng-if="!item.isStu"
+                 ng-click="transferAll(item)">
+                  <i class="iconfont icon-transfer i-text-primary"></i>  批量转移
+                </span>
+                <span  class="cursor_pointer"
+                  ng-if="item.isStu"
+                  ng-click="transfer(item)">
+                  <i class="iconfont icon-transfer i-text-primary"></i>  转移
+                </span>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+          <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="fromPageConf" ng-if="!loadStatues || resArray.length > 0"></ng-pagination>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="title">资源转入</span>
+        </div>
+        <div class="panel-body">
+          <div class="toolbar">
+            <form class="form-inline">
+              <div class="form-group pull-right">
+                <div class="input-group">
+                  <input type="text" class="form-control"
+                    placeholder="学管师信息模糊查询" ng-model="searchCounselorTo">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary"
+                      ng-click="getCounselorTo()">
+                       <i class="fa fa-search"></i> 搜索
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>选择</th>
+              <th nowrap="nowrap">校区</th>
+              <th>姓名</th>
+              <th>职位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in counselorTo" 
+              ng-if="!loadSta && counselorTo && counselorTo.length"
+              class="cursor_pointer" 
+              ng-click="chooseCounselorTo(item)">
+              <td><input type="radio" value="{{item.emp_id}}" ng-model="chosenCounselorToId" name="emp_id"></td>
+              <td>{{item.branch_name}}</td>
+              <td>{{item.emp_name}}</td>
+              <td>{{item.post_name}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-center" ng-if="loadSta">
+            <img src="img/erp/loading2.gif">
+         </div>
+        <ng-pagination conf="toPageConf" ng-if="!loadSta || counselorTo.length > 0"></ng-pagination>
+      </div>
+    </div>
+  </div>
+</div>

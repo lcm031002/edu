@@ -1,0 +1,223 @@
+<div ng-controller="erp_invoiceController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">发票管理</span></div>
+		<div class="panel-body operation-panel">
+	      	<div class="searchbar">
+	      		<form class="form-inline">
+	      			<rd-branch ng-bu-id="searchParam.bu_id"
+					    ng-branch-id="searchParam.branch_id"
+					    ng-value-change="onBranchChange()"></rd-branch>
+	      		</form>
+	      		<form class="form-inline">
+	      			<div class="form-group">
+	      				发票状态：
+	      				<button class="btn" 
+	      					ng-class="{true: 'btn-primary', false: ''}[searchParam.status==0]"
+	      					ng-click="handleChangeStatus(0)">全部</button>
+	      				<button class="btn" 
+	      					ng-class="{true: 'btn-primary', false: ''}[searchParam.status==4]"
+	      					ng-click="handleChangeStatus(4)">申请中</button>
+	      				<button class="btn" 
+	      					ng-class="{true: 'btn-primary', false: ''}[searchParam.status==1]"
+	      					ng-click="handleChangeStatus(1)">已开票</button>
+	      				<button class="btn" 
+	      					ng-class="{true: 'btn-primary', false: ''}[searchParam.status==2]"
+	      					ng-click="handleChangeStatus(2)">已回收作废</button>
+	      				<button class="btn" 
+	      					ng-class="{true: 'btn-primary', false: ''}[searchParam.status==3]"
+	      					ng-click="handleChangeStatus(3)">未回收作废</button>
+	      				<button class="btn" 
+	      					ng-class="{true: 'btn-primary', false: ''}[searchParam.status==5]"
+	      					ng-click="handleChangeStatus(5)">已拒绝</button>
+	      			</div>
+	      		</form>
+	      		<rd-date-picker-range 
+							ng-start-date="searchParam.start_date"
+							ng-end-date="searchParam.end_date"
+	      			ng-date-change="query()"></rd-date-picker-range>
+	      	</div>
+	      	<hr>
+	      	<div class="searchbar">
+	      		<form class="form-inline">
+	      			<div class="input-group">
+	      				
+	      			<input type="text" class="form-control" style="width: 260px;" placeholder="订单单据/ID、学员名称/编码/手机号"
+                ng-model="searchParam.invoice_code" autocomplete="off">
+               <span class="input-group-btn">
+    						<button class="btn btn-primary" ng-click="handleQueryInvoice()"><i class="iconfont icon-search"></i></button>
+               </span>
+	      			</div>
+    					<button class="btn btn-success" ng-click="exportInv()"><i class="iconfont icon-public_export"></i>导出</button>
+	      		</form>
+	      	</div>
+		</div>
+    </div>
+	<!--main form end-->
+	<div class="table-panel" style="overflow: auto;" ng-cloak>
+		<table class="table table-striped" ng-class="{'min-width-1600': invoiceList && invoiceList.length}">
+			<thead>
+				<tr>
+					<th>报班ID</th>
+					<th>业务校区</th>
+					<th>学生姓名</th>
+					<th>发票抬头</th>
+					<th>申开金额</th>
+					<th>实开金额</th>
+					<th>缴费金额</th>
+					<th>发票号码</th>
+					<th>开票单位</th>
+					<th>开票需求说明</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr ng-repeat="invoice in invoiceList"
+					ng-if="invoiceList && invoiceList.length">
+					<td>{{invoice.orderEncoding}}</td>
+					<td>{{invoice.branchName}}</td>
+					<td>{{invoice.studentName}}</td>
+					<td>{{invoice.headingName}}</td>
+					<td>{{invoice.requiredMoney}}</td>
+					<td>{{invoice.actualMoney}}</td>
+					<td>{{invoice.money}}</td>
+					<td>{{invoice.invoiceCode}}</td>
+					<td>{{invoice.invoiceCompamyName}}</td>
+					<td>{{invoice.invoiceExplain}}</td>
+					<td>{{invoice.statusName}}</td>
+					<td>
+						<a href="javascript:void(0);" ng-click="handleInvoice(invoice)">处理</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!-- Modal -->
+	    <div id="erpFinanceInvoicePanel" class="modal fade"
+	      tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1049;">
+	      <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	            <h4 class="modal-title">发票处理</h4>
+	          </div>
+	          <div class="modal-body">
+	            <div class="container-fluid">
+	              <form class="form-horizontal">
+	                <div class="hide">
+	                  <input type="text" ng-model="invoice.id" />
+	                  <input type="text" ng-model="invoice.orderId" />
+	                </div>
+	                <div class="form-group">
+						<label class="col-sm-2 control-label">报班单号:</label>
+						<div class="col-sm-10">
+							<input class="form-control" ng-model="invoice.orderEncoding" ng-readonly="true"
+								type="text" />
+						</div>
+					</div>
+	                <div class="form-group">
+						<label class="col-sm-2 control-label">发票抬头:</label>
+						<div class="col-sm-4">
+							<select class="form-control" ng-model="invoice.heading" ng-readonly="true"
+								ng-options="heading.key as heading.value for heading in headingList"></select>
+						</div>
+						
+						<label class="col-sm-2 control-label" ng-if="invoice.heading == 1">姓名:</label>
+						<label class="col-sm-2 control-label" ng-if="invoice.heading == 2">开票公司:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.companyName" ng-readonly="true"
+								type="text" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">申请开票金额:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.requiredMoney" ng-readonly="true"
+								type="number" />
+						</div>
+						<label class="col-sm-2 control-label">开票需求说明:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.invoiceExplain" ng-readonly="true"
+								type="text" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">申请人:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.applyUserName" ng-readonly="true"
+								type="text" />
+						</div>
+						<label class="col-sm-2 control-label">申请校区:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.branchName" ng-readonly="true"
+								type="text" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">实开金额:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.actualMoney"
+								type="number" />
+						</div>
+						<label class="col-sm-2 control-label">发票号码:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.invoiceCode"
+								type="text" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">发票单位:</label>
+						<div class="col-sm-4">
+							<select class="form-control" ng-model="invoice.invoiceCompamy"
+								ng-options="invoiceCmp.id as invoiceCmp.company_name for invoiceCmp in invoiceCmpList"></select>
+						</div>
+						<label class="col-sm-2 control-label">发票状态:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.statusName" ng-readonly="true"
+								type="text" />
+						</div>
+					</div>
+					<div class="form-group" ng-if="invoiceStatus == 1">
+						<label class="col-sm-2 control-label">开票日期:</label>
+						<div class="col-sm-4">
+							<rd-date-picker-popup
+								required="true"
+								ng-model="invoice.invoiceDate"></rd-date-picker-popup>
+						</div>
+						<label class="col-sm-2 control-label">修改人:</label>
+						<div class="col-sm-4">
+							<input class="form-control" ng-model="invoice.update_user_name" ng-readonly="true"
+								type="text" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">备注:</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" rows="4" 
+                     			ng-model="invoice.description"></textarea>
+						</div>
+					</div>
+	              </form>
+	            </div>
+	          </div>
+	          <div class="modal-footer" ng-if="invoiceStatus == 4">
+	            <button type="button" class="btn btn-danger"
+	              ng-click="handlePutInvoice(1)">开票</button>
+	            <button type="button" class="btn btn-primary"
+	              ng-click="handlePutInvoice(5)">拒绝</button>
+	          </div>
+	          
+	          <div class="modal-footer" ng-if="invoiceStatus == 1">
+	            <button type="button" class="btn btn-danger"
+	              ng-click="handlePutInvoice(2)">已回收作废</button>
+	            <button type="button" class="btn btn-primary"
+	              ng-click="handlePutInvoice(3)">未回收作废</button>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+
+	</div><!-- .table-panel end -->
+	<ng-pagination conf="paginationConf" style="background: #fff; padding: 0 20px;"></ng-pagination>
+</div>

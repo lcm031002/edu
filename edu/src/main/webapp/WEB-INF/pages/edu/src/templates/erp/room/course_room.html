@@ -1,0 +1,269 @@
+<div class="panel panel-primary" ng-controller="erp_courseRoomController">
+	<div class="panel-heading">
+		<span class="title">课次教室绑定</span>
+	</div>
+	<div class="panel-body operation-panel">
+		<div class="toolbar">
+			<div class="form-inline">
+				<div class="form-group">
+					<select class="form-control"
+							ng-options="branch.org_name for branch in branchList"
+							ng-model="queryParam.selectedBranch">
+						<!--<option  value="">&#45;&#45; 请选择校区 &#45;&#45;</option>-->
+					</select>
+				</div>
+				<div class="form-group">
+					<select class="form-control"
+							ng-options="timeSeason.course_season_name for timeSeason in timeSeasonList"
+							ng-model="queryParam.selectedTimeSeason">
+						<option  value="">-- 请选择课程季 --</option>
+					</select>
+				</div>
+				<div class="input-group">
+					<input type="text" class="form-control" ng-model="queryParam.courseSearchInfo" placeholder="请输入课程名称"/>
+					  <span class="input-group-btn"  ng-click="querySelectingCourse()">
+							<button class="btn btn-primary" type="button">
+								<i class="iconfont icon-search"></i> 搜索
+							</button>
+					  </span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel ov-a">
+		<table class="table table-striped min-width-1300">
+			<col width="6%"/>
+			<col width="12%"/>
+			<col width="11%"/>
+			<col width="8%"/>
+			<col width="5%"/>
+			<col width="8%"/>
+			<col width="6%"/>
+			<col width="6%"/>
+			<col width="6%"/>
+			<col width="15%"/>
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>课程名称</th>
+					<th>课程季</th>
+					<th>老师姓名</th>
+					<th>年级</th>
+					<th>科目</th>
+					<th>总课次</th>
+					<th>上课时间</th>
+					<th>下课时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in dataList"  style="width:100%;"
+				    ng-if="!loadStatues  && dataList && dataList.length">
+					<td colspan="10" style="padding-right:0px;padding-left:0px;">
+						<table style="width:100%;">
+							<col width="6%"/>
+							<col width="12%"/>
+							<col width="11%"/>
+							<col width="8%"/>
+							<col width="5%"/>
+							<col width="8%"/>
+							<col width="6%"/>
+							<col width="6%"/>
+							<col width="6%"/>
+							<col width="15%"/>
+							<tr>
+								<td style="padding: 0 8px;">{{item.id}}</td>
+								<td style="padding: 0 8px;">{{item.course_name}}</td>
+								<td style="padding: 0 8px;">{{item.season_name}}</td>
+								<td style="padding: 0 8px;">{{item.teacher_name}}</td>
+								<td style="padding: 0 8px;">{{item.grade_name}}</td>
+								<td style="padding: 0 8px;">{{item.subject_name}}</td>
+								<td style="padding: 0 8px;">{{item.course_count}}</td>
+								<td style="padding: 0 8px;">{{item.start_time}}</td>
+								<td style="padding: 0 8px;">{{item.end_time}}</td>
+								<td style="padding: 0 8px;">
+									<a href="javascript:void(0);" ng-click="showCourseTimes(item)" ng-if="!item.isShowCourseTime">
+										<i class="fa fa-arrow-circle-right"></i>
+									</a>
+									<a href="javascript:void(0);" ng-click="showCourseTimes(item)" ng-if="item.isShowCourseTime">
+										<i class="fa fa-arrow-circle-down"></i>
+									</a>
+									<a class="ml-20" href="javascript:void(0)" ng-click="showBatchBinding(item,true)">批量绑定</a>
+									<a class="ml-20" href="javascript:void(0)" ng-click="showBatchBinding(item,false)">解绑</a>
+								</td>
+							</tr>
+							<tr ng-if="item.isShowCourseTime">
+								<td  colspan="10">
+									<div class="table-panel">
+										<table class="table table-hover table-bordered">
+											<col width="4%"/>
+											<col width="3%"/>
+											<col width="6%"/>
+											<col width="5%"/>
+											<col width="5%"/>
+											<col width="4%"/>
+											<col width="4%"/>
+											<col width="4%"/>
+											<col width="7%"/>
+											<col width="4%"/>											
+											<col width="5%"/>
+											<col width="5%"/>
+											<col width="5%"/>
+											<col width="10%"/>
+											<col width="6%"/>
+											<tr>
+												<th>序号</th>
+												<th>课次</th>
+												<th>课次内容</th>
+												<th>老师名称</th>
+												<th>课程ID</th>
+												<th>年级</th>
+												<th>科目</th>
+												<th>总课次</th>
+												<th>上课日期</th>
+												<th>星期几</th>												
+												<th>上课时间</th>
+												<th>下课时间</th>
+												<th>备注</th>
+												<th>绑定学校教室</th>
+												<th>视频编号</th>
+												<th>操作</th>
+											</tr>
+											<tr ng-repeat="courseTime in item.courseTimeList" ng-if="!item.isQueryCourseTimes && item.courseTimeList && item.courseTimeList.length">
+												<td>{{courseTime.course_scheduling_id}}</td>
+												<td>{{courseTime.seq}}</td>
+												<td>{{courseTime.course_name}}</td>
+												<td>{{courseTime.teacher_name}}</td>
+												<td>{{courseTime.course_id}}</td>
+												<td>{{courseTime.grade_name}}</td>
+												<td>{{courseTime.subject_name}}</td>
+												<td>{{item.course_count}}</td>
+												<td>{{courseTime.course_date_str }}</td>
+												<td>星期{{courseTime.weekday }}</td>												
+												<td>{{courseTime.start_time}}</td>
+												<td>{{courseTime.end_time}}</td>
+												<td>{{courseTime.remark}}</td>
+												<td>{{courseTime.room_name ? courseTime.branch_name + ' ' + courseTime.room_name : '-'}}</td>
+												<td>{{courseTime.videoNo}}</td>
+												<td align="center">
+													<a href="javascript:void(0);" ng-click="toSettings(courseTime, item, true)">设置</a>
+													<a ng-if="courseTime.room_name" class="ml-15" href="javascript:void(0);" ng-click="toSettings(courseTime, item, false)">解绑</a>
+												</td>
+											</tr>
+											<tr ng-if="item.isQueryCourseTimes == 'isQueryCourseTimes'">
+												<td colspan="14" align="center"><img src="img/erp/loading2.gif"></td>
+											</tr>
+											<tr ng-if="(!item.isQueryCourseTimes) && (!item.courseTimeList || !item.courseTimeList.length)">
+												<td colspan="14" align="center">无数据.</td>
+											</tr>
+										</table>
+									</div>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+		<ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+	</div>
+</div>
+
+<script type="text/ng-template" id="course_room_modal.html">
+	<rd-modal ng-form="courseRoomForm">
+		<rd-modal-title>{{currentCourse.bindStauts==true?'课次绑定教室':'课次解绑教室'}}</rd-modal-title>
+		<rd-modal-body>
+			<div class="form form-horizontal">
+				<div class="form-group-inline">
+					<label class="control-label col-sm-2">校区名称</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" ng-model="modalData.branch_name" readonly="readonly" />
+					</div>
+					<label class="col-sm-2 control-label required">教室名称</label>
+					<div class="col-sm-4">
+						<select class="form-control"
+								name="room_name" 
+								ng-model="modalData.room_id"
+								ng-disabled="!currentCourse.bindStauts"
+								ng-options="room.id as room.room_name for room in roomList" required>
+							<option value=""></option>
+						</select>
+						<div ng-messages="courseRoomForm.room_name.$error" ng-if="courseRoomForm.room_name.$touched">
+							<p ng-message="required">请选择教室</p>
+						</div>
+					</div>
+					<!-- <div class="col-sm-6">
+						<input id="checkbox1" type="checkbox" style="margin-left:110px;" ng-model="modalData.applyToOther"/>
+						<label for="checkbox1" style="font-weight:normal;font-size:15px;margin-left:20px;">应用到本课程所有未绑定的课次</label>
+					</div> -->
+				</div>
+			</div>
+		</rd-modal-body>
+		<rd-modal-footer>
+			<button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+			<button type="button" class="btn btn-primary" ng-click="handleModalConfirm(currentCourse.bindStauts)" ng-disabled="courseRoomForm.$invalid">确定</button>
+		</rd-modal-footer>
+	</rd-modal>
+</script>
+<script type="text/ng-template" id="batch_binding_modal.html">
+	<rd-modal ng-form="courseBatchForm">
+		<rd-modal-title>课次批量{{batchList.bindStatus==true?'绑定':'解绑'}}教室</rd-modal-title>
+		<rd-modal-body>
+			<div class="form form-horizontal pl-20">
+				<div class="form-group">
+					<label class="control-label fl">校区名称</label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" ng-model="batchList.branch_name" readonly="readonly" />
+					</div>
+					<div class="col-sm-6 pt-5">
+						本课程上课周期为<span ng-repeat="arr in batchList.roomClassSet | orderBy:'weekNumber'">星期{{arr.weekday}}、</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-4 col-sm-3 pt-5">
+						<input id="checkbox1" class="control-label" type="checkbox" ng-model="batchList.applyToOther"
+						       ng-disabled="allTag && !batchList.applyToOther" ng-click="chooseAllCheck()"/>
+						<span for="checkbox1" class="control-label text-left">{{batchList.bindStatus==true?'应用到本课程所有未绑定的课次':'解绑本课程所有绑定课次'}}</label>						
+					</div>	
+					<label class="col-sm-2 control-label required">教室名称</label>
+					<div class="col-sm-3">
+						<select class="form-control"
+								ng-disabled="allTag || !batchList.applyToOther || !batchList.bindStatus"
+								ng-model="batchList.room_id"
+								ng-change="chooseAllRoom()"
+								ng-options="room.id as room.room_name for room in roomList" required>
+							<option value=""></option>
+						</select>
+						<div ng-messages="courseRoomForm.room_name.$error" ng-if="courseRoomForm.room_name.$touched">
+							<p ng-message="required">请选择教室</p>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" ng-repeat="arr in batchList.roomClassSet | orderBy:'weekNumber'">	
+					<div class="col-lg-4 col-sm-3 pt-5">
+						<input id="checkbox1" class="control-label" type="checkbox" ng-model="arr.Selected"
+							   ng-disabled="batchList.applyToOther" ng-click="chooseCheck(arr)" />
+						<span for="checkbox1" class="control-label text-left">{{batchList.bindStatus==true?'应用到本课程所有未绑定':'解绑本课程所有绑定的'}}星期{{arr.weekday}}课次</span>
+					</div>	
+					<label class="col-sm-2 control-label required">教室名称</label>
+					<div class="col-sm-3">
+						<select class="form-control"
+								name="room_name" 
+								ng-model="arr.roomId"
+								ng-disabled="batchList.applyToOther || !arr.Selected || !batchList.bindStatus"
+								ng-options="room.id as room.room_name for room in roomList" required>
+							<option value=""></option>
+						</select>
+					</div>
+					<span class="col-lg-3 col-sm-4 pt-5">上课时间：{{arr.startTime}}-{{arr.endTime}}</span>					
+				</div>
+			</div>
+		</rd-modal-body>
+		<rd-modal-footer>
+			<button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+			<button type="button" class="btn btn-primary" ng-click="BatchModalConfirm(batchList.bindStatus)" ng-disabled="courseRoomForm.$invalid">确定</button>
+		</rd-modal-footer>
+	</rd-modal>
+</script>

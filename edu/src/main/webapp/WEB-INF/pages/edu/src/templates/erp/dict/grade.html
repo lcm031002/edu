@@ -1,0 +1,146 @@
+<div ng-controller="erp_gradeController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">年级管理</span></div>
+		<div class="panel-body operation-panel">
+			<div class="toolbar">
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleAddGrade()">
+					<i class="iconfont icon-add"></i>添加
+				</button>
+			</div>
+			<hr>
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="名称"
+								ng-model="searchParam.p_gradeName" autocomplete="off"> <span
+								class="input-group-btn clearfix">
+								<button class="btn btn-primary" ng-click="handleQueryGrade()"><i class="fa fa-search"></i>  搜索</button>
+							</span>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="120">操作</th>
+					<th>年级名称</th>
+					<th>年级编码</th>
+					<th>上一年级名称</th>
+					<th>上一年级编码</th>
+					<th>排序</th>
+					<th>状态</th>
+					<th>创建人</th>
+					<th>创建时间</th>
+					<th>修改人</th>
+					<th>修改时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="grade in gradeList"
+					ng-if="gradeList && gradeList.length">
+					<td class='hide'>{{grade.last_id}}</td>
+					<td><span class="cur" 
+						ng-click="handlePutGrade(grade)"><i class="iconfont text-primary icon-edit"></i>修改</span>&nbsp;&nbsp;<span 
+						class="cur" 
+						ng-click="handleDeleteGrade(grade.id)"><i class="iconfont 
+						text-danger icon-delete"></i>删除</span></td>
+					<td>{{grade.grade_name}}</td>
+					<td>{{grade.encoding}}</td>
+					<td>{{grade.last_name}}</td>
+					<td>{{grade.last_encoding}}</td>
+					<td>{{grade.sort}}</td>
+					<td>
+						<input type="checkbox"
+								bs-switch
+								ng-model="grade.status"
+								ng-true-value="1"
+								ng-false-value="2"
+								switch-change="onStatusChange(grade)"
+							>
+					</td>
+					<td>{{grade.create_user_name}}</td>
+					<td>{{grade.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+					<td>{{grade.update_user_name}}</td>
+					<td>{{grade.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+		<!-- Modal -->
+		<div id="erpSystemDictGradePanel" class="modal fade klxx-modal-primary" 
+		    tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog" role="document">
+				<!-- dictGradeForm .klxx-erp-form -->
+                <form class="klxx-erp-form form-horizontal" name="dictGradeForm" novalidate>
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">年级{{optype=='add'?'添加':'修改'}}</h4>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="hide">
+									<input type="text" ng-model='gradeDetail.id'>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">年级名称</label>
+									<div class="col-sm-10" ng-class="{'has-error': dictGradeForm.grade_name.$invalid && dictGradeForm.grade_name.$dirty}">
+										<input type="text" class="klxx-erp-input  form-control" name="grade_name" required 
+											ng-model='gradeDetail.grade_name'>
+										<div class="klxx-erp-form-explain" ng-show="dictGradeForm.grade_name.$invalid && dictGradeForm.grade_name.$dirty && dictGradeForm.grade_name.$error.required">年级名称一定要填写哟</div>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">年级编码</label>
+									<div class="col-sm-10" ng-class="{'has-error': dictGradeForm.encoding.$invalid && dictGradeForm.encoding.$dirty}">
+										<input type="text" class="klxx-erp-input  form-control" name="encoding" required
+											ng-model="gradeDetail.encoding">
+										<div class="klxx-erp-form-explain" ng-show="dictGradeForm.encoding.$invalid && dictGradeForm.encoding.$dirty && dictGradeForm.encoding.$error.required">年级编码一定要填写哟</div>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="col-sm-2 control-label">上一年级</label>
+									<div class="col-sm-10">
+										<select class=form-control ng-model="gradeDetail.last_id"
+											ng-options="grade.id as grade.grade_name for grade in lastGradeList"></select>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="col-sm-2 control-label">排序</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" name="sort"
+											ng-model="gradeDetail.sort">
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="col-sm-2 control-label">描述</label>
+									<div class="col-sm-10">
+										<textarea class="form-control" rows="4" name="description"
+											ng-model="gradeDetail.description"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger"
+								ng-click="handleModalCancel()">取消</button>
+							<button type="button" class="btn btn-primary"
+								ng-click="handleModalConfirm()"
+								ng-disabled="dictGradeForm.$invalid"
+							>确定</button>
+						</div>
+					</div>
+				</form><!-- . -->
+			</div>
+		</div>
+	</div>
+</div>

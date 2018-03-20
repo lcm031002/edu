@@ -1,0 +1,144 @@
+<div ng-controller="erp_OrdersIndexPrivilegeCriteriaController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">优惠前置</span></div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="handleAddPrivilegeCriteria()">
+	          <i class="fa fa-plus"></i>添加
+	        </button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="请输入优惠前置" ng-model="queryParam" autocomplete="off">
+                            <span class="input-group-btn clearfix">
+	                <button class="btn btn-primary"
+	                  ng-click="handleQueryPrivilegeCriteria()">搜索</button>
+	              </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-panel ov-a">
+        <table class="table table-striped min-width-1300">
+            <thead>
+                <tr>
+                    <th width="120px;">操作</th>
+                    <th>前置ID</th>
+                    <th>前置名称</th>
+                    <th>优惠规则</th>
+                    <th>总金额</th>
+                    <th>课时数</th>
+                    <th>积分</th>
+                    <th>年级</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
+                    <th>创建用户</th>
+                    <th>修改时间</th>
+                    <th>修改用户</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="pc in privilegeCriteriaList"
+                    ng-if="!loadStatues && privilegeCriteriaList && privilegeCriteriaList.length">
+                    <td>
+                        <span class="cur" ng-click="handlePutPrivilegeCriteria(pc)"><i class="iconfont icon-edit text-primary"></i>修改</span>
+                        <span class="cur" ng-click="handleDeletePrivilegeCriteria(pc.id)"><i class="iconfont icon-delete text-danger"></i>删除</span>
+                    </td>
+                    <td>{{pc.id}}</td>
+                    <td>{{pc.name}}</td>
+                    <td>{{pc.rule_name}}</td>
+                    <td>{{pc.sum_price}}</td>
+                    <td>{{pc.sum_hour}}</td>
+                    <td>{{pc.sum_integral}}</td>
+                    <td>{{pc.grade_name}}</td>
+                    <td>{{pc.status == 1?'有效':'失效'}}</td>
+                    <td>{{pc.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{pc.create_user_name}}</td>
+                    <td>{{pc.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{pc.update_user_name}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues || privilegeCriteriaList.length > 0"></ng-pagination>
+
+        <!-- Modal -->
+        <div id="erpPrivilegeCriteriaPanel" class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">优惠前置{{optype=='add'?'添加':'修改'}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">前置名称:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="privilegeCriteria.id" required="" type="hidden">
+                                        <input class="form-control" ng-model="privilegeCriteria.name" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">优惠规则:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="privilegeCriteria.rule_id" ng-options="pcri.id as pcri.rule_name for pcri in privilegeRuleList">
+			                                  </select>
+                                    </div>
+                                    <label class="col-sm-2 control-label">总金额:</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" id="sum_price" ng-model="privilegeCriteria.sum_price" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">课时数:</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" id="sum_hour" ng-model="privilegeCriteria.sum_hour" required="" type="text">
+                                    </div>
+                                    <label class="col-sm-2 control-label">积分:</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model="privilegeCriteria.sum_integral" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">年级:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="privilegeCriteria.grade_id" ng-options="pcgi.id as pcgi.grade_name for pcgi in gradeList">
+			                                 </select>
+                                    </div>
+                                    <label class="col-sm-2 control-label">状态:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="privilegeCriteria.status" ng-options="prs.key as prs.value for prs in status">
+			                                	</select>
+                                    </div>
+                                </div>
+                                <div style="margin:10px 0px"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">描述:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="privilegeCriteria.description" required="" type="text">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" ng-click="handleModalCancel()">取消</button>
+                        <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+    </div>
+
+</div>

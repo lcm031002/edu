@@ -1,0 +1,114 @@
+<div ng-controller="erp_courseSchedulingYdyRecordController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="title">1对1排课记录</span>
+        </div>
+        <div class="panel-body">
+          <div class="search-panel">
+            <div class="form form-inline">
+              <div class="form-group m-0">
+                <rd-date-picker-range
+                  ng-start-date="searchParam.p_startDate"
+                  ng-end-date="searchParam.p_endDate"
+                  ng-default-range = "searchParam.range"
+                  label-name="searchParam.labelName">
+                </rd-date-picker-range>
+              </div>
+            </div>
+            <div class="form form-inline">
+              <div class="form-group">
+                <span class="input-label ng-binding">团队：</span>
+                <kl-bu-select bu-id="searchParam.p_buId"></kl-bu-select>
+              </div>
+              <div class="form-group">
+                <span class="input-label ng-binding unwid">校区：</span>                  
+                <kl-branch-select bu-id="searchParam.p_buId"
+                  branch-id="searchParam.p_branchId"></kl-bu-select>
+              </div>
+              <div class="form-group">
+                <span class="input-label ng-binding unwid">学管师：</span>                                    
+                <input type="text" class="form-control" ng-model="searchParam.p_counselorName" />
+              </div>
+              <div class="form-group">
+                <span class="input-label ng-binding">学员：</span>
+                <klc-student-typeahead
+                        student-id="searchParam.p_studentId"
+                        student-name="searchParam.p_studentName"
+                        on-select="queryCourseSchedInfo()">
+                </klc-student-typeahead>
+              </div>
+              <div class="form-group">
+                <span class="input-label ng-binding unwid">考勤状态：</span>                                                      
+                <select class="form-control" ng-model="searchParam.p_attendType" ng-options="attendType.code as attendType.name for attendType in attendTypeList"
+                  ng-change="changeType()">
+                  <option value="" selected>全部</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <span class="input-label ng-binding">考勤类型：</span>                                                                        
+                <select class="form-control set_two_width" ng-model="searchParam.p_subAttendType" ng-options="subAttendType.code as subAttendType.name for subAttendType in subAttendTypeList">
+                 <option value="" selected>全部</option>
+                </select>
+                <button class="btn btn-primary iconfont icon-search" ng-click="queryCourseSchedInfo()">查询</button>
+                <button class="btn btn-primary iconfont icon-public_export" ng-click="exportCourseSchedInfo()">导出</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+        <div class="ov-a" ng-show="courseSchedInfoList && courseSchedInfoList.length > 0">
+          <table class="table table-stripped min-width-1650">
+            <thead>
+              <tr>
+                <th style="width: 120px;">校区</th>
+                <th style="width: 100px;">学管师</th>
+                <th style="width: 100px;">学员姓名</th>
+                <th style="width: 120px;">学员编码</th>
+                <th style="width: 90px;">年级</th>
+                <th style="width: 105px;">科目</th>
+                <th style="width: 110px;">上课日期</th>
+                <th style="width: 90px;">上课时间</th>
+                <th style="width: 90px;">下课时间</th>
+                <th style="width: 90px;">消耗课时</th>
+                <th style="width: 130px;">课程名称</th>
+                <th style="width: 100px;">老师名称</th>
+                <th style="width: 100px;">老师编码</th>
+                <th style="width: 90px;">考勤状态</th>
+                <th style="width: 90px;">考勤类型</th>
+                <th style="width: 195px;">考勤单号</th>
+                <th style="width: 110px;">排课时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in courseSchedInfoList"
+                ng-if="!loadStatues && courseSchedInfoList && courseSchedInfoList.length">
+                <td>{{item.branchName}}</td>
+                <td>{{item.counselorName}}</td>
+                <td>{{item.studentName}}</td>
+                <td>{{item.studentEncoding}}</td>
+                <td>{{item.gradeName}}</td>
+                <td>{{item.subjectName}}</td>
+                <td>{{item.courseDate}}</td>
+                <td>{{item.startTime}}</td>
+                <td>{{item.endTime}}</td>
+                <td>{{item.hourLen}}</td>
+                <td>{{item.courseName}}</td>
+                <td>{{item.teacherName}}</td>
+                <td>{{item.teacherEncoding}}</td>
+                <td>{{item.attendTypeName}}</td>
+                <td>{{item.subAttendTypeName}}</td>
+                <td>{{item.attendEncoding}}</td>
+                <td>{{item.createTime}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-panel">
+          <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+          </div>
+          <ng-pagination conf="pageConf" ng-if="!loadStatues"></ng-pagination>
+        </div>
+      </div>
+</div>

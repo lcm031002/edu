@@ -1,0 +1,615 @@
+<div class="erp recharge" ng-controller="erp_studentAccountRechargeController">
+  <!--充值弹出框 start-->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">账户充值</span>
+    </div>
+    <div class="panel-body">
+      <div class="cz-win" style="height:auto;">
+        <div style="height:200px;">
+          <div class="row">
+            <div class="col-lg-4 col-sm-4">
+              <div class="cz-winmc-lic students-recharge-cash"></div>
+              <div class="text-center  mt20 mb20">现金充值</div>
+              <div class="text-center">
+                <form class="form-inline">
+                  <div class="input-group">
+                    <input class="form-control" ng-model="payment.cash_price" ng-blur="onblurCash()" ng-focus="onfocusCash()" />
+                    <span class="input-group-btn" ng-click="addCashItem()"><button class="btn btn-primary">确定</button></span>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-4">
+              <div class="cz-winmc-lic students-recharge-card"></div>
+              <div class="text-center mt20 mb20">刷卡充值</div>
+              <div class="text-center">
+                <button class="btn btn-primary" ng-click="skWindowOpen()">点击刷卡</button>
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-4">
+              <div class="cz-winmc-lic students-recharge-transfer"></div>
+              <div class="text-center mt20 mb20">转账充值</div>
+              <div class="text-center">
+                <button class="btn btn-primary" ng-click="zrWindowOpen()">点击转账</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel" align="center">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="col-lg-1 col-sm-1" style="text-align: center;" ng-if="czItem.dynamic_id==null && !czSummit" >操作</th>
+          <th class="col-lg-2 col-sm-2">充值类型</th>
+          <th class="col-lg-2 col-sm-2">金额</th>
+          <th class="col-lg-3 col-sm-2">卡号</th>
+          <th class="col-lg-4 col-sm-5">备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-if="submitCZList==null||submitCZList.length==0">
+          <td colspan="5" align="center">无充值信息！</td>
+        </tr>
+        <tr ng-repeat="czItem in submitCZList">
+          <td style="width: 60px; text-align: center;" ng-if="czItem.dynamic_id==null && !czSummit" >
+            <button class="btn btn-danger" ng-click="removeCzItem(czItem)">删除</button>
+          </td>
+          <td>
+            <span class="" ng-if="czItem.pay_mode==1">现金</span>
+            <span class="" ng-if="czItem.pay_mode==2">刷卡</span>
+            <span class="" ng-if="czItem.pay_mode==3">转账</span>
+          </td>
+          <td>
+            <span class="">￥{{czItem.money}}</span>
+          </td>
+          <td>
+            <span class="">{{czItem.stu_card}}</span>
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-if="czItem.dynamic_id==null" ng-change="changeCZRemark(czItem)" ng-model="czItem.remark" />
+            <span ng-if="czItem.dynamic_id!=null">{{czItem.remark}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-right">
+      <span class="mr10" style="line-height: 32px;">合计: <strong class="text-danger" style="font-size: 1.2em; line-height: 32px;">￥{{allCzMoney}}</strong></span>
+      <button class="btn btn-default mr10" href="javascript:void(0);" ng-click="initialCZ()" ng-if="czSummit">新充值</button>
+      <button class="btn btn-default mr10" href="javascript:void(0);" ng-click="printCZ()" ng-if="czSummit">打印</button>
+      <button class="btn btn-primary mr10" href="javascript:void(0);" ng-click="CZSubmitALL()" ng-if="!czSummit">确认充值</button>
+    </div>
+  </div>
+  <style>
+  <!--
+  /*payment 2014-10-24*/
+  
+  .payment-tab {
+    width: auto;
+    height: 242px;
+    border: 1px solid #dfdfdf;
+    background: #fbfbfb;
+  }
+  
+  .payment-money {
+    width: 248.75px;
+    height: 200px;
+  }
+  
+  .payment-moneyl {
+    width: 202px;
+    height: 200px;
+  }
+  
+  .pay-money {
+    width: 72px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 5px;
+    display: block;
+    border: 1px solid #dfdfdf;
+    margin: 0 auto;
+    background: #f8f8f8;
+  }
+  
+  .pm-tit {
+    width: 100%;
+    height: 32px;
+    text-align: center;
+    font: 900 14px/32px "宋体";
+    background: #efefef;
+  }
+  
+  .pay-card {
+    width: 64px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 2px;
+    display: block;
+    margin: 0 auto;
+    color: #fff;
+    background: #0088cc;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .pay-window,
+  .paccount-window,
+  .pclass-window {
+    width: 60%;
+    min-width: 600px;
+    height: 382px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    position: fixed;
+    left: 20%;
+    top: 25%;
+    z-index: 1000;
+    background: #fff;
+    -webkit-box-shadow: #666 0px 0px 10px;
+    -moz-box-shadow: #666 0px 0px 10px;
+    box-shadow: #666 0px 0px 10px;
+  }
+  
+  .pay-winbg,
+  .paccount-winbg,
+  .pclass-winbg {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.25);
+  }
+  
+  .pm-wint {
+    width: 100%;
+    height: 36px;
+    text-align: center;
+    background: #fff;
+    padding: 10px;
+  }
+  
+  .pm-wintc {
+    font: 900 14px/36px "宋体";
+  }
+  
+  .pm-txt {
+    text-align: right;
+  }
+  
+  .paywin-cell1 {
+    width: 114px;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .paywin-cell2 {
+    width: 298px;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .paywin-cell3 {
+    width: 140px;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .paywin-cell4 {
+    width: 180px;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .paywin-cell5 {
+    width: 54px;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .paywin-cells1,
+  .paywin-cells2,
+  .paywin-cells3,
+  .paywin-cells4,
+  .paywin-cells5 {
+    display: inline-block;
+    padding: 0 5px;
+    text-align: center;
+    overflow: hidden;
+    height: 36px;
+    line-height: 36px;
+  }
+  
+  .paywin-cells1 {
+    width: 104px;
+  }
+  
+  .paywin-cells2 {
+    width: 288px;
+  }
+  
+  .paywin-cells3 {
+    width: 130px;
+  }
+  
+  .paywin-cells4 {
+    width: 170px;
+  }
+  
+  .paywin-cells5 {
+    width: 44px;
+  }
+  
+  .paywin-input1, .paywin-input2{
+    width: 78%;
+    height: 24px;
+    line-height: 24px;
+    text-align: left;
+    border: 1px solid #dfdfdf;
+  }
+  
+  .paywin-input2 {
+    width: 98%;
+    /* height: 24px;
+    line-height: 24px;
+    text-align: left;
+    border: 1px solid #dfdfdf; */
+  }
+  
+  .pm-winput {
+    width: 30%;
+    margin: 0 auto;
+  }
+  
+  .Addclass {
+    width: 100%;
+    height: 133%;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: none;
+  }
+  /*time start 2014-10-22*/
+  
+  .main-pre-time {
+    width: auto;
+    height: 86px;
+    padding: 20px 0;
+    border: 1px solid #dfdfdf;
+    border-top: 3px solid #ffc592;
+    border-bottom: none;
+    background: #fffef0;
+  }
+  
+  .pre-time {
+    width: auto;
+  }
+  
+  .pre-time-num {
+    width: 110px;
+    height: 26px;
+    border: 1px solid #f9cda6;
+    text-align: center;
+    font: 400 18px/26px "微软雅黑";
+  }
+  
+  .pre-time-txt {
+    font: 900 12px/26px "宋体";
+    color: #4d4d4d;
+    padding: 0 5px;
+  }
+  
+  .pre-time-li {
+    width: auto;
+    height: 26px;
+    line-height: 26px;
+    color: #4d4d4d;
+  }
+  
+  .pre-time-li li {
+    float: left;
+    margin-left: 10px;
+  }
+  
+  .pre-time-li li span {
+    padding: 6px 10px;
+    border-radius: 2px;
+  }
+  
+  .pre-time-li li span:hover {
+    background: #ff983d;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .range-date {
+    display: block;
+    height: 60px;
+    margin-left: -25px;
+    margin-top: 30px;
+  }
+  
+  .ui-date-slider {
+    position: relative;
+    width: 650px;
+  }
+  
+  .ui-slider {
+    background: none repeat scroll 0 0 #eee;
+    border-bottom: 1px solid #fff;
+    border-left: 1px solid #bbb;
+    border-radius: 2px;
+    border-top: 1px solid #bbb;
+    height: 3px;
+    left: 25px;
+    position: absolute;
+    top: 35px;
+    width: 600px;
+    z-index: 1;
+  }
+  
+  .ui-slider:after {
+    clear: both;
+    content: " ";
+    display: block;
+    font-size: 0;
+    height: 0;
+    visibility: hidden;
+  }
+  
+  .ui-slider-range {
+    background-color: #8bc7f0;
+    border: 1px solid #7da9dc;
+    height: 3px;
+    overflow: hidden;
+    position: absolute;
+    top: -1px;
+    z-index: 1;
+  }
+  
+  .ui-slider-range:after {
+    background-color: #b7e1ff;
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  
+  .ui-date-slider-scales {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    left: -315px;
+  }
+  
+  .ui-slider-handle {
+    background: url(../Img/icon/1dh1jloUCL.png) no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    cursor: pointer;
+    height: 15px;
+    margin-left: -5px;
+    position: absolute;
+    top: -6px;
+    width: 10px;
+    z-index: 2;
+  }
+  
+  .ui-slider-handle:hover,
+  .ui-state-focus {
+    background-position: -10px 0;
+  }
+  
+  .ui-date-slider-scale {
+    float: left;
+    height: 60px;
+    position: relative;
+    text-align: center;
+    width: 50px;
+  }
+  
+  .ui-date-slider-month {
+    bottom: 3px;
+    color: #aaa;
+    font-size: 10px;
+    left: 15px;
+    position: absolute;
+    width: 20px;
+  }
+  
+  .ui-date-slider-line {
+    border-left: 1px solid #aaa;
+    height: 4px;
+    left: 25px;
+    overflow: hidden;
+    position: absolute;
+    top: 32px;
+    width: 0;
+  }
+  
+  .ui-date-slider-line-long {
+    height: 14px;
+    top: 22px;
+  }
+  
+  .ui-date-slider-year {
+    color: #aaa;
+    font-size: 10px;
+    left: 15px;
+    position: absolute;
+    top: 6px;
+    width: 20px;
+  }
+  
+  .ui-slider-handle-date {
+    background-color: #96d1f9;
+    border: 1px solid #62a3e8;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 1;
+    padding: 2px 3px;
+    position: absolute;
+  }
+  
+  .pay-window {
+    width: 80%;
+    left: 10%;
+    min-width: 700px;
+  }
+  
+  .paccount-window {
+    width: 80%;
+    left: 10%;
+    min-width: 700px;
+  }
+
+  .paccount-window .table th{
+    text-align:center;
+  }
+  
+  -->
+  </style>
+  <div ng-switch on="windowOpenType">
+    <div ng-click="windowOpenClose()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);" ng-switch-when="card"></div>
+    <!--刷卡金额-->
+    <div class="pay-window klxx-modal-primary" ng-switch-when="card">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="windowOpenClose()">    
+          <span aria-hidden="true">×</span>  
+        </button>  
+        <h3 class="modal-title text-left">刷卡总计：<span>{{payment.card_price.toFixed(2)}}</span> 元</span></h3>
+      </div>
+      <!-- <div class="pm-wint bd">
+        <div class="btn btn-default fr" ng-click="toCardPrice()">添加</div>
+      </div> -->
+      <div style="padding: 10px;">
+        <table class="table table-striped table-bordered form form-horizontal">
+          <thead>
+            <tr>
+              <th>金额</th>
+              <th>付款卡号</th>
+              <th>公司pos机</th>
+              <th>公司账户</th>
+              <th>备注</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-if="inputCradPrice">
+              <td>
+                <div class="pos-r">
+                  <input class="form-control" type="text" ng-model="inputCradInfo.staffappprem" ng-change="numberChange(inputCradInfo,'staffappprem')" />
+                  <span class="form-control-feedback">元</span>
+                </div>
+              </td>
+              <td>
+                <input class="form-control" type="text" ng-model="inputCradInfo.client_card_no" />
+              </td>
+              <td>
+                <select class="form-control" ng-model="inputCradInfo.account" ng-options="item1.id as item1.simple_name for item1 in accountListPos" ng-change="selectAccountPOS()">
+                </select>
+              </td>
+              <td>
+                {{inputCradInfo.account_cmp}}
+              </td>
+              <td>
+                <input class="form-control" type="text" ng-model="inputCradInfo.extend_column" />
+              </td>
+              <td>
+                <span class="btn btn-primary btn-sm" ng-click="addInputCradInfo()"><i class="iconfont icon-add"></i> 添加</span>
+              </td>
+            </tr>
+            <tr ng-repeat="item in payment.card_detail">
+              <td><span class="green-num">{{item.staffappprem}}</span>元</td>
+              <td>{{item.client_card_no}}</td>
+              <td>{{item.account_name}}</td>
+              <td>{{item.simple_cmp_name}}</td>
+              <td><span class="grey-num">{{item.extend_column}}</span></td>
+              <td><button class="btn btn-danger btn-sm" ng-click="removeCardPrice(item.id)">
+              <i class="iconfont icon-delete"></i> 删除</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="onCloseCardWindow()">确定</button>
+      </div>
+    </div>
+    <div ng-click="windowOpenClose()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);" ng-switch-when="transfer"></div>
+    <!--转账-->
+    <div class="paccount-window  klxx-modal-primary" ng-switch-when="transfer" style="height: auto;">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="windowOpenClose()">    
+          <span aria-hidden="true">×</span>  
+        </button>  
+        <h3 class="modal-title text-left">转账总计：<span>{{payment.transfer_price}}</span> 元</span></h3>
+      </div>
+      <div class="pm-wint bd">
+        <div class="btn btn-default fr" ng-click="toTransferPrice()">添加</div>
+      </div>
+      <div style="padding: 10px;">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>
+                金额
+              </th>
+              <th>
+                付款卡号
+              </th>
+              <th>
+                公司账户
+              </th>
+              <th>
+                备注
+              </th>
+              <th>
+                操作
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-if="inputTransferPrice">
+              <td>
+                <input class="green-num paywin-input1 mt5 mr5" type="text" ng-model="transferPriceData.staffappprem" ng-change="numberChange(transferPriceData,'staffappprem')" />元
+              </td>
+              <td>
+                <input class="paywin-input2 mt5 mr5" type="text" ng-model="transferPriceData.client_card_no" />
+              </td>
+              <td>
+                <select class="paywin-input2 mt5 mr5" ng-model="transferPriceData.account" ng-options="item1.ID as item1.ACCOUNT_NAME for item1 in accountTransferList" ng-change="selectAccountPOS2()">
+                </select>
+              </td>
+              <td>
+                <input class="paywin-input2 mt5 mr5 grey-num" type="text" ng-model="transferPriceData.extend_column" />
+              </td>
+              <td>
+                <span class="yellow-num cur" ng-click="addInputTransferPrice()">确定</span>
+              </td>
+            </tr>
+            <tr ng-repeat="item in payment.transfer_detail">
+              <td><span class="green-num">{{item.staffappprem}}</span>元</td>
+              <td>{{item.client_card_no}}</td>
+              <td>{{item.simple_cmp_name}}</td>
+              <td><span class="grey-num">{{item.extend_column}}</span></td>
+              <td><span class="blue-detail" ng-click="removeTransferPrice(item.id)">删除</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="windowOpenClose()">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--充值弹出框 end-->

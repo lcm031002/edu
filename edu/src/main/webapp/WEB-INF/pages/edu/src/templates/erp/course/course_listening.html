@@ -1,0 +1,74 @@
+<div ng-controller="erp_courseListeningController">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><span class="title">试听详情</span></div>
+    <div class="panel-body operation-panel">
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="exportExcel()">
+          <i class="iconfont icon-public_export"></i>导出
+        </button>
+      </div>
+      <hr>
+      <div class="searchbar">
+        <form class="form-inline">
+          <rd-date-picker-range ng-start-date="searchParam.start_date" ng-end-date="searchParam.end_date" ng-date-change="onDateChange()"></rd-date-picker-range>
+          <rd-branch ng-bu-id="searchParam.bu_id" ng-branch-id="searchParam.branch_id" ng-value-change="onBranchChange()">
+	          <div class="form-group">
+	            <button class="btn btn-primary" ng-click="query()">
+	              <i class="iconfont icon-search"></i>查询
+	            </button>
+	          </div>
+          </rd-branch>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!--main form end-->
+  <div class="table-panel">
+    <table class="table table-striped">
+      <col width="3%" />
+      <col width="12%" />
+      <col width="12%" />
+      <col width="6%" />
+      <col width="24%" />
+      <col width="6%" />
+      <col width="6%" />
+      <col width="3%" />
+      <col width="6%" />
+      <col width="6%" />
+      <col width="6%" />
+      <col width="12%" />
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>业务校区</th>
+          <th>学员编码</th>
+          <th>学员姓名</th>
+          <th>课程名称</th>
+          <th>授课教师ID</th>
+          <th>授课教师</th>
+          <th>课次</th>
+          <th>课时单价</th>
+          <th>试听日期</th>
+          <th>试听状态</th>
+          <th>备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in dataList" ng-if="dataList && dataList.length">
+          <td>{{$index + 1}}</td>
+          <td>{{data.branch_name}}</td>
+          <td>{{data.student_code}}</td>
+          <td>{{data.student_name}}</td>
+          <td>{{data.course_name}}</td>
+          <td>{{data.teacher_id}}</td>
+          <td>{{data.teacher_name}}</td>
+          <td>{{data.course_times}}</td>
+          <td>{{data.unit_price}}</td>
+          <td>{{data.listening_date}}</td>
+          <td>{{data.pay_status_name}}</td>
+          <td>{{data.remark ? data.remark : '-'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

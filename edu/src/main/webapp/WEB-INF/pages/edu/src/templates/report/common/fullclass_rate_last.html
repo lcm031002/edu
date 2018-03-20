@@ -1,0 +1,74 @@
+<div class="report" ng-controller="report_fullclassRateLastController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">培英班满班率报表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <div class="form form-inline">
+                    <div class="form-group">
+                        <span class="input-label">团队：</span>
+                        <select class="form-control"
+                            ng-options="bu.buId as bu.text for bu in buList"
+                            ng-model="searchParam.p_bu_id" ng-change="buChange()">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">年级：</span>
+                        <select class="form-control"
+                            ng-options="grade.id as grade.grade_name for grade in gradeList"
+                            ng-model="searchParam.p_grade_id">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">课程季：</span>
+                        <select class="form-control"
+                            ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList"
+                            ng-model="searchParam.p_season_id">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label">教师姓名：</span>
+                        <input  class="form-control" type="text" 
+                          ng-model="searchParam.p_teacher_name" 
+                          id="teacher_name" name="teacher_name"/>	
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                        <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <thead>
+            <tr>
+                <th>序号</th>
+				<th>课程季老师</th>
+				<th>年级</th>
+                <th>课程季</th>
+				<th>该老师本年段上季学员总人数（分子）</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="d in fullclassRateLastList"
+                ng-if="!loadStatues && fullclassRateLastList && fullclassRateLastList.length">
+                <td>{{$index + 1}}</td>
+				<td>{{d.teacher_name}}</td>
+				<td>{{d.grade_name}}</td>
+				<td>{{d.season_name}}</td>
+				<td>{{d.student_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (fullclassRateLastList == null || fullclassRateLastList.length == 0)">
+            <div class="no-data"></div>
+            没有符合条件的数据
+        </div>
+    </div>
+</div>

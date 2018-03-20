@@ -1,0 +1,67 @@
+<div class="erp" ng-controller="erp_orderUnpayController" style="min-width: 1100px;">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">欠费订单</span></div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="exportExcel()">
+                    <i class="iconfont icon-public_export"></i>导出
+                </button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <form class="form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id"
+                               ng-branch-id="searchParam.p_branch_id">
+                        订单审核状态：
+                        <select class="form-control" ng-model="searchParam.status" ng-options="status.id as status.name for status in statusList">
+                        </select>
+                    </rd-branch>
+                </form>
+                <form class="form-inline">
+                    <rd-date-picker-range
+                            ng-start-date="searchParam.p_start_date"
+                            ng-end-date="searchParam.p_end_date">
+                        <button class="btn btn-primary" ng-click="query()">
+                            <i class="iconfont icon-search"></i> 查询
+                        </button>
+                    </rd-date-picker-range>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>操作</th>
+                <th>序号</th>
+                <th>学员姓名</th>
+                <th>学员编码</th>
+                <th>报班单号</th>
+                <th>校区名称</th>
+                <th>金额</th>
+                <th>时间</th>
+                <th>状态</th>
+                <th>制单人</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="unpay in unpayList" ng-if="unpayList && unpayList.length">
+                <td><a  ng-href="?studentId={{unpay.student_id}}&temporaryOrderId={{unpay.id}}#/orders/ordersMgr/ordersMgrOrders" ng-click="toSubmitOrder(unpay)" target="_blank">去缴费</a></td>
+                <td>{{$index+1}}</td>
+                <td>{{unpay.student_name}}</td>
+                <td>{{unpay.student_encoding}}</td>
+                <td>{{unpay.encoding}}</td>
+                <td>{{unpay.branch_name}}</td>
+                <td>{{unpay.actual_price}}</td>
+                <td>{{unpay.create_time | date :'yyyy-MM-dd'}}</td>
+                <td><span ng-if="unpay.check_status==2">审核中</span>
+                    <span ng-if="unpay.check_status==3">已通过</span>
+                </td>
+                <td>{{unpay.employee_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <ng-pagination conf="paginationConf"></ng-pagination>
+    </div>
+</div>

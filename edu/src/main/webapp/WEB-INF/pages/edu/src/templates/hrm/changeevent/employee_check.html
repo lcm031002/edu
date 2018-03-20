@@ -1,0 +1,46 @@
+ <div ng-controller="EmployeeCheckCtrl">
+ 
+
+    <div class="panel panel-default " style="margin-bottom: 10px;">
+            <div class="panel-heading font-bold" >
+                转正考核
+            </div>
+
+            <div class="panel-body" style="padding: 15px;">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-6 pull-right">
+                            <label class="control-label col-lg-3"> 考核模板：</label>
+                            <div class="col-lg-9">
+                                <select class="form-control"  ng-model="selected" ng-change="selectModel()" ng-options="item.name for  item in modelDefineList">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12" align="center">
+                        <div ng-include="selected.url"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12" align="center" style="margin-top: 15px;">
+                        <button type="button" class="btn btn-default" ng-click="cancel()">
+                            取消
+                        </button>
+                        <button type="button" ng-click="save(selecteditem)" class="btn  btn-warning">
+                            确认
+                        </button>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+    </div>
+  
+
+</div>

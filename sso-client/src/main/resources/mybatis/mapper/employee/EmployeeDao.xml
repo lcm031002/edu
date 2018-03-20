@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ebusiness.cas.client.dao.EmployeeDao">
+	<resultMap type="com.ebusiness.cas.client.common.model.Employee"
+		id="pojoMap">
+		<id property="id" column="id" />
+		<result property="encoding" column="ENCODING" />
+		<result property="employeeName" column="EMPLOYEE_NAME" />
+		<result property="sex" column="SEX" />
+		<result property="identificationCard" column="ID_ID" />
+		<result property="email" column="EMAIL" />
+		<result property="phone" column="PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="status" column="STATUS" />
+		<result property="createUser" column="CREATE_USER" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateUser" column="UPDATE_USER" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="orgName" column="ORG_NAME" />
+	</resultMap>
+	
+	<!-- 查询团队对应的数据对象 -->
+	<select id="queryEmployeeById" resultMap="pojoMap"
+		parameterType="com.ebusiness.cas.client.common.model.Employee">
+		select id, ENCODING, EMPLOYEE_NAME,SEX,ID_ID, EMAIL,PHONE,ADDRESS,DESCRIPTION,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+		  from TAB_EMPLOYEE_INFO
+		 where id = #{id}
+	</select>
+	
+	<!-- 修改账户 -->
+	<update id="updateEmployee" 
+		parameterType="com.ebusiness.cas.client.common.model.Employee">
+		update TAB_EMPLOYEE_INFO set
+		UPDATE_TIME = sysdate
+		,ENCODING = #{encoding,jdbcType = VARCHAR}
+		,EMPLOYEE_NAME = #{employeeName,jdbcType = VARCHAR}
+		,SEX = #{sex,jdbcType = NUMERIC}
+		,ID_ID = #{identificationCard,jdbcType = VARCHAR}
+		,email = #{email,jdbcType = VARCHAR}
+		,phone = #{phone,jdbcType = VARCHAR}
+		,address = #{address,jdbcType = VARCHAR}
+		,DESCRIPTION = #{description,jdbcType = VARCHAR}
+		,STATUS = #{status,jdbcType = NUMERIC}
+		,UPDATE_USER = #{updateUser,jdbcType = NUMERIC}
+		where id = #{id,jdbcType = NUMERIC}
+	</update>
+	
+	<insert id="addEmployee" parameterType="com.ebusiness.cas.client.common.model.Employee">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			SELECT SEQ_TAB_EMPLOYEE_INFO.nextval AS id from dual
+		</selectKey>
+		insert into TAB_EMPLOYEE_INFO t
+		(
+			ID,
+			ENCODING,
+			EMPLOYEE_NAME,
+			SEX,
+			ID_ID,
+			EMAIL,
+			PHONE,
+			ADDRESS,
+			DESCRIPTION,
+			STATUS,
+			CREATE_USER,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME
+		)
+		values
+		(
+			#{id,jdbcType = NUMERIC},
+			#{encoding,jdbcType = VARCHAR},
+			#{employeeName,jdbcType = VARCHAR},
+			#{sex,jdbcType = NUMERIC},
+			#{identificationCard,jdbcType = VARCHAR},
+			#{email,jdbcType = VARCHAR},
+			#{phone,jdbcType = VARCHAR},
+			#{address,jdbcType = VARCHAR},
+			#{description,jdbcType = VARCHAR},
+			#{status,jdbcType = NUMERIC},
+			#{createUser,jdbcType = NUMERIC},
+			sysdate,
+			#{updateUser,jdbcType = NUMERIC},
+			sysdate
+		)
+	</insert>
+	
+	<!-- 查询可用员工列表 -->
+	<select id="queryEmployeeList" resultMap="pojoMap"  parameterType="java.util.Map">
+		select tei.id,
+		       tei.ENCODING,
+		       tei.EMPLOYEE_NAME,
+		       tei.SEX,
+		       tei.ID_ID,
+		       tei.EMAIL,
+		       tei.PHONE,
+		       tei.ADDRESS,
+		       tei.DESCRIPTION,
+		       tei.STATUS,
+		       tei.CREATE_USER,
+		       tei.CREATE_TIME,
+		       tei.UPDATE_USER,
+		       tei.UPDATE_TIME,
+		       toi.ORG_NAME
+		  from TAB_EMPLOYEE_INFO tei
+		  left join TAB_EMPLOYEE_DEPARTMENT_REF tedr
+		    on tedr.employee_id = tei.id
+		  left join tab_organization_info toi
+		    on toi.id = tedr.dep_org_id
+		 where 
+		    tei.STATUS = 1
+		    <if test="searchName!=null">
+			 	and (tei.EMPLOYEE_NAME like '%' || #{searchName} || '%'
+				    or tei.PHONE like '%' || #{searchName} || '%'
+				    or tei.ENCODING like '%' || #{searchName} || '%'
+				    or tei.ID_ID like '%' || #{searchName} || '%'
+				    or tei.EMAIL like '%' || #{searchName} || '%'
+				    or tei.ADDRESS like '%' || #{searchName} || '%'
+				    or tei.DESCRIPTION like '%' || #{searchName} || '%'
+			    )
+		 	</if>
+	</select>
+</mapper>

@@ -1,0 +1,53 @@
+<rd-modal ng-form="form">
+    <rd-modal-title>晚辅导套餐修改</rd-modal-title>
+    <rd-modal-body>
+        <div class="form-horizontal">
+            <div class="hide">
+                <input type="text" ng-model='modalData.id'>
+            </div>
+            <div class="form-group-inline">
+                <label class="col-sm-2 control-label">套餐名称：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control"
+                           ng-model='modalData.combo_name'>
+                </div>
+                <label class="col-sm-2 control-label">年级：</label>
+                <div class="col-sm-4">
+                    <select class="form-control"
+                            ng-model="modalData.grade_id"
+                            ng-options="grade.id as grade.grade_name for grade in gradeList">
+                    </select>
+                </div>
+                <label class="col-sm-2 control-label">套餐类型：</label>
+                <div class="col-sm-4">
+                    <select class="form-control"
+                            ng-model="modalData.combo_type"
+                            ng-options="type.id as type.name for type in comboTypeList">
+                    </select>
+                </div>
+                <label class="col-sm-2 control-label">价格：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control"
+                           ng-model='modalData.price'>
+                </div>
+                <label class="col-sm-2 control-label">课次：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control"
+                           ng-model='modalData.course_count'>
+                </div>
+                <label class="col-sm-2 control-label">校区：</label>
+                <div class="col-sm-4">
+                    <select class="form-control"
+                            ng-model="modalData.branch_id"
+                            ng-options="branch.id as branch.org_name for branch in branchList">
+                    </select>
+                </div>
+            </div>
+        </div>
+        </div>
+    </rd-modal-body>
+    <rd-modal-footer>
+        <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+        <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+    </rd-modal-footer>
+</rd-modal>

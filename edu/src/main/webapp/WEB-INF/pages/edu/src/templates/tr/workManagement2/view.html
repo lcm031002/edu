@@ -1,0 +1,27 @@
+<div id="tr-workMgt-view" class="erp tr layout-column" ng-controller="frWorkMgtWorkViewCtrl2 as mgtWorkView" >
+  <div class="panel panel-primary mb-10">
+    <div class="panel-heading font-bold layout-row">
+      <div ng-click="mgtWorkView.back()" class="mr-10">
+        <a href="javascript:;" class="tr-primary-fg">
+          <i class="fa fa-angle-left fa-lg"></i>
+          <span>返回</span>
+        </a>
+      </div>
+      <p class="title">作业管理 2.0 / {{mgtWorkView.title}}</p>
+    </div>
+  </div>
+
+  <!-- 作业浏览 -->
+  <div class="flex class-work-wrap layout-column tr-white-bg tr-container" 
+    ng-if="mgtWorkView.type === 'paper'">
+    <!-- 试题的展示 这块应该放在作业管理模块 -->
+    <div ng-include="'./templates/tr/template/my-course/paper-item.html'"></div>
+  </div>
+
+  <div class="flex-box layout-align-center-center class-work-wrap tr-white-bg tr-container video-wrap" 
+    ng-if="mgtWorkView.type === 'video'">
+    <video src="{{mgtWorkView.videoUrl | trustUrl}}" controls="controls" autoplay="autoplay" width="800px">
+      您的浏览器不支持 video 标签。
+    </video>
+  </div>
+</div>

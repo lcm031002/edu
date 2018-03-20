@@ -1,0 +1,121 @@
+<div class="report {{loadStatues!=false?'':'min-width-2200'}}" ng-controller="report_orderChangeReportController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">报冻退转报表</span>
+        </div>
+        <div class="panel-body">
+            <div class="search-panel" style="width:80vw;">
+                <div class="form form-inline">
+                    <div class="form-group m-0 mr-r20">
+                        <rd-date-picker-range 
+                            ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date" 
+                            ng-default-range="'today'">
+                        </rd-date-picker-range>
+                    </div>
+                </div>
+                <div class="form-inline">
+                  <div class="form-group">
+                    <span class="input-label">团队：</span>
+                    <kl-bu-select bu-id="searchParam.p_bu_id"></kl-bu-select>
+                    <span class="input-label">校区：</span>
+                    <kl-branch-select bu-id="searchParam.p_bu_id" branch-id="searchParam.p_branch_id"></kl-branch-select>
+                  </div>
+                  <div class="form-group">
+                    <span class="input-label">业务模式：</span>
+                    <select class="form-control" ng-model="searchParam.p_business_type" ng-options="var.code as var.name for var in businessList"></select> 
+                    
+                    <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                    <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-stripped">
+                <col width="2%"/>
+	            <col width="5%"/>
+	            <col width="8%"/>
+	            <col width="9%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="7%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="3%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+                <col width="4%"/>
+                <col width="4%"/>
+                <col width="4%"/>
+                <col width="4%"/>
+                <col width="4%"/>
+	            <col width="4%"/>
+ 	            <col width="4%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+				<th>业务日期</th>
+				<th>报班单号</th>
+				<th>学生编码</th>
+				<th>学生姓名</th>
+				<th>年级</th>
+				<th>业务校区</th>
+				<th>业绩校区</th>
+				<th>课程商品</th>
+				<th>业务类型</th>
+				<th>报班金额</th>
+				<th>科目</th>
+				<th>报班课时</th>
+				<th>预结转</th>
+				<th>补结转</th>
+				<th>退费金额</th>
+				<th>退费补扣</th>
+				<th>退费课时</th>
+				<th>转出金额</th>
+				<th>转出课时</th>
+				<th>转入金额</th>
+				<th>转入课时</th>                
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="orderChange in orderChangeList"
+                ng-if="!loadStatues && orderChangeList && orderChangeList.length">
+                <td>{{$index + 1}}</td>
+				<td>{{orderChange.bus_date}}</td>
+				<td class="word_break">{{orderChange.order_encoding}}</td>
+				<td class="word_break">{{orderChange.student_encoding}}</td>
+				<td class="word_break">{{orderChange.student_name}}</td>
+				<td>{{orderChange.grade_name}}</td>
+				<td>{{orderChange.branch_name}}</td>
+				<td>{{orderChange.course_branch_name}}</td>
+				<td>{{orderChange.course_name}}</td>
+				<td>{{orderChange.bus_type}}</td>
+				<td class="word_break">{{orderChange.baoban}}</td>
+				<td>{{orderChange.subject_name}}</td>
+				<td class="word_break">{{orderChange.bao}}</td>
+				<td class="word_break">{{orderChange.yujiezhuan}}</td>
+				<td class="word_break">{{orderChange.bujiezhuan}}</td>
+				<td class="word_break">{{orderChange.tui}}</td>
+				<td class="word_break">{{orderChange.bukou}}</td>
+				<td class="word_break">{{orderChange.tuikeshi}}</td>
+				<td class="word_break">{{orderChange.zhuanchu}}</td>
+				<td class="word_break">{{orderChange.zhuanchukeshi}}</td>
+				<td class="word_break">{{orderChange.zhuanru}}</td>
+				<td class="word_break">{{orderChange.zhuanrukeshi}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (orderChangeList == null || orderChangeList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="report" ng-controller="report_performanceSumController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">业绩汇总表</span>
+        </div>
+        <div class="panel-body">
+            <div class="search-panel">
+                <div class="form form-inline">
+                    <div class="form-group m-0 mr-r20">
+                        <rd-date-picker-range 
+                            ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date" 
+                            ng-default-range="'today'">
+                        </rd-date-picker-range>
+                    </div>
+                </div>
+                <div class="form form-inline">
+                    <div class="form-group m-0">
+                        <rd-branch ng-bu-id="searchParam.p_bu_id"
+                            ng-branch-id="searchParam.p_branch_id">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                        <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+                <col width="6%"/>
+	            <col width="22%"/>
+	            <col width="14%"/>
+	            <col width="12%"/>
+	            <col width="12%"/>
+	            <col width="12%"/>
+	            <col width="12%"/>
+	            <col width="12%"/>
+            <thead>
+            <tr>
+				<th>序号</th>
+				<th>课程季</th>	
+				<th>日期</th>
+                <th>一对多</th>
+				<th>一对一</th>	                	
+				<th>多对多</th>
+				<th>理赔金额</th>	
+				<th>总金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="performanceSum in performanceSumList"
+                ng-if="!loadStatues && performanceSumList && performanceSumList.length">
+                <td>{{$index + 1}}</td>
+                <td>{{performanceSum.courseasonname}}</td>
+                <td>{{performanceSum.datetime}}</td>
+                <td class="word_break">{{performanceSum.business1}}</td>
+                <td class="word_break">{{performanceSum.business2}}</td>
+                <td class="word_break">{{performanceSum.business3}}</td>
+                <td class="word_break">{{performanceSum.claimamount}}</td>
+                <td class="word_break">{{performanceSum.allamount}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (performanceSumList == null || performanceSumList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<rd-modal>
+	<rd-modal-title>{{course.name}}[课次{{course.seq}}]待确定列表</rd-modal-title>
+	<rd-modal-body>
+		<div class="table-panel">
+			<table class="table table-striped">
+				<tr>
+					<th>订单编号</th>
+					<th>学生姓名</th>
+					<th>学生ID</th>
+					<th>订单状态</th>
+				</tr>
+				<tr ng-repeat="detail in detailList">
+					<td>{{detail.orderNo}}</td>
+					<td>{{detail.studentName}}</td>
+					<td>{{detail.studentId}}</td>
+					<td ng-show="type==1">{{detail.status == 1 ? '正常':'未知'}}</td>
+					<td ng-show="type==2">{{detail.status == 1 ? '未审核' : detail.status == 2 ? '审核中' : detail.status == 3 ? '待缴费' : '未知'}}</td>
+				</tr>
+			</table>
+		</div>
+	</rd-modal-body>
+	<rd-modal-footer>
+		<button class="btn btn-default" ng-click="$dismiss()">关闭</button>
+	</rd-modal-footer>
+</rd-modal>

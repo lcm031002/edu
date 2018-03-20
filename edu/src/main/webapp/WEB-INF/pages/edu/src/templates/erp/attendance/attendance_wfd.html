@@ -1,0 +1,45 @@
+<div ng-controller="erp_attendanceWfdController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">晚辅导考勤</span></div>
+		<div class="panel-body operation-panel">
+	      	<div class="searchbar">
+	      		<rd-date-picker-range 
+							ng-start-date="searchParam.start_date"
+							ng-end-date="searchParam.end_date"
+							ng-default-range = "searchParam.range"
+	      			ng-date-change="query()"></rd-date-picker-range>
+	      	</div>
+		</div>
+    </div>
+	<!--main form end-->
+	<div class="table-panel">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<th>日期</th>
+					<th>实到学生数</th>
+					<th>实到教师数</th>
+					<th>备注</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr ng-repeat="wfd in wfdList"
+					ng-if="!loadStatues && wfdList && wfdList.length">
+					<td>{{wfd.DATE_TIME}}</td>
+					<td>{{wfd.STUDENT_COUNT}}</td>
+					<td>{{wfd.TEACHER_COUNT}}</td>
+					<td>{{wfd.REMARK}}</td>
+					<td>
+						<a href="javascript:void(0);" ng-click="handleAttendance(wfd)">考勤</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+		<ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+	</div>
+</div>

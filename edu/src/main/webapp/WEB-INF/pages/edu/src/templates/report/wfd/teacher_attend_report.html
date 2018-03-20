@@ -1,0 +1,74 @@
+<div class="{{loadStatues!=false?'':'min-width-1300'}}" ng-controller="report_teacherAttendReportController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">晚辅导教师考勤表</span></div>
+        <div class="panel-body">
+            <div class="searchbar" style="width: 80vw;">
+                <div class="form form-inline">
+                    <div class="form-group m-0 mr-r20">
+                        <rd-date-picker-range 
+                            ng-start-date="searchParam.p_calcBeginDate" 
+                            ng-end-date="searchParam.p_calcEndDate">
+                        </rd-date-picker-range>
+                    </div>
+                </div>
+                <div class="form form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id"
+                      ng-branch-id="searchParam.p_branch_id">
+                      <div class="form-group">
+                            <select class="form-control" ng-model="searchParam.p_isCourseTime" 
+                              ng-options="selector.value as selector.label for selector in selectorList">
+                            </select>
+                        
+                            <input type="text" class="form-control" placeholder="教师姓名" ng-model="searchParam.p_search_key" />
+                            <button class="btn btn-primary" ng-click="query()">
+                                <i class="iconfont icon-search"></i>查询
+                            </button>
+                            <button class="btn btn-primary" ng-click="exportExcel()">
+                                <i class="iconfont icon-export"></i>导出
+                            </button>
+                        </div>
+                    </rd-branch>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>业务校区</th>
+                <th>教师编号</th>
+                <th>教师ID</th>
+                <th>教师姓名</th>
+                <th>授课时间</th>
+                <th>授课时长</th>
+                <th>考勤状态</th>
+                <th>考勤时间</th>
+                <th>考勤人</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="teacherAttend in teacherAttendList" ng-if="!loadStatues && teacherAttendList && teacherAttendList.length">
+                <td>{{$index+1}}</td>
+                <td>{{teacherAttend.branch_name}}</td>
+                <td>{{teacherAttend.teacher_code}}</td>
+                <td>{{teacherAttend.teacher_id}}</td>
+                <td>{{teacherAttend.teacher_name}}</td>
+                <td>{{teacherAttend.teacher_attend_date}}</td>
+                <td>{{teacherAttend.teacher_attend_length}}</td>
+                <td>{{teacherAttend.teacher_attend_type_name}}</td>
+                <td>{{teacherAttend.attend_date}}</td>
+                <td>{{teacherAttend.attender_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (teacherAttendList == null || teacherAttendList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

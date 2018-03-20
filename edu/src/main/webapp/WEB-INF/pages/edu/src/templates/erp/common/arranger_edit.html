@@ -1,0 +1,167 @@
+<div class="erp arranger-edit" ng-controller="erp_arrangerEditController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">
+        <a ng-click="goBack()" class="cur"> 返回 </a>
+        {{panelTitle}}
+      </span>
+    </div>
+    <div class="panel-body">
+      <div class="form form-horizontal " style="max-width: 1170px;">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="control-label col-lg-4 required">
+              关联员工
+            </label>
+            <div class="col-lg-8">
+              <klc-teacher-typeahead employee-id="arranger.employeeId" employee-name="arranger.employeeName" encoding="arranger.employeeEncoding"
+                teacher-type="4"></klc-teacher-typeahead>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label class="control-label col-lg-4 required">
+              所属团队
+            </label>
+            <div class="col-lg-8">
+              <kl-bu-select bu-id="arranger.buId"></kl-bu-select>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group">
+            <label class="control-label col-lg-2 required">
+              负责科目
+            </label>
+            <div class="col-lg-10">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>科目</th>
+                    <th>年级</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="subject in arranger.courseArrangeSpSubjectList">
+                    <td>{{$index + 1}}</td>
+                    <td>{{subject.subjectName}}</td>
+                    <td>
+                      <span class="label label-info mr5 mt5"
+                        ng-repeat="grade in subject.courseArrangeSpGradeList">
+                        {{grade.gradeName}}
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-xs btn-danger" ng-click="onRemoveSubject($index)">
+                        <i class="iconfont icon-delete"></i> 删除
+                      </button>
+                      <button class="btn btn-default btn-xs" ng-click="onEditSubject($index, subject)">
+                        <i class="iconfont icon-edit"></i>
+                        编辑
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn btn-primary" ng-click="onAddSubject()">
+                <i class="iconfont icon-add"></i> 新增科目
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 text-center">
+          <hr>
+          <button class="btn btn-default" ng-click="onCancel()">取消</button>
+          <button class="btn btn-primary" ng-click="onSave()">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/ng-template" id="subjectModal.html">
+    <rd-modal>
+      <rd-modal-title>
+        <div ng-switch="$resolve.optype">
+          <div ng-switch-when="add">
+            添加负责科目
+          </div>
+          <div ng-switch-when="edit">
+            编辑负责科目
+          </div>
+        </div>
+      </rd-modal-title>
+      <rd-modal-body>
+        <div class="arranger-edit form form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-lg-3 required">
+              科目
+            </label>
+            <div class="col-lg-8">
+              <kl-subject-select
+                subject-id="subject.subjectId"
+                subject-name="subject.subjectName">
+              </kl-subject-select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-lg-3 required">
+              年级
+            </label>
+            <div class="col-lg-8">
+              <div class="multi-select-result-wrapper">
+                <span class="btn btn-default btn-xs"
+                  ng-repeat="grade in subject.courseArrangeSpGradeList"
+                  ng-click="handleRemoveGrade(grade)">
+                  {{grade.gradeName}}
+                  <i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+                </span>
+              </div>
+              <div class="form-horizontal  mt10 pos-r">
+                <input type="text" 
+                  class="form-control" 
+                  placeholder="输入要查询的年级名称" 
+                  ng-model="gradeSearchInfo" 
+                  style="border-radius: 0;">
+                <i class="iconfont icon-search form-control-feedback"></i>
+              </div>
+              <div class="multi-sel-table" 
+                style="width: 100%; max-height: 160px; overflow-y: auto; overflow-x: hidden;">
+                <table class="table table-bordered" >
+                  <tr ng-repeat="grade in gradeList | filter:{'gradeName': gradeSearchInfo} |orderBy : 'gradeName' ">
+                    <td width="35">
+                      <input type="checkbox" ng-model="grade.checked" ng-change="handleGradeChange(grade)">
+                    </td>
+                    <td width="100">{{grade.gradeName}}</td>
+                    <td>{{grade.gradeEncodeing}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button class="btn btn-default" ng-click="$dismiss()">
+          取消
+        </button>
+        <button class="btn btn-primary" ng-click="onSave()">
+          保存
+        </button>
+      </rd-modal-footer>
+    </rd-modal>
+    <style>
+      .arranger-edit .multi-select-result-wrapper {
+        margin-bottom: 10px;
+        min-height: 35px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #f2f2f2;
+      }
+      .arranger-edit .multi-select-result-wrapper>span.btn{
+        margin: 5px 3px;
+      }
+    </style>
+  </script>
+</div>

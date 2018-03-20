@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>点名表打印预览</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif;
+      background: #f3f3f3;
+    }
+
+    #main {
+      width: 287mm;
+      padding: 20px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .print-page {
+      page-break-after: always;
+      margin-bottom: 50px;
+    }
+
+    .print-page__hd {
+      padding: 5px 0;
+      font-size: 12px;
+    }
+
+    .print-page-header__row {
+      display: flex;
+      padding-bottom: 5px;
+    }
+
+    .print-page-header__col {
+      flex: 1;
+    }
+
+    .print-table {
+      border: 1px solid #555;
+      color: #333;
+      border-spacing: 0;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+    }
+
+    .print-table th,
+    .print-table td {
+      padding: 4px 3px;
+      border: 1px solid #555;
+      width: 6mm;
+    }
+
+    .tc {
+      text-align: center;
+    }
+
+    .tr {
+      text-align: right;
+    }
+
+    .date-format {
+      position: relative;
+      width: 24px;
+      height: 30px;
+      margin: 0 auto;
+    }
+
+    .date-format span {
+      position: absolute;
+    }
+
+    .date-format__t {
+      right: 10px;
+      top: 0;
+    }
+
+    .date-format__b {
+      left: 10px;
+      bottom: 0;
+    }
+
+    .date-format__line {
+      width: 20px;
+      height: 1px;
+      border-top: 1px solid #333;
+      transform: rotate(-45deg);
+      top: 15px;
+      left: 1px;
+    }
+
+    .print-show {
+      display: none;
+    }
+
+    .print-hide {
+      display: block
+    }
+    .print-btn {
+      width: 50px;
+      height: 50px;
+      background: url(print_btn.png) no-repeat center center #fff;
+      border-radius: 4px;
+      position: fixed;
+      top: 300px;
+      left: 50%;
+      margin-left: 580px;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+    .print-btn:hover {
+      background-color: #f0f0f0f0
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 0mm;
+      }
+      body{
+        background: #fff
+      }
+      #main {
+        width: 100%;
+        padding: 0;
+      }
+      .print-show {
+        display: block;
+      }
+      .print-hide {
+        display: none
+      }
+      .print-page {
+        margin-bottom: 0;
+      }
+    }
+  </style>
+  <script src="https://cdn.bootcss.com/axios/0.17.1/axios.min.js"></script>
+  <script src="https://cdn.bootcss.com/vue/2.5.8/vue.min.js"></script>
+</head>
+
+<body>
+    <div id="printBtn" onclick="vprint()" class="print-btn"></div>
+  <div id="main">
+    <template v-for="(students, index) in studentInfoList">
+      <template v-for="days in dayList">
+        <page :day-list="days" :course-name="courseName" :start-date="startDate" :end-date="endDate" :chinese-teacher-name="chineseTeacherName"
+          :foreign-teacher-name="foreignTeacherName" :course-time-count="courseTimeCount" :class-cycle="classCycle" :student-list="students"
+          :per-student-size="index*20" :latest-start-date="latestStartDate" :latest-end-date="latestEndDate" />
+      </template>
+    </template>
+  </div>
+
+  <script type="text/x-template" id="page">
+    <div class="print-page">
+        <header class="print-page__hd">
+          <div class="print-page-header__row">
+            <div class="print-page-header__col"><label>Class No 班别：</label>{{courseName}}</div>
+            <div class="print-page-header__col tr"><span class="print-hide">Date 起：{{latestStartDate|dateFormat}}</span><span class="print-show">Date 起：{{startDate|dateFormat}}</span></div>
+          </div>
+          <div class="print-page-header__row">
+            <div class="print-page-header__col"><label>Chinese Teacher：</label>{{chineseTeacherName}}</div>
+            <div class="print-page-header__col"><label>Foreign Teacher：</label>{{foreignTeacherName}}</div>
+            <div class="print-page-header__col">每周{{classCycle}} 共{{courseTimeCount}}堂</div>
+            <div class="print-page-header__col tr"><span class="print-hide">迄：{{latestEndDate|dateFormat}}</span><span class="print-show">迄：{{endDate|dateFormat}}</span></div>
+          </div>
+        </header>
+        <section class="print-page__bd">
+          <table class="print-table">
+            <thead>
+              <tr>
+                <th class="tc">No</th>
+                <th>收费状况</th>
+                <th style="width:auto">Chinese Name</th>
+                <th v-for="(day, index) in dayList" :key="index">
+                  <div>{{day.classTimeNo}}</div>
+                  <div>{{day.classDate|dateFormat('week')}}</div>
+                  <div class="date-format-wrap">
+                    <div class="date-format">
+                      <span class="date-format__t">{{day.classDate|dateFormat('month')}}</span>
+                      <span class="date-format__line"></span>
+                      <span class="date-format__b">{{day.classDate|dateFormat('day')}}</span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(student, studentIndex) in studentList" :key="student.studentId">
+                <td class="tc">{{perStudentSize + studentIndex + 1}}</td>
+                <td></td>
+                <td>{{student.chineseName}}</td>
+                <td v-for="day in dayList" :key="day.schedulingId"></td>
+              </tr>
+              <tr>
+                  <td class="tc">/</td>
+                  <td colspan="6">出席Present</td>
+                  <td colspan="7">旷课Unexcused Absence</td>
+                  <td colspan="6">请假Excused Absence</td>
+                  <td colspan="7">迟到Late</td>
+                </tr>
+                <tr>
+                  <td class="tc">V</td>
+                  <td colspan="6">已缴费</td>
+                  <td colspan="7">单字检定</td>
+                  <td colspan="6">期末考试</td>
+                  <td colspan="7">更换Folder</td>
+                </tr>
+                <tr>
+                  <td class="tc">X</td>
+                  <td colspan="6">未缴费</td>
+                  <td colspan="7">学费带放置</td>
+                  <td colspan="6">作业抽查</td>
+                  <td colspan="7">更换进度表</td>
+                </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+  </script>
+
+
+  <script>
+
+          Vue.component('page', {
+              template: '#page',
+              props: {
+                  classCycle: {
+                      default: ''
+                  },
+                  courseName: {
+                      default: ''
+                  },
+                  startDate: {
+                      default: ''
+                  },
+                  endDate: {
+                      default: ''
+                  },
+                  latestStartDate: {
+                      default: ''
+                  },
+                  latestEndDate: {
+                      default: ''
+                  },
+                  chineseTeacherName: {
+                      default: ''
+                  },
+                  foreignTeacherName: {
+                      default: ''
+                  },
+                  courseTimeCount: {
+                      type: Number,
+                      default: 0
+                  },
+                  dayList: {
+                      type: Array,
+                      default: function () {
+                          return []
+                      }
+                  },
+                  studentList: {
+                      type: Array,
+                      default: function () {
+                          return []
+                      }
+                  },
+                  perStudentSize: {
+                      type: Number
+                  }
+              },
+              filters: {
+                  dateFormat(value, type) {
+                      var str = ''
+                      if (value) {
+                          var date = new Date(value)
+                          var week = date.getDay()
+                          var y = date.getFullYear()
+                          var d = date.getDate()
+                          var m = date.getMonth() + 1
+                          switch (type) {
+                              case 'week':
+                                  str = ['日', '一', '二', '三', '四', '五', '六'][week]
+                                  break
+                              case 'day':
+                                  str = d
+                                  break
+                              case 'month':
+                                  str = m
+                                  break
+                              default:
+                                  m = ('0' + m).slice(-2)
+                                  d = ('0' + d).slice(-2)
+                                  str = y + '/' + m + '/' + d
+                          }
+                      }
+                      return str
+                  }
+              }
+          })
+          vPage = new Vue({
+              el: '#main',
+              data: {
+                  classCycle: '',
+                  courseName: '',
+                  startDate: '',
+                  endDate: '',
+                  chineseTeacherName: '',
+                  foreignTeacherName: '',
+                  latestStartDate: '',
+                  latestEndDate: '',
+                  courseTimeCount: 0,
+                  dayList: [],
+                  studentInfoList: []
+              },
+              created() {
+                  var that = this
+                  axios.get('/erp/callName/detail', {params: {courseId : window.location.search.substr("10")}}).then(function (res) {
+                      var dayList = res.data.data.classSchedulingList
+                      var remainder = dayList.length % 24;
+                      var dis = 24 - remainder
+                      for (var i = 0; i < dis; i++) {
+                          dayList.push({
+                              schedulingId: '',
+                              classTimeNo: '',
+                              classDate: ''
+                          })
+                      }
+                      that.dayList = that.sliceArray(dayList, 24)
+                      if (res.data.data.studentInfoList.length < 20) {
+                          var d = 20 - res.data.data.studentInfoList.length
+                          var newArr = new Array(d).fill({
+                              "studentId": '',
+                              "chineseName": "",
+                              "foreignName": null
+                          })
+                      res.data.data.studentInfoList = res.data.data.studentInfoList.concat(newArr)
+                      }
+                      that.studentInfoList = that.sliceArray(res.data.data.studentInfoList, 20)
+                      that.courseName = res.data.data.courseName
+                      that.startDate = res.data.data.startDate
+                      that.endDate = res.data.data.endDate
+                      that.chineseTeacherName = res.data.data.chineseTeacherName
+                      that.foreignTeacherName = res.data.data.foreignTeacherName
+                      that.courseTimeCount = res.data.data.courseTimeCount
+                      that.classCycle = res.data.data.classCycle
+                      that.latestStartDate = res.data.data.latestStartDate
+                      that.latestEndDate = res.data.data.latestEndDate
+                  })
+
+              },
+              methods: {
+                  sliceArray(arr, size) {
+                      var result = []
+                      for (var i = 0; i < Math.ceil(arr.length / size); i++) {
+                          var start = i * size
+                          var end = start + size
+                          result.push(arr.slice(start, end))
+                      }
+                      return result
+                  }
+              }
+          })
+
+           function vprint() {
+               if(vPage._isMounted) {
+                   if(confirm("点名表在第一次打印后，将不再可以修改，是否继续")){
+                       axios.put('/erp/callName/save/' + window.location.search.substr(10), {})
+                           .then(function() {
+                               window.print()
+                           })
+                   }
+               }
+           }
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,162 @@
+<div class="erp account-transfer" 
+  ng-controller="erp_studentAccountTransferController"
+  ng-form="transferForm">
+  <div class="form">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span class="title">团队内互转</span>
+      </div>
+      <div class="panel-body ov-a">
+        <div class="flex-box transfer-container">
+          
+          <!-- 转出学员 -->
+          <div class="flex_4">
+            <h3 class="text-center">转出学员</h3>
+            <div class="transfer-out student-info">
+              <div class="avatar">
+                <img src="{{transfer_out_student.student_heading || 'img/erp/default-avatar.png'}}" />
+              </div>
+              <div class="form-inline">
+              	<div class="hide">
+              		<input type="text" ng-model="transfer_out_student.id"/>
+              		<input type="text" ng-model="transfer_out_student.bu_id"/>
+              	</div>
+                <div class="form-group">
+                  姓名：
+                  <input class="form-control" type="text" ng-model="transfer_out_student.student_name" readonly="readonly" />
+                </div>
+                <div class="form-group">
+                  编码：
+                  <input class="form-control" type="text" ng-model="transfer_out_student.encoding" readonly="readonly"  />
+                </div>
+                <div class="divider"></div>
+                <div class="form-group">
+                  <span style="text-indent: 1em;display: inline-block;">账户类型：</span>
+                  <select class="form-control" ng-model="transfer_out_student.account_type"
+                  	ng-options="accountType.key as accountType.value for accountType in accountTypeOutList" ng-change="changeTransferType()"></select>
+                </div>
+                <div class="form-group">
+                  转账前金额：<span>{{transfer_out_student.fee_amount}}.00元</span>
+                </div>
+                <div class="form-group">
+                  转账后金额：<span>{{transfer_out_student.fee_amount - (transfer_money || 0)}}.00元</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 转入学员 -->
+          <div class="alignself-center next-step flex_1 text-center"><i class="iconfont icon-public_nextStep"></i></div>
+          <div class=" flex_4">
+            <h3 class="text-center">转入学员</h3>
+            <div class="transfer-in student-info">
+              <div class="avatar">
+                <img src="{{transfer_in_student.student_heading || 'img/erp/default-avatar.png'}}" />
+              </div>
+              <div  style="position: relative;" class="form-inline">
+              	<div class="hide">
+              		<input type="text" ng-model="transfer_in_student.id"/>
+              		<input type="text" ng-model="transfer_in_student.bu_id"/>
+              	</div>
+                <div class="form-group">
+                  姓名：
+                  <input class="form-control" type="text" id="txtTransferInStudentName"
+                    ng-model="transfer_in_student.student_name" 
+                    ng-focus="onTransferInStudentNameFocus()" 
+                    ng-blur="onTransferInStudentNameBlur()" 
+                    ng-change="onTransferInStudentNameChange()" />
+
+                  <ul ng-if="searchResult && searchResult.length && isDown!='loading'"
+                    class="search-list-con-transferAccounts {{inputing && searchResult !=null && searchResult.length > 0 ? 'showList' : ''}}">
+                    <li ng-repeat="stu in searchResult" 
+                      title="学校：{{stu.school_name != null ? stu.school_name : '-'}}，年级：{{stu.grade_name != null ? stu.grade_name : '-'}}，手机号：{{stu.phone != null ? stu.phone : '-'}}">
+                      <a href="javascript:void(0)" 
+                        ng-click="selectTransferInStudent(stu)">
+                        {{stu.student_name}}-{{stu.encoding}}
+                      </a>
+                    </li>
+                    <li ng-if="isDown=='loading'" class="search-list-con-transferAccounts showList">
+                      <div align="center"><img src="img/erp/loading2.gif" /></div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="form-group">
+                  编码：
+                  <input 
+                    name="transfer_in_endcoding"
+                    class="form-control" 
+                    type="text" 
+                    ng-model="transfer_in_student.encoding" 
+                    readonly="readonly" 
+                    required />
+                  <div ng-messages = "transferForm.transfer_in_endcoding.$error" class="mt10">
+                    <span style="display: inline-block; width: 3.5em;"></span><span ng-message="required">请选择学员</span>
+                  </div>
+                </div>
+                <div class="divider" style="height: 15px;"></div>
+                <div class="form-group">
+                  <span style="text-indent: 1em;display: inline-block;">账户类型：</span>
+                  <select class="form-control" ng-model="transfer_in_student.account_type"
+                  	ng-options="accountType.key as accountType.value for accountType in accountTypeInList" disabled></select>
+                </div>
+                <div class="form-group clearfix">
+                  转账前金额：<span>{{transfer_in_student.fee_amount || 0}}.00元</span>
+                </div>
+                <div class="form-group">
+                  转账后金额：<span>{{(transfer_in_student.fee_amount || 0) + transfer_money}}.00元</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 转账金额 -->
+          <div class="alignself-center next-step flex_1 text-center"><i class="iconfont icon-public_nextStep"></i></div>
+          <div class="flex_4">
+            <div class="transfer-account">
+                <h3 class="text-center">转账金额</h3>
+                <div class="form">
+                    <table>
+                        <tr>
+                            <td style="width: 3em;">金额：</td>
+                            <td><input class="form-control" name="transfer_money" type="number" ng-model="transfer_money" ng-blur="onTransferOutBlur()" required />
+                              <div ng-messages="transferForm.transfer_money.$error">
+                                <p ng-message="required">请输入金额</p>
+                              </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>备注：</td>
+                            <td><textarea class="form-control" rows="4" ng-model="remark"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><button ng-disabled="transferForm.$invalid" class="btn btn-primary" ng-click="ZZSubmit()">确认转出</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div id="erpStudentAccountPrintPanel" class="modal fade"
+    tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">提示</h4>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+          	转账成功！<a href="javascript:void(0)" ng-click="printAccountDynamic()">点击打印</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--充值弹出框 end-->

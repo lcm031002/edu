@@ -1,0 +1,48 @@
+<div class="ov-a" style="max-height: 250px;">
+  <button class="btn btn-primary" ng-click="getOrderCourseList()"><i class="iconfont icon-refresh"></i>刷新</button>
+  <table class="table table-striped" style="min-width: 1600px;">
+    <thead>
+      <tr>
+        <th>
+          <input type="checkbox" ng-model="orderCourseListCheckedAllFlag" ng-change="onCheckAllOrderCourse()">
+        </th>
+        <th>课程名称</th>
+        <th>单价</th>
+        <th>总课时</th>
+        <th>剩余可用课时</th>
+        <th>剩余可排课时</th>
+        <th>课时长度(分钟)</th>
+        <th>报班时间</th>
+        <th>校区</th>
+        <th>课程编号</th>
+        <th>报班单号</th>
+        <th>备注</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-hide="orderCourseList && orderCourseList.length > 0">
+        <td class="text-center" colspan="12">该学员暂无报班单！</td>
+      </tr>
+      <tr ng-repeat="orderCourse in orderCourseList track by $index" ng-class="{danger: !orderCourse.available}">
+        <td>
+          <input 
+            type="checkbox" ng-model="orderCourse.checked"
+            ng-disabled="!orderCourse.available || orderCourse.disabled"
+            ng-change="onCourseChecked(orderCourse)"
+          >
+        </td>
+        <td>{{orderCourse.course_name}}</td>
+        <td>{{orderCourse.former_unit_price}}</td>
+        <td>{{orderCourse.course_total_count}}</td>
+        <td>{{orderCourse.course_surplus_count}}</td>
+        <td>{{orderCourse.course_schedule_count==null?0:orderCourse.course_schedule_count}}</td>
+        <td>{{orderCourse.hour_len}}</td>
+        <td>{{orderCourse.create_time | date: 'yyyy-MM-dd HH:MM'}}</td>
+        <td>{{orderCourse.branch_name}}</td>
+        <td>{{orderCourse.course_no}}</td>
+        <td>{{orderCourse.order_no}}</td>
+        <td>{{orderCourse.remark}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

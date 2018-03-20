@@ -1,0 +1,70 @@
+<div class="erp" ng-controller="erp_StudentBjkController">
+  <div class="table-panel">
+    <div class="toolbar">
+      <div class="form-inline">
+        <div class="form-group">
+          课程季：
+          <select class="form-control" 
+            ng-model="selectedSeason"
+            ng-change="selectSeason()"
+            ng-options="season.course_season_name for season in seasons">
+          </select>
+        </div>
+        <div class="form-group">
+          科目：
+          <select class="form-control"
+            ng-model="selectedSubject"
+            ng-options="subject.name for subject in subjects"
+            ng-change = "selectSubject()">
+          </select>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped table-hover mt15">
+      <thead>
+        <tr>
+          <th>课程季</th>
+          <th>科目</th>
+          <th>教师</th>
+          <th>上课时间</th>
+          <th>报班次数<b class="cell-txt">（次）</b></th>
+          <th>转入<b class="cell-txt">（次）</b></th>
+          <th>转出<b class="cell-txt">（次）</b></th>
+          <th>退费<b class="cell-txt">（次）</b></th>
+          <th>考勤<b class="cell-txt">（次）</b></th>
+          <th>剩余<b class="cell-txt">（次）</b></th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-if="isLoading=='isLoading'">
+          <td colspan="11" align="center">
+            <img src="img/erp/loading2.gif">
+          </td>
+        </tr>
+        <tr ng-if="isLoading!='isLoading' && (!orderBJK || !orderBJK.length)">
+          <td colspan="11" align="center">
+            无数据.
+          </td>
+        </tr>
+        <tr ng-repeat="orderInfo in orderBJK" ng-if="isLoading!='isLoading'">
+          <td>{{orderInfo.COURSE_SEASON_NAME}}</td>
+          <td>{{orderInfo.SUBJECT_NAME}}</td>
+          <td>{{orderInfo.TEACHER_NAME}}</td>
+          <td>{{orderInfo.START_TIME}}-{{orderInfo.END_TIME}}</td>
+          <td>{{orderInfo.COURSE_TOTAL_COUNT}}</td>
+          <td><span class="grey-num">{{orderInfo.TRANSFER_IN_COUNT}}</span></td>
+          <td>{{orderInfo.TRANSFER_OUT_COUNT}}</td>
+          <td><span class="yellow-num">{{orderInfo.QUIT_LESSON}}</span></td>
+          <td><span class="grey-num">{{orderInfo.ATTEND_COUNT}}</span></td>
+          <td><span class="green-num">{{orderInfo.COURSE_SURPLUS_COUNT_ING}}</span></td>
+          <td>
+            <span class="cell-payc-detailc drop-menu-sub2">
+                   <a class="menu_field" href="?studentId={{orderInfo.STUDENT_ID}}&orderId={{orderInfo.ORDER_ID}}#/studentMgr/studentMgrCourse/studentMgrOrderDetail">详情</a>
+                </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

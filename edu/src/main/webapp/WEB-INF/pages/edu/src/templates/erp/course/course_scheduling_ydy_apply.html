@@ -1,0 +1,139 @@
+<div ng-controller="erp_courseSchedulingYdyApplyController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">1对1新增排课单</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button class="btn btn-primary iconfont icon-add" ng-click="newApply()"> 新增申请</button>
+        <!-- <button class="btn btn-warning iconfont icon-delete"> 取消申请</button> -->
+      </div>
+      <hr>
+      <div class="search-panel">
+        <div class="form form-inline">
+          <div class="form-group m-0">
+            <rd-date-picker-range 
+              label-name="'开课起止日期'"
+              disable-init="true"
+              ng-start-date="searchParam.beginDateFrom"
+              ng-end-date="searchParam.beginDateTo"
+              ng-default-range="searchParam.range"
+              ng-date-change="onDateRangeChange()">
+            </rd-date-picker-range>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">审批状态：</span>
+            <select 
+            ng-model="searchParam.auditStatus"
+            class="form-control"
+            ng-options="item.value as item.label for item in auditStatusList"
+            ></select>
+          </div>
+          <br class="content_br">
+          <div class="form-group">
+            <span class="input-label ng-binding">团队：</span>
+            <kl-bu-select bu-id="searchParam.buId"></kl-bu-select> 
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">校区：</span>
+            <kl-branch-select bu-id="searchParam.buId"
+              branch-id="searchParam.branchId"></kl-bu-select>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">单据状态：</span>
+            <select ng-model="searchParam.status" class="form-control" ng-options="item.code as item.name for item in applyStatusList"></select>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">创建人</span>
+            <!-- <select ng-model="searchParam.create_user_name" class="form-control" ng-options="item.id as item.create_user_name for item in applyList">
+              <option value="">全部</option>
+            </select> -->
+            <div class="form-group">
+              <klc-teacher-typeahead teacher-type="2" 
+              teacher-id="searchParam.employeeId" 
+              teacher-name="searchParam.employeeName"
+              default-name="searchParam.defaultName">
+            </klc-teacher-typeahead>
+            </div>
+            <button class="btn btn-primary iconfont icon-search" ng-click="getList()"> 查询</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="ov-a">
+      <table class="table table-stripped min-width-1650">
+        <thead>
+          <tr>
+            <!-- <th style="line-height: 0; width: 40px;"><input type="checkbox"></th> -->
+            <th style="width: 160px;">操作</th>
+            <th style="width: 95px;">单据状态</th>
+            <th style="width: 110px;">开课日期</th>
+            <th style="width: 90px;">学生姓名</th>
+            <th style="width: 180px;">上课地点</th>
+            <th style="width: 90px;">学管师</th>
+            <th style="width: 90px;">咨询师</th>
+            <th style="width: 80px;">年级</th>
+            <th style="width: 110px;">科目</th>
+            <th style="width: 100px;">当前处理人</th>
+            <th style="width: 95px;">申请类型</th>
+            <th style="width: 110px;">申请单据</th>
+            <th style="width: 90px;">创建人</th>
+            <th style="width: 100px;">审批状态</th>
+            <th style="width: 90px;">审批人</th>
+            <th style="width: 110px;">审批时间</th>
+            <th style="width: 100px;">备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in applyList"
+            ng-if="!loadStatues && applyList && applyList.length">
+            <!-- <td><input type="checkbox"></td> -->
+            <td>
+                <button class="btn btn-primary btn-xs"
+                  ng-show="item.status==5 || (item.status==1 && item.applyType != 3)"
+                  ng-click="editApplyDetail(item)">修改</button>
+                <button class="btn btn-primary btn-xs"
+                  ng-click="viewApplyDetail(item)">详情</button>
+                <button class="btn btn-default btn-xs"
+                  ng-if="item.status == 1 && item.applyType != 3"
+                  ng-click="cancelApply(item)">取消</button>
+                <button class="btn btn-danger btn-xs" ng-if="item.status==5 || item.status==0"
+                  ng-click="deleteApply(item)">删除</button>
+            </td>
+            <td class="{{applyStatus[item.status].cls}}">{{item.statusName}}</td>
+            <td>{{item.beginDate | date:'yyyy-MM-dd'}}</td>
+            <td class="text-info">{{item.studentName}}</td>
+            <td>{{item.classPlace}}</td>
+            <td>{{item.courseAdmin}}</td>
+            <td>{{item.counselor}}</td>
+            <th>{{item.stuGradeName}}</th>
+            <td>{{item.subjectName}}</td>
+            <td>{{item.courseArranger}}</td>
+            <td>{{item.applyTypeName}}</td>
+            <td>{{item.encoding}}</td>
+            <th>{{item.create_user_name}}</th>
+            <th>{{item.auditStatusName}}</th>
+            <th>{{item.auditUser}}</th>
+            <th>{{item.auditDate | date:'yyyy-MM-dd'}}</th>
+            <th class="word_break">{{item.rejectReason}}</th>            
+          </tr>
+          <tr ng-if="loadStatue">
+            <td colspan="17" align="center">
+              <img src="img/erp/loading2.gif">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-panel">
+      <ng-pagination conf="pageConf" ng-if="!loadStatues"></ng-pagination>
+    </div>
+  </div>
+</div>
+<style>
+  .panel-body > .search-panel .form-group > form.form-inline >.form-group{
+    margin-right:0;
+  }
+</style>

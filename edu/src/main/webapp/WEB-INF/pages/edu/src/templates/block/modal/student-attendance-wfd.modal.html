@@ -1,0 +1,45 @@
+<rd-modal>
+  <rd-modal-title>晚辅导考勤明细</rd-modal-title>
+  <rd-modal-body class="min-height-300 show">
+    <form class="form-inline">
+      <div class="form-group m-0">
+        上课日期：
+        <rd-date-picker-popup ng-model="wfdAttend.course_date"></rd-date-picker-popup>
+        备注：
+        <input type="text" class="form-control" ng-model="wfdAttend.remark">
+        <button class="btn btn-primary" ng-click="handleWfdAttend(31)">添加考勤</button>
+      </div>
+      </div>
+    </form>
+      <table class="table table-stripped">
+        <thead>
+          <tr>
+            <th style="line-height:40px;">操作</th>
+            <th style="line-height:40px;">上课日期</th>
+            <th style="line-height:40px;">考勤日期</th>
+            <th style="line-height:40px;">学管师</th>
+            <th style="line-height:40px;">经办人</th>
+            <th style="line-height:40px;">考勤状态</th>
+            <th style="line-height:40px;">备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="wfdAttnDetail in wfdAttnDetailList" class="tablelist3">
+            <td>
+              <a ng-if="wfdAttnDetail.ATTEND_TYPE!=30" href="javascript:void(0)" ng-click="handleWfdAttendModify(30, wfdAttnDetail)">置空</a>
+              <a ng-if="wfdAttnDetail.ATTEND_TYPE!=31" href="javascript:void(0)" ng-click="handleWfdAttendModify(31, wfdAttnDetail)">正常上课</a>
+            </td>
+            <td>{{wfdAttnDetail.COURSE_DATE}}</td>
+            <td>{{wfdAttnDetail.ATTEND_DATE | date: 'yyyy-MM-dd HH:mm'}}</td>
+            <td>{{wfdAttnDetail.COUNSELOR_NAME}}</td>
+            <td>{{wfdAttnDetail.ATTEND_USER_NAME}}</td>
+            <td>{{wfdAttnDetail.ATTEND_TYPE_NAME}}</td>
+            <td>{{wfdAttnDetail.REMARK}}</td>
+          </tr>
+        </tbody>
+      </table>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button class="btn btn-primary" ng-click="$dismiss()">返回</button>
+  </rd-modal-footer>
+</rd-modal>

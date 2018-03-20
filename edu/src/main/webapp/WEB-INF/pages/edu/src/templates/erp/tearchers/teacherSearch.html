@@ -1,0 +1,240 @@
+<div ng-controller="erp_TeacherSearchController">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading">
+      <span class="title">教师列表</span>
+    </div>
+    <div class="panel-body">
+      <div class="searchbar">
+        <form class="form-inline">
+          <div class="form-group">
+            <span class="input-label"style="min-width:unset;">团队：</span>
+            <select class="form-control"
+                    ng-options="bu.buId as bu.text for bu in buList"
+                    ng-model="searchParam.p_bu_id">
+            </select>
+            <div class="input-group">
+              <input type="text" autocomplete="off" id="teacher_name" placeholder="请输入教师姓名" ng-model="teacher_name" class="form-control" />
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary" ng-click="queryTeacher()"><i class="iconfont icon-search"></i> 查询
+                </button>
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+      <hr>
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="sendInvation()">
+          <i class=""></i>推送工作量平台邀请码
+        </button>
+        <button class="btn btn-primary btn-circle" ng-click="syncDingDang()">
+          <i class=""></i>同步到叮当
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div>
+      <table class="table table-striped">
+        <tr>
+          <th>
+            <input type="checkbox" ng-model="selectAllFlag">
+          </th>
+          <th style="min-width:118px;">操作</th>
+          <th>头像</th>
+          <th>教师编码</th>
+          <th>教师姓名</th>
+          <th>old_id</th>
+          <th>状态</th>
+          <!--<th>归属团队</th>-->
+          <th>邀请码</th>
+          <th>同步叮当</th>
+          <th>同步详细信息</th>
+        </tr>
+        <tr ng-repeat="teacher in teacherList" ng-if="teacherList && teacherList.length">
+          <th>
+            <input type="checkbox" ng-model="teacher.selectFlag">
+          </th>
+          <td style="padding-right:0;padding-left:0;">
+            <a href="javascript:void(0)" ng-click="shopUpdateModal(teacher)">修改</a>
+            <span><a href="javascript:void(0)" ng-click="showUploadModal(teacher)">　上传头像　</a></span>
+          </td>
+          <td>
+            <div class="avatar avatar-50">
+              <div class="img-wrapper">
+                <img src="{{teacher.photo || 'img/erp/default-teacher-avatar.png'}}"/>
+              </div>
+           </div>
+          </td>
+          <td>{{teacher.encoding}}</td>
+          <td>{{teacher.teacher_name}}</td>
+          <td>{{teacher.old_id}}</td>
+          <td>
+            {{(teacher.status == 1 || teacher.status == 2 || teacher.status == 3)?'有效':'无效' }}
+          </td>
+          <!--<td>{{teacher.bu_name}}</td>-->
+          <td>{{teacher.invation_code}}</td>
+          <td>{{teacher.synchro_dingdang}}</td>
+          <td>{{teacher.synchro_details}}</td>
+        </tr>
+        <tr ng-if="isLoading == 'loading...'">
+          <td colspan="9" align="center"><img src="img/icons/big_load.gif"></td>
+        </tr>
+      </table>
+      <ng-pagination conf="paginationConf"></ng-pagination>
+    </div>
+  </div>
+  <!--修改弹出框-->
+  <script type="text/ng-template" id="updateTeacherModalInstance.html">
+    <rd-modal>
+      <rd-modal-title>教师修改</rd-modal-title>
+      <rd-modal-body>
+        <div class="panel panel-primary" style="margin-bottom: 10px;">
+          <div class="panel-body" style="margin-left:-8%;">
+            <form class="form-horizontal" name="teacherForm" role="form" style="color: #483D8B;margin-top:5px">
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>关联员工：</label>
+                <div class="col-sm-2">
+                  <klc-teacher-typeahead employee-id="updateTeacher.employee_id" employee-name="updateTeacher.employee_name" encoding="updateTeacher.encoding"
+                      teacher-type="4"></klc-teacher-typeahead>
+                </div>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>教师编码：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="updateTeacher.encoding" required/>
+                </div>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>教师姓名：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="updateTeacher.teacher_name" required/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">教师昵称：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="updateTeacher.nickname" />
+                </div>
+                <label class="col-sm-2 control-label">教师年龄：</label>
+                <div class="col-sm-2">
+                  <input type="number" class="form-control" ng-model="updateTeacher.teacher_age" />
+                </div>
+                <label class="col-sm-2 control-label">教师教龄：</label>
+                <div class="col-sm-2">
+                  <input type="number" class="form-control" ng-model="updateTeacher.seniority" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>教师身份：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="updateTeacher.teacher_type" required ng-options="teacherType.code as teacherType.name for teacherType in teacherTypeList">
+                  </select>
+                </div>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>教师状态：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="updateTeacher.status" required ng-options="status.code as status.name for status in statusList">
+                  </select>
+                </div>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>性别：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="updateTeacher.sex" required ng-options="gender.code as gender.name for gender in genderList">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>联系方式：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" name="teacher_phone"ng-model="updateTeacher.phone" ng-pattern="/^1(3|4|5|7|8)\d{9}$/" required/>
+                  <div ng-messages="teacherForm.teacher_phone.$error">
+                    <p ng-message="pattern" style="color: red">请输入正确的电话/手机号码</p>
+                  </div>
+                </div>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>是否兼职：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="updateTeacher.is_pluralistic" ng-options="partTime.code as partTime.name for partTime in partTimeList">
+                  </select>
+                </div>
+                <label class="col-sm-2 control-label">old_id：</label>
+                <div class="col-sm-2 pt-5">
+                  <span>{{updateTeacher.old_id}}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>所属团队：</label>
+                <div class="col-sm-4">
+                  <div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
+                  <span ng-click="removeTeam(team)" class="btn btn-default btn-xs" ng-repeat="team in selTeamList" style="margin: 5px;">
+                    {{team.org_name}}
+                    <i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+                  </span>
+                </div>
+                  <div class="form-horizontal  mt10 pos-r">
+                    <input type="text" class="form-control" placeholder="输入要查询的团队名称" ng-model="teamSearchInfo" style="border-radius: 0;">
+                    <i class="iconfont icon-search form-control-feedback"></i>
+                  </div>
+                  <table class="table table-bordered" style="margin: -1px 0;">
+                    <tr>
+                      <th width="10"></th>
+                      <th width="60">团队</th>
+                    </tr>
+                  </table>
+                  <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
+                    <table class="table table-bordered" >
+                      <tr ng-repeat="team in buList | filter:{'org_name': teamSearchInfo}">
+                        <td width="10">
+                          <input type="checkbox" ng-model="team.checked" ng-change="handleTeamChange(team)">
+                        </td>
+                        <td width="90">{{team.org_name}}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>科目：</label>
+                <div class="col-sm-4">
+                  <div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
+                    <span ng-click="removeSubject(subject)" class="btn btn-default btn-xs" ng-repeat="subject in selSubjectList" style="margin: 5px;">
+                      {{subject.name}}<i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+                    </span>
+                  </div>
+                  <div class="form-horizontal  mt10 pos-r">
+                    <input type="text" class="form-control" placeholder="输入要查询的课程名称" ng-model="subjectSearchInfo" style="border-radius: 0;">
+                    <i class="iconfont icon-search form-control-feedback"></i>
+                  </div>
+                  <table class="table table-bordered" style="margin: -1px 0;">
+                    <tr>
+                      <th width="35"></th>
+                      <th width="100">科目</th>
+                      <th>备注</th>
+                    </tr>
+                  </table>
+                  <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
+                    <table class="table table-bordered" >
+                      <tr ng-repeat="subject in subjectList | filter:{'name': subjectSearchInfo}">
+                        <td width="35">
+                          <input type="checkbox" ng-model="subject.checked" ng-change="handleSubjectChange(subject)">
+                        </td>
+                        <td width="100">{{subject.name}}</td>
+                        <td>{{subject.description}}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">邮箱：</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" ng-model="updateTeacher.email" required/>
+                </div>
+                <label class="col-sm-2 control-label">描述：</label>
+                <div class="col-sm-4">
+                  <textarea rows="2" class="form-control" ng-model="updateTeacher.description"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+        <button type="button" class="btn btn-primary" ng-click="putTeacher()">确定</button>
+      </rd-modal-footer>
+    </rd-modal>
+  </script>
+</div>

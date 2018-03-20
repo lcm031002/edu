@@ -1,0 +1,727 @@
+<div class="crm" ng-controller="crmRescRecInputController">
+    <div class="panel panel-primary" ng-show="form_input">
+        <div class="panel-heading">
+            <span ng-if="form_operate == 'add'" class="title"><span class="cur text-primary" ng-click="closeForm()">< 返回</span> | 新增线索</span>
+            <span ng-if="form_operate == 'update'" class="title"><span class="cur text-primary" ng-click="closeForm()">< 返回</span> | 修改线索</span>
+        </div>
+        <div class="panel-body">
+            <form id="rescRecForm" name="rescRecForm" class="form-horizontal">
+                <!-- 来访信息：begin -->
+                <h4>1、资源信息</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> <span
+									class="asterisk">*</span>校区：
+							</label>
+                            <div class="col-sm-8">
+                                <crm-branch-select bu-id="buId" branch-id="branchId"></crm-branch-select>
+                                <input type="text" name="branch_id" ng-model="branchId" hidden="hidden">
+                                <input type="text" name="branch_name" ng-model="newRescRec.branch_obj.text" hidden="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"><span
+									class="asterisk">*</span>资源进展： </label>
+                            <div class="col-sm-8">
+                                <select ng-model="newRescRec.clue_stage_obj" name="re_clue_stage" id="re_clue_stage" ng-options="r.name for r in ClueStages track by r.id" class="form-control">
+									<option value=""></option>
+								</select>
+                                <input type="text" name="clue_stage_id" ng-model="newRescRec.clue_stage_obj.id" hidden="hidden">
+                                <input type="text" name="clue_stage_name" ng-model="newRescRec.clue_stage_obj.name" hidden="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">
+								<span class="asterisk">*</span> 资源日期： </label>
+                            <div class="col-sm-8">
+                                <rd-date-picker-popup ng-model="newRescRec.visit_time" id="visit_time"></rd-date-picker-popup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"><span
+									class="asterisk">*</span> 资源类型： </label>
+                            <div class="col-sm-8">
+                                <select ng-model="newRescRec.res_type_obj" name="re_res_type" id="re_res_type" ng-options="r.name for r in resTypes track by r.id" class="form-control" ng-change="changeResType(newRescRec.res_type_obj.id)">
+									<option value=""></option>
+								</select>
+                                <input type="text" name="res_type" ng-model="newRescRec.res_type_obj.id" hidden="hidden">
+                                <input type="text" name="res_type_name" ng-model="newRescRec.res_type_obj.name" hidden="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> <span
+									class="asterisk">*</span>来源渠道：
+							</label>
+                            <div class="col-sm-8">
+                                <select ng-model="newRescRec.channel_obj" ng-options="a.name for a in channels track by a.id" class="form-control">
+									<option value=""></option>
+								</select> <input type="text" name="channel_id" id="channel_id" ng-model="newRescRec.channel_obj.id" hidden="hidden"> <input type="text" name="channel_name" id="channel_name" ng-model="newRescRec.channel_obj.name"
+                                    hidden="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"><span
+									class="asterisk">*</span> 就读学校： </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" autocomplete="off" name="resc.attend_sch_name" ng-model="resource.attend_sch_name" ng-click="openDropMenu();" ng-change="openDropMenu();" />
+                                <input type="text" ng-show="false" class="form-control" autocomplete="off" name="resc.attend_sch_id" ng-model="resource.attend_sch_id" />
+                                <div ng-click="closeDropMenu();" ng-show="attendSchResult.length > 0" style="position: fixed; height: 155%; width: 100%; left: 0px; top: 0px; z-index: 999;">
+                                </div>
+                                <div class="associatebox" ng-show="attendSchResult.length > 0" style="position: absolute; z-index: 999; top: 32px;">
+                                    <ul>
+                                        <li ng-repeat="attendSch in attendSchResult track by $index" ng-click="selectMenu(attendSch);">{{attendSch.attend_sch_name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">
+								<span class="asterisk">*</span>联系人关系：
+							</label>
+                            <div class="col-sm-8">
+                                <select ng-model="resource.rela_id" name="resc.rela_id" class="form-control">
+									<option value=""></option>
+									<option value="{{rt.id}}" ng-repeat="rt in Relations track by $index">{{rt.name}}</option>
+								</select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">
+								<span class="asterisk">*</span>联系人称呼：
+							</label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="resource.call" name="resc.call" id="resc_call" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> <span
+									class="asterisk">*</span>联系电话：
+							</label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="resource.mp" name="resc_mp" id="resc_mp" ng-blur="checkRepeat()"  class="form-control" required/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"><span
+									class="asterisk">*</span> 年级： </label>
+                            <div class="col-sm-8">
+                                <select ng-model="newRescRec.grade_obj" ng-options="grade.name for grade in grades track by grade.id" name="re_grade_id" id="re_grade_id" class="form-control">
+									<option value=""></option>
+								</select>
+                                <input type="text" name="grade_id" id="grade_id" ng-model="newRescRec.grade_obj.id" hidden="hidden">
+                                <input type="text" name="grade_name" id="grade_name" ng-model="newRescRec.grade_obj.name" hidden="hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> 班级：</label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="resource.classinfo" name="resc.classinfo" id="resc.classinfo" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> 录入人： </label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="newRescRec.cnselor_id" name="cnselor_id" hidden />
+                                <input type="text" ng-model="newRescRec.cnselor_name" name="cnselor_name" ng-readonly="newRescRec.res_type_obj.code != 'introduce'" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> 成交意向： </label>
+                            <div class="col-sm-8">
+                                <select ng-model="newRescRec.bargain_intent_obj" name="re_bargain_intent_id" ng-options="c.name for c in BargainIntents track by c.id" id="re_bargain_intent_id" class="form-control">
+									<option value=""></option>
+								</select> <input type="text" name="bargain_intent_id" id="bargain_intent_id" ng-model="newRescRec.bargain_intent_obj.id" hidden="hidden">
+                                <input type="text" name="bargain_intent_name" id="bargain_intent_name" ng-model="newRescRec.bargain_intent_obj.name" hidden="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">推荐老师： </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" autocomplete="off" name="recommend_teacher" ng-model="recommend_teacher" ng-click="openDropTeacherMenu();" ng-change="openDropTeacherMenu();" />
+                                <input type="text" ng-show="false" class="form-control" autocomplete="off" name="recommend_teacher_id" ng-model="recommend_teacher_id" />
+                                <div ng-click="closeDropTeacherMenu();" ng-show="teacherResult.length > 0" style="position: fixed; height: 155%; width: 100%; left: 0px; top: 0px; z-index: 999;">
+                                </div>
+                                <div class="associatebox" ng-show="teacherResult.length > 0" style="position: absolute; z-index: 999; top: 32px;">
+                                    <ul>
+                                        <li ng-repeat="teacher in teacherResult track by $index" ng-click="selectTeacherMenu(teacher);">{{teacher.teacher_name}}-{{teacher.encoding}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label"> 资源质量： </label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="newRescRec.Resource_quality" id="selectnumber" style="display: none;" name="resource_quality" class="form-control" />
+                                <div class="my-rating"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label class="col-lg-2 col-sm-4 label_name control-label">咨询情况简述： </label>
+                            <div class="col-lg-10 col-sm-8">
+                                <textarea style="font-size: 12px; padding: 5px; width: 100%; resize: none;" rows="4" cols="115" ng-model="newRescRec.note" name="note" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4" style="margin-top:-165px;">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label mt-10">科目：</label>
+                            <div class="col-sm-8">
+                                <div style="margin-top:10px;margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;border-radius: 4px;">
+                                    <span ng-click="removeSubject(subject)" class="btn btn-default btn-xs" ng-repeat="subject in selSubjectList" style="margin: 5px;">
+                                       {{subject.name}}<i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+                                    </span>
+                                </div>
+                                <div class="form-horizontal  mt10 pos-r">
+                                    <input type="text" class="form-control" placeholder="输入要查询的课程名称" ng-model="subjectSearchInfo" style="border-radius: 0;">
+                                    <i class="iconfont icon-search form-control-feedback"></i>
+                                </div>
+                                <table class="table table-bordered" style="margin: -1px 0;">
+                                    <tr>
+                                        <th width="35"></th>
+                                        <th width="100">科目</th>
+                                        <th>备注</th>
+                                    </tr>
+                                </table>
+                                <div class="multi-sel-table" style="width: 100%; height: 140px; overflow-y: auto; overflow-x: hidden;">
+                                    <table class="table table-bordered">
+                                        <tr ng-repeat="subject in subjectList | filter:{'name': subjectSearchInfo}">
+                                            <td width="35">
+                                                <input type="checkbox" ng-model="subject.checked" ng-change="handleSubjectChange(subject)">
+                                            </td>
+                                            <td width="100">{{subject.name}}</td>
+                                            <td>{{subject.description}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <input type="text" ng-show="false" ng-model="newRescRec.ordered" name="ordered">
+                </div>
+
+                <!-- 来访信息：begin -->
+                <h4>2、学员信息</h4>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">学生姓名： </label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="resource.name" name="resc.name" id="resc_name" ng-blur="checkRepeat()" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">生日： </label>
+                            <div class="col-sm-8">
+                                <rd-date-picker-popup ng-model="resource.birthday" id="visit_time"></rd-date-picker-popup>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">性别： </label>
+                            <div class="col-sm-8">
+                                <select ng-model="newRescRec.resc.sex_obj" name="resc.sex" ng-options="sex.text for sex in sexs track by sex.id" id="sex" class="form-control">
+                				</select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 label_name control-label">地址/小区： </label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="resource.address" name="resc.address" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 label_name control-label" style="width: 10.6%;"> 联系人： </label>
+                    <div class="col-sm-8" style="width: 88.89%;">
+                        <table class="table table-bordered table-condensed" id="link_table">
+                            <tr>
+                                <th><label class="label_name control-label"> 联系人关系 </label></th>
+                                <th><label class="label_name control-label"> 联系人姓名 </label></th>
+                                <th><label class="label_name control-label"> 联系人电话 </label>
+                                </th>
+                                <th><label class="label_name control-label">联系人备注 </label></th>
+                                <th><label class="label_name control-label">操作 </label></th>
+                            </tr>
+                            <tr ng-repeat="link in linksList track by $index" id="linksList">
+                                <td class="form_center"><select ng-model="link.rela_id" name="resc.rescLinks[{{$index}}].rela_id" pname="rela_id" class="form-control">
+									<option value=""></option>
+									<option value="{{rt.id}}" ng-repeat="rt in Relations track by $index">{{rt.name}}</option>
+								</select></td>
+                                <td class="form_center"><input ng-model="link.id" name="resc.rescLinks[{{$index}}].id" hidden /> <input ng-model="link.name" name="resc.rescLinks[{{$index}}].name" pname="name" class="form-control" /></td>
+                                <td class="form_center"><input ng-model="link.mp" name="resc.rescLinks[{{$index}}].mp" p_name="mp" class="form-control" /></td>
+                                <td class="form_center"><input ng-model="link.company" name="resc.rescLinks[{{$index}}].company" class="form-control" />
+                                </td>
+                                <td><input class="form_btn" type="button" value="添加" ng-click="addLink($index)" /> <input class="form_btn" type="button" value="删除" ng-click="deleteLink($index)" /></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="form_btn_div">
+                    <button type="button" class="btn btn-default" ng-click="save()">
+						保存</button>
+                    <button type="button" class="btn btn-default" ng-click="clearFormFun()">重置</button>
+                    <button type="button" class="btn btn-default" ng-click="closeForm()">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-primary" ng-show="form_upload">
+        <div class="panel-heading">
+            <span class="title">线索导入</span>
+        </div>
+        <div class="panel-body">
+            <avatar class="btn btn-default a-upload">
+                <input type="file" name="fileupload" onchange="angular.element(this).scope().fileChange()" /> 选择文件
+            </avatar>
+            <button type="button" class="btn btn-primary btn-circle" ng-click="downloadTempalte()" title="导入">
+				<i class="iconfont"></i>下载模板文件
+			</button>
+            <div style="padding-top: 20px">{{ fileName }}</div>
+        </div>
+        <div class="form_btn_div" style="padding-bottom: 10px">
+            <button type="button" class="btn btn-primary" ng-click="uploadFile()">提交</button>
+            <button type="button" class="btn btn-default" ng-click="closeForm()">关闭</button>
+        </div>
+    </div>
+    <div class="panel panel-primary" ng-show="!form_input && !form_upload">
+        <div class="panel-heading">
+            <span class="title">线索录入</span>
+        </div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <button type="button" class="btn btn-primary btn-circle" ng-click="add()" title="录入">
+						<i class="iconfont icon-input"></i>录入
+					</button>
+                    <button type="button" class="btn btn-primary btn-circle" ng-show="isSchoolAdmin" ng-click="upload()" title="导入">
+						<i class="iconfont icon-operation_add"></i>导入
+					</button>
+                </form>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <div class="form form-inline">
+                    <div class="form-group mr-r20">
+                        <span class="input-label ng-binding">资源进展：</span>
+                        <button class="btn mr-15 {{searchParam.clue_stage_obj==cluestage?'btn-warning':'btn-default'}}" ng-click="SearchClue(cluestage)" ng-repeat="cluestage in ClueStages track by cluestage.id">
+							{{cluestage.name}}
+						</button>
+                        <!-- <select ng-model="searchParam.clue_stage_obj"
+												name="re_clue_stage" id="re_clue_stage"
+												ng-options="r.name for r in searchParam.ClueStages track by r.id"
+												class="form-control">
+									<option value="-1">全部</option>
+						</select> -->
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">校区：</span>
+                        <crm-branch-select bu-id="searchParam.p_buId" branch-id="searchParam.p_branchId"></crm-branch-select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">资源类型：</span>
+                        <select ng-model="searchParam.resType" class="form-control" ng-options="resType.name for resType in resTypesSearch track by resType.id" ng-change="changeResType(searchParam.resType.id)">
+						</select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">来源渠道：</span>
+                        <select ng-model="searchParam.channelType" ng-options="a.name for a in channels track by a.id" class="form-control">
+							<option value="">全部</option>
+						</select>
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">联系人称呼 ：</span>
+                        <input type="text" class="form-control" placeholder="联系人称呼" ng-model="searchParam.p_call" />
+                    </div>
+                    <br class="content_br">
+                    <div class="form-group">
+                        <span class="input-label ng-binding">学生姓名 ：</span>
+                        <input type="text" class="form-control" placeholder="学生姓名" ng-model="searchParam.p_name" />
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">联系电话 ：</span>
+                        <input type="text" class="form-control" placeholder="联系电话" ng-model="searchParam.p_mp" />
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">当前归属人 ：</span>
+                        <input type="text" class="form-control" placeholder="当前归属人" ng-model="searchParam.p_cnselorName" />
+                    </div>
+                    <div class="form-group">
+                        <span class="input-label ng-binding">录入人 ：</span>
+                        <input type="text" class="form-control" placeholder="录入人" ng-model="searchParam.p_inputUser" />
+                    </div>
+                    <div class="form-group m-0 mr-r20">
+                        <rd-date-picker-range class="mr-r20" ng-start-date="searchParam.p_start_date" ng-end-date="searchParam.p_end_date" ng-default-range="'curMonth'" ng-date-change="onDateRangeChange()">
+                        </rd-date-picker-range>
+                    </div>
+                    <div class="form-group">
+                        <button ng-click="query()" class="btn btn-primary iconfont icon-search">查询</button>
+                        <button class="btn btn-primary iconfont icon-public_export" ng-show="isSchoolAdmin" ng-click="exp()">导出
+						</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ovx-s" ng-show="!form_input && !form_upload">
+        <table class="table table-hover table-striped table-condensed col-lg-12" style="min-width:735px;">
+            <tr>
+                <th width="8%">操作</th>
+                <th width="8%">资源日期</th>
+                <!-- <th width="7%">来源渠道</th> -->
+                <th width="9%">资源类别</th>
+                <th width="7%">联系人称呼</th>
+                <th width="6%">学生姓名</th>
+                <th width="8%">联系电话</th>
+                <!-- <th width="10%">校区</th> -->
+                <!-- <th width="6%">资源质量</th> -->
+                <th width="4%">年级</th>
+                <th width="8%">当前归属人</th>
+                <!-- <th width="5%">录入人</th> -->
+                <!-- <th width="7%">资源进展</th> -->
+                <!-- <th width="7%">推荐老师</th> -->
+            </tr>
+            <tr ng-if="isLoading=='loading...'">
+                <td colspan="13" rowspan="10" align="center">
+                    <img alt="" src="img/crm/loading2.gif">
+                </td>
+            </tr>
+            <tr ng-repeat="rec in resourceRecsInput track by $index" ng-class="{false:'cursor_pointer',true:'cursor_pointer info'}['selected'==rec.selected]" ng-if="(!rec.is_trace||trace_id==rec.id)&&isLoading!='loading...'">
+                <td ng-if="!rec.is_trace">
+                    <button class="btn btn-success btn-xs" ng-if="!rec.is_trace" ng-click="updateResourceRec(rec)">修改</button>
+                    <button class="btn btn-danger btn-xs" ng-if="!rec.is_trace" ng-show="isSchoolAdmin" ng-click="remove(rec)">删除</button>
+                </td>
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.visit_time | date:'yyyy-MM-dd'}}</td>
+                <!-- <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.channel_name}}</td> -->
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.res_type_name}}</td>
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resc.call}}</td>
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resc.name}}</td>
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resc.mp}}</td>
+                <!-- <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.sch_name}}</td> -->
+                <!-- <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resource_quality}}</td> -->
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.grade_name}}</td>
+                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.cnselor_name}}</td>
+                <!-- <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.input_user}}</td> -->
+                <!-- <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.clue_stage_name}}</td> -->
+                <!-- <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.recommend_teacher_name}}</td> -->
+                <td ng-if="rec.is_trace&&trace_id==rec.id" colspan="14">
+                    <div ng-if="traceInfo.length==0" class="box">无跟踪信息！</div>
+                    <div class="box" ng-if="traceInfo!=null&&traceInfo.length!=0">
+                        <div class="box_line">资源详情</div>
+                        <div class="form form-inline col-lg-offset-1 col-sm-offset-1">
+                            <div class="form-group col-lg-3 col-sm-4">
+                                <span class="fl">来源渠道：</span>
+                                <div class="col-sm-7">{{traceInfoDetail.channel_name}}</div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-4">
+                                <span class="fl">录入人：</span>
+                                <div class="col-sm-7">{{traceInfoDetail.input_user}}</div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-4">
+                                <span class="fl">校区：</span>
+                                <div class="col-lg-7 col-sm-8">{{traceInfoDetail.sch_name}}</div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-4">
+                                <span class="fl">资源进展：</span>
+                                <div class="col-sm-7">{{traceInfoDetail.clue_stage_name}}</div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-4">
+                                <span class="fl">资源质量：</span>
+                                <div class="col-sm-7">{{traceInfoDetail.resource_quality}}</div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-4">
+                                <span class="fl">推荐老师：</span>
+                                <div class="col-sm-7">{{traceInfoDetail.recommend_teacher_name}}</div>
+                            </div>
+                        </div>
+                        <div class="box_line">资源进度</div>
+                        <ul class="event_list">
+                            <div>
+                                <li ng-repeat="trace in traceInfo track by $index" style="margin-left: 60px">
+                                    <span>{{trace.optTime}}</span>
+                                    <p>
+                                        <span style="{{trace.optTypeName=='资源跟进'?'background-color: #e8f3fe;':''}}">
+											<label class="i-text-info font-norm">【{{trace.optTypeName}}】</label>
+											{{trace.descrition}}<br>
+											<label class="i-text-info font-norm"
+														 ng-show="{{trace.optTypeName=='资源录入'?'true':'false'}}">【咨询情况简述】</label>
+											<label class="font-norm" ng-show="{{trace.optTypeName=='资源录入'?'true':'false'}}">{{trace.remark || '无'}}</label>
+											<!-- <label class="font-norm" >
+												<i class="iconfont icon-star i-text-warning mr-15 ml-55"></i>
+												咨询情况简述：{{trace.remark || '无'}}
+											</label> -->
+										</span>
+                                    </p>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div id="tmpTable"></div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="pagination" ng-show="totalPage > 0">
+                    当前{{currentPage}}页，共{{totalPage}}页</div>
+            </div>
+            <div class="col-sm-6 text-center">
+                <ul ng-show="totalPage > 1" class="pagination">
+                    <li ng-class="{true:'active'}[currentPage==1]"><span class="select-line" ng-click="currentPage=1;load()">首页</span></li>
+                    <li ng-class="{true:'disabled'}[currentPage==1]"><span class="select-line" ng-click="prev()">上一页</span></li>
+                    <li ng-repeat="page in pages" ng-class="{true:'active'}[currentPage==page]"><span class="select-line" ng-click="loadPage(page)">{{page}}</span></li>
+                    <li ng-class="{true:'disabled'}[currentPage==totalPage]"><span class="select-line" ng-click="next()">下一页</span></li>
+                    <li ng-class="{true:'active'}[currentPage==totalPage]"><span class="select-line" ng-click="currentPage=totalPage;load()">末页</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid ng-isolate-scope" ng-show="totalPage <= 0">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div class="no-data"></div>
+                </div>
+                <div class="table-panel">
+                    <div class="ov-a">
+                        <table class="table table-hover table-striped min-width-1650">
+                            <tr>
+                                <th width="10%">操作</th>
+                                <th width="8%">资源日期</th>
+                                <th width="7%">来源渠道</th>
+                                <th width="7%">资源类别</th>
+                                <th width="7%">联系人称呼</th>
+                                <th width="7%">学生姓名</th>
+                                <th width="5%">联系电话</th>
+                                <th width="10%">校区</th>
+                                <th width="6%">资源质量</th>
+                                <th width="4%">年级</th>
+                                <th width="5%">当前归属人</th>
+                                <th width="5%">录入人</th>
+                                <th width="7%">资源进展</th>
+                                <th width="7%">资源状态</th>
+                            </tr>
+                            <tr ng-if="isLoading=='loading...'">
+                                <td colspan="13" rowspan="10" align="center">
+                                    <img alt="" src="img/crm/loading2.gif">
+                                </td>
+                            </tr>
+                            <tr ng-repeat="rec in resourceRecsInput track by $index" ng-class="{false:'cursor_pointer',true:'cursor_pointer success'}[newRescRec.id==rec.id]" ng-if="(!rec.is_trace||trace_id==rec.id)&&isLoading!='loading...'">
+                                <td ng-if="!rec.is_trace">
+                                    <button class="btn btn-success btn-xs" ng-if="!rec.is_trace" ng-click="updateResourceRec(rec)">修改</button>
+                                    <button class="btn btn-danger btn-xs" ng-if="!rec.is_trace" ng-show="isSchoolAdmin" ng-click="remove(rec)">删除</button>
+                                </td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.visit_time | date:'yyyy-MM-dd'}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.channel_name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.res_type_name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resc.call}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resc.name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resc.mp}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.sch_name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.resource_quality}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.grade_name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.cnselor_name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.input_user}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.clue_stage_name}}</td>
+                                <td ng-click="showTraceInfo(rec)" ng-if="!rec.is_trace">{{rec.cnsel_state_name}}</td>
+                                <td ng-if="rec.is_trace&&trace_id==rec.id" colspan="14">
+                                    <div ng-if="traceInfo.length==0" class="box">无跟踪信息！</div>
+                                    <div class="box" ng-if="traceInfo!=null&&traceInfo.length!=0">
+                                        <ul class="event_list">
+                                            <div>
+                                                <li ng-repeat="trace in traceInfo track by $index" style="margin-left: 60px">
+                                                    <span>{{trace.optTime}}</span>
+                                                    <p style="width: auto; max-width: 80%;">
+                                                        <span style="{{trace.optTypeName=='资源跟进'?'background-color: #e8f3fe;':''}}">
+												<label class="i-text-info font-norm">【{{trace.optTypeName}}】</label>
+												{{trace.descrition}}
+												<br>
+												<label class="i-text-info font-norm" ng-show="{{trace.optTypeName=='资源录入'?'true':'false'}}">【咨询情况简述】</label>
+												<label class="font-norm" ng-show="{{trace.optTypeName=='资源录入'?'true':'false'}}">{{trace.remark || '无'}}</label>
+												<!-- <label class="font-norm" >
+																	<i class="iconfont icon-star i-text-warning mr-15 ml-55"></i>
+																	咨询情况简述：{{trace.remark || '无'}}
+																</label> -->
+											</span>
+                                                    </p>
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-panel">
+                        <ng-pagination conf="pageConf"></ng-pagination>
+                    </div>
+                </div>
+
+                <div class="common_pop_window" id="recMoreInfo" style="top: 30%; left: 40%">
+                    <div id="title" class="pop_title" ng-click="closeMoreInfoWindow()">
+                        <img src="img/crm/close01.jpg" alt="关闭" class="cursor_pointer" ng-click="closeMoreInfoWindow()" />更多信息
+                    </div>
+                    <div class="pop_content">
+                        <table>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">团队名称：</td>
+                                <td>{{moreInfo.company_name}}</td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">QQ：</td>
+                                <td>{{moreInfo.resc.qq}}</td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">生日：</td>
+                                <td>{{moreInfo.resc.birthday|date:'yyyy-MM-dd'}}</td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">是否已报名：</td>
+                                <td>{{moreInfo.is_order == 1?'是':'否'}}</td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">成交意向：</td>
+                                <td>{{moreInfo.bargain_intent_name}}</td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">就读学校：</td>
+                                <td>{{moreInfo.resc.attend_sch_name}}</td>
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap" class="form_right">联系人：</td>
+                                <td>
+                                    <table class="nested_table">
+                                        <tr>
+                                            <th nowrap="nowrap">姓名</th>
+                                            <th nowrap="nowrap">关系</th>
+                                            <th nowrap="nowrap">联系电话</th>
+                                        </tr>
+                                        <tr ng-repeat="link in moreInfo.resc.rescLinks track by $index">
+                                            <td nowrap="nowrap">{{link.name}}</td>
+                                            <td nowrap="nowrap">{{link.rela_name}}</td>
+                                            <td nowrap="nowrap">{{link.mp}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="cnselor_pop_window" id="cnselorlist">
+                    <div id="title" class="pop_title">
+                        <span class="cursor_pointer form_btn" style="margin-top: -5px; margin-right: -4px;" ng-click="closeCnselorWin()">关闭</span><span class="cursor_pointer form_btn" style="margin-top: -5px; margin-right: 4px;" ng-click="confirmCnselor()">确定</span>                        咨询师选择
+                    </div>
+                    <div class="pop_content">
+                        <table>
+                            <tr>
+                                <td class="form_left">姓名：</td>
+                                <td class="form_left"><input type="text" ng-model="ctn_cnselor_name" placeholder="姓名模糊查询"></td>
+                                <td><span class="cursor_pointer form_btn" style="margin-top: 0;" ng-click="cnSelorSearch()">检索</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <table class="nested_table mt10">
+                                        <tr>
+                                            <th nowrap="nowrap">选择</th>
+                                            <th nowrap="nowrap">编号</th>
+                                            <th nowrap="nowrap">姓名</th>
+                                            <th nowrap="nowrap">创建时间</th>
+                                        </tr>
+                                        <tr ng-repeat="cnsl in cnselors track by $index" ng-class="{even:!$even,odd:!$odd}">
+                                            <td><input name="radio_cnselor" type="radio" ng-model="selected_cnsl" value="{{$index}}" /></td>
+                                            <td>{{cnsl.encoding}}</td>
+                                            <td>{{cnsl.employee_name}}</td>
+                                            <td>{{cnsl.create_time|date:'yyyy-MM-dd'}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="cnselor_pop_window" id="aSchlist">
+                    <div id="title" class="pop_title">
+                        <span class="cursor_pointer form_btn" style="margin-top: -5px; margin-right: -4px;" ng-click="closeAsch()">关闭</span>
+                        <span class="cursor_pointer form_btn" style="margin-top: -5px; margin-right: 4px;" ng-click="confirmAsch()">确定</span> 学校选择
+                    </div>
+                    <div class="pop_content">
+                        <table>
+                            <tr>
+                                <td class="form_left">名称：</td>
+                                <td class="form_left"><input type="text" ng-model="ctn_school_name" placeholder="姓名模糊查询"></td>
+                                <td><span class="cursor_pointer form_btn" style="margin-top: 0;" ng-click="cnAschSearch()">检索</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <table class="nested_table mt10">
+                                        <tr>
+                                            <th nowrap="nowrap">选择</th>
+                                            <th nowrap="nowrap">名称</th>
+                                            <th nowrap="nowrap">所属地区</th>
+                                            <th nowrap="nowrap">创建时间</th>
+                                        </tr>
+                                        <tr ng-repeat="s in aschs" ng-class="{even:!$even,odd:!$odd}">
+                                            <td><input name="radio_asch" type="radio" ng-model="radio_asch" value="{{$index}}" /></td>
+                                            <td>{{s.school_name}}</td>
+                                            <td>{{s.org_name}}</td>
+                                            <td>{{s.create_time|date:'yyyy-MM-dd'}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>

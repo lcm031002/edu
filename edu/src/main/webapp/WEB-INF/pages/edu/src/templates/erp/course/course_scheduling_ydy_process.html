@@ -1,0 +1,125 @@
+<div ng-controller="erp_courseSchedulingYdyProcessController">
+  <div ng-if="optype=='showList'">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span class="title">1对1排课处理</span>
+      </div>
+      <div class="panel-body">
+        <div class="search-panel">
+          <div class="form form-inline">
+            <div class="form-group m-0">
+              <rd-date-picker-range 
+              ng-start-date="searchParam.beginDateFrom" 
+              ng-end-date="searchParam.beginDateTo" 
+              ng-default-range="searchParam.range"
+              ng-date-change="getApplyList()">
+              </rd-date-picker-range>
+            </div>
+          </div>
+          <div class="form form-inline">
+            <div class="form-group">
+              <span class="input-label ng-binding">团队：</span>
+              <kl-bu-select bu-id="searchParam.buId"></kl-bu-select>
+            </div>
+            <div class="form-group">
+              <span class="input-label ng-binding">校区：</span>
+              <kl-branch-select bu-id="searchParam.buId" branch-id="searchParam.branchId"></kl-bu-select>
+            </div>
+            <div class="form-group">
+              <span class="input-label ng-binding">单据状态：</span>
+              <select ng-model="searchParam.status" class="form-control" ng-options="item.code as item.name for item in applyStatusList"></select>
+            </div>
+            <div class="form-group">
+              <span class="input-label ng-binding">审批状态：</span>
+              <select ng-model="searchParam.auditStatus" class="form-control" ng-options="item.value as item.label for item in auditStatusList"></select>
+            </div>
+            <br class="content_br">
+            <div class="form-group">
+              <span class="input-label ng-binding">现任学管师：</span>
+              <div class="form-group">
+                <klc-teacher-typeahead default-name="searchParam.defaultName" teacher-type="2" teacher-id="searchParam.employeeId" teacher-name="searchParam.employeeName">
+                </klc-teacher-typeahead>
+              </div>
+            </div>
+            <div class="form-group">
+              <span class="input-label ng-binding">学员：</span>
+              <!-- <input type="text" ng-model="searchParam.studentName"  class="form-control"> -->
+              <klc-student-typeahead
+                student-id="searchParam.studentId"
+                student-name="searchParam.studentName"
+                on-select="getApplyList()">
+              </klc-student-typeahead>
+            </div>
+            <div class="form-group">
+              <span class="input-label ng-binding">申请单据：</span>
+              <input type="text" class="form-control" ng-model="searchParam.encoding" >
+              <button class="btn btn-primary iconfont icon-search" ng-click="getApplyList()"> 查询</button>
+              <button class="btn btn-primary iconfont icon-public_export" ng-click="exportReport()">导出</button>
+              <button class="btn btn-warning iconfont icon-add" ng-disabled="!searchParam.studentId" ng-click="onAddNewScheduling()">新增排课</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-panel">
+      <div class="ov-a">
+        <table class="table table-stripped min-width-1650">
+          <thead>
+            <tr>
+              <th style="width: 110px;">操作</th>
+              <th style="width: 100px;">单据状态</th>
+              <th style="width: 110px;">开课时间</th>
+              <th style="width: 100px;">学生姓名</th>
+              <th style="width: 180px;">上课地点</th>
+              <th style="width: 100px;">学管师</th>
+              <th style="width: 100px;">咨询师</th>
+              <th style="width: 80px;">年级</th>
+              <th style="width: 120px;">科目</th>
+              <th style="width: 80px;">申请类型</th>
+              <th style="width: 100px;">申请单据</th>
+              <th style="width: 100px;">排课人</th>
+              <th style="width: 100px;">审批人</th>
+              <th style="width: 110px;">审批时间</th>
+              <th style="width: 100px;">审批状态</th>
+              <th style="width: 120px;">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in applyList"
+              ng-if="!loadStatues && applyList && applyList.length>0">
+              <td>
+                  <button class="btn btn-warning btn-xs" ng-click="editApplyDetail(item)">排课</button>
+                  <!-- <button class="btn btn-primary btn-xs" ng-click="viewApplyDetail(item)">编辑</button>   -->
+              </td>
+              <td class="{{applyStatus[item.status].cls}}">{{item.statusName}}</td>
+              <td>{{item.beginDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{item.studentName}}</td>
+              <td>{{item.classPlace}}</td>
+              <td>{{item.courseAdmin}}</td>
+              <td>{{item.counselor}}</td>
+              <td>{{item.stuGradeName}}</td>
+              <td>{{item.subjectName}}</td>
+              <td>{{item.applyTypeName}}</td>
+              <td>{{item.encoding}}</td>
+              <td>{{item.create_user_name}}</td>
+              <td>{{item.auditUser}}</td>
+              <td>{{item.auditDate | date: 'yyyy-MM-dd'}}</td>
+              <td>{{item.auditStatusName}}</td>
+              <td>{{item.remark}}</td> 
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center" ng-if="loadStatues">
+        <img src="img/erp/loading2.gif">
+      </div>
+      <div class="table-panel">
+        <ng-pagination conf="pageConf" ng-if="!loadStatues"></ng-pagination>
+      </div>
+    </div>
+  </div>
+  <div ng-if="optype=='edit' || optype=='view'">
+    <klc-erp-course-stu-sched-process apply="selectedApply" optype="optype" on-go-back="showList()">
+    </klc-erp-course-stu-sched-process>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div ng-controller="erp_refundController">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><span class="title">退费单据</span></div>
+    <div class="panel-body operation-panel">
+      <hr>
+      <div class="searchbar">
+        <div class="row">
+          <form class="form-inline">
+            <input type="text" class="form-control" placeholder="订单编码或订单ID"
+                   ng-model="searchParam.order_no" autocomplete="off">
+            <input type="text" class="form-control" placeholder="退费单据编码"
+                   ng-model="searchParam.encoding" autocomplete="off">
+            <input type="text" class="form-control" placeholder="学生姓名或学生编码"
+                   ng-model="searchParam.student_info" autocomplete="off">
+            <button class="btn btn-primary"
+                   ng-click="handleQueryRefund()"><i class="iconfont icon-search"></i> 搜索</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <div class="table-panel" style="overflow-x: auto;" ng-cloak>
+    <table class="table table-striped" ng-class="{'min-width-1600': refundList && refundList.length}">
+      <thead>
+        <tr>
+          <th class="min-width-250">操作</th>
+          <th class="min-width-160">退费单据编码</th>
+          <th>订单ID</th>
+          <th>订单编码</th>
+          <th>金额</th>
+          <th class="min-width-80">学员名称</th>
+          <th>学员编码</th>
+          <th class="min-width-120">校区</th>
+          <th class="min-width-80">地区</th>
+          <th class="min-width-100">创建时间</th>
+          <th class="min-width-80">经办人</th>
+          <th class="min-width-80">已开发票</th>
+          <th class="min-width-80">已取款</th>
+          <th class="min-width-80">状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="refund in refundList"
+          ng-if="refundList && refundList.length">
+          <td>
+            <button class="btn btn-primary btn-xs" ng-click="handleDetailRefund(refund)">详情</button>
+            <button class="btn btn-default btn-xs" ng-click="handlePrintRefund(refund)">打印</button>
+            <span ng-show ="{{(refund.change_status == 7 || refund.is_draw == 1)}}">
+             <button ng-disabled="true" class="btn btn-danger btn-xs">作废</button>
+             <button ng-disabled="true" class="btn btn-warning btn-xs">去取款</button>
+             <button ng-disabled="true" class="btn btn-success btn-xs">已取款</button>
+            </span>
+            <span ng-show ="{{refund.change_status != 7 && refund.is_draw != 1}}">
+              <button class="btn btn-danger btn-xs" class="cur" ng-click="handleDeleteRefund(refund.id)">作废</button>
+              <button class="btn btn-warning btn-xs" class="cur" ng-click="handleDrawingRefund(refund)">去取款</button>
+              <button class="btn btn-success btn-xs" class="cur" ng-click="handleDrawRefund(refund.id)">已取款</button>
+            </span>
+          </td>
+          <td>{{refund.encoding}}</td>
+          <td>{{refund.order_id}}</td>
+          <td>{{refund.order_no}}</td>
+          <td>{{refund.fee_amount | currency}}</td>
+          <td>{{refund.student_name}}</td>
+          <td>{{refund.student_encoding}}</td>
+          <td>{{refund.branch_name}}</td>
+          <td>{{refund.city_name}}</td>
+          <td>{{refund.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          <td>{{refund.input_user_name}}</td>
+          <td>{{refund.invoice_status == 1 ? '是' : '否'}}</td>
+          <td>{{refund.is_draw == 1 ? '是' : '否'}}</td>
+          <td>{{refund.change_status == 7 ? '已作废' : (refund.is_draw ==1 ? '已取款' : '正常')}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- 退费详细Modal -->
+    <div id="erpDetailRefundPanel" class="modal fade"
+      tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">退费详情</h4>
+          </div>
+          <div class="modal-body">
+            <div class="table-panel">
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>课程</th>
+                  <th>退费课时</th>
+                  <th>退费金额</th>
+                  <th>补考勤费用</th>
+                  <th>返预结转</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="course in refundDetail.courseList"
+                    ng-if="refundDetail.courseList && refundDetail.courseList.length">
+                  <td>{{course.course_name}}</td>
+                  <td>{{course.course_times}}</td>
+                  <td>{{course.total_amount | currency}}</td>
+                  <td>{{course.attend_amount | currency}}</td>
+                  <td>{{course.pre_amount | currency}}</td>
+                </tr>
+                </tbody>
+              </table>
+              <ng-pagination conf="refundDetailPaginationConf"></ng-pagination>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" 
+              ng-click="handleModalCancel()">退出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 退费作废Modal -->
+    <div id="erpDeleteRefundPanel" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">退费作废</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <form class="form-horizontal">
+                <div class="hide">
+                  <input type="text" ng-model='refundDeleteInfo.change_id'>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">备注：</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" rows="4"
+                              ng-model="refundDeleteInfo.remark"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger"
+                    ng-click="handleModalCancel()">取消</button>
+            <button type="button" class="btn btn-primary"
+                    ng-click="handleModalConfirm()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- .table-panel end -->
+
+  <ng-pagination conf="paginationConf" style="background: #fff; padding: 0 20px;"></ng-pagination>
+</div>

@@ -1,0 +1,106 @@
+<div class="erp students" ng-controller="erp_StudentListController">
+  <div ng-show="viewCtrl.view == 'list'">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span class="title">学员搜索</span>
+      </div>
+      <div class="panel-body operation-panel">
+        <div class="toolbar">
+          <div class="form-inline">
+            <div class="form-group">
+              <button class="btn btn-primary btn-circle" ng-click="addStudent()">
+                <i class="iconfont icon-add"></i>添加学员
+              </button>
+            </div>
+            <div class="form-group pull-right">
+              <div class="input-group">
+                <input type="text" class="form-control" style="width: 300px;" ng-model="searchParam.searchInfo" placeholder="输入学员姓名/ID/编码/报班单号" ng-enter="doSearch()">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" ng-click="doSearch()">
+                    <i class="iconfont icon-search"></i>
+                  </button>
+                </span>
+              </div>
+              <div class="form-group ml10">
+                <label class="control-label" style="font-weight: normal;">
+                  <input type="checkbox" ng-model="searchParam.exact"> 勾选精确查找
+                </label>
+              </div>
+            <p style="color: red"><span style="font-weight: bold">*</span>模糊字眼用%代替</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-panel">
+      <div class="text-danger">
+        <span class="dian" style="vertical-align:middle;"></span>
+        表示近期活跃账号
+      </div>
+      <ul class="students-list list-unstyled" ng-if="!loadStatues">
+        <li class="students-item pull-left" ng-repeat="stu in studentsList" ng-click="viewStudentDetail(stu)">
+          <div class="avatar-wrapper">
+            <img ng-src="{{stu.head_pic || 'img/erp/student-default.png'}}" class="{{stu.head_pic?'':'default-avatar'}}" alt="">
+          </div>
+          <div class="name text-center text-overflow"  uib-popover-template="'moreName.html'" 
+            popover-trigger="'{{stu.student_name.length>9?'mouseenter':'none'}}'">
+            <script type="text/ng-template" id="moreName.html">
+              <div class="name text-center">
+                {{stu.student_name}}
+                <span ng-if="stu.student_status==1" style="color: #808080;font-size:13px ">(正常)</span>
+                <span ng-if="stu.student_status==4" style="color: #808080;font-size:13px ">(沉睡)</span>
+                <span ng-if="stu.student_status==6" style="color: #808080;font-size:13px ">(结课)</span>
+              </div>
+            </script>
+            <span class="dian" ng-if="stu.active==1"></span>
+            {{stu.student_name}}
+            <!--//学管师导入-->
+            <!--学生编码导入-->
+            <!--<div>{{stu.encoding}}</div>-->
+            <!--双师同步id导入-->
+            <!--<div ng-if ="stu.login_no!=null">{{stu.login_no}}</div>-->
+            <span ng-if="stu.student_status==1" style="color: #808080;font-size:13px ">(正常)</span>
+            <span ng-if="stu.student_status==4" style="color: #808080;font-size:13px ">(沉睡)</span>
+            <span ng-if="stu.student_status==6" style="color: #808080;font-size:13px ">(结课)</span>
+          </div>
+          <div class="grade text-center">
+             年级: {{stu.grade_name || '年级未知'}}<br/>
+             学管: {{!stu.learningmgr_name?"未指定":stu.learningmgr_name}}
+          </div>
+          <div class="phone text-left">
+            <i class="iconfont icon-Mobile_phone" style="color:#fc5964;"></i>
+            {{stu.phone || '暂无电话'}}
+          </div>
+          <div class="app-id text-left">
+            <i class="fa fa-user" style="color:#FCB249; margin-left: -12px;"></i> 
+            {{stu.login_no || '暂无APP ID'}}
+          </div>
+          <div class="learning-mgr text-left">
+            <i class="iconfont icon-Student_code" style="color:#58DBCD;"></i>
+            {{stu.encoding}}
+          </div>
+          <div class="school-name text-left text-overflow" uib-popover="{{stu.attend_school_name}}" popover-trigger="'{{stu.attend_school_name.length>12?'mouseenter':'none'}}'">
+            <i class="iconfont icon-campus" style="color: #ffb33f;"></i>
+            {{stu.attend_school_name || '暂无学校信息'}}
+          </div>
+          <div class="school-name text-left" ng-if="false">
+            <i class="iconfont icon-Track" style="color: #328df0;"></i>
+            <a href="?studentId={{stu.id}}#/studentMgr/studentTraceInfo" target="_blank">学员跟踪</a>
+          </div>
+          <div class="bu-name text-left text-overflow" uib-popover="初始团队：{{stu.bu_name}}" popover-trigger="'{{stu.bu_name.length>11?'mouseenter':'none'}}'">
+            初始团队：{{stu.bu_name || '暂无初始团队'}}
+          </div>
+        </li>
+        <li class="clearfix"></li>
+      </ul>
+      <div class="text-center" ng-if="loadStatues">
+          <img src="img/erp/loading2.gif">
+       </div>
+       <div class="text-center" ng-if="!loadStatues && (studentsList == null || studentsList.length == 0)">
+          <div class="no-data"></div>
+          暂无数据
+      </div>
+      <ng-pagination conf="pageConf" ng-if="!loadStatues && pageConf.totalItems>20"></ng-pagination>
+    </div>
+  </div>
+</div>

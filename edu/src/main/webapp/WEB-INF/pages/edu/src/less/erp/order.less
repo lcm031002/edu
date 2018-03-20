@@ -1,0 +1,95 @@
+/**
+ * 教务平台模块样式表
+ */
+@klxx-red:   		  #fc5964;
+@klxx-green:        #04c9c4;
+@klxx-blue:           #3b9ef6;
+@klxx-yellow:        #ffb33f;
+
+dl.course-conditions {
+	margin-top: 10px;
+	line-height: 2em;
+	dt {
+		width: 100px;
+	}
+	dd {
+		margin-left: 120px;
+		margin-bottom: 6px;
+		padding-bottom: 6px;
+		border-bottom: 1px dashed #ddd;
+	}
+}
+
+.erp.orders-index {
+	.shortcuts {
+		a {
+			display: block;
+			background-color: #fff;
+	    height: 150px;
+	    margin: 30px;
+	    border-left: 8px solid #ddd;
+	    text-indent: 40px;
+	    line-height: 150px;
+	    font-size: 18px;
+	    color: #333;
+	    min-width: 280px;
+	    &.ordersMgrOrders {
+				border-color: @klxx-red;
+	    }
+	    &.orderChangeTransfer {
+				border-color: @klxx-green;
+	    }
+	    &.classesSchedule {
+				border-color: @klxx-blue;
+	    }
+	    &.attendanceMgr {
+				border-color: @klxx-yellow;
+	    }
+	    &.ordersMgrBasic {
+				border-color: @klxx-blue;
+	    }
+	    &.classesRoom {
+				border-color: @klxx-yellow;
+	    }
+	    &.classesRefund {
+				border-color: @klxx-red;
+	    }
+	    &.classesFrozen {
+				border-color: @klxx-green;
+	    }
+	    img {
+	    	margin-right: 30px;
+	    }
+		}
+	}
+}
+
+.klxx{
+	&.modal-open .modal{
+		top: 0px;
+		padding-top:80px;
+		z-index: 1049;
+		overflow: auto;
+		.order-qrcode-wrapper{
+			width: 256px; 
+			height: 256px;
+			margin: 0 auto;
+			overflow: hidden;
+		}
+		@media (max-width: 1024px){
+			.modal-dialog{
+				margin-top: 10px;
+			}
+			.order-qrcode-wrapper{
+				width: 220px; 
+				height:220px;
+				margin: 0 auto;
+			}
+			.order-qrcode-wrapper img,.order-qrcode-wrapper canvas{
+				width: 220px!important; 
+				height:220px!important;
+				margin: 0 auto;
+			}
+		}
+	}
+}

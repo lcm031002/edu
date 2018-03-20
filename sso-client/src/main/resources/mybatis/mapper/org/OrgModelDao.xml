@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ebusiness.cas.client.dao.OrgModelDao">
+	<resultMap type="com.ebusiness.cas.client.common.model.OrgModel"
+		id="pojoMap">
+		<id property="id" column="ID" />
+		<result property="text" column="TEXT" />
+		<result property="parentId" column="PARENTID" />
+		<result property="buId" column="BUID" />
+		<result property="cityId" column="CITYID" />
+        <result property="productLine" column="PRODUCTLINE" />
+		<collection property="children" resultMap="pojoMap2" />
+	</resultMap>
+	
+	<resultMap type="com.ebusiness.cas.client.common.model.OrgModel"
+		id="pojoMap3">
+		<id property="id" column="ID" />
+		<result property="text" column="TEXT" />
+		<result property="type" column="TYPE" />
+		<result property="parentId" column="PARENTID" />
+		<result property="buId" column="BUID" />
+		<result property="cityId" column="CITYID" />
+		<result property="productLine" column="PRODUCTLINE" />
+		<result property="orgKind" column="ORGKIND" />
+	</resultMap>
+	
+	<resultMap type="com.ebusiness.cas.client.common.model.OrgModel"
+		id="pojoMap2">
+		<id property="id" column="ID_SUB" />
+		<result property="text" column="TEXT_SUB" />
+		<result property="parentId" column="PARENTID" />
+		<result property="buId" column="BUID" />
+		<result property="cityId" column="CITYID" />
+		<result property="productLine" column="PRODUCTLINE" />
+	</resultMap>
+	
+	<!-- 查询当前用户可见的团队 -->
+	<select id="queryByUserId" resultMap="pojoMap"
+		parameterType="com.ebusiness.cas.client.common.model.OrgModel">
+		SELECT TOI.ID         AS ID_SUB,
+		       TOI.ORG_NAME   AS TEXT_SUB,
+		       TOI2.ID        parentId,
+		       TOI2.ID        AS ID,
+		       TOI2.ORG_NAME  AS TEXT,
+		       toi.org_type||'' as type,
+		       TOI2.ID        buId,
+		       TOI2.Parent_Id cityId
+		  FROM ebs_accountorg_rel PUS
+		  LEFT JOIN TAB_ORGANIZATION_INFO TOI
+		    ON TOI.ID = PUS.Orgid
+		  LEFT JOIN TAB_ORGANIZATION_INFO TOI2
+		    ON TOI2.ID = TOI.Parent_Id
+		 where 1=1
+		 <if test="userId!=0">
+		 	AND PUS.Accountid = #{userId}
+		 </if>
+		 order by TEXT asc
+	</select>
+	
+	<!-- 查询当前用户可见的校区 -->
+	<select id="queryOrgBuList" resultMap="pojoMap2"
+		parameterType="com.ebusiness.cas.client.common.model.OrgModel">
+		SELECT TOI.ID         AS ID_SUB,
+		       TOI.ORG_NAME   AS TEXT_SUB,
+		       TOI2.ID        parentId,
+		       TOI2.ID        AS ID,
+		       TOI2.ORG_NAME  AS TEXT,
+		       toi2.org_type||'' as type,
+		       TOI2.ID        buId,
+		       TOI2.Parent_Id cityId
+		  FROM PUB_USER_SCHOOL PUS
+		  LEFT JOIN TAB_ORGANIZATION_INFO TOI
+		    ON TOI.ID = PUS.SCH_ID
+		  LEFT JOIN TAB_ORGANIZATION_INFO TOI2
+		    ON TOI2.ID = TOI.Parent_Id
+		 where  1=1
+		 <if test="userId!=0">
+		 	AND PUS.USER_ID = #{userId}
+		 </if>
+		 order by TEXT asc
+	</select>
+	
+	<select id="queryAll" resultMap="pojoMap3"
+		parameterType="com.ebusiness.cas.client.common.model.OrgModel">
+			 select distinct TOI.ID AS ID,
+	                TOI.ORG_NAME AS TEXT,
+	                TOI.Parent_Id as parentId,
+	                toi.org_type || '' as type,
+	                case
+	                  when toi.org_type = 4 then
+	                   toi.parent_Id
+	                  when toi.org_type = 3 then
+	                   toi.id
+	                  else
+	                   null
+	                end as buId,
+	                case
+	                  when toi.org_type = 4 then
+	                   (select t.parent_Id
+	                      from TAB_ORGANIZATION_INFO t
+	                     where id = toi.parent_Id)
+	                  when toi.org_type = 3 then
+	                   (select t.id
+	                      from TAB_ORGANIZATION_INFO t
+	                     where id = toi.parent_Id)
+	                  when toi.org_type = 2 then
+	                   toi.id
+	                end as cityId
+	  from TAB_ORGANIZATION_INFO toi
+	  LEFT JOIN TAB_ORGANIZATION_INFO TOI2
+	    ON TOI2.ID = TOI.Parent_Id
+	   and toi2.STATUS = 1
+	 where toi.STATUS = 1
+	 order by TEXT asc
+	</select>
+	
+	<select id="querySelectedOrg" resultMap="pojoMap3" parameterType="com.ebusiness.cas.client.common.model.UserPersonalSettings">
+	   select distinct toi.id as ID,
+	          toi.org_name as TEXT,
+	          toi.parent_Id as parentId,
+	          toi.org_type||'' as type,
+	          case
+	            when toi.org_type = 4 then
+	             toi.parent_Id
+	            when toi.org_type = 3 then
+	             toi.id
+	            else
+	             null
+	          end as buId,
+	          case
+	            when toi.org_type = 4 then
+	             (select t.parent_Id
+	                from TAB_ORGANIZATION_INFO t
+	               where id = toi.parent_Id)
+	            when toi.org_type = 3 then
+	             (select t.id
+	                from TAB_ORGANIZATION_INFO t
+	               where id = toi.parent_Id)
+	            when toi.org_type = 2 then
+	             toi.id
+	          end as cityId,
+	          toi.product_line as productLine,
+	          toi.org_kind as orgKind
+	     from TAB_ORGANIZATION_INFO toi
+	     left join user_personal_settings ups
+	       on ups.param_val = to_char(toi.id)
+	      and ups.param_name = #{paramName}
+	    where ups.user_id = #{userId}
+	</select>
+</mapper>

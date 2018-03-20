@@ -1,0 +1,116 @@
+<div class="report" ng-controller="report_autoAttendanceReportController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">自动考勤报表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <rd-date-picker-range 
+                        ng-start-date="searchParam.p_start_date" 
+                        ng-end-date="searchParam.p_end_date"
+                        ng-default-range="searchParam.default_range">
+                    </rd-date-picker-range>
+                    <rd-branch ng-bu-id="searchParam.p_bu_id" ng-branch-id="searchParam.p_branch_id" ng-value-change="onBranchChange()">
+                        <div class="form-group">
+                            <span class="input-label">日期字段：</span>
+                            <select class="form-control" ng-model="searchParam.p_isCourseTime">
+                                <option value="true">排课日期</option>
+                                <option value="false">考勤日期</option>
+                            </select>  
+                            
+                            <!-- <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button> -->
+                            <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                        </div>
+                    </rd-branch>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-stripped {{loadStatues!=false?'':'min-width-2500'}}">
+            <col width="60"/>
+            <col width="185"/>
+            <col width="140"/>
+            <col width="90"/> <!-- 学员姓名-->
+            <col width="90"/>   
+            <col width="180"/>
+            <col width="90"/>
+            <col width="180"/>
+            <col width="90"/>
+            <col width="100"/>   <!-- 上课日期 -->
+            <col width="80"/>
+            <col width="80"/>
+            <col width="80"/>
+            <col width="90"/>
+            <col width="80"/>
+            <col width="100"/>  <!-- 考勤日期 -->
+            <col width="100"/>  
+            <col width="100"/>
+            <col width="100"/>
+            <col width="100"/>
+            <col width="220"/>   <!-- 报班单号-->
+            <col width="100"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>考勤单据</th>
+                <th>教师编码</th>
+                <th>教师姓名</th>
+                <th>科目</th>
+                <th>课程名称</th>
+                <th>学管师</th>
+                <th>学生编码</th>
+                <th>学生姓名</th>
+                <th>上课日期</th>
+                <th>年级</th>
+                <th>上课时间</th>
+                <th>下课时间</th>
+                <th>上课分钟数</th>
+                <th>消耗课时</th>
+                <th>考勤日期</th>
+                <th>老师签到时间</th>
+                <th>老师签到方式</th>
+                <th>学生签到时间</th>
+                <th>学生签到方式</th>
+                <th>报班单号</th>
+                <th>上课校区</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td>{{data.attend_code}}</td>
+                <td>{{data.teacher_code}}</td>
+                <td>{{data.teacher_name}}</td>
+                <td>{{data.subject_name}}</td>
+                <td>{{data.course_name}}</td>
+                <td>{{data.manager_name}}</td>
+                <td>{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+                <td>{{data.class_date}}</td>
+                <td>{{data.grade_name}}</td>
+                <td>{{data.start_time}}</td>
+                <td>{{data.end_time}}</td>
+                <td>{{data.class_times}}</td>
+                <td>{{data.course_times}}</td>
+                <td>{{data.attend_date}}</td>
+                <td>{{data.teacher_sign_time}}</td>
+                <td>{{data.teacher_sign_type}}</td>
+                <td>{{data.student_sign_time}}</td>
+                <td>{{data.student_sign_type}}</td>
+                <td>{{data.order_no}}</td>
+                <td>{{data.branch_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

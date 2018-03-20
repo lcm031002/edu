@@ -1,0 +1,142 @@
+<div class="row alerts-container" ng-controller="crmAlertsCtrl">
+	<div class="col-xs-12">
+		<div ng-if="noticeResult.length > 0"
+			style="border: 1px solid #d6e9c6; background: #dff0d8; border-radius: 5px; margin: auto; margin: 10px; color: #3c763d; padding: 10px;">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td colspan="3" style="font-weight: bold;">通知：</td>
+					<td align="right">
+						<a href="javascript:void(-1);" ng-click="closeNotice()">
+						<img src="img/crm/noticeclose.png" width="13" height="12" /></a></td>
+				</tr>
+				<tr ng-repeat="notice in noticeResult">
+					<td width="1%" style="color: #4F4F4F;" align="right">{{$index + 1}}、</td>
+					<td width="28%">
+						<span style="color: #f77400;">{{notice.begin_time}}</span>
+						<span style="color: #24ABF8; padding-left: 10px;">{{notice.end_time}}</span>
+					</td>
+					<td width="71%">{{notice.description}}</td>
+				</tr>
+			</table>
+		</div>
+		<div ng-if="reminderResult.length > 0"
+			style="border: 1px solid #ebccd1; background: #f2dede; border-radius: 5px; margin: auto; margin: 10px; color: #a94442; padding: 10px;">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td colspan="3" style="font-weight: bold;">提醒：</td>
+					<td align="right"><a href="javascript:void(-1);"
+						ng-click="closeReminder()"><img src="img/crm/remindclose.png"
+							width="13" height="12" /></a></td>
+				</tr>
+				<tr ng-repeat="reminder in reminderResult">
+					<td width="1%" style="color: #4F4F4F;" align="right">{{$index+ 1}}、</td>
+					<td width="28%">
+						<span style="color: #24ABF8; padding-left: 10px;">预约时间：{{reminder.end_time}}</span>
+					</td>
+					<td width="30%">约访对象：{{reminder.visit_object}}</td>
+					<td width="41%">注意事项：{{reminder.description}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<div ng-controller="crmMasterCtrl" class="crm container-fluid">
+	<div class="row ">
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<a href="#/RecruitStudents/RecruitStudentsBusiness/ImportantReminders">
+				<div class="pin message">
+					<div class="icon" ng-click="extend('importantReminder')">
+						<i class="iconfont icon-recruit_remind"></i>
+					</div>
+					<div class="content">
+						<div class="title">{{Master.meminder?Master.meminder:0}}</div>
+						<div class="comment">重要提醒</div>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<a
+				href="#/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsClueInput">
+				<div class="pin res-entry" role="button" id="resc_input"
+					href="{{contextPath}}{{menuInput.url}}" title="提示"
+                    tabindex="0" data-placement="bottom">
+					<div class="icon">
+						<i class="iconfont icon-recruit_entering"></i>
+					</div>
+					<div class="content">
+						<div class="title">0</div>
+						<div class="comment">资源录入</div>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<a href="#/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsClueTrack">
+				<div class="pin res-proc">
+					<div class="icon">
+						<i class="iconfont icon-recruit_dispose"></i>
+					</div>
+					<div class="content">
+						<div class="title">{{Master.approved?Master.approved:0}}</div>
+						<div class="comment">资源处理</div>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="col-lg-3 col-md-6 col-xs-12">
+			<a href="#/RecruitStudents/RecruitStudentsBusiness/MyOrdereds">
+				<div class="pin my-order">
+					<div class="icon" ng-click="extend('myOrdereds')">
+						<i class="iconfont icon-recruit_myorder"></i>
+					</div>
+					<div class="content">	
+						<div class="title">
+							{{Master.myOrdereds?Master.myOrdereds:0}}</div>
+						<div class="comment">我的成单</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div class="row" ng-controller="crmPerformanceCtrl">
+		<div class="col-lg-12">
+			<rd-widget> <rd-widget-header icon="fa-line-chart" title="线索业绩">
+			<div class="pull-right fa-hover">
+				<form action="" class="form-inline">
+					<select ng-model="currnentBranch"
+						class="selectBranchs selectBranchsPerformance form-control"
+						ng-options="bra.name for bra in branchsVisible"
+						ng-change="changeBranch()">
+					</select>
+					<button class="btn btn-primary" class="dropdown-toggle"
+						ng-click="fresh()" title="刷新">
+						<i class="fa fa-refresh"></i> 刷新
+					</button>
+				</form>
+			</div>
+			</rd-widget-header> 
+			<rd-widget-body>
+			<div ng-show="isPerformanceLoading=='loading...'"
+				style="vertical-align: middle; text-align: center;">
+				<img src="img/crm/loading2.gif">
+			</div>
+			<div class="table-responsive data-set">
+				<div class="data-set-header" style="margin-bottom:40px">
+					<div ng-repeat="data in dataSets" class="data-set-title pull-left" style="margin-top:10px">
+						<i class="data-set-label" style="background-color: {{data.fillColor}}"></i>{{data.label}}
+					</div>
+				</div>
+				<canvas style="height: 350px; width: 95%;" id="Performance"></canvas>
+				<br>
+				<div class="data-set-title pull-left">
+						<i class="data-set-label"></i>{{schoolName}}业绩：
+						<i class="data-set-label"></i>{{schoolAmount}}
+					</div>
+			</div>
+			</rd-widget-body> 
+		</rd-widget>
+		</div>
+	</div>
+</div>

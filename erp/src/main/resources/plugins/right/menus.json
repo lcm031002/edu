@@ -1,0 +1,489 @@
+{
+    "name": "快乐学习教育",
+    "key": "klxxedu",
+    "version": "0.0.1",
+    "error":"false",
+    "rightDir":["/templates"],
+    "rightIgnoreDir":["/templates/block"],
+    "message":"",
+    "menus":[
+        {
+            "index":"A11001",
+            "name":"首页",
+            "key":"index",
+            "icon":"fa fa-home",
+            "type":"$state",
+            "active":"true",
+            "value":"index",
+            "href":"templates/klxxedu/index.html",
+            "path":"/index"
+        },
+        {
+            "index":"A12001",
+            "name":"招生",
+            "key":"RecruitStudents",
+            "icon":"fa fa-fire",
+            "type":"$state",
+            "value":"RecruitStudents",
+            "path":"/RecruitStudents",
+            "menus":[
+                {
+                    "index":"A12002",
+                    "name":"招生首页",
+                    "key":"RecruitStudentsIndex",
+                    "icon":"fa fa-home",
+                    "type":"$Plugin",
+                    "path":"/RecruitStudents/RecruitStudentsIndex",
+                    "href":"http://www.klxuexi.com/gxhCRM/gxhcrm/crmHome#/",
+                    "value":"RecruitStudentsIndex"
+                },{
+                    "index":"A12003",
+                    "name":"线索分配",
+                    "key":"RecruitStudentsClueDistribution",
+                    "icon":"fa fa-truck",
+                    "type":"$Plugin",
+                    "path":"/RecruitStudents/RecruitStudentsClueDistribution",
+                    "href":"http://www.klxuexi.com/gxhCRM/gxhcrm/index#/rescRec_transfer",
+                    "value":"RecruitStudentsClueDistribution"
+                },{
+                    "index":"A12004",
+                    "name":"线索跟踪",
+                    "key":"RecruitStudentsClueTrack",
+                    "icon":"fa fa-tty",
+                    "type":"$Plugin",
+                    "path":"/RecruitStudents/RecruitStudentsClueTrack",
+                    "href":"http://www.klxuexi.com/gxhCRM/gxhcrm/index#/rescRec_proc/",
+                    "value":"RecruitStudentsClueTrack"
+                },{
+                    "index":"A12005",
+                    "name":"线索录入",
+                    "key":"RecruitStudentsClueInput",
+                    "icon":"fa fa-pencil-square-o",
+                    "type":"$Plugin",
+                    "path":"/RecruitStudents/RecruitStudentsClueInput",
+                    "href":"http://www.klxuexi.com/gxhCRM/gxhcrm/index#/rescRec_input",
+                    "value":"RecruitStudentsClueInput"
+                },{
+                    "index":"A12005",
+                    "name":"转化学员",
+                    "key":"RecruitStudentsCustomer",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "path":"/RecruitStudents/RecruitStudentsCustomer",
+                    "href":"templates/klxxedu/employee/employee.html",
+                    "value":"RecruitStudentsCustomer"
+                },{
+                    "index":"A12006",
+                    "name":"数据字典",
+                    "key":"RecruitStudentsDicts",
+                    "icon":"fa fa-list-alt",
+                    "type":"$Plugin",
+                    "path":"/RecruitStudents/RecruitStudentsDicts",
+                    "href":"http://www.klxuexi.com/gxhCRM/gxhcrm/index#/dict",
+                    "value":"RecruitStudentsDicts"
+                },{
+                    "index":"A12007",
+                    "name":"招生报表",
+                    "key":"RecruitStudentsReports",
+                    "icon":"fa fa-bar-chart-o",
+                    "type":"$Plugin",
+                    "path":"/RecruitStudents/RecruitStudentsReports",
+                    "href":"http://www.klxuexi.com/gxhCRM/gxhcrm/index#/report/channel",
+                    "value":"RecruitStudentsReports"
+                }
+            ]
+        },
+        {
+            "index":"A13001",
+            "name":"学员",
+            "key":"students",
+            "icon":"fa fa-bar-chart-o",
+            "type":"$state",
+            "value":"students",
+            "path":"/students",
+            "menus":[
+                    {
+                        "index":"A13002",
+                        "name":"学员搜索",
+                        "key":"studentsSearch",
+                        "icon":"fa fa-align-justify",
+                        "type":"$Plugin",
+                        "value":"studentsSearch",
+                        "href":"http://erp.klxuexi.org/webERP/apps/student_index/index-student",
+                        "path":"/students/studentsSearch"
+                    },{
+                        "index":"A13003",
+                        "name":"我的学员",
+                        "key":"studentsMine",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"studentsMine",
+                        "href":"",
+                        "path":"/students/studentsMine"
+                    },{
+                        "index":"A13004",
+                        "name":"学员分配",
+                        "key":"studentsDistribution",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"studentsDistribution",
+                        "href":"",
+                        "path":"/students/studentsDistribution"
+                    },{
+                        "index":"A13005",
+                        "name":"学员跟踪",
+                        "key":"studentsTrack",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"studentsTrack",
+                        "href":"",
+                        "path":"/students/studentsTrack"
+                    }
+            ]
+        },
+        {
+            "index":"A15001",
+            "name":"教师",
+            "key":"teachers",
+            "icon":"fa fa-bar-chart",
+            "type":"$state",
+            "value":"teachers",
+            "path":"/teachers",
+            "menus":[
+                {
+                    "index":"A15002",
+                    "name":"教师搜索",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A15003",
+                    "name":"教师组（待定）",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                }
+            ]
+        },
+        {
+            "index":"A14001",
+            "name":"订单",
+            "key":"classes",
+            "icon":"fa fa-line-chart",
+            "type":"$state",
+            "value":"classes",
+            "path":"/classes",
+            "menus":[
+                {
+                    "index":"A14001",
+                    "name":"首页",
+                    "key":"classesIndex",
+                    "icon":"fa fa-home",
+                    "type":"$state",
+                    "value":"classesIndex",
+                    "path":"/classes/classesIndex",
+                    "href":"templates/klxxedu/index.html"
+                },{
+                    "index":"A14002",
+                    "name":"报班管理",
+                    "key":"classesOrders",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesOrders",
+                    "path":"/classes/classesOrders",
+                    "menus":[
+                    	{
+                    		"index":"A1400201",
+		                    "name":"报班单据",
+		                    "key":"classesOrders",
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400202",
+		                    "name":"班级课程",
+		                    "key":"classesOrders",
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400203",
+		                    "name":"1对1课程",
+		                    "key":"classesOrders",
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400204",
+		                    "name":"晚辅导课程",
+		                    "key":"classesOrders",
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400206",
+		                    "name":"优惠前置", 
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400207",
+		                    "name":"优惠规则", 
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400208",
+		                    "name":"优惠券",
+		                    "key":"classesOrders",
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	},{
+                    		"index":"A1400210",
+		                    "name":"优惠活动",
+		                    "key":"classesOrders",
+		                    "icon":"fa fa-bars",
+		                    "type":"$state",
+		                    "value":"classesOrders",
+		                    "path":"/classes/classesOrders"
+                    	}
+                    ]
+                },{
+                    "index":"A14003",
+                    "name":"转班管理",
+                    "key":"classesTransfer",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesTransfer",
+                    "path":"/classes/classesTransfer"
+                },{
+                    "index":"A14004",
+                    "name":"排课管理",
+                    "key":"classesSchedule",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesSchedule",
+                    "path":"/classes/classesSchedule"
+                },{
+                    "index":"A14005",
+                    "name":"考勤管理",
+                    "key":"classesAttendance",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesAttendance",
+                    "path":"/classes/classesAttendance"
+                },{
+                    "index":"A14006",
+                    "name":"退费管理",
+                    "key":"classesRefund",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesRefund",
+                    "path":"/classes/classesRefund"
+                },{
+                    "index":"A14007",
+                    "name":"事务跟进",
+                    "key":"classesTransactionFollowUp",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesTransactionFollowUp",
+                    "path":"/classes/classesTransactionFollowUp"
+                },{
+                    "index":"A14008",
+                    "name":"库存管理",
+                    "key":"classesInventoryMgr",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesInventoryMgr",
+                    "path":"/classes/classesInventoryMgr"
+                },{
+                    "index":"A14009",
+                    "name":"采购管理",
+                    "key":"classesPurchasingMgr",
+                    "icon":"fa fa-bars",
+                    "type":"$state",
+                    "value":"classesPurchasingMgr",
+                    "path":"/classes/classesPurchasingMgr"
+                },{
+                    "index":"A14010",
+                    "name":"业绩报表",
+                    "key":"classesReports",
+                    "icon":"fa fa-bar-chart",
+                    "type":"$state",
+                    "value":"classesReports",
+                    "path":"/classes/classesReports"
+                }
+            ]
+        },
+        {
+            "index":"A16000",
+            "name":"财务",
+            "key":"financial",
+            "icon":"fa fa-bar-chart",
+            "type":"$state",
+            "value":"financial",
+            "path":"/financial",
+            "menus":[
+                {
+                    "index":"A16001",
+                    "name":"发票处理",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A16002",
+                    "name":"在线支付",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A16003",
+                    "name":"账户单据",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A16004",
+                    "name":"订单单据",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A16005",
+                    "name":"退费单据",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A16006",
+                    "name":"学员转账",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                },{
+                    "index":"A16007",
+                    "name":"财务报表",
+                    "key":"treePanel01",
+                    "icon":"fa fa-reorder",
+                    "type":"$state",
+                    "value":"treePanel01"
+                }
+            ]
+        },
+        {
+            "index":"A17000",
+            "name":"系统",
+            "key":"systems",
+            "icon":"fa fa-gear",
+            "type":"$state",
+            "value":"systems",
+            "path":"/systems",
+            "menus":[
+                {
+                    "index":"A16001",
+                    "name":"组织机构",
+                    "key":"hrmDicttype",
+                    "icon":"fa fa-list-alt",
+                    "type":"$state",
+                    "value":"hrmDicttype",
+                    "href":"templates/hrm/dict/dict_type.html",
+                    "path":"/hrmSystemSettings/hrmDicttype"
+                },{
+                    "index":"A16002",
+                    "name":"基础数据",
+                    "key":"hrmDicttype",
+                    "icon":"fa fa-list-alt",
+                    "type":"$state",
+                    "value":"hrmDicttype",
+                    "href":"templates/hrm/dict/dict_type.html",
+                    "path":"/hrmSystemSettings/hrmDicttype"
+                },{
+                    "index":"A16003",
+                    "name":"账户管理",
+                    "key":"hrmDicttype",
+                    "icon":"fa fa-list-alt",
+                    "type":"$state",
+                    "value":"hrmDicttype",
+                    "href":"templates/hrm/dict/dict_type.html",
+                    "path":"/hrmSystemSettings/hrmDicttype"
+                },{
+                    "index":"A16004",
+                    "name":"通知管理",
+                    "key":"hrmDicttype",
+                    "icon":"fa fa-list-alt",
+                    "type":"$state",
+                    "value":"hrmDicttype",
+                    "href":"templates/hrm/dict/dict_type.html",
+                    "path":"/hrmSystemSettings/hrmDicttype"
+                },{
+                    "index":"A16005",
+                    "name":"流程管理",
+                    "key":"hrmDicttype",
+                    "icon":"fa fa-list-alt",
+                    "type":"$state",
+                    "value":"hrmDicttype",
+                    "href":"templates/hrm/dict/dict_type.html",
+                    "path":"/hrmSystemSettings/hrmDicttype"
+                }
+            ]
+        },
+        {
+            "index":"A18001",
+            "name":"个人设置",
+            "key":"userManagerment",
+            "icon":"fa fa-user",
+            "type":"$state",
+            "value":"userManagerment",
+            "path":"/userManagerment",
+            "showMenu":"false",
+            "menus":[
+                {
+                    "index":"C10001",
+                    "name":"账户安全",
+                    "key":"UMAccountMgr",
+                    "icon":"fa fa-user",
+                    "type":"$state",
+                    "value":"UMAccountMgr",
+                    "path":"/userManagerment/UMAccountMgr",
+                    "href":"templates/segment/account_security.html"
+                },
+                {
+                    "index":"C10002",
+                    "name":"个人信息",
+                    "key":"UMEmployeeInfo",
+                    "icon":"fa fa-pencil-square-o",
+                    "type":"$state",
+                    "value":"UMEmployeeInfo",
+                    "path":"/userManagerment/UMEmployeeInfo",
+                    "href":"templates/segment/employee_info.html"
+                },
+                {
+                    "index":"C10003",
+                    "name":"个人档案",
+                    "key":"UMEmployeeInfo",
+                    "icon":"fa fa-user",
+                    "type":"$state",
+                    "value":"UMEmployeeInfo",
+                    "path":"/userManagerment/UMEmployeeInfo",
+                    "href":"templates/segment/employee_info.html"
+                }
+            ]
+        }
+    ]
+}

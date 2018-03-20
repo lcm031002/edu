@@ -1,0 +1,71 @@
+<!-- 排课专员 
+  By: baiqb@klxuexi.org 2017-11-02
+-->
+<div class="erp" ng-controller="erp_arrangerController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">
+        排课专员管理</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle"
+          ng-click="onAddArranger()">
+          <i class="iconfont icon-add"></i> 添加
+        </button>
+        <button class="btn btn-default btn-circle"
+          ng-click="getArrangerList()">
+          <i class="iconfont icon-refresh"></i> 刷新
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="ov-a">
+      <table class="table table-striped min-width-1100">
+        <thead>
+          <tr>
+            <th width="160">操作</th>
+            <th>序号</th>
+            <th>编码</th>
+            <th>姓名</th>
+            <th>科目</th>
+            <th>所属团队</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in arrangerList"
+            ng-show="!loadStatues && arrangerList && arrangerList.length > 0">
+            <td>
+              <button class="btn btn-xs btn-default" title="编辑"
+                ng-click="onEditArranger(item)">
+                 <i class="iconfont icon-edit"></i> 编辑
+              </button>
+              <button class="btn btn-xs btn-danger" title="删除"
+                ng-click="onDeleteArranger(item)">
+                <i class="iconfont icon-delete"></i> 删除
+              </button>
+            </td>
+            <td ng-bind="$index+1"></td>
+            <td ng-bind="item.employeeEncoding"></td>
+            <td ng-bind="item.employeeName"></td>
+            <td>
+              <span class="label label-info cur mr5 mt5"
+                ng-repeat="subject in item.courseArrangeSpSubjectList"
+                ng-bind="subject.subjectName"
+                data-toggle="popover"
+                data-trigger="hover"
+                title="科目对应年级"
+                data-content="{{subject.gradeNameList.join('，')}}"></span>
+            </td>
+            <td ng-bind="item.buName"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center" ng-if="loadStatues">
+        <img src="img/erp/loading2.gif">
+     </div>
+    <ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+  </div>
+</div>

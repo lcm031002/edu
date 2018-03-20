@@ -1,0 +1,6 @@
+.erp.course-upload table.course-validate {width: 3600px;}
+.erp.course-upload table.course-validate th{width: 120px; text-align: center;}
+
+.erp.ydy-ladder .ladder-detail table.table-form{width: 100%}
+.erp.ydy-ladder .ladder-detail table.table-form>tbody>tr>td{padding: 5px;}
+.erp.ydy-ladder .ladder-detail table.table-form>tbody>tr>td:nth-child(2n+1){text-align: right;}

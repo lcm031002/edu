@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>学员转帐后打印</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font: 12px Arial;
+      background: #f3f3f3;
+    }
+
+    #main {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+    }
+    .content{
+      padding: 100mm 15mm 20mm 20mm;
+    }
+    .content table {
+      color: #000;
+      font-weight: 400;
+      border-spacing: 0;
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .content table .title {
+      text-align: left;
+    }
+
+    .content table td {
+      padding: 5px;
+    }
+    .content table .thd {
+      font-weight: bold;
+    }
+    .print-btn {
+      width: 50px;
+      height: 50px;
+      background: url(print_btn.png) no-repeat center center #fff;
+      border-radius: 4px;
+      position: fixed;
+      top: 300px;
+      left: 50%;
+      margin-left: 460px;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+    .print-btn:hover {
+      background-color: #f0f0f0f0
+    }
+    @media print{
+      @page {
+        size: A4;
+        margin: 5mm;
+      }
+      .print-btn{
+        display: none;
+      }
+      body{
+        background: #fff
+      }
+    }
+  </style>
+</head>
+
+<body>
+    <div id="transferprinthtml" class="print-btn" onclick="printPage()"></div>
+  <div id="main">
+    <div class="content" id="content">
+      <table>
+        <tbody>
+          <tr>
+            <td colspan="6" class="title thd">业务校区：{{school}}<span style="margin-left: 15px;">经办人：{{operator}}</span></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="thd">学员编号</td>
+            <td class="thd">学员姓名</td>
+            <td class="thd">单据编号</td>
+            <td class="thd">业务类型</td>
+            <td class="thd">业务日期</td>
+          </tr>
+          <tr>
+            <td colspan="2">{{transfer.no}}</td>
+            <td>{{transfer.name}}</td>
+            <td>{{transfer.billNo}}</td>
+            <td>{{transfer.type}}</td>
+            <td>{{transfer.date}}</td>
+          </tr>
+          <tr>
+            <td colspan="6" class="title thd" style="padding-top: 15px;">转帐信息：</td>
+          </tr>
+          <tr>
+            <td class="thd">编号</td>
+            <td class="thd">转出学员</td>
+            <td class="thd">转出账户</td>
+            <td class="thd">转入学员</td>
+            <td class="thd">转入账户</td>
+            <td class="thd">操作金额</td>
+          </tr>
+          <tr v-for="item in transferInfoList" :key="item.no">
+            <td>{{item.no}}</td>
+            <td>{{item.outerName}}</td>
+            <td>{{item.outerAccount}}</td>
+            <td>{{item.interName}}</td>
+            <td>{{item.interAccount}}</td>
+            <td>￥{{item.money}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          var data = {};
+          var vPage = {};
+          var param = window.location.search.substr("1");
+          var result = param.split("&");
+          var dynamicId= result[0];
+          var printType = result[1];
+          $.ajax({
+              url:"/erp/studentaccount/print",
+              dataType:"json",
+              type:"GET",
+              data:{
+                  dynamicId: dynamicId,
+                  printType : printType
+              },
+              success:function(resp){
+                  var data = resp.data;
+                  vPage=new Vue({
+                      el: '#content',
+                      data: {
+                          school:data.transferInfo.ORG_NAME,
+                          operator: data.transferInfo.EMPLOYEE_NAME,
+                          transfer: {
+                              no: data.transferInfo.S_ENCODING,
+                              name: data.transferInfo.STUDENT_NAME,
+                              billNo: data.transferInfo.D_ENCODING,
+                              type: '转帐',
+                              date: data.transferInfo.INPUT_TIME
+                          },
+                          transferInfoList: [
+                              {
+                                  no: 1,
+                                  outerName: data.transferInfo.STUDENT_NAME,
+                                  outerAccount: data.transferInfo.OUTPUT_PRODUCT_LINE,
+                                  interName: data.transferInfo.INPUT_STU_NAME,
+                                  interAccount: data.transferInfo.INPUT_PRODUCT_LINE,
+                                  money: data.transferInfo.MONEY
+                              }
+                          ]
+                      }
+                  })
+              }});
+          $("#transferprinthtml").click(
+              function () {
+                  if(vPage._isMounted) {
+                      window.print()
+                  }
+              }
+          );
+      });
+  </script>
+</body>
+
+</html>

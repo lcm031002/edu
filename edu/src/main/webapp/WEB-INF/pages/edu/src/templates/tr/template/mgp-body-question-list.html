@@ -1,0 +1,49 @@
+<div class="layout-column">
+  <ul class="m-0 p-0 layout-column">
+    <li class="mgp-exam layout-column" ng-repeat="item in Mgp.itemList track by item.id">
+      <!-- .mgp-exam-head -->
+      <div class="mgp-exam-head layout-row layout-align-space-between">
+        <p class="m-0 head-left layout layout-align-center-center">
+          <span class="mh-20">题型：{{item.itemType.name}}</span><i class="line"></i>
+          <!-- <span class="mh-20">题类：常考题</span><i class="line"></i> -->
+          <span class="mh-20">难易度：{{item.diffLevel.name}}</span>
+        </p>
+        <p class="m-0 head-right layout layout-align-center-center">
+          <span>试题来源：<a href="javascript:;" target="_blank">2017年广东省深圳市27校联考九年级下册物理试卷</a></span>
+        </p>
+      </div>
+      <!-- .mgp-exam-content -->
+      <div class="mgp-exam-content m-20">
+        <div class="exam-question pb-5">
+          <stem>
+            <p>{{item.content}}</p>
+            <div class="stem-img">
+              <img ng-repeat="imageItem in item.itemPic track by imageItem.itemId" ng-src="{{imageItem.picUrl}}" width="85" height="89" draggable="false">
+            </div>
+          </stem>
+          <div>
+            <opt class="col-xs-6">
+              <span>A．</span><span>有两个不相等的实数根</span>
+            </opt>
+            <opt class="col-xs-6">
+              <span>B．</span><span>有两个不相等的实数根</span>
+            </opt>
+          </div>
+        </div>
+        <!-- <div class="exam-answer"></div> -->
+      </div>
+      <!-- .mgp-exam-footer -->
+      <div class="mgp-exam-footer ph-20 layout-row layout-align-space-between">
+        <div class="m-0 footer-left layout layout-align-center-center">
+          <a href=""><i class="fa fa-plus-square-o tr-primary-fg"></i>展开详情</a>
+          <a href=""><i class="fa fa-heart-o"></i>收藏</a>
+          <a href=""><i class="fa fa-info-circle tr-danger-fg"></i>报错</a>
+        </div>
+        <div class="m-0 footer-right layout layout-align-center-center">
+          <button class="btn btn-primary">+ 加入试题篮</button>
+          <!-- <button class="btn btn-default">- 移除试题篮</button> -->
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

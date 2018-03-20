@@ -1,0 +1,196 @@
+<div ng-controller="erp_accountChangeBillsController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">账户单据</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="openDrawModal()"><i class="iconfont icon-add"></i>
+                    取款
+                </button>
+               <!-- <button class="btn btn-primary btn-circle-reverse"><i class="iconfont icon-add"></i> 转账</button>-->
+            </div>
+            <hr>
+            <div class="searchbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        类型：<select class="form-control" ng-model="searchParam.dynamicType">
+                        <option ng-repeat="dynamicType in dynamicTypeList "
+                                value="{{dynamicType.value}}">{{dynamicType.key}}
+                        </option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        学员：<input class="form-control" type="text" placeholder="可输入学生姓名,编码,ID"
+                                  ng-model="searchParam.queryStudentString"/>
+                    </div>
+                    <div class="form-group">
+                        单据编号：<input class="form-control" type="text" placeholder="单据编码"
+                                    ng-model="searchParam.queryOrderString"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                            ng-click="queryAccountDynamic()"><i class="iconfont icon-search"></i>搜索
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel" style="overflow-x: auto;" ng-cloak>
+        <table class="table table-striped"
+               ng-class="{'min-width-1500': accountDynamicList && accountDynamicList.length}">
+            <thead>
+            <tr>
+                <th style="width: 230px;">操作</th>
+                <th class="min-width-140">编码</th>
+                <th class="min-width-60">类型</th>
+                <th width="120" class="min-width-80">学员姓名</th>
+                <th width="140" class="min-width-80">转入账户</th>
+                <th ng-if="searchParam.dynamicType == 2" class="min-width-80">转入团队</th>
+                <th class="min-width-80">收费方式</th>
+                <th class="min-width-80">金额</th>
+                <th class="min-width-80">产品线</th>
+                <th class="min-width-80">操作校区</th>
+                <th class="min-width-80">操作团队</th>
+                <th class="min-width-80">操作地区</th>
+                <th class="min-width-80">操作时间</th>
+                <th class="min-width-80">操作人</th>
+                <th class="min-width-60">状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="accountDynamic in accountDynamicList">
+                <td><span
+                        ng-if="accountDynamic.status_name != '作废' && accountDynamic.dynamic_type == 1 &&  (accountDynamic.pay_mode=='刷卡' || accountDynamic.pay_mode=='银行转账')">
+							<span class="cur" ng-click="showUpdateAccountDynamicModal(accountDynamic)">
+                                <i class="iconfont text-primary icon-edit"></i>修改</span>&nbsp;&nbsp;
+					</span> <span
+                        ng-if=" !(accountDynamic.status_name != '作废' && accountDynamic.dynamic_type == 1 && (accountDynamic.pay_mode=='刷卡' || accountDynamic.pay_mode=='银行转账'))">
+							<span class="cur" style="color: #ccc; text-decoration: none">
+                                <i class="iconfont text-primary icon-edit"></i>修改</span>&nbsp;&nbsp;
+					</span> <span
+                        ng-if="accountDynamic.status_name != '作废' && (accountDynamic.dynamic_type == 1 || accountDynamic.dynamic_type == 3 || accountDynamic.dynamic_type == 4)">
+							<span class="cur" ng-click="showInvalidAccountDynamicModal(accountDynamic)">
+                                <i class="iconfont text-danger icon-cancellation"></i>作废</span>&nbsp;&nbsp;
+					</span> <span
+                        ng-if="!(accountDynamic.status_name != '作废' && (accountDynamic.dynamic_type == 1 || accountDynamic.dynamic_type == 3 || accountDynamic.dynamic_type == 4))">
+							<span class="cur" style="color: #ccc; text-decoration: none">
+                                <i class="iconfont text-danger icon-cancellation"></i>作废</span>&nbsp;&nbsp;
+					</span> <span
+                        ng-if="accountDynamic.status_name != '作废' && (accountDynamic.dynamic_type == 1 || accountDynamic.dynamic_type == 2 || accountDynamic.dynamic_type == 3 || accountDynamic.dynamic_type == 4)">
+							<span class="cur" ng-click="print(accountDynamic)">
+                                <i class="iconfont text-primary icon-print"></i>打印</span>&nbsp;&nbsp;
+					</span> <span
+                        ng-if="!(accountDynamic.status_name != '作废' && (accountDynamic.dynamic_type == 1 || accountDynamic.dynamic_type == 2 || accountDynamic.dynamic_type == 3 || accountDynamic.dynamic_type == 4))">
+							<span class="cur" style="color: #ccc; text-decoration: none">
+                                <i class="iconfont text-primary icon-print"></i>打印</span>&nbsp;&nbsp;
+					</span><span
+                         ng-if="accountDynamic.status_name != '作废' && accountDynamic.dynamic_type == 1 ">
+                                <span class="cur" ng-click="popTransferModal(accountDynamic)">
+                                    <i class="iconfont text-primary icon-transfer"></i>转账</span>&nbsp;&nbsp;
+                                </span>
+                    </span><span
+                            ng-if="!(accountDynamic.status_name != '作废' && accountDynamic.dynamic_type == 1) ">
+                                <span class="cur"  style="color: #ccc; text-decoration: none">
+                                    <i class="iconfont text-primary icon-transfer"></i>转账</span>&nbsp;&nbsp;
+                                </span>
+                    </span>
+                </td>
+                <td>{{accountDynamic.encoding}}</td>
+                <td>{{accountDynamic.dynamic_type_name}}</td>
+                <td>{{accountDynamic.student_info}}</td>
+                <td>{{accountDynamic.student_info_entry == "()()"?"":accountDynamic.student_info_entry }}</td>
+                <td ng-if="searchParam.dynamicType == 2">{{accountDynamic.in_bu_name}}</td>
+                <td>{{accountDynamic.pay_mode}}</td>
+                <td>{{accountDynamic.money}}</td>
+                <td>{{accountDynamic.product_line}}</td>
+                <td>{{accountDynamic.branch_name}}</td>
+                <td>{{accountDynamic.bu_name}}</td>
+                <td>{{accountDynamic.city_name}}</td>
+                <td>{{accountDynamic.input_time}}</td>
+                <td>{{accountDynamic.operator}}</td>
+                <td>{{accountDynamic.status_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!-- .table-panel end -->
+    <ng-pagination conf="paginationConf" style="background: #fff; padding: 0 20px;"></ng-pagination>
+
+    <!-- 转账模态框 -->
+    <div class="modal fade"
+         id="accountChangeBills_transferDynamicModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">转账</h4>
+                </div>
+                <div class="modal-body" id="accountChangeBills_transferDynamicModal_body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 作废模态框 -->
+    <div class="modal fade"
+         id="accountChangeBills_invalidAccountDynamicModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">订单作废</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="control-label">备注:</label>
+							<textarea class="form-control" ng-model="searchParam.remark"
+                                      style="resize: none; height: 100px;"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"
+                            ng-click="invalidAccountDynamic()">提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 修改模态框 -->
+    <div class="modal fade"
+         id="accountChangeBills_updateAccountDynamicModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">订单修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label class="control-label">POS机:</label> <select
+                                ng-model="cardNum.companyAccount">
+                            <option ng-repeat="item in POSList" value="{{item.accountId}}">{{item.deviceName}}</option>
+                        </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">转账卡号:</label> <input
+                                type="text" ng-model="cardNum.cardNum"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"
+                            ng-click="updateAccountDynamic()">提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

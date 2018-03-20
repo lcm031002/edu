@@ -1,0 +1,223 @@
+<div ng-controller="erp_OrdersIndexActivityInfoController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">优惠活动（线下）</span></div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="handleAddActivityInfo()">
+	          <i class="iconfont icon-add"></i>添加
+	        </button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="请输入优惠活动" ng-model="queryParam" autocomplete="off">
+                            <span class="input-group-btn clearfix">
+	                <button class="btn btn-primary"
+	                  ng-click="handleQueryActivityInfo()">
+	                  <i class="iconfont icon-search"></i>搜索</button>
+	              </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-panel ov-a">
+        <table class="table table-striped min-width-1200">
+            <thead>
+                <tr>
+                    <th width="170px;">操作</th>
+                    <th>活动名称</th>
+                    <th>活动人数</th>
+                    <th>有效期</th>
+                    <th>优惠规则</th>
+                    <th>状态</th>
+                    <th>是否发布</th>
+                    <th>创建时间</th>
+                    <th>创建用户</th>
+                    <th>修改时间</th>
+                    <th>修改用户</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="ai in activityInfoList"
+                    ng-if="!loadStatues && activityInfoList && activityInfoList.length">
+                    <td>
+                        <span class="cur" ng-click="handlePutActivityInfo(ai)"><i class="iconfont icon-edit text-primary"></i>修改</span>
+                        <span class="cur" ng-click="handleDeleteActivityInfo(ai.id)"><i class="iconfont icon-delete text-danger"></i>删除</span>
+                        <span class="cur" ng-click="handleActivityDepot(ai)"><i class="iconfont icon-edit text-primary"></i>券仓库</span>
+                    </td>
+                    <td>{{ai.activity_name}}</td>
+                    <td>{{ai.people_count}}</td>
+                    <td>{{ai.activity_date}}</td>
+                    <td>{{ai.rule_name}}</td>
+                    <td>{{ai.status == 1 ?'有效':'无效'}}</td>
+                    <td>{{ai.is_pub?'是':'否'}}</td>
+                    <td>{{ai.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{ai.create_user_name}}</td>
+                    <td>{{ai.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{ai.update_user_name}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues || activityInfoList.length > 0"></ng-pagination>
+
+        <!-- Modal -->
+        <div id="erpActivityInfoPanel" class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">优惠活动{{optype=='add'?'添加':'修改'}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">活动名称:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="activityInfo.id" type="hidden">
+                                        <input class="form-control" ng-model="activityInfo.activity_name" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">活动日期:</label>
+                                    <div class="col-sm-4">
+                                        <rd-date-picker-popup ng-model="activityInfo.activity_date"></rd-date-picker-popup>
+                                    </div>
+                                    <label class="col-sm-2 control-label">活动人数:</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model="activityInfo.people_count" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">优惠规则:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="activityInfo.rule_id" ng-options="pcri.id as pcri.rule_name for pcri in privilegeRuleList">
+			                  </select>
+                                    </div>
+                                    <label class="col-sm-2 control-label">优惠券前缀:</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control" ng-model="activityInfo.coupon_prefix" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">状态:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="activityInfo.status" ng-options="prs.key as prs.value for prs in status">
+			                  </select>
+                                    </div>
+                                    <label class="col-sm-2 control-label">是否发布:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="activityInfo.is_pub" ng-options="prs.key as prs.value for prs in is_pub">
+			                  </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">业务校区:</label>
+                                    <div class="col-sm-10">
+                                        <div style="OVERFLOW-Y: scroll; OVERFLOW-X:hidden;height:150px">
+                                            <table class="table table-striped table-hover table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th ng-click=checkedAllBuOrgs()>
+                                                            <input type=checkbox id="{{branch.id}}" ng-model="activityInfo.checkelBranchs">
+                                                        </th>
+                                                        <th>校区编码</th>
+                                                        <th>校区名称</th>
+                                                    </tr>
+                                                    <tr ng-repeat="branch in branchList">
+                                                        <td ng-click="">
+                                                            <input type=checkbox ng-model="branch.Selected">
+                                                        </td>
+                                                        <td>{{branch.id}}</td>
+                                                        <td>{{branch.org_name}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" ng-click="handleModalCancel()">取消</button>
+                        <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+
+        <!-- Modal -->
+        <div id="erpCouponDepotPanel" class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">券仓库</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">活动名称:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" ng-model="activityInfoDepot.activity_id" type="hidden">
+                                        <input class="form-control" ng-model="activityInfoDepot.rule_id" type="hidden">
+                                        <input class="form-control" ng-model="activityInfoDepot.branch_ids" type="hidden">
+                                        <input class="form-control" ng-model="activityInfoDepot.activity_name" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">优惠规则:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" ng-model="activityInfoDepot.rule_name" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">活动日期:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" ng-model="activityInfoDepot.activity_date" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">校区:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" ng-model="activityInfoDepot.branch_names" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">优惠券前缀:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" ng-model="activityInfoDepot.coupon_prefix" required="" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">券个数:</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" ng-model="activityInfoDepot.couponCount" required="" type="text">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" ng-click="handleModalDepotCancel()">取消</button>
+                        <button type="button" class="btn btn-primary" ng-click="handleModalGenerate()">生成优惠券</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+
+    </div>
+
+</div>

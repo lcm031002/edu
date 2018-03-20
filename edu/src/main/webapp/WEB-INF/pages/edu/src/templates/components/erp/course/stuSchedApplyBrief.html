@@ -1,0 +1,34 @@
+<div class="table-panel">
+  <div class="row">
+    <div class="col-lg-3 col-sm-5">
+      <dl class="dl-horizontal mb-0">
+        <dt>单据编号</dt>
+        <dd>{{$ctrl.apply.encoding}}</dd>
+        <dt>学员姓名</dt>
+        <dd>{{$ctrl.apply.studentName}}</dd>
+      </dl>
+    </div>
+    <div class="col-lg-3 col-sm-5">
+      <dl class="dl-horizontal  mb-0">
+        <dt>申请日期</dt>
+        <dd class="text-nowrap">{{$ctrl.apply.create_time | date:'yyyy-MM-dd'}}</dd>
+        <dt>学员编码</dt>
+        <dd>{{$ctrl.apply.studentEncoding}}</dd>
+      </dl>
+    </div>
+    <div class="col-lg-3 col-sm-5">
+      <dl class="dl-horizontal  mb-0">
+        <dt>申请人</dt>
+        <dd>{{$ctrl.apply.create_user_name}}</dd>
+        <dt>开课日期</dt>
+        <dd class="text-nowrap">{{$ctrl.apply.beginDate}}</dd>
+      </dl>
+    </div>
+    <div class="col-lg-3 col-sm-5">
+      <dl class="dl-horizontal  mb-0">
+        <dt>单据类型</dt>
+        <dd>{{$ctrl.apply.applyTypeName}}</dd>
+      </dl>
+    </div>
+  </div>
+</div>

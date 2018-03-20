@@ -1,0 +1,153 @@
+<div ng-controller="erp_courseController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">班级课课程</span></div>
+		<div class="panel-body operation-panel">
+			
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						<span class="input-label">校区：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.branch_id"
+							ng-options="branch.id as branch.org_name for branch in branchList">
+							</select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">课程季：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.timeSeason_id"
+							ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">年级：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.grade_id"
+							ng-options="grade.id as grade.grade_name for grade in gradeList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">科目：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.subject_id"
+							ng-options="subject.id as subject.name for subject in subjectList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">状态：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.status"
+							ng-options="status.id as status.name for status in statusList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">教师：</span>	
+						<input type="text" class="form-control" placeholder="可输入教师编码,教师名称,教师ID"
+							ng-model="searchParam.teacher_id" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<span class="input-label">辅导教师：</span>
+						<input type="text" class="form-control" placeholder="可输入教师编码,教师名称,教师ID"
+							ng-model="searchParam.assteacher_id" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<span class="input-label">课程：</span>	
+						<input type="text" class="form-control" placeholder="可输入课程编码,课程名称,课程ID"
+							ng-model="searchParam.course_name" autocomplete="off">
+					</div>
+					<button class="btn btn-primary" ng-click="handleQueryCourse()">搜索</button>
+				</form>
+			</div>
+			<hr>
+			<div class="toolbar">
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleAddCourse()">
+					<i class="iconfont icon-add"></i>添加
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleUpCourse(1)">
+					<i class="iconfont icon-operation_shelve"></i>批量上架
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleDownCourse(2)">
+					<i class="iconfont icon-operation_off-shelve"></i>批量下架
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleImportClass()">
+					<i class="iconfont icon-teachers_leadIn"></i>导入
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleAutoSchedule()">
+					<i class="iconfont icon-operation_Schedule"></i>自动排课
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleExportExcel()">
+					<i></i>导出EXCEL
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel">
+		<div class="ov-a">
+			<table class="table table-striped min-width-1600">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" ng-model="checkAllFlag" ng-click="onCheckAll()">
+						</th>
+						<th width="120">操作</th>
+						<th>ID</th>
+						<th width="180">名称</th>
+						<th>编码</th>
+						<th>校区</th>
+						<th>课程季</th>
+						<th>年级</th>
+						<th>科目</th>
+						<th>状态</th>
+						<th>教师</th>
+						<th>辅导教师</th>
+						<th>单价</th>
+						<th>开课日期</th>
+						<th>结课日期</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="course in courseList"
+					    ng-if="!loadStatues && courseList && courseList.length">
+						<td>
+							<input type="checkbox" ng-model="course.selectFlag" ng-click="onCourseChecked(course)">
+						</td>
+						<td>
+							<a href="javascript:void(0);" ng-click="handlePutCourse(course)" class="pr-10">修改</a>
+							<a href="javascript:void(0);" ng-click="queryCourseScheduing(course.id)">查询排课</a>
+						</td>
+						<td>{{course.id}}</td>
+						<td>{{course.course_name}}</td>
+						<td>{{course.course_no}}</td>
+						<td>{{course.branch_name}}</td>
+						<td>{{course.season_name}}</td>
+						<td>{{course.grade_name}}</td>
+						<td>{{course.subject_name}}</td>
+						<td>
+							<input type="checkbox" bs-switch 
+							    ng-model="course.status" 
+								ng-true-value="1" 
+								ng-false-value="2" 
+								switch-change="onStatusChange(course)">
+						</td>
+						<td>{{course.teacher_name}}</td>
+						<td>{{course.assteacher_name}}</td>
+						<td>{{course.unit_price}}</td>
+						<td>{{course.start_date | date:'yyyy-MM-dd'}}</td>
+						<td>{{course.end_date | date:'yyyy-MM-dd'}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+		<ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+	</div>
+</div>

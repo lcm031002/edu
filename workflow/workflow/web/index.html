@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html  ng-app="Apps">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工作流管理平台</title>
+<link href="./css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+
+<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="js/common/jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="js/common/angular/angular.js"></script>
+<script type="text/javascript" src="js/common/angular/angular-animate.js"></script>
+<script type="text/javascript" src="js/common/angular/angular-resource.js"></script>
+<script type="text/javascript" src="js/common/angular/angular-route.js"></script>
+<script type="text/javascript" src="js/apps/apps.js"></script>
+<script type="text/javascript" src="js/apps/first.js"></script>
+<script type="text/javascript" src="js/apps/history.js"></script>
+<script type="text/javascript" src="js/apps/process.js"></script>
+<script type="text/javascript" src="js/apps/process_def.js"></script>
+<script type="text/javascript" src="js/apps/roles.js"></script>
+<script type="text/javascript" src="js/apps/task.js"></script>
+</head>
+<body>
+<!-- Header starts here -->
+	<!--<div class="strip"> </div>-->
+	<div class="header">
+		<div class="container">
+                <div ng-include="'views/menu'"></div>
+                <!--body-->
+                <div class="view-container">
+                    <div ng-view class="view-frame"></div>
+                </div>
+			</div>
+		</div>
+		<!-- Header ends here -->
+</body>
+</html>

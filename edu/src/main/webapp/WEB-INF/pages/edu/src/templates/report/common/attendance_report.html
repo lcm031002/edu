@@ -1,0 +1,186 @@
+<div class="report" ng-controller="report_attendanceReportController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">考勤消耗表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <div class="form form-inline">
+                    <div class="form-group m-0">
+                        <rd-date-picker-range 
+                            ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date"
+                            ng-default-range="searchParam.default_range" 
+                        >
+                        </rd-date-picker-range>
+                    </div>
+                    <div class="form-group m-0">
+                        <rd-branch ng-bu-id="searchParam.p_bu_id" ng-branch-id="searchParam.p_branch_id" ng-value-change="onBranchChange()" id="branch_name">
+                            <div class="form-group">
+                                <!-- <span class="input-label">日期字段：</span> -->
+                                日期字段：
+                                <select class="form-control" ng-model="searchParam.p_isCourseTime">
+                                    <option value="true">上课日期</option>
+                                    <option value="false">考勤日期</option>
+                                </select>
+                            </div>
+                            <div class="form-group ml-10">
+                                <!-- <span class="input-label">业务模式：</span> -->
+                                业务模式：
+                                <select class="form-control" ng-model="searchParam.p_business_type">
+                                    <option value="1">培英班</option>
+                                    <option value="2">一对一</option>
+                                    <option value="3">晚辅导</option>
+                                </select>  
+                            </div>
+                            <div class="form-group">
+                                <!-- <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i>查询</button> -->
+                                <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                            </div>
+                        </rd-branch>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-stripped {{loadStatues!=false?'':'min-width-4000'}}">
+            <col width="60"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="90"/>   <!-- 学员姓名-->
+            <col width="180"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="110"/>
+            <col width="60"/>   <!-- 课次-->
+            <col width="90"/>
+            <col width="90"/>
+            <col width="110"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>  <!-- 课时长度-->
+            <col width="120"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="120"/>   <!-- 考勤日期-->
+            <col width="90"/>
+            <col width="110"/>
+            <col width="90"/>
+            <col width="80"/>
+            <col width="150"/> <!-- 业绩校区-->
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="150"/>
+            <col width="150"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>报班单号</th>
+                <th>业务校区</th>
+                <th>学员编码</th>
+                <th>学员姓名</th>
+                <th>课程名称</th>
+                <th>课程校区</th>
+                <th>是否教材</th>
+                <th>金额</th>
+                <th>消耗课时</th>
+                <th>报班总次数</th>
+                <th>课次</th>
+                <th>老师ID</th>
+                <th>老师</th>
+                <th>辅导老师ID</th>
+                <th>辅导老师</th>
+                <th>课程年级</th>
+                <th>当前年级</th>
+                <th>科目</th>
+                <th>课时长度</th>
+                <th>上课日期</th>
+                <th>上课时间</th>
+                <th>下课时间</th>
+                <th>考勤单号</th>
+                <th>考勤日期</th>
+                <th>考勤状态</th>
+                <th>上次考勤状态</th>
+                <th>是否跨月</th>
+                <th>折扣</th>
+                <th>业绩校区</th>
+                <th>学管师</th>
+                <th>中教</th>
+                <th>中教长度</th>
+                <th>中教备注</th>
+                <th>外教</th>
+                <th>外教长度</th>
+                <th>外教备注</th>
+                <th>教室</th>
+                <th>报班备注</th>
+                <th>考勤备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td>{{data.order_no}}</td>
+                <td>{{data.branch_name}}</td>
+                <td>{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+                <td>{{data.course_name}}</td>
+                <td>{{data.course_branch_name}}</td>
+                <td>{{data.is_textbookstag}}</td>
+                <td>{{data.amount}}</td>
+                <td>{{data.course_hour}}</td>
+                <td>{{data.course_count}}</td>
+                <td>{{data.course_time}}</td>
+                <td>{{data.teacher_id}}</td>
+                <td>{{data.teacher_name}}</td>
+                <td>{{data.assteacher_id}}</td>
+                <td>{{data.assteacher_name}}</td>
+                <td>{{data.grade_name}}</td>
+                <td>{{data.now_grade}}</td>
+                <td>{{data.subject_name}}</td>
+                <td>{{data.length}}</td>
+                <td>{{data.course_date}}</td>
+                <td>{{data.start_time}}</td>
+                <td>{{data.end_time}}</td>
+                <td>{{data.attend_encoding}}</td>
+                <td>{{data.attend_date}}</td>
+                <td>{{data.attend_type_name}}</td>
+                <td>{{data.attend_type_last_name}}</td>
+                <td>{{data.is_next_month_name}}</td>
+                <td>{{data.order_discount}}</td>
+                <td>{{data.performance_branch_name}}</td>
+                <td>{{data.counselor_name}}</td>
+                <td>{{data.chinese_teacher_name}}</td>
+                <td>{{data.chinese_teacher_length}}</td>
+                <td>{{data.chinese_teacher_remark}}</td>
+                <td>{{data.foreign_teacher_name}}</td>
+                <td>{{data.foreign_teacher_length}}</td>
+                <td>{{data.foreign_teacher_remark}}</td>
+                <td>{{data.room_name}}</td>
+                <td>{{data.order_remark}}</td>
+                <td>{{data.attendance_remark}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

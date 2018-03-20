@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="个性化教学部试讲评价表" xmlns="http://jbpm.org/4.4/jpdl" key="hrm.gxh_school_pingjia" description="个性化教学部试讲评价表">
+   <start name="start1" g="136,85,48,48">
+      <transition name="发起请求" to="听课评价" g="-68,-12"/>
+   </start>
+   <task name="听课评价" g="115,152,92,52">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition name="填写完毕，去导师跟进" to="导师跟进评语" g="-131,-9"/>
+   </task>
+   <task name="导师跟进评语" g="116,222,92,52">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition name="填写完毕，流程结束" to="评价结束" g="-109,-12"/>
+   </task>
+   <end name="评价结束" g="138,312,48,48"/>
+</process>

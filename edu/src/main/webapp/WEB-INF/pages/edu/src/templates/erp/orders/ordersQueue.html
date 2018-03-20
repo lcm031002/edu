@@ -1,0 +1,141 @@
+<div class="erp order" ng-controller="erp_ordersQueueController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">排号业务</span>
+		</div>
+		<!-- 条件搜索框 -->
+		<div class="panel-body">
+			<div class="toolbar">
+				<div class="form-inline pull-right">
+					<div class="form-group ">
+						<button class="btn btn-primary"
+							ng-click="view.showAdvanceSearch = !view.showAdvanceSearch">
+							高级
+							<i class="glyphicon glyphicon-menu-right"
+								ng-hide="view.showAdvanceSearch"></i>
+							<i class="glyphicon glyphicon-menu-down"
+								ng-show="view.showAdvanceSearch"></i>
+						</button>
+					</div>
+				</div>
+				<div class="form-inline">
+					<div class="form-group">
+						团队：<kl-bu-select bu-id="searchParam.buId"></kl-bu-select>
+					</div>
+					<div class="form-group">
+						校区：<kl-branch-select bu-id="searchParam.buId" 
+							branch-id="searchParam.branchId"></kl-branch-select>
+					</div>
+					<div class="form-group">
+						课程季：<kl-timeseason-select time-season="selectedTimeSeason"></kl-timeseason-select>
+					</div>
+					<br class="content_br" ng-show="view.showAdvanceSearch"/>
+					<div class="form-group" ng-show="view.showAdvanceSearch">
+						年级：<kl-grade-select grade="selectedGrade"></kl-grade-select>
+					</div>
+					<div class="form-group" ng-show="view.showAdvanceSearch">
+						科目：<kl-subject-select subject="selectedSubject"></kl-subject-select>
+					</div>
+					<div class="form-group">
+						关键字：<input class="form-control" type="text" ng_model="searchParam.courseId">
+						<button class="btn btn-primary"  ng-click=queryOrderQueue()>
+							<i class="iconfont icon-search"></i> 搜索
+						</button>
+					</div>
+				</div>
+				<div style="display: none;">
+					<button class="btn btn-primary" ng-click=queryOrderQueueByCourseId()>
+					<i class="iconfont icon-search" ></i> 点击下拉
+					</button>
+					<button class="btn btn-primary" ng-click=queryOrderQueueDetail()>
+					<i class="iconfont icon-search" ></i> 点击详情
+					</button>
+					<button class="btn btn-primary" ng-click=cancelOrderQueue()>
+					<i class="iconfont icon-search" ></i> 取消排号
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 课程列表 -->
+	<div class="table-panel">
+		<div class="ovx-a">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>课程</th>
+						<th width="10%">年级</th>
+						<th width="10%">科目</th>
+						<th width="12%">教师</th>
+						<th width="8%">状态</th>
+						<th width="10%">排号总数</th>
+						<th width="8%">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat-start = "course in courseList" 
+					    ng-if="!loadStatues && courseList && courseList.length">
+						<td>{{course.courseName}}</td>
+						<td>{{course.gradeName}}</td>
+						<td>{{course.subjectName}}</td>
+						<td>{{course.teacherName}}</td>
+						<td>{{course.status==1?"上架":"下架"}}</td>
+						<td>{{course.num}}</td>
+						<td>
+							<span class="cur text-primary">
+								<i class="glyphicon glyphicon-circle-arrow-right" 
+									ng-hide="course.showDetail" 
+									ng-click="showDetail(course)"></i>
+								<i class="glyphicon glyphicon-circle-arrow-down" 
+									ng-show="course.showDetail"
+									ng-click="hideDetail(course)"></i>
+							</span>
+						</td>
+					</tr>
+					<tr ng-repeat-end ng-if="course.showDetail">
+						<td colspan="7">
+							<div class="table-panel">
+								<table class="table table-striped table-hover">
+									<thead>
+										<tr>
+											<th>课次</th>
+											<th>上课日期</th>
+											<th>时间</th>
+											<th>教师</th>
+											<th>已报人数</th>
+											<th>待确定人数</th>
+											<th>计划人数</th>
+											<th>排号人数</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="detail in course.detailList">
+											<td>{{detail.seq}}</td>
+											<td>{{detail.courseDate}}</td>
+											<td>{{detail.startTime}}~{{detail.endTime}}</td>
+											<td>{{detail.teacherName}}</td>
+											<td><a href="javascript:void(0);" ng-click="queryCheckPeopleList(course, detail, 1)">{{detail.people_checkCount}}</a></td>
+											<td>{{detail.people_unCheckCount}}</td>
+											<td>{{detail.peopleCount}}</td>
+											<td><a href="javascript:void(0);" ng-click="queryOrderQueueDetail(course, detail)">{{detail.num}}</a></td>
+											<td>
+												<button class="btn btn-default btn-sm"
+													ng-click="queryOrderQueueDetail(course, detail)">查看详情</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+		<ng-pagination conf="pageConf" ng-if="!loadStatues"></ng-pagination>
+	</div>
+</div>

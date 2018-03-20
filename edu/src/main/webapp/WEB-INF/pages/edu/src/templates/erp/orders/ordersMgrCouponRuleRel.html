@@ -1,0 +1,168 @@
+<div class="erp" ng-controller="erp_OrdersIndexCouponRuleRelController">
+
+    <!--搜索学生信息begin-->
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+        <div class="panel-heading font-bold">发放优惠券</div>
+        <div class="panel-body" style="padding: 15px;">
+			<div class="row wrapper" style="padding: 15px;">
+			      <div class="col-sm-5 m-b-xs">
+			      </div>
+			      <div class="col-sm-4">
+			      </div>
+			      <div class="col-sm-3">
+			        <div class="input-group">
+			          <input class="input-sm form-control" placeholder="请输入姓名" type="text" ng-model="studentQueryInfo">
+			          <span class="input-group-btn">
+			            <button class="btn btn-sm btn-default" type="button" ng-click="queryStudentInfo(1)">搜索</button>
+			          </span>
+			        </div>
+			      </div>
+			</div>
+
+			<div class="table-responsive">
+	            <table class="table table-striped b-t b-light">
+	                <tr>
+	                    <th ng-click=checkedAllStudents()><input type=checkbox ng-model="studentInfo.checkelStudents"></th>
+	                    <th>学生编号</th>
+	                    <th>学生名称</th>
+	                    <th>性别</th>
+	                    <th>学生状态</th>
+	                    <th>年级</th>
+	                    <th>是否老学员</th>
+	                    <th>QQ号码</th>   
+	                    <th>手机号</th>   
+	                    <th>开户校区</th>   
+	                    <th>开户地区</th>  
+	                </tr>
+	                <tr ng-repeat="studentInfo in studentInfoList"
+	                    ng-if="studentInfoList && studentInfoList.length"
+	                    ng-click=selectedWholeStudent(studentInfo)>
+	                    <td><input type=checkbox  ng-model="studentInfo.Selected"></td>
+	                    <td>{{studentInfo.encoding}}</td>
+	                    <td>{{studentInfo.student_name}}</td>
+	                    <td>{{studentInfo.sex?'男':'女'}}</td> 
+	                    <td></td>
+	                    <td>{{studentInfo.grade_name}}</td>
+	                    <td>{{studentInfo.is_old_student?'是':'否'}}</td> 	                    
+	                    <td>{{studentInfo.qq}}</td>	                    
+	                    <td>{{studentInfo.phone}}</td>	    	                    
+	                    <td>{{studentInfo.branch_name}}</td>	                    
+	                    <td>{{studentInfo.city_name}}</td>	 	                    
+	                </tr>
+
+	                <tr ng-if="isQueryStudent">
+	                    <td colspan="7" align="center">
+	                        <img src="img/erp/loading2.gif">
+	                    </td>
+	                </tr>
+	                <tr ng-if=!studentInfoList||!studentInfoList.length>
+	                    <td colspan=7 align="center">暂无数据.</td>
+	                </tr>
+	            </table>	
+		    </div>
+
+			<div class="col-md-4 col-md-offset-8" ng-if="pageParam.totalPage>=1">
+				<ul class="pagination">
+			    	<li ng-model="pageParam.currentPage" ng-if="pageParam.totalPage>=1" ng-click="queryStudentInfo(1)" style="cursor:pointer"><span>首页</span></li>
+			    	<li ng-if="pageParam.currentPage>1"  ng-click="queryStudentInfo(pageParam.currentPage-1)" style="cursor:pointer"><span>上一页</span></li>
+			    	<li ng-repeat="i in paginationBars track by $index" class="{{ i==pageParam.currentPage ? 'active':'' }}">
+			    		<span ng-click="queryStudentInfo(i)">{{i}}</span>
+			    	</li>
+			    	<li ng-model="pageParam.currentPage"  ng-if="pageParam.currentPage<pageParam.totalPage" style="cursor:pointer" ng-click="queryStudentInfo(pageParam.currentPage+1)"><span>下一页</span></li>
+			    	<li ng-model="pageParam.totalPage" ng-click="queryStudentInfo(pageParam.totalPage)" style="cursor:pointer">
+			     		<span>尾页</span>
+			    	</li>
+			    	<li>
+			    		<span>每页{{pageParam.pageSize}}条&nbsp;&nbsp;共{{pageParam.totalPage}}页 </span>
+			    	</li>
+			   </ul>
+			</div>
+
+        </div>
+    </div>
+    <!--搜索优惠学生信息end-->
+
+    <!--发放优惠券begin-->
+    <div ng-if="openPanel == 'toManageCouponRuleRel'">
+        <div class="select-window" >
+	        <form name="formValidate" novalidate="novalidate" class="form-horizontal">
+	          <div class="panel panel-default">
+	            <div class="panel-heading">
+	              <strong>发放优惠券</strong>
+	            </div>
+	            <div class="panel-body">  
+	            	<div style="margin:10px 0px"></div>
+	            	<div class="form-group">
+	                	<label class="col-sm-2 control-label">优惠券:</label>
+	                	<div class="col-sm-6">
+		                  	<select class="form-control" ng-model="couponInfo.id" ng-options="cii.id as cii.encoding for cii in couponInfoList">
+		                  	</select>
+	                	</div>
+	              	</div>
+	              	<div class="line line-dashed b-b line-lg pull-in"></div>
+		            <div class="form-group">
+		                <label class="col-sm-2 control-label">学生:</label>
+		                <div class="col-sm-6">
+		                	<div  style="OVERFLOW-Y: scroll; OVERFLOW-X:hidden;height:150px;border:1px solid #333;">
+		                		<table class="table table-striped table-hover table-bordered">
+		                			<tbody>
+		                				<tr>
+			                    			<th>
+	                    					</th>
+			                    			<th>学生编码</th>
+			                    			<th>学生姓名</th>
+		               					</tr>
+		               					<tr ng-repeat="selectedStudent in selectedStudentInfoList">
+	                    					<td ng-click="">
+	                        					<input type=checkbox ng-model="selectedStudent.Selected">
+	                    					</td>
+	                    					<td>{{selectedStudent.encoding}}</td>
+	                    					<td>{{selectedStudent.student_name}}</td>
+	                					</tr>
+						            </tbody>
+						        </table>
+		                	</div>
+		                </div>
+		            </div>	
+	            </div>
+	            <footer class="panel-footer text-center bg-light lter" style="padding:0px 15px">
+	                <input type="submit" class="btn btn-success" ng-click="saveCouponRuleRel()" value="保存">
+            			<button class="btn btn-cancel" ng-click="closePanel()">取消</button>  
+	            </footer>
+	          </div>
+	        </form>
+
+        </div>
+    </div>
+    <!--发放优惠券面板end-->
+
+    <!--订单正式提交begin-->
+    <div ng-if="openPanel == 'saveCouponRuleRel'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                正在保存优惠券...
+            </div>
+        </div>
+    </div>
+    <!--订单正式提交end-->
+
+    <!--优惠券提交begin-->
+    <div ng-if="openPanel == 'saveCouponRuleRelOK'">
+        <div class="select-window" >
+	          <div class="panel panel-default">
+	            <div class="panel-heading">
+	              <strong>提示</strong>
+	            </div>
+				<h4 class="text-center">保存成功！</h4>
+	            <footer class="panel-footer text-center bg-light lter" style="padding:0px 15px">
+	                <button class="btn btn-success" ng-click="closePanel()">确定</button>  
+	            </footer>
+	          </div>
+        </div>
+    </div>
+    <!--优惠券提交end-->
+
+</div>
+

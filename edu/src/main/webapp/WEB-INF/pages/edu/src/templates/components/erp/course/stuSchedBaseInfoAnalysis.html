@@ -1,0 +1,206 @@
+<!-- 学生档案模块 -->
+<div class="components stu-sched-analysis">
+  <div class="panel panel-primary form mb-1">
+    <div class="panel-heading" ng-hide="$ctrl.readOnly">
+      <span>选择申请类型</span>
+    </div>
+    <dl class="dl-horizontal mb0">
+      <dt>
+        <span class="required"></span>申请类型</dt>
+      <dd>
+        <select class="form-control fl" ng-model="apply.applyType" style="width: auto;" ng-options="type.code as type.name for type in applyTypeList"
+          ng-disabled="$ctrl.readOnly">
+        </select>
+        <span class="ml20 text-danger">注：换单走审批</span>
+      </dd>
+    </dl>
+    <div class="panel-heading">
+      <span>基本信息</span>
+    </div>
+    <div class="panel-body ">
+      <dl class="dl-horizontal fl mb0">
+        <dt>学员姓名</dt>
+        <dd>{{apply.studentName}}</dd>
+      </dl>
+      <dl class="dl-horizontal fl mb0">
+        <dt>性别</dt>
+        <dd>{{apply.sexName}}</dd>
+      </dl>
+      <dl class="dl-horizontal fl mb0">
+        <dt>就读学校</dt>
+        <dd>{{apply.schoolName}}</dd>
+      </dl>
+      <dl class="dl-horizontal fl mb0">
+        <dt>年级</dt>
+        <dd>{{apply.stuGradeName}}</dd>
+      </dl>
+    </div>
+    <div class="panel-heading">
+      近期考试成绩
+      <a href="?studentId={{apply.studentId}}#/studentMgr/studentMgrScore" target="_blank" class="btn btn-primary btn-xs ml20">
+        <i class="iconfont icon-recruit_dispose"></i> 成绩档案管理
+      </a>
+    </div>
+    <div class="panel-body">
+
+      <dl class="dl-horizontal mb0">
+        <dt>近期考试类型</dt>
+        <dd>
+          <div class="form form-inline" style="margin-top:-12px;">
+            <div class="form-group">
+              年级：
+              <kl-grade-select grade-id="apply.gradeId" ng-disabled="$ctrl.readOnly"></kl-grade-select>
+              </select>
+            </div>
+            <div class="form-group">
+              学期：
+              <select class="form-control" ng-model="apply.term"  ng-options="term.code as term.name for term in termList">
+              </select>
+            </div>
+            <div class="form-group">
+              考试类型：
+              <select class="form-control" ng-model="apply.examType" ng-disabled="$ctrl.readOnly" ng-options="type.code as type.name for type in examTypeList">
+              </select>
+            </div>
+            <div class="form-group" ng-hide="$ctrl.readOnly">
+              <button class="btn btn-primary" ng-click="getLatestScore()">
+                <i class="iconfont icon-search"></i> 查询
+              </button>
+            </div>
+          </div>
+        </dd>
+        <dt>
+          <span class="required"></span>
+          近期考试成绩
+        </dt>
+        <dd>
+          <table class="table table-bordered score-list mb0 ov-a width-auto display-inb">
+            <tr class="text-nowrap">
+              <th>序号</th>
+              <th ng-repeat="score in apply.stuScoreList">
+                {{score.subjectName}}
+              </th>
+            </tr>
+            <tr>
+              <th width="80">科目</th>
+              <td class="score-wrapper" ng-repeat="score in apply.stuScoreList">
+                <div class="score">{{score.score}}/{{score.fullMark}}</div>
+                <!-- <div class="score-op">
+                  <i class="iconfont icon-edit cur text-primary" ng-click="editScore(score)"></i>
+                  <i class="iconfont icon-delete cur text-danger" ng-click="delScore(score)"></i>
+                </div> -->
+              </td>
+            </tr>
+          </table>
+        </dd>
+        <dt>
+          <span class="required"></span>
+          综合排名信息
+        </dt>
+        <dd>
+          <table class="table table-bordered score-list mb0 ov-a width-auto display-inb">
+            <tr>
+              <th width="80">排名类型</th>
+              <th ng-repeat="score in apply.stuScoreRankingList">
+                {{score.scoreRankingTypeName}}
+              </th>
+            </tr>
+            <tr>
+              <th width="60">名次</th>
+              <td class="score-wrapper" ng-repeat="score in apply.stuScoreRankingList">
+                <div class="score">{{score.ranking}}</div>
+                <!-- <div class="score-op">
+                  <i class="iconfont icon-edit cur text-primary" ng-click="editScore(score)"></i>
+                  <i class="iconfont icon-delete cur text-danger" ng-click="delScore(score)"></i>
+                </div> -->
+              </td>
+            </tr>
+          </table>
+        </dd>
+      </dl>
+    </div>
+    <div class="panel-heading">
+      <span></span>
+    </div>
+    <div class="panel-body fl pb-0">
+      <dl class="dl-horizontal mb0">
+        <dt>
+          <span class="required"></span>老师要求说明</dt>
+        <dd>
+          <textarea name="" id="" cols="35" rows="2" class="form-control" ng-disabled="$ctrl.readOnly" placeholder="请输入老师要求说明" ng-model="apply.teacherSpecification"></textarea>
+        </dd>
+        <dt>第一次上课内容</dt>
+        <dd>
+          <textarea name="" id="" cols="35" rows="2" class="form-control" ng-disabled="$ctrl.readOnly" placeholder="请输入第一次上课内容" ng-model="apply.firstClassContent"></textarea>
+        </dd>
+        <dt class="space_normal">
+          <span class="required" ng-show="apply.applyType == 3"></span> 换老师原因(原老师联系方式)</dt>
+        <dd>
+          <textarea name="" id="" cols="35" rows="2" class="form-control" ng-disabled="$ctrl.readOnly" placeholder="请输入换老师原因" ng-model="apply.changeTeacherReasons"></textarea>
+        </dd>
+      </dl>
+    </div>
+    <div class="panel-body fl pb-5">
+      <dl class="dl-horizontal mb0">
+        <dt>学生性格</dt>
+        <dd>
+          <input type="text" class="form-control" ng-disabled="$ctrl.readOnly" ng-model="apply.studentCharacter" placeholder="请输入学生性格">
+        </dd>
+        <dt>家长情况</dt>
+        <dd>
+          <input type="text" class="form-control" ng-disabled="$ctrl.readOnly" ng-model="apply.parentInfo" placeholder="请输入家长情况">
+        </dd>
+        <dt>
+          <span class="required"></span>学生情况分析</dt>
+        <dd>
+          <textarea name="" id="" cols="30" rows="4" class="form-control" ng-disabled="$ctrl.readOnly" placeholder="请输入学生情况分析" ng-model="apply.studentSituation"></textarea>
+        </dd>
+      </dl>
+    </div>
+    <div class="panel-body fl pb-0">
+      <div class="dl-horizontal">
+        <dt class="space_normal">
+          <span class="required"></span>学管师工作方向</dt>
+        <dd>
+          <textarea name="" id="" cols="35" rows="3" class="form-control" ng-disabled="$ctrl.readOnly" placeholder="请输入工作方向" ng-model="apply.workDirections"></textarea>
+        </dd>
+        <dt>备注</dt>
+        <dd>
+          <textarea name="" id="" cols="35" rows="3" class="form-control" ng-disabled="$ctrl.readOnly" placeholder="请输入备注" ng-model="apply.workRemark"></textarea>
+        </dd>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
+<script type="text/ng-template" id="erp_courseSchedApplyScoreModal.html">
+  <rd-modal>
+    <rd-modal-title>学生成绩</rd-modal-title>
+    <rd-modal-body>
+      <div class="form form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-4">科目</label>
+          <div class="col-sm-8">
+            <kl-subject-select subject-id="score.subjectId" subject-name="score.subjectName"></kl-subject-select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4">成绩</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="score.score">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4">满分</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="score.fullMark">
+          </div>
+        </div>
+      </div>
+    </rd-modal-body>
+    <rd-modal-footer>
+      <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+      <button class="btn btn-primary" ng-click="saveScore()">确定</button>
+    </rd-modal-footer>
+  </rd-modal>
+</script>

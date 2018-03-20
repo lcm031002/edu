@@ -1,0 +1,272 @@
+<div ng-form="studentForm" class="form erp student newstudent" novalidate class="erp" ng-controller="erp_newStudentController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title"><span class="cur text-primary" ng-click="goback()">< 返回</span> | 添加学员</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar mt20">
+        <div class="avatar pull-left mr50 ml20">
+          <div class="img-wrapper" style="width:unset;height:unset;">
+            <img src="{{student.head_pic || 'img/erp/student-default.png'}}" alt="">
+          </div>
+          <div class="avatar-upload mt10">
+            <button class="btn btn-warning" ng-click="showUploadModal()">上传头像</button>
+          </div>
+        </div>
+        <div class="primary-info">
+          <div class="form-inline">
+            <div class="form-group">
+              <label class="required"></label>姓名：
+              <input type="text" name="student_name" ng-model="student.student_name" class="form-control" placeholder="请输入学员姓名" required ng-change="changeStudentName()">
+              <span ng-messages="studentForm.student_name.$error" ng-if="studentForm.student_name.$touched">
+                <span ng-message="required" class="text-warning">学生姓名必填</span>
+              </span>
+            </div>
+            <div class="form-group">
+              性别：
+              <select class="form-control" ng-model="student.sex">
+                <option value="0">女</option>
+                <option value="1">男</option>
+              </select>
+            </div>
+            <div class="form-group">
+              生日：
+              <rd-date-picker-popup ng-model="student.birthday">
+              </rd-date-picker-popup>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="form form-horizontal">
+      <uib-tabset>
+        <uib-tab heading="学员档案">
+          <div class="table-panel">
+            <div class="form-group">
+              <label class="control-label required col-sm-3 col-lg-2">学校</label>
+              <div class="col-sm-3 col-lg-3">
+                <input 
+                  class="form-control" 
+                  type="text" 
+                  name="school" 
+                  placeholder="输入要查询的学校" 
+                  typeahead-select-on-blur="true"
+                  ng-model="selectedInfo.school" 
+                  uib-typeahead="school as school.school_name for school in getSchools($viewValue)" 
+                  typeahead-loading="loadingSchools" 
+                  typeahead-no-results="schoolNoResults" 
+                  required>
+                <i class="iconfont icon-search form-control-feedback"></i>
+                <div>
+                  <i ng-show="loadingSchools" class="glyphicon glyphicon-refresh text-primary">
+                  </i>
+                  <span ng-show="schoolNoResults " class="text-warning">
+                    <i class="glyphicon glyphicon-remove text-warning"></i> 查询不到对应的学校
+                  </span>
+                  <div class="text-warning" ng-messages="studentForm.school.$error" ng-if="studentForm.school.$touched">
+                    <p ng-message="required">学校必填</p>
+                  </div>
+                </div>
+              </div>
+              <label class="control-label required col-sm-2 col-lg-2">年级{{selectedSudentGrade | json}}</label>
+              <div class="col-sm-3 col-lg-3">
+                <input 
+                  class="form-control" 
+                  type="text"
+                  name="grade"
+                  placeholder="输入要查询的年级" 
+                  ng-model="selectedInfo.grade"
+                  typeahead-loading="loadingGrades"
+                  typeahead-select-on-blur="true"
+                  typeahead-no-results="gradeNoResults"
+                  uib-typeahead="grade as grade.grade_name for grade in getGrades($viewValue)"
+                  required>
+                <i class="iconfont icon-search form-control-feedback"></i>
+                <div>
+                  <i ng-show="loadingGrades" class="glyphicon glyphicon-refresh text-primary"></i>
+                  <span ng-show="gradeNoResults" class="text-warning">
+                    <i class="glyphicon glyphicon-remove text-warning" ></i>查询不到对应的年级
+                  </span>
+                  <div class="text-warning" ng-messages="studentForm.grade.$error" ng-if="studentForm.grade.$touched">
+                    <p ng-message="required">年级必填</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-3 col-lg-2">邮箱</label>
+              <div class="col-sm-3 col-lg-3">
+                <input type="email" placeholder="请输入邮箱" name="email" ng-model="student.email" class="form-control">
+                <div>
+                  <div class="text-warning" ng-messages="studentForm.email.$error" ng-if="studentForm.email.$touched">
+                    <p ng-message="email">邮箱格式不正确</p>
+                  </div>
+                </div>
+              </div>
+              <label class="control-label col-sm-2 col-lg-2">QQ</label>
+              <div class="col-sm-3 col-lg-3">
+                <input placeholder="请输入QQ号码" ng-model="student.qq" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-3 col-lg-2">推荐人（报班打折）</label>
+              <div class="col-sm-3 col-lg-3">
+                <input
+                  class="form-control"
+                  type="text" name="recommend"
+                  ng-model="selectedInfo.recommender" 
+                  placeholder="请输入推荐学员名称"
+                  typeahead-loading="loadingRecommender"
+                  typeahead-select-on-blur="true"
+                  typeahead-no-results="recommenderNoResults"
+                  uib-typeahead="recommender as recommender.studentShortInfo for recommender in getRecommender($viewValue)">
+                <i class="iconfont icon-search form-control-feedback"></i>
+              </div>
+              <label class="control-label col-sm-2 col-lg-2">学员状态</label>
+              <div class="col-sm-3 col-lg-3">
+                <select class="form-control" ng-model="student.student_status" ng-options="status.code as status.name for status in studentStatus"></select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-2 col-lg-2 required">联系电话</label>
+              <div class="col-sm-10 col-lg-8">
+                <table class="table table-bordered">
+                  <tr>
+                    <th class="col-sm-2 col-lg-2">联系人关系</th>
+                    <th class="col-sm-2 col-lg-3">联系人姓名</th>
+                    <th class="col-sm-3 col-lg-3">联系人手机</th>
+                    <th class="col-sm-4 col-lg-3">联系人备注</th>
+                    <th class="col-sm-1 col-lg-1">操作</th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <select ng-model="newContact.relation" class="form-control" ng-options="rel.value as rel.label for rel in relationList" ng-change="defalutContactName(newContact)"></select>
+                    </td>
+                    <td><input type="text" class="form-control new_contact_name" placeholder="联系人姓名" ng-model="newContact.link_name" ></td>
+                    <td><input placeholder="联系人手机号码" type="text" name="student_phone" class="form-control" ng-model="newContact.link_phone"
+                    ng-pattern="/^1(3|4|5|7|8)\d{9}$/">
+                      <div ng-messages="studentForm.student_phone.$error">
+                        <p ng-message="pattern">请输入正确的电话/手机号码</p>
+                      </div>
+                    </td>
+                    <td><input placeholder="可以在此处填写电话号码" type="text" class="form-control" ng-model="newContact.remark"></td>
+                    <td><button ng-click="addContact(newContact)" class="btn btn-primary btn-sm" ng-disabled="studentForm.student_phone.$error.pattern || !newContact.link_name || !newContact.link_phone">新增</button></td>
+                  </tr>
+                  <tr ng-repeat="contact in student.studentContactList">
+                    <td><select ng-model="contact.relation" class="form-control" ng-options="rel.value as rel.label for rel in relationList" ng-change="defalutContactName(contact)"></select></td>
+                    <td><input type="text" class="form-control" ng-model="contact.link_name"></td>
+                    <td><input type="text" class="form-control" ng-model="contact.link_phone"></td>
+                    <td><input type="text" class="form-control" ng-model="contact.remark"></td>
+                    <td><button class="btn btn-danger btn-sm" ng-click=
+                    removeContact(contact)>移除</button></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab heading="咨询师/学管师档案">
+          <div class="table-panel">
+            <div class="row">
+              <div class="col-sm-4 col-lg-6">
+                <table class="table-form form-horizontal">
+                  <colgroup>
+                    <col>
+                    <col>
+                  </colgroup>
+                  <tr>
+                    <td>咨询师编码：</td>
+                    <td>
+                      <div class="input-group">
+                        <input ng-disabled="true" class="form-control" ng-model="student.counselor.encoding">
+                        <span class="input-group-btn">
+                          <button class="btn btn-primary" ng-click="selectCounselor()"><i class="iconfont icon-search"></i></button>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>咨询师姓名：</td>
+                    <td>
+                      <input ng-disabled="true" class="form-control" ng-model="student.counselor.name">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>开始时间：</td>
+                    <td>
+                      <rd-date-picker-popup ng-model="student.counselor.start_date"></rd-date-picker-popup>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>结束时间：</td>
+                    <td>
+                      <rd-date-picker-popup ng-model="student.counselor.end_date"></rd-date-picker-popup>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> 备注：</td>
+                    <td>
+                      <textarea ng-model="student.counselor.remark" class="form-control" rows="4"></textarea>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-sm-4 col-lg-6">
+                <table class="table-form form-horizontal">
+                  <colgroup>
+                    <col>
+                    <col>
+                  </colgroup>
+                  <tr>
+                    <td>学管师编码：</td>
+                    <td>
+                      <div class="input-group">
+                        <input ng-disabled="true" ng-model="student.govern.encoding" class="form-control">
+                        <span class="input-group-btn">
+                          <button class="btn btn-primary" ng-click="selectGovern()"><i class="iconfont icon-search"></i></button>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>学管师姓名：</td>
+                    <td>
+                      <input ng-disabled="true" ng-model="student.govern.name" class="form-control">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>开始时间：</td>
+                    <td>
+                      <rd-date-picker-popup ng-model="student.govern.start_date"></rd-date-picker-popup>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>结束时间：</td>
+                    <td>
+                      <rd-date-picker-popup ng-model="student.govern.end_date"></rd-date-picker-popup>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> 备注：</td>
+                    <td>
+                      <textarea rows="4" ng-model="student.govern.remark" class="form-control"></textarea>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+  </div>
+  <div class="table-panel mt10">
+    <div class="form-inline text-center">
+      <button class="btn btn-default" ng-click="goback()">关闭</button>
+      <button class="btn btn-primary" ng-disabled="studentForm.$invalid" ng-click="saveStudent()">保存学员</button>
+    </div>
+  </div>
+</div>

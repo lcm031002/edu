@@ -1,0 +1,48 @@
+<style>
+    <!--
+        .processes{
+            width: 100%;
+        }
+        .cur{
+            cursor: pointer;
+        }
+        .dropdown:hover{
+            color: #000;
+        }
+        .float_right{
+            margin-left: 18%;;
+        }
+        .button{
+            margin-right: 65px;
+        }
+        .message{
+            width: 100%;
+        }
+
+        .classpath{
+            margin-left: 130px;
+            width:520px;
+        }
+    -->
+</style>
+<div class="col-md-8 about-us-column-right processes">
+    <h3>流程列表<!--input type="text" class="classpath" ng-model="classPathUrl" ng-blur="onClassPathBlur()"/--></h3>
+    <div class="row about-us-one-row" ng-repeat="processe in processs">
+        <div class="col-md-2 about-us-one-row-col">
+            <i class="ring6"> </i>
+        </div>
+        <div class="col-md-10 about-us-one-row-col">
+            <p class="message">文件名:<a href="{{path+'/'+processe.file}}" target="_blank">{{processe.file}}</a></p>
+            <p class="message">发布状态:{{processe.deployed?'已发布':'未发布'}}</p>
+            <p>
+                <span class="dropdown cur button" ng-click="deploy(processe)" ng-if="!processe.deployed">发布流程</span>
+                <span class="dropdown cur button" ng-click="showImg(processe)" ng-if="processe.deployed">查看流程</span>
+            </p>
+        </div>
+        <div class="processes" ng-if="processe.show">
+            <img ng-src="{{webContext+processe.png}}" class="float_right"/>
+        </div>
+    </div>
+
+
+</div>

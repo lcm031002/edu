@@ -1,0 +1,106 @@
+<div ng-controller="erp_cameraController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">摄像头设置</span></div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="addCamera()">
+                    <i class="fa fa-plus"></i>添加
+                </button>
+                <span style="color: red;font-size: small">*注意：一个教室课绑定多个摄像头，一个摄像头只可绑定一个教室</span>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        校区：
+                    <select class="form-control" 
+                        ng-model="searchParam.selectedBranch" 
+                        ng-options="branch.org_name for branch in branchList">
+                    </select>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="可输入教室编码,教室名称"
+                                   ng-model="searchParam.p_queryKey">
+                            <button class="btn btn-primary" ng-click="query()">搜索</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-striped min-width-1100">
+            <thead>
+            <tr>
+                <th>操作</th>
+                <th>应用校区</th>
+                <th>教室编码</th>
+                <th>教室名称</th>
+                <th>摄像头编码</th>
+                <th>频道ID</th>
+                <th>拉流地址</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="camera in cameraList" 
+                ng-if="!loadStatues && cameraList && cameraList.length">
+                <td><a href="javascript:void(0);" ng-click="putCamera(camera)">设置</a></td>
+                    <!--<a href="javascript:void(0);" ng-click="delRoom(room)">删除</a>&nbsp;&nbsp;-->
+                <td>{{camera.branch_name}}</td>
+                <td>{{camera.room_code}}</td>
+                <td>{{camera.room_name}}</td>
+                <td>{{camera.camera_code}}</td>
+                <td>{{camera.channel_id}}</td>
+                <td>{{camera.pf_address}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+    </div>
+    <script type="text/ng-template" id="camera_modal.html">
+        <rd-modal>
+            <rd-modal-title>摄像头信息{{optype}}</rd-modal-title>
+            <rd-modal-body>
+                <form class="form-horizontal">
+                    <div class="form-group-inline">
+                        <label class="control-label col-sm-2"><span style="color:red">*</span>选择校区： </label>
+                        <div class="col-sm-4">
+                            <select class="form-control"
+                                    ng-model="cameraDetail.branch_id"
+                                    ng-options="branch.id as branch.org_name for branch in branchList">
+                            </select>
+                        </div>
+                        <label class="control-label col-sm-2"><span style="color:red">*</span>选择教室：</label>
+                        <div class="col-sm-4">
+                            <select class="form-control"
+                                    name="room_name"
+                                    ng-model="cameraDetail.room_id"
+                                    ng-options="room.id as room.room_name for room in roomList" required>
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label text-nowrap"><span style="color:red">*</span>摄像头编码：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="cameraDetail.camera_code" disabled="true" required
+                                   ng-required/>
+                        </div>
+                        <label class="col-sm-2 control-label">频道ID：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="cameraDetail.channel_id" required
+                                   ng-required/>
+                        </div>
+                        <label class="col-sm-2 control-label">推流地址：</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" ng-model="cameraDetail.pf_address"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </rd-modal-body>
+            <rd-modal-footer>
+                <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+                <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+            </rd-modal-footer>
+        </rd-modal>
+    </script>
+</div>

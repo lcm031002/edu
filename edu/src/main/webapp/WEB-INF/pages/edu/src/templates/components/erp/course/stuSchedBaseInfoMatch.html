@@ -1,0 +1,151 @@
+<div class="table-panel">
+  <div class="toolbar" ng-if="optype!='view'">
+    <button class="btn btn-primary btn-circle" ng-click="batchOperation()">
+      <i class="fa fa-plus"></i> 批量课单事故
+    </button>
+  </div>
+  <h3>初步排课意向</h3>
+  <div class="ov-a">
+      <table class="table table-bordered min-width-1200">
+          <thead>
+            <tr>
+              <th ng-if="optype!='view'"><input type="checkbox" ng-model="checkAll" ng-click="checkAllApplyPlan()" /></th>
+              <th ng-if="optype!='view'">操作</th>
+              <th>上课地点</th>
+              <th>科目</th>
+              <th>上课日期</th>
+              <th>周几</th>
+              <th>上课时间</th>
+              <th>下课时间</th>
+              <th>老师名称</th>
+              <th>老师编码</th>
+              <th>老师电话</th>
+              <th>老师性别</th>
+              <th>科目状态</th>
+              <th>备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in applyPlanList track by $index" ng-class="{'cur': showOperatorBtn, 'success': item.checked}">
+              <td ng-if="optype!='view'"><input type="checkbox" ng-model="item.checkFlag" ng-if="!(item.status == 4 || (item.subjectId != schedulableSubjectId && curCourseArrangerId != item.courseSpId))" /></td>
+              <td ng-if="optype!='view'">
+                <button class="btn btn-primary btn-xs" ng-disabled="{{item.status == 4 || (item.subjectId != schedulableSubjectId && curCourseArrangerId != item.courseSpId)}}" ng-click="handlePutSchedPlanSatus(item, 2)">匹配</button>
+                <button class="btn btn-warning btn-xs" ng-disabled="{{item.status == 4 || (item.subjectId != schedulableSubjectId && curCourseArrangerId != item.courseSpId)}}" ng-click="handlePutSchedPlanSatus(item, 3)">压单</button>
+                <button class="btn btn-danger btn-xs" ng-disabled="{{item.status == 4 || (item.subjectId != schedulableSubjectId && curCourseArrangerId != item.courseSpId)}}" ng-click="handlePutSchedPlanSatus(item, 5)">课单事故</button>
+              </td>
+              <td>{{item.branchName}}</td>
+              <td>{{item.subjectName}}</td>
+              <td>{{item.courseDate | date:'yyyy-MM-dd'}}</td>
+              <td>{{item.weekday}}</td>
+              <td>{{item.startTime}}</td>
+              <td>{{item.endTime}}</td>
+              <td>{{item.teacherName}}</td>
+              <td>{{item.teacherEncoding}}</td>
+              <td>{{item.teacherPhone}}</td>
+              <td>{{item.teacherGender=='未知'?'':item.teacherGender}}</td>
+              <td ngclass="{{item.status==3?'text-danger':''}}">{{item.statusName}}</td>
+              <td>{{item.remark}}</td>
+            </tr>
+          </tbody>
+        </table>
+  </div>
+ 
+</div>
+    <uib-tabset id="applyPlanDialog.html"  ng-if="PlanSatus">
+      <uib-tab index="0" heading="匹配">
+        <klc-erp-course-stu-sched-by-match match-list="matchList" apply="apply" on-match-success="onMatchSuccess()">
+        </klc-erp-course-stu-sched-by-match>
+      </uib-tab>
+    </uib-tabset>
+
+<script type="text/ng-template" id="applyPlanDialog.html">
+    <rd-modal>
+      <rd-modal-title>正常排课</rd-modal-title>
+      <rd-modal-body>
+        <div class="table-panel">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>申请档期：</p>
+              <klc-erp-course-stu-sched-time-table 
+              time-list="apply.schedule" 
+              read-only="true"></klc-erp-course-stu-sched-time-table>
+            </div>
+            <div class="col-sm-6">
+              <p>特殊说明</p>
+              <p>
+                <textarea cols="30" rows="10" class="form-control"
+                  ng-model="apply.remark" ng-disabled="true"></textarea>
+              </p>
+            </div>
+          </div>
+          <div class="form form-horizontal row">
+            <div class="form-group col-sm-4">
+              <span class="required"></span>日期：<rd-date-picker-popup ng-model="detail.courseDate"></rd-date-picker-popup>
+            </div>
+            <div class="form-group col-sm-4">
+              <span class="required"></span>上课时间：
+              <kl-timepicker ng-model="detail.startTime"></kl-timepicker>
+            </div>
+            <div class="form-group col-sm-4">
+              <span class="required"></span>下课时间：
+              <kl-timepicker ng-model="detail.endTime"></kl-timepicker>
+            </div>
+            <div class="form-group col-sm-4">
+              <span class="required"></span>老师：
+              <div class="input-group">
+                <input class="form-control" type="text" ng-disabled="true" ng-model="teacher.teacher_name">
+                <span class="input-group-btn" 
+                  kl-teacher-dropdown
+                  on-search="onSearchTearcher(search_info)"
+                  kl-selected="onSelectTeacher(teacher)" 
+                  searchparam="{}">
+                  <button class="btn btn-primary">选择</button>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-sm-4">
+              <span class="required"></span>老师编码：
+              <input type="text" class="form-control" 
+                ng-model="teacher.encoding"
+                ng-disabled="true">
+            </div>
+            <div class="form-group col-sm-4">
+              <span class="required"></span>科目：
+              <input type="text" class="form-control" 
+                ng-model="detail.subjectName"
+                ng-disabled="true">
+            </div>
+            <div class="form-group col-sm-8">
+              <span class="required"></span>备注：
+              <input type="text" class="form-control" ng-model="detail.remark"></input>
+            </div>
+          </div>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+        <button class="btn btn-primary" ng-click="onOk()">确定</button>
+      </rd-modal-footer>
+    </rd-modal>
+  </script>
+<script type="text/ng-template" id="applyPlanOverstock.html">
+  <rd-modal>
+    <rd-modal-title>{{PlanSatus == 3 ? '压单' : '课程事故'}}</rd-modal-title>
+    <rd-modal-body>
+      <div class="form form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-3 col-sm-offset-1 required">
+              备注
+            </label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" ng-model="detail.remark">
+            </div>
+          </div>
+      </div>
+    </rd-modal-body>
+    <rd-modal-footer>
+      <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+      <button class="btn btn-primary" ng-click="onOk()">确定</button>
+    </rd-modal-footer>
+  </rd-modal>
+</script>

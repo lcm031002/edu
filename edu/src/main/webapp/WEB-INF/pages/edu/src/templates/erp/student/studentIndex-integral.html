@@ -1,0 +1,88 @@
+<div class="erp student integral" ng-controller="erp_studentIntegralController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">
+				积分管理
+			</span>
+		</div>
+		<div class="panel-body">
+			<div class="integral-wrapper pos-r">
+				<!-- 总积分 -->
+				<div class="pull-left integral-detail {{searchParams.p_account_id == -1 ? 'active' : ''}}" ng-click="handleQueryAllDetail()">
+					<i class="iconfont icon-integral text-warning"></i>
+					<h4 class="integral title text-warning">总积分</h4>
+					<span class="amount"><small>积分</small>
+						{{totalAcount.integral}}</span>
+					<h4 class="amount title text-warning">考勤累计金额</h4>
+					<span class="amount">&yen;{{totalAcount.money}}</span>
+				</div>
+
+				<!-- 各校区积分列表 -->
+				<div class="ovx-a" style="margin-left: 220px">
+					<ul class="integral-container list-unstyled " ng-style="integralContainerStyle">
+						<li class="integral-detail {{item.id==searchParams.p_account_id ? 'active' : ''}}"
+							ng-repeat="item in integralList"
+							ng-click="handleQueryBranchDetail(item)">
+							<i class="iconfont icon-integral text-warning"></i>
+							<h4 class="integral title text-warning">{{item.branch_name}}</h4>
+							<span class="amount"><small>积分</small>
+								{{item.crrent_integral}}</span>
+							<h4 class="amount title text-warning">考勤累计金额</h4>
+							<span class="amount">&yen;{{item.attend_amount}}</span>
+						</li>
+						<li class="clearfix"></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">
+				积分流水
+			</span>
+		</div>
+		<div class="panel-body">
+			<div class="toolbar">
+				<div class="form-inline">
+					<rd-date-picker-range
+						ng-start-date="searchParams.p_start_date"
+						ng-end-date="searchParams.p_end_date"
+						ng-date-change=""
+						>
+						<button class="btn btn-primary" ng-click="queryDetail()"><i class="iconfont icon-search"></i>查询</button>
+						<button class="btn btn-primary" ng-click="outputDetail()"><i class="iconfont icon-export"></i> 导出</button>
+					</rd-date-picker-range>
+				</div>
+			</div>
+			<div class="table-panel">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>日期</th>
+							<th>校区</th>
+							<th>经办人</th>
+							<th>金额变动</th>
+							<th>剩余金额</th>
+							<th>积分变动</th>
+							<th>剩余积分</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="detail in integralDetailList">
+							<td>{{detail.datetime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+							<td>{{detail.branch_name}}</td>
+							<td>{{detail.update_user_name}}</td>
+							<td>{{detail.change_amount}}</td>
+							<td>{{detail.attend_amount}}</td>
+							<td>{{detail.change_integral}}</td>
+							<td>{{detail.after_integral}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<ng-pagination conf="pageConf"></ng-pagination>
+		</div>
+	</div>
+</div>

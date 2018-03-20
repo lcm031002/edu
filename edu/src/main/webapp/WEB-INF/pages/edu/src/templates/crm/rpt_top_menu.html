@@ -1,0 +1,31 @@
+<div ng-controller="CrmRptTopController">
+    <div class="header headerrpt topmenu">
+        <ul class="">
+    			<span class="mr10 cur top_tool" ng-click="selectMenu('rpt_channel')">
+    				<a ui-sref=".channel" class="{{subMenuId=='rpt_channel'?'subnav-cur':'backgroundrpt'}}">渠道统计</a></span>
+<!--     			<span class="mr10 cur top_tool"  ng-click="selectMenu('rpt_visit')">
+    				<a ui-sref=".visit" class=" {{subMenuId=='rpt_visit'?'subnav-cur':'backgroundrpt'}}">到访量统计</a></span> -->
+<!--     			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_intent')">
+    				<a ui-sref=".intent" class="{{subMenuId=='rpt_intent'?'subnav-cur':'backgroundrpt'}}">意向统计</a></span>
+ -->    			
+                <span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_convertrate')">
+    				<a ui-sref=".convertrate" class="{{subMenuId=='rpt_convertrate'?'subnav-cur':'backgroundrpt'}}">转化率统计</a></span>
+    			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_avgachieve')">
+    				<a ui-sref=".avgachieve" class="{{subMenuId=='rpt_avgachieve'?'subnav-cur':'backgroundrpt'}}">平均单笔统计</a></span>
+<!--     			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_notsignup')"> -->
+<!--     				<a ui-sref=".notsignup" class="{{subMenuId=='rpt_notsignup'?'subnav-cur':'backgroundrpt'}}">未报名资源列表</a></span> -->
+    			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_achieve_total')">
+    				<a ui-sref=".achievetotal" class="{{subMenuId=='rpt_achieve_total'?'subnav-cur':'backgroundrpt'}}">业绩总额统计</a></span>
+    			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_orderedsort')">
+    				<a ui-sref=".orderedsort" class="{{subMenuId=='rpt_orderedsort'?'subnav-cur':'backgroundrpt'}}">校区业绩排名</a></span>
+    			<!-- <span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_achieve_new')">
+    				<a ui-sref=".achievenew" class="{{subMenuId=='rpt_achieve_new'?'subnav-cur':'backgroundrpt'}}">新单业绩统计</a></span>
+    			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_digres')">
+    				<a ui-sref=".digres" class="{{subMenuId=='rpt_digres'?'subnav-cur':'backgroundrpt'}}">挖掘资源报表</a></span> -->
+    			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_performance_gc')">
+    				<a ui-sref=".performance_gc" class="{{subMenuId=='rpt_performance_gc'?'subnav-cur':'backgroundrpt'}}">业绩资源对比表</a></span>
+    			<span class="mr10 cur top_tool"   ng-click="selectMenu('rpt_excavate_gc')">
+    				<a ui-sref=".excavate_gc" class="{{subMenuId=='rpt_excavate_gc'?'subnav-cur':'backgroundrpt'}}">挖掘资源业绩统计</a></span>
+            </ul>
+    </div>
+</div>

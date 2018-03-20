@@ -1,0 +1,262 @@
+<style>
+<!--
+.processes {
+	width: 100%;
+}
+
+.cur {
+	cursor: pointer;
+}
+
+.dropdown:hover {
+	color: #000;
+}
+
+.float_right {
+	margin-left: 18%;;
+}
+
+.button {
+	margin-right: 65px;
+}
+
+.message {
+	width: 100%;
+}
+
+thead {
+	background: none repeat scroll 0 0 #6b6f71;
+	height: 35px;
+}
+
+thead tr {
+	width: 90%;
+}
+
+th,td {
+	min-width: 120px;
+	text-align: center;
+	color: #fff;
+}
+
+td {
+	color: #000;
+	height: 35px;
+}
+
+.task_operator {
+	width: 300px;
+}
+
+.about-us-one-row {
+	padding: 5px 0;
+}
+
+td {
+	font-size: 14px;
+	font-family: "微软雅黑";
+}
+
+th {
+	font-size: 16px;
+	font-family: "微软雅黑";
+}
+
+.operator {
+	margin: 5px;;
+}
+
+.data_row:hover {
+	background-color: #fff;
+}
+
+.col77 {
+	
+}
+
+.tfr {
+	text-align: right;
+}
+
+.tfl {
+	text-align: left;
+}
+.body_table{
+	width:100%;
+}
+-->
+</style>
+<div class="col-md-8 about-us-column-right processes">
+	<h3>流程列表</h3>
+	<div class="row about-us-one-row">
+		<div>
+			<table class="body_table">
+				<thead>
+					<tr>
+						<th class="tfl">流程id</th>
+						<th class="tfl">流程key</th>
+						<th class="tfl">流程名称</th>
+						<th>发布id</th>
+						<th>描述</th>
+						<th>状态</th>
+						<th class="task_operator">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="data_row" style="border-bottom: 1px #000;"
+						ng-repeat="process in drocessDefList">
+						<td class="col1 tfl"><a href="{{task.task_workspace}}"
+							target="_blank">{{process.id}}</a></td>
+						<td class="col2 tfl">{{process.key}}</td>
+						<td class="col3 tfl">{{process.name}}{{'V'+process.version}}</td>
+						<td class="col4">{{process.deploymentid}}</td>
+						<td class="col4 tfl">{{process.description}}</td>
+						<td class="col2" ng-if="process.suspended==true">已停止</td>
+						<td class="col2" ng-if="process.suspended==false">运行中</td>
+						<td class="col5 task_operator">
+							<a href="javascript:void(0)"
+							class="operator" ng-click="queryProcessRoles(process)"><span
+								class="cur">查询流程角色信息</span>
+								</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<div>
+	<style ng-show="selectedProcess!=null">
+		<!--
+			.cz-window{ width:688px; height:500px; border:1px solid #cccccc; position:fixed; left:25%; top:25%; z-index:1000; background:#fff;-webkit-box-shadow: #666 0px 0px 10px; -moz-box-shadow: #666 0px 0px 10px; box-shadow: #666 0px 0px 10px; display:block; }
+			.cz-window-tit{ width:100%; height:32px; line-height:32px; font-weight:900; font-size:14px; background:#edf0f7;}
+			.cz-window-close{width:15px; height:15px; display:block; background:url(../../Img/icon/Erpicon.png) -218px -1477px no-repeat; cursor:pointer;}
+			.cz-window-bg{ width:100%; height:143%; position:absolute; z-index:999; top:0; left:0; background:rgba(0,0,0,0.25);display:none;}
+			.cz-winm{ width:100%; height:450px; border:1px solid #dfdfdf; background:#efefef; overflow-x: auto; overflow-y: auto;}
+			/*2014-11-04 新增 理赔*/
+			.lp-winmt{ width:auto; height:30px; line-height:30px;}
+			.lp-mtico{ width:18px; height:18px; background:url(../../Img/icon/icon-cz.png) -130px -99px;}
+			.lp-winmc{ width:auto; height:235px; background:url(../../Img/bg/zz-winbg.jpg) -93px -19px no-repeat;}
+			.lp-winmcon{ width:382px; height:230px; margin:0 auto;}
+			.lp-mconl{ width:222px; height:138px;}
+			.lp-mconr{ width:132px; height:132px; border-radius:50%; border:1px solid #efefef; background:#efefef; overflow:hidden}
+			.lp-txt{ width:140px; height:24px; line-height:24px; padding:0 5px; border-radius:2px; overflow:hidden;}
+			.lp-inputbg{ background:#4e5650;}
+			.lp-mcinput{ width:325px; height:36px; margin-left:57px; position:relative; z-index:2;}
+			.lp-mcinputbg{ width:325px; height:36px; margin-left:57px; margin-top:-36px; border-radius:2px; background:#000; opacity:0.2; position:relative; z-index:1;}
+			.lp-mcinputc{ width:325px; height:36px; border:none; text-align:center; font:400 14px/36px "微软雅黑"; color:#fff; background:none;}
+			.lp-color{ color:#d2d2d2;}
+			.lp-window-btn{ width:100%; height:34px; background:#edf0f7;}
+			.lp-window-bg{ width:100%; height:143%; position:absolute; z-index:999; top:0; left:0; background:rgba(0,0,0,0.25);display:none;}
+			.mt6 {
+			    margin-top: 6px;
+			}		
+			.cz-win-btn {
+			    text-align: center;
+			}
+			.zz-list{ width:auto; height:24px;}
+			.zz-listc{ width:50px; height:24px; line-height:24px; text-align:right; color:#fff;}
+			.confirm_ok{margin:10px;width:100px;float:left;}
+			.confirm_cancel{margin:10px;width:100px;float:left;}
+			.bottom_tool_bar{background: none repeat scroll 0 0 #efefef;}
+			.col100{width:100px;text-align: center;}
+			.col200{width:200px;}
+			
+			
+		-->
+	</style>
+	
+	<!-- search-list -->
+    <style>
+    	<!--
+    		.search-list-wf{
+    			position: relative;
+    		}
+    		.search-list-wf:hover .search-list-con{
+    			display: block;
+    			z-index:1001;
+    		}
+    		.search-list-wf .search-list-con{
+    			display: none;
+    		}
+    		.search-list-wf-con:hover li{
+    			display: block;
+    			background-color: #f5f5f5;
+    			z-index:1001;
+    		}
+    		.search-list-wf .showList{
+    			display: block;
+    			z-index:1001;
+    		}
+    		.inputElem{
+    			width:200px;
+    		}
+    		.search-list-con{
+    			width:200px;
+    			left:0px;
+    			z-index:1001;
+    			position: absolute;
+    			background-color: #fff;
+    			border-bottom: 1px #f5f5f5;
+    			border-left: 1px #f5f5f5;
+    			border-right: 1px #f5f5f5;
+    		}
+    	-->
+    </style>
+	<div 
+   	 style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+   	   ng-show="selectedProcess!=null" ng-click="selectedProcessClosed()"></div>
+   	<div class="cz-window lp-win" ng-show="selectedProcess!=null">
+		<div class="cz-window-tit bd">
+			<span class="yellow-num ml10 fl">流程角色信息</span>
+			<i class="cz-window-close mt10 mr10 fr" ng-click="selectedProcessClosed()"></i>
+		</div>
+		<div class="cz-winm">
+			<table class="body_table">
+					<thead>
+						<tr>
+							<th class="col100">流程key</th>
+							<th class="col100">流程任务角色</th>
+							<th class="col200 tfl ">描述</th>
+							<th class="col200 tfl">绑定业务角色</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="data_row" style="border-bottom: 1px #000;"
+							ng-repeat="role in roles">
+							<td class="col100">{{role.processKey}}</td>
+							<td class="col100">{{role.processTask}}</td>
+							<td class="col200 tfl">
+								{{role.remark}}
+							</td>
+							<td class="col200 tfl search-list-wf">
+								<p>
+									<span ng-repeat="mRole in role.mappings">{{$index>0?",":""}}{{mRole.businessRole}}<a href="javascript:void(0)" ng-click="deleteRole(mRole)">[删除]</a></span>
+								</p>
+								<p>
+								<input type="text"
+								 class="inputElem"
+								 ng-init="请输入搜索信息"
+								 ng-model="role.seacherRoleStr"
+								 ng-focus="seacherRoleFocus(role)"
+								 ng-blur="seacherRoleBlur(role)"
+								 ng-change="seacherRoleChange(role)"
+								 />
+								</p>
+								<ul class="search-list-con {{role.seacherRoleStr?'showList':''}}">
+						            <li class="cur" ng-repeat="seacherRole in role.seacherRoleResult">
+						            	<a href="javascript:void(0)" ng-click="settingsRole(role,seacherRole)" class="cur">{{seacherRole.NAME}}</a>
+						            </li>
+						        </ul>
+							</td>
+						</tr>
+					</tbody>
+			</table>
+			<div class="bottom_tool_bar">
+				<button class="confirm_cancel"  ng-click="selectedProcessClosed()">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>

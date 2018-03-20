@@ -1,0 +1,205 @@
+<div class="orders activity online" ng-controller="erp_OrdersIndexActivityOnlineController">
+  <!-- 活动列表 -->
+  <div ng-show="optype == 'list'">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span class="title">优惠活动（线上）</span>
+      </div>
+      <div class="panel-body operation-panel">
+        <div class="toolbar">
+          <button class="btn btn-primary btn-circle"
+            ng-click="addActivity()">
+            <i class="iconfont icon-add"></i>添加
+          </button>
+        </div>
+        <hr>
+        <div class="searchbar">
+          <div class="form form-inline">
+            <div class="form-group">
+              团队：
+              <kl-bu-select bu-id="searchParams.buId"></kl-bu-select>
+            </div>
+            <div class="form-group">
+              校区：
+              <kl-branch-select bu-id="searchParams.buId" branch-id="searchParams.branchId"></kl-branch-select>
+            </div>
+            <div class="form-group">
+              活动名称：
+              <input type="text" class="form-control"
+                placeholder="请输入优惠活动"
+                ng-model="searchParams.name"
+                ng-enter="getList()">
+            </div>
+            <div class="form-group">
+              活动类型：
+              <select class="form-control" ng-model="searchParams.type">
+                <option value=""></option>
+                <option value="1">普通活动</option>
+                <option value="2">邀新活动</option>
+              </select>
+              <button class="btn btn-primary"
+              ng-click="getList()">
+                <i class="iconfont icon-search"></i>
+                搜索
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-panel">
+      <div class="table-wrapper ovx-a">
+        <table class="table table-striped table-hover"  style="min-width: 1400px;">
+          <thead>
+            <tr>
+              <th width="200">操作</th>
+              <th width="80">ID</th>
+              <th >活动名称</th>
+              <th width="80">活动类型</th>
+              <th width="60">状态</th>
+              <th width="110">开始时间</th>
+              <th width="110">结束时间</th>
+              <th width="200">团队</th>
+              <th width="200">校区</th>
+              <th width="200">链接</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in activityList"
+              ng-if="!loadStatues && activityList && activityList.length">
+              <td>
+                <button class="btn btn-primary btn-xs" ng-click="editActivity(item)">编辑</button>
+                <button ng-show="item.status != 1" class="btn btn-success btn-xs" ng-click="changeStatus(item, 1)">启用</button>
+                <button ng-show="item.status != 2" class="btn btn-warning btn-xs" ng-click="changeStatus(item, 2)">停用</button>
+                <button ng-show="item.status != 0" class="btn btn-danger btn-xs" ng-click="changeStatus(item, 0)">删除</button>
+                <button ng-show="item.status != 0" class="btn btn-default btn-xs" ng-click="copyToClipboard(item.shareLink)">复制链接</button>
+
+              </td>
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>
+              <td>
+                <span ng-show="item.type == 1">普通活动</span>
+                <span ng-show="item.type == 2">邀新活动</span>
+                <span ng-show="!item.type">未知</span>
+              </td>
+              <td ng-switch="item.status">
+                <span ng-switch-when="0" class="text-danger">已删除</span>
+                <span ng-switch-when="1" class="text-primary">启用</span>
+                <span ng-switch-when="2" class="text-warning">停用</span>
+                <span ng-switch-when="3" class="text-success">未启用</span>
+              </td>
+              <td>{{item.startDate}}</td>
+              <td>{{item.endDate}}</td>
+              <td>{{item.buName}}</td>
+              <td>{{item.branchName}}</td>
+              <td>{{item.shareLink}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center" ng-if="loadStatues">
+        <img src="img/erp/loading2.gif">
+      </div>
+      <ng-pagination conf="pageConf" ng-if="!loadStatues || activityList.length > 0"></ng-pagination>
+    </div>
+  </div>
+  <!-- 活动详情 -->
+  <div ng-if="optype == 'add' || optype == 'edit' ">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <span class="title">{{optype == 'edit' ? '编辑' : '新增'}}活动</span>
+      </div>
+      <div class="panel-body">
+        <dl class="form dl-horizontal form-inline">
+          <dt><span class="required">活动类型：</span></dt>
+          <dd>
+            <select class="form-control"
+              ng-model="activityDetail.type">
+              <option value="1">普通活动</option>
+              <option value="2">邀新活动</option>
+            </select>
+          </dd>
+          <dt><span class="required">活动范围：</span></dt>
+          <dd>
+            <div class="form-group">
+              <kl-bu-select bu-id="activityDetail.buId"></kl-bu-select>
+              <kl-branch-select bu-id="activityDetail.buId"  ng-show="activityDetail.type==1"
+                branch-id="activityDetail.branchId"></kl-branch-select>
+            </div>
+          </dd>
+          <dt><span class="required">活动名称：</span></dt>
+          <dd>
+            <input type="text" ng-model="activityDetail.name" 
+            class="form-control" placeholder="请输入活动名称">
+          </dd>
+          <div ng-show="activityDetail.type == 1">
+            <dt><span class="required">选择优惠券：</span></dt>
+            <dd>
+              <span class="input-group" kl-coupon-dropdown kl-selected="insertCoupon(coupon)" floatdir="pull-left">
+                <button class="btn btn-primary" style="border-radius: 4px;"><i class="iconfont icon-operation_add" ></i> 添加</button>
+              </span>
+              <ul class="list-unstyled" style="clear: both; float: left; padding: 10px 20px; border: 1px solid #ccc; border-radius: 6px;"
+                ng-show="selectedCouponList.length > 0">
+                <li ng-repeat = "coupon in selectedCouponList">
+                  {{coupon.name}} 【{{coupon.type_name}}】
+                  <i class="iconfont icon-public_defeat i-text-primary cur pull-right" ng-click="removeCoupon(coupon)"></i>
+                </li>
+              </ul>
+            </dd>
+          </div>
+          <div ng-show="activityDetail.type == 2">
+            <dt><span class="required">新用户优惠：</span></dt>
+            <dd>
+              <kl-coupon-select coupon="activityDetail.nuserCouponId"></kl-coupon-select>
+            </dd>
+            <dt><span class="required">老用户优惠</span></dt>
+            <dd>
+              <kl-coupon-select coupon="activityDetail.ouserCouponId"></kl-coupon-select>
+            </dd>
+          </div>
+          <dt><span class="required">背景颜色：</span></dt>
+          <dd>
+            <input type="text" name="bgColor" ng-model="activityDetail.bgColor"
+              class="form-control">
+            <div style="display: inline-block; width: 30px;vertical-align: top; height: 30px;background-color: {{activityDetail.bgColor}}"></div>
+            <div class="mt5">
+              <span class="text-muted">默认色值：#f1f0f3</span>
+              <button class="btn btn-xs btn-warning" ng-click="activityDetail.bgColor='#f1f0f3' ">设置为默认</button>
+            </div>
+          </dd>
+          <dt><span class="required">开始时间：</span></dt>
+          <dd>
+            <div class="form-group">
+              <rd-date-picker-popup ng-model="activityDetail.startDate"></rd-date-picker-popup>
+            </div>
+            <div class="form-group">
+              <span class="required">结束时间：</span>
+            </div>
+            <div class="form-group">
+              <rd-date-picker-popup ng-model="activityDetail.endDate"></rd-date-picker-popup>
+            </div>
+          </dd>
+          <dt>
+            <span class="required">活动海报图：</span>
+          </dt>
+          <dd>
+            <kl-image-upload img-urls="bgImgUrlList" multiple="true"></kl-image-upload>
+          </dd>
+          <dt><span class="required">微信分享标题：</span></dt>
+          <dd><input class="form-control" type="text" name="shareTitle" ng-model="activityDetail.shareTitle" placeholder="请输入微信分享标题"></dd>
+          <dt><span class="required">微信分享描述：</span></dt>
+          <dd><input type="text" name="shareDesc" class="form-control"
+            ng-model="activityDetail.shareDesc"></dd>
+          <dt><span class="required">微信分享图片：</span></dt>
+          <dd>
+            <kl-image-upload img-urls="shareImgList"></kl-image-upload>
+          </dd>
+        </dl>
+        <div class="text-center">
+          <button class="btn btn-primary" ng-click="saveActivity()">确定</button>
+          <button class="btn btn-default" ng-click="cancelActivity()">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

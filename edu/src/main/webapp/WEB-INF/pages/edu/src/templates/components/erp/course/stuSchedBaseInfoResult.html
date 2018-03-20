@@ -1,0 +1,70 @@
+<div class="ov-a mt5">
+    <!-- table-bordered 表格有边框的class -->
+    <table ng-if="!(!apply.stuSchedPlanList || !apply.stuSchedPlanList.length)" class="table word_break table-hover min-width-1200">
+        <thead>
+          <tr>
+            <th style="width: 60px;">操作</th>
+            <th style="width: 150px;">上课地点</th>
+            <th style="width: 80px;">年级</th>
+            <th style="width: 100px;">科目</th>
+            <th style="width: 100px;">上课日期</th>
+            <th style="width: 60px;">周几</th>
+            <th style="width: 90px;">上课时间</th>
+            <th style="width: 90px;">下课时间</th>
+            <th style="width: 120px;">老师名称</th>
+            <th style="width: 150px;">老师编码</th>
+            <th style="width: 150px;">老师电话</th>
+            <th style="width: 150px;">老师性别</th>
+            <th style="width: 90px;">科目状态</th>
+            <th style="width: 90px;">审批状态</th>
+            <th style="width: 120px;">备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in apply.stuSchedPlanList">
+            <td class="{{((item.status == 1 || item.status == 3) && (!apply.auditStatus || apply.auditStatus == 1))?'':'forbid_grey'}}">
+                <!-- ng-if="item.status == 1 || item.status == 3" -->
+              <a href="javascript:void(0)" ng-click="SchedCancle(item)">取消</a>
+            </td>
+            <td>{{apply.classPlace}}</td>
+            <td>{{apply.stuGradeName}}</td>
+            <td>{{item.subjectName}}</td>        
+            <td>{{item.courseDate | date:'yyyy-MM-dd'}}</td>
+            <td>{{item.weekday}}</td>
+            <td>{{item.startTime}}</td>
+            <td>{{item.endTime}}</td>
+            <td>{{item.teacherName}}</td>
+            <td>{{item.teacherEncoding}}</td>
+            <td>{{item.teacherPhone}}</td>
+            <td>{{item.teacherGender}}</td>
+            <td ng-class="{2: 'text-success', 3:'text-danger'}[item.status]">{{item.statusName}}</td>
+            <td>{{apply.auditStatusName}}</td>
+            <td>{{item.remark}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-if="!apply.stuSchedPlanList || !apply.stuSchedPlanList.length">
+          <div class="no-data"></div>
+          <div class="pt-30 text-center">暂无数据.</div>
+      </div>
+</div>
+
+  <script type="text/ng-template" id="schedResultDialog.html">
+    <rd-modal>
+      <rd-modal-title>取消科目</rd-modal-title>
+      <rd-modal-body>
+        <div class="table-panel">
+          <div class="row">
+            <div class="form-group">
+              <span class="required">备注：</span>
+              <input type="text" class="form-control width-488 fr" ng-model="schedPlan.remark"></input>
+            </div>
+          </div>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+        <button class="btn btn-primary" ng-click="onOk()">确定</button>
+      </rd-modal-footer>
+    </rd-modal>
+  </script>

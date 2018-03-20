@@ -1,0 +1,156 @@
+    <div class="row header box-shadow"  ng-controller="CrmTopController">
+        <div class="col-xs-12">
+        <div class=" user pull-right">
+    			<div class="item dropdown">
+                  <a href="javascript:void(0);" class="dropdown-toggle"  data-toggle="dropdown" data-target="#">
+                      <img src="../img/avatar.jpg">
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li class="dropdown-header">
+                      	{{userInfo.employee_name}}
+                    </li>
+                    <li class="divider"></li>
+<!--                     <li>
+                      <a href="#">
+                         <i class="fa fa-edit"></i>个人信息
+                      </a>
+                    </li> -->
+                    <li>
+                      <a href="javascript:void(0);" ng-click="openPasswordDialog();">
+                          <i class="fa fa-keyboard-o"></i>密码修改
+                      </a>
+                    </li>
+<!--                     <li>
+                      <a href="#">
+                          <i class="fa fa-cog"></i>系统设置
+                      </a>
+                    </li> -->
+                    <li class="divider"></li>
+                    <li>
+                      <a href="#" ng-click="logout(userInfo.id)">
+                         <i class="fa fa-power-off"></i>退出
+                      </a>
+                    </li>
+                  </ul>
+              </div>
+              <div class="item dropdown">
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" ng-click="fullscreen()" ng-if="screen==''">
+                       <i class="fa fa-expand"> </i>
+                   </a>
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#" ng-click="resetFullscreen()" ng-if="screen=='fullscreen'">
+                       <i class="fa fa-compress"> </i>
+                   </a>
+               </div>
+                
+    		  <div class="item dropdown">
+               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#" >
+                  <i class="fa fa-bell-o"></i>({{Master.meminder+Master.approved+Master.myOrdereds+Master.customerBirthday}})
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li class="dropdown-header">
+                    通知
+                  </li>
+                  <li class="divider"></li>
+                  <li>
+                    <a href="#">
+                        <i class="fa fa-commenting"></i>重要提醒({{Master.meminder}})
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                        <i class="fa fa-tasks"></i>待我处理({{Master.approved}})
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                        <i class="fa fa-tty"></i>我的客户({{Master.myOrdereds}})
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                        <i class="fa fa-gift"></i>客户生日({{Master.customerBirthday}})
+                    </a>
+                  </li>
+                </ul>
+              </div>
+    			
+    			<div class="item dropdown">
+	                  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+	                  	<i class="fa fa-th-large"></i>
+	                  </a>
+                  	  <ul class="dropdown-menu dropdown-menu-right">
+	                      <li class="dropdown-header">
+	                         	 客户关系
+	                      </li>
+	                      <li class="divider"></li>
+	                      <li ng-repeat="menu in userInfo.menuList">
+	                          <a href="{{contextPath}}{{menu.url}}" target="_self">
+	                              <i class="{{menu.style_class}}"></i>{{menu.permission_name}}
+	                          </a>
+	                      </li>
+<!-- 	                      <li ng-repeat="menu.userInfo.menuList">
+	                          <a href="index#rescRec_input" target="_self">
+	                              <i class="fa fa-pencil-square-o"></i>录入资源
+	                          </a>
+	                      </li> -->
+<!-- 	                  <li>
+	                          <a href="index#rescRec_distribute/" target="_self">
+	                              <i class="fa fa-users"></i>分配资源
+	                          </a>
+	                      </li> -->
+	                    <!--   <li>
+	                          <a href="index#rescRec_transfer" target="_self">
+	                              <i class="fa fa-truck"></i>资源转移
+	                          </a>
+	                      </li>
+	                      <li>
+	                          <a href="index#rescRec_proc/" target="_self">
+	                              <i class="fa fa-tty"></i>资源处理
+	                          </a>
+	                      </li>
+	                      <li>
+	                          <a href="index#dict"  target="_self">
+	                              <i class="fa fa-list-alt"></i>字典定义
+	                          </a>
+	                      </li>
+	                      <li>
+	                          <a href="index#/report" target="_self">
+	                              <i class="fa fa-bar-chart-o"></i>报表
+	                          </a>
+	                      </li> -->
+	                      <!-- <li class="dropdown-header">
+	                         	 报班管理
+	                      </li>
+	                      <li class="divider"></li>
+	                      <li>
+	                          <a href="#">
+	                              <i class="fa fa-cny"></i>学员充值
+	                          </a>
+	                      </li>
+	                      <li>
+	                          <a href="#">
+	                              <i class="fa fa-cart-plus"></i>学员报班
+	                          </a>
+	                      </li>
+	                      <li>
+	                          <a href="#">
+	                              <i class="fa fa-credit-card"></i>签证管理
+	                          </a>
+	                      </li> -->
+                  </ul>
+                </div>
+    			
+    			<span class="top_tool1 tool_item item dropdown">
+    				<a href="home" target="_self"><i class="fa fa-home"></i></a>
+    			</span>
+            </div>
+<!-- 	    	<div class="meta">
+	          <div class="page">
+                  	<input id="btn_nation" type="button" value="{{userInfo.org?userInfo.org.org_name:'组织机构'}}" onclick = "nationSelect()" /> 
+        			<b class="caret" onclick="nationSelect()" class="cur"></b>
+        			<span style="padding-left:5px;" class="cur"  ng-click="toDefaultOrg()" title="设置默认"><i class="fa fa-save"></i></span>
+              </div>
+	        </div> -->
+        </div>
+        <div ng-include="'views/passwordDialog.html?_=20151230'""></div>
+    </div>

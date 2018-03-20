@@ -1,0 +1,267 @@
+<div ng-controller="erp_StudentOrdersController">
+    <div class="table-panel">    
+        <div class="form-inline">
+            <div class="form-group">
+                时间范围：
+                <select class="form-control"  ng-model="searchParam.selectedMonth" ng-change="selectMonth()">
+                    <option value="{{item.value}}" ng-repeat="item in selectMonthModel">{{item.label}}</option>
+                </select>
+            </div>
+        </div>
+        <table class="table table-striped table-hover mt15">
+            <thead>
+                <tr>
+                    <th>订单生成时间：</th>
+                    <th>报班单号</th>
+                    <th>报班内容/<b class="cell-txt">详情</b></th>
+                    <th>报班说明</th>
+                    <th>总课时<b class="cell-txt" style="display: none">（次）</b></th>
+                    <th>剩余课时<b class="cell-txt" style="display: none">（次）</b></th>
+                    <th>总价<b class="cell-txt">（元）</b></th>
+                    <th width="200">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="isLoading=='isLoading'">
+                    <td colspan="6" align="center">
+                        <img src="img/erp/loading2.gif">
+                    </td>
+                </tr>
+                <tr  ng-if="isLoading!='isLoading' && (!orderInfoList||!orderInfoList.length)">
+                    <td colspan="6" align="center">
+                        无数据.
+                    </td>
+                </tr>
+                <tr ng-repeat="orderInfo in orderInfoList" ng-if="isLoading!='isLoading'">
+                    <td>{{orderInfo.CREATE_TIME | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>
+                        <span><a ng-href="{{detailOrderHref}}" target="_blank" ng-click="toOrderDetail(orderInfo)">{{orderInfo.ENCODING}}</a></span>
+                        <!--<span><a href="#/orders/ordersMgr/ordersMgrOrders" ng-click="toSubmitOrder(orderInfo)" target="_blank">{{orderInfo.ENCODING}}</a></span>-->
+                    </td>
+                    <td>
+                        <p class=""  ng-if="!orderInfo.details||!orderInfo.details.length">-</p>
+                        <a ng-href="{{detailOrderHref}}" ng-click="toOrderDetail(orderInfo)" target="_blank">
+                            <p  title="{{detailInfo.course_name}}" class="" ng-if="3!=detailInfo.ORDER_TYPE_REAL"  ng-repeat="detailInfo in orderInfo.details">{{detailInfo.COURSE_NAME}}<span class="wfd-combo">{{detailInfo.COMBO_NAME}}</span></p>
+                        </a>
+                        <!--<a href="?studentId={{orderInfo.STUDENT_ID}}&temporaryOrderId={{orderInfo.ID}}#/orders/ordersMgr/ordersMgrOrders" ng-click="toSubmitOrder(orderInfo)" target="_blank">-->
+                            <!--<p  title="{{detailInfo.course_name}}" class=""  ng-repeat="detailInfo in orderInfo.details">{{detailInfo.COURSE_NAME}}<span class="wfd-combo">{{detailInfo.COMBO_NAME}}</span></p>-->
+                        <!--</a>-->
+                    </td>
+                    <td>
+                        <span>{{!orderInfo.REMARK?'无':orderInfo.REMARK}}</span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <span class="cell-num fs fw fl dropdown-toggle" data-toggle="dropdown">{{orderInfo.COURSE_TOTAL_COUNT}}</span>
+                            <i class="cell-icon cell-iconbg fl dropdown-toggle" data-toggle="dropdown"  ng-click="toShow(orderInfo.ID)" targetId = '{{orderInfo.ID}}'></i>
+                            <ul class="dropdown-menu order_course_times" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation">
+                                    <table class="table">
+                                        <tr><th>科目</th><td ng-if="3!=subject.ORDER_TYPE_REAL" ng-repeat="subject in orderInfo.details"><span>{{subject.SUBJECT_NAME}}</span></td></tr>
+                                        <tr><th>课时</th><td ng-if="3!=subject.ORDER_TYPE_REAL" ng-repeat="subject in orderInfo.details"><span>{{subject.COURSE_TOTAL_COUNT_REAL || subject.COURSE_TOTAL_COUNT}}次</span></td></tr>
+                                        <tr><td colspan="{{1+orderInfo.details.length}}"><span class="cell-txt fr mr10">订单生成时间：{{orderInfo.APPROVE_TIME}}</span></td></tr>
+                                    </table>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <span class="cell-num fs fw fl dropdown-toggle" data-toggle="dropdown">{{orderInfo.COURSE_SURPLUS_COUNT}}</span>
+                            <i class="cell-icon cell-iconbg fl dropdown-toggle" data-toggle="dropdown"  ng-click="toShow(orderInfo.ID)" targetId = '{{orderInfo.ID}}'></i>
+                            <ul class="dropdown-menu order_course_times" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation">
+                                    <table class="table">
+                                        <tr><th>科目</th><td ng-repeat="subject in orderInfo.details"><span>{{subject.SUBJECT_NAME}}</span></td></tr>
+                                        <tr><th>课时</th><td ng-repeat="subject in orderInfo.details"><span>{{subject.COURSE_SURPLUS_COUNT_ING}}次</span></td></tr>
+                                        <tr><td colspan="{{1+orderInfo.details.length}}"><span class="cell-txt fr mr10">订单生成时间：{{orderInfo.CREATE_TIME | date: 'yyyy-MM-dd'}}</span></td></tr>
+                                    </table>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </td>
+                    <td>
+                        <del class="cell-txt-del" ng-if="orderInfo.SUM_PRICE!=orderInfo.ACTUAL_PRICE">￥{{orderInfo.SUM_PRICE}}</del>
+                        <span class="cell-txt-cur fs fw" ng-if="orderInfo.SUM_PRICE!=orderInfo.ACTUAL_PRICE">￥{{orderInfo.ACTUAL_PRICE}}</span>
+                        <span class="cell-txt-cur fs fw" ng-if="orderInfo.SUM_PRICE==orderInfo.ACTUAL_PRICE" style="margin-top: 10px;">￥{{orderInfo.ACTUAL_PRICE}}</del>
+                    </td>
+                    <td>
+
+                        <div class="btn-group"  ng-if="orderInfo.CHECK_STATUS==1 && orderInfo.VALID_STATUS != 0">
+                        	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								待审核<span class="caret"></span>
+							</button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="?studentId={{orderInfo.STUDENT_ID}}&temporaryOrderId={{orderInfo.ID}}#/orders/ordersMgr/ordersMgrOrders" ng-click="toSubmitOrder(orderInfo)" target="_blank">继续报班</a></li>
+                                <li><a href="javascript:void(0);" ng-click="deleteOrder(orderInfo)">作废处理</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group"  ng-if="orderInfo.VALID_STATUS == 0 && !orderInfo.PAY_STATUS">
+                            已删除
+                        </div>
+
+                        <div class="btn-group"  ng-if="orderInfo.CHECK_STATUS==4 && orderInfo.VALID_STATUS == 1 && !orderInfo.PAY_STATUS">
+                            未通过
+                        </div>
+
+                        <div class="btn-group"  ng-if="orderInfo.CHECK_STATUS==3 && orderInfo.VALID_STATUS == 1 && orderInfo.PAY_STATUS ">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                已通过 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-href="{{detailOrderHref}}" target="_blank" ng-click="toOrderDetail(orderInfo)">查看详情</a></li>
+                                <li><a href="javascript:void(0);" ng-click="invoiceApply(orderInfo.ID)">申请发票</a></li>
+                            </ul>
+                        </div>
+                        
+                        <button ng-if="orderInfo.CHECK_STATUS==3 && orderInfo.VALID_STATUS == 1 && orderInfo.PAY_STATUS " class="ml10 btn btn-default"  ng-click="printOrder(orderInfo)"> <i class="iconfont icon-print"></i> 打印</button>
+
+                        <div class="btn-group"  ng-if="orderInfo.CHECK_STATUS==3 && orderInfo.VALID_STATUS == 0 && orderInfo.PAY_STATUS ">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                已作废 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-href="{{detailOrderHref}}" target="_blank" ng-click="toOrderDetail(orderInfo)">查看详情</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group"  ng-if="orderInfo.CHECK_STATUS==3 && orderInfo.VALID_STATUS == 1 && !orderInfo.PAY_STATUS ">
+                            <a type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                待缴费 <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a  ng-href="?studentId={{orderInfo.STUDENT_ID}}&temporaryOrderId={{orderInfo.ID}}#/orders/ordersMgr/ordersMgrOrders" ng-click="toSubmitOrder(orderInfo)" target="_blank">去缴费</a></li>
+                                <li><a href="javascript:void(0);" ng-click="deleteOrder(orderInfo)">作废处理</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group"  ng-if="orderInfo.CHECK_STATUS==2 && orderInfo.VALID_STATUS == 1">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                审核中 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a ng-href="{{detailOrderHref}}" target="_blank" ng-click="toOrderDetail(orderInfo)">查看详情</a></li>
+                                <!--<li><a  href="?studentId={{orderInfo.STUDENT_ID}}&temporaryOrderId={{orderInfo.ID}}#/orders/ordersMgr/ordersMgrOrders" target="_blank"   >查看详情</a></li>-->
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--订单正式提交begin-->
+        <div ng-if="openPanel == 'deleteOrder'">
+            <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                    ></div>
+            <div class="pay-window" >
+                <div style="margin: 20px;height:50px;" align="center">
+                    正在删除暂存订单...
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="openPanel == 'beginPrint'">
+            <div  ng-click="closePrintWindow()" style="position:absolute;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+            <div class="pay-window" >
+                <div style="margin: 20px;height:50px;" align="center">
+                    正在打印单据...<a class="btn btn-default" ng-click="closePrintWindow()">关闭<i class="fa fa-times"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- begin 申请发票弹窗 -->
+        <div id="erpStudentMgrInvoiceApplyPanel" class="modal fade"
+          tabindex="-1" role="dialog" style="z-index: 1049;" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">发票申请</h4>
+              </div>
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <form class="form-horizontal">
+                  	<div class="hide">
+                    	<input type="text" ng-model="invoice.orderId">
+                    	<input type="text" ng-model="invoice.branchId">
+                    	<input type="text" ng-model="invoice.studentId">
+                    	<input type="text" ng-model="invoice.studentName">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12" style="margin-left:10px;">本订单可开票金额 = 订单实际金额 - 已退费金额 - 冻结账户支付金额</label>
+                    </div>
+                    <div class="form-group">
+    					<label class="col-sm-3 control-label">本订单可开票金额:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.orderMoney" ng-readonly="true"
+    							type="number">
+    					</div>
+    				</div>
+    				<div class="form-group">
+    					<label class="col-sm-3 control-label">已开金额:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.money" ng-readonly="true"
+    							type="number">
+    					</div>
+    				</div>
+    				<div class="form-group">
+    					<label class="col-sm-3 control-label">发票抬头:</label>
+    					<div class="col-sm-9">
+    						<select class=form-control ng-model="invoice.heading" ng-change="clearTaxNumAndCompName()"
+    							ng-options="header.key as header.value for header in headerList"></select>
+    					</div>
+    				</div>
+    				<div class="form-group" ng-if="invoice.heading == '1'">
+    					<label class="col-sm-3 control-label">姓名:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.companyName"
+    								type="text" ng-change="setTaxNum()">
+    					</div>
+    				</div>
+    				<div class="form-group" ng-if="invoice.heading == '2'">
+    					<label class="col-sm-3 control-label">公司名称:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.companyName"
+    								type="text">
+    					</div>
+    				</div>
+    				<div class="form-group">
+    					<label class="col-sm-3 control-label">税务登记号:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.taxNum"
+    							type="text">
+    					</div>
+    				</div>
+    				<div class="form-group">
+    					<label class="col-sm-3 control-label">申请开票金额:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.requiredMoney"
+    							type="number">
+    					</div>
+    				</div>
+    				<div class="form-group">
+    					<label class="col-sm-3 control-label">开票需求说明:</label>
+    					<div class="col-sm-9">
+    						<input class="form-control" ng-model="invoice.invoiceExplain"
+    							type="text">
+    					</div>
+    				</div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" 
+                  ng-click="handleInvoiceApplyCancel()">取消</button>
+                <button type="button" class="btn btn-primary"
+                  ng-click="handleInvoiceApply()">确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- end 申请发票弹窗 -->
+</div>
+

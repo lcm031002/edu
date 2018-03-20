@@ -1,0 +1,66 @@
+<div class="report" ng-controller="report_gxhStudentStatusDetailController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">学生状态报表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                <rd-branch ng-bu-id="searchParam.p_bu_id"
+                           ng-branch-id="searchParam.p_branch_id">
+                    <div class="form-group">
+                        月份：<input type="text" class="Wdate cursor_pointer form-control"
+                                  onfocus="WdatePicker({dateFmt:'yyyy-MM'})"
+                                  ng-model="searchParam.p_year_month"
+                                  name="searchParam.p_year_month" id="searchParam.p_year_month" />
+                    </div>
+
+                    <span class="input-label">学管师姓名：</span>
+                    <input type="text" ng-model="searchParam.p_counselor_name" id="counselor_name" name="counselor_name"/>
+
+                    <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询
+                    </button>
+                    <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                </rd-branch>
+            </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel" style="overflow-x: auto;">
+        <table class="table table-stripped" style="width: 200em;">
+            <col width="60"/>
+            <col width="180"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>业务校区</th>
+                <th>学管师</th>
+                <th>年月</th>
+                <th>状态</th>
+                <th>年级</th>
+                <th>学生编码</th>
+                <th>学生姓名</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="dataList && dataList.length">
+                <td>{{$index + 1}}</td>
+                <td>{{data.branch_name}}</td>
+                <td>{{data.counselor_name}}</td>
+                <td>{{data.year_month}}</td>
+                <td>{{data.status_name}}</td>
+                <td>{{data.grade_name}}</td>
+                <td>{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

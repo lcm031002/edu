@@ -1,0 +1,110 @@
+<div class="erp scheduling-ydy-apply form"
+  ng-controller="erp_courseSchedulingYdyApplyAddController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">1对1新增排课申请</span>
+    </div>
+    <div class="panel-body  pb-0">
+      <kl-progress kl-current="curStep" kl-steps="steps"></kl-steps>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div ng-show="curStep==1">
+      <div class="form form-inline">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control" 
+              ng-model="stuSearchInfo.searchInfo"
+              placeholder="请输入关键字搜索"
+              ng-change="getStudentList()">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" ng-click="getStudentList()">
+                <i class="iconfont icon-search"></i>
+                搜索
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <table class="table table-stripped">
+        <thead>
+          <tr>
+            <th></th>
+            <th>学员姓名</th>
+            <th>学员编码</th>
+            <th>学管师</th>
+            <th>咨询师</th>            
+            <th>就读学校</th>
+            <th>年段</th>
+            <th>联系方式</th>
+            <th>剩余可排课时</th>
+            <th>所属校区</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="stu in studentList"
+            class="{{stu.course_schedule_count ? 'cur' : 'bg-gray'}}"
+            ng-hide="(selectedStudent.id && selectedStudent.id != stu.id) || !stu.course_schedule_count"
+            ng-click="onStudentCheckedChange(stu)">
+            <td>
+              <input type="checkbox" 
+                ng-true-value="true"
+                ng-false-value="false"
+                ng-change="onStudentCheckedChange(stu)"
+                ng-disabled="!stu.course_schedule_count"
+                ng-model="stu.checked">
+            </td>
+            <td>{{stu.student_name}}</td>
+            <td>{{stu.encoding}}</td>
+            <td class="{{!stu.learningmgr_name? 'text-dager':''}}">{{stu.learningmgr_name || '未指定'}}</td>
+            <td>{{stu.counselor_name || '未指定'}}</td>            
+            <td>{{stu.attend_school_name}}</td>
+            <td>{{stu.grade_name}}</td>
+            <td>{{stu.phone}}</td>
+            <td>{{stu.course_schedule_count}}</td>
+            <td>{{stu.branch_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-panel text-center">
+        <button 
+          class="btn btn-primary" 
+          ng-disabled="!selectedStudent.id || !selectedStudent.course_schedule_count"
+          ng-click="nextStep(1, 2)"
+        >下一步</button>
+      </div>
+      <div class="text-center">
+        <span class="text-danger">*注：灰色背景的学员剩余可排课时为0，不能进行排课！</span>
+      </div>
+    </div>
+
+    <!-- 第二步 学生档案模块 -->
+    <div ng-show="curStep==2" class="form">
+      <!-- 学生档案模块 -->
+      <klc-erp-course-stu-sched-base-info-analysis apply="apply"></klc-erp-course-stu-sched-base-info-analysis>
+      <div class="table-panel text-center">
+        <button class="btn btn-default" ng-click="nextStep(2, 1)" ng-disabled="optype=='edit'">上一步</button>
+        <button class="btn btn-primary" ng-click="nextStep(2, 3)">下一步</button>
+      </div>
+    </div>
+
+      <!-- 第三步 学员课程设计模块 -->
+    <div ng-show="curStep==3" class="form">
+      <klc-erp-course-stu-sched-base-info-plan apply="apply" student="selectedStudent"></klc-erp-course-stu-sched-base-info-plan>
+      <!-- <div ng-include="'templates/block/ydy-course-scheduling-plan.html'"></div> -->
+      <div class="table-panel text-center">
+          <button class="btn btn-default" ng-click="nextStep(3, 2)">上一步</button>
+          <button class="btn btn-primary" ng-click="nextStep(3, 4)">下一步</button>
+        </div>
+    </div>
+    <div ng-show="curStep==4">
+      <div class="text-center">
+        恭喜您，学生【{{apply.studentName}}】的排课申请完成
+      </div>
+      <div class="table-panel text-center">
+        <button class="btn btn-default" ng-click="newApply()">继续申请</button>
+        <button class="btn btn-primary" ng-click="goBack()">返回排课列表</button>
+      </div>
+    </div>
+  </div>
+</div>

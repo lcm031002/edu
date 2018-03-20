@@ -1,0 +1,23 @@
+<rd-modal ng-form="courseForm"> <rd-modal-title>订单解锁原因</rd-modal-title>
+<rd-modal-body>
+<div class="form-horizontal">
+	<div class="table-panel">
+		<table class="table table-striped" style="min-width: 800px;">
+			<thead>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">解锁原因：</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" rows="4"
+										ng-model="conf.remark"></textarea>
+								</div>
+				</div>
+			</thead>
+		</table>
+	</div>
+</div>
+</rd-modal-body> <rd-modal-footer>
+<button type="button" class="btn btn-default"
+	ng-click="handleModalCancel()">取消</button>
+<button type="button" class="btn btn-primary"
+	ng-click="handleModalConfirm()">确定</button>
+</rd-modal-footer> </rd-modal>

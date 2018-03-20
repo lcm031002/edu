@@ -1,0 +1,109 @@
+<div class="report {{loadStatues!=false?'':'min-width-1600'}}" ng-controller="report_accountFlowController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">账户流水表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar" style="width: 80vw;">
+                <div class="form form-inline">
+                    <div class="form-group m-0 mr-r20">
+                        <rd-date-picker-range 
+                            ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date" 
+                            ng-default-range="'today'">
+                        </rd-date-picker-range>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <!-- <span class="input-label">校区：</span> -->
+                        校区：
+                        <select class="form-control"
+                            ng-options="branch.id as branch.org_name for branch in branchList"
+                            ng-model="searchParam.p_branch_id">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        学员：
+                	    <input type="text" class="form-control" ng-model="searchParam.p_student_code" />
+                    </div>
+                	<div class="form-group">
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                        <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="3%"/>
+            <col width="8%"/>
+            <col width="11%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="6.5%"/>
+            <col width="6.5%"/>
+            <col width="10%"/>
+            <col width="5%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>校区</th>
+                <th>编码</th>
+                <th>姓名</th>
+                <th>储值</th>
+                <th>冻结</th>
+                <th>退费</th>
+                <th>储值</th>
+                <th>冻结</th>
+                <th>退费</th>
+                <th>储值</th>
+                <th>冻结</th>
+                <th>退费</th>
+                <th>收费方式</th>
+                <th>操作</th>
+                <th>操作时间</th>
+                <th>操作人</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="accountFlow in accountFlowList"
+                ng-if="!loadStatues && accountFlowList && accountFlowList.length">
+                <td class="word_break">{{$index + 1}}</td>
+                <td class="word_break">{{accountFlow.branch_name}}</td>
+                <td class="word_break">{{accountFlow.student_code}}</td>
+                <td class="word_break">{{accountFlow.student_name}}</td>
+                <td class="word_break">{{accountFlow.change_account_amount}}</td>
+                <td class="word_break">{{accountFlow.change_frozen_amount}}</td>
+                <td class="word_break">{{accountFlow.change_refund_amount}}</td>
+                <td class="word_break">{{accountFlow.before_account_amount}}</td>
+                <td class="word_break">{{accountFlow.before_frozen_amount}}</td>
+                <td class="word_break">{{accountFlow.before_refund_amount}}</td>
+                <td class="word_break">{{accountFlow.after_account_amount}}</td>
+                <td class="word_break">{{accountFlow.after_frozen_amount}}</td>
+                <td class="word_break">{{accountFlow.after_refund_amount}}</td>
+                <td class="word_break">{{accountFlow.charge_mode_name}}</td>
+                <td class="word_break">{{accountFlow.operate_type_name}}</td>
+                <td class="word_break">{{accountFlow.operate_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td class="word_break">{{accountFlow.operate_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (accountFlowList == null || accountFlowList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

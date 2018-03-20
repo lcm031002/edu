@@ -1,0 +1,101 @@
+<div ng-controller="erp_roomController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">教室管理</span></div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="addRoom()">
+                    <i class="fa fa-plus"></i>添加
+                </button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <form class="form-inline">
+                    <div class="form-group">
+                        校区：
+                        <select class="form-control" 
+                            ng-model="searchParam.p_branch_id" 
+                            ng-options="branch.id as branch.org_name for branch in branchList">
+                            <option value="">--全部--</option>
+                        </select>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="可输入教室编码,教室名称"
+                                   ng-model="searchParam.p_queryKey">
+                            <button class="btn btn-primary" ng-click="query()">搜索</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>操作</th>
+                <th>序号</th>
+                <th>校区名称</th>
+                <th>教室编码</th>
+                <th>教室名称</th>
+                <th>教室人数</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="room in roomList" 
+                ng-if="!loadStatues && roomList && roomList.length">
+                <td><a href="javascript:void(0);" ng-click="putRoom(room)">修改</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0);" ng-click="delRoom(room)">删除</a>&nbsp;&nbsp;</td>
+                <td>{{$index+1}}</td>
+                <td>{{room.branch_name}}</td>
+                <td>{{room.room_code}}</td>
+                <td>{{room.room_name}}</td>
+                <td>{{room.room_num}}</td>
+                <td>{{room.remark}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+    </div>
+    <script type="text/ng-template" id="room_modal.html">
+        <rd-modal>
+            <rd-modal-title>教室信息{{optype}}</rd-modal-title>
+            <rd-modal-body>
+                <form class="form-horizontal">
+                    <div class="form-group-inline">
+                        <label class="control-label col-sm-2">校区： </label>
+                        <div class="col-sm-4">
+                            <select class="form-control"
+                                    ng-model="roomDetail.branch_id"
+                                    ng-options="branch.id as branch.org_name for branch in branchList">
+                            </select>
+                        </div>
+                        <label class="control-label col-sm-2">教室编码：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model='roomDetail.room_code'>
+                        </div>
+                        <label class="col-sm-2 control-label">教室名称：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="roomDetail.room_name" required
+                                   ng-required/>
+                        </div>
+                        <label class="col-sm-2 control-label">教室人数：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="roomDetail.room_num" required
+                                   ng-required/>
+                        </div>
+                        <label class="col-sm-2 control-label">备注：</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" ng-model="roomDetail.remark"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </rd-modal-body>
+            <rd-modal-footer>
+                <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+                <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+            </rd-modal-footer>
+        </rd-modal>
+    </script>
+</div>

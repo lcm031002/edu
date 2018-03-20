@@ -1,0 +1,89 @@
+{
+    "name": "外账系统",
+    "key": "pubproject",
+    "version": "0.0.1",
+    "models_path": "F\:\\MeWorkSpace\\com.ebusiness.pubproject\\src\\main\\webapp\\excels\\models\\",
+    "input_path": "F\:\\MeWorkSpace\\com.ebusiness.pubproject\\src\\main\\webapp\\excels\\input\\",
+	"output_path": "F\:\\MeWorkSpace\\com.ebusiness.pubproject\\src\\main\\webapp\\excels\\output\\",
+    "models":[
+    	{
+    		"id":"orders_01",
+    		"name":"报班单批注",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.Orders01",
+    		"modelFile":"orders_01.xls"
+    	},
+    	{
+    		"id":"recharges_01",
+    		"name":"充值单批注",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelRecharges",
+    		"modelFile":"recharges_01.xls"
+    	},
+    	{
+    		"id":"outExcelNewRetreatTurn",
+    		"name":"报表报班退费转班",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelNewRetreatTurn",
+    		"modelFile":"newRetreatTurn_01.xls"
+    	
+    	},
+    	{
+    		"id":"outExcelLeftcoursetimes",
+    		"name":"报表剩余课时费用",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelLeftcoursetimes",
+    		"modelFile":"excelLeftcoursetimes.xls"
+    		
+    	},
+    	{
+    		"id":"outExcelAccountbalance",
+    		"name":"报表账户余额",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelAccountbalance",
+    		"modelFile":"excelAccountbalance.xls"
+    	
+    	},
+    	{
+    		"id":"outExcelAccomplishmentdetail",
+    		"name":"报表业绩明细",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelAccomplishmentdetail",
+    		"modelFile":"excelAccomplishmentdetail.xls"
+    	
+    	},
+    	{
+    		"id":"outExcelCountaccomplishmenteveryday",
+    		"name":"报表业绩总表",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelCountaccomplishmenteveryday",
+    		"modelFile":"excelCountaccomplishmenteveryday.xls"
+    	
+    	},
+    	{
+    		"id":"outExcelRechargeandenchashment",
+    		"name":"报表充值取款",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelRechargeandenchashment",
+    		"modelFile":"excelRechargeandenchashment.xls"
+    	
+    	},
+    	{
+    		"id":"outExcelAccountdaybooks",
+    		"name":"报表账户流水",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelAccountdaybooks",
+    		"modelFile":"excelAccountdaybooks.xls"
+    	
+    	},
+    	{
+    		"id":"outExcelAttendanceconsume",
+    		"name":"报表考勤消耗",
+    		"desc":"描述信息",
+    		"handler":"com.modules.excels.ExcelAttendanceconsume",
+    		"modelFile":"excelAttendanceconsume.xls"
+    	
+    	}
+    ]
+}
+

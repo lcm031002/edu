@@ -1,0 +1,141 @@
+<div class="report min-width-1100" ng-controller="report_alStudentStatusController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title" ng-if="alSub">艾伦学生状态报表</span>
+            <span class="title" ng-if="!alSub">
+                <span class="cur text-primary" ng-click="showBack()">&lt; 返回</span> | 艾伦学生{{sutdentStatus}}报表
+            </span>
+        </div>
+        <div class="panel-body" style="width:80vw;" ng-if="alSub">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id"
+                               ng-branch-id="searchParam.p_branch_id">
+                        <div class="form-group">
+                            <span class="required">月份:</span>
+                            <input type="text" class="Wdate cursor_pointer form-control"
+                                   onfocus="WdatePicker({dateFmt:'yyyy-MM'})"
+                                   ng-model="searchParam.p_year_month"
+                                   name="p_year_month" id="p_year_month"/>
+                        </div>
+
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                        <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </rd-branch>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel" ng-if="alSub">
+        <table class="table table-stripped">
+            <col width="60"/>
+            <col width="180"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>业务校区</th>
+                <th>年月</th>
+                <th>预报名</th>
+                <th>新生</th>
+                <th>在读</th>
+                <th>有来未缴</th>
+                <th>流失</th>
+                <th>沉睡</th>
+                <th>搬家</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1}}</td>
+                <td>{{data.branchName}}</a></td>
+                <td>{{data.changeTime}}</td>
+                <td ng-click="openDetails(data,1)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.predictionNum}}
+                </td>
+                <td ng-click="openDetails(data,7)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.newNum}}
+                </td>
+                <td ng-click="openDetails(data,3)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.readingNum}}
+                </td>
+                <td ng-click="openDetails(data,5)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.notpayNum}}
+                </td>
+                <td ng-click="openDetails(data,8)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.lossNum}}
+                </td>
+                <td ng-click="openDetails(data,4)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.sleepNum}}
+                </td>
+                <td ng-click="openDetails(data,6)" 
+                    class="{{data.branchName == '合计'? '':'cursor_pointer text-primary'}}">
+                    {{data.moveNum}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+    <div class="table-panel" ng-if="!alSub">
+        <table class="table table-stripped">
+            <col width="60" />
+            <col width="180" />
+            <col width="90" />
+            <col width="90" />
+            <col width="90" />
+            <col width="90" />
+            <col width="90" />
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>校区</th>
+                    <th>学员编号</th>
+                    <th>姓名</th>
+                    <th>学员状态</th>
+                    <th>咨询师</th>
+                    <th>学管师</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in detailsList" ng-if="!loadStatues && detailsList && detailsList.length">
+                    <td>{{$index + 1}}</td>
+                    <td>{{data.branchName}}</td>
+                    <td>{{data.studentEcoding}}</td>
+                    <td>{{data.studentName}}</td>
+                    <td>{{data.studentStatus}}</td>
+                    <td>{{data.counselorName}}</td>
+                    <td>{{data.learningmgrName}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (detailsList == null || detailsList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

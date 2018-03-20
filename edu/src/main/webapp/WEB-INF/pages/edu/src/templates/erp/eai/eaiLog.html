@@ -1,0 +1,88 @@
+<div ng-controller="erp_eaiLogController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">接口日志管理</span></div>
+		<div class="panel-body operation-panel">
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						<div class="form-group">
+							类型：<select class="form-control" 
+							ng-model="searchParam.log_type"
+							ng-options="logType.key as logType.value for  logType in logTypeList"></select>
+						</div>
+						<div class="form-group" ng-if="searchParam.log_type == 3">
+							双师接口：<select class="form-control"
+												 ng-model="searchParam.method"
+												 ng-options="mtMethod.key as mtMethod.value for  mtMethod in mtMethodList"></select>
+						</div>
+						<div class="form-group">
+							来源系统：<select class="form-control" 
+							ng-model="searchParam.source_sys"
+							ng-options="sys.key as sys.value for  sys in sysList"></select>
+						</div>
+						<div class="form-group">
+							导入系统：<select class="form-control" 
+							ng-model="searchParam.in_sys"
+							ng-options="sys.key as sys.value for  sys in sysList"></select>
+						</div>
+						<div class="form-group">
+							状态：<select class="form-control" 
+							ng-model="searchParam.status"
+							ng-options="status.key as status.value for  status in statusList"></select>
+						</div>
+						<div class="form-group">
+							<input class="form-control" ng-model="searchParam.search_info" placeholder="业务ID、编码"></input>
+						</div>
+						<button class="btn btn-primary" ng-click="handleQueryLog()"><i class="fa fa-search"></i>  搜索</button>
+					</div>
+					
+					<hr>
+						<div class="toolbar">
+							<button class="btn btn-primary btn-circle"
+								ng-click="handleSendData()">
+								<i class="fa fa-plus"></i>重发
+							</button>
+						</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel ov-a">
+		<table class="table table-striped min-width-1200">
+			<col width="2%" />
+			<col width="7%" />
+			<col width="7%" />
+			<col width="5%" />
+			<col width="32%" />
+			<col width="30%" />
+			<col width="7%" />
+			<col width="10%" />
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="checkAllFlag" ng-click="onCheckAll()"></th>
+					<th>接口类型</th>
+					<th>来源系统</th>
+					<th>导入系统</th>
+					<th>发送数据内容</th>
+					<th>返回数据内容</th>
+					<th>状态</th>
+					<th>创建时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="eaiLog in eaiLogList"
+					ng-if="eaiLogList && eaiLogList.length">
+					<td><input type="checkbox" ng-model="eaiLog.selectFlag" ng-click="onLogChecked(eaiLog)"></td>
+					<td class='hide'>{{eaiLog.id}}</td>
+					<td>{{eaiLog.log_type}}</td>
+					<td>{{eaiLog.source_sys}}</td>
+					<td>{{eaiLog.in_sys}}</td>
+					<td class="word_break">{{eaiLog.send_data}}</td>
+					<td class="word_break">{{eaiLog.back_data}}</td>
+					<td>{{eaiLog.status==0?'同步失败':'同步成功'}}</td>
+					<td>{{eaiLog.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+</div>

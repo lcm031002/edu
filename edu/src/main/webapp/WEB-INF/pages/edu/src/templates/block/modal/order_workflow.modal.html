@@ -1,0 +1,12 @@
+<!-- Teacher Group Modal -->
+<rd-modal ng-form="form" id="orderWorkflowPanel">
+  <rd-modal-title>流程图</rd-modal-title>
+  <rd-modal-body>
+    <div style="position:relative;width:100%;height:620px;background-color:#fff;background-image: url(/erp{{taskDetail.task_png}});background-repeat: no-repeat;">
+        <div style="position:absolute;border:2px solid red;left:{{taskDetail.activityCoordinates.x}}px;top:{{taskDetail.activityCoordinates.y}}px;width:{{taskDetail.activityCoordinates.width}}px;height:{{taskDetail.activityCoordinates.height}}px;"/>
+    </div>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">关闭</button>
+  </rd-modal-footer>
+</rd-modal>

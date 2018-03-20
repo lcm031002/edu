@@ -1,0 +1,274 @@
+<div ng-controller="erp_delayCourseController">
+	<div class="panel panel-primary" style="margin-bottom: 20px">
+		<div class="panel-heading">
+			<span class="title">延课申请</span>
+		</div>
+		<div class="panel-body pb-0">
+			<kl-progress kl-current="currentStep" kl-steps="steps"></kl-progress>
+		</div>
+	</div>
+	<div class="panel panel-primary" ng-show="currentStep == 1" style="margin-bottom: 0px;">
+		<div class="panel-heading">
+			<span class="title">第一步：选择课程</span>
+		</div>
+		<div class="panel-body operation-panel" >
+			<div class="searchbar">
+				<div class="form form-inline">
+					<div class="form-group">
+						<span class="input-label">校区：</span>
+						<select class="form-control"
+							ng-model="searchParam.branchId"
+							ng-options="branch.id as branch.org_name for branch in branchList">
+							</select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">课程季：</span>
+						<select class="form-control"
+							ng-model="searchParam.seasonId"
+							ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">年级：</span>
+						<select class="form-control"
+							ng-model="searchParam.gradeId"
+							ng-options="grade.id as grade.grade_name for grade in gradeList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">科目：</span>
+						<select class="form-control"
+							ng-model="searchParam.subjectId"
+							ng-options="subject.id as subject.name for subject in subjectList">
+							<option  value="">-- 全部 --</option></select>
+					</div>					
+					<br class="content_br">                                                 					
+					<div class="form-group">
+						<span class="input-label">教师：</span>
+						<input type="text" class="form-control" placeholder="可输入教师编码,教师名称"
+							ng-model="searchParam.teacherSearchInfo" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<span class="input-label">课程：</span>
+						<input type="text" class="form-control" placeholder="可输入课程编码,课程名称"
+							ng-model="searchParam.courseSearchInfo" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<span class="input-label required">延课日期：</span>
+						<rd-date-picker-popup ng-model="searchParam.delayCourseDateString" name="delayCourseDateString"></rd-date-picker-popup>
+					</div>
+					<button class="btn btn-primary" ng-click="query()">搜索</button>
+				</div>
+				<div class="toolbar ml-50">
+					<button class="btn btn-primary btn-circle" ng-click="goDelayCourseInfo()">
+						<!-- <i class="iconfont icon-add"></i>  -->
+						生成延课单
+					</button>
+				</div>
+			</div>
+			<div class="table-panel">
+				<div class="ov-a">
+					<table class="table table-stripped min-width-1600">
+						<thead>
+							<tr>
+								<th>
+									<input type="checkbox" ng-model="checkAllFlag" ng-click="onCheckAll()">
+								</th>
+								<th>操作</th>
+								<th>课程名称</th>
+								<th>课程编码</th>
+								<th>校区</th>
+								<th>课程季</th>
+								<th>年级</th>
+								<th>科目</th>
+								<th>教师</th>
+								<th>开课日期</th>
+								<th>结课日期</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="course in courseList" 
+							    ng-if="!loadStatues && courseList && courseList.length">
+								<td>
+									<input type="checkbox" ng-model="course.selectFlag" ng-click="onCourseChecked(course)">
+								</td>
+								<td>
+									<button class="btn btn-primary btn-xs" ng-click="querycourseSchedullingChangeInfo(course.courseId,course.courseTime)">延课变动</button>
+								</td>
+								<td>{{course.courseName}}</td>
+								<td>{{course.courseNo}}</td>
+								<td>{{course.branchName}}</td>
+								<td>{{course.courseSeasonName}}</td>
+								<td>{{course.gradeName}}</td>
+								<td>{{course.subjectName}}</td>
+								<td>{{course.teacherName}}</td>
+								<td>{{course.startDate | date:'yyyy-MM-dd'}}</td>
+								<td>{{course.endDate | date:'yyyy-MM-dd'}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="text-center" ng-if="loadStatues">
+						<img src="img/erp/loading2.gif">
+					</div>
+					<div class="text-center" ng-if="!loadStatues && (courseList == null || courseList.length == 0)">
+						<div class="no-data"></div>
+						暂无数据
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-primary" ng-show="currentStep == 2" style="margin-bottom: 0px;">
+		<div class="panel-heading">
+			<span class="title">第二步：延课清单</span>
+		</div>
+		<div class="panel-body operation-panel" >
+			<div class="table-panel">
+				<div>
+					<p><h4>订单信息</h4></p>
+					<div style="padding:10px 30px;">
+						<div class="col-sm-2">
+							制单人：{{currentPeple}}
+						</div>
+						<div class="col-sm-2">
+							制单日期：{{currentDate}}
+						</div>
+						<div class="col-sm-2">
+							延课日期：{{searchParam.delayCourseDateString}}
+						</div>
+						<div class="col-sm-2">
+							延课数量：{{selectedCourseList.length}}
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div><p><h4>订单详情</h4></p></div>
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>操作</th>
+						<th>课程名称</th>
+						<th>课程编码</th>
+						<th>校区</th>
+						<th>延课课次</th>
+						<th>延课前上课日期</th>
+						<th>延课后上课日期</th>
+						<th>开课日期</th>
+						<th>结课日期</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="course in selectedCourseList"
+						ng-if="selectedCourseList && selectedCourseList.length">
+						<td><button class="btn btn-primary btn-xs"  ng-click="showCourseSchedullingChangeInfo(course)" >详情</button></td>
+						<td>{{course.courseName}}</td>
+						<td>{{course.courseNo}}</td>
+						<td>{{course.branchName}}</td>
+						<td>{{course.courseTime}}</td>
+						<td>{{course.courseDateBeforeDelay}}</td>
+						<td>{{course.courseDateAfterDelay}}</td>
+						<td>{{course.startDate | date:'yyyy-MM-dd'}}</td>
+						<td>{{course.endDate | date:'yyyy-MM-dd'}}</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div align="center" class="mb15">
+				<button type="button" class="btn btn-default mr-10 w-200" ng-click="back()">上一步</button>
+				<button type="button" class="btn btn-primary mr-10 w-200" ng-click="showReasonInputDialog()">确认提交</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-primary" ng-show="currentStep == 3" style="margin-bottom: 0px;">
+		<div class="panel-heading">
+			<span class="title">第三步：延课完成</span>
+		</div>
+		<div class="panel-body operation-panel h-400 text-center pt-100">
+			<i class="iconfont icon-public_succeed i-text-warning" style="font-size:80px;"></i>
+			<div class="mt-t20">延课申请完成</div>
+			<button class="btn btn-default mt-50"  ng-click = "backForDelayCourse()">返回</button>
+			<button class="btn btn-primary mt-50"  ng-click = "queryDelayReocedCourseDetail()">查看延课单</button>
+		</div>
+	</div>
+
+	<div id="delayCourseViewcourseSchedullingChangeInfo" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" style="border:solid 1px;width:550px">
+				<div class="modal-header" style="background-color:#1b8cf2;text-align: center">
+					<h4 class="modal-title" style="color:#ffffff;">延课变动
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+						</button>
+					</h4>
+				</div>
+				<div class="modal-body" style="height:400px; overflow-y:auto;padding :15px 15px 0;">
+					<div class="col-sm-6" style="padding-right: 10px;">
+						<p style="font-size:14px">当前排课详情</p>
+						<table class="table table-hover" style="width:235px;border:solid 1px #ddd;text-align: center">
+							<thead style="background-color:#dfdfdf">
+							<tr>
+								<td>课次</td>
+								<td>上课时间</td>
+							</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="courseSchedullingChangeInfo in courseSchedullingChangeInfoList" style="color:{{courseSchedullingChangeInfo.delayCourseTime?'red':'black'}}">
+								<td>{{courseSchedullingChangeInfo.courseTime}}</td>
+								<td>{{courseSchedullingChangeInfo.courseDateBeforeDelay}}</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-sm-6" style="padding-left:10px;">
+						<p style="font-size:14px">延课后排课详情</p>
+						<table class="table table-hover" style="width:235px;border:solid 1px #ddd;text-align: center">
+							<thead style="background-color:#dfdfdf">
+							<tr>
+								<td>课次</td>
+								<td>上课时间</td>
+							</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="courseSchedullingChangeInfo in courseSchedullingChangeInfoList" style="color:{{courseSchedullingChangeInfo.delayCourseTime?'red':'black'}}">
+								<td>{{courseSchedullingChangeInfo.courseTime}}</td>
+								<td>{{courseSchedullingChangeInfo.courseDateAfterDelay}}</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div style="text-align: left"><span>备注：红色部分为发生延课的课次</span></div>
+					<button type="button" class="btn btn-primary center-block" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.modal -->
+
+	<!-- 输入延课原因框 -->
+	<div id="delayCourseInputReason" class="modal fade" tabindex="-1" role="dialog" style="z-index: 1049">
+		<div class="modal-dialog" role="document" style="width: 300px;">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color:#1b8cf2;text-align: center">
+					<h4 class="modal-title" style="color:#ffffff;">延课原因
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span>
+						</button>
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div><span class="text-danger">*</span><span>延课原因</span></div>
+					<div style="padding-top: 10px">
+						<textarea style="width:265px;height:90px;" ng-model = "delayReason"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer " style="text-align: center">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary" ng-click="delayCourseBatch()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.modal -->
+</div>

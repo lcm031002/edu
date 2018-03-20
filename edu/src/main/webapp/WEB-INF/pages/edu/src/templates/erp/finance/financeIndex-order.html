@@ -1,0 +1,104 @@
+<div ng-controller="erp_FinanceOrderController">
+	<div class="panel panel-default" style="margin-bottom: 10px;">
+		<div class="panel-heading font-bold">订单单据</div>
+		<div class="panel-body" style="padding: 15px;">
+			<form class="ng-pristine ng-valid" role="form">
+				<div class="col-lg-2">
+					<div class="form-group">
+						<div class="input-group col-sm-12 ">
+							<input type="text" autocomplete="off" id="order_no" placeholder="请输入订单编号" ng-model="order_no" class="form-control" />
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2">
+					<div class="form-group">
+					    <label class="col-sm-5 control-label">业务模式：</label>
+						<div class="input-group col-sm-3 ">
+							<select class="form-control" style="width:100px;"  ng-model="business_type">
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="1">班级课</option>
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="2">一对一</option>
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="3">晚辅导</option>
+	                        </select>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-2">
+					<div class="form-group">
+					    <label class="col-sm-5 control-label">订单类型：</label>
+						<div class="input-group col-sm-3 ">
+							<select class="form-control" style="width:100px;" ng-model="order_type">
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="1">原单</option>
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="2">赠单</option>
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="3">转班单</option>
+	    	                   <option ng-click="pageQuery(pageNo)" class="ng-binding ng-scope" value="4">续单</option>
+	                        </select>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-1" align="center">
+					<button type="submit" class="btn btn-default"
+						ng-click="searchOrder()">查询</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!--main form end-->
+	<div>
+		<table class="table table-striped table-hover table-bordered">
+			<tr>
+				<th>订单ID</th>
+				<th>订单编号</th>
+				<th>订单类型</th>
+				<th>学生姓名(ID)(编号)</th>
+				<th>折扣前总金额</th>
+				<th>折扣后总金额</th>
+				<th>业务模式</th>
+				<th>操作员</th>
+				<th>创建时间</th>
+			</tr>
+			
+			<tr ng-repeat="order in orderList" ng-if="orderList && orderList">
+				<td>{{order.ORDERID}}</td>
+				<td>{{order.ORDERNO}}</td>
+				<td>{{order.ORDERTYPE}}</td>
+				<td>{{order.STUDENTINFO}}</td>
+				<td>{{order.FEEAMOUNT}}</td>
+				<td>{{order.ACTURALAMOUNT}}</td>
+				<td>{{order.BUSINESSTYPE}}</td>
+				<td>{{order.EMPLOYEENAME}}</td>
+				<td>{{order.CREATEDATE}}</td>
+			</tr>
+			
+			<tr ng-if="!orderList || !orderList.length">
+				<td colspan="9" style="text-align: center; color: red">暂无数据</td>
+			</tr>
+
+			<tr ng-if="isLoading == 'loading...'">
+				<td colspan="9" align="center"><img
+					src="img/icons/big_load.gif"></td>
+			</tr>
+		</table>
+		<div class="col-md-4 col-md-offset-8" ng-if="pageParam.totalPage>=1">
+			<ul class="pagination">
+				<li ng-model="pageParam.currentPage" ng-if="pageParam.totalPage>=1"
+					ng-click="queryOrder(1)" style="cursor:pointer"><span>首页</span></li>
+				<li ng-if="pageParam.currentPage>1"
+					ng-click="queryOrder(pageParam.currentPage-1)" style="cursor:pointer"><span>上一页</span></li>
+				<li ng-repeat="i in paginationBars track by $index"
+					class="{{ i==pageParam.currentPage ? 'active':'' }}"><span
+					ng-click="queryOrder(i)">{{i}}</span></li>
+				<li ng-model="queryOrder.currentPage"
+					ng-if="pageParam.currentPage<pageParam.totalPage" style="cursor:pointer"
+					ng-click="queryOrder(pageParam.currentPage+1)"><span>下一页</span></li>
+				<li ng-model="pageParam.totalPage" ng-click="queryOrder(pageParam.totalPage)" style="cursor:pointer">
+					<span>尾页</span>
+				</li>
+				<li>
+				<span>
+					每页{{pageParam.pageSize}}条&nbsp;&nbsp;共{{pageParam.totalPage}}页 
+				</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

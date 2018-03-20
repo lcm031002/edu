@@ -1,0 +1,34 @@
+<div class="components sched-time-table">
+  <table class="table table-bordered stu-sched" style="width:auto;">
+      <thead>
+        <tr>
+          <th>时间</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(0)">周六</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(1)">周日</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(2)">周一</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(3)">周二</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(4)">周三</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(5)">周四</th>
+          <th class="{{$ctrl.readOnly?'':'cur'}}" ng-click="setAllTimesIdle(6)">周五</th>
+        </tr>
+        <tr ng-repeat="time in stuSchedTimeList track by $index">
+          <td style="border-bottom-width: 1px;">{{time.startTime}}-{{time.endTime}}</td>
+          <td ng-repeat="idle in time.idles track by $index"
+            class="{{idle=='Y'?'idle':'not-idle'}} {{$ctrl.readOnly?'':'cur'}}"
+            ng-click="reverseIdle(time, $index)">
+          </td>
+        </tr>
+      </thead>
+    </table>
+    <span class="text-warning">
+        注：申请时段在课表中标注，蓝色代表空闲。<span ng-hide="$ctrl.readOnly">
+          点击【周几】可选择全列。
+        </span>
+    </span>
+</div>
+<style>
+.components.sched-time-table table.stu-sched td.idle {
+  border-bottom-width: 0;
+  background-color: rgba(27, 140, 242, 0.60);
+}
+</style>

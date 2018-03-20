@@ -1,0 +1,111 @@
+<div ng-controller="erp_courseSchedulingYdyMatchController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">1对1师生匹配</span>
+    </div>
+    <div class="panel-body">
+      <div class="search-panel">
+        <div class="form form-inline">
+          <div class="form-group m-0">
+            <rd-date-picker-range 
+              ng-start-date="searchParam.beginDateFrom" 
+              ng-end-date="searchParam.beginDateTo" 
+              ng-default-range="'curMonth'"
+              ng-date-change="onDateRangeChange()">
+            </rd-date-picker-range>
+          </div>
+        </div>
+        <div class="form form-inline">
+          <div class="form-group">
+              <span class="input-label ng-binding">申请种类：</span>
+              <kl-dict-select  dict-type="'schedApplyType'" bind-data="searchParam.applyType"></kl-dict-select>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">当前处理人：</span>
+            <select ng-model="searchParam.curEmployeeId" class="form-control" ng-options="item.employeeId as item.employeeName for item in arrangerList">
+              <option value="">全部</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">团队：</span>
+            <kl-bu-select bu-id="searchParam.buId"></kl-bu-select>
+          </div>
+          <br class="content_br">
+          <div class="form-group">
+            <span class="input-label ng-binding">校区：</span>
+            <kl-branch-select bu-id="searchParam.buId" branch-id="searchParam.branchId"></kl-branch-select>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">待排科目：</span>
+            <kl-subject-select subject-id="searchParam.subjectId"></kl-subject-select>
+          </div>
+          <div class="form-group">
+            <span class="input-label ng-binding">单据状态：</span>
+            <select ng-model="searchParam.status" class="form-control" ng-options="item.code as item.name for item in applyStatusList"></select>
+            <button class="btn btn-primary iconfont icon-search" ng-click="getList()"> 查询</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="ov-a">
+      <table class="table table-stripped min-width-1650">
+        <thead>
+          <tr>
+            <th width = "95px;">操作</th>
+            <th width = "80px">单据状态</th>
+            <th width = "95px">开课时间</th>
+            <th width = "120px;">学生姓名</th>
+            <th width = "145px">上课地点</th>
+            <th width = "120px">学管师</th>
+            <th width = "120px">咨询师</th>
+            <th width = "70px">年级</th>
+            <th width = "130px">科目</th>
+            <th width = "80px">待排科目</th>
+            <th width = "120px">当前处理人</th>
+            <th width = "75px">申请类型</th>
+            <th width = "120px">申请单据</th>
+            <th width = "95px">申请时间</th>
+            <th width = "120px">操作人</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in applyList"
+            ng-if="!loadStatues && applyList && applyList.length">
+            <td>
+               <!-- 待匹配、匹配中、有压单等状态，匹配按钮可用 -->
+                <button class="btn btn-primary btn-xs" 
+                ng-show="item.status == 1 || item.status == 2 || item.status == 4"
+                ng-click="doMatch(item)" 
+                ng-disabled="{{(item.courseArrangerEmpId && item.courseArrangerEmpId==curEmployeeId)?'false':'true'}}">
+                  匹配
+                </button>
+                <button class="btn btn-primary btn-xs" ng-click="viewDetail(item)">详情</button>
+            </td>
+            <td class="{{applyStatus[item.status].cls}}">{{item.statusName}}</td>
+            <td>{{item.beginDate | date: 'yyyy-MM-dd'}}</td>
+            <td>{{item.studentName}}</td>
+            <td>{{item.classPlace}}</td>
+            <td>{{item.courseAdmin}}</td>
+            <td>{{item.counselor}}</td>
+            <td>{{item.stuGradeName}}</td>
+            <td>{{item.subjectName}}</td>
+            <td>{{item.schedulableSubjectName}}</td>
+            <td>{{item.courseArranger}}</td>
+            <td>{{item.applyTypeName}}</td>
+            <td>{{item.encoding}}</td>
+            <td>{{item.create_time | date: 'yyyy-MM-dd'}}</td>
+            <td>{{item.create_user_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center" ng-if="loadStatues">
+          <img src="img/erp/loading2.gif">
+       </div>
+    </div>
+    <div class="table-panel">
+      <ng-pagination conf="pageConf" ng-if="!loadStatues"></ng-pagination>
+    </div>
+  </div>
+</div>

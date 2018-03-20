@@ -1,0 +1,21 @@
+{
+    "error": false,
+    "message": "info",
+    "path":"D:/workspace/FEoSA/src/main/webapp/workflow/jpdl",
+    "data":[
+        {
+            "process_name":"请假流程",
+            "process_message":"这是一个请假流程，由业务部门发起，需要由财务进行审批处理。",
+            "process_id":"com.process.audit",
+            "process_jpdl":"leave.jpdl.xml",
+            "process_img":"leave.png"
+        },
+        {
+            "process_name":"监控点审核流程",
+            "process_message":"这个是一个审核的流程，也是由业务部门进行审批。",
+            "process_id":"com.process.notaudit",
+            "process_jpdl":"alertline_audit.jpdl.xml",
+            "process_img":"alertline_audit.png"
+        }
+    ]
+}

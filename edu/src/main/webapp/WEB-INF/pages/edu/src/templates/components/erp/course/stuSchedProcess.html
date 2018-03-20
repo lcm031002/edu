@@ -1,0 +1,89 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <span class="title">
+      <span class="text-primary cur" ng-click="$ctrl.onGoBack()">< 返回</span>
+      1对1排课处理
+    </span>
+  </div>
+  <div class="panel-body">
+    <uib-tabset>
+      <uib-tab index="0" heading="排课处理">
+        <div class="table-panel">
+          <h3>学员订单</h3><hr>
+          <!-- 学员订单 -->
+          <klc-erp-course-stu-order-list student-id="apply.studentId"
+            is-all-branch="1"
+            on-checked="checkedOrders = orders"></klc-erp-course-stu-order-list>
+          <!-- 初步排课意向 -->
+          <h3>学员排课意向</h3><hr>
+          <klc-erp-course-stu-sched-plan-list 
+            apply-id="apply.id"
+            show-operator-btn = "false"
+            on-item-click="hanldeSchedPlanListClick(item)">
+          </klc-erp-course-stu-sched-plan-list>
+          <p class="text-warning">
+            *注意：请先点击上面的正常排课的记录，再进行排课
+          </p>
+          <h3>学员排课</h3>
+          <hr>
+          <uib-tabset>
+            <uib-tab index="0" heading="按时间排课">
+              <klc-erp-course-stu-sched-by-time
+                order-list="checkedOrders"
+                apply-item="checkApplyPlanItem"
+                student-id="apply.studentId"
+                student-counselors="studentCounselors"
+                on-sched-success="onSchedSuccess()">
+              </klc-erp-course-stu-sched-by-time>
+            </uib-tab>
+            <!-- <uib-tab index="1" heading="按期排课">
+              <klc-erp-course-stu-sched-by-period>
+              </klc-erp-course-stu-sched-by-period>
+            </uib-tab> -->
+          </uib-tabset>
+          <h3>排课结果</h3><hr>
+          <div class="table-panel">
+            <button class="btn btn-primary mb5"
+                ng-click="getSchedListByApplyId()">
+                <i class="iconfont icon-refresh"></i>刷新</button>
+            <table class="table table-striped">
+              <tr>
+                <th>课程名称</th>
+                <th>校区</th>
+                <th>上课日期</th>
+                <th>上课时间</th>
+                <th>下课时间</th>
+                <th>老师名称</th>
+                <th>老师编码</th>
+                <th>科目</th>
+                <th>考勤状态</th>
+                <th>备注</th>
+              </tr>
+              <tr ng-repeat="item in scheduledList">
+                <td>{{item.course_name}}</td>
+                <td>{{item.branch_name}}</td>
+                <td>{{moment(item.course_date, 'YYYYMMDD').format('YYYY-MM-DD')}}</td>
+                <td>{{item.start_time}}</td>
+                <td>{{item.end_time}}</td>
+                <td>{{item.attTeacherName}}</td>
+                <td>{{item.teacher_no}}</td>
+                <td>{{item.subject_name}}</td>
+                <td>{{item.attend_type_name || '未考勤'}}</td>
+                <td>{{item.remark}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab index="1" heading="课程设计模块">
+        <klc-erp-course-stu-sched-base-info-plan apply="apply" read-only="true">
+        </klc-erp-course-stu-sched-base-info-plan>
+      </uib-tab>
+      <uib-tab index="2" heading="学生档案模块">
+        <klc-erp-course-stu-sched-base-info-analysis apply="apply" read-only="true">
+        </klc-erp-course-stu-sched-base-info-analysis>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+
+</div>

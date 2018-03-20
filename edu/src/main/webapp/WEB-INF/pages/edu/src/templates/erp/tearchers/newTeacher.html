@@ -1,0 +1,143 @@
+<div ng-controller="erp_NewTeacherController" ng-click="searchResult=[]">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading"><span class="title">教师录入</span></div>
+    <div class="panel-body">
+      <form class="form-horizontal" name="teacherForm" role="form" style="color: #483D8B;margin-top:5px">
+        <div class="hide">
+          <input type="text" class="form-control" ng-model="newTeacher.employee_id" />
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>关联员工：</label>
+          <div class="col-sm-2">
+            <klc-teacher-typeahead employee-id="newTeacher.employee_id" employee-name="newTeacher.employee_name" encoding="newTeacher.encoding"
+              teacher-type="4"></klc-teacher-typeahead>
+          </div>
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>教师编码：</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" ng-model="newTeacher.encoding" required />
+          </div>
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>教师姓名：</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" ng-model="newTeacher.teacher_name" required />
+          </div>
+          <label class="col-sm-1 control-label">教师昵称：</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" ng-model="newTeacher.nickname" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">教师年龄：</label>
+          <div class="col-sm-2">
+            <input type="number" class="form-control" ng-model="newTeacher.teacher_age" />
+          </div>
+          <label class="col-sm-1 control-label">教师教龄：</label>
+          <div class="col-sm-2">
+            <input type="number" class="form-control" ng-model="newTeacher.seniority" />
+          </div>
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>教师身份：</label>
+          <div class="col-sm-2">
+            <select class="form-control" ng-model="newTeacher.teacher_type" required ng-options="teacherType.code as teacherType.name for teacherType in teacherTypeList">
+            </select>
+          </div>
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>教师状态：</label>
+          <div class="col-sm-2">
+            <select class="form-control" ng-model="newTeacher.status" required ng-options="status.code as status.name for status in statusList">
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>性别：</label>
+          <div class="col-sm-2">
+            <select class="form-control" ng-model="newTeacher.sex" required ng-options="gender.code as gender.name for gender in genderList">
+            </select>
+          </div>
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>联系方式：</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" name="teacher_phone"ng-model="newTeacher.phone" ng-pattern="/^1(3|4|5|7|8)\d{9}$/" required />
+            <div ng-messages="teacherForm.teacher_phone.$error">
+              <p ng-message="pattern" style="color: red">请输入正确的电话/手机号码</p>
+            </div>
+          </div>
+          <label class="col-sm-1 control-label"><span class="text-danger">*</span>是否兼职：</label>
+          <div class="col-sm-2">
+            <select class="form-control" ng-model="newTeacher.is_pluralistic" ng-options="partTime.code as partTime.name for partTime in partTimeList">
+            </select>
+          </div>
+          <label class="col-sm-1 control-label">邮箱：</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" ng-model="newTeacher.email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label mb-10"><span class="text-danger">*</span>所属团队：</label>
+          <div class="col-lg-2 col-sm-5 mb-10">
+            <div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
+              <span ng-click="removeTeam(team)" class="btn btn-default btn-xs" ng-repeat="team in selTeamList" style="margin: 5px;">
+                {{team.org_name}}<i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+                </span>
+            </div>
+            <div class="form-horizontal  mt10 pos-r">
+              <input type="text" class="form-control" placeholder="输入要查询的团队名称" ng-model="teamSearchInfo" style="border-radius: 0;">
+              <i class="iconfont icon-search form-control-feedback"></i>
+            </div>
+            <table class="table table-bordered" style="margin: -1px 0;">
+              <tr>
+                <th width="10"></th>
+                <th width="90">团队</th>
+              </tr>
+            </table>
+            <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
+              <table class="table table-bordered" >
+                <tr ng-repeat="team in buList | filter:{'org_name': teamSearchInfo}">
+                  <td width="10">
+                    <input type="checkbox" ng-model="team.checked" ng-change="handleTeamChange(team)">
+                  </td>
+                  <td width="150">{{team.org_name}}</td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+          <label class="col-sm-1 control-label mb-10"><span class="text-danger">*</span>科目：</label>
+          <div class="col-lg-5 col-sm-5 mb-10">
+            <div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
+              <span ng-click="removeSubject(subject)" class="btn btn-default btn-xs" ng-repeat="subject in selSubjectList" style="margin: 5px;">
+                {{subject.name}}<i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+              </span>
+            </div>
+            <div class="form-horizontal  mt10 pos-r">
+              <input type="text" class="form-control" placeholder="输入要查询的课程名称" ng-model="subjectSearchInfo" style="border-radius: 0;">
+              <i class="iconfont icon-search form-control-feedback"></i>
+            </div>
+            <table class="table table-bordered" style="margin: -1px 0;">
+              <tr>
+                <th width="35"></th>
+                <th width="100">科目</th>
+                <th>备注</th>
+              </tr>
+            </table>
+            <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
+              <table class="table table-bordered" >
+                <tr ng-repeat="subject in subjectList | filter:{'name': subjectSearchInfo}">
+                  <td width="35">
+                    <input type="checkbox" ng-model="subject.checked" ng-change="handleSubjectChange(subject)">
+                  </td>
+                  <td width="100">{{subject.name}}</td>
+                  <td>{{subject.description}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <label class="col-sm-1 control-label">描述：</label>
+          <div class="col-lg-2 col-sm-5">
+            <textarea rows="4" class="form-control" ng-model="newTeacher.description"></textarea>
+          </div>
+        </div>
+        <div class="col-lg-6 col-sm-7" align="right">
+          <button class="btn btn-default" type="reset" ng-click="clearAll()">重置</button>
+          <button type="button" class="btn btn-primary" ng-click="saveTeacher()">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

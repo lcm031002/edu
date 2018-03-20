@@ -1,0 +1,70 @@
+<div class="erp student student-manager" ng-controller="erp_StudentManagerController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">学管师耗课</span>
+		</div>
+        <div class="panel-body operation-panel">
+            <div class="searchbar">
+                <div class="form-group">
+                    <rd-date-picker-range 
+                        class="display-inb" 
+                        ng-start-date="searchParam.p_start_date" 
+                        ng-end-date="searchParam.p_end_date" 
+                        ng-default-range="searchParam.range"
+                        ng-btn-tag="searchParam.p_btn_tag" 
+                        ng-min-date="searchParam.p_min_date" 
+                        ng-max-date="searchParam.p_max_date">
+                    </rd-date-picker-range>
+                    <rd-branch class="display-inb" 
+                        ng-bu-id="searchParam.p_bu_id" 
+                        ng-branch-id="searchParam.p_branch_id">
+                        <div class="form-group">
+                            <span class="input-label">学管/咨询师：</span>
+                        </div>
+                        <div class="form-group">
+                            <klc-teacher-typeahead 
+                                teacher-id="searchParam.p_studentManagerId" 
+                                teacher-type="2">
+                            </klc-teacher-typeahead>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" ng-click="queryStuMgrAnalysis()">
+                                <i class="iconfont icon-search"></i> 搜索
+                            </button>
+                        </div>
+                    </rd-branch>
+                </div>
+            </div>
+        </div>
+	</div>
+    <!--main form end-->
+    <div class="table-panel">
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                <th>学管师</th>
+                <th>在读人数</th>
+                <th>正常上课总数（h）</th>
+                <th>未考勤总数（h）</th>
+                <th>总排课数（h）</th>
+            </tr>
+            <tr ng-repeat="stuMgrAnalysis in stuMgrAnalysisList" 
+                ng-if="!loadStatues && stuMgrAnalysisList && stuMgrAnalysisList.length">
+                <td>
+                    <a ng-click="gotoTeacherStudentReport(stuMgrAnalysis.buId, stuMgrAnalysis.branchId, stuMgrAnalysis.studentManagerId, stuMgrAnalysis.studentManager)">{{stuMgrAnalysis.studentManager}}</a>
+                </td>
+                <td>{{stuMgrAnalysis.studentCount}}</td>
+                <td>{{stuMgrAnalysis.attendanceCount}}</td>
+                <td>{{stuMgrAnalysis.surplusCount}}</td>
+                <td>{{stuMgrAnalysis.scheduleCount}}</td>
+            </tr>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" 
+            ng-if="!loadStatues && (stuMgrAnalysisList == null || stuMgrAnalysisList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1054 @@
+<div class="erp" ng-controller="erp_StudentOrderDetailController">
+
+    <div ng-if="order.temporaryOrder">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="main-nav ng-scope">
+                    <div class="main-nav-person">
+                        <a class="nav-person" href="?studentId={{studentId}}#/studentMgr/studentMgrIndex" target="_self">
+                            <img class="nav-person-img" ng-src="{{order.studentInfo.head_pic?order.studentInfo.head_pic:'img/erp/student01.jpg'}}">
+                        </a>
+                    </div>
+                    <div class="nav-content-tit">
+                        <p class="nav-contnet-name fl ng-binding">{{order.studentInfo.student_name}}</p>
+                        <p class="nav-information">
+                            <span class="ng-binding">{{order.studentInfo.grade_name}}</span>
+                            <span class="ng-scope ng-binding" ng-if="order.studentInfo.branch_name">，{{order.studentInfo.branch_name}}</span>
+                            <span class="ng-scope ng-binding" ng-if="order.studentInfo.phone">，{{order.studentInfo.phone}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary"  ng-if="order.temporaryOrder">
+        <div class="panel-heading">
+            <span class="title">订单信息</span>
+        </div>
+        <div class="panel-body form-horizontal">
+            <div  class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">报班单号：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.order_no}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">订单状态：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static" ng-if="order.order_status == 0">已作废</p>
+                            <p class="form-control-static" ng-if="order.order_status == 1">正常</p>
+                            <p class="form-control-static" ng-if="order.order_status == 2">暂存</p>
+                            <p class="form-control-static" ng-if="order.order_status == 3"><a href="javascript:void(0)" ng-click="openModal()">待缴费</a></p>
+                            <p class="form-control-static" ng-if="order.order_status == 4"><a href="javascript:void(0)" ng-click="openModal()">审核中</a></p>
+                            <p class="form-control-static" ng-if="order.order_status == 5"><a href="javascript:void(0)" ng-click="openModal()">审核不通过</a></p>
+                        </div>
+                    </div>
+                   </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">订单现价：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">￥ {{order.actural_amount}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">订单原价：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">￥ {{order.fee_amount}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">制单人：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.employee_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">制单时间：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.create_time}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6" ng-if="order.actural_amount != order.fee_amount">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">最后审核人：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.audit_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6" ng-if="order.actural_amount != order.fee_amount">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">审批通过时间：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.fin_confirm_date}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">业务团队：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.bu_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">业务校区：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.branch_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6" ng-if="order.temporaryOrder.rule_id">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">订单优惠：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.privilegeRule.rule_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6" ng-if="order.temporaryOrder.rule_id && order.fee_amount && order.actural_amount">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">优惠金额：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">￥ {{order.fee_amount - order.actural_amount}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6" ng-if="(!order.temporaryOrder.rule_id) && order.immediate_reduce">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">立减金额：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">￥ {{order.immediate_reduce}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div  class="col-lg-6 col-sm-6" ng-if="order.orderLock">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">冻结状态：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.orderLock.statusName}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">发票状态：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.invoice_status?'已开':'未开'}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">订单类型：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static">{{order.temporaryOrder.order_type == 4 ? '续单':'新单'}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6 col-sm-6" ng-if="order.tOrderLock">
+                    <div class="">
+                        <label class="col-lg-4 col-sm-4 control-label" style="text-align: left;">冻结状态：</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <p class="form-control-static" ng-if="order.tOrderLock.status == 1">订单已冻结 </p>
+                            <p class="form-control-static" ng-if="order.tOrderLock.status == 2">订单已冻结，已经结转剩余</p>
+                            <p class="form-control-static" ng-if="order.tOrderLock.status == 3">订单已解锁</p>
+                            <p class="form-control-static" ng-if="order.tOrderLock.status != 1 && order.tOrderLock.status != 2 && order.tOrderLock.status != 3">订单状态异常，请联系管理员</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-12 col-sm-12">
+                    <div  class="col-lg-6 col-sm-12" >
+                        <div class="">
+                            <label class="col-lg-4 col-sm-2 control-label" style="text-align: left;">备注：</label>
+                            <div class="col-lg-4 col-sm-4" style="padding-left:0;">
+                                <table ng-show="temporaryOrderRemarkDisabled">
+                                    <tr>
+                                        <td class="text-justify">
+                                            {{order.temporaryOrder.remark || '无'}}
+                                        </td>
+                                        <td class="text-right" style="min-width:4em;vertical-align: top;">
+                                            <a href="javascript:void(0);" ng-show="temporaryOrderRemarkDisabled"
+                                                ng-click="editTemporaryOrderRemark(order.temporaryOrder.remark)">
+                                                <i class="iconfont icon-edit"> </i>编辑</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <textarea ng-hide="temporaryOrderRemarkDisabled"
+                                    type="text" class="form-control"
+                                    rows="5" 
+                                    ng-model="order.temporaryOrder.remark" 
+                                    ng-disabled="temporaryOrderRemarkDisabled"></textarea>
+                                <!-- <p class="form-control-static">{{order.temporaryOrder.remark}}</p> -->
+                            </div>
+                            <div class="col-lg-4 col-sm-6 mt15">
+                                <button class="btn btn-primary" ng-hide="temporaryOrderRemarkDisabled"
+                                    ng-click="saveTemporaryOrderRemark(order.temporaryOrder.remark)">保存</button>
+                                <button class="btn btn-default" ng-hide="temporaryOrderRemarkDisabled"
+                                    ng-click="cancelTemporaryOrderRemark()">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div  class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                    <div  class="col-lg-12 col-sm-12" align="right"  ng-if="order.order_status == 1 && selectedOrg.id == order.branch_id">
+                        <div class="">
+                            <div class="btn btn-primary"  ng-if="order.order_status == 1 && (!order.tOrderLock || order.tOrderLock.status == 3)"  ng-click="printOrder(order)">订单打印</div>
+                            <div class="btn btn-primary"  ng-if="order.order_status == 1 && (!order.tOrderLock || order.tOrderLock.status == 3)"  ng-click="handleCancelOrder()">订单作废</div>
+                            <div class="btn btn-primary"  ng-if="!order.tOrderLock || order.tOrderLock.status == 3"  ng-click="handleLockOrder()">订单锁定</div>
+                            <div class="btn btn-primary" ng-if="order.tOrderLock && order.tOrderLock.status == 1" ng-click="handleUnLockOrder()">申请解锁</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary"  ng-if="order.orderDetails">
+        <div class="panel-heading">
+            <span class="tille">课程信息</span>
+        </div>
+        <div class="panel-body">
+
+            <div class="col-lg-12 col-sm-12" style="padding: 10px;">
+                <table class="table table-bordered" style="margin-bottom: 0px;">
+                    <col class="col-lg-3 col-sm-4"/>
+                    <col class="col-lg-2 col-sm-2"/>
+                    <col class="col-lg-2 col-sm-2"/>
+                    <col class="col-lg-3 col-sm-3"/>
+                    <col class="col-lg-2 col-sm-1"/>
+                    <tr>
+                        <th>课程商品名称</th>
+                        <th style="text-align: center;">课程单价</th>
+                        <th style="text-align: center;">报班次数</th>
+                        <th style="text-align: center;">课时</th>
+                        <th style="text-align: center;">操作</th>
+                    </tr>
+                    <tr ng-repeat="detail in order.orderDetails">
+                        <td>
+                            <h4 ng-if="detail.root_course_id&&detail.root_course_id>0">【转入课程】</h4>
+                            <p>
+                                <div class="col-lg-12 col-sm-12"style="padding: 2px;">
+                                    <img class="img-circle" style="width: 40px; height: 40px;" 
+                                         ng-src="{{detail.course.teacher&&detail.course.teacher.photo?detail.course.teacher.photo:'img/erp/person.jpg'}}" style="margin-right: 10px;"/>
+                                    <span style="margin-right: 10px;" ng-if="detail.course.teacher.teacher_name">{{detail.course.teacher.teacher_name}}</span>
+                                </div>
+                            </p>
+                            <p>
+                                <span style="margin-right: 10px;">
+                                    校区：{{detail.branch_name}}
+                                </span>
+                            </p>
+                            <p>
+                                <span style="margin-right: 10px;">课程名称：{{detail.course.course_name}}<br/>
+                                    <span style="font: 400 12px/24px '微软雅黑';color: #b0afac;">
+                                        课程编码：{{detail.course.course_no}}，<br/>课程id：{{detail.course.id}}
+                                    </span>
+                                </span>
+                            </p>
+
+                            <p style="font: 400 12px/24px '微软雅黑';color: #b0afac;" ng-if="detail.temporaryOrderDetail&&detail.temporaryOrderDetail.rule_id&&detail.temporaryOrderDetail.privilegeRule&&detail.temporaryOrderDetail.privilegeRule.id">
+                                课程优惠：{{detail.temporaryOrderDetail.privilegeRule.rule_name}}
+                            </p>
+
+                        </td>
+                        <td align="center">
+                            <p>
+                                <div class="col-lg-12 col-sm-12"style="padding: 2px;">
+                                    <p>￥ {{detail.discount_unit_price}}</p>
+                                    <p ng-if="detail.discount_unit_price!=detail.former_unit_price"
+                                       style="font: 400 12px/24px '微软雅黑';color: #b0afac;text-decoration:line-through;">￥ {{detail.former_unit_price}}
+                                    </p>
+                                </div>
+                            </p>
+                        </td>
+                        <td align="center">
+                            <p>
+                                <div class="col-lg-12 col-sm-12"style="padding: 2px;">
+                                    <p>{{detail.course_total_count}} 课时</p>
+                                </div>
+                            </p>
+                        </td>
+                        <td>
+                            <p ng-if="detail.course_surplus_count>0">
+                                <div class="col-lg-12 col-sm-12" ng-if="detail.course_surplus_count>0" style="padding: 2px;">
+                                    <div  class="col-lg-6 col-sm-6" align="right">置空：</div>
+                                    <div  class="col-lg-6 col-sm-6" align="left">
+                                        <div class="school-ico bg-color-6H"
+                                             ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                             ng-click="showDetailTimes(detail,'shenyu')">
+                                            {{detail.course_surplus_count}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </p>
+                            <p ng-if="detail.kaoqinCount>0" style="margin-bottom: 5px;">
+                                <div class="col-lg-12 col-sm-12" ng-if="detail.kaoqinCount>0"  style="padding: 2px;">
+                                    <div  class="col-lg-6 col-sm-6" align="right">考勤：</div>
+                                    <div  class="col-lg-6 col-sm-6" align="left">
+                                        <div class="school-ico bg-color-7H"
+                                             ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                             ng-click="showDetailTimes(detail,'kaoqin')">{{detail.kaoqinCount}}</div>
+                                    </div>
+                                </div>
+                            </p>
+                            <p ng-if="detail.kaoqinCount>0" style="margin-bottom: 5px;">
+                                <div class="col-lg-12 col-sm-12" ng-if="detail.guaqiCount>0"  style="padding: 2px;">
+                                    <div  class="col-lg-6 col-sm-6" align="right">挂起：</div>
+                                    <div  class="col-lg-6 col-sm-6" align="left">
+                                        <div class="school-ico bg-color-7H" 
+                                            ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                            ng-click="showDetailTimes(detail,'guaqi')">{{detail.guaqiCount}}</div>
+                                    </div>
+                                </div>
+                            </p>
+                            <p ng-if="detail.zhuanbanCount>0"  style="padding: 2px;">
+                                <div class="col-lg-12 col-sm-12" ng-if="detail.zhuanbanCount>0"  style="padding: 2px;">
+                                    <div  class="col-lg-6 col-sm-6" align="right">转班：</div>
+                                    <div  class="col-lg-6 col-sm-6" align="left">
+                                        <div class="school-ico bg-color-3H"
+                                            ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                            ng-click="showDetailTimes(detail,'zhuanban')">{{detail.zhuanbanCount}}</div>
+                                    </div>
+                                </div>
+                            </p>
+                            <p ng-if="detail.tuifeiCount>0"  style="padding: 2px;">
+                            <div class="col-lg-12 col-sm-12" ng-if="detail.tuifeiCount>0"  style="padding: 2px;">
+                                <div  class="col-lg-6 col-sm-6" align="right">退费：</div>
+                                <div  class="col-lg-6 col-sm-6" align="left">
+                                    <div class="school-ico bg-color-4H"
+                                        ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                        ng-click="showDetailTimes(detail,'tuifei')">{{detail.tuifeiCount}}</div>
+                                </div>
+                            </div>
+                            </p>
+                            <p ng-if="detail.tuifeiAuditCount>0"  style="padding: 2px;">
+                            <div class="col-lg-12 col-sm-12" ng-if="detail.tuifeiAuditCount>0"  style="padding: 2px;">
+                                <div  class="col-lg-6 col-sm-6" align="right">退费审批：</div>
+                                <div  class="col-lg-6 col-sm-6" align="left">
+                                    <div class="school-ico bg-color-4H"
+                                         ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                         ng-click="showDetailTimes(detail,'tuifeiAudit')">{{detail.tuifeiAuditCount}}</div>
+                                </div>
+                            </div>
+                            </p>
+                            <p ng-if="detail.dongjieCount>0"  style="padding: 2px;">
+                            <div class="col-lg-12 col-sm-12" ng-if="detail.dongjieCount>0"  style="padding: 2px;">
+                                <div  class="col-lg-6 col-sm-6" align="right">冻结：</div>
+                                <div  class="col-lg-6 col-sm-6" align="left">
+                                    <div class="school-ico bg-color-5H"
+                                        ng-style="{cursor: selectedOrg.productLine== 2 ? 'auto':'pointer'};"
+                                        ng-click="showDetailTimes(detail,'dongjie')">{{detail.dongjieCount}}</div>
+                                </div>
+                            </div>
+                            </p>
+                        </td>
+                        <td align="center" >
+                            <div ng-if="( selectedOrg.productLine!= 2 && detail.course_surplus_count  && order.order_status == 1  && (selectedOrg.id == detail.branch_id || selectedOrg.id ==detail.course.branch_id)) && (!order.tOrderLock || order.tOrderLock.status == 3)">
+                                <p >
+                                    <div class="btn btn-default" ng-if="detail.course.business_type != 3">
+                                        <a ng-click="checkOrderChange(order, detail.id, 'transfer')">转班</a>
+                                    </div>
+                                </p>
+                                <p >
+                                    <div class="btn btn-default">
+                                        <a ng-click="checkOrderChange(order, detail.id, 'refund')">退费</a>
+                                    </div>
+                                </p>
+                                <p >
+                                    <div class="btn btn-default">
+                                        <a ng-click="checkOrderChange(order, detail.id, 'frozen')">冻结</a>
+                                    </div>
+                                </p>
+                                <!--<p >
+                                    <div class="btn btn-default">冻结</div>
+                                </p>-->
+                            </div>
+
+                            <div ng-if="( selectedOrg.productLine == 2 && detail.course_surplus_count  && order.order_status == 1  && (selectedOrg.id == detail.branch_id || selectedOrg.id ==order.branch_id)) && (!order.tOrderLock || order.tOrderLock.status == 3)">
+                                <p >
+                                    <div class="btn btn-default" ng-if="detail.course.business_type != 3">
+                                        <a ng-click="checkOrderChange(order, detail.id, 'transfer')">转班</a>
+                                    </div>
+                                </p>
+                                <p >
+                                    <div class="btn btn-default">
+                                        <a ng-click="checkOrderChange(order, detail.id, 'refund')">退费</a>
+                                    </div>
+                                </p>
+                                <p >
+                                    <div class="btn btn-default">
+                                        <a ng-click="checkOrderChange(order, detail.id, 'frozen')">冻结</a>
+                                    </div>
+                                </p>
+                                <!--<p >
+                                    <div class="btn btn-default">冻结</div>
+                                </p>-->
+                            </div>
+
+                        </td>
+                        <td align="center"  ng-if="!order.order_status == 1">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel panel-primary"  ng-if="order.orderDetails">
+        <div class="panel-heading">
+            <span class="title">订单明细</span>
+        </div>
+        <div class="panel-body">
+
+            <div class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" ng-init="tab='tab1'">
+                    <li class="{{tab=='tab1'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab1'">缴费</a></li>
+                    <li class="{{tab=='tab2'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab2'">预结转</a></li>
+                    <!--<li class="{{tab=='tab3'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab3'">考勤</a></li>-->
+                    <li class="{{tab=='tab4'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab4'">补结转</a></li>
+                    <li class="{{tab=='tab5'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab5'">转班</a></li>
+                    <li class="{{tab=='tab6'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab6'">退费</a></li>
+                    <li class="{{tab=='tab7'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab7'">优惠券</a></li>
+                    <li class="{{tab=='tab8'?'active':''}}"><a href="javascript:void(0);" ng-click="tab='tab8'">退费审批</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane {{tab=='tab1'?'active':''}}" id="tab1">
+
+                        <div class="col-lg-12 col-sm-12" style="color: #999;font-size: 12px;">
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-sm-6 control-label" style="padding:6px;">时间：</label>
+                                    <div class="col-lg-8 col-sm-6">
+                                        <p class="form-control-static">{{order.temporaryOrder.payment.buyDate}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-6 col-sm-6 control-label" style="padding:6px;">操作人：</label>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <p class="form-control-static">{{order.temporaryOrder.payment.createUser}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-sm-6 control-label" style="padding:6px;">校区：</label>
+                                    <div class="col-lg-8 col-sm-6">
+                                        <p class="form-control-static">{{order.temporaryOrder.payment.branchName}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-sm-6 control-label" style="padding:6px;">订单原价：</label>
+                                    <div class="col-lg-8 col-sm-6">
+                                        <p class="form-control-static">￥{{order.temporaryOrder.payment.sumPrice}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-6 col-sm-6 control-label" style="padding:6px;">订单现价：</label>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <p class="form-control-static">￥{{order.temporaryOrder.payment.actualPrice}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-sm-6 control-label" style="padding:6px;">缴费金额：</label>
+                                    <div class="col-lg-8 col-sm-6">
+                                        <p class="form-control-static">￥{{order.temporaryOrder.payment.actualPrice}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12">
+                            <table class="table">
+                                <tr>
+                                    <th>金额</th>
+                                    <th>缴费方式</th>
+                                    <th>设备</th>
+                                    <th>客户卡号</th>
+                                    <th>商户订单号</th>
+                                    <th>备注</th>
+                                </tr>
+                                <tr ng-repeat="detailPay in order.temporaryOrder.payment.details">
+                                    <td>{{detailPay.staffappprem?'￥'+detailPay.staffappprem:'0'}}</td>
+                                    <td>{{detailPay.payment_way_str}}</td>
+                                    <td>{{detailPay.simple_name}}</td>
+                                    <td>{{detailPay.client_card_no}}</td>
+                                    <td>{{detailPay.eb_no}}</td>
+                                    <td>{{detailPay.extend_column}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane {{tab=='tab2'?'active':''}}" id="tab2">
+                        <table class="table">
+                            <tr>
+                                <th>日期</th>
+                                <th>说明</th>
+                                <th>金额</th>
+                                <th>经办人</th>
+                            </tr>
+                            <tr ng-repeat="forward in order.forwardList" ng-if="order.forwardList">
+                                <td>{{forward.VALIDATE_TIME}}</td>
+                                <td>{{!forward.REMARK ? '-':forward.REMARK}}</td>
+                                <td>{{forward.FEE_AMOUNT}}</td>
+                                <td>{{forward.EMPLOYEE_NAME}}</td>
+                            </tr>
+                            <tr  ng-if="!order.forwardList">
+                                <td colspan="4">无数据.</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!--<div class="tab-pane {{tab=='tab3'?'active':''}}" id="tab3">...</div>-->
+                    <div class="tab-pane {{tab=='tab4'?'active':''}}" id="tab4">
+                        <table class="table">
+                            <tr>
+                                <th>日期</th>
+                                <th>补结转说明</th>
+                                <th>金额</th>
+                                <th>经办人</th>
+                            </tr>
+                            <tr ng-repeat="unForward in order.unForwardList" ng-if="order.unForwardList">
+                                <td>{{unForward.VALIDATE_TIME}}</td>
+                                <td>{{!unForward.REMARK?'-':unForward.REMARK}}</td>
+                                <td>{{unForward.FEE_AMOUNT}}</td>
+                                <td>{{unForward.EMPLOYEE_NAME}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="tab-pane {{tab=='tab5'?'active':''}}" id="tab5">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>转班说明</th>
+                                    <th>金额</th>
+                                    <th>课时</th>
+                                    <th>方向</th>
+                                    <th>经办人</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="change in orderZhuanbanInfo" ng-if="orderZhuanbanInfo && orderZhuanbanInfo.length">
+                                    <td>{{change.apply_time_string}}</td>
+                                    <td>{{change.courseName}}{{change.courseTimes}}课时
+                                        <p>课程名称：{{change.courseName}}</p>
+                                        <p>课程校区：{{change.branch_name}}</p>
+                                        <p ng-if="change.courseTimeString">转班课时：{{change.courseTimeString}} 课时</p>
+                                        <p ng-if="!change.courseTimeString">转班课时：{{change.courseTimes}} 课时</p>
+                                        <p ng-if="change.remark">备注：{{change.remark}}</p>
+                                    </td>
+                                    <td>￥{{change.total_amount}}</td>
+                                    <td>{{change.courseTimes}}</td>
+                                    <td>
+                                        <span ng-if="change.transfer_flag">转入</span>
+                                        <span ng-if="!change.transfer_flag">转出</span>
+                                    </td>
+                                    <td>{{change.createUserName}}</td>
+                                </tr>
+                                <tr ng-if="!orderZhuanbanInfo || !orderZhuanbanInfo.length">
+                                    <td colspan="6" align="center" style="text-align: center;">无数据.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane {{tab=='tab6'?'active':''}}" id="tab6">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>退费说明</th>
+                                    <th>金额</th>
+                                    <th>经办人</th>
+                                    <th>状态</th>
+                                    <th>打印</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="change in orderTuifeiInfo" ng-if="orderTuifeiInfo && orderTuifeiInfo.length">
+                                    <td>{{change.apply_time_string}}</td>
+                                    <td>
+                                        <p>课程名称：{{change.courseName}}</p>
+                                        <p>退费课次：{{change.courseTimes}} 次</p>
+                                        <p>详细课次信息：{{change.courseTimeString}}</p>
+                                        <p>退费金额：￥ {{change.fee_returns_amount ? change.fee_returns_amount : 0}}</p>
+                                        <p>退费补扣：￥ {{change.fee_deduction_amount ? change.fee_deduction_amount : 0}}</p>
+                                        <p>实退金额：￥ {{change.fee_amount ? change.fee_amount : 0}}</p>
+                                        <p>备注：{{change.remark}}</p>
+                                    </td>
+                                    <td>￥{{change.fee_amount ? change.fee_amount : 0}}</td>
+                                    <td>{{change.createUserName}}</td>
+                                    <td>{{change.changeStatusName}}</td>
+                                    <td><a href="javascript:void(0);" ng-click="printPremium(change)">打印</a></td>
+                                </tr>
+                                <tr ng-if="!orderTuifeiInfo || !orderTuifeiInfo.length">
+                                    <td colspan="6"  style="text-align: center;">无数据.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane {{tab=='tab7'?'active':''}}" id="tab7">
+                        <table class="table">
+                            <tr>
+                                <th>编码</th>
+                                <th>名称</th>
+                                <th>金额</th>
+                            </tr>
+                            <tr ng-repeat="coupon in order.temporaryOrder.coupon_rels" ng-if="order.temporaryOrder && order.temporaryOrder.coupon_rels && order.temporaryOrder.coupon_rels.length">
+                                <td>{{coupon.coupon_encoding}}</td>
+                                <td>{{coupon.coupon_name}}</td>
+                                <td>{{coupon.coupon_amount}}</td>
+                            </tr>
+                            <tr ng-if="!order.temporaryOrder || !order.temporaryOrder.coupon_rels || !order.temporaryOrder.coupon_rels.length">
+                                <td colspan="3" align="center">
+                                    无数据.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="tab-pane {{tab=='tab8'?'active':''}}" id="tab8">
+                        <table class="table">
+                            <tr>
+                                <th>日期</th>
+                                <th>申请人</th>
+                                <th>退费说明</th>
+                                <th>课次</th>
+                                <th>实际金额</th>
+                                <th>审批人</th>
+                                <th>状态</th>
+                            </tr>
+                            <tr ng-repeat="premiumAudit in order.premiumAuditList" ng-if="order.premiumAuditList&&order.premiumAuditList.length">
+                                <td>
+                                    {{premiumAudit.APPLY_TIME}}
+                                </td>
+                                <td>
+                                    {{premiumAudit.APPLY_USER_NAME}}
+                                </td>
+                                <td>
+                                    <p>退费课程：{{premiumAudit.COURSE_NAME}}</p>
+                                    <p>退费课次：{{premiumAudit.COURSE_TIMES_DETAILS}}</p>
+                                    <p ng-if="premiumAudit.FEE_DEDUCTION_AMOUNT">冻结补扣：{{premiumAudit.FEE_DEDUCTION_AMOUNT}}</p>
+                                    <p>退费金额：{{premiumAudit.TOTAL_AMOUNT}}</p>
+                                    <p>实际金额：{{premiumAudit.ACTUAL_FEE_AMOUNT}}</p>
+                                </td>
+
+                                <td>
+                                    {{premiumAudit.COURSE_TIMES}}
+                                </td>
+                                <td>
+                                    {{premiumAudit.ACTUAL_FEE_AMOUNT?'￥'+premiumAudit.ACTUAL_FEE_AMOUNT:''}}
+                                </td>
+                                <td>
+                                    {{premiumAudit.CURRENT_MAN!=null?premiumAudit.CURRENT_MAN:'-'}}
+                                </td>
+                                <td>
+                                    {{premiumAudit.CHANGE_STATUS_NAME}}
+                                </td>
+                            </tr>
+                            <tr ng-if="!order.premiumAuditList||!order.premiumAuditList.length">
+                                <td colspan="7"  align="center" style="text-align: center;">
+                                    无数据.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary"   ng-if="order.orderDetails">
+        <div class="panel-heading">
+            <span class="title">发票信息</span>
+        </div>
+        <div class="panel-body">
+
+            <div class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>报班编号</th>
+                        <th>发票号码</th>
+                        <th>实开金额</th>
+                        <th>开票单位</th>
+                        <th>日期</th>
+                        <th>状态</th>
+                    </tr>
+                    <tr ng-repeat="invoice in invoiceData" ng-if="isQueryInvoiceData != 'isLoading' && invoiceData">
+                        <td>{{invoice.orderEncoding}}</td>
+                        <td>{{invoice.invoiceCode}}</td>
+                        <td>{{invoice.actualMoney?'￥'+invoice.actualMoney:''}}</td>
+                        <td>{{invoice.invoiceCompamyName}}</td>
+                        <td>{{invoice.invoiceDate}}</td>
+                        <td>
+                            <span ng-if="invoice.status==1">已开票</span>
+                            <span ng-if="invoice.status==2">已回收</span>
+                            <span ng-if="invoice.status==3">已作废</span>
+                            <span ng-if="invoice.status==4">申请中</span>
+                            <span ng-if="invoice.status==5">已拒绝</span>
+                        </td>
+                    </tr>
+                    <tr ng-if=" isQueryInvoiceData != 'isLoading' && ( !invoiceData || !invoiceData.length )">
+                        <td colspan="6" align="center">无数据.</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+    <rd-loading ng-if="isLoading == 'loadOrderInfo'">正在加载信息...</rd-loading>
+    <rd-loading ng-if="isLoading == 'loadOrderInfoFailed'">加载失败！{{isLoadingFailedInfo}}</rd-loading>
+
+    <!-- <div ng-if="isLoading == 'loadOrderInfo'">
+        <div style="position:absolute;height: 155%;width:100%;left:0px;top:0px;z-index: 1001;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" style="width:450px;overflow: hidden;left:0px;top:35%;z-index: 1002;">
+            <div style="margin: 20px;height:50px;" align="center">
+                
+            </div>
+        </div>
+    </div> -->
+    <!-- <div ng-if="isLoading == 'loadOrderInfoFailed'">
+        <div style="position:absolute;height: 155%;width:100%;left:0px;top:0px;z-index: 1001;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" style="width:80%;overflow: hidden;left:0px;top:35%;z-index: 1002;">
+            <div style="margin: 20px;height:50px;" align="center">
+                加载失败！{{isLoadingFailedInfo}}
+            </div>
+        </div>
+    </div> -->
+    <div id="detailTimesPanel" class="modal klxx-modal-primary">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.shenyu'">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">剩余课次</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>考勤时间</th>
+                                    <th>考勤人</th>
+                                    <th>考勤状态</th>
+                                    <th>备注</th>
+                                </tr>
+                                <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.orderCourseSurplusCount" ng-if="attendance.ATTEND_TYPE==10||!attendance.ATTEND_TYPE">
+                                    <td>{{attendance.TIMES}}</td>
+                                    <td>{{attendance.TEACHER_NAME}}</td>
+                                    <td>{{attendance.COURSE_DATE}}</td>
+                                    <td>{{attendance.ATTEND_DATE?attendance.ATTEND_DATE:'-'}}</td>
+                                    <td>{{attendance.ATTEND_USER_NAME?attendance.ATTEND_USER_NAME:'-'}}</td>
+                                    <td>{{attendance.NAME?attendance.NAME:'-'}}</td>
+                                    <td>{{attendance.remark}}</td>
+                                </tr>
+                                <tr ng-if="showDetailTimesPanelLoading == 'loading'">
+                                    <td colspan="5" align="center">
+                                        <img src="img/erp/loading2.gif"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.kaoqin' && order.business_type!=2 ">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">考勤记录</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>考勤时间</th>
+                                    <th>考勤人</th>
+                                    <th>考勤状态</th>
+                                    <th>备注</th>
+                                </tr>
+                                <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.tAttendanceList" ng-if="attendance.attend_type&&attendance.attend_type != 10&&attendance.attend_type != 20&&attendance.attend_type != 30&&attendance.attend_type != 11">
+                                    <td>{{attendance.course_times}}</td>
+                                    <td>{{attendance.schedulingTeacherName}}</td>
+                                    <td>{{attendance.course_time}}</td>
+                                    <td>{{attendance.attend_date}}</td>
+                                    <td>{{attendance.attTeacherName?attendance.attTeacherName:'-'}}</td>
+                                    <td>{{attendance.attendTypeName}}</td>
+                                    <td>{{attendance.remark}}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.kaoqin' && order.business_type==2 ">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">考勤33记录</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                            <table class="table">
+                                <tr>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>考勤时间</th>
+                                    <th>考勤人</th>
+                                    <th>考勤状态</th>
+                                    <th>备注</th>
+                                </tr>
+                                <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.tAttendanceList" ng-if="attendance.attend_type&&attendance.attend_type != 10&&attendance.attend_type != 20&&attendance.attend_type != 30&&attendance.attend_type != 11">
+                                    <td>{{attendance.schedulingTeacherName}}</td>
+                                    <td>{{attendance.course_time}}</td>
+                                    <td>{{attendance.attend_date}}</td>
+                                    <td>{{attendance.attTeacherName?attendance.attTeacherName:'-'}}</td>
+                                    <td>{{attendance.attendTypeName}}</td>
+                                    <td>{{attendance.remark}}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.guaqi'">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">挂起记录</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>考勤时间</th>
+                                    <th>考勤人</th>
+                                    <th>考勤状态</th>
+                                    <th>备注</th>
+                                </tr>
+                                <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.tAttendanceList" ng-if="attendance.attend_type&&attendance.attend_type == 11">
+                                    <td>{{attendance.course_times}}</td>
+                                    <td>{{attendance.schedulingTeacherName}}</td>
+                                    <td>{{attendance.course_time}}</td>
+                                    <td>{{attendance.attend_date}}</td>
+                                    <td>{{attendance.attTeacherName?attendance.attTeacherName:'-'}}</td>
+                                    <td>{{attendance.attendTypeName}}</td>
+                                    <td>{{attendance.remark}}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.zhuanban'">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">转班记录</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;" ng-if="showDetailTimesPanelLoading!='loading'">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>经办人</th>
+                                    <th>办理时间</th>
+                                    <th>最后审批人</th>
+                                    <th>最后审批时间</th>
+                                </tr>
+                                <tr ng-repeat="courseChange in showDetailTimesPanelSelectedDetail.orderChangeCourseTimes" ng-if="courseChange.changeType==2&&courseChange.changeStatus==5&&courseChange.transferFlag==0&&showDetailTimesPanelSelectedDetail.orderChangeCourseTimes&&showDetailTimesPanelSelectedDetail.orderChangeCourseTimes.length">
+                                    <td>{{courseChange.times}}</td>
+                                    <td>{{courseChange.teacherName}}</td>
+                                    <td>{{courseChange.courseDate}}</td>
+                                    <td>{{courseChange.createrName}}</td>
+                                    <td>{{courseChange.createTime}}</td>
+                                    <td>{{courseChange.confirmerName?courseChange.confirmerName:'-'}}</td>
+                                    <td>{{courseChange.finConfirmTime?courseChange.finConfirmTime:'-'}}</td>
+                                </tr>
+                                <tr ng-if="!showDetailTimesPanelSelectedDetail.orderChangeCourseTimes||!showDetailTimesPanelSelectedDetail.orderChangeCourseTimes.length">
+                                    <td colspan="6">
+                                        无数据.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;text-align: center;" ng-if="showDetailTimesPanelLoading=='loading'">
+                            正在加载...
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.tuifei'">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">退费记录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="" ng-if="showDetailTimesPanelLoading!='loading'">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>经办人</th>
+                                    <th>办理时间</th>
+                                    <th>最后审批人</th>
+                                    <th>最后审批时间</th>
+                                </tr>
+                                <tr ng-repeat="courseChange in showDetailTimesPanelSelectedDetail.orderChangeCourseTimes" ng-if="courseChange.changeType==1&&courseChange.changeStatus==5&&showDetailTimesPanelSelectedDetail.orderChangeCourseTimes&&showDetailTimesPanelSelectedDetail.orderChangeCourseTimes.length">
+                                    <td>{{courseChange.times}}</td>
+                                    <td>{{courseChange.teacherName}}</td>
+                                    <td>{{courseChange.courseDate}}</td>
+                                    <td>{{courseChange.createrName}}</td>
+                                    <td>{{courseChange.createTime}}</td>
+                                    <td>{{courseChange.confirmerName}}</td>
+                                    <td>{{courseChange.finConfirmTime}}</td>
+                                </tr>
+                                <tr ng-if="!showDetailTimesPanelSelectedDetail.orderChangeCourseTimes||!showDetailTimesPanelSelectedDetail.orderChangeCourseTimes.length">
+                                    <td colspan="6">
+                                        无数据.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;text-align: center;" ng-if="showDetailTimesPanelLoading=='loading'">
+                            正在加载...
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.dongjie'">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">冻结记录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;" ng-if="showDetailTimesPanelLoading!='loading'">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>老师</th>
+                                    <th>排课时间</th>
+                                    <th>经办人</th>
+                                    <th>办理时间</th>
+                                    <th>最后审批人</th>
+                                    <th>最后审批时间</th>
+                                </tr>
+                                <tr ng-repeat="courseChange in showDetailTimesPanelSelectedDetail.orderChangeCourseTimes" ng-if="courseChange.changeType==5&&courseChange.changeStatus==5&&showDetailTimesPanelSelectedDetail.orderChangeCourseTimes&&showDetailTimesPanelSelectedDetail.orderChangeCourseTimes.length">
+                                    <td>{{courseChange.times}}</td>
+                                    <td>{{courseChange.teacherName}}</td>
+                                    <td>{{courseChange.courseDate}}</td>
+                                    <td>{{courseChange.createrName}}</td>
+                                    <td>{{courseChange.createTime}}</td>
+                                    <td>{{courseChange.confirmerName}}</td>
+                                    <td>{{courseChange.finConfirmTime}}</td>
+                                </tr>
+                                <tr ng-if="!showDetailTimesPanelSelectedDetail.orderChangeCourseTimes||!showDetailTimesPanelSelectedDetail.orderChangeCourseTimes.length">
+                                    <td colspan="6">
+                                        无数据.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-lg-12" style="margin-top: 15px;text-align: center;" ng-if="showDetailTimesPanelLoading=='loading'">
+                            正在加载...
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="showDetailTimesPanel == 'showDetailTimesPanel.tuifeiAudit'">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="closeShowDetailTimes()"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">退费审批记录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="" ng-if="showDetailTimesPanelLoading!='loading'">
+                            <table class="table">
+                                <tr>
+                                    <th>课次</th>
+                                    <th>申请人</th>
+                                    <th>申请时间</th>
+                                    <th>退费金额</th>
+                                    <th>实际金额</th>
+                                    <th>审批人</th>
+                                    <th>状态</th>
+                                </tr>
+                                <tr ng-repeat="premiumAudit in showDetailTimesPanelSelectedDetail.premiumAuditList">
+                                    <td>{{premiumAudit.COURSE_TIMES}}</td>
+                                    <td>{{premiumAudit.APPLY_USER_NAME}}</td>
+                                    <td>{{premiumAudit.APPLY_TIME}}</td>
+                                    <td>{{premiumAudit.TOTAL_AMOUNT}}</td>
+                                    <td>{{premiumAudit.ACTUAL_FEE_AMOUNT}}</td>
+                                    <td>{{premiumAudit.CURRENT_MAN}}</td>
+                                    <td>{{premiumAudit.CHANGE_STATUS_NAME}}</td>
+                                </tr>
+                                <tr ng-if="!showDetailTimesPanelSelectedDetail.premiumAuditList||!showDetailTimesPanelSelectedDetail.premiumAuditList.length">
+                                    <td colspan="7">
+                                        无数据.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-lg-12 col-sm-12" style="margin-top: 15px;text-align: center;" ng-if="showDetailTimesPanelLoading=='loading'">
+                            正在加载...
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" ng-click="closeShowDetailTimes()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

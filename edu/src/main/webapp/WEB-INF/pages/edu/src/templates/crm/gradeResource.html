@@ -1,0 +1,41 @@
+<div class="row" ng-controller="GradeResourceCtrl">
+
+	<div class="col-lg-12">
+		<rd-widget> <rd-widget-header icon="fa-pie-chart"
+			title="资源年级分布统计">
+		<div class="pull-right fa-hover">
+			月份：<input type="text" class="Wdate cursor_pointer" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})"  ng-model="paramdate" name="cdt_start_date" id="cdt_start_date" ng-change="monthSelect()"/>
+			校区：<select ng-model="gradeBranch" name="cdt_branch_id" id="cdt_branch_id" ng-change="changeBranch2()">
+						<option value="">全部校区</option>
+             			<option ng-repeat="sch in gradeBranchsVisible" value="{{sch.id}}">{{sch.name}}</option>           
+         		 </select>
+						
+			 <a href="#" class="dropdown-toggle" ng-click="refresh()" title="刷新">
+				<i class="fa fa-refresh"></i>
+			</a> <a href="#" class="dropdown-toggle" title="缩小" ng-click="extend('')">
+				<i class="fa fa-compress"></i>
+			</a> <a href="#" class="dropdown-toggle" ng-click="excel()" title="导出">
+				<i class="fa fa-file-excel-o"></i>
+			</a>
+		</div>
+		</rd-widget-header>
+		<div classes="medium no-padding">
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<th class="text-center">类型</th>
+						<th ng-repeat="h in grade_headers" ng-class="text-center">{{h.grade_name}}</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in items track by $index"
+							ng-class="{true:'selected-line'}[$index == (items.length-1)]">
+							<td class="text-center">{{item.grtype}}</td>
+							<td ng-repeat="c in item.counts" ng-class="text-center">{{c.count}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		</rd-widget>
+	</div>
+</div>

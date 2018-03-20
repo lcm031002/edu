@@ -1,0 +1,82 @@
+<div ng-controller="erp_delayRecordController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">延课单</span></div>
+		<div class="panel-body operation-panel">
+
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+							<div style="display:inline-block"><label>关联员工：</label></div>
+							<div class="dropdown open" style="display:inline-block">
+								<i class="iconfont icon-search form-control-feedback"></i>
+								<input type="text"
+									   class="form-control"
+									   ng-model="employee.employee_name"
+									   ng-focus="onEmployeeNameFocus()"
+									   ng-blur="onEmployeeNameBlur()"
+									   ng-change="onEmployeeNameChange()"
+									   placeholder="请输入员工姓名或编码"
+								/>
+								<ul ng-if="searchResult && searchResult.length && isDown!='loading'"  class="dropdown-menu">
+									<li ng-repeat="employee in searchResult"
+										title="员工姓名：{{employee.employee_name != null ? employee.employee_name : ''}}">
+										<a href="javascript:void(0)"
+										   ng-click="selectEmployee(employee)">
+											{{employee.employee_name}}
+										</a>
+									</li>
+									<li ng-if="isDown=='loading'"
+										class="search-list-con-transferAccounts showList">
+										<div align="center">
+											<img src="img/erp/loading2.gif" />
+										</div>
+									</li>
+								</ul>
+							</div>
+					</div>
+					<div class="form-group">
+						<span class="input-label">制单日期：</span>
+						<rd-date-picker-popup ng-model="searchParam.createDate"></rd-date-picker-popup>
+					</div>
+					<div class="form-group">
+						<span class="input-label">延课日期：</span>
+						<rd-date-picker-popup ng-model="searchParam.delayCourseDate" ></rd-date-picker-popup>
+					</div>
+					<button class="btn btn-primary" ng-click="query()">搜索</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>操作</th>
+					<th>制单人</th>
+					<th>制单时间</th>
+					<th>延课日期</th>
+					<th>延课数量</th>
+					<th>延课原因</th>
+					<th>延课结果</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="delayRecord in delayRecordList"
+					ng-if="!loadStatues && delayRecordList && delayRecordList.length">
+					<td><a href="javascript:void(0);" ng-click="queryDelayReocedCourseDetail(delayRecord.id)">延课详情</a></td>
+					<td>{{delayRecord.createUserName}}</td>
+					<td>{{delayRecord.createTime | date:'yyyy-MM-dd HH:mm'}}</td>
+					<td>{{delayRecord.delayCourseDate}}</td>
+					<td>{{delayRecord.delayCourseNum}}</td>
+					<td>{{delayRecord.reason}}</td>
+					<td>{{delayRecord.error==1?'失败':'成功'}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+		<ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+		
+	</div>
+</div>

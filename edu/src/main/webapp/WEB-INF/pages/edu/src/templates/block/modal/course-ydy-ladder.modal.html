@@ -1,0 +1,39 @@
+<rd-modal>
+	<rd-modal-title>阶梯{{viewCtrl.rowOpType=='add'?'添加':'修改'}}</rd-modal-title>
+	<rd-modal-body>
+		<div class="form-horizontal">
+			<div class="form-group-inline">
+				<label class="col-sm-2 control-label">阶梯名称：</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control"
+						   ng-model='ladderModelData.ladder_level_name'>
+				</div>
+				<label class="col-sm-2 control-label">达成条件：</label>
+				<div class="col-sm-4">
+					<input type="number" class="form-control"
+						   ng-model='ladderModelData.level_condition'>
+				</div>
+				<label class="col-sm-2 control-label">达成单价：</label>
+				<div class="col-sm-4">
+					<input type="number" class="form-control"
+						   ng-model='ladderModelData.level_price'>
+				</div>
+				<label class="col-sm-2 control-label">图片上传：</label>
+				<div class="col-sm-4" style="height: 32px;">
+					<!-- TODO 样式优化-->
+					<input style="width: 280px;border-radius: 4px;" type="file" name="fileImage" id="fileImage"
+						   onchange="angular.element(this).scope().onFileChange(this.files)">
+				</div>
+				<label class="col-sm-2 control-label">图片预览：</label>
+				<div class="col-sm-4">
+					<img style="width:280px;height:280px;display:block;background:#ccc;"
+						 ng-src="{{img_src}}" />
+				</div>
+			</div>
+		</div>
+	</rd-modal-body>
+	<rd-modal-footer>
+		<button class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+		<button class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+	</rd-modal-footer>
+</rd-modal>

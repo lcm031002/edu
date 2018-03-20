@@ -1,0 +1,1095 @@
+<div class="erp order" ng-controller="erp_OrdersIndexOrdersController">
+  <div class="panel panel-primary" style=" margin-bottom: 10px; ">
+
+    <div class="panel-heading">
+      <span class="title">报班业务
+        <span ng-if="student&&student.student_name ">(学员：{{student.student_name}}，年级：{{student.grade_name}})</span>
+      </span>
+    </div>
+    <div class=panel-body style="padding: 15px; ">
+      <div style="float: left; width: 98%; margin-top: 10px; ">
+        <div class=step>第一步 选择学员</div>
+        <div class=step>第二步 选择课程</div>
+        <div class=step>第三步 调整价格</div>
+        <div class=step>第四步 缴费扣款</div>
+      </div>
+      <div style="float: left; width: 98%; margin-left: 10px; margin-top: 10px; ">
+        <div class="progress kl-progress ">
+          <div class="progress-bar bg-primary " role=progressbar aria-valuenow=60 aria-valuemin=0 aria-valuemax=200 style="width: {{step*25}}%; "></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--搜索学员begin-->
+  <div class="panel panel-primary " style="margin-bottom: 10px; " ng-show="step==1 ">
+    <div class="panel-heading">
+      <span class="title ">第一步 选择学员</span>
+    </div>
+    <div class=panel-body style="padding: 15px; ">
+      <div ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
+        <div class="form-inline ">
+          <div class="form-group ">
+            <div class="input-group">
+              <input type=text class=form-control ng-model="studentQueryInfo.searchInfo " placeholder="请输入搜索关键字. " ng-enter="queryStudents(1)">
+              <span class="input-group-btn ">
+                <button type=button class="btn btn-primary " ng-click=queryStudents(1)>
+                  <i class="iconfont icon-search "></i> 搜索学员</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-panel ov-a">
+      <table class="table table-striped table-hover table-bordered min-width-1100">
+        <tr>
+          <th></th>
+          <th>学员姓名</th>
+          <th>学员编码</th>
+          <th>就读学校</th>
+          <th>年段</th>
+          <th>联系方式</th>
+          <th>积分</th>
+          <th>老学员</th>
+          <th>所属校区</th>
+        </tr>
+        <tr ng-repeat="stu in studentList " ng-if="studentList && studentList.length " ng-show="student.id && stu.id == student.id || !student.id"
+          ng-click=checkedStudent(stu)>
+          <td ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
+            <input type=checkbox checked ng-if=stu.checked>
+            <input type=checkbox ng-if=!stu.checked>
+          </td>
+          <td style="color: red;">{{stu.student_name}}</td>
+          <td>{{stu.encoding}}</td>
+          <td>{{stu.attend_school_name}}</td>
+          <td>{{stu.grade_name}}</td>
+          <td>{{stu.phone}}</td>
+          <td>
+            <a href="?studentId={{stu.id}}#/studentMgr/studentMgrIntegral">{{stu.integral ? stu.integral : 0}}</a>
+          </td>
+          <td>{{stu.is_old_student?'是':'否'}}</td>
+          <td>{{stu.branch_name}}</td>
+        </tr>
+        <tr ng-if="isQueryStudent ">
+          <td colspan="9" align="center">
+            <img src="img/erp/loading2.gif ">
+          </td>
+        </tr>
+        <tr ng-if="!isQueryStudent && (studentList == null || studentList.length == 0)">
+          <td colspan="9" align="center">暂无数据.</td>
+        </tr>
+      </table>
+      <div style="width: 200px; margin: auto; text-align: center; ">
+        <button type=button class="btn btn-primary " style="width: 200px; " ng-click=nextStep(1,2) ng-disabled="!curStudent || !student.student_name">下一步</button>
+      </div>
+    </div>
+  </div>
+  <!--搜索学员end-->
+
+  <!--选择课程begin-->
+  <div class="panel panel-primary " style="margin-bottom: 10px; " ng-show="step==2 ">
+    <div>
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs ">
+        <li class="{{business_type==1? 'active': ''}}">
+          <a href="javascript:void(0);" data-toggle="tab " ng-click="selectBusinessType(1) ">班级课</a>
+        </li>
+        <li class="{{business_type==2? 'active': ''}}" ng-if="selectedOrg.productLine != 1">
+          <a href="javascript:void(0);" data-toggle="tab " ng-click="selectBusinessType(2) ">1对1</a>
+        </li>
+        <li class="{{business_type==3? 'active': ''}}">
+          <a href="javascript:void(0);" data-toggle="tab " ng-click="selectBusinessType(3) ">晚辅导</a>
+        </li>
+        <div class="btn btn-primary fr " ng-click="toSelectedCourse() " ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
+          选课 </div>
+      </ul>
+    </div>
+    <!-- Tab panes -->
+    <div class="tab-content ">
+      <div class="tab-pane {{business_type == 1 ? 'active': ''}}" id="dxb">
+        <div class="table-panel">
+          <table class="table table-striped table-hover table-bordered ">
+            <tr>
+              <th width="13%">课程</th>
+              <th>单价</th>
+              <th>课次</th>
+              <th>年段</th>
+              <th>教师/编码</th>
+              <th width="13%">上课期间</th>
+              <th>上课时间</th>
+              <th width="12%">已报名人数</th>
+              <th width="10%">开班人数</th>
+              <th width="7%">操作</th>
+            </tr>
+            <tr ng-repeat="course in selectedDXBCourseList " ng-if="selectedDXBCourseList && selectedDXBCourseList.length " ng-click="checked(course) ">
+              <td class="word_break">{{course.course_name}}/{{course.course_no}}</td>
+              <td>{{course.unit_price}}</td>
+              <td>
+                <div class="dropdown ">
+                  <a class="dropdown-toggle " data-toggle="dropdown " href="javascript:void(0); " ng-click="openCourseTimesPanel(course) "
+                    ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
+                    {{course.selectedCourseTimesCount}}
+                    <span class="caret "></span>
+                  </a>
+                </div>
+              </td>
+              <td>{{course.grade_name}}</td>
+              <td>{{course.teacher_name}}</td>
+              <td class="word_break">{{course.start_date}}~{{course.end_date}}</td>
+              <td>{{course.start_time}}~{{course.end_time}}</td>
+              <td>{{course.actual_people_count}}</td>
+              <td>{{course.people_count}}</td>
+              <td>
+                <a href="javascript:void(0); " ng-click="removeCourse(course) " ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
+                  <i class="fa fa-times "></i>
+                </a>
+              </td>
+            </tr>
+            <tr ng-if=!selectedDXBCourseList||!selectedDXBCourseList.length>
+              <td colspan=10 align=center>请选择课程.</td>
+            </tr>
+          </table>
+        </div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <span class="title">试听课程列表</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>课程名称</th>
+                <th>课次</th>
+                <th>年级</th>
+                <th>科目</th>
+                <th>校区</th>
+                <th>教师</th>
+                <th>教师编码</th>
+                <th>试听时间</th>
+                <th>试听状态</th>
+                <th>经办人</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cl in courseListeningList" ng-hide="cl.courseSelected">
+                <td>{{cl.COURSE_NAME}}</td>
+                <td>{{cl.COURSE_TIMES}}</td>
+                <td>{{cl.GRADE_NAME}}</td>
+                <td>{{cl.SUBJECT_NAME}}</td>
+                <td>{{cl.BRANCH_NAME}}</td>
+                <td>{{cl.TEACHER_NAME}}</td>
+                <td>{{cl.ENCODING}}</td>
+                <td>{{cl.LISTENING_DATE}}</td>
+                <td ng-switch="cl.pay_status">
+                  <span ng-switch-when="1">成功缴费</span>
+                  <span ng-switch-when="2">拒缴</span>
+                  <span ng-switch-when="3">已试听</span>
+                </td>
+                <td>{{cl.RECORD_NAME}}</td>
+                <td>
+                  <a href="javascript:void(0);" ng-click="handleListeningSignUp(cl.COURSE_ID)">试听报名</a>
+                </td>
+              </tr>
+              <tr ng-hide="courseListeningList.length > 0">
+                <td colspan="11" class="text-center">暂无数据</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- 一对一课程选择 -->
+      <div class="tab-pane {{business_type == 2 ? 'active': ''}}" id="ydy">
+        <table class="table table-striped ">
+          <thead>
+            <tr>
+              <th width="18%">课程商品</th>
+              <th>编码</th>
+              <th width="15%">开课校区</th>
+              <th>年级</th>
+              <th width="10%">单价</th>
+              <th width="15%">报班课时</th>
+              <th>总金额</th>
+              <th>备注</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="course in selectedYDYCourseList " ng-if="selectedYDYCourseList && selectedYDYCourseList.length " ng-click="checked(course) ">
+              <td>{{course.course_name}}</td>
+              <td>{{course.course_no}}</td>
+              <td>{{course.branch_name}}</td>
+              <td>{{course.grade_name}}</td>
+              <td>{{course.unit_price}}</td>
+              <td>
+                <input type="text " class="form-control " ng-change="changeTimes(course) " ng-init="0 " ng-model="course.selectedCourseTimesCount "
+                />
+              </td>
+              <td>{{course.discount_sum_price}}</td>
+              <td>{{course.remark}}</td>
+              <td>
+                <a href="javascript:void(0); " ng-click="removeCourse(course) " ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
+                  <i class="fa fa-times "></i>
+                </a>
+              </td>
+            </tr>
+            <tr ng-if="!selectedYDYCourseList || !selectedYDYCourseList.length ">
+              <td colspan=9 align=center>请选择课程.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!--阶梯说明-->
+        <div class="cl panel panel-primary ">
+          <div class="panel-heading ">
+            <span class="title ">
+              阶梯说明:
+            </span>
+          </div>
+          <div class="order-step ">
+            <ul class="order-step-c " style="padding: 20px 0; ">
+              <li class="step-con text-center cur fl {{$index>0?'ml30':''}} {{comboId==$index?'item-selected':'item-unselected'}}" ng-repeat="ladder in ladders"
+                ng-click="selectLadder(ladder,$index)" title=" " style="margin: 10px;">
+                <img src="{{comboWfd.IMG_PATH || 'img/erp/02.png'}}" style="width: 150px;height: 100px; border-radius: 6px;" />
+                <br>
+                <span>{{ladder.ladder_name}}</span>
+              </li>
+              <li class="clearfix"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- 晚辅导课程选择 -->
+      <div class="tab-pane {{business_type==3?'active':''}}" id="wfd">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th width="18%">课程商品</th>
+              <th>实际单价(元)</th>
+              <th width="15%">报班次数(次)</th>
+              <th>实际金额(次)</th>
+              <th width="17%">开始时间</th>
+              <th>说明</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="course in selectedWFDCourseList" ng-if="selectedWFDCourseList && selectedWFDCourseList.length" ng-click="checked(course)">
+              <td>{{course.course_name}}</td>
+              <td>{{course.unit_price}}</td>
+              <td>
+                <input type="text" class="form-control" ng-change="changeTimes(course)" ng-init="0" ng-model="course.selectedCourseTimesCount"
+                />
+              </td>
+              <td>{{course.discount_sum_price}}</td>
+              <td>
+                <input class="form-control" id="date{{course.course_id}}" onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd',readOnly:true})"
+                  ng-disabled="{{!course.selectedComboWfd}}" value="{{course.start_date?course.start_date:''}}" />
+              </td>
+              <td>{{course.remark}}</td>
+              <td>
+                <a href="javascript:void(0);" ng-click="removeCourse(course)" ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">
+                  <i class="fa fa-times"></i>
+                </a>
+              </td>
+            </tr>
+            <tr ng-if="!selectedWFDCourseList || !selectedWFDCourseList.length">
+              <td colspan=7 align=center>请选择课程.</td>
+            </tr>
+          </tbody>
+        </table>
+        <!--套餐报班-->
+        <div class="cl panel panel-primary">
+          <div class="panel-heading">
+            <span class="title">
+              套餐报班
+            </span>
+          </div>
+          <div class="order-step">
+            <ul class="order-step-c" style="padding: 20px 0;">
+              <li style="width: 180px;margin: 10px;padding: 10px;" class="step-con text-center cur fl {{$index>0?'ml30':''}} {{comboId==comboWfd.id?'item-selected':'item-unselected'}}"
+                ng-repeat="comboWfd in comboWfds" ng-click="selectComboWfd(comboWfd,$index)" title="{{comboWfd.combo_type==1?(comboWfd.month_count+'个月课程(30节/月)，价格：'+comboWfd.price+'.00元'):comboWfd.combo_type==2?comboWfd.month_count+'个月内，上完'+comboWfd.course_count+'节课，价格：'+comboWfd.price+'.00元':comboWfd.combo_type==3?comboWfd.course_count+'节课，价格：'+comboWfd.price+'.00元':''}}"
+                style="">
+                <img src="{{comboWfd.IMG_PATH || 'img/erp/02.png'}}" style="width: 150px;height: 100px; border-radius: 6px;" />
+                <br>
+                <span>{{comboWfd.combo_name}}</span>
+              </li>
+              <li class="clearfix"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin: auto;" align=center class="mt15">
+      <button type=button class="btn btn-default" style="width: 200px; margin-right: 10px;" ng-click=nextStep(2,1)>上一步</button>
+      <button type=button class="btn btn-primary" style="width: 200px;" ng-click=nextStep(2,3) ng-disabled="!selectedWFDCourseList.length && !selectedDXBCourseList.length && !(selectedYDYCourseList.length ==1) ">下一步</button>
+      <div class="text-center  mt15" ng-if="business_type == 2">
+        <span class="text-warning">*提示：一对一报班，只能选择一个课程进行报班</span>
+      </div>
+    </div>
+  </div>
+  <!--选择课程end-->
+  <!--调整价格begin-->
+  <div class="panel panel-primary" style="margin-bottom: 10px;" ng-if="step == 3">
+    <div class="panel-heading">
+      <span class="title">第三步 调整价格</span>
+    </div>
+    <div class=panel-body style="padding: 15px;">
+      <h3>
+        1、{{business_type == 2 ? '课程明细' : '单科折扣设置'}}
+      </h3>
+      <table class="table table-striped table-hover table-bordered">
+        <tr>
+          <th>课程</th>
+          <th>原单价</th>
+          <th>现单价</th>
+          <th>课时</th>
+          <th>现总价</th>
+          <th>原总价</th>
+          <th ng-hide="productLine == 2 && business_type != 1">折扣</th>
+        </tr>
+        <tr ng-repeat="course in selectedCourseList" ng-if="selectedCourseList && selectedCourseList.length" ng-click=checked(course)>
+          <td>{{course.course_name}}/{{course.course_no}}</td>
+          <td>{{course.former_unit_price}}</td>
+          <td>{{course.discount_unit_price}}</td>
+          <td>{{course.selectedCourseTimesCount}}</td>
+          <td>{{course.discount_sum_price}}</td>
+          <td>{{course.former_sum_price}}</td>
+          <td ng-hide="productLine == 2 && business_type != 1">
+            <select style="min-width:100px;"
+              ng-change="changeCourseSelectedRule()"
+              ng-model="course.selectedRule"
+              ng-options="privilegeRule as privilegeRule.rule_name for privilegeRule in privilegeRuleList"
+              ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">
+            </select>
+            <div ng-show="!(!temporaryOrder||temporaryOrder.check_status==1)">{{course.selectedRule.rule_name}}</div>
+          </td>
+        </tr>
+        <tr ng-if=!selectedCourseList||!selectedCourseList.length>
+          <td colspan=7 align=center>没有数据.</td>
+        </tr>
+      </table>
+      <h3>2、整体折扣设置</h3>
+      <ul class="nav nav-tabs">
+        <li class="{{Preferential.tabType == 'PreferentialRules'?'active':''}}">
+          <a href="javascript:void(0)" ng-click="selectTab('PreferentialRules')" ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">折扣选择</a>
+          <a href="javascript:void(0)" ng-if="!(!temporaryOrder||temporaryOrder.check_status==1)">折扣选择</a>
+        </li>
+        <li class="{{Preferential.tabType == 'PreferentialReduction'?'active':''}}">
+          <a href="javascript:void(0);" ng-click="selectTab('PreferentialReduction')" ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">优惠立减</a>
+          <a href="javascript:void(0);" ng-if="!(!temporaryOrder||temporaryOrder.check_status==1)">优惠立减</a>
+        </li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content" style="margin-bottom: 50px;min-height:100px;">
+        <div class="tab-pane {{Preferential.tabType == 'PreferentialRules'?'active':''}}" id="preferentialRules" style="margin-top:10px;">
+          <table class="table table-striped table-hover table-bordered">
+            <tr>
+              <th></th>
+              <th>优惠名称</th>
+              <th>优惠类型</th>
+              <th>优惠额度</th>
+              <th>开始日期</th>
+              <th>结束日期</th>
+              <th>适用人群</th>
+            </tr>
+            <tr ng-repeat="rule in privilegeRuleList" ng-if="rule.id != -1" ng-click="selectedWholeRule(rule)">
+              <td>
+                <input type=checkbox checked ng-if="theWholeRule.id == rule.id">
+                <input type=checkbox ng-if="theWholeRule.id != rule.id">
+              </td>
+              <td>{{rule.rule_name}}</td>
+              <td>{{coupon[rule.coupon_type]}}</td>
+              <td>{{rule.coupon_content}}</td>
+              <td>{{rule.start_date}}</td>
+              <td>{{rule.end_date}}</td>
+              <td>{{use_scope_types[rule.use_scope]}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="tab-pane {{Preferential.tabType == 'PreferentialReduction'?'active':''}}" id="preferentialReduction">
+          <div class="form-group" style="height:30px;margin-top:10px;">
+            <label class="col-lg-1 col-sm-2 control-label">优惠金额</label>
+            <div class="col-lg-10 col-sm-10">
+              <div class="input-group">
+                <input class="form-control" type="text" ng-model="Preferential.immediate_reduce" ng-change="changeImmediateReduce()" ng-readonly="!(!temporaryOrder||temporaryOrder.check_status==1)"
+                />
+              </div>
+            </div>
+          </div>
+          <table class="form form-horizontal col-lg-12 col-sm-12">
+            <tr>
+              <td class="col-lg-1 col-sm-2">
+                <label>备注信息：</label>
+              </td>
+              <td class="col-lg-11 col-sm-10">
+                <input class="form-control" placeholder="请输入备注." type="text" ng-model="Preferential.immediate_remark" ng-readonly="!(!temporaryOrder||temporaryOrder.check_status==1)"
+                />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <h3 style="margin-bottom: 20px;height:30px;">
+        <div class="col-lg-6 col-sm-6" style="line-height:30px;">3、优惠券折扣设置</div>
+        <div class="col-lg-6 col-sm-6 form-inline text-right" ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">
+          <div class="input-group">
+            <input class="form-control" type="text" placeholder="请输入优惠券编码." ng-model="CouponInfo.inputCouponInfoEncoding">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" ng-click="queryCouponInfo()" ng-readonly="!(!temporaryOrder||temporaryOrder.check_status==1)">获取优惠券</button>
+            </span>
+          </div>
+        </div>
+
+      </h3>
+      <div style="margin-bottom: 20px;max-height:250px;">
+        <table class="table table-striped table-hover table-bordered">
+          <tr>
+            <th></th>
+            <th>优惠券编码</th>
+            <th>优惠券名称</th>
+            <th>有效期</th>
+            <th>适用校区</th>
+            <th>优惠类型</th>
+            <th>优惠额度</th>
+          </tr>
+          <tr ng-repeat="couponInfo in foundedCouponInfos">
+            <td>
+              <div ng-click="checkCouponInfo(couponInfo)" ng-if="!(temporaryOrder && temporaryOrder.check_status == 1)">
+                <input type=checkbox checked ng-if="couponInfo.checked">
+                <input type=checkbox ng-if="!couponInfo.checked">
+              </div>
+            </td>
+            <td>{{couponInfo.encoding}}</td>
+            <td>{{couponInfo.name}}</td>
+            <td>{{couponInfo.valid_date}}</td>
+            <td>{{couponInfo.branch_names}}</td>
+            <td>{{coupon[couponInfo.privilegeRule.coupon_type]}}</td>
+            <td>{{couponInfo.privilegeRule.coupon_content}}</td>
+          </tr>
+          <tr align="center" ng-if="!foundedCouponInfos||!foundedCouponInfos.length">
+            <td colspan="7">暂无数据.</td>
+          </tr>
+        </table>
+      </div>
+      <table class="form form-horizontal" style="width:100%">
+        <tr>
+          <td width="100" class="text-right">
+            <label>备注信息：</label>
+          </td>
+          <td>
+            <input class="form-control" rows="6" placeholder="请输入备注信息" ng-model="selectedOrder.remark" ng-readonly="!(!temporaryOrder||temporaryOrder.check_status==1)"></input>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <div style="text-align: center;font-size: 20px;" class="mb20">
+        总金额：
+        <span style="color: #ec1611;">
+          <i style="font-size: 40px;">{{selectedOrder.actual_price}}</i> ￥</span>
+        <span style="text-decoration:line-through;" ng-if="selectedOrder.actual_price!=selectedOrder.sum_price">
+          <i style="font-size: 20px;">{{selectedOrder.sum_price}}￥</i>
+        </span>
+      </div>
+      <div style="margin: auto;" align=center>
+        <!--  
+      <button type="button" class="btn btn-default" ng-if="(!temporaryOrder||temporaryOrder.check_status==1)" style="width: 200px;" ng-click="saveTemporary()">暂存</button>
+      -->
+        <button type=button class="btn btn-default" style="width: 200px; margin-right: 10px;" ng-click=nextStep(3,2)>上一步</button>
+        <button type=button class="btn btn-primary" style="width: 200px;" ng-click="nextStep(3,4)" ng-if="(!temporaryOrder||temporaryOrder.check_status==1) || (temporaryOrder.check_status==3 && temporaryOrder.valid_status==1 && !temporaryOrder.pay_status) "
+          ng-disabled="!selectedCourseList || !selectedCourseList.length || selectedOrder.actual_price < 0">提交订单</button>
+      </div>
+    </div>
+  </div>
+  <!--调整价格end-->
+  <!--缴费扣款begin-->
+  <div class="panel panel-primary" style="margin-bottom: 10px;" ng-if="step == 4">
+    <div class="panel-heading">
+      <span class="title">第四步 缴费扣款</span>
+    </div>
+    <div class=panel-body style="padding: 15px;">
+      <h3>
+        缴费方式（应缴费：￥{{selectedOrder.actual_price}}）
+        <span class=fr>合计缴费：￥{{payment.cash+payment.onlinePrice+payment.card+payment.transfer+payment.storeAccount+payment.frozenAccount}}</span>
+      </h3>
+      <table class="table table-striped table-hover table-bordered">
+        <col width=16.66%>
+        <col width=16.66%>
+        <col width=16.66%>
+        <col width=16.66%>
+        <col width=16.68%>
+        <col width=16.68%>
+        <tr>
+          <th>现金</th>
+          <th>刷卡</th>
+          <th>转账</th>
+          <!-- 合并需要 -->
+          <th>在线支付</th>
+          <th>储值账户</th>
+          <th>冻结账户</th>
+        </tr>
+        <tr>
+          <td>
+            <button type=button class="btn btn-default" ng-click="openRechargePanel('cash')">缴费</button>
+            <div class="mt10">已缴费：{{payment.cash}}</div>
+          </td>
+          <td>
+            <button type=button class="btn btn-default" ng-click="openRechargePanel('card')">缴费</button>
+            <div class="mt10">已缴费：{{payment.card}}</div>
+          </td>
+          <td>
+            <button type=button class="btn btn-default" ng-click="openRechargePanel('transfer')">缴费</button>
+            <div class="mt10">已缴费：{{payment.transfer}}</div>
+          </td>
+          <td>
+            <button type="button" class="btn btn-default" ng-disabled="!payment.onlinePayEnable" ng-click="openPayOnline()">{{payment.onlinePayBtnLabel || '缴费'}}</button>
+            <div class="mt10">已缴费：{{payment.onlinePrice}}</div>
+          </td>
+          <td>
+            <button type=button class="btn btn-default" ng-click="openRechargePanel('storeAccount')">缴费</button>
+            <div class="mt10">已缴费：{{payment.storeAccount}}，</div>
+            <div class="mt10">当前余额：{{studentIndexAccount.STORE_ACCOUNT - payment.storeAccount | number: 2}}</div> 
+          </td>
+          <td>
+            <button type=button class="btn btn-default" ng-click="openRechargePanel('frozenAccount')">缴费</button>
+            <div class="mt10">已缴费：{{payment.frozenAccount}},</div>
+            <div class="mt10">当前余额：{{studentIndexAccount.FROZEN_ACCOUNT - payment.frozenAccount | number: 2}}</div>
+          </td>
+        </tr>
+      </table>
+      <div style="margin: auto;" align=center>
+        <!-- <button type="button" class="btn btn-default" style="width: 200px; margin-right: 10px;" ng-click="nextStep(4,3)">上一步</button> -->
+        <button type="button" class="btn btn-primary" style="width: 200px;" ng-click="payOrder()" ng-disabled="(temporaryOrder&&temporaryOrder.check_status==2)||(payment.cash+payment.card+payment.transfer+payment.storeAccount+payment.frozenAccount+payment.onlinePrice) != selectedOrder.actual_price">确认支付</button>
+      </div>
+    </div>
+  </div>
+  <!--缴费扣款end-->
+  <!--课程选择面板begin-->
+  <div ng-if="openPanel == 'toSelectedCourseState'">
+    <div ng-click="closePanel()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="select-course-window klxx-modal-primary">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closePanel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">选择课程</h4>
+      </div>
+      <div class="modal-body">
+        <dl class="dl-horizontal course-conditions">
+          <dt>开课校区：</dt>
+          <dd ng-if="selectedCourseList.length <= 0">
+            <kl-multi-tags>
+              <a class="condition_item {{selectedBranch.id== branch.id?'condition_item_checked':''}}" ng-click="selectBranch(branch)" ng-repeat="branch in branchList">{{branch.org_name}}</a>
+            </kl-multi-tags>
+          </dd>
+          <dd ng-if="selectedCourseList.length > 0">
+            已选择了
+            <span class="text-primary">【{{selectedBranch.org_name}}】</span>校区所在的课程，不能再选择其他校区的课程！
+          </dd>
+          <dt>课程季 :</dt>
+          <dd>
+            <kl-multi-tags>
+              <a class="condition_item {{selectedTimeSeason== null?'condition_item_checked':''}}" ng-click="selectSeason(null)">不限</a>
+              <a class="condition_item {{selectedTimeSeason.id== season.id?'condition_item_checked':''}}" ng-click="selectSeason(season)"
+                ng-repeat="season in timeSeasonList">
+                {{season.course_season_name}}
+              </a>
+            </kl-multi-tags>
+          </dd>
+          <dt>年级 :</dt>
+          <dd>
+            <kl-multi-tags>
+              <a class="condition_item {{selectedGrade== null?'condition_item_checked':''}}" ng-click="selectGrade(null)">不限</a>
+              <a class="condition_item {{selectedGrade.id== grade.id?'condition_item_checked':''}}" ng-click="selectGrade(grade)" ng-repeat="grade in gradeList">{{grade.grade_name}}</a>
+            </kl-multi-tags>
+          </dd>
+          <dt>科目 :</dt>
+          <dd>
+            <kl-multi-tags>
+              <a class="condition_item {{selectedSubject== null?'condition_item_checked':''}}" ng-click="selectSubject(null)">不限</a>
+              <a class="condition_item {{selectedSubject.id== subject.id?'condition_item_checked':''}}" ng-click="selectSubject(subject)"
+                ng-repeat="subject in subjectList">{{subject.name}}</a>
+            </kl-multi-tags>
+          </dd>
+        </dl>
+        <table class="table table-striped table-hover table-bordered">
+          <tr>
+            <th>
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label class="col-sm-2" style="top:5px;">课程</label>
+                  <div class="col-sm-10 " style="width:200px;">
+                    <input type=text class=form-control placeholder="快速检索课程" ng-change="querySelectingCourse()" id="courseSearchInfo" ng-model="searchInfo">
+                  </div>
+                </div>
+              </div>
+            </th>
+            <th>单价</th>
+            <th ng-hide="business_type == 2">课次</th>
+            <th>年段</th>
+            <th ng-hide="business_type == 2">教师</th>
+            <th>操作</th>
+          </tr>
+          <tr ng-repeat="course in toSelectingCourseList" ng-if="toSelectingCourseList && toSelectingCourseList.length" ng-click=checked(course)>
+            <td ng-click="course.showDetail=!course.showDetail" class="cur">
+              <p>
+                <i ng-show="course.showDetail" class="iconfont icon-public_shrink i-text-danger"></i>
+                <i ng-show="!course.showDetail" class="iconfont icon-public_spread i-text-warning"></i> {{course.course_name}}
+              </p>
+              <p ng-show="course.showDetail">{{course.course_no}}</p>
+              <p ng-show="course.showDetail">上课期间：{{course.start_date}}~{{course.end_date}}</p>
+              <p ng-show="course.showDetail">上课时间：{{course.start_time}}~{{course.end_time}}</p>
+            </td>
+            <td>{{course.unit_price}}</td>
+            <td ng-hide="business_type == 2">{{course.course_count}}</td>
+            <td>{{course.grade_name}}</td>
+            <td ng-hide="business_type == 2">{{course.teacher_name}}</td>
+            <td>
+              <button class="btn btn-default" href=javascript:void(0) ng-click=selectedCourse(course)>
+                <i class="iconfont icon-diandian"></i>添加</button>
+            </td>
+          </tr>
+          <tr ng-if="isQuerySelectingCourse == 'isQuerySelectingCourse'">
+            <td colspan="8" align="center">
+              <img src="img/erp/loading2.gif">
+            </td>
+          </tr>
+          <tr ng-if=!toSelectingCourseList||!toSelectingCourseList.length>
+            <td colspan=8 align=center>没有数据.</td>
+          </tr>
+        </table>
+        <ng-pagination conf="paginationConf"></ng-pagination>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" ng-click="closePanel()">
+          关闭
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--课程选择面板end-->
+  <!--课程课时面板begin-->
+  <div ng-if="openPanel == 'showCourseTimes'" style="position:fixed;height: 100%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);">
+    <div ng-click="closePanel()"></div>
+    <div class="message-window klxx-modal-primary" style="border: 0px; border-radius: 4px;height:71%">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closePanel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">选择课次</h4>
+      </div>
+      <div class="table-panel ov-a" style="height: 70%;height: calc(100% - 110px);">
+        <table class="table" style="min-width: 1200px;">
+          <thead>
+            <tr>
+              <th ng-click=checkedAllCourseTimes()>
+                <span ng-show="curCourse.canSelCourseList.length > 0">
+                  <input type=checkbox checked ng-if=curCourse.checkedAllTimes>
+                  <input type=checkbox ng-if=!curCourse.checkedAllTimes>
+                </span>
+              </th>
+              <th>课次</th>
+              <th>日期</th>
+              <th>时间</th>
+              <th>老师</th>
+              <th>状态</th>
+              <th>可报人数</th>
+              <th>排号人数</th>
+              <th>等待人数</th>
+              <th>计划人数</th>
+              <th>已报人数</th>
+              <th>待确定人数</th>
+              <th>取号数</th>
+              <th width="150">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="courseTime in curCourse.courseSchedulingList">
+              <td ng-click=checkedCourseTimes(courseTime) ng-hide="courseTime.is_ordered">
+                <div>
+                  <input ng-disabled="courseTime.is_listening" type=checkbox checked ng-if=courseTime.checked>
+                  <input ng-disabled="courseTime.is_listening" type=checkbox ng-if=!courseTime.checked>
+                </div>
+              </td>
+              <td ng-show="courseTime.is_ordered"></td>
+              <td>{{courseTime.course_times}}
+                <span ng-if="courseTime.is_listening" class="text-warning">[已试听]</span>
+              </td>
+              <td>{{courseTime.course_date}}</td>
+              <td>{{courseTime.start_time}}~{{courseTime.end_time}}</td>
+              <td>{{courseTime.teacher_name}}</td>
+              <td ng-switch="courseTime.is_ordered">
+                <span class="text-primary" ng-switch-when="0">可报名</span>
+                <span class="text-success" ng-switch-when="1">已报名</span>
+                <span class="text-warning" ng-switch-when="2">排号中</span>
+                <span class="text-danger" ng-switch-when="3">满额，请排号</span>
+                <span class="text-primary" ng-switch-default>可报名</span>
+              </td>
+              <td>{{courseTime.people_count?courseTime.people_count-courseTime.people_checkCount-courseTime.people_unCheckCount>0?courseTime.people_count-courseTime.people_checkCount-courseTime.people_unCheckCount:0:'--'}}</td>
+              <td>
+                <a href="javascript:void(0);" ng-if="courseTime.totalSortNum > 0" ng-click="queryOrderQueueDetail(curCourse, courseTime)">
+                  {{courseTime.totalSortNum}}
+                </a>
+                <span ng-hide="courseTime.totalSortNum > 0">--</span>
+              </td>
+              <td>{{courseTime.waitPeople?courseTime.waitPeople:0}}</td>
+              <td>{{courseTime.people_count}}</td>
+              <td>
+                <a href="javascript:void(0);" ng-click="queryCheckPeopleList(curCourse, courseTime, 1)">{{courseTime.people_checkCount}}</a>
+              </td>
+              <td>
+                <a href="javascript:void(0);" ng-click="queryCheckPeopleList(curCourse, courseTime, 2)">{{courseTime.people_unCheckCount}}</a>
+              </td>
+              <td>{{courseTime.sort_num?courseTime.sort_num + '号':'--'}}</td>
+              <td>
+                <div ng-hide="(!courseTime.is_ordered && !courseTime.people_count )||(!courseTime.is_ordered && courseTime.people_count &&courseTime.people_count > courseTime.people_checkCount)">
+                  <button ng-show="courseTime.is_ordered && courseTime.is_ordered == 3" type=button class="btn btn-default btn-sm" ng-click=sortNum(courseTime)>排号</button>
+                  <button ng-show="courseTime.is_ordered && courseTime.is_ordered == 2" type=button class="btn btn-default btn-sm" ng-click=cancelSortNum(courseTime)>取消排号</button>
+                  <!-- <button type=button class="btn btn-default btn-sm" 
+                        ng-click=queryTotalSortNumInfo(courseTime)>排号人数点击查询</button> -->
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6" ng-if="isLoadingCourseTimesPanel=='isLoadingCourseTimesPanel'" align="center">
+                <img src="img/erp/loading2.gif">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="closePanel()">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--课程课时面板end-->
+  <!--现金缴费begin-->
+  <div ng-if="openPanel == 'cash'">
+    <div ng-click="closeRechargePanel()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="modal klxx-modal-primary fade in" style="display: block;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" ng-click="closeRechargePanel()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">现金报班（应缴费：{{selectedOrder.actual_price}}￥，待缴费：{{selectedOrder.actual_price - payment.cash - payment.card - payment.transfer
+              - payment.storeAccount - payment.frozenAccount - payment.onlinePrice}}￥）</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form">
+              <input class="form-control" type="number" placeholder="请输入报班金额." ng-model="payment.paymentCash">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="addCash()">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--现金缴费end-->
+  <!--刷卡缴费begin-->
+  <div ng-if="openPanel == 'card'">
+    <div ng-click="closeRechargePanel()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <!--刷卡金额-->
+    <div class="pay-cash-window klxx-modal-primary">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closeRechargePanel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">刷卡总计：
+          <span class="yellow-num">{{payment.card}}.00</span>元（应缴费：{{selectedOrder.actual_price}}￥，待缴费：{{selectedOrder.actual_price - payment.cash
+          - payment.card - payment.transfer - payment.storeAccount - payment.frozenAccount - payment.onlinePrice}}￥）</h4>
+      </div>
+      <!--<div class="pm-wint bd" style="padding: 10px;">
+                <div class="btn btn-default fr"  ng-click="toCardPrice()">添加</div>
+            </div>-->
+      <div style="padding: 10px;">
+        <table class="table table-striped table-bordered">
+            <col width="19%" />
+            <col width="20%" />
+            <col width="20%" />
+            <col width="15%" />
+            <col width="20%" />
+            <col width="6%" />
+          <thead>
+            <tr>
+              <th>金额</th>
+              <th>付款卡号</th>
+              <th>公司pos机</th>
+              <th>公司账户</th>
+              <th>备注</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in payment.card_detail">
+              <td>
+                <span class="green-num">{{item.staffappprem}}</span>元</td>
+              <td>{{item.client_card_no}}</td>
+              <td>{{item.account_name}}</td>
+              <td>{{item.simple_cmp_name}}</td>
+              <td>
+                <span class="grey-num">{{item.extend_column}}</span>
+              </td>
+              <td>
+                <span class="blue-detail" ng-click="removeCardPrice(item.id)">删除</span>
+              </td>
+            </tr>
+            <tr ng-if="inputCradPrice">
+              <td>
+                <input class="green-num paywin-input1 mr5 col-sm-9" type="number" ng-model="inputCradInfo.staffappprem" />元
+              </td>
+              <td>
+                <input class="paywin-input2 mr5 col-sm-12" type="text" ng-model="inputCradInfo.client_card_no" />
+              </td>
+              <td>
+                <select class="paywin-input2 mr5 col-sm-12" ng-model="inputCradInfo.account" ng-options="item1.id as item1.simple_name for item1 in accountListPos"
+                  ng-change="selectAccountPOS()">
+                </select>
+              </td>
+              <td>
+                {{inputCradInfo.account_cmp}}
+              </td>
+              <td>
+                <input class="paywin-input2 mr5 grey-num col-sm-12" type="text" ng-model="inputCradInfo.extend_column" />
+              </td>
+              <td>
+                <span class="yellow-num cur" ng-click="addInputCradInfo()">确定</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!--刷卡缴费end-->
+  <!--转账缴费begin-->
+  <div ng-if="openPanel == 'transfer'">
+    <div ng-click="closeRechargePanel()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <!--转账-->
+    <div class="pay-cash-window klxx-modal-primary">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closeRechargePanel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">转账总计：
+          <span>{{payment.transfer}}.00</span>元（应缴费：{{selectedOrder.actual_price}}￥，待缴费：{{selectedOrder.actual_price - payment.cash
+          - payment.card - payment.transfer - payment.storeAccount - payment.frozenAccount  - payment.onlinePrice}}￥）</h4>
+      </div>
+      <!--<div class="pm-wint bd">
+                <div class="btn btn-default fr"  ng-click="toTransferPrice()">添加</div>
+            </div>-->
+      <div style="padding: 10px;">
+        <table class="table table-striped table-bordered">
+            <col width="20%" />
+            <col width="20%" />
+            <col width="20%" />
+            <col width="32%" />
+            <col width="8%" />
+          <thead>
+            <tr>
+              <th>
+                金额
+              </th>
+              <th>
+                付款卡号
+              </th>
+              <th>
+                公司账户
+              </th>
+              <th>
+                备注
+              </th>
+              <th>
+                操作
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in payment.transfer_detail">
+              <td>
+                <span class="green-num">{{item.staffappprem}}</span>元</td>
+              <td>{{item.client_card_no}}</td>
+              <td>{{item.simple_cmp_name}}</td>
+              <td>
+                <span class="grey-num">{{item.extend_column}}</span>
+              </td>
+              <td>
+                <span class="blue-detail" ng-click="removeTransferPrice(item.id)">删除</span>
+              </td>
+            </tr>
+            <tr ng-if="inputTransferPrice">
+              <td>
+                <input class="green-num paywin-input1 mr5 col-sm-9" type="number" ng-model="transferPriceData.staffappprem" />元
+              </td>
+              <td>
+                <input class="paywin-input2 mr5 col-sm-12" type="text" ng-model="transferPriceData.client_card_no" />
+              </td>
+              <td>
+                <select class="paywin-input2 mr5 col-sm-12" ng-model="transferPriceData.account" ng-options="item1.ACCOUNT_NAME for item1 in accountTransferList">
+                </select>
+              </td>
+              <td>
+                <input class="paywin-input2 mr5 grey-num col-sm-12" type="text" ng-model="transferPriceData.extend_column" />
+              </td>
+              <td>
+                <span class="yellow-num cur" ng-click="addInputTransferPrice()">确定</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!--转账缴费end-->
+  <!--储值账户缴费begin-->
+  <div ng-if="openPanel == 'storeAccount'">
+    <div ng-click="closeRechargePanel()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window klxx-modal-primary" style="width: 600px;left: 50%;margin-left: -300px;">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closeRechargePanel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">账户报班（应缴费：{{selectedOrder.actual_price}}￥，待缴费：{{selectedOrder.actual_price - payment.cash - payment.card - payment.transfer
+          - payment.storeAccount - payment.frozenAccount  - payment.onlinePrice}}￥）</h4>
+      </div>
+      <div class="modal-body" align="center">
+        <form class="form">
+          <input class="form-control" type="number" placeholder="请输入储值账户报班金额." ng-model="payment.paymentStoreAccount">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="addStoreAccount()">确定</button>
+      </div>
+    </div>
+  </div>
+  <!--储值账户缴费end-->
+  <!--冻结账户缴费begin-->
+  <div ng-if="openPanel == 'frozenAccount'">
+    <div ng-click="closeRechargePanel()" style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window klxx-modal-primary" style="width: 600px;left: 50%;margin-left: -300px;">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="closeRechargePanel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">账户报班（应缴费：{{selectedOrder.actual_price}}￥，待缴费：{{selectedOrder.actual_price - payment.cash - payment.card - payment.transfer
+          - payment.storeAccount - payment.frozenAccount - payment.onlinePrice}}￥）</h4>
+      </div>
+      <div class="modal-body" align="center">
+        <form class="form">
+          <input class="form-control" type="number" placeholder="请输入冻结账户报班金额." ng-model="payment.paymentFrozenAccount">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="addFrozenAccount()">确定</button>
+      </div>
+    </div>
+  </div>
+  <!--冻结账户缴费end-->
+  <!--订单暂存begin-->
+  <div ng-if="openPanel == 'saveTemporary'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在暂存中...
+      </div>
+    </div>
+  </div>
+  <!--订单暂存end-->
+  <!--订单提交审批成功begin-->
+  <div ng-if="openPanel == 'saveOrderOK'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        订单提交成功！
+        <a href="?studentId={{temporaryOrder.student_id}}#/studentMgr/studentMgrIndex" target="_self">点击查看</a>
+      </div>
+    </div>
+  </div>
+  <!--订单提交审批成功end-->
+  <!--订单提交审批begin-->
+  <div ng-if="openPanel == 'saveOrder'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在提交订单中...
+      </div>
+    </div>
+  </div>
+  <!--订单提交审批end-->
+  <!--订单正式提交begin-->
+  <div ng-if="openPanel == 'payOrder'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        订单正在付款...
+      </div>
+    </div>
+  </div>
+  <!--订单正式提交end-->
+  <!--订单提交审批成功begin-->
+  <div ng-if="openPanel == 'payOrderOK'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        订单支付成功！
+        <a href="?studentId={{temporaryOrder.student_id}}#/studentMgr/studentMgrIndex" target="_self">点击查看</a>
+      </div>
+    </div>
+  </div>
+  <!--订单提交审批成功end-->
+  <!--加载begin-->
+  <div ng-if="openPanel == 'isLoadingTemporaryOrder'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在加载订单...
+      </div>
+    </div>
+  </div>
+  <script type="text/ng-template" id="payOnlineAccountInput.html">
+    <rd-modal>
+      <rd-modal-title>在线支付({{amount}}元)</rd-modal-title>
+      <rd-modal-body>
+        <div class="gen-qrcode" ng-show="pageView == 'genQrCode'">
+          <div class="form form-horizontal">
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="请输入缴费金额" ng-model="amount" ng-disabled="true">
+            </div>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-primary" ng-click="onGenQrcode()">
+              生成支付二维码
+            </button>
+          </div>
+        </div>
+        <div class="text-center" ng-show="pageView == 'getQrCodeFromServer'">
+          <p>
+            获取二维码中，请稍候...
+          </p>
+        </div>
+        <div class="show-qrcode"  ng-show="pageView == 'showQrCode'">
+          <div class="qrcode-wrapper order-qrcode-wrapper">
+            <div id="order-pay-online-qrcode" class="text-center"></div>
+          </div>
+          <div class="text-center mt20">
+            <button class="btn btn-primary" ng-click="onPayDone()">支付完成</button>
+            <button class="btn btn-default" ng-click="onReGenQrcode()">重新生成二维码</button>
+            <button class="btn btn-danger" ng-click="$dismiss('cancel')">关闭</button>
+          </div>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer></rd-modal-footer>
+    </rd-modal>
+  </script>
+  <!--加载end-->
+</div>

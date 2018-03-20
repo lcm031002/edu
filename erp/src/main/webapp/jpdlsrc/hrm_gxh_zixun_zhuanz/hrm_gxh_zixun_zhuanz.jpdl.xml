@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="个性化咨询部转正考核表" xmlns="http://jbpm.org/4.4/jpdl" key="hrm.gxh_zixun_zhuanz" description="个性化咨询部转正考核表">
+   <start name="start1" g="146,55,48,48">
+      <transition name="填写完毕去校区总监审核" to="校区总监" g="-146,-8"/>
+   </start>
+   <task name="校区总监" g="126,129,92,52">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition name="审核通过去部门总监审核" to="部门总监审核" g="-150,-8"/>
+      <transition name="审核不同意" to="审核不同意" g="-14,-29"/>
+   </task>
+   <task name="部门总监审核" g="130,208,92,52">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition name="审核通过去人力资源审核" to="人力资源审核" g="-149,-12"/>
+      <transition name="审核不同意" to="审核不同意" g="-49,-27"/>
+   </task>
+   <task name="人力资源审核" g="127,291,92,52">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition name="审核同意" to="审核同意" g="-58,-8"/>
+      <transition name="审核不同意" to="审核不同意" g="-55,-22"/>
+   </task>
+   <java name="审核同意" g="126,369,92,52" class="com.ebusiness.erp.workflow.hrm.controller.ChangeEventController"  method="approvalSuccessInfo">
+    	<arg><object expr="#{employee_id}"/></arg>
+     	<arg><object expr="#{poslevel}"/></arg>
+     	<arg><object expr="#{post}"/></arg>
+   		<arg><object expr="#{processKey}"/></arg>
+      <transition to="流程结束"/>
+   </java>
+   <java name="审核不同意" g="331,241,92,52" class="com.ebusiness.erp.workflow.hrm.controller.ChangeEventController"  method="approvalFail">
+    <arg><object expr="#{employee_id}"/></arg>
+      <transition to="流程结束"/>
+   </java>
+   <end name="流程结束" g="148,452,48,48"/>
+</process>

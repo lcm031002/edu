@@ -1,0 +1,53 @@
+<div class="erp" ng-controller="erp_attendanceBJKMakeupController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">学员补课</span>
+		</div>
+		<div class="panel-body" ng-if="!isQueryCourse">
+			<div class="searchbar">
+				<div class="row"
+					style="margin: 0; padding: 0; padding-bottom: 15px;">
+					<rd-date-picker-range ng-start-date="searchParam.start_date"
+						ng-end-date="searchParam.end_date" ng-default-range="'lastMonth'"
+						ng-date-change="queryInfo()"></rd-date-picker-range>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>预约码</th>
+					<th>状态</th>
+					<th>激活时间</th>
+					<th>课程</th>
+					<th>课次</th>
+					<th>考勤状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="makeup in courseTimeMakeupList"
+					ng-if="!isQueryCourseTimeMakeup" style="width: 100%;">
+					<td>{{makeup.vs_date}}</td>
+					<td>{{makeup.ve_date}}</td>
+					<td>{{makeup.act_code}}</td>
+					<td>{{makeup.status_name}}</td>
+					<td>{{makeup.active_time}}</td>
+					<td>{{makeup.course_name}}</td>
+					<td>{{makeup.course_times}}</td>
+					<td>{{makeup.attended}}</td>
+				</tr>
+				<tr
+					ng-if="!isQueryCourseTimeMakeup && (!courseTimeMakeupList || !courseTimeMakeupList.length)">
+					<td colspan="9" align="center">暂无数据.</td>
+				</tr>
+				<tr ng-if="isQueryCourseTimeMakeup=='isQueryCourseTimeMakeup'">
+					<td colspan="9" align="center"><img src="img/erp/loading2.gif"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

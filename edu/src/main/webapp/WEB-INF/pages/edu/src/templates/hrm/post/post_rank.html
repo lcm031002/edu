@@ -1,0 +1,39 @@
+<div ng-controller="PostRankCtrl">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading">
+      <span class="title">职级管理</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button type="button" style="margin-bottom: 5px;" class="btn btn-primary btn-circle" ng-click="toAddPostRankPanel()"><i class="iconfont icon-add"></i> 添加</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <table class="table table-striped table-hover table-bordered">
+      <tr>
+        <th>职级</th>
+        <th>层级</th>
+        <th>id</th>
+        <th>操作</th>
+      </tr>
+      <tr ng-repeat="postRank in postRankList" ng-if="postRankList && postRankList.length">
+        <td>{{postRank.rank_code}}</td>
+        <td>{{postRank.level_codes}}</td>
+        <td>{{postRank.id}}</td>
+        <td>
+          <a ng-click="toUpdateItem(postRank)" href="javascript:void(0)">修改</a>
+        </td>
+      </tr>
+      <tr ng-if="!postRankList||!postRankList.length">
+        <td colspan="4">暂无数据</td>
+      </tr>
+      <tr ng-if="isLoading == 'loading...'">
+        <td colspan="4" align="center">
+          <img src="img/icons/big_load.gif">
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div ng-include="'templates/hrm/post/post_rank_info.html'"></div>
+</div>

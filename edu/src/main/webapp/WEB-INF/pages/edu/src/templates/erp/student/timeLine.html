@@ -1,0 +1,105 @@
+<style>
+<!--
+
+/*time start 2014-10-22*/
+
+.main-pre-time{-moz-user-select:none; width:auto; height:86px; padding:20px 0; border:1px solid #dfdfdf; border-top:3px solid #ffc592; border-bottom:none; background:#fffef0;}
+.pre-time{ width:auto;}
+.pre-time-num{ width:110px; height:26px; border:1px solid #f9cda6; text-align:center; font:400 18px/26px "微软雅黑";}
+.pre-time-txt{ font:900 12px/26px "宋体"; color:#4d4d4d; padding:0 5px;}
+.pre-time-li{ width:auto; height:26px; line-height:26px; color:#4d4d4d;}
+.pre-time-li li{ float:left; margin-left:10px;}
+.pre-time-li li span{ padding:6px 10px; border-radius:2px;}
+.pre-time-li li span:hover{ background:#ff983d; color:#fff; cursor:pointer;}
+.range-date{ display:block; height:60px; margin-left:-25px; margin-top:30px;}
+.ui-date-slider{position:relative; width:650px;}
+.ui-slider { background: none repeat scroll 0 0 #eee; border-bottom: 1px solid #fff; border-left: 1px solid #bbb; border-radius: 2px; border-top: 1px solid #bbb; height: 3px; left: 25px; position: absolute; top: 35px; width: 600px; z-index: 1;}
+.ui-slider:after { clear: both; content: " "; display: block; font-size: 0; height: 0; visibility: hidden;}
+.ui-slider-range { background-color: #8bc7f0; border: 1px solid #7da9dc; height: 3px; overflow: hidden; position: absolute; top: -1px; z-index: 1;}
+.ui-slider-range:after { background-color: #b7e1ff; content: ""; height: 1px; left: 0; position: absolute; top: 0; width: 100%;}
+.ui-date-slider-scales { width:100%; overflow: hidden; position: absolute; }
+.ui-slider-handle { background: url(../../Img/img/1dh1jloUCL.png) no-repeat scroll 0 0 rgba(0, 0, 0, 0); cursor: pointer; height: 15px; margin-left: -5px; position: absolute; top: -6px; width: 10px; z-index: 2;}
+.ui-slider-handle:hover, .ui-state-focus { background-position: -10px 0;}
+.ui-date-slider-scale { float: left; height: 60px; position: relative; text-align: center; width: 50px;}
+.ui-date-slider-month { bottom: 3px; color: #aaa; font-size: 10px; left: 15px; position: absolute; width: 20px;}
+.ui-date-slider-line { border-left: 1px solid #aaa; height: 4px; left: 25px; overflow: hidden; position: absolute; top: 32px; width: 0;}
+.ui-date-slider-line-long { height: 14px; top: 22px;}
+.ui-date-slider-year { color: #aaa; font-size: 10px; left: 15px; position: absolute; top: 6px; width: 20px;}
+.ui-slider-handle-date { background-color: #96d1f9; border: 1px solid #62a3e8; border-radius: 2px; color: #fff; font-size: 10px; line-height: 1; padding: 2px 3px; position: absolute;}
+/*time end*/
+-->
+</style>
+<div class="main-pre-time" ng-mouseup="timeLineBeginSelectUp($event,'timeSlider1')" ng-mousemove="timeLineBeginSelectMove($event,'timeSlider1')" >
+
+    <div class="pre-time ml30">
+        <div class="pt">
+            <label class="pre-time-txt fl">起止日期：</label>
+            <div class="fl">
+                <div class="dp">
+                    <div class="fl" ng-if="!model.type">
+                        <input class="pre-time-num" type="text" ng-model="model.inputSelectBeginDate" ng-blur="changeInputSelectBeginDate()"/>
+                        <label class="pre-time-txt">-</label>
+                        <input class="pre-time-num" type="text" ng-model="model.inputSelectEndDate"  ng-blur="changeInputSelectEndDate()" />
+                    </div>
+					<div class="fl" ng-if="model.type">
+                        <input class="pre-time-num" type="text" ng-model="model.inputSelfBeginDate" ng-blur="changeInputSelfBeginDate()"/>
+                        <label class="pre-time-txt">-</label>
+                        <input class="pre-time-num" type="text" ng-model="model.inputSelfEndDate"  ng-blur="changeInputSelfEndDate()" />
+                    </div>
+                    <ul class="pre-time-li ml30 fr">
+                        <li ng-click="timeLingToday()"  ng-if="!model.type"><span>今天</span></li>
+                        <li ng-click='timeLingWeek()'  ng-if="!model.type"><span>最近一周</span></li>
+                        <li ng-click='timeLingMonth()'  ng-if="!model.type"><span>一个月</span></li>
+                        <li ng-click='timeLingYear()'  ng-if="!model.type"><span>一年</span></li>
+                        <li ng-click='timeLingYearBefore()'  ng-if="!model.type"><span>更多 >></span></li>
+						<li ng-click='timeLingYearThis()'  ng-if="model.type"><span>今年 >></span></li>
+                    </ul>
+                </div>
+                <div class="range-date" ng-style="{width:model.width+'px'}"  ng-if="!model.type">
+                    <div class="ui-date-slider"  ng-style="{width:model.width+'px'}">
+                        <div class="ui-slider" ng-style="{width:model.width+'px'}">
+                            <div class="ui-slider-range"
+								  ng-style="{left: model.selectBeginDateLeft*100+'%', width: ((model.selectEndDateLeft-model.selectBeginDateLeft)*100)+'%'}">
+							</div>
+                            <div
+								  ng-mousedown="timeLineBeginSelectDown($event,'timeSlider1')"
+								  class="ui-slider-handle ui-state-default"
+								  href="javascript:void(0)"
+								  ng-style="{left: model.timeSlider1 * 100+'%',cursor: 'pointer'}"
+								  seed="f-consume-standard-youbiao1">
+						    </div>
+                            <div
+								  ng-mousedown="timeLineBeginSelectDown($event,'timeSlider2')"
+								  class="ui-slider-handle ui-state-default"
+								  href="javascript:void(0)"
+								  ng-style="{left: model.timeSlider2*100+'%','z-index':999,cursor: 'pointer'}"
+								  seed="f-consume-standard-youbiao2" >
+							</div>
+                        </div>
+                        <div class="ui-date-slider-scales"
+                             ng-style="{'margin-left': model.marginLeft+'px', width:model.width+'px'}">
+                            <div class="ui-date-slider-scale" ng-repeat="month in model.months"
+                                 ng-style="{width:model.monthLength+'px',visibility: !$index?'hidden':''}">
+                                <span class="ui-date-slider-month">{{month.name}}</span>
+                                <span class="ui-date-slider-line {{month.name==1?'ui-date-slider-line-long':''}}"></span>
+								<span class="ui-date-slider-year" ng-if="month.name==1">{{model.year}}</span>
+                            </div>
+                        </div>
+
+						<span ng-mousedown="timeLineBeginSelectDown($event,'timeSlider1')"
+							  class="ui-slider-handle-date"
+							  ng-style="{position: 'absolute',cursor: 'pointer',left: (model.selectBeginDateLeft*model.width-15)+'px',top: '12px'}">
+						{{model.selectBeginDateString}}
+						</span>
+						<span ng-mousedown="timeLineBeginSelectDown($event,'timeSlider2')"
+							  class="ui-slider-handle-date"
+							  ng-style="{position: 'absolute', cursor: 'pointer',left: (model.selectEndDateLeft*model.width+30)+'px',top: '12px'}">
+						{{model.selectEndDateString}}
+						</span>
+					
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

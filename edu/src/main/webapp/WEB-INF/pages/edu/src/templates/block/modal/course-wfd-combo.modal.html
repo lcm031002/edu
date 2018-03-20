@@ -1,0 +1,73 @@
+<rd-modal ng-form="wfdComboForm" novalidate class="form form-horizontal">
+  <rd-modal-title>晚辅导套餐{{opType=='add'?'添加':'修改'}}</rd-modal-title>
+  <rd-modal-body>
+    <div class="form form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">套餐名称</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="combo_name" ng-model='modalData.combo_name' required>
+          <div ng-messages="wfdComboForm.combo_name.$error">
+            <p ng-message="required" ng-if="wfdComboForm.combo_name.$touched">请输入套餐名称</p>
+          </div>
+        </div>
+        <label class="col-sm-2 control-label required">年级</label>
+        <div class="col-sm-4">
+          <select class="form-control" name="grade_id" ng-model="modalData.grade_id" ng-options="grade.id as grade.grade_name for grade in gradeList" required>
+          </select>
+          <div ng-messages="wfdComboForm.grade_id.$error">  
+            <p ng-message="required">请选择年级</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">套餐类型</label>
+        <div class="col-sm-4">
+          <select class="form-control" ng-model="modalData.combo_type" ng-options="type.id as type.name for type in comboTypeList" required>
+          </select>
+        </div>
+        <label class="col-sm-2 control-label required">价格</label>
+        <div class="col-sm-4">
+          <input type="number" name="price" class="form-control" ng-model='modalData.price' required ng-pattern="/^[0-9]+([.]{1}[0-9]+){0,1}$/">
+          <div ng-messages="wfdComboForm.price.$error" ng-if="wfdComboForm.price.$touched">
+            <p ng-message="pattern">请输入正确价格</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label required">课次</label>
+        <div class="col-sm-4">
+          <input type="number" class="form-control" name="course_count" ng-model="modalData.course_count" 
+          ng-pattern="/^[1-9]\d*$/"
+          required>
+          <div ng-messages="wfdComboForm.course_count.$error" ng-if="wfdComboForm.course_count.$touched">
+            <p ng-message="pattern">课次必须为正整数</p>
+          </div>
+        </div>
+        <label class="col-sm-2 control-label required">校区</label>
+        <div class="col-sm-4">
+          <select class="form-control" ng-model="modalData.branch_id" 
+          ng-options="branch.id as branch.org_name for branch in branchList" 
+          name="branch_id" 
+          required>
+          </select>
+          <div ng-messages="wfdComboForm.branch_id.$error">
+              <p ng-message="required">请选择校区</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">图片上传</label> <div class="col-sm-4">
+          <input style="width: 280px;border-radius: 4px;" type="file" name="fileImage" id="fileImage" onchange="angular.element(this).scope().onFileChange(this.files)">
+        </div>
+        <label class="col-sm-2 control-label">图片预览</label>
+        <div class="col-sm-4">
+          <img style="width:280px;height:280px;display:block;background:#ccc;" ng-src="{{img_src}}" />
+        </div>
+      </div>
+    </div>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+    <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()" ng-disabled="wfdComboForm.$invalid" >确定</button>
+  </rd-modal-footer>
+</rd-modal>

@@ -1,0 +1,493 @@
+<div class="erp" ng-controller="erp_StudentIndexAttendanceController">
+  <!--main-content-->
+  <!--个人考勤 start-->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">学员考勤</span>
+    </div>
+  </div>
+  <!--考勤-->
+  <div id="pre-info" class="panel panel-primary">
+    <div id="loadSpan" style="margin:0 auto;display:table; width:5%;height:5%;z-index: 10" ng-if="wait==true">
+      <img id="load" src="img/erp/loading2.gif" style="width:30%; height:30%; padding:0 60px;border-radius: 4px;">
+    </div>
+    <div class="panel-body">
+      <ul id="pre-info-c" class="nav nav-tabs">
+        <li class="{{businessType==1?'active':''}} fl" ng-click="changeBusinessType(1)"><a href="javascript:void(0);" data-toggle="tab">班级课</a></li>
+        <!-- <li class="{{businessType==2?'active':''}} fl" ng-click="changeBusinessType(2)" ng-if="productLine == 2 || productLine == 11"><a href="javascript:void(0);" data-toggle="tab">一对一</a></li> -->
+        <li class="{{businessType==3?'active':''}} fl" ng-click="changeBusinessType(3)"><a href="javascript:void(0);" data-toggle="tab">晚辅导</a></li>
+      </ul>
+    </div>
+    <div class="panel-body">
+      <div class="form-inline">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="请输入搜索关键字." ng-model="searchInfo">
+          <span class="input-group-btn" ng-click="queryStudentCourse()"><button class="btn btn-primary"><i class="fa fa-search"></i></button></span>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <!--班级课-->
+      <div class="" ng-if="businessType==1" style="text-align: center;">
+        <table class="table table-striped table-hover table-bordered">
+          <thead>
+            <tr>
+              <th width="10%"></th>
+              <th width="45%">课程</th>
+              <th width="10%">老师</th>
+              <th width="5%">科目</th>
+              <th width="10%">上课时间</th>
+              <th width="10%">下课时间</th>
+              <th width="10%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="course in courses">
+              <td colspan="7">
+                <table style="width:100%;">
+                  <thead>
+                    <tr>
+                      <col width="10%">
+                      <col width="45%">
+                      <col width="10%">
+                      <col width="5%">
+                      <col width="10%">
+                      <col width="10%">
+                      <col width="10%">
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <img class="avatar-45" ng-src="{{course.PHOTO?course.PHOTO:'img/erp/head.png'}}" />
+                      </td>
+                      <td>{{course.COURSE_NAME}}{{course.COURSE_NO}}</td>
+                      <td>{{course.TEACHER_NAME}}{{course.ENCODING}}</td>
+                      <td>{{course.NAME}}</td>
+                      <td>{{course.START_DATE}}</td>
+                      <td>{{course.END_DATE}}</td>
+                      <td>
+                        <img ng-src="{{course.showDetail?'img/erp/down.png':'img/erp/up.png'}}" class="cur" ng-click="showDetail(course)" />
+                      </td>
+                    </tr>
+                    <tr ng-if="course.showDetail">
+                      <td colspan="7">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>课次</th>
+                              <th>上课日期</th>
+                              <th>考勤日期</th>
+                              <th>考勤状态</th>
+                              <th>教师名称</th>
+                              <th>辅导老师</th>
+                              <th>补课预约码</th>
+                              <th>开始时间</th>
+                              <th>截止时间</th>
+                              <th>备注</th>
+                              <th>操作</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-if="course.isLoadingTimes">
+                              <td colspan="6" align="center">
+                                <img src="img/erp/loading2.gif">
+                              </td>
+                            </tr>
+                            <tr ng-repeat="courseTime in course.courseTimes" ng-if="!course.isLoadingTimes">
+                              <td>{{courseTime.course_times}}</td>
+                              <td>{{courseTime.course_date}}</td>
+                              <td>{{courseTime.attend_date}}</td>
+                              <td>
+                                <div class="buttonbg" ng-if="courseTime.att_shenpi_status != 1 && courseTime.is_valid!=0">
+                                  <div ng-class="{10: 'bottonselect', 11:'botton',12:'botton'}[courseTime.attend_type]" ng-click="changeAttendType(courseTime,10)">置空</div>
+                                  <div ng-class="{10: 'botton', 11:'botton',12:'bottonselect'}[courseTime.attend_type]" ng-click="changeAttendType(courseTime,12)">正常上课</div>
+                                  <div ng-class="{10: 'botton', 11:'bottonselect',12:'botton'}[courseTime.attend_type]" ng-click="changeAttendType(courseTime,11)">挂起</div>
+                                </div>
+                                <div class="buttonbg" ng-if="courseTime.is_valid==0" align="center">
+                                  已转班或退费
+                                </div>
+                                <div class="buttonbg" ng-if="courseTime.att_shenpi_status == 1" align="center">
+                                  跨月置空审批中
+                                </div>
+                              </td>
+                              <td>
+                                  {{courseTime.teacher_name}}
+                              	<!-- <a href="?courseId={{course.ID}}#/orders/classesScheduleCourse">{{courseTime.teacher_name}}</a> -->
+                              	<!-- 
+                                <div class="con-input-self fl" ng-if="(courseTime.is_valid==0||courseTime.att_shenpi_status==1)">
+                                  {{courseTime.teacher_name}}
+                                </div>
+                                <div class="mass-tab-consc" ng-if="courseTime.is_valid!=0&&courseTime.att_shenpi_status !=1">
+                                  <div class="mass-cells1 pre-br fl" style="overflow: visible;">
+                                    <div class="student_grade fl">
+                                      <div class="con-input-self fl">
+                                        <input class="inner_input fl" type="text" style="text-align: center;" ng-model="courseTime.teacher_name" ng-change="courseSchedulingTeacherChange(courseTime)" />
+                                        <i class="con-input-self-em cur" ng-click="win_change_student_infoDownListGrade(courseTime)" style="margin-top:12px;"></i>
+                                      </div>
+                                      <ul class="list-con-grade">
+                                        <li class="cur" ng-repeat="teacher in courseTime.teacherList" ng-click="changeCourseSchedulingTeacher(courseTime,teacher)">
+                                          {{teacher.teacher_name}}({{teacher.encoding}})
+                                        </li>
+                                      </ul>
+                                      <ul ng-if="courseScheduling.isteacherLoading=='loading...'" class="list-con-grade" style="margin-top:12px;">
+                                        <li style="width:100%;">
+                                          <img src="img/erp/loading2.gif">
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                                -->
+                              </td>
+                              <td>{{courseTime.assteacher_name}}</td>
+                              <td>
+                                {{courseTime.activation_code}}
+                              </td>
+                              <td>
+                                {{courseTime.valid_start_date | date:'yyyy-MM-dd'}}
+                              </td>
+                              <td>
+                                {{courseTime.valid_end_date | date:'yyyy-MM-dd'}}
+                              </td>
+                              <td>
+                                <label>
+                                  <input type="text" name="textfield2" class="inputstyle" ng-model="courseTime.remark" />
+                                </label>
+                              </td>
+                              <td>
+                                <div align="center" ng-if="courseTime.att_shenpi_status != 1">
+                                  <img src="img/erp/mx.png" width="44" height="23" ng-click="showAttentDetail(courseTime,course)" class="cur" />
+                                  <img src="img/erp/save.png" width="44" height="23" ng-click="saveAttendance(courseTime,course)" class="cur" />
+                                  <img ng-if="courseTime.attend_type==11" src="img/erp/buke.png" width="44" height="23" ng-click="extralesson(courseTime,teach)" />
+                                    <button class="btn btn-default" style="    height: 25px;font-size: 12px;padding: 2px 5px;" ng-click="openParamSettingsPanel(courseTime.SCHEDULINGID,courseTime.course_id)">高级参数</button>
+                                </div>
+                                <div align="center" ng-if="courseTime.att_shenpi_status == 1">
+                                  <img src="img/erp/mx.png" width="44" height="23" ng-click="attentDetail(courseTime,teach)" /> 暂时无法进行考勤
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr ng-if="isLoading == 'isLoading'">
+              <td colspan="7" align="center">
+                <img src="img/erp/loading2.gif">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--一对一-->
+      <div class="" ng-if="businessType==2">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th width="2%"><input type="checkbox" ng-model="attend.checkYdyAllFlag" ng-click="onYdyCheckAll()"></th>
+              <th width="10%">操作</th>
+              <th width="10%">上课日期</th>
+              <th width="5%">上课时间</th>
+              <th width="5%">下课时间</th>
+              <th width="10%">学管师</th>
+              <th width="10%">教师</th>
+              <th width="10%">学生</th>
+              <th width="9%">学生考勤状态</th>
+              <th width="9%">教师考勤状态</th>
+              <th width="10%">考勤单号</th>
+              <th width="10%">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="ydy in ydyList">
+              <td><input type="checkbox" ng-model="ydy.selectFlag"></td>
+              <td><a href="javascript:void(0);"
+    ng-click="cancelYdyAttend(ydy)">置空</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="javascript:void(0);"
+    ng-click="cancelYdySched(ydy)">排课取消</a></td>
+              <td>{{ydy.course_date}}</td>
+              <td>{{ydy.start_time}}</td>
+              <td>{{ydy.end_time}}</td>
+              <td>{{ydy.counselor_name}}</td>
+              <td>{{ydy.attTeacherName}}</td>
+              <td>{{ydy.student_name}}</td>
+              <td>{{ydy.attend_type_name}}</td>
+              <td>{{ydy.attend_type_teacher_name}}</td>
+              <td>{{ydy.encoding ? ydy.encoding : ydy.id}}</td>
+              <td><input type="text" ng-model="ydy.remark" /></td>
+            </tr>
+            <tr ng-if="isLoading == 'isLoading'">
+              <td colspan="12" align="center">
+                <img src="img/erp/loading2.gif">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div>
+        	<button class="btn btn-primary btn-circle"
+				ng-click="ydyBatchAttend(21)">
+				<i class="fa fa-plus"></i>批量考勤
+			</button>
+			<button class="btn btn-primary btn-circle"
+				ng-click="ydyBatchAttend(23)">
+				<i class="fa fa-plus"></i>排课取消
+			</button>
+        </div>
+      </div>
+      <!--晚辅导-->
+      <div class="" ng-if="businessType==3">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>操作</th>
+              <th>报班单号</th>
+              <th>课程名称</th>
+              <th>报班课次</th>
+              <th>开始时间</th>
+              <th>到期时间</th>
+              <th>已用</th>
+              <th>剩余</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="wfd in wfdList" ng-if="wfdList && wfdList.length">
+              <td><a href="javascript:void(0)" ng-click="showWfdAttentDetail(wfd)">考勤</a></td>
+              <td>{{wfd.ORDER_NO}}</td>
+              <td>{{wfd.COURSE_NAME}}</td>
+              <td>{{wfd.COURSE_TOTAL_COUNT}}</td>
+              <td>{{wfd.START_DATE}}</td>
+              <td>{{wfd.END_DATE}}</td>
+              <td>{{wfd.COURSE_USED_COUNT}}</td>
+              <td>{{wfd.COURSE_SURPLUS_COUNT}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!--个人考勤-课次考勤明细_start-->
+  <style ng-if="openDialog == 'open.dialog.attendDetails'">
+  .openDialog-window {
+    min-width: 50%;
+    min-width: 600px;
+    height: auto;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    position: fixed;
+    left: 25%;
+    top: 35%;
+    z-index: 1000;
+    background: #fff;
+    -webkit-box-shadow: #666 0px 0px 10px;
+    -moz-box-shadow: #666 0px 0px 10px;
+    box-shadow: #666 0px 0px 10px;
+  }
+  </style>
+  <div ng-click="closeAttentDetail()" 
+    style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);" ng-if="openDialog == 'open.dialog.attendDetails'">
+  </div>
+  <div class="openDialog-window" ng-if="openDialog == 'open.dialog.attendDetails'">
+    <div class="window-tit">
+      <span class="ml10 fl">课次考勤记录</span>
+      <i class="cz-window-close mt10 mr10 fr" ng-click="closeAttentDetail()"></i>
+    </div>
+    <form>
+      <table width="600" border="0" cellspacing="0" cellpadding="0" class="table" style="text-align: center; line-height: 40px;">
+        <thead>
+          <tr>
+            <th style="padding-left:20px; line-height:40px;">课次</th>
+            <th style="line-height:40px;">排课日期</th>
+            <th style="line-height:40px;">考勤日期</th>
+            <th style="line-height:40px;">考勤状态</th>
+            <th style="line-height:40px;">考勤人</th>
+            <th style="line-height:40px;">备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tablelist3" ng-if="attDetailsLoad == 'loading'">
+            <td colspan="6">
+              <img id="load" src="../../Img/img/loading.gif" style="width:8%; height:10%; padding:0 60px;border-radius: 4px;">
+            </td>
+          </tr>
+          <tr class="tablelist3" ng-if="attDetailsLoad == '' && attDetailsResult.length == 0">
+            <td colspan="6">
+              暂无考勤记录
+            </td>
+          </tr>
+          <tr ng-if="attDetailsLoad == ''" ng-repeat="attendDetails in attDetailsResult" class="tablelist3">
+            <td>{{attendDetails.course_times}}</td>
+            <td>{{attendDetails.course_date}}</td>
+            <td>{{attendDetails.attend_date2}}</td>
+            <td>{{attendDetails.attend_type_name}}</td>
+            <td>{{attendDetails.attend_user_name}}</td>
+            <td>{{attendDetails.remark}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    <div class="window-btn">
+      <a class="window-btn-sendbd" href="javascript:void(0);" ng-click="closeAttentDetail()">
+        <span class="window-btn-send">返回</span>
+      </a>
+    </div>
+  </div>
+  <!--个人考勤-课次考勤明细_end-->
+  <!--补课_start-->
+  <style ng-if="openDialog == 'open.dialog.extralesson'">
+  .openDialog-window {
+    width: 400px;
+    height: auto;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    position: fixed;
+    left: 37%;
+    top: 35%;
+    z-index: 1000;
+    background: #fff;
+    -webkit-box-shadow: #666 0px 0px 10px;
+    -moz-box-shadow: #666 0px 0px 10px;
+    box-shadow: #666 0px 0px 10px;
+  }
+  </style>
+  <div ng-click="closeAttentDetail()" 
+    style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);" 
+      ng-if="openDialog == 'open.dialog.extralesson'">
+  </div>
+  <div class="openDialog-window" ng-if="openDialog == 'open.dialog.extralesson'">
+    <div class="window-tit">
+      <span class="ml10 fl">补课申请</span>
+      <i class="cz-window-close mt10 mr10 fr" ng-click="closeExtralesson()"></i>
+    </div>
+    <div class="uoloadbottom">
+      <table border="0" cellspacing="0" cellpadding="0" class="buketable" align="center">
+        <tr>
+          <td align="right">手机号：</td>
+          <td>
+            <input type="text" id="phone" ng-model="phone" class="inputstyle10" />
+          </td>
+        </tr>
+        <tr>
+          <td align="right">开始时间：</td>
+          <td>
+            <input type="text" ng-model="elStartDate" id="elStartDate" class="inputstyle10" onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd',readOnly:true})" />
+          </td>
+        </tr>
+        <tr>
+          <td align="right">截止时间：</td>
+          <td>
+            <input type="text" ng-model="elEndDate" id="elEndDate" class="inputstyle10" onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd',readOnly:true})" />
+          </td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td>
+            <div style="float:left;margin-top:5px;margin-bottom:10px;" ng-click="saveExtralesson()">
+              <input type="submit" value="确定" class="window-btn-send" style="color:#fff;" />
+            </div>
+            <div style="float:left;margin-top:5px;margin-bottom:10px;margin-left:10px;" ng-click="closeExtralesson()">
+              <a href="javascript:void(0);">
+                <input type="submit" value="返回" class="window-btn-send" style="color:#fff;" />
+              </a>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <!--补课_end-->
+    <!-- 高级参数start -->
+    <div ng-if="isOpenParamSettings">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+        <div class="panel panel-default" style="z-index: 1000;position:fixed;left:20%;top:25%;width:60%;">
+            <div class="panel-heading font-bold">
+                高级参数
+                <a href="javascript:void(0);" ng-click="closeParamSettingsPanel()"><i class="fa fa-times pull-right" ></i></a>
+            </div>
+            <div class="panel-body" ng-if="!isQueryCourseParamSettings">
+                <table class="table">
+                    <col width="15%"/>
+                    <col width="20%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>参数值</th>
+                        <th>扩展参数</th>
+                        <th>参数值</th>
+                        <th>口语长度</th>
+                        <th>备注</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="paramSetting in paramSettingsList">
+                        <td>{{paramSetting.courseName}}</td>
+                        <td>
+                            <div class="input-group  btn-group">
+                                <input type="text" class="form-control" ng-model="paramSetting.courseValName" ng-readonly="true" />
+                                <span class="input-group-btn  dropdown-toggle" data-toggle="dropdown">
+                                            <button class="btn btn-default" type="button" ng-click="changeSearchInfo(paramSetting)" >
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                      </span>
+                                <div class="dropdown-menu pull-right" role="menu" style="padding: 10px;width:100%;">
+                                    <div class="col-lg-12" align="center" style="margin-bottom: 15px;">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" ng-model="queryParam.search_info" ng-change="changeSearchInfo(paramSetting)" />
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <tr ng-repeat="data in queryParam.dataList" ng-if="isLoadingDataList != 'isLoadingDataList' && queryParam.dataList && queryParam.dataList.length">
+                                            <td ng-click="selectParam(paramSetting,data)">{{data.name}}，{{data.encoding}}</td>
+                                        </tr>
+                                        <tr ng-if="isLoadingDataList != 'isLoadingDataList' && (!queryParam.dataList || !queryParam.dataList.length)">
+                                            <td style="text-align: center;">没有找到数据.</td>
+                                        </tr>
+                                        <tr ng-if="isLoadingDataList == 'isLoadingDataList'">
+                                            <td align="center"><img src="img/erp/loading2.gif"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{paramSetting.courseKey == 'course_manager'? '-':paramSetting.extandVal3}}</td>
+                        <td>
+                            <input class="form-control" ng-model="paramSetting.extandVal1" type="text" ng-if="paramSetting.courseKey != 'course_manager'" ng-change="changeHourLen(paramSetting)"/>
+                        </td>
+                        <td>
+                            <input class="form-control"  ng-model="paramSetting.extandVal2" type="text" ng-if="paramSetting.courseName == '外文老师'"  ng-change="changeHourLen(paramSetting)"/>
+                        </td>
+                        <td>
+                            <input class="form-control" ng-model="paramSetting.remark" type="text" />
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="col-lg-12" style="margin-top: 15px;margin-bottom: 15px;" align="center">
+                    <button class="btn btn-default" type="button" ng-click="saveParamSettings()">
+                        保存
+                    </button>
+                    <button class="btn btn-default" type="button" ng-click="closeParamSettingsPanel()">
+                        关闭
+                    </button>
+                </div>
+                <div>
+                    <span class="text-danger">公式：</span><span>中教长度+外教长度=课时长度</span>
+                </div>
+            </div>
+            <div class="panel-body" ng-if="isQueryCourseParamSettings == 'isQueryCourseParamSettings'">
+                正在加载...
+            </div>
+        </div>
+    </div>
+    <!-- 高级参数 end-->
+</div>
+<!--个人考勤 end-->

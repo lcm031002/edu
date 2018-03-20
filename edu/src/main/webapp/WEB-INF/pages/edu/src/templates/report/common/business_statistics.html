@@ -1,0 +1,94 @@
+<div class="report" ng-controller="report_businessStatisticsController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">培英班运营统计总表</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <form class="form-inline">
+          <rd-branch ng-bu-id="searchParam.p_bu_id"
+                     ng-branch-id="searchParam.p_branch_id">
+            <div class="form-group">
+              <span class="required"></span>
+              课程季：<select class="form-control" ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList" ng-model="searchParam.p_season_id">
+            </select>
+            </div>
+            <div class="form-group">
+              年级：<select class="form-control" ng-options="grade.id as grade.grade_name for grade in gradeList" ng-model="searchParam.p_grade_id">
+            </select>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+              <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+            </div>
+          </rd-branch>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel ov-a">
+    <table class="table table-stripped {{loadStatues!=false?'':'min-width-2500'}}">
+      <col width="60" />
+      <col width="180" />
+      <col width="100" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>业绩校区</th>
+          <th>年级</th>
+          <th>总业绩</th>
+          <th>总人数</th>
+          <th>总人次</th>
+          <th>续报业绩</th>
+          <th>续报人数</th>
+          <th>续报人次</th>
+          <th>新生业绩</th>
+          <th>新生人数</th>
+          <th>新生人次</th>
+          <th>沉睡业绩</th>
+          <th>沉睡人数</th>
+          <th>沉睡人次</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="busStatistics in busStatisticss" ng-if=" !loadStatues && busStatisticss && busStatisticss.length">
+          <td>{{$index + 1}}</td>
+          <td>{{busStatistics.performance_branch_name}}</td>
+          <td>{{busStatistics.grade_name}}</td>
+          <td>{{busStatistics.performance}}</td>
+          <td>{{busStatistics.people}}</td>
+          <td>{{busStatistics.subject}}</td>
+          <td>{{busStatistics.xb_performance}}</td>
+          <td>{{busStatistics.xb_people}}</td>
+          <td>{{busStatistics.xb_subject}}</td>
+          <td>{{busStatistics.xs_performance}}</td>
+          <td>{{busStatistics.xs_people}}</td>
+          <td>{{busStatistics.xs_subject}}</td>
+          <td>{{busStatistics.cs_performance}}</td>
+          <td>{{busStatistics.cs_people}}</td>
+          <td>{{busStatistics.cs_subject}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center" ng-if="loadStatues">
+      <img src="img/erp/loading2.gif">
+    </div>
+    <div class="text-center" ng-if="!loadStatues && (busStatisticss == null || busStatisticss.length == 0)">
+      <div class="no-data"></div>
+      暂无数据
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    
+       <!-- Data Converter -->
+    <bean id="globalObjectMapper" class="com.ebusiness.common.objectmapper.GlobalObjectMapper"/>
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">  
+        <property name="objectMapper" ref="globalObjectMapper"/>
+    </bean>  
+      
+    <!-- Method Annotation Mapping -->  
+       <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">  
+        <property name="urlDecode" value="true"/>  
+       </bean>  
+      
+       <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
+        <property name="messageConverters">  
+           <list>  
+                <ref bean="jsonConverter" />  
+           </list>  
+        </property>  
+       </bean>   
+       <bean class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver ">  
+        <property name="messageConverters">  
+           <list>  
+                <ref bean="jsonConverter" />  
+           </list>  
+        </property>  
+       </bean>  
+</beans>    

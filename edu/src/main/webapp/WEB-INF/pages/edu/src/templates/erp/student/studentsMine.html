@@ -1,0 +1,98 @@
+<div ng-controller="erp_StudentMineController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">我的学员</span>
+		</div>
+		<div class="panel-body operation-panel">
+			<div class="searchbar">
+				<div class="form-inline">
+					<div class="form-group">
+                        <div class="input-group">
+
+                            <input type="text" class="form-control" placeholder="学生姓名"
+                                ng-model="searchParam.student_name" autocomplete="off">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" ng-click="queryMineStudent()"><i class="iconfont icon-search"></i> 搜索</button>
+                            </span>
+                        </div>
+						<div class="input-group">
+						</div>
+                        <a href="?#/orders/attendanceMgr/attendanceMgrYDY" target="_blank" class="btn btn-default">1对1学员批量考勤</a>
+                        <a href="javascript:void(0)" ng-click="exportExcel()" class="btn btn-default mr25"><i class="iconfont icon-public_export"></i> 导出</a>
+                    </div>
+                    <div class="form-group">
+                        <span class="btn mr5" ng-repeat="btn in statusBtnNames"
+                            ng-class="{true: 'btn-warning', false: 'btn-default'}[btn.status==searchParam.student_status]"
+                            ng-click="queryMineStudentByStatus(btn.status)">{{btn.name}}</span>
+                    </div>
+                    <!-- <div class="input-group">
+                        <button class="btn btn-primary" ng-click="queryMineStudent(1)" ng-model="searchParam.student_status">正常</button>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <button class="btn btn-primary" ng-click="queryMineStudent(6)" ng-model="searchParam.student_status">结课</button>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <button class="btn btn-primary" ng-click="queryMineStudent(4)" ng-model="searchParam.student_status">沉睡</button>
+                        </span>
+                    </div> -->
+                </div>
+			</div>
+		</div>
+	</div>
+    <!--main form end-->
+    <div class="table-panel">
+        <div class="ov-a">
+            <table class="table table-striped table-hover table-bordered min-width-1200">
+                <col width="260" />
+                <col width="90" />
+                <col width="90" />
+                <col width="100" />
+                <col width="90" />
+                <col width="90" />
+                <col width="70" />
+                <col width="100" />
+                <col width="100" />
+                <tr>
+                    <th>操作</th>
+                    <th>学管师姓名</th>
+                    <th>咨询师姓名</th>
+                    <th>学生编码</th>
+                    <th>学生姓名</th>
+                    <th>学校</th>
+                    <th>年级</th>
+                    <th>剩余可用课时</th>
+                    <th>剩余可排课时</th>
+                </tr>
+                <tr ng-repeat="student in studentList" 
+                    ng-if="!loadStatues && studentList && studentList.length">
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="?studentId={{student.student_id}}#/studentMgr/studentMgrYDYSchedule"
+                            target="_blank">更改排课</a>
+                        <a class="btn btn-default btn-sm" href="?#/orders/classesSchedule/ydyApply/Add?studentId={{student.student_id}}" target="_blank">新增排课单</a>
+                        <a class="btn btn-primary btn-sm" href="?#/orders/classesSchedule/ydyProcess?studentId={{student.student_id}}&studentName={{student.student_name}}"
+                            target="_blank">排课</a>
+                        <a class="btn btn-default btn-sm" href="?studentId={{student.student_id}}#/studentMgr/studentTraceInfo"
+                            target="_blank">跟踪</a>
+                        <!--<span ng-show="student.bu_id != selectedOrg.buId" class="text-muted">（非当前所属团队，不能进行操作）</span>-->
+                    </td>
+                    <td class="word_break">{{student.name}}</td>
+                    <td class="word_break">{{student.counselor_name}}</td>
+                    <td>
+                        <a href="?studentId={{student.student_id}}#/studentMgr/studentMgrIndex" target="_blank">{{student.student_encoding}}</a>
+                    </td>
+                    <td class="word_break">{{student.student_name}}</td>
+                    <td>{{student.school_name}}</td>
+                    <td>{{student.grade_name}}</td>
+                    <td class="word_break">{{student.course_surplus_count}}</td>
+                    <td class="word_break">{{student.course_schedule_count}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues || studentList.length > 0"></ng-pagination>
+    </div>
+</div>

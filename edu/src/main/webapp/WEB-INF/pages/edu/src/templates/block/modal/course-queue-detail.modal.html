@@ -1,0 +1,34 @@
+<rd-modal>
+	<rd-modal-title>{{course.name}}[课次{{course.seq}}]排号详情</rd-modal-title>
+	<rd-modal-body>
+		<div class="table-panel">
+			<table class="table table-striped">
+				<tr>
+					<th width="15%">排号号码</th>
+					<th width="15%">学生姓名</th>
+					<th width="20%">排号时间</th>
+					<th>联系方式</th>
+					<th>操作</th>
+				</tr>
+				<tr ng-repeat="detail in courseQueueList">
+					<td>{{detail.num}}号</td>
+					<td>{{detail.studentName}}</td>
+					<td>{{detail.createTime | date: 'yyyy-MM-dd hh:mm'}}</td>
+					<td>{{detail.phone}}</td>
+					<td>
+						<button class="btn btn-default btn-sm" 
+							ng-hide="detail.isCancel"
+							ng-click="cancelQueue(detail)">取消排号</button>
+						<button class="btn btn-primary btn-sm" 
+							ng-hide="detail.isCancel"
+							ng-click="goToOrders(detail.studentId)">去报班</button>
+					</td>
+				</tr>
+			</table>
+			<ng-pagination conf="pageConf"></ng-pagination>
+		</div>
+	</rd-modal-body>
+	<rd-modal-footer>
+		<button class="btn btn-default" ng-click="$dismiss()">关闭</button>
+	</rd-modal-footer>
+</rd-modal>

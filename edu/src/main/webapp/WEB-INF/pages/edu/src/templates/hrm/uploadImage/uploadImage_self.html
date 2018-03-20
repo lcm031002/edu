@@ -1,0 +1,28 @@
+<div class="hrm " ng-controller="hrm_uploadImgSelfController">
+    <div class="container" ng-if="employeeId">
+        <div class="action">
+            <div class="new-contentarea tc">
+                <a href="javascript:void(0)" class="upload-img">
+                    <label for="upload-file" style="padding-top:3px;">选择头像</label>
+                </a>
+                <input class="" name="upload-file" id="upload-file" type="file">
+            </div>
+            <input id="upSave" class="Btnsty_peyton" value="上传" type="button" ng-click="uploadSave()">
+        </div>
+        <div style="background-image: url(&quot;&quot;); background-size: 658px 851px; background-position: -129px -225.5px; background-repeat: no-repeat;transform-origin: 0px 0px 0px; transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) scale(1) translateZ(0px);" class="imageBox">
+            <div class="thumbBox"></div>
+            <div class="spinner" style="display: none;">请上传头像.</div>
+        </div>
+        <div style=" float:left;margin-top:10px; margin-bottom:10px; text-align:center; width:100%;">
+            <input id="btnZoomIn" class="Btnsty_peyton" value="+" type="button" style="float:left;">
+            <input id="btnZoomOut" class="Btnsty_peyton" value="-" type="button" style="float:left;">
+            <input id="btnCrop" class="Btnsty_peyton" value="裁切" type="button" style="float:right;">
+        </div>
+        <div class="cropped">
+            <img  style="width:50%; height:50%; float:left;margin-top:4px;border-radius:1000px;" ></p>
+        </div>
+    </div>
+    <div ng-if="!employeeId">
+        未找到员工，请联系管理员！
+    </div>
+</div>

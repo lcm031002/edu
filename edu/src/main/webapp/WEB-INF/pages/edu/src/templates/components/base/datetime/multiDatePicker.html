@@ -1,0 +1,91 @@
+<div class="kl-calendar-wrapper">
+  <div class="kl-calendar-header">
+    <!-- <button class="btn btn-xs prev-year" ng-click="calendarDecrement(calendar, 'year')"><<</button> -->
+    <button class="btn btn-primary btn-xs pre-month" ng-click="calendarDecrement(calendar, 'month')">上月</button>
+    <button class="btn btn-primary btn-xs current">
+      {{calendar.yearMonth}}
+    </button>
+    <button class="btn btn-primary btn-xs next-month" ng-click="calendarIncrement(calendar, 'month')">下月</button>
+    <!-- <button class="btn btn-xs next-year" ng-click="calendarIncrement(calendar, 'year')">>></button> -->
+  </div>
+  <div class="kl-calendar-body">
+    <table>
+      <tr>
+        <th>周一</th>
+        <th>周二</th>
+        <th>周三</th>
+        <th>周四</th>
+        <th>周五</th>
+        <th>周六</th>
+        <th>周日</th>
+      </tr>
+      <tr ng-repeat="days in calendar.weeks">
+        <td ng-repeat="day in days" ng-class="" ng-click="calendarToggleCheck(day)">
+          <div class="day-wrapper" ng-class="{'checked':day.isChecked,'text-muted': !day.isCurrentMonth}">
+            {{day.date}}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <hr>
+  <div class="text-right">
+    <button class="btn btn-danger btn-xs" ng-click="clearAllCalendarChecked(calendar)">
+      <i class="iconfont icon-delete"></i> 清空所有</button>
+    <button class="btn btn-primary btn-xs" ng-click="setCalendarToCurrenDay(calendar)">
+      <i class="iconfont icon-refresh"></i> 返回本月</button>
+  </div>
+  <div class="text-warning mt10">*点击日历选择日期，可多选，再次点击取消对应日期的选择</div>
+</div>
+
+<style>
+  .kl-calendar-wrapper {
+    border: 1px solid #eee;
+    padding: 15px 20px;
+    width: 350px;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-header {
+    text-align: center;
+    padding-bottom: 10px;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-header button {
+    font-size: 12px;
+    margin: 0 3px;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-body th,
+  .kl-calendar-wrapper .kl-calendar-body td {
+    width: 50px;
+    text-align: center;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-body td {
+    cursor: pointer;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-body td>div.day-wrapper {
+    border-radius: 50%;
+    border: 1px solid transparent;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-body td:hover>.day-wrapper {
+    color: #1b8cf2;
+    border-color: #1b8cf2;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-body td>.day-wrapper.active,
+  .kl-calendar-wrapper .kl-calendar-body td>.day-wrapper.checked {
+    color: #fff;
+    background-color: #1b8cf2;
+  }
+
+  .kl-calendar-wrapper .kl-calendar-body td>.day-wrapper.active.text-muted,
+  .kl-calendar-wrapper .kl-calendar-body td>.day-wrapper.checked.text-muted {
+    background-color: rgba(27, 140, 242, 0.8);
+  }
+</style>

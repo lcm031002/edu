@@ -1,0 +1,76 @@
+<div ng-controller="erp_noticeController">
+  <div class="panel panel-primary" ng-show="optype != 'view'">
+    <div class="panel-heading"><span class="title">系统通知</span></div>
+    <div class="panel-body operation-panel">
+      <div class="searchbar">
+        <form class="form-inline">
+          <div class="form-group">
+            <span class="input-label">开始日期：</span>
+            <rd-date-picker-popup ng-model="searchForm.p_start_date"></rd-date-picker-popup>
+          </div>
+          <div class="form-group">
+            <span class="input-label">截止日期：</span>
+            <rd-date-picker-popup ng-model="searchForm.p_end_date"></rd-date-picker-popup>
+          </div>
+          <div class="form-group">
+            <span class="input-label">关键字：</span>
+            <input class="form-control" type="text" ng-model="searchForm.p_keyWords" autocomplete="off" />
+          </div>
+          <button class="btn btn-primary" ng-click="queryPage()">搜索</button>
+        </form>
+      </div>
+      <hr>
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="handleAddNotice()">
+          <i class="iconfont icon-add"></i>添加
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--main form end-->
+  <div class="table-panel">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th width="120px;"></th>
+          <th width="80px">通知类型</th>
+          <th width="120px">标题</th>
+          <th>内容</th>
+          <th width="120px" ng-if="optype!='view'">状态</th>
+          <th width="120px" ng-if="optype!='view'">开始日期</th>
+          <th width="120px" ng-if="optype!='view'">结束日期</th>
+          <th width="120px">创建用户</th>
+          <th ng-if="optype!='view'" width="100px">创建时间</th>
+          <th ng-if="optype!='view'" width="100px">修改用户</th>
+          <th ng-if="optype!='view'" width="100px">修改时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="notice in noticeList" ng-if="noticeList && noticeList.length">
+          <td>
+            <span ng-show="optype=='view'" class="cur text-primary" ng-click="handleViewNotice(notice)">
+              <i class="iconfont icon-view"></i>查看
+            </span>
+            <span ng-show="optype!='view'" class="cur" ng-click="handlePutNotice(notice)">
+              <i class="iconfont icon-edit text-primary"></i>修改
+            </span>
+            <span ng-show="optype!='view'" class="cur" ng-click="handleDeleteNotice(notice.id)">
+              <i class="iconfont icon-delete text-danger"></i>删除
+            </span>
+          </td>
+          <td>{{notice.type_name}}</td>
+          <td>{{notice.subject}}</td>
+          <td>{{notice.content}}</td>
+          <td ng-if="optype!='view'">{{notice.status_name}}</td>
+          <td ng-if="optype!='view'">{{notice.start_date}}</td>
+          <td ng-if="optype!='view'">{{notice.end_date}}</td>
+          <td>{{notice.create_user_name}}</td>
+          <td ng-if="optype!='view'">{{notice.create_time | date:'yyyy-MM-dd HH:mm'}}</td>
+          <td ng-if="optype!='view'">{{notice.update_user_name}}</td>
+          <td ng-if="optype!='view'">{{notice.update_time | date:'yyyy-MM-dd HH:mm'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-pagination conf="paginationConf"></ng-pagination>
+  </div>
+</div>

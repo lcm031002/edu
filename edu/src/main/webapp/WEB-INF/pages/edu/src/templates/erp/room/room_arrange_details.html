@@ -1,0 +1,108 @@
+<div ng-controller="erp_roomArrangeDetailsController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">
+                <kl-header-go-back></kl-header-go-back>教室安排表-详情</span>
+        </div>
+        <div class="panel-body operation-panel">
+                <div class="searchbar">
+                    <div class="form form-inline">
+                        <div class="form-group">
+                            <rd-date-picker-range 
+                                ng-start-date="searchParams.startDate" 
+                                ng-end-date="searchParams.endDate"
+                                ng-min-date="searchParams.p_min_date" 
+                                ng-max-date="searchParams.p_max_date"
+                                ng-default-range="searchParams.range"
+                                ng-btn-tag = "searchParams.p_btn_tag"
+                                disabled="searchParam.condition =='教室'">
+                            </rd-date-picker-range>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" ng-click="queryRoomScheduling()">搜索</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <tdead>
+                <tr>
+                    <th>上课日期</th>
+                    <th>上课时间</th>
+                    <th>教室名称</th>
+                    <th>课程名称</th>
+                    <th>在读人数</th>
+                    <th>应到人数</th>
+                    <th>差异人数</th>
+                    <th>课程教师</th>
+                    <th>辅导教师</th>
+                    <th>中文教师</th>
+                    <th>外文教师</th>
+                    <th>校区</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="arr in arrangeList">
+                    <!-- <td>上课日期</td>
+                    <td>上课时间</td>
+                    <td>教室名称</td>
+                    <td>课程名称</td>
+                    <td>在读人数</td>
+                    <td>应到人数</td>
+                    <td>差异人数</td>
+                    <td>中文教师</td>
+                    <td>外文教师</td>
+                    <td>校区</td>
+                    <td>辅导教师</td>
+                    <td>
+                        <a class="btn btn-default btn-sm" href="#">变更教室</a>
+                    </td> -->
+                    <td>{{arr.courseDate | date:'yyyy-MM-dd'}}</td>
+                    <td>{{arr.startTime}} - {{arr.endTime}}</td>
+                    <td>{{arr.roomName}}</td>
+                    <td>{{arr.courseName}}</td>
+                    <td>{{arr.readingStudent}}</td>
+                    <td>{{arr.signUpStudent}}</td>
+                    <td>{{arr.signUpStudent - arr.readingStudent}}</td>
+                    <td>{{arr.teacherName}}</td>
+                    <td>{{arr.assistTeacherName}}</td>
+                    <td>{{arr.chineseTeacherName}}</td>
+                    <td>{{arr.foreignTeacherName}}</td>
+                    <td>{{arr.branchName}}</td>
+                    <td>
+                        <a class="btn btn-default btn-sm" href="#" ng-click="showRoomDialog(arr)">变更教室</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>备注：在读人数：已报班该课程且状态为在读的学生人数，应到人数：已报名该课程的学生人数，差异人数：应到人数-在读人数</div>
+    </div>
+
+
+    <!-- 输入延课原因框 -->
+    <div id="roomArrangeChangeRoomDialog" class="modal fade" tabindex="-1" role="dialog" style="z-index: 1049">
+        <div class="modal-dialog" role="document" style="width: 300px;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#1b8cf2;text-align: center">
+                    <h4 class="modal-title" style="color:#ffffff;">变更教室</h4>
+                </div>
+                <div class="modal-body">
+                    <div><span><span class="text-danger">*</span>请选择教室</span></div>
+                    <div>
+                        <select class="form-control" required
+                                ng-model="selectedRoom"
+                                ng-options="room.id as room.roomName for room in emptyRoomList">
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer " style="text-align: center">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" ng-click="changeRoom()">确定变更</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
+</div>

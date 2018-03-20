@@ -1,0 +1,100 @@
+<div ng-controller="klxxedu_indexController" class="klxx index-block">
+    <div>
+        <div class="col-lg-5">
+            <div ng-include="menu.href" ng-if="$index%2==0" ng-repeat="menu in menus"></div>
+        </div>
+        <div class="col-lg-5">
+            <div ng-include="menu.href" ng-if="$index%2==1" ng-repeat="menu in menus"></div>
+        </div>
+        <div class="col-lg-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                	<span class="title">
+                    <i class="iconfont icon-home_notice text-primary"></i>
+                    公告</span>
+                	<div class="pull-right">
+                		<small class="cur" ng-click="viewNoticeList()" ng-if="totalNotice > 5">更多 >></small>
+            		</div>
+                </div>
+                <div class="panel-body">
+                    <div class="no-data" ng-if="!noticeList || noticeList.length <= 0">暂无数据</div>
+                    <div ng-if="noticeList && noticeList.length">
+    	                <table class="table">
+    	                    <tr ng-repeat="notice in noticeList" >
+    	                        <td>
+    	                        	<i class="pull-left iconfont icon-common_circle {{notice.read_flag ? 'text-muted' : 'text-warning'}}"></i> 
+                                    <div class="ml20">
+                                        <span class="cur {{notice.read_flag ? '' : 'font-bold'}}" ng-click="viewNotice(notice)" target="_blank">
+                                        {{notice.subject}}  </span>
+                                        <span class="cur {{notice.read_flag ? '' : 'font-bold'}} pull-right">{{notice.start_date}}</span>
+                                        <br>
+                                        <span class="text-muted">{{notice.type_name}}</span>
+                                    </div>
+    	                        </td>
+    	                    </tr>
+    	                </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="title">
+                        <i class="iconfont icon-home_shortcut text-primary"></i>
+                        快捷入口
+                    </span>
+                </div>
+                <div class="home-shortcut">
+                    <div class="shortcut-block">
+                        <h4>ERP</h4>
+                        <table style="width: 100%; margin-bottom: 0px;">
+                            <tr>
+                                <td align="center" class="index_box"><a href="?#/orders/ordersMgr/ordersMgrOrders" target="_blank">
+                                <i class="iconfont icon-home_apply i-bg-blue"></i>报班</a></td>
+                                <td align="center" class="index_box"><a href="?#/students/studentsSearch" target="_blank">
+                                <i class="iconfont icon-home_recharge i-bg-orange"></i>充值</a></td>
+                                <td align="center" class="index_box"><a href="?#/orders/attendanceMgr" target="_blank">
+                                <i class="iconfont icon-home_attendance i-bg-green"></i>考勤</a></td>
+                            </tr>
+                            <tr>
+                                <td align="center" class="index_box"><a href="?#/orders/orderChangeTransfer" target="_blank">
+                                <i class="iconfont icon-home_changeClass i-bg-deep-blue"></i>转班</a></td>
+                                <td align="center" class="index_box"><a href="?#/orders/classesSchedule" target="_blank">
+                                <i class="iconfont icon-home_scheduling i-bg-purple"></i>排课</a></td>
+                                <td align="center" class="index_box"><a href="?#/orders/classesRefund" target="_blank">
+                                <i class="iconfont icon-home_refund i-bg-red"></i>退费</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="shortcut-block"> 
+                        <h4>CRM</h4>
+                        <table style="width: 100%; margin-bottom: 0px;">
+                                <tr>
+                                    <td align="center" class="index_box"><a href="#/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsClueInput" target="_blank">
+                                <i class="iconfont icon-home_clue i-bg-red"></i>线索</a></td>
+                                    <td align="center" class="index_box"><a href="#/students/studentsMine" target="_blank">
+                                <i class="iconfont icon-home_students i-bg-orange"></i>学员</a></td>
+                                    <td align="center" class="index_box"><a href="#/teachers/teacherSearch" target="_blank">
+                                <i class="iconfont icon-home_teachers i-bg-deep-blue"></i>老师</a></td>
+                                </tr>
+                        </table>
+                    </div>
+                    <div class="shortcut-block">
+                        <h4>HRM</h4>
+                        <table style="width: 100%; margin-bottom: 0px;">
+                            <tr>
+                                <td align="center" class="index_box">
+                                    <a href="#/hrm/hrmChangeEvent/hrmEmployeeCheck" target="_blank">
+                                <i class="iconfont icon-home_positive i-bg-blue"></i>转正</a></td>
+                                <td align="center" class="index_box">
+                                <a href="javascript:void(0);"><i class="iconfont icon-home_promotion i-bg-deep-blue"></i>晋升</a></td>
+                                <td align="center" class="index_box">
+                                <a href="javascript:void(0);"><i class="iconfont icon-home_shiftJobs i-bg-purple"></i>调岗</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

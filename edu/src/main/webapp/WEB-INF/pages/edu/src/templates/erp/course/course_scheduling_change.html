@@ -1,0 +1,486 @@
+<div class="erp" ng-controller="erp_courseSchduleChangeController">
+    <div class="panel panel-primary" style="margin-bottom: 10px;" >
+        <div class="panel-heading">
+            <span class="title"><a ng-click="goBack()" class="cur"> &lt; 返回 </a> | 课程排课</span>
+            <button class="pull-right btn btn-primary mt5" type="button" ng-click="openParamSettingsPanel()">
+                高级参数 <i class="fa fa-gear"></i>
+            </button>
+        </div>
+        <div class=panel-body style="padding: 15px;" ng-if="!isLoadingCourse">
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">课程名称：</label>
+                        <div class="col-lg-10">
+                            <p class="form-control-static">{{course.course_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" align="center">
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">课程编码：</label>
+                        <div class="col-lg-10" align="left">
+                            <p class="form-control-static">{{course.course_no}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">上课老师：</label>
+                        <div class="col-lg-10">
+                            <div class="input-group  btn-group">
+                                  <input type="text" class="form-control" ng-model="course.teacher_name" ng-readonly="true"/>
+                                  <span class="input-group-btn  dropdown-toggle"  data-toggle="dropdown">
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                  </span>
+                                    <div class="dropdown-menu pull-right" role="menu" style="padding: 10px;width:100%;">
+                                        <div class="col-lg-12" align="center" style="margin-bottom: 15px;">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" ng-model="queryParam.search_info" ng-change="changeSearchInfo()"/>
+                                            </div>
+                                        </div>
+                                        <table class="table table-hover">
+                                            <tr ng-repeat="teacher in queryParam.teacherList" ng-if="isLoadingTeacherList != 'isLoadingTeacherList' && queryParam.teacherList && queryParam.teacherList.length">
+                                                <td ng-click="selectCourseTeacher(teacher)">{{teacher.teacher_name}}，{{teacher.encoding}}<span ng-if="teacher.phone">，手机号：{{teacher.phone}}</span></td>
+                                            </tr>
+                                            <tr ng-if="isLoadingTeacherList != 'isLoadingTeacherList' && (!queryParam.teacherList || !queryParam.teacherList.length)">
+                                                <td style="text-align: center;">没有找到老师.</td>
+                                            </tr>
+                                            <tr ng-if="isLoadingTeacherList == 'isLoadingTeacherList'">
+                                                <td align="center"><img src="img/erp/loading2.gif"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" align="center">
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">老师编码：</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" ng-model="course.teacher_code" ng-readonly="true"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">开课日期：</label>
+                        <div class="col-lg-10">
+                            <input class="Wdate form-control" ng-readonly="true" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"  ng-model="course.start_date" type="text" id="start_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">结课日期：</label>
+                        <div class="col-lg-10">
+                            <input class="Wdate form-control" ng-readonly="true"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" ng-model="course.end_date" type="text" id="end_date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">上课时间：</label>
+                        <div class="col-lg-10">
+                            <input class="Wdate form-control" ng-readonly="true"  onfocus="WdatePicker({dateFmt:'HH:mm'})" ng-model="course.start_time" type="text" id="start_time">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">下课时间：</label>
+                        <div class="col-lg-10">
+                            <input class="Wdate form-control" ng-readonly="true"  onfocus="WdatePicker({dateFmt:'HH:mm'})" ng-model="course.end_time" type="text" id="end_time">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">课时长度：</label>
+                        <div class="col-lg-10">
+                            <input class="form-control"  type="text" ng-model="course.hour_len" ng-readonly="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">上课周期：</label>
+                        <div class="col-lg-10">
+
+
+                            <div class="input-group  btn-group">
+                                  <input class="form-control" type="text" ng-model="course.attend_class_period" ng-readonly="true">
+                                  <span class="input-group-btn  dropdown-toggle"  data-toggle="dropdown">
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                  </span>
+                                <div class="dropdown-menu pull-right" role="menu" style="padding: 15px;width:100%;">
+                                    <table class="table table-hover">
+                                        <tr ng-repeat="period in class_period_list" ng-click="checkPeriod(period)">
+                                            <td>
+                                                <i class="fa fa-square-o" ng-if="!period.checked"></i>
+                                                <i class="fa fa-check-square" ng-if="period.checked"></i>
+                                            </td>
+                                            <td>{{period.name}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">课时数量：</label>
+                        <div class="col-lg-10">
+                            <input class="form-control"  type="text" ng-model="course.course_count">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">班级人数：</label>
+                        <div class="col-lg-10">
+                            <input class="form-control" type="text" ng-model="course.people_count">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">课程状态：</label>
+                        <div class="col-lg-10">
+                            <p class="form-control-static" ng-if="course.status == 0">已删除</p>
+                            <p class="form-control-static" ng-if="course.status == 1">已上架</p>
+                            <p class="form-control-static" ng-if="course.status == 2">已下架</p>
+                            <p class="form-control-static" ng-if="course.status == null">未知</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="margin-top: 15px;margin-bottom: 15px;" align="center">
+            
+            	<!-- 
+                <button class="btn btn-default" type="button" style="width:200px;" ng-click="updateCourseSchdule()">
+                    马上排课
+                </button>
+
+                <button class="btn btn-default" type="button" style="width:200px;" ng-if="course.status == 2 || course.status == null" ng-click="changeStatus(1)">
+                    上架课程
+                </button>
+
+                <button class="btn btn-default" type="button" style="width:200px;" ng-if="course.status == 1" ng-click="changeStatus(2)">
+                    下架课程
+                </button>
+ -->
+                <button class="btn btn-default" type="button" style="width:200px;" ng-click="batchModifySchedullingModalShow()" ng-disabled ="isMtCourse && !isMainMtCourse">
+                    批量修改课次标题
+                </button>
+                <button class="btn btn-default" type="button" style="width:200px;" ng-click="printCallNameTable()">
+                    打印点名表
+                </button>
+            </div>
+            <div class="table-panel ov-a" style="min-height: 400px;">
+                <table class="table table-bordered table-hover" style="width:1600px;">
+                    <col width="80">
+                    <col width="130">
+                    <col width="100">
+                    <col width="100">
+                    <col width="150">
+                    <col width="130">
+                    <col width="200">
+                    <col width="130">
+                    <col width="130">
+                    <col width="120">
+                    <col width="120">
+                    <col width="100">
+    
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>操作</th>
+                            <th>日期</th>
+                            <th>上课</th>
+                            <th>下课</th>
+                            <th>教师</th>
+                            <th>编码</th>
+                            <th>辅导老师</th>
+                            <th>辅导老师编码</th>
+                            <th>第几周</th>
+                            <th>课次标题</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="!isQueryCourseTimes && (!courseTimesList || !courseTimesList.length)">
+                            <td colspan="10" align="center">
+                                暂无数据.
+                            </td>
+                        </tr>
+                        <tr ng-if="isQueryCourseTimes == 'isQueryCourseTimes'">
+                            <td colspan="10" align="center">
+                                <img src="img/erp/loading2.gif">
+                            </td>
+                        </tr>
+                        <tr ng-repeat="courseTime in courseTimesList" ng-if="!isQueryCourseTimes">
+                            <td ng-if="!courseTime.isEdit">{{courseTime.course_times}}</td>
+                            <td ng-if="!courseTime.isEdit"> <a href="javascript:void(0);" ng-click="modifyCourseTime(courseTime)" class="{{(isMtCourse && !isMainMtCourse) ? 'forbid_grey' : ''}}">修改</a> </td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.course_date}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.start_time}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.end_time}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.teacher_name}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.teacher_code}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.assteacher_name}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.assteacher_code}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.week_number}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.title}}</td>
+                            <td ng-if="!courseTime.isEdit">{{courseTime.remark}}</td>
+                    
+                            <td ng-if="courseTime.isEdit">
+                            <input ng-show="false"   ng-model="courseTime.course_times" type="text"  value="{{courseTime.course_times}}"/>
+                                {{courseTime.course_times}}
+                            </td>
+                            <td ng-if="courseTime.isEdit">
+                                <a href="javascript:void(0);" ng-click="saveCourseTime(courseTime)">保存</a>
+                                <a href="javascript:void(0);" ng-click="cancelMofifyCourseTime(courseTime)">取消</a>
+                            </td>
+                            <td ng-if="courseTime.isEdit"><input class="Wdate form-control" ng-readonly="true"  onfocus="WdatePicker({dateFmt:'yyyyMMdd'})" ng-model="courseTime.course_date" type="text" id="course_date_{{courseTime.id}}"/></td>
+                            <td ng-if="courseTime.isEdit"><input class="Wdate form-control" ng-readonly="true"  onfocus="WdatePicker({dateFmt:'HH:mm'})" ng-model="courseTime.start_time" type="text" id="start_time_{{courseTime.id}}"/></td>
+                            <td ng-if="courseTime.isEdit"><input class="Wdate form-control" ng-readonly="true"  onfocus="WdatePicker({dateFmt:'HH:mm'})" ng-model="courseTime.end_time" type="text" id="end_time_{{courseTime.id}}"/></td>
+                            <td ng-if="courseTime.isEdit">
+                                <div class="input-group  btn-group">
+                                    <input type="text" class="form-control" ng-model="courseTime.teacher_name" ng-readonly="true"/>
+                                    
+                                    <span class="input-group-btn  dropdown-toggle"  data-toggle="dropdown">
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                    <div class="dropdown-menu pull-right" role="menu" style="padding: 10px;width:100%;min-width:200px;">
+                                        <div class="col-lg-12" align="center" style="margin-bottom: 15px;">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" ng-model="queryParam.search_info" ng-change="changeSearchInfo()"/>
+                                            </div>
+                                        </div>
+                                        <table class="table table-hover">
+                                            <tr ng-repeat="teacher in queryParam.teacherList" ng-if="isLoadingTeacherList != 'isLoadingTeacherList' && queryParam.teacherList && queryParam.teacherList.length">
+                                                <td ng-click="selectCourseTimeTeacher(courseTime,teacher)">{{teacher.teacher_name}}，{{teacher.encoding}}</td>
+                                            </tr>
+                                            <tr ng-if="isLoadingTeacherList != 'isLoadingTeacherList' && (!queryParam.teacherList || !queryParam.teacherList.length)">
+                                                <td style="text-align: center;">没有找到老师.</td>
+                                            </tr>
+                                            <tr ng-if="isLoadingTeacherList == 'isLoadingTeacherList'">
+                                                <td align="center"><img src="img/erp/loading2.gif"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                            <td ng-if="courseTime.isEdit">{{courseTime.teacher_code}}</td>
+                            <td ng-if="courseTime.isEdit">
+                                <div class="input-group  btn-group">
+                                   <div class="form-control" type="text"  >
+                                        <span class="btn btn-default btn-xs" ng-if="courseTime.assteacher_name">
+                                            {{courseTime.assteacher_name}}
+                                            <i class="iconfont icon-public_defeat i-text-primary cur" ng-click="resetCourseTeacher(courseTime)"></i>
+                                        </span>
+                                  <!-- <span >{{courseTime.assteacher_name}}</span> -->
+                                    </div>
+                                    <span class="input-group-btn"  kl-teacher-dropdown kl-selected="setCourseTeacher(courseTime,teacher)" searchparam="{ teacher_type:4}">
+                                    <button class="btn btn-primary">选择</button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td ng-if="courseTime.isEdit">{{courseTime.assteacher_code}}</td>
+                            <td ng-if="courseTime.isEdit">{{courseTime.week_number}}</td>
+                            <td ng-if="courseTime.isEdit">
+                                <input  ng-model="courseTime.title" class="form-control" type="text" />
+                            </td>
+                            <td ng-if="courseTime.isEdit">
+                                <textarea ng-model="courseTime.remark" class="form-control"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div  class=panel-body style="padding: 15px;"  ng-if="isLoadingCourse=='courseLoadingFailed'">
+            {{courseLoadingFailed}}
+        </div>
+        <div  class=panel-body style="padding: 15px;"  ng-if="isLoadingCourse=='isLoadingCourse'">
+            正在加载中...
+        </div>
+    </div>
+
+
+
+    <div ng-if="isSubmit == 'isSubmit'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                正在提交...
+            </div>
+        </div>
+    </div>
+    <div ng-if="isSubmit == 'isSubmitOk'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                提交成功！<a href="?#/orders/classesSchedule" target="_self" >点击继续排课</a>
+            </div>
+        </div>
+    </div>
+    <div ng-if="isSubmit == 'isSubmitFailed'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                转班失败,请联系管理员！{{submitFailedMessage}}
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="isOpenParamSettings">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="panel panel-default" style="z-index: 1000;position:fixed;left:20%;top:25%;width:60%;">
+            <div class="panel-heading font-bold">
+                高级参数
+                <a href="javascript:void(0);" ng-click="closeParamSettingsPanel()"><i class="fa fa-times pull-right" ></i></a>
+            </div>
+            <div class="panel-body" ng-if="!isQueryCourseParamSettings">
+                <table class="table">
+                    <col width="15%"/>
+                    <col width="20%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <col width="15%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>参数值</th>
+                            <th>范围</th>
+                            <th>扩展参数</th>
+                            <th>参数值</th>
+                            <th>口语长度</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="paramSetting in paramSettingsList">
+                            <td>{{paramSetting.courseName}}</td>
+                            <td>
+                                <div class="input-group  btn-group">
+                                    <input type="text" class="form-control" ng-model="paramSetting.courseValName" ng-readonly="true" />
+                                    <span class="input-group-btn  dropdown-toggle" data-toggle="dropdown">
+                                            <button class="btn btn-default" type="button" ng-click="changeHighParamSearchInfo(paramSetting)" >
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                      </span>
+                                    <div class="dropdown-menu pull-right" role="menu" style="padding: 10px;width:100%;">
+                                        <div class="col-lg-12" align="center" style="margin-bottom: 15px;">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" ng-model="queryParam.search_info" ng-change="changeHighParamSearchInfo(paramSetting)" />
+                                            </div>
+                                        </div>
+                                        <table class="table table-hover">
+                                            <tr ng-repeat="data in queryParam.dataList" ng-if="isLoadingDataList != 'isLoadingDataList' && queryParam.dataList && queryParam.dataList.length">
+                                                <td ng-click="selectParam(paramSetting,data)">{{data.name}}，{{data.encoding}}</td>
+                                            </tr>
+                                            <tr ng-if="isLoadingDataList != 'isLoadingDataList' && (!queryParam.dataList || !queryParam.dataList.length)">
+                                                <td style="text-align: center;">没有找到数据.</td>
+                                            </tr>
+                                            <tr ng-if="isLoadingDataList == 'isLoadingDataList'">
+                                                <td align="center"><img src="img/erp/loading2.gif"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-control" ng-model="paramSetting.courseCfgScope" ng-options="user_type.id as user_type.name for user_type in user_type_list">
+                                </select>
+                            </td>
+                            <td>{{paramSetting.extandVal3?paramSetting.extandVal3:'-'}}</td>
+                            <td>
+                                <input class="form-control"  ng-model="paramSetting.extandVal1" type="text" ng-if="paramSetting.extandVal3" ng-change="changeHourLen(paramSetting)"/>
+                                <span ng-if="!paramSetting.extandVal3">-</span>
+                            </td>
+                            <td>
+                                <input class="form-control"  ng-model="paramSetting.extandVal2" type="text" ng-if="paramSetting.courseName == '外文老师'" ng-change="changeHourLen(paramSetting)"/>
+                            </td>
+                            <td>
+                                <input class="form-control"  ng-model="paramSetting.remark" type="text"/>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="col-lg-12" style="margin-top: 15px;margin-bottom: 15px;" align="center">
+                    <button class="btn btn-default" type="button" ng-click="saveParamSettings()" >
+                        保存
+                    </button>
+
+                    <button class="btn btn-default" type="button" ng-click="closeParamSettingsPanel()">
+                        关闭
+                    </button>
+
+                </div>
+                <div>
+                    <span class="text-danger">公式：</span><span>中教长度+外教长度=课时长度</span>
+                </div>
+            </div>
+
+            <div class="panel-body" ng-if="isQueryCourseParamSettings == 'isQueryCourseParamSettings'">
+                正在加载...
+            </div>
+
+
+        </div>
+    </div>
+    <!-- 批量更新课次标题模态框 -->
+    <div class="modal fade" style="z-index: 1041"
+         id="course_scheduling_change_batch_modify_modal">
+        <div class="modal-dialog klxx-modal-primary">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">批量修改课次标题</h4>
+                </div>
+                <div class="modal-body" id="course_scheduling_change_batch_modify_modal_body">
+                    <textarea id="batchUpdateCourseTimeTitle" rows="30" style="width:100%" ng-model="course_scheduling" ng-focus="focus()" ng-blur="blur()"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="batchModifySchedulling()">提交</button>
+                    <button class="btn btn-primary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

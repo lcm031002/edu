@@ -1,0 +1,105 @@
+<div class="erp" ng-controller="erp_workflowProcessDefinitionController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">流程实例</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <button class="btn btn-primary" ng-click="refresh()">
+                    <i class="fa fa-refresh" ></i> 刷新
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-striped table-hover ">
+            <thead>
+            <tr>
+                <!--<th>流程ID</th>-->
+                <th>发布id</th>
+                <th>流程KEY</th>
+                <th>流程名称</th>
+
+                <th>描述</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="processInfo in processInfoList">
+                <!--<td>{{processInfo.id}}</td>-->
+                <td>{{processInfo.deploymentid}}</td>
+                <td>{{processInfo.key}}</td>
+                <td>{{processInfo.name}}</td>
+
+                <td>{{processInfo.description}}</td>
+                <td>{{!processInfo.suspended?'运行中':'已终止'}}</td>
+                <td>
+
+                    <a><div class="btn btn-default" ng-click="startProcess(processInfo)">发起流程</div></a>
+                    <a><div class="btn btn-default" ng-click="deleteDefinition(processInfo)">删除流程</div></a>
+                    <a><div class="btn btn-default" ng-click="deleteDefinitionForse(processInfo)">强制删除</div></a>
+                </td>
+            </tr>
+            <tr ng-if="isLoading=='isLoading'">
+                <td colspan="7" align="center">
+                    <img src="img/erp/loading2.gif"/>
+                </td>
+            </tr>
+            <tr ng-if="isLoading!='isLoading'&&(!processInfoList||!processInfoList.length)">
+                <td colspan="7" align="center">暂无数据.</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--删除流程中begin-->
+    <div ng-if="openPanel == 'deleteProcessDefinition'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" style="width:60%;overflow: hidden;left:0px;top:10%;">
+            <div style="margin: 20px;height:50px;" align="center">
+                正在删除流程...
+            </div>
+        </div>
+    </div>
+    <!--删除流程中end-->
+
+    <!--查询流程细节begin-->
+    <div ng-if="openPanel == 'queryProcessDefinitionDetail'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" style="width:60%;overflow: hidden;left:0px;top:10%;">
+            <div class="window-tit">
+                流程实例
+                <i class="fa fa-close cur fr" ng-click="toClosePanel()"></i>
+            </div>
+            <table class="table  table-striped table-hover  table-border">
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>状态</th>
+                </tr>
+                <tr ng-repeat="instance in selectedProcess.instanceList ">
+                    <td>{{instance.id}}</td>
+                    <td>{{instance.name}}</td>
+                    <td>{{instance.state}}</td>
+                </tr>
+                <tr ng-if="isQueryProcessDefinitionDetail">
+                    <td colspan="3" align="center">
+                        <img src="img/erp/loading2.gif"/>
+                    </td>
+                </tr>
+                <tr ng-if="!isQueryProcessDefinitionDetail && (!selectedProcess.instanceList || !selectedProcess.instanceList.length)">
+                    <td colspan="3" align="center">
+                        暂无数据.
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--查询流程细节end-->
+
+</div>

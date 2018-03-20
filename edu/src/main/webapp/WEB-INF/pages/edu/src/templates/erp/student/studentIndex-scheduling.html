@@ -1,0 +1,439 @@
+<div ng-controller="erp_studentScheduingController">
+	<div ng-show="pageView=='list'">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><span class="title">学员排课</span></div>
+			<div class="panel-body">
+				<div class="searchbar">
+					<form class="form-inline">
+						<rd-date-picker-range ng-start-date="searchInfo.start_date" ng-end-date="searchInfo.end_date" ng-default-range="'curMonth'"
+						 ng-date-change="query()"></rd-date-picker-range>
+						<rd-branch ng-bu-id="searchInfo.bu_id" ng-branch-id="searchInfo.branch_id" ng-value-change="query()">
+							
+							<div class="form-group">
+								考勤状态：
+								<button class="btn {{searchInfo.attend_type == attendType.key? 'btn-warning':'btn-default'}} btn-sm mr5" 
+									ng-repeat="attendType in attendTypeList"
+									ng-click="searchInfo.attend_type = attendType.key;querySchedule()">
+									{{attendType.value}}
+								</button>
+							</div>
+							<button class="btn btn-primary" ng-click="querySchedule()"><i class="iconfont icon-search"></i> 查询</button></rd-branch>
+					</form>
+				</div>
+				<!-- <hr> -->
+				<!-- <div class="toolbar"> -->
+					<!-- <button class="btn btn-primary btn-circle" ng-click="addScheduleCourse()">
+						<i class="fa fa-plus"></i>新增排课
+					</button> -->
+					<!-- <button class="btn btn-primary btn-circle" ng-click="cancelScheduleCourse()">
+						<i class="fa fa-plus"></i>取消排课
+					</button> -->
+				<!-- </div> -->
+			</div>
+		</div>
+		<div class="table-panel ov-a">
+			<table class="table table-striped" style="min-width: 1600px;">
+				<thead>
+					<tr>
+						<!-- <th><input type="checkbox" ng-model="checkAllFlag" ng-click="onScheduleCheckAll()"></th> -->
+						<th width="220">操作</th>
+						<th>课程名称</th>
+						<th>校区</th>
+						<th>学管师</th>
+						<th>上课日期</th>
+						<th>上课时间</th>
+						<th>下课时间</th>
+						<th>消耗课时</th>
+						<th>老师名称</th>
+						<th>老师编码</th>
+						<th>科目</th>
+						<th>考勤状态</th>
+						<th>考勤单号</th>
+						
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="schedule in scheduleList">
+						<!-- <td><input type="checkbox" ng-model="schedule.selectFlag" ng-click="onScheduleChecked(schedule)"></td> -->
+						<td>
+							<span class="cur" ng-click="editSchedule(schedule)" ng-show="schedule.attend_type == 28">
+								<i class="iconfont text-primary icon-view"></i>编辑
+							</span>
+						</td>
+						<td>{{schedule.course_name}}</td>
+						<td>{{schedule.branch_name}}</td>
+						<td>{{schedule.counselor_name}}</td>
+						<td>{{schedule.course_date}}</td>
+						<td>{{schedule.start_time}}</td>
+						<td>{{schedule.end_time}}</td>
+						<td>{{schedule.course_times}}</td>
+						<td>{{schedule.attTeacherName}}</td>
+						<td>{{schedule.teacher_no}}</td>
+						<td>{{schedule.subject_name}}</td>
+						<td>{{attendType(schedule.attend_type)}}</td>
+						<td>{{schedule.encoding}}</td>
+						<td>{{schedule.remark}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<ng-pagination conf="paginationConf"></ng-pagination>
+		</div>
+	</div>
+	<div ng-show="pageView=='add'" style="min-width:900px;">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<span class="title">
+					<span class="cur text-primary" ng-click="goBack()">&lt; 返回</span> 新增排课
+				</span>
+			</div>
+			<div class="panel-body">
+				<div class="ov-a" style="max-height: 250px;">
+					<button class="btn btn-primary" ng-click="getOrderCourseList()"><i class="iconfont icon-refresh"></i>刷新</button>
+					<table class="table table-striped" style="min-width: 1600px;">
+						<thead>
+							<tr>
+								<th>
+									<input type="checkbox" ng-model="orderCourseListCheckedAllFlag" ng-change="onCheckAllOrderCourse()">
+								</th>
+								<th>课程名称</th>
+								<th>单价</th>
+								<th>总课时</th>
+								<th>剩余可用课时</th>
+								<th>剩余可排课时</th>
+								<th>课时长度(分钟)</th>
+								<th>报班时间</th>
+								<th>校区</th>
+								<th>课程编号</th>
+								<th>报班单号</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="orderCourse in orderCourseList track by $index" ng-class="{danger: !orderCourse.available}">
+								<td>
+									<input 
+										type="checkbox" ng-model="orderCourse.checked"
+										ng-disabled="!orderCourse.available || orderCourse.disabled"
+										ng-change="onCourseChecked(orderCourse)"
+									>
+								</td>
+								<td>{{orderCourse.course_name}}</td>
+								<td>{{orderCourse.former_unit_price}}</td>
+								<td>{{orderCourse.course_total_count}}</td>
+								<td>{{orderCourse.course_surplus_count}}</td>
+								<td>{{orderCourse.course_schedule_count==null?0:orderCourse.course_schedule_count}}</td>
+								<td>{{orderCourse.hour_len}}</td>
+								<td>{{orderCourse.create_time | date: 'yyyy-MM-dd HH:MM'}}</td>
+								<td>{{orderCourse.branch_name}}</td>
+								<td>{{orderCourse.course_no}}</td>
+								<td>{{orderCourse.order_no}}</td>
+								<td>{{orderCourse.remark}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mt5" style="text-indent: -3em; padding-left:3em;">
+					<span class="text-danger">提示：1.选择报班单时，请先选择报班日期最早的报班单，需要优先消耗<br>
+							2.红色背景的为该学生在【其他校区】的报班单，不能使用！</span>
+				</div>
+			</div>
+		</div>
+		<div class="table-panel">
+			<uib-tabset active="0">
+				<uib-tab index="0" heading="按时间排课" select="selectScheduleType('time')">
+						<!-- <klc-erp-course-stu-sched-by-time
+						order-list="checkedOrders"
+						apply-item="checkApplyPlanItem"
+						student-id="apply.studentId"
+						student-counselors="studentCounselors"
+						on-sched-success="onSchedSuccess()">
+					  </klc-erp-course-stu-sched-by-time> -->
+					<div class="table-panel row form form-horizontal">
+						<div class="col-sm-6 container-fluid">
+							<div class="row form-horizontal">
+								<div class="hide">
+									<input type="text" ng-model='attendTime.id'>
+								</div>
+								<div class="form-group-inline">
+									<label class="col-sm-2 control-label required">时间档期</label>
+									<div class="col-sm-8">
+											<button 
+												ng-repeat="period in tpScheduleTimeList "
+												ng-click="onTpScheduleTimeChange(period)"
+												ng-class="{true: 'btn-primary',false:'btn-default'}[period.checked]"
+												class="btn btn-sm mr10">{{period.name}}</button>
+									</div>
+								</div>
+								<div class="form-group-inline">
+									<label class="col-sm-2  control-label required">上课时间</label>
+									<div class="col-sm-3">
+										<kl-timepicker disabled="disabled" ng-model="attendTime.start_time"></kl-timepicker>
+									</div>
+									<label class="col-sm-2 control-label required">下课时间</label>
+									<div class="col-sm-3">
+										<kl-timepicker disabled="disabled" ng-model="attendTime.end_time"></kl-timepicker>
+									</div>
+								</div>
+								<div class="form-group-inline">
+
+									<label class="col-sm-2 control-label required">科目</label>
+									<div class="col-sm-8">
+										<kl-subject-select subject="attendTime.subject"></kl-subject-select>
+									</div>
+								</div>
+								<div class="form-group-inline">
+									<label class="col-sm-2 control-label required">教师</label>
+									<div class="col-sm-8">
+										<div class="input-group">
+											<div class="form-control" type="text">
+												<span>{{scheduleSelectedTeacher.teacher_name}} </span>
+											</div>
+											<span class="input-group-btn" kl-teacher-dropdown kl-selected="onSelectTeacher(teacher)" searchparam="{bussinessType:2}">
+														<button class="btn btn-primary">选择</button>
+													</span>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">现任学管师</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control i-text-danger" ng-disabled="true" ng-model="studentIndexCounselors.LEARNINGMGR_NAME">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="kl-calendar-wrapper">
+								<div class="kl-calendar-header">
+									<!-- <button class="btn btn-xs prev-year" ng-click="calendarDecrement(calendar, 'year')"><<</button> -->
+									<button class="btn btn-primary btn-xs pre-month" ng-click="calendarDecrement(calendar, 'month')">上月</button>
+									<button class="btn btn-primary btn-xs current">
+										{{calendar.yearMonth}}
+									</button>
+									<button class="btn btn-primary btn-xs next-month" ng-click="calendarIncrement(calendar, 'month')">下月</button>
+									<!-- <button class="btn btn-xs next-year" ng-click="calendarIncrement(calendar, 'year')">>></button> -->
+								</div>
+								<div class="kl-calendar-body">
+									<table>
+										<tr>
+											<th>周一</th>
+											<th>周二</th>
+											<th>周三</th>
+											<th>周四</th>
+											<th>周五</th>
+											<th>周六</th>
+											<th>周日</th>
+										</tr>
+										<tr ng-repeat="days in calendar.weeks">
+											<td ng-repeat="day in days" ng-class="" ng-click="calendarToggleCheck(day)">
+												<div class="day-wrapper" ng-class="{'checked':day.isChecked,'text-muted': !day.isCurrentMonth}">
+													{{day.date}}
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+								<hr>
+								<div class="text-right">
+									<button class="btn btn-danger btn-xs" ng-click="clearAllCalendarChecked(calendar)">
+										<i class="iconfont icon-delete"></i> 清空所有</button>
+									<button class="btn btn-primary btn-xs" ng-click="setCalendarToCurrenDay(calendar)">
+										<i class="iconfont icon-refresh"></i> 返回本月</button>
+								</div>
+								<div class="text-warning mt10">*点击日历选择日期，可多选，再次点击取消对应日期的选择</div>
+							</div>
+						</div>
+					</div>
+					<div class="text-center">
+						<hr>
+						<button class="btn btn-primary" ng-click="addScheduleByTime()">确定添加</button>
+					</div>
+				</uib-tab>
+				<uib-tab index="1" heading="按期排课" select="selectScheduleType('period')">
+					<div class="form-horizontal table-panel">
+						<div class="hide">
+							<input type="text" ng-model='courseDetail.id'>
+						</div>
+						<div class="form-group-inline">
+							<label class="col-sm-2 control-label">周期：</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" ng-model="attendPeriod.period">
+							</div>
+							<label class="col-sm-2 control-label">排课课时：</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" ng-model="attendPeriod.hour_len">
+							</div>
+							<label class="col-sm-2 control-label">开始日期：</label>
+							<div class="col-sm-4">
+								<rd-date-picker-popup ng-model="attendPeriod.start_date"></rd-date-picker-popup>
+							</div>
+							<label class="col-sm-2 control-label">截止日期：</label>
+							<div class="col-sm-4">
+								<rd-date-picker-popup ng-model="attendPeriod.end_date"></rd-date-picker-popup>
+							</div>
+
+							<label class="col-sm-2 control-label required">时间档期</label>
+							<div class="col-sm-4">
+									<button 
+										ng-repeat="period in tpScheduleTimeList "
+										ng-click="onTpScheduleTimeChange(period)"
+										ng-class="{true: 'btn-primary',false:'btn-default'}[period.checked]"
+										class="btn btn-sm mr10">{{period.name}}</button>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">学管师：</label>
+								<div class="col-sm-4">
+									<input type="text" class="form-control" ng-disabled="true" ng-model="studentIndexCounselors.LEARNINGMGR_NAME">
+								</div>
+							</div>
+							<label class="col-sm-2 control-label">上课时间：</label>
+							<div class="col-sm-4">
+								<kl-timepicker ng-model="attendTime.start_time"></kl-timepicker>
+							</div>
+							<label class="col-sm-2 control-label">下课时间：</label>
+							<div class="col-sm-4">
+								<kl-timepicker ng-model="attendTime.end_time"></kl-timepicker>
+							</div>
+							<label class="col-sm-2 control-label">科目：</label>
+							<div class="col-sm-4">
+								<kl-subject-select subject="attendPeriod.subject"></kl-subject-select>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">上课教师：</label>
+								<div class="col-sm-4">
+									<div class="input-group">
+										<div class="form-control" type="text">
+											<span>{{scheduleSelectedTeacher.teacher_name}} </span>
+										</div>
+										<span class="input-group-btn" kl-teacher-dropdown kl-selected="onSelectTeacher(teacher)" searchparam="{}">
+													<button class="btn btn-primary">选择</button>
+												</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center">
+						<hr>
+						<button class="btn btn-primary" ng-click="addScheduleByPeriod()">确定添加</button>
+					</div>
+				</uib-tab>
+			</uib-tabset>
+		</div>
+		<script type="text/ng-template" id="newScheduleListByDate.html">
+			<rd-modal>
+				<rd-modal-title>新增排课确认</rd-modal-title>
+				<rd-modal-body>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<span class="title">即将新增的排课列表</span>
+						</div>
+						<div class="panel-body">
+							<span class="text-warning mb20" ng-if="conflictList && conflictList.length>0">
+								*警告：有{{conflictList.length}}条排课记录有冲突，请先确认之后再继续排课（可先删除有冲突课程，添加其余课程）
+							</span>
+							<div class="ov-a" style="max-height: 250px;">
+								<table class="table table-striped">
+									<tr>
+										<th>序号</th>
+										<th>教师编码</th>
+										<th>教师姓名</th>
+										<th>学管师姓名</th>
+										<th>科目</th>
+										<th>上课日期</th>
+										<th>上课时间</th>
+										<th>下课时间</th>
+										<th>星期</th>
+										<th>操作</th>
+									</tr>
+									<tr ng-repeat="day in calendar.checkedDays track by day.key"
+										ng-class="day.cls">
+										<td>{{$index + 1}}</td>
+										<td>{{scheduleSelectedTeacher.encoding}}</td>
+										<td>{{scheduleSelectedTeacher.teacher_name}}</td>
+										<td>{{studentIndexCounselors.LEARNINGMGR_NAME}}</td>
+										<td>{{attendTime.subject.name}}</td>
+										<td>{{day.value}}</td>
+										<td>{{attendTime.start_time}}</td>
+										<td>{{attendTime.end_time}}</td>
+										<td>{{moment(day.value, 'YYYY-MM-DD').format('dddd')}}</td>
+										<td><button class="btn btn-danger btn-xs" ng-click="deleteCheckDay(day)">删除</button></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</rd-modal-body>
+				<rd-modal-footer>
+					<button class="btn btn-default" ng-click="$dismiss()">取消</button>
+					<button class="btn btn-primary" ng-click="onOk()">确定</button>
+				</rd-modal-footer>
+				<rd-modal-body ng-if="conflictList && conflictList.length>0">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<span class="title">排课冲突列表：</span>
+						</div>
+						<div class="panel-body ov-a" style="max-height: 250px;">		
+								<table class="table table-striped">
+									<tr>
+										<th>排课编码</th>
+										<th>学生姓名</th>
+										<th>上课日期</th>
+										<th>上课时间</th>
+										<th>下课时间</th>
+										<th>教师姓名</th>
+										<th>学管师姓名</th>
+									</tr>
+									<tr ng-repeat="item in conflictList">
+										<td>{{item.encoding}}</td>
+										<td>{{item.student_name}}</td>
+										<td>{{moment(item.course_date, 'YYYYMMDD').format('YYYY-MM-DD')}}</td>
+										<td>{{item.start_time}}</td>
+										<td>{{item.end_time}}</td>
+										<td>{{item.schedulingTeacherName}}</td>
+										<td>{{item.counselor_name}}</td>
+									</tr>
+								</table>
+						</div>
+					</div>
+				</rd-modal-body>
+			</rd-modal>
+		</script>
+		<div class="panel panel-primary  mt15">
+			<div class="panel-heading">
+				<span class="title">本次已成功排课列表</span>
+			</div>
+			<div class="table-panel">
+				<table class="table table-striped">
+					<tr>
+						<th>课程名称</th>
+						<th>校区</th>
+						<th>上课日期</th>
+						<th>上课时间</th>
+						<th>下课时间</th>
+						<th>老师名称</th>
+						<th>老师编码</th>
+						<th>科目</th>
+						<th>排课状态</th>
+						<th>备注</th>
+					</tr>
+					<tr ng-repeat="item in addedScheduleList">
+						<td>{{item.course_name}}</td>
+						<td>{{item.branch_name}}</td>
+						<td>{{moment(item.course_date, 'YYYYMMDD').format('YYYY-MM-DD')}}</td>
+						<td>{{item.start_time}}</td>
+						<td>{{item.end_time}}</td>
+						<td>{{item.attTeacherName}}</td>
+						<td>{{item.teacher_no}}</td>
+						<td>{{item.subject_name}}</td>
+						<td>{{attendType(item.attend_type)}}</td>
+						<td>{{item.remark}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>报班单打印</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font: 12px Arial;
+      background: #f3f3f3;
+    }
+
+    #main {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+    }
+    .content{
+      padding: 100mm 15mm 20mm 25mm;
+    }
+    .content table {
+      color: #000;
+      font-weight: 400;
+      border-spacing: 0;
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .content table .title {
+      text-align: left;
+    }
+
+    .content table td {
+      padding: 5px;
+    }
+    .content table .thd {
+      font-weight: bold;
+    }
+    .print-btn {
+      width: 50px;
+      height: 50px;
+      background: url(print_btn.png) no-repeat center center #fff;
+      border-radius: 4px;
+      position: fixed;
+      top: 300px;
+      left: 50%;
+      margin-left: 460px;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+    .print-btn:hover {
+      background-color: #f0f0f0f0
+    }
+    .tb-box__row{
+      display: flex;
+    }
+    .tb-box__col{
+      flex: 1;
+    }
+    @media print{
+      @page {
+        size: A4;
+        margin: 5mm;
+      }
+      .print-btn{
+        display: none;
+      }
+      body{
+        background: #fff
+      }
+    }
+  </style>
+</head>
+
+<body>
+    <div class="print-btn" onclick="printPage()"></div>
+  <div id="main">
+    <div class="content" id="content">
+      <table>
+        <tbody>
+          <tr>
+            <td colspan="3" class="title thd">业务校区：{{branch_name.replace('个性化','').replace('培英精品班','').replace('大小班','')}}<span style="margin-left: 15px;">日期：{{dateFormate(create_time)}}</span></td>
+          </tr>
+          <tr>
+            <td class="thd">学员姓名</td>
+            <td class="thd">业务类型</td>
+            <td class="thd">APP帐号</td>
+          </tr>
+          <tr>
+            <td>{{student_name}}</td>
+            <td>报班</td>
+            <td>{{studentInfo.login_no?studentInfo.login_no:''}}</td>
+          </tr>
+          <tr>
+            <td class="thd">编号</td>
+            <td class="thd" colspan="2">报班总金额</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td colspan="2">{{actual_price}}</td>
+          </tr>
+          <tr>
+            <td class="thd tal">优惠金额：0</td>
+            <td class="thd">实际需缴费金额：￥{{actual_price}}</td>
+            <td class="thd">已缴费金额：￥{{actual_price}}</td>
+          </tr>
+          <tr>
+            <td class="thd tal" style="vertical-align:text-bottom">
+              缴费明细:
+            </td>
+            <td colspan="2" class="tal">
+              <div class="tb-box">
+                <div class="tb-box__row">
+                  <div class="tb-box__col">1</div>
+                  <div class="tb-box__col">{{actual_price}}</div>
+                  <div class="tb-box__col">{{branch_name.replace('个性化','').replace('培英精品班','').replace('大小班','')}}</div>
+                  <div class="tb-box__col">{{dateFormate(create_time)}}</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="thd tal" colspan="3">以上优惠均需报整期课程并消耗完毕，若产生退费/冻结，则优惠取消</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+  <script>
+  new Vue({
+    el: '#content',
+    data: {
+      branch_name: '业务校区',
+      student_name: '',
+      actual_price: 0,
+      studentInfo:{
+          login_no: ''
+      },
+      create_time: ''
+    },
+      mounted() {
+        var data = JSON.parse(window.localStorage.getItem('BJKData'))
+          this.branch_name=data.branch_name
+              this.student_name=data.student_name
+              this.actual_price=data.actual_price
+              this.studentInfo.login_no=data.studentInfo.login_no
+              this.create_time=data.create_time
+      },
+    methods: {
+      dateFormate(t) {
+        var date = new Date(t)
+        var y = date.getFullYear()
+        var m = date.getMonth()
+        if (m<10) m = '0'+m
+        var d = date.getDate()
+        if (d<10) d = '0' +m
+        return y+'-'+m+'-'+d
+      }
+    }
+  })
+  function printPage() {
+      if (vPage._isMounted) {
+        window.print()
+      }
+    }
+  </script>
+</body>
+
+</html>

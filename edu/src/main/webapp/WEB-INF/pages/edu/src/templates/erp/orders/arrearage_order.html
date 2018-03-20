@@ -1,0 +1,111 @@
+<div class="klxx index-block" ng-controller="erp_UserOrdersController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">
+            <i class="iconfont icon-home_listApply text-primary"></i>
+            我的报班单({{selectedState.name}}，共{{orderPage.totalCount?orderPage.totalCount:0}}条)</span>
+            <div class="pull-right" style="cursor: pointer;margin-left: 10px;font-size: 14px;" ng-click="queryTask()">
+                <i class="fa fa-rotate-right"></i>
+            </div>
+            <div class="pull-right" style="cursor: pointer;font-size: 15px;font-weight:bolder;"
+                 ng-click="moreConditions=!moreConditions">
+                <i class="fa fa-arrow-circle-down" ng-if="moreConditions"></i>
+                <i class="fa fa-arrow-circle-right" ng-if="!moreConditions"></i>
+            </div>
+        </div>
+        <div class="panel-body" style="height: 430px; overflow-y: auto;">
+            <div class="row" style="padding: 20px; padding-bottom: 5px;"
+                 ng-show="moreConditions">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">开始时间：</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control Wdate cursor_pointer"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                       ng-model="start_date" name="cdt_start_date" id="cdt_start_date_03" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">截止时间：</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control Wdate cursor_pointer"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                       ng-model="end_date" name="cdt_end_date" id="cdt_end_date_03" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                 style="padding: 20px; padding-bottom: 5px; padding-top: 5px;"
+                 ng-show="moreConditions">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">订单状态：</label>
+                            <div class="col-lg-8">
+                                <select class="form-control" ng-model="selectedState"
+                                        ng-options="state.name for state in stateList">
+                                    <option value="state.value">{{state.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">关键字：</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" ng-model="app_info" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                 style="padding: 20px; padding-bottom: 5px; padding-top: 5px;"
+                 ng-show="moreConditions" align="center">
+                <div class="input-group-btn">
+                    <div class="btn btn-default"  ng-click="queryTask()">搜索</div>
+                </div>
+            </div>
+            <table class="table table-border table-hover" style="margin-bottom: 0px;">
+                <tbody>
+                    <tr ng-repeat="order in orderPage.resultList" ng-if="orderPage.resultList">
+                        <td>
+                            <div class="col-lg-9">
+                                <p>【{{order.TYPE}}】{{order.STUDENT_NAME}}{{order.STUENCODING}} <span style="font-size:14px;color: red;text-align: right;">￥{{order.ACTUAL_PRICE}}</span></p>
+                                <p><span style="font-size:12px;color: #888;">
+                                	<a href="?studentId={{order.STUID}}&orderId={{order.ORDERID}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank">{{order.ORDERENCODING}}</a>，{{order.ORG_NAME}}</span></p>
+                            </div>
+                            <div class="col-lg-3" align="right">
+                                <p>
+                                    <a href="?studentId={{order.STUID}}&orderId={{order.ORDERID}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank"><i class="iconfont icon-home_track" style="font-size: 1.2em;"></i></a>
+                                    <!-- <a href="?studentId={{order.STUID}}#/students/studentsTrack" class="btn btn-default" target="_blank" title="电话催缴" ng-click="toCall(order)" ><i class="iconfont icon-home_track" style="font-size: 1.2em;"></i></a> -->
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-if="isLoading!='isLoading'&&(!orderPage.resultList||!orderPage.resultList.length)">
+                        <td align="center" colspan="5" style="border-top: none;"><div class="no-data"></div>暂无数据</td>
+                    </tr>
+                    <tr ng-if="isLoading=='isLoading'">
+                        <td align="center" colspan="5"><img src="img/erp/loading2.gif" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row" align="center" ng-if="orderPage.totalCount>5">
+                <div class="btn btn-default" style="margin: 5px; width: 200px;"
+                     ng-click="queryMore()">
+                    <i class="fa fa-angle-double-down"></i>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

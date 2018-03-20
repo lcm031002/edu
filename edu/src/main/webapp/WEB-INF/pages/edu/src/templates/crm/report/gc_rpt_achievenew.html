@@ -1,0 +1,35 @@
+<div>
+  <div class="tool_bar">
+    <span class="tool_bar_left page_title">新单业绩排名</span>
+  </div>
+  <div class="src_div">
+    开始日期：
+    <input type="text" style="height:30px" class="Wdate cursor_pointer" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" ng-model="searchParam.p_start_date" name="cdt_start_date" id="cdt_start_date" /> 结束日期：
+    <input type="text" style="height:30px" class="Wdate cursor_pointer" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" ng-model="searchParam.p_end_date" name="cdt_end_date" id="cdt_end_date" />
+    <input class="src_button" value="查询" ng-click="cdtSearch()">
+    <input class="src_button" value="导出" ng-click="exp()">
+  </div>
+  <div class="table_div">
+    <div class="table_data_div">
+      <div class="div_title"><span>统计列表   </span>
+      </div>
+      <table class="table table-striped table-hover">
+        <tr>
+          <th>序号</th>
+          <th ng-show="{{searchParam.p_grp_sch}}">校区</th>
+          <th>月份</th>
+          <th>月份</th>
+        </tr>
+        <tr ng-if="isLoading=='loading...'">
+          <td colspan="9" rowspan="10"><img alt="" src="../img/loading.gif"></td>
+        </tr>
+        <tr ng-repeat="rec in reportData" ng-if="isLoading!='loading...'">
+          <td ng-show="{{searchParam.p_grp_company}}">{{rec.bu_name}}</td>
+          <td ng-show="{{searchParam.p_grp_sch}}">{{rec.branch_name}}</td>
+          <td>{{rec.order_count}}</td>
+          <td>{{rec.avg_achieve}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

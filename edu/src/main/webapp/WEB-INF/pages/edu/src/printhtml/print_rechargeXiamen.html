@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>充值打印</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font: 12px Arial;
+      background: #f3f3f3;
+    }
+
+    #main {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .content {
+      padding: 100mm 15mm 20mm 25mm;
+    }
+
+    .content table {
+      color: #000;
+      font-weight: 400;
+      border-spacing: 0;
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .content table .title {
+      text-align: left;
+    }
+
+    .content table td {
+      padding: 5px;
+    }
+
+    .content table .thd {
+      font-weight: bold;
+    }
+
+    .print-btn {
+      width: 50px;
+      height: 50px;
+      background: url(print_btn.png) no-repeat center center #fff;
+      border-radius: 4px;
+      position: fixed;
+      top: 300px;
+      left: 50%;
+      margin-left: 460px;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+
+    .print-btn:hover {
+      background-color: #f0f0f0f0
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 5mm;
+      }
+      body {
+        background: #fff
+      }
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="print-btn" onclick="printPage()"></div>
+<div id="main">
+  <div class="content" id="content">
+    <table>
+      <tbody>
+      <tr>
+        <td colspan="4" class="title thd">业务校区：{{school}}
+          <span style="margin-left: 15px;">经办人：{{operator}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="thd" colspan="2">学员姓名</td>
+        <td class="thd">业务类型</td>
+        <td class="thd">业务日期</td>
+      </tr>
+      <tr>
+        <td colspan="2">{{transfer.name}}</td>
+        <td>{{transfer.type}}</td>
+        <td>{{transfer.date}}</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="title thd" style="padding-top: 15px;">转帐信息：</td>
+      </tr>
+      <tr>
+        <td class="thd">编号</td>
+        <td class="thd">操作账户</td>
+        <td class="thd">方式</td>
+        <td class="thd">操作金额</td>
+      </tr>
+      <tr v-for="item in transferInfoList" :key="item.no">
+        <td>{{item.no}}</td>
+        <td>{{item.operatorAccount}}</td>
+        <td>{{item.type}}</td>
+        <td>￥{{item.money}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.17.1/axios.min.js"></script>
+<script>
+    var vPage = new Vue({
+        el: '#content',
+        data: {
+            school: '厦门佳音',
+            operator: '曾黎文',
+            transfer: {
+                name: '小二',
+                type: '充值',
+                date: '2017-11-10'
+            },
+            transferInfoList: []
+        },
+        mounted(){
+            var str = decodeURI(location.search.substring(11))
+            var jsn = JSON.parse(str)
+            this.school = jsn[0].rechargeInfo.ORG_NAME
+            this.operator = jsn[0].rechargeInfo.EMPLOYEE_NAME
+            this.transfer.name=jsn[0].rechargeInfo.STUDENT_NAME
+            this.transfer.date=jsn[0].rechargeInfo.INPUT_TIME
+
+            var data=jsn.map((v,i) => {
+                var obj = {
+                    no: i+1,
+                    operatorAccount: v.rechargeInfo.NAME,
+                    type: v.rechargeInfo.PAY_NAME,
+                    money: v.rechargeInfo.MONEY
+                }
+                return obj
+            })
+            this.transferInfoList = data
+
+
+        }
+    })
+    function printPage() {
+        if (vPage._isMounted) {
+            window.print()
+        }
+    }
+</script>
+</body>
+
+</html>

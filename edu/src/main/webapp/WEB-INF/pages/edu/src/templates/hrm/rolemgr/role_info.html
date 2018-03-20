@@ -1,0 +1,80 @@
+<!-- Modal -->
+<div id="roleMgrPanel" class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" aria-labelledby="roleMgrPanelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 class="modal-title" id="roleMgrPanelLabel">{{selectedRole.roleName || '添加新角色'}}</h3>
+      </div>
+      <div class="modal-body form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">id：</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" ng-readonly="true" ng-model="selectedRole.id" />
+          </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : !selectedRole.roleName}">
+          <label class="col-sm-3 control-label">角色名称：</label>
+          <div class="col-sm-9" ng-controller="TooltipDemoCtrl">
+            <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" tooltip-placement="top" tooltip-placement="{dynamicTooltip}}" uib-tooltip="{{dynamicTooltip}}" tooltip-enable="!selectedRole.roleName" ng-model="selectedRole.roleName" placeholder="请输入角色名称" class="btn btn-default" required>
+            <p ng-show="(!selectedRole.roleName||selectedRole.roleName=='')&&isSbumitting==true" class="help-block" desc="校验角色不能为空">角色不能为空........</p>
+          </div>
+        </div>
+        <!--  <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">归属公司</label>
+            <div class="col-sm-9 input-group">
+            <select 
+            class="form-control" ng-model="selectedRole.companyId"  ng-change="queryBranchs()" >
+                 <option value=" ">全部校区</option>
+                  <option value="{{company.id}}"
+                   ng-selected="company.id==selectedRole.companyId" 
+                   ng-repeat="company in companyList">{{company.name}}
+                 </option>
+              </select>
+                 <p  ng-show="(!selectedRole.companyId||selectedRole.companyId=='')&&isSbumitting==true" 
+               class="help-block" style='color:#a94442'  desc="校验归属公司不能为空">归属公司不能为空.......</p>
+            </div>
+              
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">归属校区:</label>
+            <div class="col-sm-9 input-group">
+            <select class="form-control" name="branch" 
+            ng-model="selectedRole.branchId" 
+            ng-selected="selectedRole.branchId"
+            ng-options="branch.id as branch.name for branch in branchs"/>
+            </div>
+        </div> 
+
+        <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">备注</label>
+            <div class="col-sm-9 input-group">
+                <input type="text" class="form-control" ng-model="selectedRole.remark"/>
+            </div>
+        </div>
+
+        <div class="form-group" >
+                <label class="col-sm-3 fl" style="line-height: 34px;">归属模块</label>
+                <div class="col-sm-9 input-group">
+                    <input type="text"  class="form-control" ng-readonly="true" ng-model="selectedRole.mod"/>
+                </div>
+        </div>-->
+        <div class="form-group" style="height: 260px;">
+          <div class="col-lg-12">
+            <div>
+              <label class="col-sm-3 control-label">菜单权限：</label>
+            </div>
+            <div style="overflow-y: scroll;height:260px;border: 1px solid #f5f5f5;">
+              <div id="treeRole"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" align="center">
+        <button class="btn btn-default" type="button" data-dismiss="modal">取消</button>        
+        <button class="btn btn-primary" type="button" ng-click="saveRole()">确定</button>
+      </div>
+    </div>
+  </div>
+</div>

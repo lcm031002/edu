@@ -1,0 +1,151 @@
+<div ng-controller="erp_InvoiceTraceController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">发票跟踪</span>
+		</div>
+
+		<div class="panel-body operation-panel">
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						领取状态：
+						<button class="btn"
+										ng-class="{true: 'btn-primary', false: ''}[searchParam.p_receiveStatus==0]"
+										ng-click="handleChangeStatus(0)">全部</button>
+						<button class="btn"
+										ng-class="{true: 'btn-primary', false: ''}[searchParam.p_receiveStatus==1]"
+										ng-click="handleChangeStatus(1)">待领取</button>
+						<button class="btn"
+										ng-class="{true: 'btn-primary', false: ''}[searchParam.p_receiveStatus==2]"
+										ng-click="handleChangeStatus(2)">已领取</button>
+						<button class="btn"
+										ng-class="{true: 'btn-primary', false: ''}[searchParam.p_receiveStatus==3]"
+										ng-click="handleChangeStatus(3)">领取作废</button>
+					</div>
+				</form>
+				<rd-date-picker-range
+						ng-start-date="searchParam.p_start_date"
+						ng-end-date="searchParam.p_end_date"
+						ng-date-change="query()"></rd-date-picker-range>
+			</div>
+		</div>
+	</div>
+
+	<!--main form end-->
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>操作</th>
+					<th>领取状态</th>
+					<th>发票状态</th>
+					<th>报班单号</th>
+					<th>业务校区</th>
+					<th>学生姓名</th>
+					<th>发票抬头</th>
+					<th>公司名称</th>
+					<th>税务发票号</th>
+					<th>申开金额</th>
+					<th>实开金额</th>
+					<th>发票号码</th>
+					<th>开票单位</th>
+					<th>历史操作记录</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr ng-repeat="invoice in invoiceList"	ng-if="invoiceList && invoiceList.length">
+					<td>
+						<a href="javascript:void(0)" ng-click="openDialog('receive', invoice.id)" class="{{(invoice.receiveStatus==1 || invoice.receiveStatus == 3)?'':'forbid_grey'}}">领取</a>
+						<a href="javascript:void(0)" ng-click="openDialog('receiveCancel', invoice.id)" class="{{invoice.receiveStatus==2?'':'forbid_grey'}}">作废</a>
+					</td>
+					<td>{{invoice.receiveStatusName}}</td>
+					<td>{{invoice.statusName}}</td>
+					<td>{{invoice.orderEncoding}}</td>
+					<td>{{invoice.branchName}}</td>
+					<td>{{invoice.studentName}}</td>
+					<td>{{invoice.headingName}}</td>
+					<td>{{invoice.companyName}}</td>
+					<td>{{invoice.taxNum}}</td>
+					<td>{{invoice.requiredMoney}}</td>
+					<td>{{invoice.actualMoney}}</td>
+					<td>{{invoice.invoiceCode}}</td>
+					<td>{{invoice.invoiceCompamyName}}</td>
+					<td><a href="javascript:void(0)" ng-click="viewLog(invoice.id)">查看</a></td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+	</div>
+	<!-- 领取状态记录框 -->
+	<div class="modal fade" id="viewInvoice" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content klxx-modal-primary">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+					<h4 class="modal-title">领取状态记录</h4>
+				</div>
+				<div class="modal-body">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>领取状态</th>
+								<th>领取人</th>
+								<th>备注</th>
+								<th>操作人</th>
+								<th>操作时间</th>
+							</tr>
+						</thead>
+			
+						<tbody>
+							<tr ng-repeat="invoiceReceiver in invoiceReceiveList"	ng-if="invoiceReceiveList && invoiceReceiveList.length">
+							
+								<td>{{invoiceReceiver.statusName}}</td>
+								<td>{{invoiceReceiver.receiver}}</td>
+								<td>{{invoiceReceiver.remark}}</td>
+								<td>{{invoiceReceiver.create_user_name}}</td>
+								<td>{{invoiceReceiver.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 领取状态框 -->
+	<div class="modal fade" id="invoiceInvalid" style="z-index: 1041;" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content klxx-modal-primary">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+					<h4 class="modal-title">领取状态</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form form-inline">
+						<div class="form-group" ng-if="operateType == 'receive'">
+							<span class="input-label ng-binding required">领取人:</span>
+							<select class="width-420 form-control" ng-model="invoiceReceiveLog.receiverCode">
+								<option value="1"  class="ng-scope">学员</option>
+								<option value="2">学员家长</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<span class="input-label ng-binding">备注:</span>
+							<textarea class="width-420 form-control" ng-model="invoiceReceiveLog.remark" style="resize: none; height: 100px;"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-cancle" data-dismiss="modal">取消
+					</button>
+					<button type="button" class="btn btn-primary" ng-click="receiveInvoice()">提交
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

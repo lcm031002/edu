@@ -1,0 +1,76 @@
+/**
+ * 字体颜色默认 #333;
+ * 字体大小默认 14px;
+ */
+body {
+    color: #333;
+    font-size: 14px;
+    font-family: "Microsoft Yahei" arial;
+}
+.index_box {
+    text-align: center;
+    font-size: 14px;
+}
+.index_box:hover {
+    cursor:pointer;
+    background:#ddd;
+    font-weight:bold;
+}
+.panel{
+    margin-bottom: 10px;
+}
+/* 
+.dropdown-menu:hover{
+    display: block;
+} */
+
+/**
+ * [color description]
+ * @type {[type]}
+ */
+.mCS-klxx.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{ background-color: #ddd; }
+.mCS-klxx.mCSB_scrollTools .mCSB_draggerRail{ background-color: rgba(255,255,255,0); } 
+.mCS-klxx.mCSB_inside>.mCSB_container{ margin-right: 0px;}
+.mCS-klxx.mCSB_scrollTools.mCSB_scrollTools_vertical{width: 4px;}
+.mCS-klxx.mCSB_scrollTools .mCSB_draggerRail{width: 1px;}
+.klxx.index-block .panel-heading i.fa {
+    color: #ffc33f;
+}
+.klxx.index-block .panel-primary {
+    border-top: 3px solid #1b8cf2;
+    margin-bottom: 20px;
+    margin-right: 15px;
+}
+.klxx.index-block .panel-primary>.panel-heading span.title {
+    border-bottom: 0;
+}
+.klxx.index-block .panel-primary>.panel-heading span.title i.iconfont{
+    font-size: 1.2em;
+}
+.home-shortcut {
+    height: 532px;
+}
+.home-shortcut .index_box a {
+    color: #333;
+}
+.home-shortcut .index_box a:hover{
+    font-weight: normal;
+}
+.home-shortcut .index_box a i.iconfont{
+    display: block;
+    width: 60px;
+    height: 60px;
+    margin: 10px auto;
+    border-radius: 60px;
+    line-height: 60px;
+    font-size: 36px;
+    color: #fff;
+}
+.home-shortcut .shortcut-block  {
+    border-bottom: 1px solid #f2f2f2;
+    padding-bottom: 10px;
+}
+.home-shortcut h4 {
+    text-align: center;
+    margin: 15px 0 5px;
+}

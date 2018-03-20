@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ebusiness.cas.client.dao.AccountDao">
+	<resultMap type="com.ebusiness.cas.client.common.model.Account"
+		id="pojoMap">
+		<id property="id" column="id" />
+		<result property="userName" column="USERNAME" />
+		<result property="password" column="PASSWORD" />
+		<result property="oldPassword" column="OLD_PASSWORD" />
+		<result property="employeeId" column="EMPLOYEE_ID" />
+		<result property="employeeName" column="EMPLOYEE_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+	</resultMap>
+	
+	<!-- 查询团队对应的数据对象 -->
+	<select id="queryAccountByUserName" resultMap="pojoMap"
+		parameterType="com.ebusiness.cas.client.common.model.Account">
+		select tui.id, tui.USERNAME, tui.PASSWORD,tui.OLD_PASSWORD,tui.EMPLOYEE_ID,tei.EMPLOYEE_NAME, tui.STATUS,tui.CREATE_TIME,tui.UPDATE_TIME
+		  from TAB_USER_INFO tui
+	 left join TAB_EMPLOYEE_INFO tei on tui.EMPLOYEE_ID = tei.id
+		 where tui.status = 1
+		   and tui.USERNAME = #{userName}
+	</select>
+	<select id="queryAccountById" resultMap="pojoMap"
+		parameterType="com.ebusiness.cas.client.common.model.Account">
+		select tui.id, tui.USERNAME, tui.PASSWORD,tui.OLD_PASSWORD,tui.EMPLOYEE_ID,tei.EMPLOYEE_NAME, tui.STATUS,tui.CREATE_TIME,tui.UPDATE_TIME
+		  from TAB_USER_INFO tui
+	 left join TAB_EMPLOYEE_INFO tei on tui.EMPLOYEE_ID = tei.id
+		 where tui.id = #{id}
+	</select>
+	
+	<!-- 修改账户 -->
+	<update id="updateAccount" 
+		parameterType="com.ebusiness.cas.client.common.model.Account">
+		update TAB_USER_INFO set
+		UPDATE_TIME = sysdate
+		<if test="userName!=null">
+			,userName = #{userName}
+		</if>
+		<if test="password!=null">
+			,password = #{password}
+		</if>
+		<if test="oldPassword!=null">
+			,OLD_PASSWORD = #{oldPassword}
+		</if>
+		<if test="status!=null">
+			,status = #{status}
+		</if>
+		where id = #{id}
+	</update>
+</mapper>

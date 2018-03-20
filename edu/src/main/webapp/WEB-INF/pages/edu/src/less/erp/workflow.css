@@ -1,0 +1,21 @@
+.erp .bg-light {
+    color: #58666e;
+    background-color: #edf1f2;
+}
+.erp .bg-light .lter, .erp .bg-light .lter {
+    background-color: #f6f8f8;
+}
+.erp .b-b {
+    border-bottom: 1px solid #dee5e7;
+}
+.erp .wrapper-md {
+    padding: 20px;
+}
+.erp .m-n {
+    margin: 0 !important;
+}
+.erp .font-thin {
+    font-weight: 300;
+}
+.erp .message-window{ width:60%;height:auto; border:0px solid transparent; border-radius:4px; position:absolute; top:35%; z-index:1000; background:#fff;-webkit-box-shadow: #666 0px 0px 10px; -moz-box-shadow: #666 0px 0px 10px; box-shadow: #666 0px 0px 10px;}
+	

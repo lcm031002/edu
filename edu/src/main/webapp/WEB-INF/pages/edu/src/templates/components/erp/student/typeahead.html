@@ -1,0 +1,25 @@
+<span ng-transclude></span>
+<div class="form-group has-feedback">
+  <span class="glyphicon {{student?'glyphicon-remove':'glyphicon-search'}} text-muted cur form-control-feedback"
+  ng-click="onClearTypeahead()"></span>
+  <input type="text"
+    class="form-control"
+    ng-model="student"
+    uib-typeahead="student as student.fullName for student in getStudent($viewValue)"
+    placeholder="请输入姓名或编码"
+    typeahead-wait-ms="300"
+    typeahead-select-on-blur="true"
+    typeahead-select-on-exact="true"
+    typeahead-show-hint="true"
+    typeahead-loading="loading"
+    typeahead-no-results="noResults"
+    typeahead-on-select="onTypeaheadSelect($item, $model, $label, $event)"
+  >
+  <div ng-show="loading" class="pos-a">
+    <i class="glyphicon glyphicon-refresh"></i>
+    loading...
+  </div>
+  <!-- <div ng-show="noResults" class="pos-a">
+    <i class="glyphicon glyphicon-remove"></i> 查询结果为空
+  </div> -->
+</div>

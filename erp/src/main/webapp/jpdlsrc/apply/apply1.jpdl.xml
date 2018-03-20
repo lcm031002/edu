@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process description="测试用审批流程" key="demo.apply" name="测试审批" version="2" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="164,48,48,48" name="start1">
+      <transition g="-27,-30" name="发起请求" to="申请信息录入"/>
+   </start>
+   <task g="286,43,92,52" name="申请信息录入">
+   	  <assignment-handler class="com.ebusiness.erp.workflow.ext.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition g="-25,-29" name="完成录入" to="经理审批"/>
+   </task>
+   <task g="439,42,92,52" name="经理审批">
+   	  <assignment-handler class="com.ebusiness.erp.workflow.ext.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition g="-21,-24" name="审核通过" to="end1"/>
+      <transition g="486,133;331,134:-63,-23" name="录入信息不正确发回重写" to="申请信息录入"/>
+   </task>
+   <end g="615,44,48,48" name="end1"/>
+</process>

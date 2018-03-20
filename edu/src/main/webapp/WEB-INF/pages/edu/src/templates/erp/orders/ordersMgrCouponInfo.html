@@ -1,0 +1,143 @@
+<div ng-controller="erp_OrdersIndexCouponInfoController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">优惠券（线下）</span></div>
+        <div class="panel-body operation-panel">
+            <div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="handleAddCouponInfo()">
+	          <i class="fa fa-plus"></i>添加
+	        </button>
+            </div>
+            <hr>
+            <div class="searchbar">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="请输入优惠券" ng-model="queryParam" autocomplete="off">
+                            <span class="input-group-btn clearfix">
+	                <button class="btn btn-primary"
+	                  ng-click="handleQueryCouponInfo()">搜索</button>
+	              </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-panel ov-a">
+        <table class="table table-striped min-width-1100">
+            <thead>
+                <tr>
+                    <th>操作</th>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>优惠规则</th>
+                    <th>有效期</th>
+                    <th>状态</th>
+                    <!-- <th class="col-sm-4">所属校区</th> -->
+                    <th>创建时间</th>
+                    <th>创建用户</th>
+                    <th>修改时间</th>
+                    <th>修改用户</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="ci in couponInfoList"
+                 ng-if="!loadStatues && couponInfoList && couponInfoList.length">
+                    <td>
+                        <span class="cur" ng-click="handlePutCouponInfo(ci)"><i class="iconfont icon-edit text-primary"></i>修改</span>
+                        <span class="cur" ng-click="handleDeleteCouponInfo(ci.id)"><i class="iconfont icon-delete text-danger"></i>删除</span>
+                    </td>
+                    <td>{{ci.encoding}}</td>
+                    <td>{{ci.name}}</td>
+                    <td>{{ci.rule_name}}</td>
+                    <td>{{ci.valid_date}}</td>
+                    <td>{{ci.status == 1 ?'有效':'失效'}}</td>
+                    <!-- <td>{{ci.branch_names}}</td>  -->
+                    <td>{{ci.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{ci.create_user_name}}</td>
+                    <td>{{ci.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{ci.update_user_name}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <ng-pagination conf="paginationConf" ng-if="!loadStatues || couponInfoList.length > 0"></ng-pagination>
+
+        <!-- Modal -->
+        <div id="erpCouponInfoPanel" class="modal fade klxx-modal-primary" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">优惠券{{optype=='add'?'添加':'修改'}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">名称:</label>
+                                    <div class="col-sm-4">
+                                        <input type="hidden" class="form-control" ng-model="couponInfo.id">
+                                        <input type="text" class="form-control" ng-model="couponInfo.name" required>
+                                    </div>
+                                    <label class="col-sm-2 control-label">优惠规则:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="couponInfo.rule_id" ng-options="pcri.id as pcri.rule_name for pcri in privilegeRuleList">
+			                                  </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">有效期:</label>
+                                    <div class="col-sm-4">
+                                        <rd-date-picker-popup ng-model="couponInfo.valid_date"></rd-date-picker-popup>
+                                    </div>
+                                    <label class="col-sm-2 control-label">状态:</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" ng-model="couponInfo.status" ng-options="prs.key as prs.value for prs in status">
+			                                  </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">校区:</label>
+                                    <div class=" ">
+                                        <div style="OVERFLOW-Y: scroll; OVERFLOW-X:hidden;height:150px">
+                                            <table class="table table-striped table-hover table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th ng-click=checkedAllBuOrgs()>
+                                                            <input type=checkbox id="{{branch.id}}" ng-model="couponInfo.checkelBranchs">
+                                                        </th>
+                                                        <th>校区编码</th>
+                                                        <th>校区名称</th>
+                                                    </tr>
+                                                    <tr ng-repeat="branch in branchList">
+                                                        <td ng-click="">
+                                                            <input type=checkbox ng-model="branch.Selected">
+                                                        </td>
+                                                        <td>{{branch.id}}</td>
+                                                        <td>{{branch.org_name}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" ng-click="handleModalCancel()">取消</button>
+                        <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+    </div>
+
+</div>

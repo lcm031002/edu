@@ -1,0 +1,98 @@
+<div class="report" ng-controller="report_orderPerformaceController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">课程顾问绩效报表</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <div class="form form-inline">
+          <div class="form-group m-0 mr-r20">
+            <rd-date-picker-range 
+              ng-start-date="searchParam.p_start_date" 
+              ng-end-date="searchParam.p_end_date" 
+              ng-default-range="'today'">
+            </rd-date-picker-range>
+          </div>
+        </div>
+        <div class="form form-inline">
+          <div class="form-group">
+            <rd-branch ng-bu-id="searchParam.p_bu_id"
+              ng-branch-id="searchParam.p_branch_id">
+            </rd-branch>
+          </div>
+          <div class="form-group">
+            <!-- <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button> -->
+            <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel ov-a">
+    <table class="table table-stripped {{loadStatues!=false?'':'min-width-1800'}}">
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <col width="180" />
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>单据编号</th>
+          <th>付款时间</th>
+          <th>报班合同编号</th>
+          <th>学生编号</th>
+          <th>学生姓名</th>
+          <th>操作类型</th>
+          <th>课程商品</th>
+          <th>年级</th>
+          <th>科目</th>
+          <th>业绩校区</th>
+          <th>制单人</th>
+          <th>新单/续单</th>
+          <th>学员状态</th>
+          <th>报备人</th>
+          <th>业绩归属人</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="perfDetail in perfDetails" ng-if="!loadStatues && perfDetails && perfDetails.length">
+          <td>{{$index + 1}}</td>
+          <td>{{perfDetail.order_number}}</td>
+          <td>{{perfDetail.business_date}}</td>
+          <td>{{perfDetail.order_no}}</td>
+          <td>{{perfDetail.student_code}}</td>
+          <td>{{perfDetail.student_name}}</td>
+          <td>{{perfDetail.operate_type_name}}</td>
+          <td>{{perfDetail.course_name}}</td>         
+          <td>{{perfDetail.grade_name}}</td>
+          <td>{{perfDetail.subject_name}}</td>
+          <td>{{perfDetail.performance_branch_name}}</td>
+          <td>{{perfDetail.agent_name}}</td>
+          <td>{{perfDetail.order_type}}</td>
+          <td>{{perfDetail.student_status}}</td>
+          <td>{{perfDetail.recorder}}</td>
+          <td>{{perfDetail.performancer}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center" ng-if="loadStatues">
+      <img src="img/erp/loading2.gif">
+    </div>
+    <div class="text-center" ng-if="!loadStatues && (perfDetails == null || perfDetails.length == 0)">
+      <div class="no-data"></div>
+      暂无数据
+    </div>
+  </div>
+</div>

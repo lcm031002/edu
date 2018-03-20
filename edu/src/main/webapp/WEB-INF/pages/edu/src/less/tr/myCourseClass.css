@@ -1,0 +1,5 @@
+#tr-my-course-class table tr th,
+#tr-my-course-class table tr td { 
+	text-align: center; 
+  border: 1px solid #ddd;
+}

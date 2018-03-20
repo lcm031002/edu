@@ -1,0 +1,97 @@
+<div class="compoents stu-sched-by-time table-panel">
+  <div class="row form form-horizontal">
+    <div class="col-sm-7">
+      <div class="form-group-inline">
+        <label class="col-sm-12 font-bold m-0">空挡查询</label>
+        <label class="col-lg-2 col-sm-3 control-label required">科目</label>
+        <div class="col-lg-3 col-sm-5">
+          <input type="text" class="form-control" ng-model="detail.subjectName" ng-disabled="true">
+        </div>
+      </div>
+      <div class="form-group-inline">
+          <label class="col-lg-2 col-sm-3 control-label required">教研组</label>
+          <div class="col-lg-3 col-sm-5">
+              <!-- <select class="form-control"></select> -->
+            <select ng-model="detail.teachGroupId" class="form-control"
+              ng-options="item.id as item.teach_group_name for item in teachGroupList">
+            </select>
+          <!-- <input type="text" class="form-control"> -->
+            <!-- <kl-subject-select subject="detail.subject" subject-id="detail.subjectId"></kl-subject-select> -->
+          </div>
+          <!-- <div class="col-sm-2 control-label text-primary" ng-click="viewSchedule(detail)">选择老师</div> -->
+      </div>
+      <div class="form-group-inline">
+        <label class="col-lg-2 col-sm-3  control-label required">日期</label>
+        <rd-date-picker-popup class="col-lg-3 col-sm-5" ng-model="detail.courseDate"></rd-date-picker-popup>
+        
+        <div class="col-lg-2 col-sm-3">
+          <input type="text" ng-model="detail.weekday" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="detail.weekday" ng-disabled="true" disabled="disabled">
+        </div>
+      </div>
+      <div class="form-group-inline">
+        <label class="col-lg-2 col-sm-3 control-label required">时间档期</label>
+        <div class="col-lg-10 col-sm-9">
+          <button ng-repeat="period in tpScheduleTimeList " ng-click="onTpScheduleTimeChange(period)" ng-class="{true: 'btn-primary',false:'btn-default'}[period.checked]"
+            class="btn btn-sm mr10">{{period.name}}</button>
+        </div>
+      </div>
+      
+      <div class="form-group-inline">
+        <label class="col-lg-2 col-sm-3 control-label required">上课时间</label>
+        <div class="col-lg-3 col-sm-5 matchb">
+          <kl-timepicker ng-model="detail.startTime"></kl-timepicker>
+        </div>
+        <label class="col-lg-2 col-sm-3 control-label required">下课时间</label>
+        <div class="col-lg-3 col-sm-5">
+            <kl-timepicker ng-model="detail.endTime"></kl-timepicker>              
+        </div>
+        <button class="btn btn-primary iconfont icon-search" ng-click="searchSchedule(detail)" ng-disabled="!detail.weekday || !detail.startTime || !detail.endTime"> 查询</button>
+          <!-- <div class="control-label text-primary fl ml-15" ng-click="searchSchedule(detail)">查询</div> -->
+      </div>
+      <div class="form-group-inline" >
+        <label class="col-sm-12 font-bold m-0">正式匹配</label>            
+        <label class="col-lg-2 col-sm-3 control-label required">老师</label>        
+        <div class="col-lg-3 col-sm-5 matchb">
+          <div class="input-group">
+            <input class="form-control" type="text" ng-disabled="true" ng-model="detail.teacherName">
+            <span class="input-group-btn" kl-teacher-dropdown seach-tag="detail.subjectId" on-search="onSearchTearcher(search_info)" kl-selected="onSelectTeacher(teacher)"
+              searchparam="{}">
+              <button class="btn btn-primary">选择</button>
+            </span>
+          </div>
+        </div>
+        <label class="col-lg-2 col-sm-3 control-label required">老师编码</label>  
+        <div class="col-lg-4 col-sm-6">
+            <input type="text" class="form-control" ng-model="detail.teacherEncoding" ng-disabled="true">              
+        </div>
+      </div>
+      <div class="form-group-inline">
+        <label class="col-lg-2 col-sm-3 control-label">备注</label> 
+        <div class="col-sm-9">
+            <input type="text" class="form-control height-60" ng-model="detail.remark"></input>              
+        </div>
+      </div>
+      <div class="form-group-inline mt-20">
+        <div class="col-sm-1 col-sm-offset-9 mr-30">
+          <button class="btn btn-default" ng-click="onCancle()">取消</button>              
+        </div>
+        <div class="col-sm-1">
+         <button class="btn btn-primary" ng-click="onOk()">确定</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-5 match-right">
+      <label class="col-sm-12">申请档期</label>
+      <div class="col-sm-12">
+          <klc-erp-course-stu-sched-time-table time-list="apply.schedule" read-only="true"></klc-erp-course-stu-sched-time-table>
+      </div>
+      <label class="col-sm-12 martchtop">特殊说明</label>
+      <div class="col-sm-10">
+        <textarea cols="15" rows="4" class="form-control" ng-model="apply.remark" ng-disabled="true"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="margin:0 -33px;" ng-if="detail.teach_group_id">
+  <klc-teacher-schedule group-id="detail.teach_group_id" search-seg="detail.seg"></klc-teacher-schedule>  
+</div>

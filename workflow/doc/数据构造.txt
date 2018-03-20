@@ -1,0 +1,18 @@
+
+
+INSERT INTO jbpm4_db.jbpm4_ext_processrole_def
+(id, process_key, process_task, remark)
+VALUES(0, 'demo.apply', '申请信息录入', 'demo.apply.applyer');
+
+INSERT INTO jbpm4_db.jbpm4_ext_processrole_def
+(id, process_key, process_task, remark)
+VALUES(1, 'demo.apply', '经理审批', 'demo.apply.manager');
+
+
+INSERT INTO jbpm4_db.jbpm4_ext_businessrol_mapping
+(id, process_key, business_role, process_task)
+VALUES(0, 'demo.apply', '84', '申请信息录入');
+
+INSERT INTO jbpm4_db.jbpm4_ext_businessrol_mapping
+(id, process_key, business_role, process_task)
+VALUES(1, 'demo.apply', '81', '经理审批');

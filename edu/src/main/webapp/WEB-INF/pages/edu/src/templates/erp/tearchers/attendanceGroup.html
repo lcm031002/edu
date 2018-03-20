@@ -1,0 +1,50 @@
+<div ng-controller="erp_attendanceGroupController">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><span class="title">考勤教师组管理</span></div>
+    <div class="panel-body operation-panel">
+      <div class="searchbar">
+        <form class="form-inline">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="名称" ng-model="searchParam.teach_group_name" autocomplete="off">
+              <span class="input-group-btn clearfix">
+                    <button class="btn btn-primary" ng-click="handleQueryAttendTeacherGroup()"><i class="fa fa-search"></i>搜索</button>
+                  </span>
+            </div>
+          </div>
+        </form>
+      </div>
+      <hr>
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="handleAddAttendTeacherGroup()">
+          <i class="fa fa-plus"></i>添加
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--main form end-->
+  <div class="table-panel">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>操作</th>
+          <th>组名称</th>
+          <th>校区名称</th>
+          <th>所在地区</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="attendanceGroup in attendTeacherGroupList">
+          <td style="width: 150px;">
+            <span class="cur mr15" ng-click="handlePutAttendTeacherGroup(attendanceGroup)"><i class="iconfont icon-edit text-primary"></i> 修改</span>
+            <sapn class="cur" ng-click="handleDeleteAttendTeacherGroup(attendanceGroup.id)"><i class="iconfont icon-delete text-danger"></i> 删除</span>
+          </td>
+          <td>{{attendanceGroup.name}}</td>
+          <td>{{attendanceGroup.branch_name}}</td>
+          <td>{{attendanceGroup.city_name}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-pagination conf="paginationConf"></ng-pagination>
+  </div>
+</div>

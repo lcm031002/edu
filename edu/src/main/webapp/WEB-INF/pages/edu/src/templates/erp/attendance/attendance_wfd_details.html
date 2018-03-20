@@ -1,0 +1,154 @@
+<div ng-controller="erp_attendanceWfdDetailsController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">批量考勤 晚辅导(日期：{{attendance_date}})</span>
+    </div>
+    <div class="panel-body">
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a href="javascript:void(0)" ng-click="changeTabAndLoadData('student')" data-toggle="tab">学员考勤</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)" ng-click="changeTabAndLoadData('teacher')" data-toggle="tab">教师考勤</a>
+        </li>
+      </ul>
+      <!-- 学员考勤工具栏 -->
+      <div ng-show="selectedTab == 'student'">
+        <div class="table-panel" style="min-height:50px;">
+          <button class="btn mr15" ng-repeat="student in studentList_attend" ng-if="studentList_attend && studentList_attend.length" title="{{student.COURSE_INFO}}" ng-click="submitStudentAttend('cancel',student)">
+            {{student.STUDENT_NAME}}
+            <span class="badge" title="取消考勤">X</span>
+          </button>
+        </div>
+        <div class="form-inline mb20">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="学生姓名/编码" ng-model="student_search_info">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" ng-click="queryStudents()"><i class="iconfont icon-search"></i>搜索</button>
+              </span>
+          </div>
+          <div class="pull-right">
+            今日待考勤学员人数：{{studentList_no_attend.length}}　已完成考勤人数：{{studentList_attend.length}}
+          </div>
+        </div>
+      </div>
+      <!-- 教师考勤工具栏 -->
+      <div ng-show="selectedTab == 'teacher'">
+        <div class="table-panel" style="min-height:50px;">
+          <button class="btn mr15" ng-repeat="teacher in teacherList_attend" ng-if="teacherList_attend && teacherList_attend.length" ng-click="submitTeacherAttend('cancel',teacher)">
+            {{teacher.TEACHER_NAME}}
+            <span class="badge" title="取消考勤">X</span>
+          </button>
+        </div>
+        <div class="form-inline">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="教师姓名/编码" ng-model="teacher_search_info">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" ng-click="queryTeachers()">搜索</button>
+              </span>
+          </div>
+          <div class="pull-right">
+            已完成考勤人数：{{teacherList_attend.length}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div ng-show="selectedTab == 'student'">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" ng-model="selectAllStudentFlag" ng-click="switchFlag('student')">
+            </th>
+            <th>操作</th>
+            <th>学生姓名</th>
+            <th>到期时间</th>
+            <th>已用</th>
+            <th>剩余</th>
+            <th>学管师</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="student in studentList_no_attend" ng-if="studentList_no_attend && studentList_no_attend.length">
+            <td>
+              <input type="checkbox" ng-model="student.selectFlag">
+            </td>
+            <td>
+              <a href="javascript:void(0);" ng-click="submitStudentAttend('attend',student)">考勤</a>
+            </td>
+            <td>{{student.STUDENT_NAME}}</td>
+            <td>{{student.END_DATE}}</td>
+            <td>{{student.COUNT_ATT}}</td>
+            <td>{{student.COURSE_SURPLUS_COUNT}}</td>
+            <td>{{student.COUNSELOR_NAME}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="toolbar">
+        <button class="btn btn-primary" ng-click="submitStudentAttend('attendBatch')">批量考勤</button>
+      </div>
+    </div>
+    <div ng-show="selectedTab == 'teacher'">
+      <!-- /搜索教师工具栏 -->
+      <table class="table table-bordered">
+        <tr>
+          <td width="260" class="bg-default">全部教师</td>
+          <td>教师组教师</td>
+        </tr>
+        <tr>
+          <td>
+            <ul ng-show="teacherGroupList && teacherGroupList.length" class="list-unstyled">
+              <li class="cur" ng-repeat="teacherGroup in teacherGroupList" ng-click="queryTeachers(teacherGroup.ID);">
+                <i class="iconfont icon-orders_record" style="color: #fcc873; font-size: 18px;"></i> {{teacherGroup.NAME}}
+              </li>
+            </ul>
+            <div></div>
+          </td>
+          <td>
+            <div class="table-panel">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" ng-model="selectAllTeacherFlag" ng-click="switchFlag('teacher')">
+                  </th>
+                  <th>操作</th>
+                  <th>教师姓名</th>
+                  <th>性别</th>
+                  <th>简介</th>
+                  <th>电话</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="teacher in teacherList_no_attend" ng-if="teacherList_no_attend && teacherList_no_attend.length">
+                  <td>
+                    <input type="checkbox" ng-model="teacher.selectFlag">
+                  </td>
+                  <td>
+                    <a href="javascript:void(0);" ng-click="submitTeacherAttend('attend',teacher)">考勤</a>
+                  </td>
+                  <td>{{teacher.TEACHER_NAME}}</td>
+                  <td>{{teacher.SEX == 1 ? '男' : (teacher.SEX == 2 ? '女' : '-')}}</td>
+                  <td>{{teacher.DESCRIPTION == null ? '-' : teacher.DESCRIPTION}}</td>
+                  <td>{{teacher.PHONE ? '-' : teacher.PHONE}}</td>
+                </tr>
+              </tbody>
+            </table>
+            
+          </div>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn btn-primary" ng-click="goSetTeacherGroup()">设置分组</button></td>
+          <td><div class="toolbar">
+              <button class="btn btn-primary" ng-click="submitTeacherAttend('attendBatch')">
+                批量考勤
+              </button>
+            </div></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

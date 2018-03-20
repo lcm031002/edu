@@ -1,0 +1,156 @@
+#tr-my-course table tr th,
+#tr-my-course table tr td { text-align: center; border: 1px solid #ddd;}
+#tr-work-list table tr th,
+#tr-work-list table tr td { text-align: center; border: 1px solid #ddd;}
+
+#tr-my-course dt { 
+  float: left;
+  display: inline-block;
+  width: 42px;
+  text-align: left;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+#tr-my-course dd {
+  margin-left: 44px;
+}
+
+#tr-my-course ul li {
+  display: inline-block;
+}
+
+#tr-my-course .circle{
+  background: #e8f3fe;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px; 
+}
+
+#tr-my-course .circle i {
+  font-size: 30px;
+  color: #1b8cf2;
+}
+
+#tr-work-list .circle {
+  display: inline-block;
+  background: #e8f3fe;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px; 
+}
+
+#tr-work-list .work-type-field {
+  width: 148px;
+  background-color: #fff;
+  position: absolute;
+  right: 120px;
+  top: 36px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(177, 180, 185, 0.45);
+  border-radius: 4px;
+  z-index: 200;
+}
+
+#tr-work-list .work-statusCode-field {
+  width: 110px;
+  background-color: #fff;
+  position: absolute;
+  right: 15px;
+  top: 36px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(177, 180, 185, 0.45);
+  border-radius: 4px;
+  z-index: 200;
+}
+
+#tr-my-course .work-courseStatus-field {
+  width: 110px;
+  background-color: #fff;
+  position: absolute;
+  right: 15px;
+  top: 36px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(177, 180, 185, 0.45);
+  border-radius: 4px;
+  z-index: 200;
+}
+
+#tr-work-list ul,
+#tr-work-list li {
+  /*margin: 0;*/
+  padding: 0;
+}
+#tr-work-list .work-type-field .work-item {
+  padding: 6px 12px;
+  display: block;
+  color: #71777c;
+}
+
+#tr-work-list .work-statusCode-field .work-item {
+  padding: 6px 12px;
+  display: block;
+  color: #71777c;
+}
+
+#tr-my-course .work-courseStatus-field .work-item {
+  padding: 6px 12px;
+  display: block;
+  color: #71777c;
+}
+
+#tr-work-list .work-type-field .work-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+#tr-work-list .work-statusCode-field .work-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+#tr-work-list .work-type-field .work-item:hover {
+  background-color: #1b8cf2;
+  color: #fff;
+}
+#tr-work-list .work-statusCode-field .work-item:hover {
+  background-color: #1b8cf2;
+  color: #fff;
+}
+
+#tr-my-course .work-courseStatus-field .work-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+#tr-my-course .work-courseStatus-field .work-item:hover {
+  background-color: #1b8cf2;
+  color: #fff;
+}
+
+#tr-my-course .work-courseStatus-field ul {
+  padding: 0px;
+}
+
+#tr-workMgt-view .circle {
+  background: #e8f3fe;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: #2196F3;
+}
+
+#tr-workMgt-view .mgtBtn {
+  background-color: #e8f3fe;
+  padding: 3px 8px;
+  color: #2196F3;
+}
+
+#tr-workMgt-view .tr-disabled {
+  color: rgba(0,0,0,0.38);
+}
+
+#tr-workMgt-view .tr-disabled i {
+  color: rgba(0,0,0,0.38) !important;
+}
+
+#tr-workMgt-add .videos-field:not(:first-child) {
+  margin-top:10px;
+}
+

@@ -1,0 +1,60 @@
+<div ng-controller="erp_teacherGroupController">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><span class="title">教研组管理</span></div>
+    <div class="panel-body operation-panel">
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="handleAddTeacherGroup()">
+          <i class="fa fa-plus"></i>添加
+        </button>
+      </div>
+      <hr>
+      <div class="searchbar">
+        <form class="form-inline">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="名称" ng-model="searchParam.teach_group_name" autocomplete="off">
+              <span class="input-group-btn clearfix">
+                    <button class="btn btn-primary" ng-click="handleQueryTeacherGroup()"><i class="fa fa-search"></i>搜索</button>
+                  </span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!--main form end-->
+  <div class="table-panel">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>操作</th>
+          <th>教研组名称</th>
+          <th style="min-width:45px;">状态</th>
+          <th>团队名称</th>
+          <th>所在地区</th>
+          <th>创建时间</th>
+          <th>创建用户</th>
+          <th>修改时间</th>
+          <th>修改用户</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="teacherGroup in teacherGroupList" ng-if="teacherGroupList && teacherGroupList.length">
+          <td style="width: 150px;">
+            <span class="cur mr15" ng-click="handlePutTeacherGroup(teacherGroup)"><i class="iconfont icon-edit text-primary"></i> 修改</span>
+            <sapn class="cur" ng-click="handleDeleteTeacherGroup(teacherGroup.id)"><i class="iconfont icon-delete text-danger"></i> 删除</span>
+          </td>
+          <td>{{teacherGroup.teach_group_name}}</td>
+          <td>{{teacherGroup.status_name}}</td>
+          <td>{{teacherGroup.bu_name}}</td>
+          <td>{{teacherGroup.city_name}}</td>
+          <td>{{teacherGroup.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          <td>{{teacherGroup.create_user_name}}</td>
+          <td>{{teacherGroup.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          <td>{{teacherGroup.update_user_name}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-pagination conf="paginationConf"></ng-pagination>
+  </div>
+</div>

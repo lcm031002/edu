@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd   
+    http://www.springframework.org/schema/tx   
+    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+    http://www.springframework.org/schema/mvc  
+    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.ebusiness.workflow">
+	</context:component-scan>
+	
+	
+	<mvc:resources location="/WEB-INF/classes/com.ebusiness.workflow/workflow/" mapping="/workflow/**"
+	cache-period="31536000" />
+	<mvc:default-servlet-handler />
+
+	<bean id="workflowApps"
+		class="com.ebusiness.workflow.common.WorkflowApps">
+	</bean>
+	
+	
+	
+	<!-- 加载属性配置文件 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:properties/workflowCfg.properties" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+
+	<!-- 配置工作流组件配置信息 -->
+	<bean id="workflowCfg" class="com.ebusiness.workflow.cfg.WorkflowCfg">
+		<!-- 工作流jpdl文件目录 -->
+		<property name="jpdl_zip_dir" value="${workflow.jpdl.zip.dir}" />
+		<!-- 工作流文件解压目录 -->
+		<property name="deployed_dir" value="${workflow.deployed.dir}" />
+		<!-- 工作流文件解压目录 -->
+		<property name="deployed_download_dir" value="${workflow.deployed.download.dir}" />
+		<!-- 业务角色查询服务 -->
+		<property name="ext_query_business_role_url" value="${workflow.ext.ext_query_business_role_url}" />
+		<property name="ext_current_user_getter" value="${workflow.ext.ext_current_user_getter}" />
+		<property name="before_complete_task" value="${workflow.ext.before_complete_task}" />
+		<property name="ext_after_task_do_log" value="${workflow.ext.ext_after_task_do_log}" />
+	</bean>
+</beans>    

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process description="个性化学管部360度考评流程" key="hrm.gxh_manger_360kaoping" name="个性化学管部360度考评问卷" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="251,95,48,48" name="start1">
+      <transition g="-58,-8" name="填写完毕" to="校区"/>
+   </start>
+   <task g="228,176,92,52" name="校区">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition g="-133,-12" name="填写完毕给人力资源评价" to="人力资源"/>
+   </task>
+   <task g="229,278,92,52" name="人力资源">
+     <assignment-handler class="com.ebusiness.erp.workflow.hrm.controller.HrmAssignTask">
+   </assignment-handler>
+      <transition to="end1" name="填写完毕。流程结束 "/>
+   </task>
+   <end g="250,370,48,48" name="end1"/>
+</process>

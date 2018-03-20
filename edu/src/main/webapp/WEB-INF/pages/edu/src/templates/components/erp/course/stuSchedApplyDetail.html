@@ -1,0 +1,30 @@
+<div class="table-panel">
+    <uib-tabset ng-if="!match">
+      <uib-tab index="0" heading="学生档案模块">
+        <klc-erp-course-stu-sched-base-info-analysis apply="$ctrl.apply" read-only="true">
+        </klc-erp-course-stu-sched-base-info-analysis>
+      </uib-tab>
+      <uib-tab index="1" heading="课程设计模块">
+        <klc-erp-course-stu-sched-base-info-plan apply="$ctrl.apply" read-only="true">
+        </klc-erp-course-stu-sched-base-info-plan>
+      </uib-tab>
+      <uib-tab index="3" heading="师生匹配结果">
+        <klc-erp-course-stu-sched-base-info-result apply="$ctrl.apply" read-only="true">
+        </klc-erp-course-stu-sched-base-info-result>
+      </uib-tab>
+    </uib-tabset>
+  <uib-tabset ng-if="match">
+    <uib-tab index="0" heading="师生匹配">
+      <klc-erp-course-stu-sched-base-info-match apply="$ctrl.apply" read-only="true">
+      </klc-erp-course-stu-sched-base-info-match>
+    </uib-tab>
+    <uib-tab index="1" heading="学生档案模块">
+      <klc-erp-course-stu-sched-base-info-analysis apply="$ctrl.apply" read-only="true">
+      </klc-erp-course-stu-sched-base-info-analysis>
+    </uib-tab>
+    <uib-tab index="2" heading="课程设计模块">
+      <klc-erp-course-stu-sched-base-info-plan apply="$ctrl.apply" read-only="true">
+      </klc-erp-course-stu-sched-base-info-plan>
+    </uib-tab>
+  </uib-tabset>
+</div>

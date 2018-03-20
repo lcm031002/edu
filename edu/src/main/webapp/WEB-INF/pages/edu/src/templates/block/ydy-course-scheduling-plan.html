@@ -1,0 +1,151 @@
+<!-- 课程规划 -->
+<div class="form panel panel-primary">
+  <div class="panel-heading"><span>课程规划（单位：节/每周）</span></div>
+  <dl class="dl-horizontal">
+    <dt ng-hide="applyBaseReadOnly"></dt>
+    <dd ng-hide="applyBaseReadOnly">
+      <button class="btn btn-primary" ng-click="addReq()">
+        <i class="iconfont icon-add"></i> 新增课程规划
+      </button>
+    </dd>
+    <dt></dt>
+    <dd>
+      <table class="table req-list table-bordered table-stripped" style="width: auto;">
+        <tr>
+          <th>科目</th>
+          <td ng-repeat="req in apply.stuReqList">
+            {{req.subjectName}}
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>每周节数</th>
+          <td class="req-wrapper" ng-repeat="req in apply.stuReqList" style="min-width: 60px;">
+            <div class="req">{{req.requirement}} 【{{req.seq}}】</div>
+            <div class="req-op">
+              <i class="iconfont icon-edit cur text-primary" ng-click="editReq(req)"></i>
+              <i class="iconfont icon-delete cur text-danger" ng-click="delReq(req)"></i>
+            </div>
+          </td>
+          <td width="60"></td>
+        </tr>
+      </table>
+    </dd>
+    <dt>每周总节数</dt>
+    <dd>{{totalRequirement}}</dd>
+    <dt>开课日期</dt>
+    <dd>
+      <rd-date-picker-popup ng-model="apply.beginDate"></rd-date-picker-popup>
+      <span class="text-danger">注：开课日期统一填做学生第一次课开课时间</span>
+    </dd>
+  </dl>
+  <div class="panel-heading"><span>备注</span></div>
+  <div class="row">
+    <div class="col-sm-4">
+      <dl class="dl-horizontal">
+        <dt>咨询师</dt>
+        <dd>
+          <span>{{apply.counselor}}</span>
+        </dd>
+        <dt>学管师</dt>
+        <dd>
+          <span>{{apply.courseAdmin}}</span>
+        </dd>
+        <dt>上课地点</dt>
+        <dd>
+          <kl-branch-select bu-id="selectedStudent.bu_id" branch-id="apply.branchId" hide-option-all="true"></kl-branch-select>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-4">
+      <dl class="dl-horizontal">
+          <dt>手机</dt>
+          <dd>
+            <span>{{apply.counselorPhone || '暂无'}}</span>
+          </dd>
+          <dt>手机</dt>
+          <dd><span>{{apply.courseAdminPhone || '暂无'}}</span></dd>
+          <dt>校区邮箱</dt>
+          <dd>
+            <input type="text" ng-model="apply.branchEmail" class="form-control" placeholder="请输入校区邮箱">
+          </dd>
+      </dl>
+    </div>
+    <div class="col-sm-4">
+      <dl class="dl-horizontal">
+          <dt>座机</dt>
+          <dd>{{apply.counselorLine || '暂无'}}</dd>
+          <dt>座机</dt>
+          <dd>{{apply.courseAdminLine || '暂无'}}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="panel-heading"><span>申请档期</span></div>
+  <dl class="dl-horizontal">
+    <dt>特殊说明</dt>
+    <dd><textarea cols="30" rows="5" ng-model="apply.remark" class="form-control"></textarea></dd>
+    <dt>申请档期</dt>
+    <dd>
+      <table class="table table-bordered stu-sched" style="width:auto;">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th class="cur" ng-click="setAllTimesIdle(0)">周六</th>
+            <th class="cur" ng-click="setAllTimesIdle(1)">周日</th>
+            <th class="cur" ng-click="setAllTimesIdle(2)">周一</th>
+            <th class="cur" ng-click="setAllTimesIdle(3)">周二</th>
+            <th class="cur" ng-click="setAllTimesIdle(4)">周三</th>
+            <th class="cur" ng-click="setAllTimesIdle(5)">周四</th>
+            <th class="cur" ng-click="setAllTimesIdle(6)">周五</th>
+          </tr>
+          <tr ng-repeat="time in stuSchedTimeList track by $index">
+            <td style="border-bottom-width: 1px;">{{time.startTime}}-{{time.endTime}}</td>
+            <td ng-repeat="idle in time.idles track by $index"
+              class="{{idle=='Y'?'idle':'not-idle'}}"
+              ng-click="reverseIdle(time, $index)">
+            </td>
+          </tr>
+        </thead>
+      </table>
+      <span class="text-info">
+        注：点击表格设置学生是否【空闲】，【空闲】状态下可排课（蓝色表示空闲，可排课）
+      </span>
+    </dd>
+  </dl>
+</div>
+<script type="text/ng-template" id="erp_courseSchedApplyReqModal.html">
+  <rd-modal>
+    <rd-modal-title>课程规划</rd-modal-title>
+    <rd-modal-body>
+      <div class="form form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">科目</label>
+          <div class="col-sm-8">
+            <kl-subject-select 
+              subject-id="req.subjectId"
+              subject-name="req.subjectName"
+            ></kl-subject-select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">节数/周</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="req.requirement" placeholder="请输入每周节数">
+            （举例：1 表示每周上1节相应的科目）
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">排序</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="req.seq" placeholder="请输入排序序号">
+            （排序序号决定课程规划的顺序）
+          </div>
+        </div>
+      </div>
+    </rd-modal-body>
+    <rd-modal-footer>
+      <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+      <button class="btn btn-primary" ng-click="saveReq()">确定</button>
+    </rd-modal-footer>
+  </rd-modal>
+</script>

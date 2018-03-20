@@ -1,0 +1,191 @@
+<!-- 课程设计模块 -->
+<div class="form panel panel-primary components stu-sched-plan">
+  <div class="panel-heading mt10"><span>课程规划（单位：节/每周）</span></div>
+  <dl class="dl-horizontal">
+    <dt ng-hide="$ctrl.readOnly"></dt>
+    <dd ng-hide="$ctrl.readOnly">
+      <button class="btn btn-primary" ng-click="addReq()">
+        <i class="iconfont icon-add"></i> 新增课程规划
+      </button>
+    </dd>
+    <dt><span class="required"></span>课程规划</dt>
+    <dd style="overflow-x:auto;">
+      <table class="table req-list table-bordered table-stripped" style="width:unset;">
+        <tr class="text-nowrap">
+          <th>科目</th>
+          <td ng-repeat="req in apply.stuReqList">
+            {{req.subjectName}}
+          </td>
+        </tr>
+        <tr class="text-nowrap">
+          <th>教研组</th>
+          <td ng-repeat="req in apply.stuReqList">
+            {{req.teachGroupName}}
+          </td>
+        </tr>
+        <tr class="text-nowrap">
+          <th>每周节数</th>
+          <td class="req-wrapper" ng-repeat="req in apply.stuReqList" style="min-width: 60px;">
+            <div class="req">{{req.requirement}}节 <span class="text-muted">({{req.seq}})</span></div>
+            <div class="req-op" ng-hide="$ctrl.readOnly">
+              <i class="iconfont icon-edit cur text-primary" ng-click="editReq(req)"></i>
+              <i class="iconfont icon-delete cur text-danger" ng-click="delReq(req)"></i>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!-- <span class="text-warning">注：科目成绩每周上课节数后括号内的数字为排序序号，<br>
+        序号小的，排序前面，序号大的排后面。例：4 (10)表示每周4节课，排序序号为10
+      </span> -->
+    </dd>
+    <!-- <dt>每周总节数</dt>
+    <dd>{{pageData.totalRequirement}}</dd> -->
+    <dt><span class="required"></span>开课日期</dt>
+    <dd>
+      <rd-date-picker-popup ng-model="apply.beginDate" disabled="$ctrl.readOnly" style="display:inline-table;"></rd-date-picker-popup>
+      <sup class="text-danger">注：开课日期统一填做学生第一次课开课时间</sup>
+    </dd>
+  </dl>
+  <div class="panel-heading"><span>备注</span></div>
+  <div class="row">
+    <div class="col-sm-4">
+      <dl class="dl-horizontal">
+        <dt>咨询师</dt>
+        <dd>
+          <span>{{apply.counselor}}</span>
+        </dd>
+        <dt>学管师</dt>
+        <dd>
+          <span>{{apply.courseAdmin}}</span>
+        </dd>
+        <dt><span class="required"></span>上课地点</dt>
+        <dd>
+          <kl-branch-select
+            bu-id="apply.student.bu_id"
+            branch-id="apply.branchId"
+            hide-option-all="true"
+            query-all="'Y'"
+            ng-disabled="$ctrl.readOnly"
+            on-branch-change="handleBranchChange(branch)"
+            ></kl-branch-select>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-4">
+      <dl class="dl-horizontal">
+          <dt>手机</dt>
+          <dd>
+            <span>{{apply.counselorPhone || '暂无'}}</span>
+          </dd>
+          <dt>手机</dt>
+          <dd><span>{{apply.courseAdminPhone || '暂无'}}</span></dd>
+          <dt>校区邮箱</dt>
+          <dd>
+            <input type="text" ng-model="apply.branchEmail" ng-disabled="true"
+              class="form-control" placeholder="请输入校区邮箱">
+          </dd>
+      </dl>
+    </div>
+    <div class="col-sm-4">
+      <dl class="dl-horizontal">
+          <dt>座机</dt>
+          <dd>{{apply.counselorLine || '暂无'}}</dd>
+          <dt>座机</dt>
+          <dd>{{apply.courseAdminLine || '暂无'}}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="panel-heading"><span class="required"></span><span>申请档期</span></div>
+  <dl class="dl-horizontal fl">
+    <dt>申请档期</dt>
+    <dd>
+      <klc-erp-course-stu-sched-time-table 
+        time-list="apply.schedule" 
+        read-only="$ctrl.readOnly"
+        on-update="onUpdateSched(schedule)"></klc-erp-course-stu-sched-time-table>
+    </dd>
+  </dl>
+  <dl class="dl-horizontal fl">
+      <dt>特殊说明</dt>
+      <dd>
+        <textarea cols="30" rows="5" ng-disabled="$ctrl.readOnly"
+          ng-model="apply.remark" class="form-control">
+        </textarea>
+      </dd>
+  </dl>
+  <div class="clearfix"></div>
+</div>
+<script type="text/ng-template" id="erp_courseSchedApplyReqModal.html">
+  <rd-modal>
+    <rd-modal-title>课程规划</rd-modal-title>
+    <rd-modal-body>
+      <div class="form form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">科目</label>
+          <div class="col-sm-8">
+            <kl-subject-select 
+              subject-id="req.subjectId"
+              subject-name="req.subjectName"
+            ></kl-subject-select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">教研组</label>
+          <div class="col-sm-8">
+            <kl-teacher-group-select
+                teach-group-id="req.teachGroupId"
+                teach-group-name="req.teachGroupName">
+            </kl-teacher-group-select>
+            <!-- <select ng-model="req.teachGroupId" class="form-control"
+                    ng-options="item.id as item.teach_group_name for item in teachGroupList">
+            </select> -->
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">节数/周</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="req.requirement" placeholder="请输入每周节数">
+            （举例：1 表示每周上1节相应的科目）
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label required">优先级</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="req.seq" placeholder="请输入排序序号">
+            （序号决定排课专员的处理优先顺序）
+          </div>
+        </div>
+      </div>
+    </rd-modal-body>
+    <rd-modal-footer>
+      <button class="btn btn-default" ng-click="$dismiss()">取消</button>
+      <button class="btn btn-primary" ng-click="saveReq()">确定</button>
+    </rd-modal-footer>
+  </rd-modal>
+</script>
+
+<style>
+    .components.stu-sched-plan td.req-wrapper {
+  
+      height: 40px;
+      cursor: pointer;
+      position: relative;
+    }
+  
+    .components.stu-sched-plan td .req-op {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0px;
+      line-height: 40px;
+      background-color: rgba(0, 0, 0, 0.8);
+      text-align: center;
+      transition: height .5s;
+      overflow: hidden;
+    }
+  
+    .components.stu-sched-plan td.req-wrapper:hover .req-op {
+      height: 40px;
+    }
+  </style>

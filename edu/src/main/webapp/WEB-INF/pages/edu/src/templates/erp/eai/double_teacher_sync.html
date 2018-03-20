@@ -1,0 +1,105 @@
+<div ng-controller="erp_doubleTeacherSyncCtrl">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">双师数据同步核对报表</span>
+		</div>
+		<div class="panel-body">
+			<div class="search-panel">
+				<div class="form form-inline">
+					<div class="form-group">
+						<select class="form-control" ng-model="searchType" ng-change="searchParam ={}">
+							<option value="0">主场课程</option>
+							<option value="1">分场课程</option>
+							<option value="2">订单号</option>
+						</select>
+						<input class="form-control" 
+						  ng-if="searchType==0"
+						  ng-model="searchParam.mainCourseCdtn" 
+						  placeholder="请输入主场课程名称/课程编号"></input>
+						<input class="form-control"
+						  ng-if="searchType==1"
+						  ng-model="searchParam.subCourseCdtn" 
+						  placeholder="请输入分场课程名称/课程编号"></input>
+						<input class="form-control" 
+						  ng-if="searchType==2"
+						  ng-model="searchParam. orderNo" 
+						  placeholder="请输入订单号"></input>
+					</div>
+					<!-- <div class="form-group">
+						<span class="input-label ng-binding">学员：</span>
+						<klc-student-typeahead 
+							student-id="searchParam.studentId" 
+							student-name="searchParam.studentName" 
+							on-select="query()">
+						</klc-student-typeahead>
+					</div> -->
+					<!-- <div class="form-group">
+						课程季：
+						<kl-timeseason-select time-season="searchParam.selectedTimeSeason"></kl-timeseason-select>
+					</div> -->
+					<div class="form-group">
+						<button class="btn btn-primary" ng-click="query()">
+							<i class="fa fa-search"></i> 
+								搜索
+						</button>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="toolbar">
+                <button class="btn btn-primary btn-circle" ng-click="handleExportExcel(true)">
+                    <i class="iconfont icon-public_export"></i>导出全部数据
+				</button>
+				<button class="btn btn-primary btn-circle" ng-click="handleExportExcel(false)">
+                    <i class="iconfont icon-public_export"></i>导出差异数据
+                </button>
+            </div>
+		</div>
+	</div>
+	<div class="table-panel ov-a">
+		<table class="table table-striped table-bordered min-width-1200">
+			<thead>
+				<tr class="bg-gray">
+					<th colspan="3" class="text-center">课程课次信息</th>
+					<th colspan="3" class="text-center">同步源数据</th>
+					<th colspan="3" class="text-center">目标数据</th>
+				</tr>
+				<tr>
+					<th>课程名称</th>
+					<th>课程编号</th>
+					<th>课次</th>
+					<th>学生姓名</th>
+					<th>学生ID</th>
+					<th>订单号</th>
+					<th>学生姓名</th>
+					<th>学生ID</th>
+					<th>订单号</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="arr in MTSyncList" ng-if="!loadStatues && MTSyncList && MTSyncList.length">
+					<td>{{arr.courseName}}</td>
+					<td class="word_break">{{arr.courseNo}}</td>
+					<td>{{arr.seq}}</td>
+					<td class="bg-danger">{{arr.erpStudentName}}</td>
+					<td class="bg-danger word_break">{{arr.erpStudentId}}</td>
+					<td class="bg-danger word_break" style="border-right-color: #fff;">{{arr.erpOrderNo}}</td>
+					<td class="bg-danger">{{arr.mtStudentName}}</td>
+					<td class="bg-danger word_break">{{arr.mtStudentId}}</td>
+					<td class="bg-danger word_break">{{arr.mtOrderNo}}</td>
+				</tr>
+				<tr ng-if="loadStatues">
+					<td colspan="9" class="text-center">
+						<img src="img/erp/loading2.gif">
+					</td>
+				</tr>
+				<tr ng-if="!loadStatues && (MTSyncList == null || MTSyncList.length == 0)">
+					<td colspan="9" class="text-center">
+						<div class="no-data"></div>
+                        无差异数据
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,128 @@
+<div ng-controller="erp_mtCourseController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">双师课程</span></div>
+		<div class="panel-body operation-panel">
+			
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						校区：<select class="form-control"
+								   ng-model="searchParam.branch_id"
+								   ng-options="branch.id as branch.org_name for branch in branchList">
+					</select>
+					<div class="form-group">
+						课程类别：<select class="form-control" 
+							ng-model="searchParam.mtcourse_type"
+							ng-options="courseType.id as courseType.name for courseType in courseTypeList">
+							<option  value="">-- 请选择课程类别 --</option></select>
+					</div>
+					<div class="form-group">
+						教师：<input type="text" class="form-control" placeholder="可输入老师ID,老师编码,老师名称"
+							ng-model="searchParam.teacher_id" autocomplete="off">
+					</div>
+					<div class="form-group">
+						状态：<select class="form-control" 
+							ng-model="searchParam.status"
+							ng-options="status.id as status.name for status in statusList">
+							<option  value="">-- 请选择课程状态 --</option></select></select>
+					</div>
+					<div class="form-group">
+						课程：<input type="text" class="form-control" placeholder="可输入课程ID,课程编码,课程名称"
+							ng-model="searchParam.course_name" autocomplete="off">
+					</div>  
+					<div class="form-group">
+					    <button class="btn btn-primary" ng-click="handleQueryCourse()">搜索</button>						
+					</div>
+				</form>
+			</div>
+			<hr>
+			<div class="toolbar">
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleAddCourse()">
+					<i class="iconfont icon-add"></i>添加
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleUpCourse('1')">
+					<i class="iconfont icon-operation_shelve"></i>批量上架
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleDownCourse('2')">
+					<i class="iconfont icon-operation_off-shelve"></i>批量下架
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleImportClass()">
+					<i class="iconfont icon-operation_synchronization"></i>同步叮当
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleDelCourse('0')">
+					<i class="iconfont icon-delete"></i>删除
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel ov-a">
+		<table class="table table-striped min-width-1500">
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="allCheckedFlag" ng-click="onAllCheckedChange()"></th>
+					<th>操作</th>
+					<th>课程ID</th>
+					<th>课程名称</th>
+					<th>主讲老师ID</th>
+					<th>主讲老师</th>
+					<th>单价</th>
+					<th>课时数量</th>
+					<th>开课日期</th>
+					<th>结课日期</th>
+					<th>课时长度</th>
+					<th>上课周期</th>
+					<th>上课时间</th>
+					<th>下课时间</th>
+					<th>同步状态</th>
+					<th>课程类型</th>
+					<th>课程状态</th>
+					<th>校区</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="course in courseList"
+					ng-if="!loadStatues && courseList && courseList.length">
+					<td><input type="checkbox" ng-model="course.selectedFlag" 
+						ng-click="onCourseCheckedChange(course)"></td>
+					<td><a href="javascript:void(0);"
+						ng-click="handlePutCourse(course)">修改</a>&nbsp;&nbsp;<a
+						href="javascript:void(0);"
+						ng-click="queryCourseScheduing(course.course_id)">查询排课</a></td>
+					<td>{{course.id}}</td>
+					<td>{{course.course_name}}</td>
+					<td>{{course.teacher_id}}</td>
+					<td>{{course.teacher_name}}</td>
+					<td>{{course.unit_price}}</td>
+					<td>{{course.course_count}}</td>
+					<td>{{course.start_date | date:'yyyy-MM-dd'}}</td>
+					<td>{{course.end_date | date:'yyyy-MM-dd'}}</td>
+					<td>{{course.hour_len}}</td>
+					<td>{{course.attend_class_period}}</td>
+					<td>{{course.start_time}}</td>
+					<td>{{course.end_time}}</td>
+					<td>{{statusType(course.is_sended)}}</td>
+					<td>{{courseType(course.type)}}</td>
+					<td>
+						<input type="checkbox"
+								bs-switch
+								ng-model="course.status"
+								ng-true-value="1"
+								ng-false-value="2"
+								switch-change="onStatusChange(course)"
+							>
+					</td>
+					<td>{{course.branch_name}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+		<ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+	</div>
+</div>

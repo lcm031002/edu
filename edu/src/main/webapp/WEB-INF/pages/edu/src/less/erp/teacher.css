@@ -1,0 +1,319 @@
+ .teacher-schedule {
+    display: flex;
+    height: 840px;
+    border: 1px solid #ddd;
+  }
+  .teacher-week-schedule {
+    height: 1310px;    
+    /* min-width:1690px; */
+    background: #fff;
+  }
+  .teacher-schedule__side {
+    width: 15%;
+    height: 100%;
+    position: relative;
+    border-right: 1px solid #ddd;
+  }
+  .teacher-schedule__content {
+    flex: 1;
+    padding: 0 15px 15px;
+  }
+  .teacher-schedule .teacher-list {
+    overflow-y: auto;
+    position: absolute;
+    top: 105px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #ddd;
+  }
+  .teacher-schedule .teacher-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  .teacher-schedule .teacher-list::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #ccc;
+  }
+  .teacher-schedule .teacher-list__wrap {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .teacher-schedule .teacher-list__item {
+    position: relative;
+    padding: 15px;
+  }
+  .teacher-schedule .teacher-list__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* background-color: red; */
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+  .teacher-schedule h3.teacher-list__name {
+    font-size: 16px;
+    color: #444;
+    line-height: 25px;
+    margin-top: -6px;
+  }
+  .teacher-schedule .teacher-list__en-name {
+    color: #d5d5d5;
+    font-size: 12px;
+    margin-left: 10px;
+  }
+  .teacher-schedule .teacher-list__des {
+    color: #777;
+    line-height: 18px;
+    font-size: 12px;
+    text-overflow:ellipsis; 
+  }
+  .teacher-schedule .teacher-list__name,
+  .teacher-schedule .teacher-list__des {
+    padding-left: 65px;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .teacher-schedule .teacher-profile {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+  }
+  .teacher-schedule .teacher-profile__l {
+    width: 64px;
+  }
+  .teacher-schedule .teacher-profile__avatar {
+    width: 64px;
+    height: 64px;
+    display: block;
+    border-radius: 50%;
+    /* background: red; */
+  }
+  .teacher-schedule .teacher-profile__r {
+    flex: 1;
+    margin-left: 10px;
+  }
+  .teacher-schedule .teacher-profile__name {
+    font-size: 16px;
+    color: #333;
+    line-height: 36px;
+  }
+  .teacher-schedule .teacher-profile__link {
+    font-size: 14px;
+    margin-left: 10px;
+    color: #daaa6a;
+  }
+  .teacher-schedule .teacher-profile__des {
+    color: #c0c0c0;
+    font-size: 12px;
+  }
+  .teacher-seach {
+    padding: 20px 7px;
+  }
+  .teacher-calendar-weeks,
+  .teacher-calendar-days,
+  .teacher-calendar-time{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 1px;
+    background: #ddd;
+    border-width: 1px 1px 0 1px;
+    border-style: solid;
+    border-color: #ddd;
+  }
+  .teacher-calendar-time{
+    position: relative;
+    width:1409px;
+    grid-template-columns: repeat(8, 1fr);
+  }
+  .teacher-calendar-weeks__item {
+    height: auto;
+    background-color: #f6f7fb;
+    font-size: 14px;
+    line-height: 35px;
+    text-align: center;
+  }
+  .teacher-calendar-days,.teacher-calendar-time{
+    border-bottom: 1px solid #ddd;
+  }
+  .teacher-calendar-time_item{
+    margin:0;
+    padding: 0;
+    height: 1080px;
+    min-height: 550px;
+    background-color: #fff;
+  }
+  .teacher-calendar-time_item li{
+    height: 60px;
+    padding: 0 10px;
+    list-style: none;
+    display: grid;
+    grid-gap: 1px;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: #ddd;
+  }
+  .teacher-calendar-days__item {
+    height: 120px;
+    background-color: #fff;
+    padding: 10px;
+  }
+  .teacher-calendar-days__hd {
+    margin-bottom: 10px;
+    line-height: 20px;
+  }
+  .teacher-calendar-days__sloar {
+    color: #333;
+    font-size: 16px;
+  }
+  .teacher-calendar-days__sloar.disable {
+    color: #c0c0c0;
+  }
+  .teacher-calendar-days__lunar {
+    color: #c0c0c0;
+    margin-left: 10px;
+  }
+  .teacher-calendar-course {
+    background-color: #d1e7fc;
+    line-height: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    margin: 5px 0;
+  }
+  .teacher-calendar-course__name,
+  .teacher-calendar-course__time {
+    font-size: 12px;
+  }
+  .teacher-change-month {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .teacher-change-month .btn + .btn {
+    margin-left: 10px;
+  }
+  .teacher-change-month__icon {
+    font-size: 12px;
+    color: #d9d9d9;
+    margin-left: 5px;
+  }
+  .teacher-calendar-time_course{
+    position:absolute;
+    z-index:1;
+    border-radius: 15px;
+    font-size: 12px;
+    margin-left: 6px;
+    text-align: center;
+    padding-top:2px;
+    width:22px;
+    height:60px;
+    line-height:1.1;
+  }
+  .teacher-calendar-time_course label{
+    font-weight: normal;
+    padding: 0 3px;
+    margin-top: -2px;
+    word-break: break-all;
+  }
+  .teacher-calendar-time_course.on,.teacher-lis-on{
+    background: #a6dbff;
+  }
+  .teacher-calendar-time_course.pre{
+    background: #ffdbb8;
+  }
+  .teacher-calendar-time_course.on::before,
+  .teacher-calendar-time_course.pre::before{
+    color:#fff;
+    border-radius: 50%;
+    padding:4px 6px 5px 6px;
+    transform: scale(0.7);
+    display: inline-block;
+    margin-left: -1px;
+    margin-top: -3px;
+  }
+  .teacher-calendar-time_course.on::before{
+    content:'正';
+    background:#0099ff;
+  }
+  .teacher-calendar-time_course.pre::before{
+    content:'预';
+    background:#ff9933;
+  }
+  .teacher-calendar-time_course.more{
+    padding-top: 8px;
+    z-index: 2;
+  }
+  .teacher-calendar-time_course.more::before{
+    content:'···';
+    color: #999;
+    border:1px solid #999;    
+    /* color: #fff;
+    background: #3dce6d; 
+    border:1px solid #3dce6d;*/
+    border-radius: 50%;
+    padding: 0 5px;
+
+  }
+  .pop_course{
+    border-bottom: 1px solid #ddd;
+  }
+  .pop_course:first-of-type{
+    padding-top: 10px;
+  }
+  .pop_course:last-of-type{
+    border-bottom: none;
+  }
+  .teacher-calendar-time_course::after{
+    background: rgb(94, 255, 0);
+    height:10px;
+    width:10px;
+  }
+  .teacher-calendar-time_courses{
+    position:relative;
+    top:40px;
+    left:60px;
+  }
+  .teacher-week_title,.teacher-week_title th{
+    height:40px;
+    text-align: center;
+  }
+  .teacher-week_design{
+    width:175px;
+    height:60px;
+    padding:0 !important;
+  }
+  /* .teacher-week_design label{
+    margin-top: -10px;
+    display: block;
+    background-color: #dedada;
+    height: 15px;
+  } */
+.teacher-week_title th:first-of-type,.teacher-week_design:first-of-type{
+  width:60px;
+  text-align: center;
+}
+  @media (max-width: 1441px) {
+    .teacher-schedule__side{
+      width:13%;
+    }
+    .teacher-schedule .teacher-list__avatar{
+      display: none;
+    }
+    .teacher-schedule .teacher-list__name, 
+    .teacher-schedule .teacher-list__des{
+      padding-left: 0;
+    }
+  }
+
+  .teacher-schedule .pagination{
+    margin: 10px 0;
+  }

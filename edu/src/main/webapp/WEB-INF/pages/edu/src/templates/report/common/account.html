@@ -1,0 +1,56 @@
+<div class="report" ng-controller="report_accountController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">账户剩余表</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id"
+                               ng-branch-id="searchParam.p_branch_id">
+                    <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询
+                    </button>
+                    <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="10%"/>
+            <col width="25%"/>
+            <col width="12%"/>
+            <col width="13%"/>
+            <col width="20%"/>
+            <col width="20%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>学员编码</th>
+                <th>学员姓名</th>
+                <th>储值账户</th>
+                <th>退费账户</th>
+                <th>冻结账户</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td class="word_break">{{data.student_code}}</td>
+                <td>{{data.student_name}}</td>
+                <td class="word_break">{{data.account}}</td>
+                <td class="word_break">{{data.refund_account}}</td>
+                <td class="word_break">{{data.frozen_account}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

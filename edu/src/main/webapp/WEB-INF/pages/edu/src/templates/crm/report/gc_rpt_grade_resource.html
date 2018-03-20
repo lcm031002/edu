@@ -1,0 +1,56 @@
+<div class="crm" ng-controller="crmGcRptGradeResourceController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+        <span class="title">资源年级分布统计</span></div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button type="submit" class="btn btn-primary btn-circle " ng-click="exp()"><i class="iconfont icon-public_export"></i> 导出</button>
+      </div>
+      <hr>
+      <div class="searchbar">
+        <form role="form" class="form-inline">
+          <div class="form-group">
+           	 学校：
+            <crm-branch-select bu-id="buId" branch-id="branchId"></crm-branch-select>
+          </div>
+          <div class="form-group">
+         	  月份：
+            <input type="text" class="form-control Wdate cursor_pointer" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})" ng-model="searchParam.p_start_date" name="cdt_start_date" id="cdt_start_date" />
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary" ng-click="cdtSearch()"><i class="iconfont icon-search"></i> 查询</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+      <table class="table table-striped table-hover">
+       <thead>
+							<th class="text-center">资源类型</th>
+							<th ng-repeat="h in grade_headers" ng-class="text-center">{{h}}</th>
+						</thead>
+        <tbody>
+         <tr ng-if="isLoading=='loading'">
+            <td colspan="9" rowspan="10" align="center"><img alt=""  src="img/crm/loading2.gif"></td>
+          </tr>
+          <tr ng-repeat="item in items track by $index"
+								ng-class="{true:'info'}[$index == (items.length-1)]">
+								<td class="text-center">{{item.grType}}</td>
+								<td ng-repeat="c in item.dataList track by $index" ng-class="text-center">{{c}}</td>
+							</tr>
+        </tbody>
+      </table>
+		<div class="container-fluid ng-isolate-scope"
+			ng-show="items.length <1">
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<div class="no-data"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<div style="margin: 0 auto">暂无数据</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

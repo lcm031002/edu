@@ -1,0 +1,315 @@
+// == Colors
+@klxx-primary:   		  #1b8cf2;
+@klxx-success:        #3dce6d;
+@klxx-info:           #1b8cf2;
+@klxx-warning:        #ffb33f;
+@klxx-danger:         #fc5964;
+// 学员
+.erp.student {
+	.avatar {
+		border: 5px solid fade(@klxx-primary, 30%);
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		overflow: hidden;
+		img {
+			width: 100%;
+		}
+	}
+	// 基本信息
+	&.basic-info {
+		.contacts {
+			margin-top: 20px;
+			.contact {
+				height: 100px;
+				float: left;
+				width: 33.3333333%;
+				border-right: 3px solid #f3f3f3;
+				background: #fff;
+				padding: 20px;
+				.title {
+					font-size: 24px;
+				}
+				small {
+					font-size: 14px;
+				}
+				i.iconfont {
+					margin-right: 15px;
+					float: left;
+					color: @klxx-warning;
+					font-size: 42px;
+				}
+				&.phone {
+
+				}
+				&.email {
+
+				}
+				&.qq {
+					border-right: 0;
+				}
+			}
+			&:after{
+				display: block;
+				clear: both;
+			}
+		}
+		.detail-info {
+			dl {
+				line-height: 2.5em;
+				dt, dd {
+					padding: 5px 0;
+				}
+				dt {
+					font-weight: normal;
+				}
+			}
+			&.modify-detail {
+				dd {
+					width: 220px;
+				}
+			}
+		}
+
+	}
+	// 学员积分
+	&.integral {
+		.integral-detail{
+			display: inline-block;
+			cursor: pointer;
+			width: 180px;
+			height: 220px;
+			margin: 20px;
+			padding: 0 30px;
+			background-color: #fff;
+			border-radius: 6px;
+			border: 1px solid #e4e4e4;
+			h4.title {
+				margin-top: 20px;
+				&.integral {
+					height: 2.5em;
+					overflow: hidden;
+					margin: 20px 0 0;
+				}
+			}
+			span.amount{
+				small {
+					font-size: 12px;
+				}
+				font-size: 24px;
+				color: #666;
+			}
+			&:hover, &.active {
+				background: #f5f5f5;
+			}
+			i.iconfont {
+				position: relative;
+				left: 90px;
+				top: -5px;
+				line-height: 0;
+				font-size: 40px;
+			}
+		}
+	}
+	// 学员账户详情
+	&.account-info {
+		.dashboard .info{
+			width: 33%;
+			float: left;
+			height: 118px;
+			margin: 15px 0;
+			padding: 0 20px;
+			&.divider {
+				border-left: 1px solid #ddd;
+				border-right: 1px solid #ddd;
+			}
+			.title {
+			
+			}
+			.account {
+				font-size: 24px;
+				margin: 10px 0;
+				small {
+					font-size: 14px;
+				}
+			}
+		}
+	}
+	// 学员试听
+	&.listening {
+		
+	}
+	// 学员理赔
+	&.claim {
+		.claim-panel {
+			width: 800px;
+			margin: 20px auto;
+		}
+		h2 {
+			text-align: center;
+			margin: 40px 0;
+		}
+		.student-info {
+			width: 360px;
+			text-align: center;
+			.info{
+				margin-top: 60px;
+				position: relative;
+				padding-top: 80px;
+				padding-bottom: 20px;
+				border: 1px solid #ccc;
+				border-radius: 6px;
+				text-align: center;
+				.avatar {
+					position: absolute;
+					left: 50%;
+					top: -40px;
+					margin-left: -40px;
+				}
+			}
+		}
+		.divider {
+			width: 155px;
+			height: 360px;
+			text-align: center;
+			i.iconfont {
+				margin-top: 180px;
+				display: inline-block;
+			}
+		}
+		@media screen and (max-width: 1010px) {
+			.claim-panel {
+				width: 700px;
+			}
+			.divider {
+				width: 55px;
+			}
+		}
+		.claim-amount-panel {
+			width: 285px;
+			form {
+				margin-top: 60px;
+			}
+		}
+	}
+	//学员添加
+	&.newstudent{
+		.toolbar {
+			.primary-info{
+				padding-top: 20px;
+				margin-left: 20px;
+			}
+			.form-inline{
+				
+				.form-group:nth-of-type(2){
+					.form-control{
+						width:100px;
+					}
+				}
+			}
+		}
+		@media screen and  (max-width: 1025px) {
+			.avatar{
+				margin-left:0;
+				margin-right:15px;
+			}
+			.form-inline{
+				.form-group:nth-of-type(1){
+					input{
+						width:130px;
+					}
+				}
+				.form-group:nth-of-type(2){
+					.form-control{
+						width:65px;
+					}
+				}
+				.form-group:nth-of-type(3){
+					input{
+						width:110px;
+					}
+				}
+			}
+			.table-panel{
+				padding:20px 10px;
+			}
+			table.table-form>tbody>tr>td:nth-child(2n+1){
+				white-space: nowrap;
+			}
+		}
+	}
+	// &.student-manager-bu{
+	// 	.picker-range{
+	// 		display: inherit;
+	// 		.input-group .btn{
+	// 			display: block;
+	// 		}
+	// 		.btn{
+	// 			display: none;
+	// 		}
+	// 	}
+	// }
+}
+
+
+/**
+ * 组件pad端兼容处理
+ * @version 0.0.1
+ * @author yans@klxuexi.org
+ */
+/**
+ * 搜索控件rd-date-picker-popup
+ */
+ @media screen and  (max-width: 1285px){
+	 &.student-manager-bu{
+		.panel-body{
+			.searchbar > .form-inline > .form-group>span{
+				min-width:unset;margin-left:-25px;
+			}
+			.searchbar > .form-inline > .form-group>select{
+				width:200px;
+			}
+		}
+	}
+	&.student-manager-student,&.student-manager,&.student-manager-branch{
+		.panel-body{
+			form.form-inline .form-group rd-date-picker-popup .input-group input{
+				width:unset;
+				padding:unset;
+			}
+		}
+	}
+	&.student-manager,&.student-manager-student{
+		ng-transclude{
+			display: block;
+		}
+	}
+	&.account-info{
+		.table-panel{
+			.date-picker{
+				padding-right: 0;
+			}
+		}
+	}
+	form.form-inline{
+		
+		.form-group{
+			.input-label{
+				min-width:unset;
+			}
+			rd-date-picker-popup{
+				.input-group input{
+					width:100px;
+					padding:5px;
+				}
+			}
+		}
+		.form-group > .btn{
+			padding: 6px;
+			background: rgb(221, 221, 221);
+			&.btn-primary {
+				background-color: #1b8cf2;
+			}
+		}
+	}
+}

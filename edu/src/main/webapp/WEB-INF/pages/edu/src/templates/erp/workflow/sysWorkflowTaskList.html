@@ -1,0 +1,307 @@
+<div class="erp" ng-controller="erp_workflowProcessTaskController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">任务列表</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button class="btn btn-primary" ng-click="refresh()">
+          <i class="fa fa-refresh"></i>刷新
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12">
+    <div class="col-lg-6">
+      <div class="input-group fl" style="margin-top:20px;">
+        <input class="form-control" type="text" placeholder="请输入搜索关键字." ng-model="queryTaskParam.searcherName">
+        <div class="input-group-addon  cur" ng-click="queryWorkflowTaskList()">
+          <a data-toggle="dropdown" href="javascript:void(0);"><i class="fa fa-search"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3" style="line-height: 74px;">
+      当前{{queryTaskParam.beginNo+1}}~{{queryTaskParam.endNo+1}}条，共{{queryTaskParam.totalCount}}条
+    </div>
+    <div class="col-lg-3">
+      <ul class="pagination fr">
+        <li ng-if="queryTaskParam.currentPage>1"><a href="javascript:void(0);" class="btn btn-default" ng-click="selectPage(queryTaskParam.currentPage-1)">上一页</a></li>
+        <li><a href="javascript:void(0);" class="btn btn-default" ng-click="selectPage(queryTaskParam.currentPage+1)">下一页</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="table-panel">
+    <table class="table table-striped table-hover table-bordered">
+      <col width="10%"></col>
+      <col width="20%"></col>
+      <col width="25%"></col>
+      <col width="40%"></col>
+      <col width="5%"></col>
+      <thead>
+        <tr>
+          <!--<th>流程ID</th>-->
+          <th>id</th>
+          <th>流程key</th>
+          <th>任务名称</th>
+          <th>处理人</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="taskInfo in taskInfoList">
+          <td>{{taskInfo.dbid_}}</td>
+          <td>{{taskInfo.execution_id_}}</td>
+          <td>{{taskInfo.taskdefname_}}</td>
+          <td>{{taskInfo.assignee_ + taskInfo.paramPbj?taskInfo.paramPbj.allAssignee:'' }}</td>
+          <td>
+            <a class="btn btn-default" ng-click="detailPanel(taskInfo)" href="javascript:void(0);">详情</a>
+          </td>
+        </tr>
+        <tr ng-if="isLoading=='isLoading'">
+          <td colspan="7" align="center">
+            <img src="img/erp/loading2.gif" />
+          </td>
+        </tr>
+        <tr ng-if="isLoading!='isLoading'&&(!taskInfoList||!taskInfoList.length)">
+          <td colspan="7" align="center">暂无数据.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+    
+  <!--查看任务详情begin-->
+  <div id="erpWorkflowProcessTaskPanel" class="modal fade klxx-modal-primary"
+    tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content klxx-modal-primary">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+          <h4 class="modal-title">任务详情</h4>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-heading font-bold">流程基本信息</div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label class="col-lg-2 control-label">流程名称</label>
+                <div class="col-lg-10">
+                  <p class="form-control-static">{{taskDetailInfo.task.name}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">流程key</label>
+                <div class="col-lg-10">
+                  <p class="form-control-static">{{taskDetailInfo.task.processKey}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">流程ID</label>
+                <div class="col-lg-10">
+                  <p class="form-control-static">{{taskDetailInfo.task.execution}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">发起时间</label>
+                <div class="col-lg-10">
+                  <p class="form-control-static">{{taskDetailInfo.task.createTime}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">当前任务</label>
+                <div class="col-lg-10">
+                  <p class="form-control-static">{{taskDetailInfo.task.name}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">当前处理人</label>
+                <div class="col-lg-10">
+                  <p class="form-control-static">{{taskDetailInfo.task.allAssignee}}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 mb-10 control-label">可选操作</label>
+                <div class="col-lg-10 mb-10">
+                  <div class="btn-group">
+                    <label class="btn btn-default" ng-click="processTask(outcome)" ng-repeat="outcome in taskDetailInfo.data">{{outcome}}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">操作备注</label>
+                <div class="col-lg-10">
+                  <textarea class="form-control" ng-model="queryTaskParam.remark"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading font-bold">流程附带参数列表</div>
+            <div>
+              <table class="table table-striped table-hover  table-bordered">
+                <tr>
+                  <th>参数名称</th>
+                  <th>参数值</th>
+                </tr>
+                <tr ng-repeat="variable in selectedTask.variables">
+                  <td>{{variable.key_}}</td>
+                  <td>{{variable.val_}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading font-bold">流程处理历史</div>
+            <div>
+              <table class="table table-striped table-hover  table-bordered">
+                <tr>
+                  <th>id</th>
+                  <th>发起时间</th>
+                  <th>处理人</th>
+                  <th>操作名称</th>
+                  <th>操作状态</th>
+                  <th>备注</th>
+                </tr>
+                <tr ng-repeat="historyTask in taskDetailInfo.historyTasks">
+                  <td>{{historyTask.id}}</td>
+                  <td>{{historyTask.createTime}}</td>
+                  <td>{{historyTask.assignee}}</td>
+                  <td>{{historyTask.outcome}}</td>
+                  <td>{{historyTask.state}}</td>
+                  <td>{{historyTask.remark}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading font-bold">流程图示例</div>
+            <div>
+              <div style="position:relative;width:100%;background-color:#fff">
+                <img ng-src="/erp{{taskDetailInfo.task_png}}" style="position:relative;left:0px;top:0px;">
+                <div style="position:absolute;border:2px solid red;left:{{taskDetailInfo.activityCoordinates.x}}px;top:{{taskDetailInfo.activityCoordinates.y}}px;width:{{taskDetailInfo.activityCoordinates.width}}px;height:{{taskDetailInfo.activityCoordinates.height}}px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-if="openPanel2 == 'detailPanel'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 1001;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window" style="width:20%;overflow: hidden;left:30%;top:35%;z-index: 1002;">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在查询...
+      </div>
+    </div>
+  </div>
+  <!--删除流程中end-->
+  <!--删除流程中begin-->
+  <div ng-if="openPanel2 == 'isAddProcessNodeRole'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 10001;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window" style="width:60%;overflow: hidden;left:30%;top:10%;">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在添加角色...
+      </div>
+    </div>
+  </div>
+  <!--删除流程中end-->
+  <!--查询流程细节begin-->
+  <div ng-if="openPanel == 'queryProcessDefinitionDetail'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window" style="width:60%;min-width:800px;overflow: hidden;left:30%;top:10%;">
+      <div class="window-tit">
+        流程实例
+        <i class="fa fa-close cur fr" ng-click="toClosePanel()"></i>
+      </div>
+      <div class="col-lg-12">
+        <div class="col-lg-4">
+          <h3>流程节点</h3>
+          <table class="table  table-striped table-hover  table-border">
+            <tr>
+              <th>id</th>
+              <th>流程节点</th>
+              <th>描述</th>
+            </tr>
+            <tr ng-repeat="role in selectedProcess.roleList " ng-click="selectProcessNode(role)" class="{{selectedRole.id == role.id?'success':''}}">
+              <td>{{role.id}}</td>
+              <td>{{role.processTask}}</td>
+              <td>{{role.remark}}</td>
+            </tr>
+            <tr ng-if="isQueryProcessDefinitionDetail">
+              <td colspan="3" align="center">
+                <img src="img/erp/loading2.gif" />
+              </td>
+            </tr>
+            <tr ng-if="!isQueryProcessDefinitionDetail && (!selectedProcess.roleList || !selectedProcess.roleList.length)">
+              <td colspan="3" align="center">
+                暂无数据.
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-lg-8">
+          <div class="col-lg-12">
+            <div class="col-lg-4">
+              <h3>
+                                审批人
+                            </h3>
+            </div>
+            <div class="col-lg-8">
+              <div class="input-group dropdown {{openSearchRoleList?'open':''}} fr " style="margin-top:16px;">
+                <input class="form-control" type="text" placeholder="请输入角色名称." ng-model="queryBusinessRoleParam.searchName">
+                <div class="input-group-addon  cur" ng-click="queryBusinessRole()">
+                  <a data-toggle="dropdown" href="javascript:void(0);"><i class="fa fa-search"></i></a>
+                </div>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  <li class="cur" ng-repeat="searchRole in searchRoleList">
+                    <a href="javascript:void(0)" ng-click="selectSearchRole(searchRole)" class="cur">{{searchRole.employeeName + '（'+searchRole.encoding+'）'}}{{searchRole.orgName?','+searchRole.orgName:''}}</a>
+                  </li>
+                  <li ng-if="queryBusinessRoleParam.isSearch" style="text-align: center;">
+                    <img src="img/erp/loading2.gif" />
+                  </li>
+                  <li ng-if="!queryBusinessRoleParam.isSearch&&(!searchRoleList||!searchRoleList.length)" style="text-align: center;">
+                    没有查询到可分配的员工.
+                  </li>
+                </ul>
+                <span class="input-group-btn" ng-click="addRoleMapping()">
+                                    <button class="btn btn-default bootstrap-touchspin-up" type="button">+</button>
+                                </span>
+              </div>
+            </div>
+          </div>
+          <table class="table table-striped table-hover table-border">
+            <tr>
+              <th>id</th>
+              <th>角色名称</th>
+              <th>操作</th>
+            </tr>
+            <tr ng-repeat="mapping in selectedRole.mappings">
+              <td>{{mapping.id}}</td>
+              <td>{{mapping.businessRole}}</td>
+              <td>
+                <a class="cur" href="javascript:void(0);" ng-click="removeRoleMapping(mapping)">
+                  <i class="fa fa-times"></i>
+                </a>
+              </td>
+            </tr>
+            <tr ng-if="isQueryProcessDefinitionDetail">
+              <td colspan="3" align="center">
+                <img src="img/erp/loading2.gif" />
+              </td>
+            </tr>
+            <tr ng-if="!isQueryProcessDefinitionDetail && (!selectedRole.mappings || !selectedRole.mappings.length)">
+              <td colspan="3" align="center">
+                暂无数据.
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--查询流程细节end-->
+</div>

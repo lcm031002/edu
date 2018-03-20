@@ -1,0 +1,295 @@
+<div class="erp" ng-controller="erp_teacherExcelInputController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">教师导入</span>
+    </div>
+    <div class="panel-body">
+      <kl-progress kl-current="currentStep" kl-steps="steps"></kl-progress>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="table-panel" ng-show="currentStep==2">
+      <form class="form-inline">
+        校验状态：
+        <select ng-model="viewDataType" class="form-control" ng-change="filterData()">
+          <option value="全部">全部</option>
+          <option value="成功">校验成功</option>
+          <option value="失败">校验失败</option>
+        </select>
+      </form>
+      <form class="form-inline mt15">
+        <span class="mr20">全部{{importData.length}}条</span>
+        <span class="mr20">校验通过{{importDataSuccess.length}}条</span>
+        <span class="mr20">校验失败{{importDataFailure.length}}条</span>
+        <!--<button class="btn btn-primary" ng-click="exportAll(2)">全部导出</button>-->
+        <!--<button class="btn btn-warning" ng-click="exportError(2)">错误导出</button>-->
+        <button class="btn btn-ghost-primary" ng-click="currentStep=1">重新上传</button>
+      </form>
+    </div>
+    <div class="table-panel" ng-show="currentStep == 3">
+      <form class="form-inline">
+        <select ng-model="viewImportedDataType" class="form-control" ng-change="filterImportedData()">
+          <option value="全部">全部</option>
+          <option value="已导入">导入成功</option>
+          <option value="导入失败">导入失败</option>
+        </select>
+      </form>
+      <form class="form-inline">
+        <span class="mr20">全部{{importData.length}}条</span>
+        <span class="mr20">导入成功{{importSuccessItems}}条</span>
+        <span class="mr20">导入失败{{importFailureItems}}条</span>
+        <!--<button class="btn btn-primary" ng-click="exportAll(3)">全部导出</button>-->
+        <!--<button class="btn btn-warning" ng-click="exportError(3)">失败导出</button>-->
+        <button class="btn btn-ghost-primary" ng-click="currentStep=1">重新上传</button>
+      </form>
+    </div>
+    <div class="table-panel">
+      <div class="operation-panel" ng-show="currentStep == 1">
+        <div class="toolbar">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <h4 class="text-primary">导入提示：</h4>
+              <ul class="list-style-disc" style="line-height: 1.8em;">
+                <li>表格格式统一为EXCEL表格</li>
+                <li>Excel最大支持<span class="text-danger">800</span>条数据，超过800条请分次进行导入</li>
+                <li>
+                  导入时，第一行为表头，您可以 <a href="data/common/excelModel/teacher.xlsx" class="btn btn-primary btn-sm">下载模板</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="input-tips">请选择要导入的Excel文件</div>
+              <form class="form">
+                <div class="form-group">
+                  <input type="file" name="fileExcel" id="fileExcel" onchange="angular.element(this).scope().onFileChange(this.files)">
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-primary btn-sm" ng-disabled="validDisable" ng-click="handleValidate()">开始校验</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="currentStep != 1">
+        <div class="table-panel" style="position: relative;overflow-x: auto;">
+          <table class="table table-bordered course-validate">
+            <thead>
+              <tr>
+                <th style="width: 60px;">序号</th>
+                <th style="width: 80px;">操作</th>
+                <th style="width: 80px;">检验状态</th>
+                <th style="width: 180px;"><span class="text-danger">*</span>员工编码</th>
+                <th style="width: 180px;"><span class="text-danger">*</span>教师编码</th>
+                <th style="width: 180px;"><span class="text-danger">*</span>教师姓名</th>
+                <th style="width: 220px;">教师昵称</th>
+                <th style="width: 120px;"><span class="text-danger">*</span>教师年龄</th>
+                <th style="width: 180px;"><span class="text-danger">*</span>教师教龄</th>
+                <th style="width: 60px;"><span class="text-danger">*</span>教师身份</th>
+                <th style="width: 120px;"><span class="text-danger">*</span>教师状态</th>
+                <th style="width: 180px;"><span class="text-danger">*</span>性别</th>
+                <th style="width: 80px;"><span class="text-danger">*</span>联系方式</th>
+                <th style="">是否兼职</th>
+                <th style="">团队</th>
+                <th style="">科目</th>
+                <th style="">邮箱</th>
+                <th style="">描述</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in importDataForPageView">
+                <td class="text-center">{{$index + 1}}</td>
+                <td class="text-center">
+                  <a href="javascript:void(0);" ng-click="shopUpdateModal(item)">修改</a>
+                </td>
+                <td class="text-center {{item.checkStatus == '失败' ? 'text-danger':'text-success'}}">{{item.checkStatus == '失败' ? '校验失败': (item.checkStatus == '成功' ? '校验成功' :(item.checkStatus == '已导入' ?'已导入':'导入失败') )}}</td>
+                <td ng-repeat="cell in item.cells" class="{{cell.checkErrorMessage?'bg-danger': ''}}">
+                  <div uib-popover="{{cell.checkErrorMessage}}" popover-trigger="'mouseenter'"><span>{{cell.displayValue==null?'　':cell.displayValue}}</span></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-pagination conf="paginationConf"></ng-pagination>
+      </div>
+      <div ng-show="currentStep != 1">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <button class="btn btn-default" ng-click="closeCurrentPage()">关闭页面</button>
+            <button class="btn btn-primary" ng-show="currentStep == 2" ng-click="teacherImport()">确认导入</button>
+            <button class="btn btn-primary" ng-click="currentStep = 1" ng-show="currentStep == 3">继续上传</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="import-teacher-progress-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <br>
+          <span>正在导入第{{currentImportIndex}}条数据，成功{{importSuccessItems}}条, 失败{{importFailureItems}}条，请稍候...</span>
+          <br>
+          <div class="progress">
+            <div ng-show="importSuccessProgress > 0" class="progress-bar progress-bar-success" style="width: {{importSuccessProgress}}%">
+              <!-- {{importSuccessProgress}}% -->
+            </div>
+            <div ng-show="importFailureProgress > 0" class="progress-bar progress-bar-danger" style="width: {{importFailureProgress}}%">
+              <!-- {{importFailureProgress}}% -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--修改弹出框-->
+  <script type="text/ng-template" id="importTeacherModalInstance.html">
+    <rd-modal>
+      <rd-modal-title>教师修改</rd-modal-title>
+      <rd-modal-body>
+        <div class="panel panel-primary" style="margin-bottom: 10px;">
+          <div class="panel-body">
+            <form class="form-horizontal" name="teacherForm" role="form" style="color: #483D8B;margin-top:5px">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">关联员工：</label>
+                <div class="col-sm-2">
+                  <div class="input-group">
+                    <input type="text" class="form-control" ng-model="bindRow.employee_encoding.displayValue" disabled placeholder="">
+                    <span class="input-group-btn">
+                     <button class="btn btn-default" type="button" ng-click="showDropdown()"><i class="iconfont icon-search"></i></button>
+                    </span>
+                  </div>
+                  <span ng-show="bindRow.employee_encoding.checkErrorMessage" class="text-danger">{{bindRow.employee_encoding.checkErrorMessage}}</span>
+                  <div class="dropdown open hidden" id="importEmployeeModifyDropdown">
+                    <i class="iconfont icon-search form-control-feedback"></i>
+                    <input type="text" class="form-control" ng-model="searchEmployeeInfo.employee_name" ng-change="onEmployeeNameChange()" placeholder="编码或姓名" />
+                    <ul ng-if="searchResult && searchResult.length && isDown!='loading'" class="dropdown-menu">
+                      <li ng-repeat="employee in searchResult" title="员工姓名：{{employee.employee_name != null ? employee.employee_name : ''}}">
+                        <a href="javascript:void(0)" ng-click="selectEmployee(employee)">{{employee.employee_name}}</a>
+                      </li>
+                      <li ng-if="isDown=='loading'" class="search-list-con-transferAccounts showList">
+                        <div align="center"><img src="img/erp/loading2.gif" /></div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <label class="col-sm-2 control-label">教师编码：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="bindRow.teacher_encoding.holdValue" required ng-change="onTeacherEncodingChange()"/>
+                  <span ng-show="bindRow.teacher_encoding.checkErrorMessage" class="text-danger">{{bindRow.teacher_encoding.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label">教师姓名：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="bindRow.teacher_name.holdValue" required ng-change="onChangeForPureNotNull(bindRow.teacher_name)"/>
+                  <span ng-show="bindRow.teacher_name.checkErrorMessage" class="text-danger">{{bindRow.teacher_name.checkErrorMessage}}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">教师昵称：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="bindRow.nickname.holdValue" ng-change="onChangeForCommonText(bindRow.nickname)"/>
+                </div>
+                <label class="col-sm-2 control-label">教师年龄：</label>
+                <div class="col-sm-2">
+                  <input type="number" class="form-control" ng-model="bindRow.teacher_age.holdValue" ng-change="onChangeForPureNotNull(bindRow.teacher_age)"/>
+                  <span ng-show="bindRow.teacher_age.checkErrorMessage" class="text-danger">{{bindRow.teacher_age.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label">教师教龄：</label>
+                <div class="col-sm-2">
+                  <input type="number" class="form-control" ng-model="bindRow.seniority.holdValue" ng-change="onChangeForPureNotNull(bindRow.seniority)"/>
+                  <span ng-show="bindRow.seniority.checkErrorMessage" class="text-danger">{{bindRow.seniority.checkErrorMessage}}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">教师身份：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="bindRow.teacher_type.holdValue" required ng-options="teacherType.code as teacherType.name for teacherType in teacherTypeList" ng-change="onChangeForSelector(bindRow.teacher_type,teacherTypeList)">
+                  </select>
+                  <span ng-show="bindRow.teacher_type.checkErrorMessage" class="text-danger">{{bindRow.teacher_type.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label">教师状态：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="bindRow.status.holdValue" required ng-options="status.code as status.name for status in statusList"  ng-change="onChangeForSelector(bindRow.status,statusList)">
+                  </select>
+                  <span ng-show="bindRow.status.checkErrorMessage" class="text-danger">{{bindRow.status.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label">性别：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="bindRow.sex.holdValue" required ng-options="gender.code as gender.name for gender in genderList"  ng-change="onChangeForSelector(bindRow.sex,genderList)">
+                  </select>
+                  <span ng-show="bindRow.sex.checkErrorMessage" class="text-danger">{{bindRow.sex.checkErrorMessage}}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label required" required>联系方式：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="bindRow.phone.holdValue" ng-change="onPhoneChange()"/>
+                  <span ng-show="bindRow.phone.checkErrorMessage" class="text-danger">{{bindRow.phone.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label">是否兼职：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="bindRow.is_pluralistic.holdValue" ng-options="partTime.code as partTime.name for partTime in partTimeList"  ng-change="onChangeForSelector(bindRow.is_pluralistic,partTimeList)">
+                  </select>
+                  <span ng-show="bindRow.is_pluralistic.checkErrorMessage" class="text-danger">{{bindRow.is_pluralistic.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label">所属团队：</label>
+                <div class="col-sm-2">
+                  <select class="form-control" ng-model="bindRow.bu.holdValue" ng-options="bu.id as bu.org_name for bu in buList" ng-change="changeBu()">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">邮箱：</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" ng-model="bindRow.email.holdValue" ng-change="onChangeForCommonText(bindRow.email)" />
+                  <span ng-show="bindRow.email.checkErrorMessage" class="text-danger">{{bindRow.email.checkErrorMessage}}</span>
+                </div>
+                <label class="col-sm-2 control-label" >描述：</label>
+                <div class="col-sm-6">
+                  <textarea rows="2" class="form-control" ng-model="bindRow.description.holdValue" ng-change="onChangeForCommonText(bindRow.description)" ></textarea>
+                </div>
+              </div>
+              <div>
+                <label class="col-sm-2 control-label">科目：</label>
+                <div class="col-sm-10">
+                  <div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
+                    <span ng-click="removeSubject(subject)" class="btn btn-default btn-xs" ng-repeat="subject in selSubjectList" style="margin: 5px;">
+                      {{subject.name}}<i class="iconfont icon-public_defeat i-text-primary cur" ></i>
+                    </span>
+                  </div>
+                  <span ng-show="bindRow.subject_names.checkErrorMessage" class="text-danger">{{bindRow.subject_names.checkErrorMessage}}</span>
+                  <div class="form-horizontal  mt10 pos-r">
+                    <input type="text" class="form-control" placeholder="输入要查询的课程名称" ng-model="subjectSearchInfo" style="border-radius: 0;">
+                    <i class="iconfont icon-search form-control-feedback"></i>
+                  </div>
+                  <table class="table table-bordered" style="margin: -1px 0;">
+                    <tr>
+                      <th width="35"></th>
+                      <th width="100">科目</th>
+                      <th>备注</th>
+                    </tr>
+                  </table>
+                  <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
+                    <table class="table table-bordered" >
+                      <tr ng-repeat="subject in subjectList | filter:{'name': subjectSearchInfo}">
+                        <td width="35">
+                          <input type="checkbox" ng-model="subject.checked" ng-change="handleSubjectChange(subject)">
+                        </td>
+                        <td width="100">{{subject.name}}</td>
+                        <td>{{subject.description}}</td>
+                      </tr>
+                    </table>
+                  </div>
+              </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+        <button type="button" class="btn btn-primary" ng-click="checkRow()">确定</button>
+      </rd-modal-footer>
+    </rd-modal>
+  </script>
+</div>

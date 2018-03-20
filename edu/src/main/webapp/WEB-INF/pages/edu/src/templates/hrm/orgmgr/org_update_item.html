@@ -1,0 +1,63 @@
+<!-- Modal -->
+<div id="UpdateOrgItemPanel" class="modal fade " tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog klxx-modal-primary {{selectedItem.org_type == '4'?'modal-lg':''}}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 class="modal-title">修改组织机构</h3>
+      </div>
+      <div class="modal-body form-horizontal">
+        <div class="form-group">
+          <label class="{{selectedItem.org_type=='4' ? 'col-sm-2':'col-sm-3'}} control-label">组织机构名称：</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" required ng-model="selectedItem.org_name" />
+          </div>
+        </div>
+        <div class="form-group" ng-show="selectedItem.org_type == 4">
+          <label class="{{selectedItem.org_type=='4' ? 'col-sm-2':'col-sm-3'}} control-label">地址：</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" required ng-model="selectedItem.address" />
+          </div>
+        </div>
+        <div class="form-group" ng-show="selectedItem.org_type == 4">
+          <label class="{{selectedItem.org_type=='4' ? 'col-sm-2':'col-sm-3'}} control-label">经度，经度：</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" 
+            ng-disabled="true"
+            required ng-model="selectedItem.lng" />
+          </div>
+          <div class="col-sm-1 text-center" style="width: 2em;">，</div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" 
+            ng-disabled="true"
+            required ng-model="selectedItem.lat" />
+          </div>
+        </div>
+        <!-- <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">组织类型</label>
+            <div class="col-sm-9 input-group">
+                <select type="text" class="form-control" ng-model="orgSelectType.type" ng-options="org.type as org.name for org in orgType"/>
+            </div>
+        </div> -->
+        <div ng-show="selectedItem.org_type == '4'" class="map-wrapper" style="width: 100%;height: 400px; position: relative;">
+          <div class="search-panel" style="position: absolute; top: 20px;left: 20px; width: 300px;">
+            <div class="input-group">
+              <input type="text" class="map-search form-control" 
+                ng-model="mapOptions.searchInfo" 
+                ng-change="updateOrgMapSearch(mapOptions.searchInfo)">
+              <span class="input-group-btn">
+                  <button class="btn btn-primary"><i class="iconfont icon-search"></i></button>
+              </span>
+            </div>
+            <div id="search-result-panel" style="position: absolute;width: 866px;height: 300px;overflow-y: auto;z-index: 999;"></div>
+          </div>
+          <div id="update-org-map" style="height: 400px;width:866px;position: relative;">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="saveOrgItem()">确定</button>
+      </div>
+    </div>
+  </div>
+</div>

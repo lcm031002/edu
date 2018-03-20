@@ -1,0 +1,63 @@
+<!-- Modal -->
+<div id="PostRankPanel" class="modal klxx-modal-primary fade " tabindex="-1"
+	role="dialog" aria-hidden="true" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">职级管理</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label class="col-sm-3 fl" style="line-height: 34px;">id</label>
+					<div class="col-sm-9 input-group">
+						<input type="text" class="form-control" ng-readonly="true" ng-model="selectedItem.id" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-3 fl" style="line-height: 34px;">职级名称</label>
+					<div class="col-sm-9 input-group">
+						<input type="text" 
+						class="form-control" ng-model="selectedItem.rank_code" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-3 fl" style="line-height: 34px;">层级</label>
+					<div class="col-sm-9 input-group">
+						<div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
+		                    <span ng-click="removeSelected(select)" class="btn btn-default btn-xs" ng-repeat="select in selectedList" style="margin: 5px;">
+				            	{{select.level_code}}<i class="iconfont icon-public_defeat i-text-primary cur" ></i> 
+			                </span>
+		                </div>
+					</div>
+					<table class="table table-bordered" style="margin: -1px 0;">
+		              <tr>
+		                <th width="35"></th>
+		                <th width="100">层级</th>
+		                <th>类别</th>
+		              </tr>
+		            </table>
+		            <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
+		              <table class="table table-bordered" >
+		                <tr ng-repeat="select in postLevelList">
+		                  <td width="35" style="text-align: center;">
+		                    <input type="checkbox" ng-model="select.checked" ng-change="handleSelectedListChange(select)">
+		                  </td>
+		                  <td width="100">{{select.level_code}}</td>
+		                  <td>{{select.level_type_name}}</td>
+		                </tr>
+		              </table>
+		            </div>
+				</div>
+				<div align="center">
+				</div>
+			</div>
+			<div class="modal-footer">
+					<button class="btn btn-default" type="button" data-dismiss="modal">取消</button>
+				<button class="btn btn-primary" type="button" ng-click="savePostRank()">确定</button>
+			</div>
+		</div>
+	</div>
+</div>

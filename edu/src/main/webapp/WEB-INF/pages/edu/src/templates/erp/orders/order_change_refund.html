@@ -1,0 +1,698 @@
+<div class="erp" ng-controller="erp_orderChangeRefundController">
+    <div class="panel panel-primary" style="margin-bottom: 10px;">
+        <div class="panel-heading">
+            <span class="title">退费<span ng-if="student&&student.student_name">(学员：{{student.student_name}}，年级：{{student.grade_name}})</span></span>
+        </div>
+        <div class=panel-body style="padding: 15px;">
+            <div style="float: left; width: 98%; margin-top: 10px;">
+                <div class=step  style="width: 33.33%; ">第一步 选择学员</div>
+                <div class=step   style="width: 33.33%; ">第二步 退费课程</div>
+                <div class=step  style="width: 33.33%; ">第三步 公式确认</div>
+            </div>
+            <div style="float: left; width: 98%; margin-left: 10px; margin-top: 10px;">
+                <div class="progress kl-progress">
+                    <div class=progress-bar role=progressbar aria-valuenow=60
+                         aria-valuemin=0 aria-valuemax=200 style="width:{{step*33.33}}%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--搜索学员begin-->
+    <div class="panel panel-primary" style="margin-bottom: 10px;" ng-if="step == 1">
+        <div class="panel-heading"><span class="title">第一步 选择学员</span></div>
+        <div class=panel-body style="padding: 15px;">
+            <div  ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type=text class=form-control  ng-model="studentQueryInfo.searchInfo" placeholder="请输入搜索关键字.">
+                            <span class="input-group-btn">
+                                <button type=button class="btn btn-primary" ng-click=queryStudents()><i class="iconfont icon-search"></i> 搜索学员</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>学员姓名</th>
+                        <th>学员编码</th>
+                        <th width="16%">就读学校</th>
+                        <th>年段</th>
+                        <th>联系方式</th>
+                        <th ng-if="productLine != 2">积分</th>
+                        <th ng-if="productLine != 2">老学员</th>
+                        <th>所属校区</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="stu in studentList"
+                        ng-if="studentList && studentList.length && ((student&&student.checked&&student.id==stu.id)||!student)"
+                        ng-click=checkedStudent(stu)>
+                        <td ng-if="(!temporaryOrder||temporaryOrder.check_status==1)">
+                            <input type=checkbox checked ng-if=stu.checked>
+                            <input type=checkbox ng-if=!stu.checked>
+                        </td>
+                        <td style="color: red;">{{stu.student_name}}</td>
+                        <td>{{stu.encoding}}</td>
+                        <td>{{stu.attend_school_name}}</td>
+                        <td>{{stu.grade_name}}</td>
+                        <td>{{stu.phone}}</td>
+                        <td ng-if="productLine != 2"><a href="?studentId={{stu.id}}#/studentMgr/studentMgrIntegral">{{stu.integral ? stu.integral : 0}}</a></td>
+                        <td ng-if="productLine != 2">{{stu.is_old_student?'是':'否'}}</td>
+                        <td>{{stu.branch_name}}</td>
+                    </tr>
+                    <tr ng-if="isQueryStudent">
+                        <td colspan="{{productLine != 2 ? 9: 7}}" align="center">
+                            <img src="img/erp/loading2.gif">
+                        </td>
+                    </tr>
+                    <tr ng-if="!isQueryStudent && (studentList == null || studentList.length == 0)">
+                        <td colspan="{{productLine != 2 ? 9: 7}}" align="center">暂无数据.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div style="width: 200px; margin: auto; text-align: center;">
+                <button type=button class="btn btn-primary" style="width: 200px;"
+                        ng-click=nextStep(1,2) ng-disabled=!curStudent>下一步</button>
+            </div>
+        </div>
+    </div>
+    <!--搜索学员end-->
+
+    <!--选择退费课程-->
+    <div class="panel panel-primary" style="margin-bottom: 10px;" ng-if="step == 2">
+        <div class="panel-heading"><span class="title">第二步 退费课程</span></div>
+        <div class=panel-body style="padding: 15px;">
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="{{refundTab=='bjk'?'active':''}}"><a href="javascript:void(0);" ng-click="selectRefundCourseTab('bjk')">班级课</a></li>
+                    <li class="{{refundTab=='ydy'?'active':''}}"><a href="javascript:void(0);" ng-click="selectRefundCourseTab('ydy')">1对1</a></li>
+                    <li class="{{refundTab=='wfd'?'active':''}}"><a href="javascript:void(0);" ng-click="selectRefundCourseTab('wfd')">晚辅导</a></li>
+                </ul>
+
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane {{refundTab=='bjk'?'active':''}}" >
+                    <table class="table table-striped table-hover table-bordered" >
+                        <col width="5%"/>
+                        <col width="10%"/>
+                        <col width="40%"/>
+                        <col width="10%"/>
+                        <col width="15%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>编码</th>
+                                <th>课程</th>
+                                <th>老师</th>
+                                <th>校区</th>
+                                <th>单价</th>
+                                <th>剩余</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="isQueryBjk">
+                            <td colspan="7" align="center">
+                                <img src="img/erp/loading2.gif">
+                            </td>
+                        </tr>
+                        <tr ng-if="isQueryBjk!='isQueryBjk' && (!orderBJK || !orderBJK.length)">
+                            <td colspan="7" align="center">无数据.</td>
+                        </tr>
+                        <tr ng-repeat="course in orderBJK" ng-if="isQueryBjk != 'isQueryBjk' && (!selectedRefundCourse||!selectedRefundCourse.id||selectedRefundCourse.id == course.id)">
+                            <td ng-click="checkRefundCourse(orderBJK,course)">
+                                <input type=checkbox checked ng-if=course.checked>
+                                <input type=checkbox ng-if=!course.checked>
+                            </td>
+                            <td>{{course.order_no}}</td>
+                            <td>{{course.course_name}}{{course.course_no}}</td>
+                            <td>{{course.teacher_name}}{{course.teacher_encoding}}</td>
+                            <td>{{course.branch_name}}</td>
+                            <td>
+                                <span class="text-warning mr10">￥{{course.discount_unit_price}}</span>
+                                <del class="text-muted" ng-if="course.discount_unit_price!=course.former_unit_price">￥{{course.former_unit_price}}</del>
+                            </td>
+                            <td>{{course.course_surplus_count}}次</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div ng-if="selectedRefundCourse">
+                        <h3>选择退费课时({{refundCourseTimesList.length}}课时)</h3>
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <table class="table  table-striped table-hover ">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <input type=checkbox checked ng-click="uncheckAllRefundCourseTimes()" ng-if="selectedRefundCourse.course_surplus_count==refundCourseTimesList.length">
+                                            <input type=checkbox  ng-click="checkAllRefundCourseTimes()" ng-if="selectedRefundCourse.course_surplus_count!=refundCourseTimesList.length">
+                                        </th>
+                                        <th>课次</th>
+                                        <th>老师</th>
+                                        <th>排课时间</th>
+                                        <th>考勤时间</th>
+                                        <th>考勤人</th>
+                                        <th>考勤状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="attendance in selectedRefundCourse.orderCourseSurplusCount" ng-if="attendance.ATTEND_TYPE==10||!attendance.ATTEND_TYPE" ng-click="checkRefundCourseTimes(attendance)">
+                                        <td>
+                                            <input type=checkbox checked ng-if=attendance.checked>
+                                            <input type=checkbox ng-if=!attendance.checked>
+                                        </td>
+                                        <td>{{attendance.TIMES}}</td>
+                                        <td>{{attendance.TEACHER_NAME}}</td>
+                                        <td>{{attendance.COURSE_DATE}}</td>
+                                        <td>{{attendance.ATTEND_DATE?attendance.ATTEND_DATE:'-'}}</td>
+                                        <td>{{attendance.ATTEND_USER_NAME?attendance.ATTEND_USER_NAME:'-'}}</td>
+                                        <td>{{attendance.NAME}}</td>
+                                    </tr>
+                                    <tr ng-if="showDetailTimesPanelLoading == 'loading'">
+                                        <td colspan="6" align="center">
+                                            <img src="img/erp/loading2.gif"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane {{refundTab=='ydy'?'active':''}}">
+                    <table class="table table-striped table-hover table-bordered" >
+                        <col width="2%"/>
+                        <col width="10%"/>
+                        <col width="18%"/>
+                        <col width="10%"/>
+                        <col width="5%"/>
+                        <col width="5%"/>
+                        <col width="5%"/>
+                        <col width="5%"/>
+                        <col width="5%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="15%"/>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>报班单</th>
+                                <th>课程（编码）</th>
+                                <th>校区</th>
+                                <th>年级</th>
+                                <th>单价</th>
+                                <th>总价</th>
+                                <th>报班课时</th>
+                                <th>剩余可用课时</th>
+                                <th>剩余可排课时</th>
+                                <th>开课日期</th>
+                                <th>结课日期</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="isQueryYdy">
+                            <td colspan="7" align="center">
+                                <img src="img/erp/loading2.gif">
+                            </td>
+                        </tr>
+                        <tr ng-if="isQueryYdy != 'isQueryYdy' && (!orderYDY || !orderYDY.length)">
+                            <td colspan="12" align="center">无数据.</td>
+                        </tr>
+                        <tr ng-repeat="course in orderYDY" ng-if="isQueryYdy != 'isQueryYdy' && (!selectedRefundCourse || !selectedRefundCourse.id||selectedRefundCourse.id == course.id)">
+                            <td ng-click="checkRefundCourse(orderYDY,course)">
+                                <input type=checkbox checked ng-if=course.checked>
+                                <input type=checkbox ng-if=!course.checked>
+                            </td>
+                            <td>{{course.order_no}}</td>
+                            <td>{{course.course_name}}{{course.course_no}}</td>
+                            <td>{{course.branch_name}}</td>
+                            <td>{{course.grade_name}}</td>
+                            <td>
+                                <span class="cell-txt-cur">￥{{course.discount_unit_price}}</span>
+                                <span class="cell-txt-del" ng-if="course.discount_unit_price!=course.former_unit_price">￥{{course.former_unit_price}}</span>
+                            </td>
+                            <td>
+                                <span class="cell-txt-cur">￥{{course.discount_sum_price}}</span>
+                                <span class="cell-txt-del" ng-if="course.discount_sum_price!=course.former_sum_price">￥{{course.former_sum_price}}</span>
+                            </td>
+                            <td>{{course.course_total_count}}</td>
+                            <td>{{course.course_surplus_count}}</td>
+                            <td>{{course.course_schedule_count}}</td>
+                            <td>{{course.start_date}}</td>
+                            <td>{{course.end_date}}</td>
+                            <td>{{course.remark}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="col-lg-12" style="margin-top: 15px;">
+                        <table class="table  table-striped table-hover ">
+                            <col class="col-lg-1"/>
+                            <col class="col-lg-2"/>
+                            <col class="col-lg-3"/>
+                            <col class="col-lg-6"/>
+                            <tr>
+                                <th>
+                                    <td style="text-align:right;">
+                                        <span>退费课时：</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="selectedRefundCourse.refundCourseTimes"  ng-change="inputPremiumNum(selectedRefundCourse.refundCourseTimes, 'ydy')" />
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane {{refundTab=='wfd'?'active':''}}">
+                    <table class="table table-striped table-hover table-bordered" >
+                        <col width="5%"/>
+                        <col width="10%"/>
+                        <col width="40%"/>
+                        <col width="10%"/>
+                        <col width="15%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>编码</th>
+                            <th>课程</th>
+                            <th>老师</th>
+                            <th>校区</th>
+                            <th>单价</th>
+                            <th>剩余</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-if="isQueryWfd">
+                            <td colspan="7" align="center">
+                                <img src="img/erp/loading2.gif">
+                            </td>
+                        </tr>
+                        <tr ng-if="isQueryWfd!='isQueryWfd' && (!orderWFD || !orderWFD.length)">
+                            <td colspan="7" align="center">
+                                无数据.
+                            </td>
+                        </tr>
+                        <tr ng-repeat="course in orderWFD" ng-if="isQueryWfd!='isQueryWfd' && course.course_surplus_count > 0 && (!selectedRefundCourse||!selectedRefundCourse.id||selectedRefundCourse.id == course.id)">
+                            <td  ng-click="checkRefundCourse(orderWFD,course)">
+                                <input type=checkbox checked ng-if=course.checked>
+                                <input type=checkbox ng-if=!course.checked>
+                            </td>
+                            <td>{{course.order_no}}</td>
+                            <td>{{course.course_name}}{{course.course_no}}</td>
+                            <td>{{course.teacher_name}}{{course.teacher_encoding}}</td>
+                            <td>{{course.branch_name}}</td>
+                            <td>
+                                <span class="cell-txt-cur">￥{{course.discount_unit_price}}</span>
+                                <span class="cell-txt-del" ng-if="course.discount_unit_price!=course.former_unit_price">￥{{course.former_unit_price}}</span>
+                            </td>
+                            <td>{{course.course_surplus_count}}次</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div ng-if="selectedRefundCourse">
+                        <div class="col-lg-12" style="margin-top: 15px;">
+                            <table class="table  table-striped table-hover ">
+                                <col class="col-lg-1"/>
+                                <col class="col-lg-2"/>
+                                <col class="col-lg-3"/>
+                                <col class="col-lg-6"/>
+                                <tr>
+                                    <th>
+                                        <td style="text-align:right;">
+                                            <span>退费课时：</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" ng-model="selectedRefundCourse.premiumNum" ng-change="inputPremiumNum(selectedRefundCourse.premiumNum, 'wfd')">
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin: auto; text-align: center;">
+                <button
+                        type=button
+                        class="btn btn-primary"
+                        style="width: 200px;"
+                        ng-click=nextStep(2,1) >
+                    上一步
+                </button>
+                <button
+                        type=button
+                        class="btn btn-primary"
+                        style="width: 200px;"
+                        ng-click="nextStep(2,3)"
+                        ng-disabled="!selectedRefundCourse || !refundCourseTimesList.length">
+                    下一步
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--选择退费课程-->
+
+    <!--退费公式确认-->
+    <div class="panel panel-primary" style="margin-bottom: 10px;" ng-if="step == 3">
+        <div class="panel-heading"><span class="title">第三步 退费确认</span></div>
+        <div class=panel-body style="padding: 15px;">
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label"><h3>学员信息</h3></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">学员姓名：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{student.student_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">学员编码：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{student.encoding}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">年级：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{student.grade_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">手机号：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{student.phone}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label"><h3>退费信息</h3></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">课程名称：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{selectedRefundCourse.course_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">课程编码：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{selectedRefundCourse.course_no}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;"  ng-if="businessType != 2" >
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">老师名称：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{selectedRefundCourse.teacher_name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">老师编码：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{selectedRefundCourse.teacher_encoding}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">课程校区：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">{{selectedRefundCourse.branch_name}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">退费课时：</label>
+                        <div class="col-lg-8" ng-if="businessType == 1 || businessType == 3">
+                            <p class="form-control-static">{{refundCourseTimesList.length}} 课时</p>
+                        </div>
+                        <div class="col-lg-8" ng-if="businessType == 2">
+                            <p class="form-control-static">{{refundCourseTimes}} 课时</p>
+                        </div>
+                    </div>
+                </div>
+                <div  class="col-lg-6" ng-if="businessType==1">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">详细课次：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static">
+                                第<span ng-repeat="time in refundCourseTimesList">{{$index>0?'，'+time.TIMES:time.TIMES}}</span>课次
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">退费公式：</label>
+                        <div class="col-lg-8">
+                            <select
+                                    ng-model="selectedFormulaInfo.selectedFormula"
+                                    class="form-control"
+                                    ng-change="changeFormula()"
+                                    ng-options="formula.name for formula in formulaTypeList"
+                                    ng-disabled="premiumTypeSelect">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">公式描述：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static" style="color: #ff7b0e;">
+                                {{selectedFormulaInfo.selectedFormula.description}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">计算明细：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static" style="color: #ff7b0e;">
+                                {{selectedFormulaInfo.formulaDetailInfo}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">补扣金额：</label>
+                        <div class="col-lg-8">
+                            <div class="col-lg-10 col-md-9 col-sm-8">
+                                <input type="number" class="form-control" ng-model="selectedFormulaInfo.buckleUp" ng-disabled="!selectedFormulaInfo.checkBuckleUp"/>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-sm-4" style="height: 32px; font-size:26px; line-height:32px;">
+                                <a href="javascript:void(0);" ng-click="checkBuckleUp()" ng-if="selectedFormulaInfo.checkBuckleUp">
+                                    <i class="fa fa-check-square" aria-hidden="true"></i>
+                                </a>
+                                <a href="javascript:void(0);" ng-click="checkBuckleUp()" ng-if="!selectedFormulaInfo.checkBuckleUp">
+                                    <i class="fa fa-square-o"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="border-bottom: 1px dashed #ddd;padding-bottom:5px;padding-top:5px;">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">实退金额：</label>
+                        <div class="col-lg-8">
+                            <p class="form-control-static" style="color: #ff7b0e;"  ng-if="selectedFormulaInfo.checkBuckleUp" >
+                                {{(selectedFormulaInfo.result-selectedFormulaInfo.buckleUp)>0?(selectedFormulaInfo.result-selectedFormulaInfo.buckleUp):0}}
+                            </p>
+                            <p class="form-control-static" style="color: #ff7b0e;"  ng-if="!selectedFormulaInfo.checkBuckleUp" >
+                                {{selectedFormulaInfo.result>0?selectedFormulaInfo.result:0}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div  class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label required"><span class="required"></span>备注：</label>
+                        <div class="col-lg-8">
+                            <textarea class="form-control" ng-model="selectedFormulaInfo.remark"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane" ng-if="businessType == 2">
+               <table class="table table-striped table-hover table-bordered" >
+                   <col width="10%"/>
+                   <col width="18%"/>
+                   <col width="10%"/>
+                   <col width="5%"/>
+                   <col width="5%"/>
+                   <col width="5%"/>
+                   <col width="5%"/>
+                   <col width="5%"/>
+                   <col width="10%"/>
+                   <col width="10%"/>
+                   <thead>
+                       <tr>
+                           <th>报班单</th>
+                           <th>课程（编码）</th>
+                           <th>校区</th>
+                           <th>年级</th>
+                           <th>单价</th>
+                           <th>总价</th>
+                           <th>报班课时</th>
+                           <th>剩余课时</th>
+                           <th>开课日期</th>
+                           <th>结课日期</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                   <tr>
+                       <td>{{selectedRefundCourse.order_no}}</td>
+                       <td>{{selectedRefundCourse.course_name}}{{selectedRefundCourse.course_no}}</td>
+                       <td>{{selectedRefundCourse.branch_name}}</td>
+                       <td>{{selectedRefundCourse.grade_name}}</td>
+                       <td>
+                           <span class="cell-txt-cur">￥{{selectedRefundCourse.discount_unit_price}}</span>
+                           <span class="cell-txt-del" ng-if="course.discount_unit_price!=course.former_unit_price">￥{{selectedRefundCourse.former_unit_price}}</span>
+                       </td>
+                       <td>
+                           <span class="cell-txt-cur">￥{{selectedRefundCourse.discount_sum_price}}</span>
+                           <span class="cell-txt-del" ng-if="course.discount_sum_price!=course.former_sum_price">￥{{selectedRefundCourse.former_sum_price}}</span>
+                       </td>
+                       <td>{{selectedRefundCourse.course_total_count}}次</td>
+                       <td>{{selectedRefundCourse.course_surplus_count}}次</td>
+                       <td>{{selectedRefundCourse.start_date}}</td>
+                       <td>{{selectedRefundCourse.end_date}}</td>
+                   </tr>
+                   </tbody>
+               </table>
+               
+               <table class="table table-striped table-hover table-bordered" >
+                   <col width="30%"/>
+                   <col width="10%"/>
+                   <thead>
+                       <tr>
+                           <th>阶梯名称</th>
+                           <th>阶梯单价</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                   <tr>
+                       <td>{{ladder.ladder_level_name}}</td>
+                       <td>{{ladder.level_price}}</td>
+                   </tr>
+                   </tbody>
+               </table>
+           </div>
+
+            <div class="col-lg-12">
+                <div style="margin: auto; text-align: center;margin-top: 15px;">
+                    <button type=button class="btn btn-primary" style="width: 200px;"
+                            ng-click=nextStep(3,2) >上一步</button>
+                    <button type=button class="btn btn-primary" style="width: 200px;"
+                            ng-click="submitRefund()">提交</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--退费公式确认-->
+
+    <div ng-if="isSubmitRefund=='isSubmitRefund'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                正在处理...
+            </div>
+        </div>
+    </div>
+    <div ng-if="isSubmitRefund=='isSubmitRefundOk'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                退费成功！<a href="?studentId={{student.id}}&orderId={{selectedRefundCourse.order_id}}#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_self" >点击查看退费</a>
+            </div>
+        </div>
+    </div>
+    <div ng-if="isSubmitRefund=='isSubmitRefundFailed'">
+        <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+               ng-click="submitRefundColse()" ></div>
+        <div class="pay-window" >
+            <div style="margin: 20px;height:50px;" align="center">
+                退费失败,请联系管理员！
+            </div>
+        </div>
+    </div>
+</div>

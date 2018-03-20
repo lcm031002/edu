@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process version="400" description="退费审批流程，三层审批流程" name="退费审批流程" key="erpv4.DXB_tuifei" xmlns="http://jbpm.org/4.4/jpdl">
+   <start name="start1" g="91,36,48,48">
+      <transition name="to 一层审批" to="一层审批" g="-69,-14"/>
+   </start>
+   <task name="一层审批" g="68,109,92,52">
+ 	  <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition name="审批通过，去二层审批" to="二层审批" g="-70,-13"/>
+      <transition name="审批不通过，退费单作废" to="退费单作废" g="-57,-30"/>
+   </task>
+   <task name="二层审批" g="68,187,92,52">
+      <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition name="审批通过，去三层审批" to="三层审批" g="-71,-7"/>
+      <transition name="审批不通过，退费单作废" to="退费单作废" g="-69,-21"/>
+   </task>
+   <task name="三层审批" g="68,260,92,52">
+      <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition name="审批通过，退费单生效" to="退费单生效" g="-70,-15"/>
+      <transition name="审批不通过，退费单作废" to="退费单作废" g="-53,1"/>
+   </task>
+   <java class="com.modules.work_flow.controller.ServiceAPI"
+         name="退费单生效"
+         method="doOrderChangeAudit"
+         g="67,331,92,52">
+      <arg><object expr="#{change_id}"/></arg>
+      <arg><object expr="#{remark_order}"/></arg>
+      <arg><object expr="1"/></arg>
+      <arg><object expr="#{laststep_user_id}"/></arg>
+      <transition name="to end1" to="end1" g="-56,-13"/>
+   </java>
+   <end name="end1" g="90,411,48,48"/>
+   <end name="end2" g="444,191,48,48"/>
+   <java class="com.modules.work_flow.controller.ServiceAPI" method="doOrderChangeAudit" name="退费单作废" g="322,187,92,52">
+      <arg><object expr="#{change_id}"/></arg>
+      <arg><object expr="#{remark_order}"/></arg>
+      <arg><object expr="0"/></arg>
+      <arg><object expr="#{laststep_user_id}"/></arg>
+      <transition to="end2"/>
+   </java>
+</process>

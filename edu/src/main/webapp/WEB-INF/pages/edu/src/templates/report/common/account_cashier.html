@@ -1,0 +1,129 @@
+<div class="report min-width-2500" ng-controller="report_accountCashierController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">出纳信息表</span>
+        </div>
+        <div class="panel-body">
+            <div class="search-panel" style="width:80vw;">
+                <div class="form form-inline">
+                    <div class="form-group m-0 mr-r20">
+                        <rd-date-picker-range 
+                            ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date" 
+                            ng-default-range="'today'">
+                        </rd-date-picker-range>
+                    </div>
+                </div>
+                <div class="form-inline">
+                	<rd-branch ng-bu-id="searchParam.p_bu_id"
+                     	ng-branch-id="searchParam.p_branch_id">
+						<div class="form-group">
+				            学生姓名：
+                            <input type="text" class="form-control" ng-model="searchParam.p_student_name" id="student_name" name="student_name"/>							  
+                        </div>
+                        <div class="form-group ml-10">
+				            制单人：
+					        <input type="text" class="form-control" ng-model="searchParam.p_input_user_name" id="input_user_name" name="input_user_name"/>		
+				            
+		                    <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询
+		                    </button>
+		                    <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+				        </div>
+          			</rd-branch>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+                <col width="2%"/>
+                <col width="3%"/>
+	            <col width="4%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="3%"/>
+	            <col width="7%"/>
+	            <col width="3.5%"/>
+	            <col width="7.5%"/>  <!-- 学生编码 -->
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+	            <col width="4%"/>
+                <col width="3.5%"/>  <!-- 制单人 -->
+                <col width="5%"/>
+                <col width="6%"/>
+                <col width="4%"/>
+                <col width="4%"/>
+                <col width="2%"/>
+                <col width="5%"/>
+ 	            <col width="2%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>地区</th>
+                <th>日期</th>
+                <th>团队</th>
+                <th>业务校区</th>
+                <th>操作类型</th>
+                <th>单据编号</th>
+                <th>学生姓名</th>
+                <th>学生编码</th>
+                <th>总金额</th>
+                <th>现金</th>
+                <th>刷卡</th>
+                <th>转账</th>
+                <th>账户消耗</th>
+                <th>在线支付(微信公众号)</th>
+                <th>在线支付(Web页面)</th>
+                <th>制单人</th>
+                <th>银商订单号</th>
+                <th>公司账户名称</th>
+                <th>公司账号</th>
+                <th>客户账号</th>
+                <th>状态</th>
+                <th>报班说明</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="accountCashier in accountCashierList"
+                ng-if="!loadStatues && accountCashierList && accountCashierList.length">
+                <td>{{$index + 1}}</td>
+                <td>{{accountCashier.city_name}}</td>
+                <td>{{accountCashier.input_time}}</td>
+                <td>{{accountCashier.bu_name}}</td>
+                <td>{{accountCashier.branch_name}}</td>
+                <td>{{accountCashier.opt_type_name}}</td>
+                <td class="word_break">{{accountCashier.opt_encoding}}</td>
+                <td class="word_break">{{accountCashier.student_name}}</td>
+                <td class="word_break">{{accountCashier.student_encoding}}</td>               
+                <td class="word_break">{{accountCashier.pay_amount}}</td>
+                <td class="word_break">{{accountCashier.pay_cash}}</td>
+                <td class="word_break">{{accountCashier.pay_card}}</td>
+                <td class="word_break">{{accountCashier.pay_trans}}</td>
+                <td class="word_break">{{accountCashier.pay_account}}</td>
+                <td class="word_break">{{accountCashier.pay_ebprice}}</td>
+                <td class="word_break">{{accountCashier.pay_onlineprice}}</td>
+                <td class="word_break">{{accountCashier.input_user_name}}</td>
+                <td class="word_break">{{accountCashier.eb_no}}</td>
+                <td class="word_break">{{accountCashier.company_names}}</td>
+                <td class="word_break">{{accountCashier.company_account}}</td>
+                <td class="word_break">{{accountCashier.card_no}}</td>
+                <td>{{accountCashier.status}}</td>
+                <td class="word_break">{{accountCashier.remark}}</td>
+                <td><input class="bn2" type="button" value="打印" ng-click="print(accountCashier)" ng-show="accountCashier.opt_type_name==null||accountCashier.opt_type_name==''||accountCashier.opt_type_name=='充值'||accountCashier.opt_type_name=='报班'||accountCashier.opt_type_name=='取款'||accountCashier.opt_type_name=='退费'"/></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (accountCashierList == null || accountCashierList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

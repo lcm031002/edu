@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.common.dao.InvoicesSequenceDao">
+	
+	<!-- 根据编号类型 查询编号序列号 -->
+	<select id="querySequenceByInvoicesType" resultType="com.ebusiness.common.model.InvoicesSequence" parameterType="java.lang.Long">
+		SELECT * FROM tab_invoices_sequence t WHERE t.invoices_type = #{invoices_type}
+	</select>
+	
+	<parameterMap id="seqParam" type="com.ebusiness.common.model.InvoicesSequence">
+		<parameter mode="IN" property="invoices_type"  javaType="long" jdbcType="NUMERIC"/>
+		<parameter mode="OUT" property="sequence" javaType="long" jdbcType="NUMERIC"/>
+	</parameterMap>
+	
+	<select id="selectSeq" statementType="CALLABLE" parameterMap="seqParam">
+		<![CDATA[
+			{call PKG_FOUND_SEQ.querySequenceByInvoicesType(?,?)}
+		]]>
+	</select>
+	
+	
+	<!-- 如果未找到对应编号类型 则插入新编号类型 -->
+	<insert id="insert" parameterType="com.ebusiness.common.model.InvoicesSequence">
+		INSERT INTO 
+			tab_invoices_sequence (id,invoices_type, sequence)
+		VALUES 
+		(	
+			SEQ_TAB_INVOICES_SEQUENCE.nextval,
+			#{invoices_type,jdbcType=NUMERIC},
+			#{sequence,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<!-- 根据编号类型 修改 编号序列内容 -->
+	<update id="update" parameterType="com.ebusiness.common.model.InvoicesSequence">
+		UPDATE 
+			tab_invoices_sequence 
+				
+			<if test="invoices_type != null">
+				SET sequence = #{sequence} WHERE invoices_type = #{invoices_type} 
+			</if>
+			<if test="invoices_type == null">
+				SET sequence = 1
+			</if>
+	</update>
+</mapper>

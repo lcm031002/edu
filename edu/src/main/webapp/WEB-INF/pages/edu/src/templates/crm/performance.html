@@ -1,0 +1,26 @@
+<div class="row" ng-controller="PerformanceCtrl">
+    <div class="col-lg-12">
+        <rd-widget>
+            <rd-widget-header icon="fa-line-chart" title="校区业绩">
+                <div class="pull-right fa-hover" >
+                    <select ng-model="currnentBranch" class="selectBranchs selectBranchsPerformance" ng-options="bra.name for bra in branchsVisible" ng-change="changeBranch()">
+                    </select>
+                    <a href="javascript:void(0);" class="dropdown-toggle" ng-click="fresh()" title="刷新">
+                        <i class="fa fa-refresh" ></i>
+                    </a>
+                    <a href="#" class="dropdown-toggle" title="缩小" ng-click="extend('')">
+                        <i class="fa fa-compress"></i>
+                    </a>
+                </div>
+            </rd-widget-header>
+            <rd-widget-body >
+                <div ng-if="isPerformanceLoading=='loading...'"  style="vertical-align: middle;text-align: center;">
+                    <img src="../img/loading2.gif"  >
+                </div>
+                <div class="table-responsive" >
+                    <canvas  style="height:250px;width:100%;" id="Performance"></canvas>
+                </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+</div>

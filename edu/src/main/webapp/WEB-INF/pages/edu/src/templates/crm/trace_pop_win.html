@@ -1,0 +1,15 @@
+<div class="trace_pop_window" id="traceInfo"> 
+ <div id="title" class="pop_title"><img src="../img/close01.jpg" alt="关闭" class="cursor_pointer" ng-click="closeSearchAdvWindow($event.target)" />跟踪信息</div> 
+  <div class="pop_content">
+   <table class="table_data">
+     <tr><th nowrap="nowrap">回访时间</th><th nowrap="nowrap">回访方式</th><th nowrap="nowrap">回访内容</th><th nowrap="nowrap">资源情况</th><th nowrap="nowrap">备注</th></tr>
+     <tr ng-repeat="proc in traceInfo" ng-class="{even:!$even,odd:!$odd}">
+        <td width="20%">{{proc.visit_time|date:'yyyy-MM-dd'}}</td>
+        <td>{{proc.visit_way_name}}</td>
+        <td>{{proc.talk_content}}</td>
+        <td>{{proc.clue_stage_name}}</td>
+        <td>{{proc.note}}</td>
+     </tr>
+   </table>
+ </div> 
+</div> 

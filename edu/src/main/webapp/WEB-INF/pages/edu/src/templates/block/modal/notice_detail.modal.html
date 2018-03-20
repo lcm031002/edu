@@ -1,0 +1,48 @@
+<rd-modal ng-form="noticeForm">
+  <rd-modal-title>公告{{optype=='add'?'添加':(optype=='update'?'修改':'详情')}}</rd-modal-title>
+  <rd-modal-body>
+    <div class="form-horizontal" ng-if="optype != 'view'">
+      <div class="hide">
+      	<input type="text" ng-model="notice.id">
+      </div>
+      <div class="form-group-inline">
+        <label class="col-sm-2 control-label">标题：</label>
+        <div class="col-sm-4">
+          <input class="form-control" ng-model="notice.subject" type="text">
+        </div>
+        <label class="col-sm-2 control-label">通知类型：</label>
+        <div class="col-sm-4">
+          <select class="form-control" ng-model="notice.type" ng-options="messageType.value as messageType.label for messageType in messageTypeList">
+		  </select>
+        </div>
+        <label class="col-sm-2 control-label">开始日期：</label>
+        <div class="col-sm-4">
+          <rd-date-picker-popup ng-model="notice.start_date"></rd-date-picker-popup>
+        </div>
+        <label class="col-sm-2 control-label">截止日期：</label>
+        <div class="col-sm-4">
+          <rd-date-picker-popup ng-model="notice.end_date"></rd-date-picker-popup>
+        </div>
+        <label class="col-sm-2 control-label">内容：</label>
+        <div class="col-sm-4">
+          <textarea class="form-control" rows="4" ng-model="notice.content"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="form" ng-if="optype == 'view'" style="margin-left: -100px;">
+      <dl class="dl-horizontal">
+        <dt>
+          <span>{{notice.type_name}}</span>
+        </dt>
+        <dd>{{notice.subject}}</dd>
+        <dt>时间</dt><dd>{{notice.start_date}}</dd>
+        <dt>内容</dt><dd>{{notice.content}}</dd>
+      </dl>
+    </div>
+  </rd-modal-body>
+  <rd-modal-footer>
+    <button ng-if="optype == 'view'" type="button" class="btn btn-primary" ng-click="handleModalCancel()">确定</button>
+    <button ng-if="optype != 'view'" type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+    <button ng-if="optype != 'view'" type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+  </rd-modal-footer>
+</rd-modal>

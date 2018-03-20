@@ -1,0 +1,145 @@
+<!-- calendar_day_reminder_start -->
+<div class="modal fade" style="height:50px" id="calendarReminder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<style>
+		.tablebox td{ padding:10px 10px 0px 0px;}
+	</style>
+   	<div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
+            <h4 class="modal-title" id="myModalLabel">重要事件</h4>
+         </div>
+         <div class="modal-body">
+         	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="tablebox">
+			  <tr>
+			    <td width="100" align="right">开始时间：</td>
+			    <td> 
+			    	<input type="text" placeholder="" class="form-control text-muted Wdate" style="height: 34px;" 
+								onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" 
+								ng-model="calendarObject.begin_time"
+								id="begin_time"/>
+				</td>
+			  </tr>
+			  <tr>
+			    <td align="right">截止时间：</td>
+			    <td> 
+			    	<input type="text" placeholder="" class="text-muted form-control Wdate" style="height: 34px;" 
+			    				onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" 
+			    				ng-model="calendarObject.end_time"
+			    				id="end_time"
+			    				/>
+			  	</td>
+			  </tr>
+			  <tr>
+			    <td align="right">适应范围：</td>
+			    <td>
+			    	<select class="form-control m-t ng-pristine ng-invalid ng-invalid-required ng-touched text-muted" 
+			    		style=" float:left;" 
+			    		ng-model="calendarObject.apply_scope"
+			    		ng-options="applyScope.val as applyScope.label for applyScope in ApplyScopeResult"
+			    		ng-change="applyScopeChange();"
+			    		>
+			        </select>
+			    </td>
+			  </tr>
+			  <tr ng-show="applyMoreBranch">
+			    <td align="right">适用校区：</td>
+			    <td>
+	    			<ul id="treeDemo" class="ztree" style="width:100%;"></ul>
+	    			<div style="width: 100%; height: auto;">
+		    			<input style="vertical-align:middle;margin-left: 28px;" type="checkbox" id="selectAll" value="1"/><span style="vertical-align:middle;">全选</span>
+	    			</div>
+			    </td>
+			  </tr>
+			  <tr>
+			  	<td align="right">提醒级别：</td>
+			    <td>
+			    	<input name="remind_type" type="radio" value="2" checked="checked" ng-model="calendarObject.remind_type"/>提醒
+			    	<input name="remind_type" type="radio" value="1" style="margin-left:20px;" ng-model="calendarObject.remind_type"/>通知
+			    </td>
+			  </tr>
+			  <tr>
+			    <td align="right" valign="top">提醒内容：</td>
+			    <td><textarea rows="6" class="form-control text-danger" style="resize: none" ng-model="calendarObject.description"></textarea></td>
+			  </tr>
+			  <tr ng-if="warnmsg.length > 0">
+			  	<td colspan="2" align="center">
+			  		<label class="control-label" for="inputError1" style="color: red;">{{warnmsg}}</label>
+			  	</td>
+			  </tr>
+			</table>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+            <button type="button" class="btn btn-primary" ng-click="saveReminder();">提交 </button>
+         </div>
+      </div>
+	</div>
+</div>
+<!-- calendar_day_reminder_end -->
+
+<!-- 我的成单_start -->
+<div class="modal fade" id="myOrderedUpdate" style="height:600px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+   	<div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
+            <h4 class="modal-title" id="myModalLabel2">我的成单</h4>
+         </div>
+         <div class="modal-body">
+         	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="tablebox">
+			  <tr>
+			    <td width="100" align="right">报班单号：</td>
+			    <td colspan="3"><input type="text" ng-model="order.orderNo" class="form-control" /></td>
+			  </tr>
+			  <tr>
+			    <td align="right">订单金额：</td>
+			    <td><input type="text" ng-model="order.feeAmount" class="form-control" /></td>
+			  	<td align="right">课时数：</td>
+			  	<td><input type="text" ng-model="order.courseCount" class="form-control" /> </td>
+			  </tr>
+			  <tr>
+			    <td align="right">来源渠道：</td>
+			    <td><select class="form-control" 
+			    			ng-model="order.channel"
+						 	ng-options="channel.name for channel in channels track by channel.id">
+					</select>
+				</td>
+			    <td align="right">报班日期：</td>
+			    <td>
+			    	<input type="text" class="text-muted form-control Wdate" style="height: 34px;" 
+			    				onclick="WdatePicker({isShowClear:true,dateFmt:'yyyy-MM-dd',readOnly:true})" 
+			    				ng-model="order.orderTime"
+			    				id="orderTime"/>
+			    </td>
+			  </tr>
+			  <tr>
+			    <td align="right" valign="top">备注：</td>
+			    <td colspan="3"><textarea ng-model="order.remark" rows="6" class="form-control text-danger" style="resize: none"></textarea></td>
+			  </tr>
+			  <tr ng-if="formMsg.length > 0">
+			  	<td colspan="4" align="center">
+			  		<label class="control-label" for="inputError1" style="color: red;">{{formMsg}}</label>
+			  	</td>
+			  </tr>
+			</table>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭 </button>
+            <button type="button" class="btn btn-primary" ng-click="submitOrder();">提交 </button>
+         </div>
+      </div>
+	</div>
+</div>
+<!-- 我的成单修改_end -->
+
+<script type="text/javascript">
+	var openDialog = {
+			calendarReminderToggle: function(){
+				$('#calendarReminder').modal('toggle');
+			},
+			myOrderedUpdateToggle: function(){
+				$('#myOrderedUpdate').modal('toggle');
+			},
+	}
+</script>

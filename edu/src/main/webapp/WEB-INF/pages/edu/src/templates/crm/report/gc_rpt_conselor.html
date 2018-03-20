@@ -1,0 +1,80 @@
+<div class="crm" ng-controller="crmGcRptMarketAnalyseController">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">咨询师数据报表</span></div>
+        <div class="panel-body operation-panel">
+          <div class="toolbar">
+            <button type="submit" class="btn btn-primary btn-circle "  ng-click="exp()"><i class="iconfont icon-public_export"></i>导出</button>
+          </div>
+          <hr>
+          <div class="panel panel-primary">
+            <div class ="form form-inline">
+              <div class="form-group" style="margin-left:50px">
+              		  校区：<select class="form-control" ng-model="selectedSchool" name="selectedSchool" ng-options="sch.text for sch in schs"></select>
+              </div>
+              <div class="form-group">
+              		  联系人称呼：<input type="text" class="form-control"  ng-model="searchParam.p_link_name" name="searchParam.p_link_name">
+              </div>
+              <div class="form-group">
+						<rd-date-picker-range 
+							ng-start-date="searchParam.p_start_date" 
+							ng-end-date="searchParam.p_end_date" 
+							ng-default-range="'curMonth'"
+							ng-date-change="onDateRangeChange()">
+						</rd-date-picker-range>
+              </div>
+              <div class="form-group">
+              	<button type="submit" class="btn btn-sm btn-primary"  ng-click="cdtSearch()"><i class="iconfont icon-search"></i> 查询</button>
+              </div>     
+            </div>
+          </div>
+        </div>
+    </div>
+    <div  class="table-panel">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+           		   <th>校区</th>
+           		   <th>资源获取时间</th>
+           		   <th>资源类别 </th>
+		           <th>资源渠道</th>
+		           <th>联系人称呼</th>
+		           <th>学生姓名</th>
+		           <th>学校</th>
+		           <th>年级</th>
+		           <th>当前归属人</th>
+		           <th>是否上门</th>
+		           <th>上门日期</th>
+		           <th>是否签约</th>
+		           <th>签约产品</th>
+		           <th>签约金额</th>
+		           <th>实收金额</th>
+		           <th>地址</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-if="isLoading=='loading'">
+            <td colspan="9" rowspan="10" align="center"><img alt=""  src="img/crm/loading2.gif"></td>
+          </tr>
+          <tr ng-repeat="rec in reportData" ng-if="isLoading!='loading'" >
+            <td>{{rec.BRANCH_NAME}}</td>
+            <td>{{rec.VISIT_TIME}}</td>
+            <td>{{rec.RES_TYPE}}</td>
+            <td>{{rec.CHANNEL_NAME}}</td>
+            <td>{{rec.LINKNAME}}</td>
+            <td>{{rec.NAME}}</td>
+            <td>{{rec.ATTEND_SCH_NAME}}</td>
+            <td>{{rec.GRADE}}</td>
+            <td>{{rec.EMPLOYEE_NAME}}</td>
+            <td>{{rec.IS_ON_DOOR}}</td>
+            <td>{{rec.FIRST_VISIT_TIME}}</td>
+            <td>{{rec.IS_SUC_ORDER==1?'是':'否'}}</td>
+            <td>{{rec.COURSE_NAME}}</td>
+            <td>{{rec.SUM_PRICE2}}</td>
+            <td>{{rec.ACTUAL_PRICE2}}</td>
+            <td>{{rec.ADDRESS}}</td>
+          </tr>
+        </tbody>
+      </table>
+       <ng-pagination conf="paginationConf"></ng-pagination>
+    </div>
+</div>

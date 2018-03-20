@@ -1,0 +1,138 @@
+<div ng-controller="erp_companyAccountController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">公司账户管理</span>
+		</div>
+		<div class="panel-body operation-panel">
+			<div class="toolbar">
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleAddAccount()">
+					<i class="iconfont icon-add"></i>添加
+				</button>
+			</div>
+			<hr>
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="账户名称"
+							ng-model="searchParam.account_name" autocomplete="off">
+						
+						<input type="text" class="form-control" placeholder="账户号码"
+							ng-model="searchParam.account_num" autocomplete="off">
+						<button class="btn btn-primary" ng-click="query()"><i class="iconfont icon-search"></i>  搜索</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!--main form end-->
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="120">操作</th>
+					<th width="21%">账户名称</th>
+					<th>账户号码</th>
+					<th>状态</th>
+					<th>描述</th>
+					<th>所属地区</th>
+					<th>创建时间</th>
+					<th>创建用户</th>
+					<th>修改时间</th>
+					<th>修改用户</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="account in companyAccountList"
+					ng-if="companyAccountList && companyAccountList.length">
+					<td>
+						<span class="cur" ng-click="handlePutAccount(account)">
+							<i class="iconfont icon-edit text-primary"></i>修改
+						</span> 
+						<span class="cur" ng-click="handleDeleteAccount(account.ID)">
+							<i class="iconfont icon-delete text-danger"></i>删除
+						</span>
+					</td>
+					<td>{{account.ACCOUNT_NAME}}</td>
+					<td>{{account.ACCOUNT_NUM}}</td>
+					<td>{{account.STATUSSTR}}</td>
+					<td>{{account.DESCRIPTION}}</td>
+					<td>{{account.ORG_NAME}}</td>
+					<td>{{account.CRATE_TIME | date:'yyyy-MM-dd HH:mm'}}</td>
+					<td>{{account.CREATE_USER}}</td>
+					<td>{{account.UPDATE_TIME | date:'yyyy-MM-dd HH:mm'}}</td>
+					<td>{{account.UPDATE_USER}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+		<!-- Modal -->
+		<div id="erpSystemDictAccountPanel" class="modal fade klxx-modal-primary" tabindex="-1"
+			role="dialog" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog" role="document">
+			 	<!-- companyAccountForm .klxx-erp-form -->
+                <form class="klxx-erp-form form-horizontal" name="companyAccountForm" novalidate>
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">公司账户{{optype=='add'?'添加':'修改'}}</h4>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="hide">
+									<input type="text" ng-model="companyAccountDetail.id">
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">账户名称</label>
+									<div class="col-sm-4"  ng-class="{'has-error': companyAccountForm.account_name.$invalid && companyAccountForm.account_name.$dirty}">
+										<input class="klxx-erp-input form-control" name="account_name"
+											ng-model="companyAccountDetail.account_name" type="text" required>
+										<div class="has-error klxx-erp-form-explain" ng-show="companyAccountForm.account_name.$invalid && companyAccountForm.account_name.$dirty && companyAccountForm.account_name.$error.required">账户名称一定要填写哟</div>
+									</div>
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">账户号码</label>
+									<div class="col-sm-4" ng-class="{'has-error': companyAccountForm.account_num.$invalid && companyAccountForm.account_num.$dirty}">
+										<input class="klxx-erp-input form-control" name="account_num"
+											ng-model="companyAccountDetail.account_num" type="text" required>
+										<div class="has-error klxx-erp-form-explain" ng-show="deviceForm.account_num.$invalid && deviceForm.account_num.$dirty && deviceForm.account_num.$error.required">账户号码一定要填写哟</div>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="col-sm-2 control-label">状态</label>
+									<div class="col-sm-10" ng-class="{'has-error': companyAccountForm.status.$invalid && companyAccountForm.status.$dirty}">
+										<select class="form-control" name="status"
+											ng-model="companyAccountDetail.status"
+											ng-options="st.key as st.value for st in statusList">
+										</select>
+										 <div ng-if="!companyAccountDetail.status" class="has-error klxx-erp-form-explain" 
+                      ng-show="companyAccountForm.status.$invalid && companyAccountForm.status.$dirty && companyAccountForm.status.$error.required">
+                      请选择状态哟
+                    </div>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="col-sm-2 control-label">描述</label>
+									<div class="col-sm-10">
+										<textarea class="form-control" rows="4"
+											ng-model="companyAccountDetail.description"></textarea>
+									</div>
+								</div>
+							</div>
+						</div><!-- .modal-body end -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger"
+								ng-click="handleModalCancel()">取消</button>
+							<button type="button" class="btn btn-primary"
+								ng-click="handleModalConfirm()"
+								ng-disabled="companyAccountForm.$invalid"
+							>
+								确定</button>
+						</div><!-- .modal-footer end -->
+					</div><!-- .modal-content end -->
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

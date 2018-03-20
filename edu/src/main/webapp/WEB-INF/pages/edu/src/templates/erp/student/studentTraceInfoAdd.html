@@ -1,0 +1,178 @@
+<div class="erp form" ng-controller="erp_studentTraceInfoAddController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">学员详情</span>
+    </div>
+    <div class="panel-body">
+      <div class="form container-fluid">
+        <div class="panel-heading">
+          <span>基本信息</span>
+          <hr class="mt5">
+        </div>
+        <div class="row" style="max-width: 1200px;">
+          <div class="col-md-6">
+            <dl class="dl-horizontal">
+              <dt><span class="required"></span> 沟通日期</dt>
+              <dd>
+                <rd-date-picker-popup 
+                disabled="opType=='view'"
+                ng-model="studentTraceInfo.traceDate"></rd-date-picker-popup>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl class="dl-horizontal">
+              <dt><span class="required"></span> 沟通时间</dt>
+              <dd>
+                <kl-timepicker disabled="opType=='view'" ng-model="studentTraceInfo.traceTime"></kl-timepicker>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl class="dl-horizontal">
+              <dt><span class="required"></span> 沟通对象</dt>
+              <dd>
+                <select ng-disabled="opType=='view'" ng-model="studentTraceInfo.relation" class="form-control" ng-options="rel.value as rel.label for rel in relationList"></select>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-md-6"  ng-show="studentTraceInfo.relation == '3'">
+            <dl class="dl-horizontal">
+              <dt>沟通对象称谓</dt>
+              <dd>
+                <input ng-disabled="opType=='view'" ng-model="studentTraceInfo.relationTitle" class="form-control" ></input>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt><span class="required"></span> 沟通类型</dt>
+                <dd><select ng-disabled="opType=='view'" ng-model="studentTraceInfo.traceType" class="form-control" ng-options="type.code as type.name for type in traceTypeList"></select></dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <dl class="dl-horizontal">
+              <dt><span class="required"></span> 沟通目的/备注</dt>
+              <dd><textarea ng-disabled="opType=='view'" ng-model="studentTraceInfo.tracePurpose" rows="4" class="form-control" cols="50"></textarea></dd>
+            </dl>
+          </div>
+          <div class="col-md-12">
+            <dl class="dl-horizontal">
+              <dt ng-hide="opType=='view'">附件</dt>
+              <dd ng-hide="opType=='view'">
+                <input ng-disabled="opType=='view'" type="file" nv-file-select uploader="uploader"
+                  accept="image/jpeg,image/png,application/pdf,application/msword, .docx"
+                  multiple>
+                <table>
+                  <tr ng-repeat="item in uploader.queue">
+                    <td>
+                      <i class="{{item.iconCls}} i-text-success"
+                      style="font-size: 1.25em;"></i> 
+                    </td>
+                    <td>
+                      <span style="display:inline-block;margin:5px 20px 0 10px; line-height: 1.25em;">{{item.file.name}}</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-xs btn-danger" ng-click="item.remove()">
+                        <i class="iconfont icon-delete"></i> 删除
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+                <span class="text-warning">*注意：仅能上传PDF/JPG/PNG/DOCX文件，允许最多上传5张图片，且不能超过2M</span>
+              </dd>
+              <dt ng-show="studentTraceInfo.studentTraceAttachList && studentTraceInfo.studentTraceAttachList.length > 0">已上传附件</dt>
+              <dd ng-show="studentTraceInfo.studentTraceAttachList && studentTraceInfo.studentTraceAttachList.length > 0">
+                <table>
+                  <tr ng-repeat="item in studentTraceInfo.studentTraceAttachList">
+                    <td>
+                      <i class="{{item.iconCls}} i-text-success" style="font-size: 1.25em;"></i>
+                    </td>
+                    <td>
+                      <a style="display:inline-block;margin:5px 20px 0 10px; line-height: 1.25em;"
+                        href="{{item.fileUrl}}" target="_blank">{{item.fileName}}</a>
+                    </td>
+                    <td ng-hide="opType=='view'">
+                      <button class="btn btn-xs btn-danger" ng-click="deleteUploadedFile(item)">
+                        <i class="iconfont icon-delete"></i> 删除
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+              </dd>
+            </dl>
+          </div>
+        </div>
+  
+        <div class="panel-heading">
+          <span>本次沟通内容</span>
+          <hr class="mt5">
+        </div>
+        <div class="panel-body">
+          <div>
+            <ul class="nav nav-tabs">
+              <li class="{{traceDetailTab == 1 ? 'active' : ''}}" ng-click="changeTraceDetailTab(1)"><a href="javascript:void(0);">学科</a></li>
+              <li class="{{traceDetailTab == 2 ? 'active' : ''}}" ng-click="changeTraceDetailTab(2)"><a href="javascript:void(0);">习惯</a></li>
+              <li class="{{traceDetailTab == 3 ? 'active' : ''}}" ng-click="changeTraceDetailTab(3)"><a href="javascript:void(0);">状态</a></li>
+              <li class="{{traceDetailTab == 4 ? 'active' : ''}}" ng-click="changeTraceDetailTab(4)"><a href="javascript:void(0);">课堂</a></li>
+            </ul>
+          </div>
+          <div>
+            <!-- 学科 -->
+            <div class="trend-content" ng-show="traceDetailTab==1">
+              <textarea ng-disabled="opType=='view'" class="form-control mt20" ng-model="detailContent1" id="detailContent1" rows="4" cols="90"></textarea>
+            </div>
+            <!-- 习惯 -->
+            <div class="trend-content" ng-show="traceDetailTab==2">
+              <textarea ng-disabled="opType=='view'" class="form-control mt20" ng-model="detailContent2" id="detailContent2" rows="4" cols="90"></textarea>
+            </div>
+            <!-- 状态 -->
+            <div class="trend-content" ng-show="traceDetailTab==3">
+              <textarea ng-disabled="opType=='view'" class="form-control mt20" ng-model="detailContent3" id="detailContent3" rows="4" cols="90"></textarea>
+            </div>
+            <!-- 课堂 -->
+            <div class="trend-content" ng-show="traceDetailTab==4">
+              <textarea ng-disabled="opType=='view'" class="form-control mt20" ng-model="detailContent4" id="detailContent4" rows="4" cols="90"></textarea>
+            </div>
+          </div>
+        </div>
+  
+        <div class="panel-heading">
+          <span>解决方案</span>
+          <hr class="mt5">
+        </div>
+        <div class="panel-body">
+            <div>
+              <ul class="nav nav-tabs">
+                <li class="{{tracePlanTab == 1 ? 'active' : ''}}" ng-click="changeTracePlanTab(1)"><a href="javascript:void(0);">老师端</a></li>
+                <li class="{{tracePlanTab == 2 ? 'active' : ''}}" ng-click="changeTracePlanTab(2)"><a href="javascript:void(0);">家长端</a></li>
+                <li class="{{tracePlanTab == 3 ? 'active' : ''}}" ng-click="changeTracePlanTab(3)"><a href="javascript:void(0);">学生端</a></li>
+              </ul>
+            </div>
+            <div>
+              <!-- 老师端 -->
+              <div class="trend-content" ng-show="tracePlanTab == 1">
+                <textarea ng-disabled="opType=='view'" class="form-control mt20" 
+                  ng-model="planContent1" id="planContent1" rows="4" cols="90"></textarea>
+              </div>
+              <!-- 家长端 -->
+              <div class="trend-content" ng-show="tracePlanTab == 2">
+                <textarea ng-disabled="opType=='view'" class="form-control mt20" 
+                  ng-model="planContent2" id="planContent2" rows="4" cols="90"></textarea>
+              </div>
+              <!-- 学生端 -->
+              <div class="trend-content" ng-show="tracePlanTab == 3">
+                <textarea ng-disabled="opType=='view'" class="form-control mt20" 
+                  ng-model="planContent3" id="planContent3" rows="4" cols="90"></textarea>
+              </div>
+            </div>
+        </div>
+        <div class="table-panel text-center">
+          <button class="btn btn-default mr15" ng-click="goBack()">返回</button>
+          <button class="btn btn-primary" ng-if="opType != 'view'" ng-click="saveStudentTrace()">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

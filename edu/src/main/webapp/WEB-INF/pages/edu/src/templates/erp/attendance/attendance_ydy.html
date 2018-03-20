@@ -1,0 +1,231 @@
+<div class="erp min-width-1600" ng-controller="erp_attendanceYdyController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">1对1考勤</span></div>
+		<div class="panel-body operation-panel">
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+							<rd-date-picker-range
+								ng-start-date="attendance.start_date"
+								ng-end-date="attendance.end_date"
+								ng-default-range="'today'"
+								ng-date-change="queryStudentSchedulings()"
+								></rd-date-picker-range>
+					</div><br>
+					<div class="form-group">
+						<span class="input-label">上课时间：</span>	
+						<kl-timepicker width="'220px'" ng-model="attendance.start_time"></kl-timepicker>
+					</div>
+					<div class="form-group">
+						<span class="input-label">下课时间：</span>	
+						<kl-timepicker width="'220px'" ng-model="attendance.end_time"></kl-timepicker>
+					</div>
+					<br>
+					<!-- <div class="form-group">
+						<span class="input-label">学管师：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.status"
+							ng-options="status.id as status.name for status in statusList">
+							<option  value=""></option></select>
+					</div> -->
+					<div class="form-group">
+						<span class="input-label">考勤状态：</span>
+						<button class="btn {{attendance.attend_type == attendType.key? 'btn-warning':'btn-default'}} btn-sm mr5" 
+						ng-repeat="attendType in attendTypeList"
+						ng-click="attendance.attend_type = attendType.key;queryStudentSchedulings()">
+						{{attendType.value}}
+					</button>
+					</div>
+					<div class="form-group">
+						<span class="input-label">学员：</span>	
+						<div class="input-group">
+							<input type="text" class="form-control"
+								ng-model="attendance.student_info" 
+								ng-enter="queryStudentSchedulings()"
+								autocomplete="off">
+							<span class="input-group-btn">
+								<button class="btn btn-primary"
+									ng-click="queryStudentSchedulings()">
+									<i class="iconfont icon-search"></i> 搜索</button>
+							</span>
+						</div>
+						<span class="text-warning">*提示：列表仅显示当前归属当前学管师的学生排课数据</span>
+					</div>
+				</form>
+			</div>
+			<hr>
+			<div class="toolbar">
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleBatchAttendance(21)">
+					<i class="fa fa-plus"></i>批量考勤
+				</button>
+				<button class="btn btn-primary btn-circle"
+					ng-click="handleBatchAttendance(23)">
+					<i class="fa fa-plus"></i>排课取消
+				</button>
+				<button class="btn btn-primary btn-circle"
+						ng-click="morePrint()">
+					<i class="fa fa-plus"></i>批量打印
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="table-panel">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="checkAllFlag" ng-click="onCheckAll()"></th>
+					<th>操作</th>
+					<th>序号</th>
+					<th>校区</th>
+					<th>上课日期</th>
+					<th>上课时间</th>
+					<th>下课时间</th>
+					<th>学管师</th>
+					<th>教师</th>
+					<th>学生</th>
+					<th>学生考勤状态</th>
+					<th>教师考勤状态</th>
+					<th>考勤单号</th>
+					<th>考勤类型</th>
+					<!-- <th>备注</th> -->
+					<th style="padding-left:30px">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-show="attendanceListLoading">
+					<td colspan="15" class="text-center">
+						<img src="img/erp/loading2.gif" alt="">
+					</td>
+				</tr>
+				<tr ng-if="!attendanceListLoading  && (attendanceList == null || attendanceList.length == 0)">
+					<td colspan="15" class="text-center">
+						<div class="no-data"></div>
+						暂无数据
+					</td>
+				</tr>
+				<tr ng-repeat="attendance in attendanceList"
+					ng-if="!attendanceListLoading  && attendanceList && attendanceList.length">
+					<td>
+						<span  ng-show="attendance.attend_type==28">
+							<input type="checkbox" ng-model="attendance.selectFlag" ng-disabled="">
+						</span>
+					</td>
+					<td>
+						<button class="btn btn-default btn-xs mr10" ng-disabled="true" ng-show="attendance.attend_type==29">考勤作废</button>
+						<button class="btn btn-default btn-xs mr10" ng-disabled="true" ng-show="attendance.attend_type==23">排课取消</button>
+						<button class="btn btn-default btn-xs mr10 btn-primary"
+							ng-show="attendance.attend_type==28 || attendance.attend_type==20 "
+							ng-click="handleAttend([attendance], 21)">考勤</a>
+						<button class="btn btn-default btn-xs mr10"
+							ng-show="attendance.attend_type==21"
+							ng-click="handleAttend([attendance], 29)">考勤作废</a>
+						<button class="btn btn-default btn-xs mr10"
+							ng-show="attendance.attend_type==28"
+							ng-click="handleAttend([attendance], 23)">排课取消</a>
+						<!-- <a href="javascript:void(0);" ng-click="cancelScheduing(attendance)">排课取消</a> -->
+						<!-- <a href="javascript:void(0);" class="mr15" ng-click="cancelAttendance(attendance)">置空</a> -->
+					</td>
+					<td>{{$index + 1}}</td>
+					<td>{{attendance.branch_name}}</td>
+					<td>{{attendance.course_date}}</td>
+					<td>{{attendance.start_time}}</td>
+					<td>{{attendance.end_time}}</td>
+					<td>{{attendance.counselor_name}}</td>
+					<td>{{attendance.attTeacherName}}</td>
+					<td>{{attendance.student_name}}</td>
+					<td>{{attendance.attend_type == 28 ? '': attendance.attend_type_name}}</td>
+					<td>{{attendance.attend_type_teacher_name}}</td>
+					<td>{{attendance.encoding ? attendance.encoding : attendance.id}}</td>
+					<td>
+							<div ng-show="attendance.attend_type==21">
+								<select class="form-control"
+									ng-disabled="attendance.optype!='edit'"
+									ng-model="attendance.sub_attend_type"
+									ng-options="+item.code as item.name for item in subAttendTypeList"></select>
+							</div>
+							<div ng-show="attendance.attend_type==23 || attendance.attend_type==29">
+								<select class="form-control"
+									ng-disabled="attendance.optype!='edit'"
+									ng-model="attendance.sub_attend_type"
+									ng-options="+item.code as item.name for item in subAttendTypeCancelList"></select>
+							</div>
+					</td>
+					<!-- <td><input type="text" 
+							ng-model="attendance.remark" 
+							ng-disabled="attendance.optype!='edit'"
+							class="form-control" style="width:auto;" /></td> -->
+					<td>
+						<div class="div">
+							<a href="javascript:void(0);" 
+							ng-click="editAttendRecord(attendance)"
+							ng-show="attendance.optype=='saved' && attendance.attend_type!=28">修改</a>
+							<a href="javascript:void(0);" 
+							ng-click="saveAttendRecord(attendance)"
+							ng-show="attendance.optype=='edit'">保存</a>
+							<a href="javascript:void(0);" 
+							ng-click="cancelAttendRecord(attendance)"
+							ng-show="attendance.optype=='edit'">取消</a>
+							<button class="ml10 btn btn-default" ng-click="printYdyAttendance(attendance)"><i class="iconfont icon-print"></i>打印</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script type="text/ng-template" id="batchAttendYdy.html">
+		<rd-modal>
+			<rd-modal-title>{{title}}</rd-modal-title>
+			<rd-modal-body>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>上课日期</th>
+							<th>上课时间</th>
+							<th>下课时间</th>
+							<th>学管师</th>
+							<th>教师</th>
+							<th>学生</th>
+							<th>考勤类型</th>
+							<!-- <th>备注</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in attendList">
+							<td>{{$index + 1}}</td>
+							<td>{{item.course_date}}</td>
+							<td>{{item.start_time}}</td>
+							<td>{{item.end_time}}</td>
+							<td>{{item.counselor_name}}</td>
+							<td>{{item.attTeacherName}}</td>
+							<td>{{item.student_name}}</td>
+							<td>
+								<div ng-show="operate=='21'">
+									<button 
+										ng-repeat="op in subAttendTypeList"
+										class="btn mr5 {{item.sub_attend_type == op.code ?
+											'btn-primary' : 'btn-default'}} btn-sm"
+										ng-click="item.sub_attend_type=op.code">{{op.name}}</button> 
+								</div>
+								<div ng-show="operate=='23' || operate=='29'">
+									<button 
+										ng-repeat="op in subAttendTypeCancelList"
+										class="btn mr5 {{item.sub_attend_type == op.code ?
+											'btn-primary' : 'btn-default'}} btn-sm"
+										ng-click="item.sub_attend_type=op.code">{{op.name}}</button> 
+								</div>
+							</td>
+							<!-- <td>{{item.remark}}</td> -->
+						</tr>
+					</tbody>
+				</table>
+			</rd-modal-body>
+			<rd-modal-footer>
+				<button class="btn btn-default" ng-click="$dismiss()">取消</button>
+				<button class="btn btn-primary" ng-click="onSave()">确定</button>
+			</rd-modal-footer>
+		</rd-modal>
+	</script>
+</div>
+

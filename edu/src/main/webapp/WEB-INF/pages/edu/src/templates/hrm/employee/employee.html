@@ -1,0 +1,177 @@
+<div ng-controller="EmployeeCtrl">
+  <div ng-if="!addEmp">
+    <div class="panel panel-primary" style="margin-bottom: 10px;">
+      <div class="panel-heading">
+        <span class="title">员工档案管理</span>
+      </div>
+      <div class="panel-body" style="padding: 15px;" id="panelBody">
+        <div class="toolbar">
+          <a class="btn btn-primary btn-circle" href="?#/hrm/hrmEmployeeArchives/hrmEmployeeAdd" target="_blank">
+            <i class="iconfont icon-add"></i> 添加
+          </a>
+          <button type="button" class="btn btn-primary btn-circle-reverse">
+            <i class="iconfont icon-teachers_leadIn"></i> 导入
+          </button>
+          <button type="button" class="btn btn-primary btn-circle-reverse">
+            <i class="iconfont icon-public_export"></i> 导出</button>
+        </div>
+        <div class="toolbar form-inline">
+          <hr>
+          <div class="form-group">        
+            在职类型：<select class="form-control" ng-options="e.id as e.name for e in enterTypeList" ng-model="selected.EnterType">
+              <option value="">-- 请选择 --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            员工号/姓名：<input type="text" class="form-control" ng-model="selected.Name" />
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" ng-click="queryInfo(1)"> <i class="iconfont icon-search"></i> 搜索</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="table-panel">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>编码</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>手机号</th>
+            <th>身份证</th>
+            <th>地址</th>
+            <th>状态</th>
+            <th>企业邮箱</th>
+            <th>在职类型</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>  
+          <tr ng-repeat="emp in employeeList" ng-if="employeeList&&employeeList.length">
+            <td>{{emp.id}}</td>
+            <td>{{emp.encoding}}</td>
+            <td>{{emp.employee_name}}</td>
+            <td>{{emp.sex==1?"男":emp.sex==0?"女":'未设置'}}</td>
+            <td>{{emp.phone}}</td>
+            <td>{{emp.id_ID}}</td>
+            <td>{{emp.address}}</td>
+            <td>
+              <span >{{emp.status==1?'启用':(emp.status==0?'禁用':'undefined')}}</span>
+            </td>
+            <td>{{emp.email}}</td>
+            <td>{{emp.enterTypeName}}</td>
+            <td>
+              <span ng-if="emp.status==2">undefined</span>
+              <button ng-if="emp.status==1" class="btn btn-primary btn-danger btn-xs" ng-click="setStatus(emp)">禁用</button>
+              <button ng-if="emp.status==0" class="btn btn-primary btn-xs" ng-click="setStatus(emp)">启用</button>
+              <a class="btn btn-primary btn-xs" ng-click="toQueryItem(emp)" href="?employeeId={{emp.id}}#/employeeService/employeeInfo" target="_blank">具体信息</a>
+              <button class="btn btn-primary btn-warning btn-xs" ng-click="setPostPanel(emp)">设置职务</button>
+            </td>
+          </tr>
+          <tr ng-if="!employeeList||!employeeList.length">
+            <td colspan="12" align="center">暂无数据</td>
+          </tr>
+        </tbody>
+        <tr ng-if="isLoading == 'loading...'">
+          <td colspan="12" align="center">
+            <img src="img/icons/big_load.gif">
+          </td>
+        </tr>
+      </table>
+      <div class="center" ng-if="pageParam.pages>=1">
+        <ul class="pagination">
+          <li ng-model="pageParam.pageNum" ng-if="pageParam.pages>=1" ng-click="queryInfo(1)">
+            <span>首页</span>
+          </li>
+          <li ng-if="pageParam.pageNum>1" ng-click="queryInfo(pageNum-1)">
+            <span>上一页</span>
+          </li>
+          <li ng-repeat="i in paginationBars track by $index" class="{{ i==pageParam.pageNum ? 'active':'' }}">
+            <span ng-click="queryInfo(i)">{{i}}</span>
+          </li>
+          <li ng-model="pageParam.pageNum" ng-if="pageParam.pageNum<pageParam.pages" ng-click="queryInfo(pageNum+1)">
+            <span>下一页</span>
+          </li>
+          <li ng-model="pageParam.pages" ng-click="queryInfo(pageParam.pages)">
+            <span>尾页</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--  <div ng-if="addEmp">
+                <div class="panel panel-default " style="margin-bottom: 10px;">
+                    <div class="panel-heading font-bold" >
+                        添加学员
+                        <button type="button" class="close pull-right" ng-click="cancelPanel()">×</button>
+                    </div>
+
+                    <div class="panel-body" style="padding: 15px;">
+                        <div ng-include="detailPage"></div>
+                    </div>
+                </div>
+            </div> -->
+  <div ng-if="addEmp">
+    <div class="panel panel-default " style="margin-bottom: 10px;">
+      <div class="panel-heading font-bold">
+        设置职务
+        <button type="button" class="close pull-right" ng-click="cancelSetPostPanel()">×</button>
+      </div>
+      <div class="panel-body" style="padding: 15px;">
+        <div>
+          <table class="table table-striped table-bordered" id="add_Table">
+            <thead>
+              <tr>
+                <th>团队</th>
+                <th>校区</th>
+                <th>职务</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="d in postByEmpList">
+                <td>{{d.buName}}</td>
+                <td>{{d.branchName}}</td>
+                <td>{{d.post_name}}</td>
+                <td>{{d.status==1?'已启用':'已禁用'}}</td>
+                <td>
+                  <button class="btn btn-primary btn-danger btn-xs" ng-if="d.status == 1" ng-click="removePost(d)">禁用</button>
+                  <button class="btn btn-primary  btn-xs" ng-if="d.status == 0" ng-click="removePost(d)">启用</button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <select ng-model="selectedPost.bu_Id" class="form-control" ng-options="bu.id as bu.org_name for bu in buList" ng-change="changeBuId(selectedPost.bu_Id)">
+                    <option value=""></option>
+                </td>
+                <td>
+                  <select ng-model="selectedPost.branch_Id" class="form-control" ng-options="branch.id as branch.org_name for branch in branchsList">
+<!--                     <option value="">全部</option> -->
+                </td>
+                <td>
+                  <select ng-model="selectedPost.post_Id" class="form-control" ng-options="post.id as post.post_name for post in postList">
+                    <option value=""></option>
+                </td>
+                <td colspan="2">
+                  <button class="btn btn-primary  btn-sm" ng-click="savePost()">保存</button>
+                </td>
+              </tr>
+            </tbody>
+            <tr ng-if="!postByEmpList||!postByEmpList.length">
+              <td colspan="4" align="center">暂无数据</td>
+            </tr>
+            <tr ng-if="Loading == 'loading...'">
+              <td colspan="4" align="center">
+                <img src="img/icons/big_load.gif">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true"
+	package="com.ebusiness.workflow.modules.index.model" default-access="field">
+	<class name="ExtProcessDef" table="JBPM4_EXT_PROCESS_DEF">
+		<id name="id" column="ID" type="long">
+			<generator class="increment" />
+		</id>
+		<property name="processZip" column="PROCESS_ZIP" type="string" />
+		<property name="processJpdl" column="PROCESS_JPDL" type="string" />
+		<property name="processPng" column="PROCESS_PNG" type="string" />
+		<property name="processKey" column="PROCESS_KEY" type="string" />
+		<property name="processName" column="PROCESS_NAME" type="string" />
+		<property name="processState" column="PROCESS_STATE" type="integer" />
+		<property name="processDeployId" column="PROCESS_DEPLOYID"
+			type="string" />
+		<property name="processCreateTime" column="PROCESS_CREATETIME"
+			type="date" />
+		<set name="processRoleDefSet" inverse="false" lazy="false" cascade="all">
+			<key column="PROCESS_KEY" property-ref="processKey" ></key>
+			<one-to-many class="ExtProcessRoleDef" />
+		</set>
+	</class>
+
+	<class name="ExtProcessRoleDef" table="JBPM4_EXT_PROCESSROLE_DEF">
+		<id name="id" column="ID" type="long">
+			<generator class="increment" />
+		</id>
+		<property name="processKey" column="PROCESS_KEY" type="string" />
+		<property name="processTask" column="PROCESS_TASK" type="string" />
+		<property name="remark" column="REMARK" type="string" />
+		<set name="mappings"  inverse="false" lazy="false" cascade="all" >
+			<key column="PROCESS_ROLE_DEF_ID"></key>
+			<one-to-many class="ExtBusinessRoleMapping" />
+		</set>
+	</class>
+
+	<class name="ExtBusinessRoleMapping" table="JBPM4_EXT_BUSINESSROLE_MAPPING">
+		<id name="id" column="ID" type="long">
+			<generator class="increment" />
+		</id>
+		<property name="processRoleDefId" column="PROCESS_ROLE_DEF_ID"
+			type="long" />
+		<property name="businessRole" column="BUSINESS_ROLE" type="string" />
+		<property name="businessRoleId" column="BUSINESS_ROLE_ID" type="string" />
+		<property name="isdefault" column="ISDEFAULT" type="integer" />
+	</class>
+
+	<class name="ExtBusinessEntrust" table="JBPM4_EXT_BUSINESS_ENTRUST">
+		<id name="id" column="ID" type="long">
+			<generator class="increment" />
+		</id>
+		<property name="consignorRole" column="CONSIGNOR_ROLE" type="string" not-null="true"/>
+		<property name="consigneeRole" column="CONSIGNEE_ROLE" type="string" not-null="true"/>
+		<property name="consigneeName" column="CONSIGNEE_NAME" type="string" not-null="true"/>
+		<property name="consigneeTaskId" column="CONSIGNEE_TASK_ID" type="string" not-null="true"/>
+		<property name="taskName" column="TASK_NAME" type="string" not-null="true"/>
+		<property name="createTime" column="CREATE_TIME" type="date" not-null="true"/>
+		<property name="status" column="STATUS" type="integer" not-null="true"/>
+		<property name="beginTime" column="BEGIN_TIME" type="date" not-null="true"/>
+		<property name="endTime" column="END_TIME" type="date" not-null="true"/>
+	</class>
+	<class name="ExtTaskVariable" table="JBPM4_VARIABLE">
+		<id name="dbid_" column="DBID_" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="class_" column="CLASS_" type="string" />
+		<property name="dbversion_" column="DBVERSION_" type="long" />
+		<property name="key_" column="KEY_" type="string" />
+		<property name="converter_" column="CONVERTER_" type="string" />
+		<property name="hist_" column="HIST_" type="long" />
+		<property name="execution_" column="EXECUTION_" type="long" />
+		<property name="task_" column="TASK_" type="long" />
+		<property name="lob_" column="LOB_" type="long" />
+		<property name="date_value_" column="DATE_VALUE_" type="date" />
+		<property name="double_value_" column="DOUBLE_VALUE_" type="double" />
+		<property name="classname_" column="CLASSNAME_" type="string" />
+		<property name="long_value_" column="LONG_VALUE_" type="long" />
+		<property name="string_value_" column="STRING_VALUE_" type="string" />
+		<property name="text_value_" column="TEXT_VALUE_" type="string" />
+		<property name="exesys_" column="EXESYS_" type="long" />
+	</class>
+	<class name="ExtTask" table="JBPM4_TASK">
+		<id name="dbid_" column="DBID_" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="class_" column="CLASS_" type="string" />
+		<property name="dbversion_" column="DBVERSION_" type="long" />
+		<property name="name_" column="NAME_" type="string" />
+		<property name="descr_" column="DESCR_" type="string" />
+		<property name="state_" column="STATE_" type="string" />
+		<property name="susphiststate_" column="SUSPHISTSTATE_" type="string" />
+		<property name="assignee_" column="ASSIGNEE_" type="string" />
+		<property name="form_" column="FORM_" type="string" />
+		<property name="priority_" column="PRIORITY_" type="string" />
+		<property name="create_" column="CREATE_" type="date" />
+		<property name="duedate_" column="DUEDATE_" type="date" />
+		<property name="progress_" column="PROGRESS_" type="long" />
+		<property name="signalling_" column="SIGNALLING_" type="long" />
+		<property name="execution_id_" column="EXECUTION_ID_" type="string" />
+		<property name="activity_name_" column="ACTIVITY_NAME_" type="string" />
+		<property name="hasvars_" column="HASVARS_" type="long" />
+		<property name="supertask_" column="SUPERTASK_" type="long" />
+		<property name="execution_" column="EXECUTION_" type="long" />
+		<property name="procinst_" column="PROCINST_" type="long" />
+		<property name="swimlane_" column="SWIMLANE_" type="long" />
+		<property name="taskdefname_" column="TASKDEFNAME_" type="string" />
+		<set name="variables" inverse="false" lazy="false" cascade="all">
+			<key column="execution_" property-ref="execution_" ></key>
+			<one-to-many class="ExtTaskVariable" />
+		</set>
+	</class>
+</hibernate-mapping>

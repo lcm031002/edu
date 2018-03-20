@@ -1,0 +1,63 @@
+<div class="erp students schedule" ng-controller="erp_studentIndexScheduleController">
+  <div class="panel-primary">
+    <div class="panel-heading">
+      <span class="title">课程表</span>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="container-fluid">
+      <div class="">
+        <div class="row">
+          <div class="col-sm-12 text-center">
+            <div class="form form-inline">
+              <div class="form-group">
+                <button class="btn btn-primary" ng-click="prevYear()">
+                  <</button>
+                    <select class="form-control" ng-change="getCourseList()" ng-model="dateRange.year" style="width: auto;" ng-options="year for year in yearList"></select>
+                    <button class="btn btn-primary" ng-click="nextYear()">></button>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary" ng-click="prevMonth()">
+                  <</button>
+                    <select class="form-control" ng-change="getCourseList()" ng-model="dateRange.month" style="width: auto;" ng-options="month.value as month.name for month in monthList"></select>
+                    <button class="btn btn-primary" ng-click="nextMonth()">></button>
+              </div>
+              <div class="form-group">
+                <div class="btn-group">
+                  <label class="btn btn-primary" ng-model="calendar.view" uib-btn-radio="'year'" ng-click="vm.cellIsOpen = false">年</label>
+                  <label class="btn btn-primary" ng-model="calendar.view" uib-btn-radio="'month'" ng-click="vm.cellIsOpen = false">月</label>
+                  <label class="btn btn-primary" ng-model="calendar.view" uib-btn-radio="'day'" ng-click="vm.cellIsOpen = false">日</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" {{calendar.view == 'month' ? 'calendar-wrapper' : ''}} table-panel" style="position: relative;">
+	        <mwl-calendar 
+	        	view="calendar.view" 
+	        	view-date="calendar.viewDate" 
+	        	events="calendar.events" 
+	        	on-timespan-click="timeSpanClick(calendarDate)" on-event-click="eventClicked(calendarEvent)" 
+	        	on-view-change-click="onViewChangeClick(calendarDate,calendarNextView)"
+	        	cell-is-open="false" cell-auto-open-disabled="true">
+	        </mwl-calendar>
+	        <div ng-show="calendar.view == 'month'" class="detail-wrapper">
+	          <div class="full-date">{{detail.dateStr}}</div>
+	          <div class="current-day" style="">
+	            {{detail.dayStr}}
+	          </div>
+	          <div class="today-course title">今日课程</div>
+	          <div class="course-list">
+	            <div class="course-item" ng-repeat="item in detail.courseList">{{item.course_name}} {{item.schedulingTeacherName}}
+	              <br>
+	              <i class="iconfont icon-stdudents_remediation"></i> {{item.start_time}}-{{item.end_time}}
+	              <br>
+	              <i class="iconfont icon-campus"></i> {{item.branch_name}} {{item.room_name}}
+	            </div>
+	          </div>
+	        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,154 @@
+<div class="klxx-modal-primary avatar-upload">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title" >上传头像</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form">
+      <div class="form-group text-center">
+        <avatar class="btn btn-default a-upload">
+          <input type="file" name="fileInput" onchange="angular.element(this).scope().fileChanged(event)" /> 上传本地图片
+        </avatar>
+      </div>
+    </div>
+    <div>
+      <image-crop ng-show="imageCropStep != 3"
+        data-height="250" 
+        data-width="250" 
+        data-shape="circle" 
+        data-step="imageCropStep" 
+        result="result" 
+        src="imgSrc" 
+        data-result-blob="resultBlob" 
+        crop="initCrop" 
+        padding="150" 
+        max-size="1024">
+      </image-crop>
+      <div ng-show="imageCropStep == 3" class="text-center">
+        <img ng-src="{{result}}"></img>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" 
+      class="btn btn-default" 
+      ng-click="$dismiss()">关闭</button>
+    <button type="button" 
+      ng-show="imageCropStep == 2"
+      class="btn btn-warning" 
+      ng-click="cropImage()">裁切</button>
+    <button type="button" 
+      ng-show="imageCropStep == 3"
+      class="btn btn-warning" 
+      ng-click="reCrop()">重新裁切
+    </button>
+    <button type="button" 
+      ng-show="imageCropStep == 3"
+      class="btn btn-primary" 
+      ng-click="uploadImage(result)">上传
+    </button>
+  </div>
+</div>
+<style>
+/* body {
+  font-size: 12px;
+  font-family: Helvetica, Arial;
+  background: white;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+a {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  width: 80%;
+  background: rgba(0, 0, 0, .3);
+  margin: 40px auto;
+}
+ */
+.avatar-upload .result-datauri {
+  width: 300px;
+  height: 100px;
+  font-size: 11px;
+  line-height: 15px;
+  padding: 5px;
+  border: 1px solid black;
+  clear: both;
+  display: block;
+  margin: 20px auto;
+}
+
+.avatar-upload .ng-image-crop {
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.avatar-upload .ng-image-crop > section {
+  background: #ccc;
+}
+
+.avatar-upload .ng-image-crop button {
+  margin-top: 10px;
+}
+
+.avatar-upload .ng-image-crop .cropping-guide {
+  display: block;
+  background: rgba(255, 255, 255, .3);
+  border: 2px dashed white;
+  position: absolute;
+  pointer-events: none;
+}
+
+.avatar-upload .ng-image-crop--circle .cropping-guide {
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.avatar-upload .ng-image-crop .cropping-canvas {
+  background: rgba(255, 255, 255, .3);
+  margin: 0 auto;
+  cursor: move;
+}
+
+.avatar-upload .ng-image-crop .zoom-handle {
+  display: block;
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+  background: rgba(255, 255, 255, 0.7);
+  width: 80px;
+  height: 80px;
+  cursor: move;
+  border-radius: 200px 50px;
+}
+
+.avatar-upload .ng-image-crop .zoom-handle > span {
+  color: rgba(0, 0, 0, 0.5);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  display: block;
+  position: relative;
+  top: 32px;
+}
+</style>

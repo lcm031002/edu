@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process description="学生报班设定了优惠规则，需要进行审批" key="erpv5.DXB_enter_class_02" name="订单优惠审批流程" version="400" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="143,-1,48,48" name="start1">
+      <transition to="自动审批"/>
+   </start>
+   <task g="120,240,92,52" name="一层审批">
+   	  <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition g="-125,-12" name="审批通过，去上级审批" to="二层审批"/>
+      <transition g="327,265:-102,-21" name="订单审批不通过" to="订单作废"/>
+   </task>
+   <task g="121,322,92,52" name="二层审批">
+   	  <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition g="-124,-11" name="审批通过，去上级审批" to="三层审批"/>
+      <transition g="327,347:-103,-23" name="订单审批不通过" to="订单作废"/>
+   </task>
+   <task g="121,397,92,52" name="三层审批">
+      <assignment-handler class="com.modules.work_flow.handle.OrgBranchAssignTask">
+      </assignment-handler>
+      <transition g="-37,-27" name="订单审批不通过" to="订单作废"/>
+      <transition g="-124,-16" name="审核通过，订单生效" to="审核通过"/>
+   </task>
+   <java class="com.modules.work_flow.controller.ServiceAPI" g="281,397,92,52" method="doOrderUnpass" name="订单作废" var="orderChangeService">
+   	  <arg><object expr="#{remark}"/></arg>
+   	  <arg><object expr="#{order_id}"/></arg>
+   	  <arg><object expr="#{laststep_user_id}"/></arg>
+   </java>
+   <java class="com.modules.work_flow.controller.ServiceAPI" g="122,474,92,52" method="doOrderPass" name="审核通过" var="orderChangeService">
+   	  <arg><object expr="#{remark}"/></arg>
+   	  <arg><object expr="#{order_id}"/></arg>
+   	  <arg><object expr="#{laststep_user_id}"/></arg>
+      <transition to="订单生效"/>
+   </java>
+   <java class="com.modules.work_flow.controller.ServiceAPI" g="120,76,92,52" method="doAutoPass" name="自动审批" var="result">
+      <arg><object expr="#{order_id}"/></arg>
+      <arg><object expr="#{application_id}"/></arg>
+      <transition to="exclusive1"/>
+   </java>
+   <decision g="141,153,48,48" name="exclusive1">
+      <transition g="-65,-13" name="转人工审批" to="一层审批">
+      	<condition expr="#{result==&quot;menu&quot;}"/>
+      </transition>
+      <transition g="30,177;30,266;30,500:10,-111" name="自动审批通过" to="审核通过">
+      	<condition expr="#{result==&quot;autopass&quot;}"/>
+      </transition>
+   </decision>
+   <state g="123,564,92,52" name="订单生效"/>
+</process>

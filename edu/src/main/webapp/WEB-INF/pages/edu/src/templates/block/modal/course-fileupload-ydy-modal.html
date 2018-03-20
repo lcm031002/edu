@@ -1,0 +1,94 @@
+<rd-modal ng-form="form">
+    <rd-modal-title>一对一修改</rd-modal-title>
+    <rd-modal-body>
+        <div class="form-horizontal">
+            <div class="hide">
+                <input type="text" ng-model='courseDetail.id'>
+            </div>
+            <div class="form-group-inline">
+                <label class="col-sm-2 control-label required">课程编号：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model='courseDetail.course_no' ng-change="courseDetail.errorMsgObj.course_no = ''" required>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.course_no}}</div>
+                </div>
+                <label class="col-sm-2 control-label required">课程名称：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="courseDetail.course_name" ng-change="courseDetail.errorMsgObj.course_name = ''" required>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.course_name}}</div>
+                </div>
+
+                <label class="col-sm-2 control-label required">年级：</label>
+                <div class="col-sm-4">
+                    <!-- TODO 下拉编辑项，绑定change事件，选择后同步更改对应的名称-->
+                    <select class=form-control ng-model="courseDetail.grade_id"
+                            ng-options="grade.id as grade.grade_name for grade in gradeList" ng-change =changeSelector(courseDetail,gradeList,'grade_id','grade_name','grade_name') required></select>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.grade_name}}</div>
+                </div>
+                <label class="col-sm-2 control-label required">课时单价：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="courseDetail.unit_price" ng-change="courseDetail.errorMsgObj.unit_price = ''" required>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.unit_price}}</div>
+                </div>
+                <label class="col-sm-2 control-label required">课时长度：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="courseDetail.hour_len" ng-change="courseDetail.errorMsgObj.hour_len = ''" required>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.hour_len}}</div>
+                </div>
+                <label class="col-sm-2 control-label">销售类型：</label>
+                <div class="col-sm-4">
+                    <select type="text" class="form-control" ng-model="courseDetail.product_type"
+                            ng-options="productType.id as productType.value for productType in productTypeList"  ng-change =changeSelector(courseDetail,productTypeList,'product_type','product_type_name')>
+                    </select>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.product_type_name}}</div>
+                </div>
+                <label class="col-sm-2 control-label required">开课日期：</label>
+                <div class="col-sm-4">
+                    <rd-date-picker-popup ng-model="courseDetail.start_date"  ng-change="courseDetail.errorMsgObj.start_date = ''"></rd-date-picker-popup>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.start_date}}</div>
+                </div>
+                <label class="col-sm-2 control-label required">结课日期：</label>
+                <div class="col-sm-4">
+                    <rd-date-picker-popup ng-model="courseDetail.end_date"  ng-change="courseDetail.errorMsgObj.end_date = ''"></rd-date-picker-popup>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.end_date}}</div>
+                </div>
+                <label class="col-sm-2 control-label">描述：</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" ng-model="courseDetail.description">
+                </div>
+                <label class="col-sm-2 control-label required">状态：</label>
+                <div class="col-sm-4">
+                    <select class="form-control" ng-model="courseDetail.status"
+                            ng-options="sale.id as sale.value for sale in saleList"  ng-change =changeSelector(courseDetail,saleList,'status','status_name') required></select>
+                    </select>
+                    <div class="text-danger">{{courseDetail.errorMsgObj.status_name}}</div>
+                </div>
+                <label class="col-sm-2 control-label">是否应用所有校区：</label>
+                <div class="col-sm-4">
+                    <select class=form-control ng-model="courseDetail.is_all"
+                            ng-options="isAll.id as isAll.name for isAll in isAllList"></select>
+                </div>
+            </div>
+            <div class="table-panel ov-a" style="max-height:250px;" ng-hide="courseDetail.is_all">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" ng-click="switchSelectAll($event)"></th>
+                        <th > <label class=" required">校区</label> <span class="text-danger">{{courseDetail.errorMsgObj.branch_names}}</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="branch in branchList"
+                        ng-show="branchList && branchList.length">
+                        <td><input type="checkbox" ng-model="branch.selectFlag"></td>
+                        <td>{{branch.org_name}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </rd-modal-body>
+    <rd-modal-footer>
+        <button type="button" class="btn btn-default" ng-click="handleModalCancel()">取消</button>
+        <button type="button" class="btn btn-primary" ng-click="handleModalConfirm()">确定</button>
+    </rd-modal-footer>
+</rd-modal>

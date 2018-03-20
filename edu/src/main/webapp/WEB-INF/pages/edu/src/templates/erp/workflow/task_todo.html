@@ -1,0 +1,420 @@
+<div class="klxx index-block " ng-controller="erp_workflowTaskTodoController">
+    <div class="panel panel-primary">
+    	<div class="panel-heading">
+            <span class="title">
+            <i class="iconfont icon-home_listApproval text-primary"></i>
+    		我的审批(共{{todoTaskPage.totalCount?todoTaskPage.totalCount:0}}条)</span>
+            <div class="pull-right" style="cursor: pointer;margin-left: 10px;font-size: 14px;" ng-click="queryTask()">
+                <i class="fa fa-rotate-right"></i>
+            </div>
+            <div class="pull-right" style="cursor: pointer;font-size: 15px;font-weight:bolder;"
+                 ng-click="moreConditions=!moreConditions">
+                <i class="fa fa-arrow-circle-down" ng-if="moreConditions"></i>
+                <i class="fa fa-arrow-circle-right" ng-if="!moreConditions"></i>
+            </div>
+    	</div>
+    	<div class="panel-body" style="height: 430px; overflow-y: auto;">
+            <div class="row" style="padding: 20px; padding-bottom: 5px;"
+                 ng-show="moreConditions">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">开始时间：</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control Wdate cursor_pointer"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                       ng-model="start_date" name="cdt_start_date" id="cdt_start_date" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">截止时间：</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control Wdate cursor_pointer"
+                                       onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                       ng-model="end_date" name="cdt_end_date" id="cdt_end_date" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                 style="padding: 20px; padding-bottom: 5px; padding-top: 5px;"
+                 ng-show="moreConditions">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">校区：</label>
+                            <div class="col-lg-8">
+                                <select class="form-control"
+                                        ng-model="selectedBranch"
+                                        ng-options="branch.id as branch.org_name for branch in branchList">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">关键字：</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" type="text" ng-model="app_info" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                 style="padding: 20px; padding-bottom: 5px; padding-top: 5px;"
+                 ng-show="moreConditions" align="center">
+                <div class="input-group-btn">
+                    <div class="btn btn-default"  ng-click="queryTask()">搜索</div>
+                </div>
+            </div>
+    		<table class="table table-border table-hover" style="margin-bottom: 0px;">
+    			<tbody>
+    				<tr ng-repeat="todoTask in todoTaskPage.resultList" ng-if="todoTaskPage.resultList">
+    					<td>
+                            <div class="col-lg-10">
+                                <p>【{{todoTask.createTime}}】{{todoTask.processName}}：{{todoTask.name}}</p>
+                                <p style="font-size:12px;color: #888;">当前处理人：{{todoTask.allAssignee?todoTask.allAssignee:'无'}}，备注：{{todoTask.remark?todoTask.remark:'无'}},<a target="_blank" href="?studentId={{todoTask.extData.student_id}}&orderId={{todoTask.extData.order_id}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail">学员姓名：{{todoTask.extData.student_name?todoTask.extData.student_name:'无'}}</a></p>
+                            </div>
+                            <div class="col-lg-2 ">
+                                <p>
+                                    <a class="btn btn-default pull-right" ng-click="showDetailInfo(todoTask)">
+                                        <i class="fa fa-long-arrow-down" ng-if="todoTask.showDetail"></i>
+                                        <i class="fa fa-long-arrow-right" ng-if="!todoTask.showDetail"></i>
+                                    </a>
+                                </p>
+                            </div>
+                            <div  class="col-lg-12" ng-if="todoTask.showDetail">
+                                <div ng-if="todoTask.isDetailLoading!='isDetailLoading' && !todoTask.entrust" style="font-size: 14px;">
+                                    <h3 class="text-center">
+                                        基本信息
+                                        <small class="pull-right">
+                                            <div class="btn btn-default" ng-click="toEntrust(todoTask)">委托</div>
+                                        </small>
+                                    </h3>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">申请类型：</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control-static pt-0">{{selectedRow.extData['processDefinition.name']}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">申请时间：</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control-static pt-0">{{todoTask.createTime}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6" ng-if="selectedRow.extData.student_name">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">学员姓名：</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control-static pt-0">{{selectedRow.extData.student_name}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6" ng-if="selectedRow.extData.student_encoding">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">学员编码：</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control-static pt-0">
+                                                        <a href="?studentId={{selectedRow.extData.student_id}}#/studentMgr/studentMgrIndex" target="_blank">
+                                                            {{selectedRow.extData.student_encoding}}
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6" ng-if="selectedRow.extData.order_id">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">报班id：</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control-static pt-0">{{selectedRow.extData.order_id}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6" ng-if="selectedRow.extData.order_encoding">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">报班单据：</label>
+                                                <div class="col-lg-8">
+                                                    <a href="?studentId={{selectedRow.extData.student_id}}&orderId={{selectedRow.extData.order_id}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail"
+                                                        class="form-control-static pt-0" target="_blank">
+                                                        {{selectedRow.extData.order_encoding}}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">公式信息：</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <p class="form-control-static">{{selectedRow.extData.businessDetailInfo}}</p>
+                                    </div>
+                                    <div class="form-group col-lg-12 mv-5">
+                                        <label class="col-lg-2 control-label">申请人：</label>
+                                        <div class="col-lg-10 mb-5">
+                                            {{todoTask.employeeName}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12" ng-if="selectedRow.extData.remark_order">
+                                        <label class="col-lg-2 control-label">申请备注：</label>
+                                        <div class="col-lg-10 mb-5">
+                                            {{selectedRow.extData.remark_order}}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <h3 class="text-center">审批操作</h3>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">审批备注：</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control" ng-model="todoTask.submitRemark"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">审批操作：</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <a class="btn btn-default"
+                                           href="javascript:void(0);"
+                                           ng-repeat="operate in selectedRow.task.data"
+                                           ng-click="submitTask(todoTask,operate)"
+                                           style="margin: 10px;">
+                                            {{operate}}
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <h3 class="text-center">审批记录</h3>
+                                        <table class="table">
+                                            <tr ng-repeat="historyTask in selectedRow.task.historyTasks">
+                                                <td>{{historyTask.createTime}}</td>
+                                                <td>{{historyTask.assignee}}</td>
+                                                <td>{{historyTask.state}}</td>
+                                                <td>{{historyTask.outcome}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-lg-12" style="overflow-x:hidden; ">
+                                        <h3 class="text-center">流程图</h3>
+                                        <p>
+                                            <div style="position:relative;width:100%;height:620px;background-color:#fff;background-image: url(/erp{{selectedRow.task.task_png}});background-repeat: no-repeat;">
+                                                <div style="position:absolute;border:2px solid red;left:{{selectedRow.task.activityCoordinates.x}}px;top:{{selectedRow.task.activityCoordinates.y}}px;width:{{selectedRow.task.activityCoordinates.width}}px;height:{{selectedRow.task.activityCoordinates.height}}px;"/>
+                                            </div>
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div ng-if="todoTask.isDetailLoading!='isDetailLoading' && todoTask.entrust" style="font-size: 14px;" >
+                                    <div class="col-lg-12">
+                                        <small class="pull-left">
+                                            <div class="btn btn-default" ng-click="returnDetail(todoTask)">
+                                                <i class="fa fa-long-arrow-left"></i>
+                                            </div>
+                                        </small>
+                                    </div>
+
+                                    <h3 align="center">
+                                        委托任务
+                                    </h3>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>任务ID：</label>
+                                                <p class="form-control-static" style="font-size:12px;color: #888;">{{todoTask.id}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>任务名称：</label>
+                                                <p class="form-control-static" style="font-size:12px;color: #888;">【{{selectedRow.extData['processDefinition.name']}}】{{todoTask.name}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>提交时间：</label>
+                                                <p class="form-control-static" style="font-size:12px;color: #888;">{{todoTask.createTime}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>当前处理人：</label>
+                                                <p class="form-control-static" style="font-size:12px;color: #888;">{{todoTask.allAssignee}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>备注：</label>
+                                                <p class="form-control-static" style="font-size:12px;color: #888;">{{todoTask.remark}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h3 align="center">
+                                        受托人设置
+                                    </h3>
+                                    <div class="col-lg-12">
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group pull-right">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" ng-model="todoTask.searchName" />
+
+                                                    <div class="input-group-addon"  ng-click="queryEmployeeList(todoTask)">
+                                                        搜索
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12" style="min-height:100px;max-height:200px;overflow-y:scroll; ">
+                                            <table class="table">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>受托人</th>
+                                                    <th>手机号</th>
+                                                </tr>
+                                                <tr ng-repeat="employee in employeeList" ng-if="todoTask.entrustIsLoadingDetail!='entrustIsLoadingDetail'">
+                                                    <td>
+                                                        <input type="checkbox" ng-click="checkEmployee(employee)" checked ng-if="employee.checked"/>
+                                                        <input type="checkbox" ng-click="checkEmployee(employee)" ng-if="!employee.checked"/>
+                                                    </td>
+                                                    <td>{{employee.employeeName}}</td>
+                                                    <td>{{employee.phone}}</td>
+                                                </tr>
+                                                <tr ng-if="todoTask.entrustIsLoadingDetail=='entrustIsLoadingDetail'">
+                                                    <td align = "center" colspan="3"><img src="img/erp/loading2.gif" /></td>
+                                                </tr>
+                                                <tr ng-if="todoTask.entrustIsLoadingDetail!='entrustIsLoadingDetail' && (!employeeList || !employeeList.length)">
+                                                    <td align = "center" colspan="3" style="border-top: none;"><div class="no-data"></div>暂无数据</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-12" align="center">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">开始时间：</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control Wdate cursor_pointer"
+                                                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                                           ng-model="start_date" name="cdt_start_date" id="cdt_start_date_0201" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="col-lg-4 control-label">截止时间：</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control Wdate cursor_pointer"
+                                                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"
+                                                           ng-model="end_date" name="cdt_end_date" id="cdt_end_date_0201" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" align="center">
+                                        <div class="btn btn-default" style="margin: 5px; width: 200px;"
+                                             ng-click="changeTask(todoTask)">
+                                            确定
+                                        </div>
+                                    </div>
+                                    <h3 align="center">
+                                        历史委托信息
+                                    </h3>
+                                    <div class="col-lg-12" align="center">
+                                        <table class="table">
+                                            <tr>
+                                                <th>受托人</th>
+                                                <th>委托任务</th>
+                                                <th>有效期间</th>
+                                                <th>委托时间</th>
+                                            </tr>
+                                            <tr ng-repeat="historyChangeTask in  todoTask.historyChangeTaskList">
+                                                <td>{{historyChangeTask.consigneeName}}</td>
+                                                <td>{{historyChangeTask.taskName}}</td>
+                                                <td>{{historyChangeTask.beginTime}}~{{historyChangeTask.endTime}}</td>
+                                                <td>{{historyChangeTask.createTime}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!-- 删除联报课程 -->
+                                    <rd-loading ng-if="todoTask.entrustIsLoadingDetail == 'entrustIsPosting'">正在提交...</rd-loading>
+                                    <!-- <div style="position: fixed; height: 155%; width: 100%; left: 0px; top: 0px; z-index: 999; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                                         ng-if="todoTask.entrustIsLoadingDetail == 'entrustIsPosting'"></div>
+                                    <div class="erp panel panel-default"
+                                         style="height: auto;position: absolute;top: 35%; width:60%;z-index: 1000;" ng-if="todoTask.entrustIsLoadingDetail == 'entrustIsPosting'">
+                                        <div class="panel-body">
+                                            <div align="center">
+                                                正在提交...
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                                <div ng-if="todoTask.isDetailLoading=='isDetailLoading'">
+                                    <div align = "center">
+                                        <img src="img/erp/loading2.gif" />
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+    				</tr>
+                    <tr ng-if="isLoading!='isLoading'&&(!todoTaskPage.resultList||!todoTaskPage.resultList.length)">
+                        <td align="center" colspan="1" style="border-top: none;"><div class="no-data"></div>暂无数据</td>
+                    </tr>
+                    <tr ng-if="isLoading=='isLoading'">
+                        <td align="center" colspan="1"><img src="img/erp/loading2.gif" />
+                        </td>
+                    </tr>
+    			</tbody>
+    		</table>
+            <div class="row" align="center" ng-if="todoTaskPage.totalCount>5">
+                <div class="btn btn-default" style="margin: 5px; width: 200px;"
+                     ng-click="queryMore()">
+                    <i class="fa fa-angle-double-down"></i>
+                </div>
+            </div>
+
+            <!-- 删除联报课程 -->
+            <div ng-click="closeDeletingInfo()"
+                 style="position: fixed; height: 155%; width: 100%; left: 0px; top: 0px; z-index: 999; background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"
+                 ng-if="isSubmitTask == 'isSubmitTask'"></div>
+            <div class="erp panel panel-default"
+                 style="height: auto;position: absolute;top: 35%; width:60%;z-index: 1000;" ng-if="isSubmitTask == 'isSubmitTask'">
+                <div class="panel-body">
+                    <div align="center">
+                        正在提交...
+                    </div>
+                </div>
+            </div>
+
+
+
+
+    	</div>
+    </div>
+</div>

@@ -1,0 +1,212 @@
+<style>
+    <!--
+    .processes{
+        width: 100%;
+    }
+    .cur{
+        cursor: pointer;
+    }
+    .dropdown:hover{
+        color: #000;
+    }
+    .float_right{
+        margin-left: 18%;;
+    }
+    .button{
+        margin-right: 65px;
+    }
+    .message{
+        width: 100%;
+    }
+    thead{
+        background: none repeat scroll 0 0 #6b6f71;
+        height:35px;
+    }
+    thead tr{
+        width: 90%;
+    }
+    th,td{
+        min-width:150px;
+        text-align: center;
+        color:#fff;
+    }
+    td{
+        color:#000;
+        height:35px;
+    }
+    .task_operator{
+        width:300px;
+    }
+
+    .about-us-one-row{
+        padding:5px 0 ;
+    }
+    td{
+        font-size: 14px;
+        font-family: "微软雅黑";
+    }
+    th{
+        font-size: 16px;
+        font-family: "微软雅黑";
+    }
+    .operator{
+        margin: 5px;;
+    }
+
+    .data_row:hover{
+        background-color: #fff;
+    }
+
+    .col77{
+
+    }
+    .iconfont, .c-icon{
+    background: rgba(0, 0, 0, 0) url("../Img/icon/Erpstudenticon.png") no-repeat scroll 0 0;
+}
+    -->
+</style>
+<div class="top-banner mb20">
+    <!--nav:subnav-cur-->
+    <div class="Erpnav">
+    </div>
+    <style>
+    	<!--
+    		.search-list:hover .search-list-con{
+    			display: block;
+    		}
+    		.search-list .search-list-con{
+    			display: none;
+    		}
+    		.search-list .showList{
+    			display: block;
+    		}
+    		.sub-search-input{
+    			width:240px;
+    			border: 1px solid #e4e7e8;
+			    border-radius: 20px;
+			    color: #999;
+			    font-size: 12px;
+			    height: 25px;
+			    line-height: 1;
+			    margin: 0;
+			    outline: 0 none;
+			    padding: 4px 10px;
+    		}
+    		.search-list-con{
+    			width:340px;
+    			right:23px;
+    		}
+    		.sub-search-input-ing{
+    			width:350px;
+    		}
+    		
+    		.search-list:HOVER showList {
+				display: block;	
+			}
+			.search-list showList{
+				display: none;	
+			}
+    	-->
+    </style>
+    <div class="search-list">
+        <div class="sub-search">
+            <form class="parentCls">
+               <input class="sub-search-input"
+                       ng-click="onSeacherNameFocus()"
+                       ng-blur="onSeacherNameBlur()" type="text"
+                       ng-model="seacherName"/>
+                <!-- <a href="javascript:void(0)"><i class="iconfont subnav-input-scan" title="查询/搜索" ng-click="seacher()"></i></a> -->
+                <input type="button" ng-click="seacher()" value="查询"/>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-8 about-us-column-right processes">
+    <h3>任务列表</h3>
+    <div class="row about-us-one-row">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                    	<th>
+	                    	<table>
+	                    		<thead>
+	                    			<tr>
+	                    				<th>任务id</th>
+	                    				<th>任务名称</th>
+				                        <th>创建时间</th>
+				                        <th>当前处理人</th>
+				                        <th>备注</th>
+				                        <th class="task_operator">任务操作</th>
+	                    			</tr>
+	                    		</thead>
+	                    	</table>
+                    	</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="data_row" style="border-bottom: 1px #000;" ng-repeat="task in tasks">
+                        <td>
+                        	<table>
+                        		<tbody>
+                        			<tr>
+                        				<td class="col3">{{task.id}}</td>
+                        				<td class="col1">
+				                        	<a href="{{webContext+task.workbenchURL}}" target="_blank">[{{task.processName}}]{{task.name}}</a>
+				                        </td>
+				                        <td class="col3">{{task.createTimeString}}</td>
+				                        <td class="col3">{{task.allAssignee}}</td>
+				                        <td class="col4">
+				                            {{task.remark}}
+				                        </td>
+				                        <td class="col5 task_operator">
+				                            <a href="javascript:void(0)" class="operator" ng-click="queryDetails(task)">
+				                            	<span class="cur" ng-if="task.outcomes==null">操作[+]</span>
+				                            	<span class="cur" ng-if="task.outcomes!=null">操作[-]</span>
+				                            </a>
+				                        </td>
+                        			</tr>
+                        			<tr ng-if="task.outcomes!=null">
+                        				<td class="col1" colspan="6">
+                        					<div style="position:relative;min-width:500px;">
+                        						<div style="float:left;text-align: left;">
+                        							<p><h3>任务处理</h3></p>
+                        							<hr>
+	                        						<p ng-repeat="outcome in task.outcomes"><span >操作{{$index+1}}[<a href="javascript:void(0)" ng-click="operateTask(task,outcome)">{{outcome}}</a>]</span></p>
+	                        						<p>备注：<textarea rows="2" cols="50" ng-model="task.taskRemak"></textarea></p>
+	                        					</div> 
+                        					</div>
+				                        </td>
+				                    </tr>
+				                    <tr ng-if="task.outcomes!=null">
+                        				<td class="col1" colspan="6">
+                        					<div style="position:relative;min-width:500px;">
+                        						<div style="float:left;text-align: left;">
+                        							<p><h3>任务处理记录</h3></p>
+                        							<hr>
+	                        						<p ng-repeat="history in task.historyTasks"><span >[{{$index+1}}] 时间：{{history.createTime}},处理人：{{history.assignee}},操作：{{history.id==task.id?'当前':history.outcome}},任务id:{{history.id}},备注:{{history.remark}}</span></p>
+	                        					</div> 
+                        					</div>
+				                        </td>
+				                    </tr>
+                        			<tr ng-if="task.outcomes!=null">
+                        				<td class="col1" colspan="6">
+                        					<div style="position:relative">
+                        						<img ng-src="{{webContext+task.task_png}}" style="position:absolute;left:0px;top:0px;"/>
+                        						<div style="position:absolute;border:1px solid red;left:{{task.activityCoordinates.x}}px;top:{{task.activityCoordinates.y}}px;width:{{task.activityCoordinates.width}}px;height:{{task.activityCoordinates.height}}px;"/>
+                        					</div>
+				                        </td>
+                        			</tr>
+                        			
+                        		</tbody>
+                        	</table>
+                        	
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>

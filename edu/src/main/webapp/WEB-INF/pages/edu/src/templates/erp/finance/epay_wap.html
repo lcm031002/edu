@@ -1,0 +1,70 @@
+<div ng-controller="erp_epayWapController">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<span class="title">在线支付</span>
+		</div>
+		<div class="panel-body operation-panel">
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						团队：<select class="form-control" 
+							ng-model="searchParam.buId"
+							ng-options="team.buId as team.name for team in teamList">
+							<option  value="">-- 请选择团队 --</option></select>
+					</div>
+				</form>
+				<rd-date-picker-range ng-start-date="searchParam.beginDate"
+					ng-end-date="searchParam.endDate" ng-date-change="queryPayFlow()"></rd-date-picker-range>
+			</div>
+			<hr>
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="input-group">
+
+						<input type="text" class="form-control" style="width: 260px;"
+							placeholder="学员名称" ng-model="searchParam.keyWord"
+							autocomplete="off"> <span class="input-group-btn">
+							<button class="btn btn-primary" ng-click="handleQueryInvoice()">
+								<i class="iconfont icon-search"></i>
+							</button>
+						</span>
+					</div>
+					<button class="btn btn-success" ng-click="exportAll()">
+						<i class="iconfont icon-public_export" ></i>导出
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!--main form end-->
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>时间</th>
+					<th>学员</th>
+					<th>金额</th>
+					<th>支付电话</th>
+					<th>备注</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr ng-if="isLoading=='isLoading'">
+					<td colspan="11" align="center"><img
+						src="img/erp/loading2.gif"></td>
+				</tr>
+				<tr ng-repeat="payFlow in payFlowList"
+					ng-if="isLoading!='isLoading'">
+					<td>{{payFlow.pay_time}}</td>
+					<td>{{payFlow.student_name}}</td>
+					<td>{{payFlow.pay_amount}}元</td>
+					<td>{{payFlow.pay_phone}}</td>
+					<td>{{payFlow.remark}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+		<div><span>总额：</span><span>{{totalAmount || 0}}元</span></div>
+	</div>
+</div>

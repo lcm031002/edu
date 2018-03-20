@@ -1,0 +1,79 @@
+<div class="report min-width-1100" ng-controller="report_gxhStudentStatusController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">学生状态报表</span>
+        </div>
+        <div class="panel-body" style="width:80vw">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <rd-branch ng-bu-id="searchParam.p_bu_id"
+                        ng-branch-id="searchParam.p_branch_id">
+                        <div class="form-group">
+                            月份：
+                            <input type="text" class="Wdate cursor_pointer form-control"
+                                onfocus="WdatePicker({dateFmt:'yyyy-MM'})"
+                                ng-model="paramdate"
+                                name="p_year_month" id="p_year_month" />
+                        </div>
+
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                        <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </rd-branch>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="60"/>
+            <col width="180"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <col width="90"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>业务校区</th>
+                <th>年月</th>
+                <th>新在读</th>
+                <th>唤醒在读</th>
+                <th>常规在读</th>
+                <th>合计</th>
+                <th>新生沉睡</th>
+                <th>常规沉睡</th>
+                <th>结课</th>
+                <th>合计</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1}}</td>
+                <td><a href="?buId={{data.bu_id}}&branchId={{data.branch_id}}&yearMonth={{data.year_month}}#/students/managerReport/classesReportGxhStudentStatusBranch" target="_blank">{{data.branch_name}}</a></td>
+                <td>{{data.year_month}}</td>
+                <td>{{data.zt_new}}</td>
+                <td>{{data.zt_sleep}}</td>
+                <td>{{data.zt_normal}}</td>
+                <td>{{data.zt_count}}</td>
+                <td>{{data.cs_new}}</td>
+                <td>{{data.cs_normal}}</td>
+                <td>{{data.cs_end}}</td>
+                <td>{{data.cs_count}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+            <img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

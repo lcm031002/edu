@@ -1,0 +1,46 @@
+<div class="report" ng-controller="report_teacherWorkloadAttendController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">培英班教师工作量表实到学生</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                        <div class="form-group">
+                            <button class="btn btn-primary" ng-click="outputReport()"><i class="iconfont icon-export"></i> 导出</button>
+                        </div>
+                    </rd-branch>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+            <col width="60"/>
+            <col width="180"/>
+            <col width="180"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>学生编号</th>
+                <th>学生姓名</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1}}</td>
+                <td>{{data.encoding}}</td>
+                <td>{{data.student_name}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

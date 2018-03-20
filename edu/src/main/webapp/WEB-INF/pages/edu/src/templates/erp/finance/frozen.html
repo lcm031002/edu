@@ -1,0 +1,104 @@
+<div class="erp finance frozen" ng-controller="erp_financeFrozenController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">冻结单据</span>
+    </div>
+    <div class="panel-body">
+      <div class="searchbar">
+        <div class="form form-inline">
+          <div class="form-group">
+            订单：<input class="form-control" type="text"
+              placeholder="请输入订单ID"
+              ng-model="searchParams.queryOrderString">
+          </div>
+          <div class="form-group">
+            冻结单据：<input class="form-control" type="text"
+              placeholder="请输入冻结单据编码" 
+              ng-model="searchParams.frozenEncoding">
+            <button class="btn btn-primary"
+              ng-click="getList()"><i class="iconfont icon-search"></i> 搜索</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <div class="table-wrapper">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th width="120">编码</th>
+            <th width="120">订单ID</th>
+            <th width="120">订单编码</th>
+            <th width="100">金额</th>
+            <th width="120">学员名称</th>
+            <th width="160">学员编码</th>
+            <th width="180">校区</th>
+            <th width="180">地区</th>
+            <th width="120">创建时间</th>
+            <th width="100">经办人</th>
+            <th width="60">状态</th>
+            <th width="180">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in frozenList">
+            <td>{{item.encoding}}</td>
+            <td>{{item.order_id}}</td>
+            <td>{{item.order_no}}</td>
+            <td>{{item.fee_amount}}</td>
+            <td>{{item.student_name}}</td>
+            <td>{{item.student_encoding}}</td>
+            <td>{{item.branch_name}}</td>
+            <td>{{item.city_name}}</td>
+            <td>{{item.create_time | date: 'yyyy-MM-dd'}}</td>
+            <td>{{item.input_user_name}}</td>
+            <td>{{item.change_status == 7 ? '已作废' : '正常'}}</td>
+            <td>
+              <button class="btn btn-default btn-xs" ng-click="viewDetail(item)">详情</button>
+              <button class="btn btn-danger btn-xs" ng-click="deleteChange(item)">作废</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-pagination conf="pageConf"></ng-pagination>
+  </div>
+
+  <script type="text/ng-template" id="frozenDetailModal.html">
+    <rd-modal>
+      <rd-modal-title>
+        冻结单据详情
+      </rd-modal-title>
+      <rd-modal-body>
+        <div class="table-panel">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>课程</th>
+                <th>冻结课时</th>
+                <th>冻结金额</th>
+                <th>补考勤费用</th>
+                <th>返预结转</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in frozenDetail">
+                <td>{{item.course_name}}</td>
+                <td>{{item.course_times}}</td>
+                <td>{{item.total_amount}}</td>
+                <td>{{item.pre_amount}}</td>
+                <td>{{item.attend_amount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </rd-modal-body>
+      <rd-modal-footer>
+        <button class="btn btn-primary" ng-click="$dismiss()">
+          确定
+        </button>
+      </rd-modal-footer>
+    </rd-modal>
+  </script>
+</div>

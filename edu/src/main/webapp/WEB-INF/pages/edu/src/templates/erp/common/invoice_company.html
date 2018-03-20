@@ -1,0 +1,125 @@
+<div ng-controller="erp_invoiceCompanyController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">开票公司管理</span></div>
+		<div class="panel-body operation-panel">
+			<div class="toolbar">
+		        <button class="btn btn-primary btn-circle" ng-click="handleAddInvoiceCompany()">
+		          <i class="iconfont icon-add"></i>添加
+		        </button>
+	      	</div>
+	      	<hr>
+	      	<div class="searchbar">
+	      		<form class="form-inline">
+	      			<div class="form-group">
+			            <div class="input-group">
+			              <input type="text" class="form-control" placeholder="名称"
+			                ng-model="searchParam.company_name" autocomplete="off">
+			              <span class="input-group-btn clearfix">
+			              	<button class="btn btn-primary" ng-click="handleQueryInvoiceCompany()"><i class="iconfont icon-search"></i>  搜索</button>
+			              </span>
+			            </div>
+	      			</div>
+	      		</form>
+	      	</div>
+		</div>
+    </div>
+	<!--main form end-->
+	<div class="table-panel">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="120">操作</th>
+					<th>开票单位名称</th>
+					<th>状态</th>
+					<th>所属地区</th>
+					<th>描述</th>
+					<th>创建人</th>
+					<th>创建时间</th>
+					<th>修改人</th>
+					<th>修改时间</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr ng-repeat="invoiceCompany in invoiceCompanyList"
+					ng-if="invoiceCompanyList && invoiceCompanyList.length">
+					<td>
+						<span class="cur" ng-click="handlePutInvoiceCompany(invoiceCompany)"><i class="iconfont icon-edit text-primary"></i>修改</span>
+						<span class="cur" ng-click="handleDeleteInvoiceCompany(invoiceCompany.id)"><i class="iconfont icon-delete text-danger"></i>删除</span>
+					</td>
+					<td>{{invoiceCompany.company_name}}</td>
+					<td>
+						<input type="checkbox"
+								bs-switch
+								ng-model="invoiceCompany.status"
+								ng-true-value="1"
+								ng-false-value="0"
+								switch-change="onStatusChange(invoiceCompany)"
+							>
+					</td>
+					<td>{{invoiceCompany.city_name}}</td>
+					<td>{{invoiceCompany.description}}</td>
+					<td>{{invoiceCompany.create_user_name}}</td>
+					<td>{{invoiceCompany.create_time | date:'yyyy-MM-dd'}}</td>
+					<td>{{invoiceCompany.update_user_name}}</td>
+					<td>{{invoiceCompany.update_time | date:'yyyy-MM-dd'}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<ng-pagination conf="paginationConf"></ng-pagination>
+		<!-- Modal -->
+		<div id="erpSystemCommonInvoiceCompanyPanel" class="modal fade klxx-modal-primary" 
+		  tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog" role="document">
+				<!-- companyAccountForm .klxx-erp-form -->
+				<form class="klxx-erp-form form-horizontal" name="invoiceCompanyForm" novalidate>
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">课程季{{optye=='add'?'添加':'修改'}}</h4>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<form class="form-horizontal">
+									<div class="hide">
+										<input type="text" ng-model="invoiceCompany.id">
+									</div>
+									<div class="klxx-erp-form-item-label form-group">
+										<label class="klxx-erp-form-item-required  col-sm-2 control-label">单位名称</label>
+										<div class="col-sm-10" ng-class="{'has-error': invoiceCompanyForm.company_name.$invalid && invoiceCompanyForm.company_name.$dirty}">
+											<input name="company_name" class="klxx-erp-input form-control" 
+											ng-model="invoiceCompany.company_name" type="text" required>
+											<div class="klxx-erp-form-explain" 
+												ng-show="invoiceCompanyForm.company_name.$invalid && invoiceCompanyForm.company_name.$dirty && invoiceCompanyForm.company_name.$error.required">
+												单位名称一定要填写哟
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">描述:</label>
+										<div class="col-sm-10">
+											<textarea class="form-control" rows="4" ng-model="invoiceCompany.description"></textarea>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" ng-click="handleModalCancel()">取消</button>
+							<button type="button" class="btn btn-primary" ng-click="handleModalConfirm()" ng-disabled="invoiceCompanyForm.$invalid">
+								确定
+							</button>
+						</div>
+						<!-- .modal-footer end-->
+					</div>
+					<!-- .modal-content end -->
+				</form>
+				<!-- .klxx-erp-form end -->
+			</div>
+			<!-- .modal-dialog end -->
+		</div>
+		<!-- #erpSystemCommonInvoiceCompanyPanel end -->
+	</div>
+</div>

@@ -1,0 +1,153 @@
+<div class="crm container-fluid" ng-controller="crmRescRecTransferController">
+  <div class="row">
+    <div class="col-lg-8 col-md-6 col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="title">资源转出</span>
+        </div>
+        <div class="panel-body operation-panel">
+          <div class="toolbar">
+            <form class="form-inline">
+              <div class="form-group pull-right">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="咨询师姓名模糊查询" ng-model="searchCounselorFrom"/>
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" ng-click="getCounselorFrom()">
+                    	<i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+         <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 140px; padding-left: 32px;">当前归属人</th>
+              <th>学生姓名</th>
+              <th>称呼</th>
+              <th>资源日期</th>
+              <th>联系电话</th>
+              <th>归属校区</th>
+              <th>渠道来源</th>
+              <th style="width: 100px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in resArray">
+            <td ng-if="!item.isStu" class="cursor_pointer"
+                style="padding-left: 32px; text-indent: -22px;" 
+                ng-click="toggleRes(item)">
+                <i class="iconfont" 
+                  ng-class="{true: 'icon-public_shrink i-text-danger', false: 'icon-public_spread i-text-warning'}[item.showStu == true]" ng-if="!item.isStu"></i> {{item.EMPLOYEE_NAME}} </td>
+              <td colspan="{{item.isStu ? 1 : 5}}"></td>
+              <td ng-if="item.isStu">{{item.resc.name}}</td>
+              <td ng-if="item.isStu">{{item.resc.call}}</td>
+              <td ng-if="item.isStu">{{item.visit_time}}</td>
+              <td ng-if="item.isStu">{{item.resc.mp}}</td>
+              <td ng-if="item.isStu">{{item.sch_name}}</td>
+              <td ng-if="item.isStu">{{item.channel_name}}</td>
+              <td>
+                <span class="cursor_pointer"
+                 ng-if="!item.isStu"
+                 ng-click="transferAll(item)">
+                  <i class="iconfont icon-transfer i-text-primary"></i>批量转移
+                </span>
+                <span  class="cursor_pointer"
+                  ng-if="item.isStu"
+                  ng-click="transfer(item)">
+                  <i class="iconfont icon-transfer i-text-primary"></i>  转移
+                </span>
+            </tr>
+          </tbody>
+        </table>
+        <ng-pagination conf="fromPageConf"></ng-pagination>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading"><span class="title">资源转入</span></div>
+        <div class="panel-body operation-panel">
+          <div class="toolbar">
+            <form class="form-inline">
+              <div class="form-group pull-right">
+                <div class="input-group">
+                  <input type="text" ng-model="searchCounselorTo" placeholder="咨询师姓名模糊查询"  class="form-control" />
+                  <span class="input-group-btn">
+                        <button type="button" class="btn btn-primary" ng-click="getCounselorTo()"><i class="fa fa-search"></i></button>
+                  </span>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th></th>
+              <th nowrap="nowarp">校区</th>
+              <th>姓名</th>
+              <!-- <th>职位</th> -->
+            </tr>
+            <tr ng-repeat="item in counselorTo"  class="cursor_pointer"  ng-click="chooseCounselorTo(item)">
+               <td><input type="radio" value="{{item.id}}" ng-model="chosenCounselorToId" name="to_cnsoler_id"></td>
+              <td>{{item.branch_name}}</td>
+              <td>{{item.employee_name}}</td>
+            </tr>
+          </tbody>
+        </table>
+       	<ng-pagination conf="toPageConf"></ng-pagination>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" tabindex="-1" role="dialog" id="recMoreInfo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="klxx-modal-primary">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">学员详情</h4>
+          </div>
+          <div class="modal-body">
+            <dl class="dl-horizontal">
+              <dt>学生姓名：</dt>
+              <dd>{{moreInfo.resc.name}}</dd>
+              <dt>称呼：</dt>
+              <dd>{{moreInfo.resc.call}}</dd>
+              <dt>资源日期：</dt>
+              <dd>{{moreInfo.visit_time}}</dd>
+              <dt>联系电话：</dt>
+              <dd>{{moreInfo.resc.mp}}</dd>
+              <dt>渠道来源：</dt>
+              <dd>{{moreInfo.resc.res_type_name}}</dd>
+              <dt>年级：</dt>
+              <dd>{{moreInfo.grade_name}}</dd>
+              <dt>团队名称：</dt>
+              <dd>{{moreInfo.company_name}}</dd>
+              <dt>学校名称：</dt>
+              <dd>{{moreInfo.sch_name}}</dd>
+              <dt>QQ：</dt>
+              <dd>{{moreInfo.resc.qq}}</dd>
+              <dt>生日：</dt>
+              <dd>{{moreInfo.resc.birthday|date:'yyyy-MM-dd'}}</dd>
+              <dt>就读学校：</dt>
+              <dd>{{moreInfo.resc.attend_sch_name}}</dd>
+              <dt>备注：</dt>
+              <dd>{{moreInfo.note}}</dd>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="closeMoreInfoWin()">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

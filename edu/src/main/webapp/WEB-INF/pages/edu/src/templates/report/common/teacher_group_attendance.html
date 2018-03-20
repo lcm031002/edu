@@ -1,0 +1,92 @@
+<div class="report" ng-controller="report_teacherGroupAttendanceController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">培英班教研组统计</span>
+        </div>
+        <div class="panel-body">
+            <div class="toolbar">
+                <form class="form-inline">
+                    <span class="input-label">团队：</span>
+                    <select class="form-control"
+                            ng-options="bu.buId as bu.text for bu in buList"
+                            ng-model="searchParam.p_bu_id" ng-change="buChange()">
+                    </select>
+
+                    <span class="input-label">年级：</span>
+                    <select class="form-control"
+                            ng-options="grade.id as grade.grade_name for grade in gradeList"
+                            ng-model="searchParam.p_grade_id">
+                    </select>
+
+                    <span class="input-label">课程季：</span>
+                    <select class="form-control"
+                            ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList"
+                            ng-model="searchParam.p_season_id" id="season_name">
+                    </select>
+
+                    <div class="form-group">
+                        <span class="input-label">查询日期：</span>
+                        <rd-date-picker-popup ng-model="searchParam.p_course_date"></rd-date-picker-popup>
+                    </div>
+
+                    <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询
+                    </button>
+                    <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel ov-a">
+        <table class="table table-stripped {{loadStatues!=false?'':'min-width-1900'}}">
+            <col width="60"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <col width="180"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>教师姓名</th>
+                <th>教研组</th>
+                <th>年级</th>
+                <th>本季人数</th>
+                <th>本季出勤人数</th>
+                <th>本季出勤率</th>
+                <th>上次课应到</th>
+                <th>上次课实到</th>
+                <th>本次课应到</th>
+                <th>本次课实到</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in dataList"
+                ng-if="!loadStatues && dataList && dataList.length">
+                <td>{{$index + 1 == dataList.length ? '' : $index + 1}}</td>
+                <td>{{data.teacher_name}}</td>
+                <td>{{data.group_name}}</td>
+                <td>{{data.grade_name}}</td>
+                <td>{{data.course_students}}</td>
+                <td>{{data.attendance_students}}</td>
+                <td>{{data.attendance_rate}}</td>
+                <td>{{data.last_plan_attendance}}</td>
+                <td>{{data.last_actual_attendance}}</td>
+                <td>{{data.curr_plan_attendance}}</td>
+                <td>{{data.curr_actual_attendance}}</td>
+              </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (dataList == null || dataList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

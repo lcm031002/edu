@@ -1,0 +1,111 @@
+<div class="report min-width-1800" ng-controller="report_rechargeCashController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="title">充值取现表</span>
+        </div>
+        <div class="panel-body">
+            <div class="search-panel" style="width:80vw;">
+                <div class="form form-inline">
+                    <div class="form-group">
+                        <rd-date-picker-range class="display-inb"
+                            ng-start-date="searchParam.p_start_date" 
+                            ng-end-date="searchParam.p_end_date" 
+                            ng-default-range="'today'">
+                        </rd-date-picker-range>
+                    </div>
+                </div>
+                <div class="form form-inline">
+                    <div class="form-group m-0">
+                        <rd-branch ng-bu-id="searchParam.p_bu_id"
+                            ng-branch-id="searchParam.p_branch_id">
+                        </rd-branch>
+                    </div>
+                    <div class="form-group">
+                        <!-- <span class="input-label">制单人：</span> -->
+                        制单人：
+                        <input type="text" class="form-control" ng-model="searchParam.p_input_user_name" id="input_user_name" name="input_user_name"/>
+                        <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
+                        <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-panel">
+        <table class="table table-stripped">
+                <col width="3%"/>
+	            <col width="6%"/>
+	            <col width="6%"/>
+	            <col width="6%"/>
+	            <col width="6%"/>
+	            <col width="6%"/>
+	            <col width="5%"/>
+	            <col width="6%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="5%"/>
+	            <col width="7%"/>
+                <col width="7%"/>
+                <col width="4%"/>
+	            <col width="3%"/>
+ 	            <col width="6%"/>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>业务日期</th>
+                <th>团队</th>
+                <th>校区</th>
+                <th>转入校区</th>
+                <th>学生编码</th>
+                <th>学生姓名</th>
+                <th>单据</th>
+                <th>业务类型</th>
+                <th>取款手续费</th>
+                <th>金额</th>
+                <th>现金</th>
+                <th>刷卡</th>
+                <th>转账</th>
+                <th>客户账户</th>
+                <th>公司账户</th>
+                <th>制单人</th>
+                <th>状态</th>
+                <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="rechargeCash in rechargeCashList"
+                ng-if="!loadStatues">
+                <td>{{$index + 1}}</td>
+                <td>{{rechargeCash.calc_date}}</td>
+                <td>{{rechargeCash.bu_name}}</td>
+                <td>{{rechargeCash.branch_name}}</td>
+                <td>{{rechargeCash.zhuanru}}</td>
+                <td class="word_break">{{rechargeCash.student_encoding}}</td>
+                <td class="word_break">{{rechargeCash.student_name}}</td>
+                <td class="word_break">{{rechargeCash.opt_encoding}}</td>
+                <td>{{rechargeCash.opt_name}}</td>
+                <td class="word_break">{{rechargeCash.qukuan}}</td>
+                <td class="word_break">{{rechargeCash.fee_amount}}</td>
+                <td class="word_break">{{rechargeCash.pay_cash}}</td>
+                <td class="word_break">{{rechargeCash.pay_card}}</td>
+                <td class="word_break">{{rechargeCash.pay_trans}}</td>
+                <td class="word_break">{{rechargeCash.student_bankcard}}</td>
+                <td class="word_break">{{rechargeCash.company_bankcard}}</td>
+                <td>{{rechargeCash.creatMaker}}</td>
+                <td>{{rechargeCash.status_name}}</td>
+                <td>{{rechargeCash.remark}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+        </div>
+        <div class="text-center" ng-if="!loadStatues && (rechargeCashList == null || rechargeCashList.length == 0)">
+            <div class="no-data"></div>
+            暂无数据
+        </div>
+    </div>
+</div>

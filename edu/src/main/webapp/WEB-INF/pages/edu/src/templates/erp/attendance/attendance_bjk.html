@@ -1,0 +1,224 @@
+<div class="erp" ng-controller="erp_attendanceBJKController">
+  <div class="panel panel-primary" style="margin-bottom: 10px;">
+    <div class="panel-heading"><span class="title">培英精品班考勤</span></div>
+    <div class=panel-body style="padding: 15px;">
+      <form class="form-inline">
+        <div class="form-group">
+          <select class="form-control" ng-options="branch.org_name for branch in branchList" ng-model="queryParam.selectedBranch">
+            <option value="">-- 请选择校区 --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control" ng-options="timeSeason.course_season_name for timeSeason in timeSeasonList" ng-model="queryParam.selectedTimeSeason">
+            <option value="">-- 请选择课程季 --</option>
+          </select>
+        </div>
+        状态：
+        <select style="width: 95px;" class="form-control" ng-model="queryParam.status" ng-options="status.id as status.name for status in statusList">
+        </select>
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="queryParam.courseSearchInfo" />
+          <span class="input-group-btn" ng-click="querySelectingCourse()">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                      </span>
+        </div>
+        <div class="form-group ml10">
+          <label class="control-label" style="font-weight: normal;">
+            <input type="checkbox" ng-model="queryParam.onlyshow" value="true"> 仅显示本月有上课课程
+          </label>
+        </div>
+        <button class="btn btn-primary pull-right" type="button" ng-click="showSenior()">
+          高级
+          <i class="fa fa-angle-double-right" ng-if="!isShowSenior"></i>
+          <i class="fa fa-angle-double-down" ng-if="isShowSenior"></i>
+        </button>
+      </form>
+      <div class=col-lg-12 style="border-bottom: 1px dashed #ddd" ng-if="isShowSenior">
+        <label class=fl style="line-height: 34px; width: 100px;">年级 :
+        </label>
+        <div class="input-group col-sm-10 col-md-10 col-lg-10" style="line-height: 34px;">
+          <a class="condition_item {{queryParam.selectedGrade== null?'condition_item_checked':''}}" ng-click="selectGrade(null)">不限</a> <a class="condition_item {{queryParam.selectedGrade.id== grade.id?'condition_item_checked':''}}" ng-click="selectGrade(grade)" ng-repeat="grade in gradeList">{{grade.grade_name}}</a>
+        </div>
+      </div>
+      <div class=col-lg-12 style="border-bottom: 1px dashed #ddd" ng-if="isShowSenior">
+        <label class=fl style="line-height: 34px; width: 100px;">科目 :
+        </label>
+        <div class="input-group col-sm-10 col-md-10 col-lg-10" style="line-height: 34px;">
+          <a class="condition_item {{queryParam.selectedSubject== null?'condition_item_checked':''}}" ng-click="selectSubject(null)">不限</a> <a class="condition_item {{queryParam.selectedSubject.id== subject.id?'condition_item_checked':''}}" ng-click="selectSubject(subject)" ng-repeat="subject in subjectList">{{subject.name}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel ov-a">
+    <table class="table min-width-1100">
+      <col width="35%" />
+      <col width="16%" />
+      <col width="8%" />
+      <col width="12%" />
+      <col width="12%" />
+      <col width="6%" />
+      <col width="6%" />
+      <col width="5%" />
+      <thead>
+        <tr>
+          <th>课程</th>
+          <th>课程编码</th>
+          <th>年级</th>
+          <th>科目</th>
+          <th>教师</th>
+          <th>状态</th>
+          <th>课次</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="selectingCourse in toSelectingCourseList" ng-if="!isQuerySelectingCourse" style="width:100%;">
+          <td colspan="8" style="padding-right:0px;padding-left:0px;">
+            <table style="width:100%;">
+              <col width="35%" />
+              <col width="16%" />
+              <col width="8%" />
+              <col width="12%" />
+              <col width="12%" />
+              <col width="6%" />
+              <col width="6%" />
+              <col width="5%" />
+              <tr>
+                <td style="padding-right:8px;padding-left:8px;">{{selectingCourse.course_name}}</td>
+                <td style="padding-right:8px;padding-left:8px;">{{selectingCourse.course_no}}</td>
+                <td style="padding-right:8px;padding-left:8px;">{{selectingCourse.grade_name}}</td>
+                <td style="padding-right:8px;padding-left:8px;">{{selectingCourse.subject_name}}</td>
+                <td style="padding-right:8px;padding-left:8px;">{{selectingCourse.teacher_name}}{{selectingCourse.teacher_code}}</td>
+                <td style="padding-right:8px;padding-left:8px;">
+                  <span ng-if="selectingCourse.status == 2">已下架</span>
+                  <span ng-if="selectingCourse.status == 1">上架中</span>
+                  <span ng-if="selectingCourse.status == 0">已删除</span>
+                </td>
+                <td style="padding-right:8px;padding-left:8px;">
+                  {{selectingCourse.course_count}}
+                </td>
+                <td style="padding-right:8px;padding-left:8px;">
+                  <a href="javascript:void(0);" ng-click="showCourseTimes(selectingCourse)" ng-if="!selectingCourse.isShowCourseTime">
+                    <i class="fa fa-arrow-circle-right"></i>
+                  </a>
+                  <a href="javascript:void(0);" ng-click="showCourseTimes(selectingCourse)" ng-if="selectingCourse.isShowCourseTime">
+                    <i class="fa fa-arrow-circle-down"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr ng-if="selectingCourse.isShowCourseTime">
+                <td colspan="8">
+                  <div class="table-panel">
+                    <table class="table  table-hover table-bordered">
+                      <tr>
+                        <th>课次</th>
+                        <th>上课日期</th>
+                        <th>应到</th>
+                        <th>实到</th>
+                        <th>挂起</th>
+                        <th>出勤率</th>
+                        <th>试听</th>
+                        <th>锁定</th>
+                        <th>视频ID</th>
+                        <th style="text-align: center;">操作</th>
+                      </tr>
+                      <tr ng-repeat="courseTimeAttendance in courseTimeAttendanceList" ng-if="!selectingCourse.isQueryAttendanceCourseTimes && courseTimeAttendanceList && courseTimeAttendanceList.length">
+                        <td>{{courseTimeAttendance.courseTimes}}</td>
+                        <td>{{courseTimeAttendance.courseDate}}</td>
+                        <td>{{courseTimeAttendance.attendancePlan}}</td>
+                        <td>{{courseTimeAttendance.actualAttendace}}</td>
+                        <td>{{courseTimeAttendance.hangUp}}</td>
+                        <td>{{courseTimeAttendance.attendanceRate}}</td>
+                        <td>{{courseTimeAttendance.listeningTraining}}</td>
+                        <td>{{courseTimeAttendance.lockedCount?courseTimeAttendance.lockedCount:0}}</td>
+                        <td>
+                          <a href="javascript:void(0);" ng-click="openVideo(courseTimeAttendance.videoNo)">{{courseTimeAttendance.videoNo}}</a>
+                        </td>
+                        <td align="center">
+                          <a href="?courseId={{courseTimeAttendance.courseId}}&courseTime={{courseTimeAttendance.courseTimes}}&schedulingId={{courseTimeAttendance.schedulingId}}#/orders/attendanceMgr/attendanceMgrBJKStudents" target="_blank">考勤</a>
+                          <a href="?courseId={{courseTimeAttendance.courseId}}&courseTime={{courseTimeAttendance.courseTimes}}&schedulingId={{courseTimeAttendance.schedulingId}#/orders/attendanceMgr/attendanceMgrBJKMakeup" target="_blank">补课</a>
+                          <a href="?courseId={{courseTimeAttendance.courseId}}&courseTime={{courseTimeAttendance.courseTimes}}&schedulingId={{courseTimeAttendance.schedulingId}#/orders/classesScheduleCourse" target="_blank">
+                            排课</a>
+                        </td>
+                      </tr>
+                      <tr ng-show="selectingCourse.isQueryAttendanceCourseTimes == 'isQueryAttendanceCourseTimes'">
+                        <td colspan="10" align="center"><img src="img/erp/loading2.gif"></td>
+                      </tr>
+                      <tr ng-show="(!selectingCourse.isQueryAttendanceCourseTimes) && (!courseTimeAttendanceList || !courseTimeAttendanceList.length)">
+                        <td colspan="10" align="center">无数据.
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr ng-if="!isQuerySelectingCourse && (!toSelectingCourseList || !toSelectingCourseList.length)">
+          <td colspan="7" align="center">
+            暂无数据.
+          </td>
+        </tr>
+        <tr ng-if="isQuerySelectingCourse == 'isQuerySelectingCourse'">
+          <td colspan="7" align="center">
+            <img src="img/erp/loading2.gif">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="center" ng-if="queryParam.totalPage>=1">
+      <ul class="pagination">
+        <li ng-click="firstPage()">
+          <span>首页</span>
+        </li>
+        <li ng-if="queryParam.currentPage>10" ng-click="nextPage(queryParam.page-1)">
+          <span>上一页</span>
+        </li>
+        <li class="{{queryParam.currentPage==i+1?'active':''}}" ng-repeat="i in queryParam.paginationBars track by $index">
+          <span ng-click="pageQuery(i+1)">{{i+1}}</span>
+        </li>
+        <li ng-if="queryParam.currentPage < queryParam.totalPage - 10" ng-click="nextPage(queryParam.page+1)">
+          <span>下一页</span>
+        </li>
+        <li ng-click="endPage()">
+          <span>尾页</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div ng-if="isSubmitTransfer=='isSubmitTransfer'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在处理...
+      </div>
+    </div>
+  </div>
+  <div ng-if="isSubmitTransfer=='isSubmitTransferOk'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        转班成功！<a href="?#/orders/orderChangeTransfer" target="_self">点击继续转班</a>
+      </div>
+    </div>
+  </div>
+  <div ng-if="isSubmitTransfer=='isSubmitTransferFailed'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        转班失败,请联系管理员！
+      </div>
+    </div>
+  </div>
+  <div ng-if="isSubmit == 'isSubmit'">
+    <div style="position:fixed;height: 155%;width:100%;left:0px;top:0px;z-index: 999;background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25);"></div>
+    <div class="pay-window">
+      <div style="margin: 20px;height:50px;" align="center">
+        正在提交...
+      </div>
+    </div>
+  </div>
+</div>

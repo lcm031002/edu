@@ -1,0 +1,102 @@
+<div class="report min-width-1700" ng-controller="onLineOrderReportController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">在线支付订单明细表</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar" style="width: 80vw;">
+        <div class="form form-inline">
+          <div class="form-group m-0">
+            <rd-date-picker-range 
+              ng-start-date="searchParam.p_start_date" 
+              ng-end-date="searchParam.p_end_date" 
+              ng-default-range="'today'">
+            </rd-date-picker-range>
+          </div>
+        </div>
+        <div class="form-inline">
+          <div class="form-group m-0">
+            <rd-branch ng-bu-id="searchParam.p_bu_id"
+              ng-branch-id="searchParam.p_branch_id">
+            </rd-branch>
+          </div>
+          <div class="form-group">
+            <!-- <span class="input-label">课程季：</span> -->
+            课程季：
+            <select class="form-control"
+              ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList"
+              ng-model="searchParam.p_season_id" id="season_name">
+              <option value="-1">--全部--</option>
+            </select>
+          </div>
+          <div class="form-group">
+            学员姓名（编码）：
+            <div class="input-group">
+             <input type="text" class="form-control" ng-model="searchParam.p_student_info" />
+            </div>     
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button> 
+            <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-panel">
+    <table class="table table-stripped">
+      <col width="4%" />
+      <col width="10%" />
+      <col width="10%" />
+      <col width="9%" />
+      <col width="8%" />
+      <col width="8%" />
+      <col width="8%" />
+      <col width="8%" />
+      <col width="9%" />
+      <col width="8%" />
+      <col width="8%" />
+      <col width="8%" />
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>订单编号</th>
+          <th>付款时间</th>
+          <th>支付类型</th>
+          <th>银商订单号</th>
+          <th>付款金额</th>
+          <th>登录账号</th>
+          <th>学生姓名</th>
+          <th>业务校区</th>
+          <th>课程商品</th>
+          <th>科目</th>
+          <th>优惠类型</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="perfDetail in perfDetails" ng-if="!loadStatues && perfDetails && perfDetails.length">
+          <td>{{$index + 1}}</td>
+          <td class="word_break">{{perfDetail.order_no}}</td>
+          <td>{{perfDetail.pay_time}}</td>
+          <td>{{perfDetail.payment_way}}</td>
+          <td class="word_break">{{perfDetail.eb_no}}</td>
+          <td class="word_break">{{perfDetail.pay_amount}}</td>
+          <td>{{perfDetail.login_no}}</td>
+          <td>{{perfDetail.student_name}}</td>
+          <td>{{perfDetail.branch_name}}</td>
+          <td>{{perfDetail.course_name}}</td>
+          <td>{{perfDetail.subject_name}}</td>
+          <td>{{perfDetail.coupon_type}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center" ng-if="loadStatues">
+      <img src="img/erp/loading2.gif">
+    </div>
+    <div class="text-center" ng-if="!loadStatues && (perfDetails == null || perfDetails.length == 0)">
+      <div class="no-data"></div>
+      暂无数据
+    </div>
+  </div>
+</div>

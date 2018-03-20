@@ -1,0 +1,87 @@
+/**
+ * 教室管理
+ * 	- 教师安排表
+ * @author: yans@klxuexi.org
+ * @date:  2017/11/18 17:09:27
+ * 
+ */
+    // 教室安排表
+.erp.room_arrange{
+    .panel{
+        .panel-body{
+            
+            @media (min-width:1200px) {
+                rd-date-picker-popup input.form-control,
+                kl-timepicker input.form-control{
+                    max-width: 120px;
+                }
+                .form-inline>.form-group{
+                    margin-right:10px;
+                }
+            }
+            @media (min-width:768px) and (max-width:1200px) {
+                .form-inline .input-label{
+                    min-width:unset;
+                }
+                input{
+                    max-width: 150px;
+                }
+                rd-date-picker-popup input,kl-timepicker input{
+                    max-width: 96px;
+                }
+                .form-inline>.form-group{
+                    margin-right:0;
+                }
+            }
+            
+        }
+    }
+    .table-panel{
+        .arrange_list{
+            padding-top:30px;
+            &>div{
+                border:6px solid #53a2f2;
+                border-radius: 5px;
+                padding:10px;
+                margin-bottom:46px;
+                &>div{
+                    border-radius: 4px;
+                    padding-top: 10px;
+                    font-size: 16px;
+                    background: #d3e7fb;
+                    height: 100%;
+                    min-height: 110px;
+                    p{
+                        padding-left:8px;
+                        padding-right:8px;
+                        text-align: center;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+            @media (min-width:768px) and (max-width: 1200px){
+                .col-sm-5{
+                    width:45.8%;
+                }
+                .col-sm-3{
+                    width:29.6%;
+                }
+                .col-sm-offset-1{
+                    margin-left:2.8%;
+                }
+            }
+            @media (min-width:1200px) {
+                .col-lg-offset-1{
+                    margin-left:4%;
+                }
+                .col-lg-2 {
+                    width: 15%;
+                }
+            }
+            
+            
+        }
+    }
+}

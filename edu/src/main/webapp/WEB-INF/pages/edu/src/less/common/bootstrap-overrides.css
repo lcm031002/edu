@@ -1,0 +1,207 @@
+/**
+ * 通用背景色
+ */
+.bg-gray{background-color: #f9f9f9;}
+.bg-grey{background-color: #f5f5f5;}
+.bg-danger {background-color: rgba(252, 89, 100, .3)}
+.i-bg-danger {background-color: #fc5964;}
+.i-bg-primary {background-color: #1b8cf2;}
+.i-bg-warning {background-color: #ffb33f;}
+.i-bg-success {background-color: #04c9c4;}
+
+.i-bg-blue{background-color: #1b8cf2;}
+.i-bg-orange{background-color: #ffb33f;}
+.i-bg-green{background-color: #04c9c4;}
+.i-bg-deep-blue{background-color: #256cd3;}
+.i-bg-purple {background-color: #b05abf;}
+.i-bg-red {background-color: #fc5964;}
+/**
+ * 通用边框颜色
+ */
+ .i-bgbr-danger {background-color: #fc5964;border-color:#fc5964; }
+ .i-bgbr-primary {background-color: #1b8cf2;border-color: #1b8cf2;}
+ .i-bgbr-warning {background-color: #ffb33f;border-color: #ffb33f;}
+ .i-bgbr-success {background-color: #04c9c4;border-color: #04c9c4;}
+ 
+ .i-bgbr-blue{background-color: #1b8cf2;border-color: #1b8cf2;}
+ .i-bgbr-orange{background-color: #ffb33f;border-color: #ffb33f;}
+ .i-bgbr-green{background-color: #04c9c4;border-color: #04c9c4;}
+ .i-bgbr-deep-blue{background-color: #256cd3;border-color: #256cd3;}
+ .i-bgbr-purple {background-color: #b05abf;border-color: #b05abf;}
+ .i-bgbr-red {background-color: #fc5964;border-color: #fc5964;}
+/**
+ * 通用文字颜色
+ */
+.text-primary{color: #1b8cf2;}
+.text-info{color: #5bc0de;}
+.text-danger{color: #f01;}
+.text-warning{color: #fcb03d;}
+.text-success{color: #64CE50;}
+/**
+ * Panel样式覆盖
+ */
+.panel{
+  border: none;
+  border-radius: 0;
+}
+.panel-heading {
+  font-size: 16px;
+  border-radius: 0;
+}
+
+.panel-primary>.panel-heading{
+  color: #333;
+  background-color: #fff;
+  border-color: #f2f2f2;
+  padding: 0 15px;
+}
+
+.panel-primary>.panel-heading span.title{
+  border-bottom: 3px solid #1b8cf2;
+  display: inline-block;
+  margin-bottom: -2px;
+  line-height: 45px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+/**
+ * Modal
+ */
+
+.modal {
+  top: 80px;
+}
+/**
+ * Msgbox
+ */
+.msgbox-header {
+  line-height: 64px;
+}
+.msgbox-footer {
+  padding: 15px 20px;
+}
+
+/**
+ * pagination
+ */
+.pagination>li>a, .pagination>li>span {
+  cursor: pointer;
+  color: #333;
+}
+
+/**
+ * form
+ */
+.form.dl-horizontal dt,
+.form.dl-horizontal dd {
+  padding: 10px 0;
+}
+.form-horizontal .form-group{
+  margin-right: 0;
+  margin-left: auto;
+}
+.form-control {
+  height: 32px;
+  padding: 5px 12px;
+}
+.form-group .form-control-feedback {
+  pointer-events: initial; /* or - auto // or -  unset  */
+}
+/**
+ * container-fluid
+ */
+.container-fluid {padding-left: 10px;padding-right: 10px;}
+
+
+/**
+ * bootstrap-switch
+ */
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
+  color: #fff;
+  background: #1b8cf2;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-info,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-info {
+  color: #fff;
+  background: #1b8cf2;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-success,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-success {
+  color: #fff;
+  background: #04c9c4;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-warning,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-warning {
+  background: #ffb33f;
+  color: #fff;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-danger,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-danger {
+  color: #fff;
+  background: #fc5964;
+}
+.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default,
+.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
+  color: #000;
+  background: #ccc;
+}
+
+.uib-daypicker, .uib-daypicker .btn {
+  border: none;
+}
+
+dt, dd {line-height: 1.8em;}
+dt {font-weight: normal;}
+/*  */
+@-moz-document url-prefix() {
+    select.form-control {
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url(../img/icons/firefox_select_icon.png);
+        background-repeat: no-repeat;
+        background-position: calc(100% - 7px) 50%;
+        background-size: 5px auto;
+        border-radius:3px;
+        padding:0 14px 0 5px;
+    }
+}
+.avatar .img-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.avatar.avatar-50 .img-wrapper{
+  width: 50px;
+  height: 50px;
+}
+
+.avatar .img-wrapper img {
+  width: 100%;
+}
+
+/**
+ * uib-date-picker
+ */
+[uib-daypicker] button.btn-info.active span.text-info {
+  color: #fff;
+}
+
+/**
+ * ztree
+ */
+table.treetable {
+  border: 1px solid #ddd;
+}
+.dian {
+  background: #ffb33f;
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 5px;
+}

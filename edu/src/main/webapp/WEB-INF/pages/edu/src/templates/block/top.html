@@ -1,0 +1,64 @@
+<div class="head_logo_bar container-fluid" ng-controller="TopHeadCtrl">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-3 col-xs-10">
+            <div class="brand pull-left">
+                <div class="logo pull-left"></div>
+                <span class="divider">|</span>
+                <span class="title">ERP </span>
+                <!-- <span class="version">{{version}}</span> -->
+            </div>
+            <div class=" btn-group sel-org pull-left">
+                <a href="javascript:void(0)" class="top_org dropdown-toggle" data-toggle="dropdown" ng-click="toChangeOrg()">{{selectedNode.text?selectedNode.text:rootNode.text}} <i class="fa fa-caret-square-o-down"></i></a>
+                <div class="dropdown-menu">
+                    <div id="org_tree" class="org_tree"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-9 col-xs-2">
+
+            <div class="row col-lg-12 top_bar">
+                <div class="btn-group top_bar_item cur ml list-alt item_min">
+                    <a class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-list"></i> </a>
+                    <ul class="dropdown-menu text_align_center" role="menu">
+                        <li role="presentation" ng-repeat="topMenu in topMenus"><a role="menuitem" href="javascript:void(0);" ng-click="selectSystem(topMenu)">{{topMenu.name}}</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="{{systemParam.casServerLogoutUrl}}" target="_self"> <i class="active_arrow"></i> 退出</a></li>
+                    </ul>
+                </div>
+                <div class="top_bar_item top-menu ml {{curSystem.key==topMenu.key?'top_bar_item_active':''}} 
+                    {{curSystem.key=='studentMgr' && topMenu.key == 'students' ? 'top_bar_item_active' : ''}}" 
+                    ng-repeat="topMenu in topMenus"
+                    ng-click="selectSystem(topMenu)"
+                    ng-if="topMenu.showMenu!='false'"
+                    id="{{topMenu.path}}">
+                    <div class="icon-wrap">
+                        <i class="iconfont icon-nav_{{topMenu.key}}"></i>
+                    </div>
+                    <div class="top-menu-text">
+                        <span>{{topMenu.name.substring(0, 2)}}</span>
+                    </div>
+                    <!-- <div class="top-menu-text bl-text">ml-text
+                        <span>{{topMenu.name}}</span>
+                    </div> -->
+                </div>
+                <div class="top_bar_item mr power-off btn-group">
+                    <ul class="dropdown-menu self_lnfo_list text_align_center pull-right" role="menu">
+                        <li class="dropdown-header">
+                            {{employee.employeeName}}
+                        </li>
+                        <li ng-repeat="userMenu in userMenus.menus"><a href="?#{{userMenu.path}}" target="_self" ng-click="selectUserNav(userMenu)">{{userMenu.name}}</a></li>
+                        <!-- <li><a href="javascript:void(0);" ng-click="selectUserNav(userMenus.menus[1])">个人信息</a></li> -->
+                        <li ng-if="userMenus.menus && userMenus.menus.length > 0" class="divider"></li>
+                        <li><a href="{{systemParam.casServerLogoutUrl+'?service='+systemParam.serverName}}"  target="_self" ng-click="logout()">退出</a></li>
+                    </ul>
+                    <span class="user_info cur dropdown-toggle" data-toggle="dropdown">
+                        <img src="img/photos/b0.jpg" class="top_photos">
+                        <span style="font-size:14px;"><i class="fa fa-caret-down"></i><label class="bl-text ml5">{{employee.employeeName}}</label></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

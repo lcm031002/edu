@@ -1,0 +1,311 @@
+					<div ng-if="openPanel=='2'" class="col-lg-12">
+                   				<p>&nbsp;</p>
+								<p>&nbsp;</p>
+							  <div align="center">
+							  	<h2>快乐学习大小班校区部转正考核表</h2>
+							  </div>
+							  <p>&nbsp;</p>
+							  <p>&nbsp;</p>
+                              <div class="col-lg-12">
+                                  <div class="form-group col-lg-4 col-sm-4">
+                                      <label class="col-lg-4" style="line-height: 34px;">伙伴姓名：</label>
+                                      <div class="input-group col-lg-8">
+                                          <input type="text" class="form-control" ng-model="selecteditem.employeeName"/>
+                                          <p   ng-show="(!selecteditem.employeeId||selecteditem.employeeId=='')&&isSbumitting==true"
+                                               class="help-block" style="color:#a94442" desc="伙伴姓名不能为空">伙伴姓名不能为空........</p>
+								               <span class="input-group-addon"  id="showSpan" ng-click="showEmployeeQuery()">
+								                 <i class="fa fa-edit"></i></span>
+                                          <!-- 隐藏账户所属员工Id -->
+                                          <input type="hidden" ng-model="selecteditem.employeeId" na-value="selecteditem.employeeId" >
+                                          <div class="associatebox" ng-if="showQuery==true" >
+                                              <ul >
+                                                  <div class="input-group drop-field"  ng-controller="TooltipDemoCtrl" >
+                                                      <input type="text" class="form-control ng-pristine ng-valid ng-touched"
+                                                             ng-model="searchInfo"
+                                                             ng-class="{'has-error' : !selecteditem.employeeId}"
+                                                             id="employee_search_info"
+                                                             ng-change="queryEmployeeInfo()"
+                                                             tooltip-placement="top"
+                                                             tooltip-placement="{dynamicTooltip}}"
+                                                             uib-tooltip="{{dynamicTooltip}}"
+                                                             tooltip-enable="!selecteditem.employeeId"
+                                                             placeholder="请输入教师姓名或编码....">
+								                 <span id="selectSpan" class="input-group-addon"   ng-click="queryEmployeeInfo()">
+								                 <i class="fa fa-search"></i></span>
+                                                  </div>
+                                                  <!-- 迭代员工 -->
+                                                  <li ng-if="onGoingQuery==true" ng-repeat="employee in employeeList" ng-click="selectedEmployee(employee)">
+                                                      {{employee.ENCODING}}-{{employee.EMPLOYEE_NAME}}</li>
+                                              </ul>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="form-group col-lg-4 col-sm-4">
+                                      <label class="col-lg-4 col-sm-4" style="line-height: 34px;">在职岗位：</label>
+                                      <div class="col-lg-8 col-sm-6 input-group">
+                                          <select ng-if="showDetail==1" class="form-control" ng-options="post as post.post_name for post in posts"  ng-model="selecteditem.post">
+                                              <option  value="">-- 请选择 --</option>
+                                          </select>
+                                          <select ng-if="showDetail==0"  class="form-control" >
+                                              <option >{{selecteditem.postshow}}</option>
+                                          </select>
+                                      </div>
+                                  </div>
+                              </div>
+							  <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-4 col-sm-4 ">
+                                        <label class="col-lg-4 col-sm-4" style="line-height: 34px;">转正后等级：</label>
+                                        <div class="col-lg-8 col-sm-8 input-group">
+                                            <select ng-if="showDetail==1" class="form-control" ng-options="m as m.name for m in poslevelList"  ng-model="selecteditem.poslevel">
+                                                 <option  value="">-- 请选择 --</option>
+                                            </select>
+                                            <select ng-if="showDetail==0" class="form-control" >
+                                                 <option  value="">{{selecteditem.poslevelshow}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-sm-4">
+                                        <label class="col-lg-4">入职日期：</label>
+                                        <div class="col-lg-8 input-group" ng-controller="DatepickerDemoCtrl">
+                                               <input type="text"
+                                                     ng-model="selecteditem.entryDate" placeholder="请输入入职时间" required
+                                                    uib-datepicker-popup="{{format}}"
+                                                   current-text="今天"
+                                                   close-text="关闭"
+                                                   clear-text="清理"
+                                                   class="form-control"
+                                                   is-open="opened"
+                                                   ng-readonly="true"
+                                                   id="entryDate"/>
+                                               <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-default" ng-click="open($event)">
+                                                        <i class="glyphicon glyphicon-calendar"></i>
+                                                    </button>
+                                               </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-sm-4">
+                                        <label class="col-lg-4">拟转正日期：</label>
+                                        <div class="input-group col-lg-8" ng-controller="DatepickerDemoCtrl">
+                                               <input type="text"
+                                                     ng-model="selecteditem.toPostDate" placeholder="请输入拟转正时间" required
+                                                    uib-datepicker-popup="{{format}}"
+                                                   current-text="今天"
+                                                   close-text="关闭"
+                                                   clear-text="清理"
+                                                   class="form-control"
+                                                   is-open="opened"
+                                                   ng-readonly="true"
+                                                   id="toPostDate"/>
+                                               <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-default" ng-click="open($event)">
+                                                        <i class="glyphicon glyphicon-calendar"></i>
+                                                    </button>
+                                               </div>
+                                        </div>
+                                    </div>
+								</div>
+                                <div class=" col-lg-12 " style="text-align: left;">
+                                    <p > 各考核项目满分为 100 分，得分需高于 60 分（含）， 低于 60 分者延迟转正或解除劳动关系。</p>
+                                </div>
+								<div class="col-lg-12 pull-left">
+									<table class="table table-bordered">
+                                          <tr>
+                                            <th><span class="STYLE3"><div align="center">项目</div></span></th>
+                                            <th><span class="STYLE3"><div align="center">具体描述</div></span></th>
+                                            <th><span class="STYLE4"><div align="center">考核方式</div></span></th>
+                                            <th><span class="STYLE4"><div align="center">评分规则</div></span></th>
+                                            <th><span class="STYLE4"><div align="center">实际得分</div></span></th>
+                                          </tr>
+									  <tr>
+									    <td><div align="center"><strong>1</strong></div></td>
+									    <td> <div align="center">对企业和团队认可度、集体活动配合<br />
+									      参与情况、工作完成情况</div></td>
+									    <td> <div align="center">360°环评<br />
+									    </div></td>
+									    <td> <div align="center"><strong>满分 20 分</strong><br />
+									      （ 所得分数直接计入总分）<br />
+									  <!--EndFra>><!--EndFragment-->
+									  <br />
+									    </div></td>
+									    <td><input type="number" name="score" ng-model="scoreList[0]" min="0" max="20" required/></td>
+									  </tr>
+									  <tr>
+									    <td><div align="center"><strong>2</strong></div></td>
+									    <td> <div align="center">常规咨询、投诉处理、营销呼出等专<br />
+									      业技能考核</div></td>
+									    <td>
+									    	<div align="center"> 案例模拟<br />
+											</div>
+										</td>
+									    <td><div align="center">
+											      <p><strong>满分30分</strong></p>
+											      <p>（模拟分100分，30%计入总分）</p>
+											    </div>
+										</td>
+									    <td><input type="number" name="score" ng-model="scoreList[1]" min="0" max="30" required/></td>
+									  </tr>
+									  <tr>
+									    <td><div align="center"><strong>3</strong></div></td>
+									    <td><div align="center"> 前台咨询常用内容、校区常识<br />
+									        <!--En>><!--EndFragment-->
+									</div></td>
+									    <td><div align="center">笔试</div></td>
+									    <td><div align="center">
+									      <p>满分20分</p>
+									      <p>（模拟分100分，20%计入总分）</p>
+									    </div></td>
+									    <td><input type="number" name="score" ng-model="scoreList[2]" min="0" max="20" required/></td>
+									  </tr>
+									  <tr>
+									    <td><div align="center"><strong>4</strong></div></td>
+									    <td><div align="center"> 报退冻转等 ERP 操作<br />
+									</div></td>
+									    <td><div align="center"> 上机操作<br />
+									</div></td>
+									    <td><div align="center">
+									      <p>满分20分</p>
+									      <p>所得分数直接计入总分</p>
+									    </div></td>
+									    <td><input type="number" name="score" ng-model="scoreList[3]" min="0" max="20" required/></td>
+									  </tr>
+									  <tr>
+									    <td><div align="center"><strong>5</strong></div></td>
+									    <td><div align="center"> 办公室软件运用、邮件操作、 MY 系统<br />
+									      使用等</div></td>
+									    <td><div align="center"> 上机操作<br />
+									</div></td>
+									    <td><div align="center">
+									      <p>满分10分</p>
+									      <p>所得分数直接计入总分</p>
+									    </div></td>
+									    <td><input type="number" name="score" ng-model="scoreList[4]" min="0" max="10" required/></td>
+									  </tr>
+									  <tr>
+									    <td colspan="4">
+									    	<div align="right">
+										    	<strong>
+										    		<button type="button" ng-click="toSum(scoreList)" class="btn  btn-warning">
+														实际得分
+													</button> （ 满分 100  分 ）
+										    	</strong>
+									    	</div>
+									    </td>
+									    <td>{{selecteditem.total_score}}</td>
+									  </tr>
+									  <tr>
+									    <td><p align="center"><strong>考勤情况<br />
+									      （人力资源 ）</strong></p>    </td>
+									    <td colspan="4">
+									    	<p><strong>迟到：</strong><input type="text" size="10" ng-model="selecteditem.late"/>次共计<input type="text" size="10" ng-model="selecteditem.late_min"/>分钟</p> </br>
+                                            <p><strong>早退：</strong><input type="text" size="10" ng-model="selecteditem.leave"/>次共计<input type="text" size="10" ng-model="selecteditem.leave_min"/>分钟</p></br>
+                                            <p><strong> 旷工 ：</strong><input type="text" size="10" ng-model="selecteditem.absence"/>次</p></br>
+                                            <p><strong>  请假 ：</strong><input type="text" size="10" ng-model="selecteditem.afternoon"/>天</p><br /></br>
+                                            <p><strong>考核标准 ：</strong>无故意旷工、早退迟到累计不超过 5 次，请假累计不超过 7 天</p>
+									    </td>
+									   
+									  </tr>
+									  <tr ng-if="step==1||step==2||step==3||step==4">
+									    <td><div align="center"><strong>内训师<br />意见</strong></div>
+									   	</td>
+									    <td colspan="4" contentEditable="true">
+									    	<div class="form-group">
+						                        <label ng-if="step==1" class="col-lg-2 control-label">可选操作</label>
+						                        <label ng-if="step!=1" class="col-lg-2 control-label">审批结果</label>
+						                        <div class="col-lg-10">
+						                            <div class="btn-group">
+						                                <label ng-if="step==1" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+						                                <label ng-if="step!=1">{{handler_opinionList[0]}}</label>
+						                            </div>
+						                        </div>
+						                    </div>
+						                    <div>
+							                    <div>
+							                    	<label class="col-lg-2 control-label">操作备注</label>
+							                    	<div class="col-lg-10">
+									                    <textarea ng-model="remark[0]" class="form-control" style="width: 300px;height: 100px;">
+														</textarea>
+													</div>
+												</div>
+												<div class="pull-right">
+													<div >
+														{{handler_nameList[0]}}
+													</div>
+													<div >
+														{{last_update_timeList[0]|date:'yyyy-MM-dd HH:mm:ss'}}
+													</div>
+												</div>
+											</div>
+										</td>
+									  </tr> 
+									  <tr ng-if="step==2||step==3||step==4">
+									    <td><div align="center"><strong>课程顾问<br />总监意见</strong></div>
+									    </td>
+									    <td colspan="4">
+									    	<div class="form-group">
+						                        <label ng-if="step==2" class="col-lg-2 control-label">可选操作</label>
+						                        <label ng-if="step!=2" class="col-lg-2 control-label">审批结果</label>
+						                        <div class="col-lg-10">
+						                            <div class="btn-group">
+						                                <label ng-if="step==2" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+						                                <label  ng-if="step!=2">{{handler_opinionList[1]}}</label>
+						                            </div>
+						                        </div>
+						                    </div>
+						                    <div>
+							                    <div>
+							                    	<label class="col-lg-2 control-label">操作备注</label>
+							                    	<div class="col-lg-10">
+									                    <textarea ng-model="remark[1]" class="form-control" style="width: 300px;height: 100px;">
+														</textarea>
+													</div>
+												</div>
+												<div class="pull-right">
+													<div >
+														{{handler_nameList[1]}}
+													</div>
+													<div >
+														{{last_update_timeList[1]|date:'yyyy-MM-dd HH:mm:ss'}}
+													</div>
+												</div>
+											</div>
+									     </td>
+									  </tr>  
+									   <tr ng-if="step==3||step==4">
+										    <td><div align="center"><strong>人力资源<br />
+										    意见</strong></div></td>
+										    <td colspan="4">
+										    	<div class="form-group">
+							                        <label ng-if="step==3"  class="col-lg-2 control-label">可选操作</label>
+							                        <label ng-if="step!=3" class="col-lg-2 control-label">审批结果</label>
+							                        <div class="col-lg-10">
+							                            <div class="btn-group">
+							                                <label ng-if="step==3" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+							                                <label   ng-if="step!=3">{{handler_opinionList[2]}}</label>
+							                            </div>
+							                        </div>
+							                    </div>
+							                    <div>
+								                    <div>
+								                    	<label class="col-lg-2 control-label">操作备注</label>
+								                    	<div class="col-lg-10">
+										                    <textarea ng-model="remark[2]" class="form-control" style="width: 300px;height: 100px;">
+															</textarea>
+														</div>
+													</div>
+													<div class="pull-right">
+														<div >
+														{{handler_nameList[2]}}
+														</div>
+														<div >
+														{{last_update_timeList[2]|date:'yyyy-MM-dd HH:mm:ss'}}
+														</div>
+													</div>
+												</div>
+										    </td>
+									  </tr> 
+									</table>
+								</div>
+								
+				</div>
+	

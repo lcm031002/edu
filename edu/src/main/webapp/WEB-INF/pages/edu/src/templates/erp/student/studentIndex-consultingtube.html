@@ -1,0 +1,188 @@
+<div class="erp" ng-controller="erp_studentCenterCounselorController">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">咨询师</span>
+      <div class="pull-right">
+        <small>
+					<span class="cur text-primary"  ng-hide="viewCtrl.showEditCounselor" ng-click="showEditCounselor()">添加</span> 
+					<span class="text-muted"  ng-hide="viewCtrl.showEditCounselor"> | </span>
+					<span class="cur text-primary" ng-click="showHistoryCounselor()">历任咨询师</span>
+				</small>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="pull-left">
+        <div class="form" style="width: 425px;">
+          <dl class="dl-horizontal">
+            <dt>
+              <label class="control-label required">咨询师编号</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditCounselor">{{counselor.encoding}}</span>
+              <div class="input-group" ng-show="viewCtrl.showEditCounselor">
+                <input class="form-control" type="text" ng-model="counselorCopy.encoding" ng-disabled="true" >
+                <span class="input-group-btn">
+									<button class="btn btn-primary" ng-click="selectCounselor()">
+										<i class="iconfont icon-search"></i>
+									</button>
+								</span>
+              </div>
+            </dd>
+            <dt>
+              <label class="control-label required">开始时间</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditCounselor">{{counselor.start_date}}</span>
+              <rd-date-picker-popup ng-show="viewCtrl.showEditCounselor" ng-model="counselorCopy.start_date">
+              </rd-date-picker-popup>
+            </dd>
+            <dt>
+                <label style="font-weight: normal;margin-bottom: 5px;">备注<span style="margin: 0 8px 0 2px;
+                    position: relative;
+                    top: -.5px;">:</span></label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditCounselor">{{counselor.remark}}</span>
+              <textarea class="form-control" ng-show="viewCtrl.showEditCounselor" ng-model="counselorCopy.remark"></textarea>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="pull-left">
+        <div class="form" style="width: 425px;">
+          <dl class="dl-horizontal">
+            <dt>
+              <label class="control-label required">咨询师姓名</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditCounselor">{{counselor.name}}</span>
+              <input ng-show="viewCtrl.showEditCounselor" type="text" ng-disabled="true" class="form-control" ng-model="counselorCopy.name">
+            </dd>
+            <dt>
+              <label class="control-label required">结束时间</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditCounselor">{{counselor.end_date}}</span>
+              <rd-date-picker-popup ng-show="viewCtrl.showEditCounselor" ng-model="counselorCopy.end_date"></rd-date-picker-popup>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="table-panel text-center" ng-show="viewCtrl.showEditCounselor">
+      	<button class="btn btn-default" ng-click="cancelCounselorEdit()">取消</button>
+      	<button class="btn btn-primary" ng-click="saveCounselor()">确定</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <span class="title">学管师</span>
+      <div class="pull-right">
+        <small>
+					<span ng-hide="viewCtrl.showEditGovern" class="cur text-primary" ng-click="showEditGovern()">添加</span> 
+					<span class="" ng-hide="viewCtrl.showEditGovern"> | </span>
+					<span class="cur text-primary" ng-click="showHistoryGovern()">历任学管师</span>
+				</small>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="pull-left">
+        <div class="form" style="width: 425px;">
+          <dl class="dl-horizontal">
+            <dt>
+              <label class="control-label required">学管师编号</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditGovern">{{govern.encoding}}</span>
+              <div class="input-group" ng-show="viewCtrl.showEditGovern">
+                <input type="text" ng-disabled="true" class="form-control" ng-model="governCopy.encoding">
+                <span class="input-group-btn">
+									<button class="btn btn-primary" ng-click="selectGovern()">
+										<i class="iconfont icon-search"></i>
+									</button>
+								</span>
+              </div>
+            </dd>
+            <dt>
+              <label class="control-label required">开始时间</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditGovern">{{govern.start_date}}</span>
+              <rd-date-picker-popup ng-show="viewCtrl.showEditGovern" ng-model="governCopy.start_date"></rd-date-picker-popup>
+            </dd>
+            <dt>
+                <label style="font-weight: normal;margin-bottom: 5px;">备注<span style="margin: 0 8px 0 2px;
+                    position: relative;
+                    top: -.5px;">:</span></label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditGovern">{{govern.remark}}</span>
+              <textarea ng-show="viewCtrl.showEditGovern" class="form-control" ng-model="governCopy.remark"></textarea>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="pull-left">
+        <div class="form" style="width: 425px;">
+          <dl class="dl-horizontal">
+            <dt>
+              <label class="control-label required">学管师姓名</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditGovern">{{govern.name}}</span>
+              <input ng-show="viewCtrl.showEditGovern" ng-disabled="true" type="text" ng-model="governCopy.name" class="form-control">
+            </dd>
+            <dt>
+              <label class="control-label required">结束时间</label>
+            </dt>
+            <dd>
+              <span ng-hide="viewCtrl.showEditGovern">{{govern.end_date}}</span>
+              <rd-date-picker-popup ng-show="viewCtrl.showEditGovern" ng-model="governCopy.end_date"></rd-date-picker-popup>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="table-panel text-center" ng-show="viewCtrl.showEditGovern" >
+      	<button class="btn btn-default" ng-click="cancelGovernEdit()">取消</button>
+      	<button class="btn btn-primary" ng-click="saveGovern()">确定</button>
+      </div>
+    </div>
+  </div>
+  <script type="text/ng-template" id="employeeList.html">
+  	<rd-modal>
+  		<rd-modal-title>{{conf.title}}列表</rd-modal-title>
+  		<rd-modal-body>
+  			<div class="table-panel">
+  				<table class="table table-striped">
+  					<thead>
+  						<tr>
+  							<th>序号</th>
+  							<th>编码</th>
+  							<th>姓名</th>
+  							<th>所属组织</th>
+  							<th>开始日期</th>
+  							<th>结束日期</th>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<tr ng-repeat="e in employeeList">
+  							<td>{{$index}}</td>
+  							<td>{{e.encoding}}</td>
+  							<td>{{e.name}}</td>
+  							<td>{{e.bu_name}}</td>
+  							<td>{{e.start_date}}</td>
+  							<td>{{e.end_date}}</td>
+  						</tr>
+  					</tbody>
+  				</table>
+  				<ng-pagination conf="pageConf"></ng-pagination>
+  			</div>
+  		</rd-modal-body>
+  		<rd-modal-footer>
+  			<button class="btn btn-default" ng-click="$dismiss()">关闭</button>
+  		</rd-modal-footer>
+  	</rd-modal>
+  </script>
+</div>

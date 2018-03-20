@@ -1,0 +1,90 @@
+<div ng-controller="erp_orderFrozenMgrController">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><span class="title">锁定订单管理</span></div>
+    <div class="panel-body operation-panel">
+      <div class="toolbar">
+        <button class="btn btn-primary btn-circle" ng-click="exportExcel()">
+          <i class="iconfont icon-public_export"></i>导出
+        </button>
+        <button class="btn btn-primary btn-circle-reverse" ng-click="selectedRowCarryForward()">
+          <i class="iconfont icon-edit"></i>订单结转
+        </button>
+      </div>
+      <hr>
+      <div class="searchbar">
+        <form class="form-inline">
+          <rd-date-picker-range ng-start-date="searchParam.start_date" ng-end-date="searchParam.end_date" ng-date-change="onDateChange()"></rd-date-picker-range>
+          <rd-branch ng-bu-id="searchParam.bu_id" ng-branch-id="searchParam.branch_id" ng-value-change="onBranchChange()">
+	          <div class="form-group">
+	            订单状态：
+	            <select class="form-control" ng-model="searchParam.status" ng-options="status.id as status.name for status in statusList">
+	            </select>
+	            <button class="btn btn-primary" ng-click="query()">
+	              <i class="iconfont icon-search"></i>查询
+	            </button>
+	          </div>
+          </rd-branch>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!--main form end-->
+  <div class="table-panel">
+    <table class="table table-striped">
+      <col width="1%" />
+      <col width="2%" />
+      <col width="3%" />
+      <col width="3%" />
+      <col width="3%" />
+      <col width="6%" />
+      <col width="3%" />
+      <col width="3%" />
+      <col width="3%" />
+      <col width="6%" />
+      <col width="4%" />
+      <col width="9%" />
+      <col width="4%" />
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" ng-model="selectAllFlag">
+          </th>
+          <th>序号</th>
+          <th>报班单号</th>
+          <th>学员姓名</th>
+          <th>学员编码</th>
+          <th>业务校区</th>
+          <th>订单状态</th>
+          <th>剩余课时</th>
+          <th>剩余金额</th>
+          <th>操作时间</th>
+          <th>操作人</th>
+          <th>备注</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="data in dataList" ng-if="dataList && dataList.length">
+          <th>
+            <input ng-show="data.status==1" type="checkbox" ng-model="data.selectItemFlag">
+          </th>
+          <td>{{$index + 1}}</td>
+          <td>{{data.order_encoding}}</td>
+          <td>{{data.student_name}}</td>
+          <td>{{data.student_code}}</td>
+          <td>{{data.branch_name}}</td>
+          <td>{{data.statusName}}</td>
+          <td>{{data.course_surplus_count}}</td>
+          <td>{{data.surplus_cost}}</td>
+          <td>{{data.updateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          <td>{{data.updaterName}}</td>
+          <td>{{data.remark ? data.remark : '-'}}</td>
+          <td>
+            <span class="btn btn-default btn-sm" ng-show="{{data.status != 1}}" class="cur" ng-disabled="true">订单结转</span>
+            <span class="btn btn-default btn-sm" ng-show="{{data.status == 1}}" class="cur" ng-click="oneRowCarryForward(data)">订单结转</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

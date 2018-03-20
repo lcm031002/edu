@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table catalog="jbpm4_db" name="jbpm4_ext_business_entrust">
+		<column name="id"></column>
+		<column name="consignor_role"></column>
+		<column name="consignee_role"></column>
+		<column name="consignor_type"></column>
+		<column name="task_id"></column>
+		<column name="process_key"></column>
+		<column name="begin_time"></column>
+		<column name="end_time"></column>
+		<column name="process_task"></column>
+	</table>
+	<table catalog="jbpm4_db" name="jbpm4_ext_processrole_def">
+		<column name="id"></column>
+		<column name="process_key"></column>
+		<column name="jbpm_role"></column>
+		<column name="remark"></column>
+		<column name="process_task"></column>
+	</table>
+	<table catalog="jbpm4_db" name="jbpm4_ext_businessrol_mapping">
+		<column name="id"></column>
+		<column name="process_key"></column>
+		<column name="jbpm_role"></column>
+		<column name="business_role"></column>
+		<column name="business_task"></column>
+	</table>
+</hibernate-reverse-engineering>
