@@ -11,7 +11,7 @@
 				<name>Team Nexus Repository</name>
 				<url>http://maven.fkls.com/nexus/content/groups/public</url>
 			</repository>
-		</repositories>
+	</repositories>
   
   <properties>
 		<project.name>edu</project.name>
@@ -111,8 +111,8 @@
 			<version>0.9.1</version>
 		</dependency>
   		<dependency>
-  			<groupId>com.ebusiness</groupId>
-  			<artifactId>com.ebusiness.sso-client</artifactId>
+  			<groupId>com.edu</groupId>
+  			<artifactId>sso-client</artifactId>
   			<version>4.0.0</version>
   		</dependency>
   		
@@ -208,8 +208,8 @@
 		  	<version>10.2.0.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.ebusiness.common</groupId>
-			<artifactId>com.ebusiness.common</artifactId>
+			<groupId>com.edu</groupId>
+			<artifactId>common</artifactId>
 			<version>4.0.0</version>
 		</dependency>
 
