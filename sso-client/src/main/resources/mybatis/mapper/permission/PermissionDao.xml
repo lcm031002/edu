@@ -10,15 +10,15 @@
 	<!-- 查询团队对应的数据对象 -->
 	<select id="queryByUserId" resultMap="pojoMap"
 		parameterType="com.ebusiness.cas.client.common.model.Permission">
-		SELECT PU.ID AS USER_ID, PRP.menuIndex as PERMISSION_ID
+		SELECT PU.ID AS USER_ID, PRP.menu_id as PERMISSION_ID
 		FROM TAB_USER_INFO PU
 		LEFT JOIN tab_user_role_ref PUR
 		ON PU.ID = PUR.user_id
 		LEFT JOIN tab_role_info PR
 		ON PUR.role_id = PR.ID
 		LEFT JOIN ebs_rolemenu_rel PRP
-		ON PR.ID = PRP.roleId
-		WHERE PRP.menuIndex IS NOT NULL
+		ON PR.ID = PRP.role_Id
+		WHERE PRP.menu_id IS NOT NULL
 		<!-- 管理员ID为0 -->
 		<if test="userId!=0">
 			AND PU.ID = #{userId}

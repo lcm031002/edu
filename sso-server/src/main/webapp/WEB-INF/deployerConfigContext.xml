@@ -90,7 +90,7 @@
 				<!-- <bean
 					class="org.jasig.cas.authentication.handler.support.SimpleTestUsernamePasswordAuthenticationHandler" /> -->
 					<bean class="org.jasig.cas.adaptors.jdbc.QueryDatabaseAuthenticationHandler">
-						<property name="sql" value="select password from t_sys_user where status = 1 and username = ? "></property>
+						<property name="sql" value="select password from tab_user_info where status = 1 and username = ? "></property>
 						<property name="dataSource" ref="dataSource"></property>
 						<property name="passwordEncoder" ref="KLXXPasswordEncoder"></property>
 					</bean>

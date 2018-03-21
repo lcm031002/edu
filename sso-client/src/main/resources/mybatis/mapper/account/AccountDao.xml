@@ -6,7 +6,6 @@
 		<id property="id" column="id" />
 		<result property="userName" column="USERNAME" />
 		<result property="password" column="PASSWORD" />
-		<result property="oldPassword" column="OLD_PASSWORD" />
 		<result property="employeeId" column="EMPLOYEE_ID" />
 		<result property="employeeName" column="EMPLOYEE_NAME" />
 		<result property="status" column="STATUS" />
@@ -17,7 +16,7 @@
 	<!-- 查询团队对应的数据对象 -->
 	<select id="queryAccountByUserName" resultMap="pojoMap"
 		parameterType="com.ebusiness.cas.client.common.model.Account">
-		select tui.id, tui.USERNAME, tui.PASSWORD,tui.OLD_PASSWORD,tui.EMPLOYEE_ID,tei.EMPLOYEE_NAME, tui.STATUS,tui.CREATE_TIME,tui.UPDATE_TIME
+		select tui.id, tui.USERNAME, tui.PASSWORD,tui.EMPLOYEE_ID ,tei.EMPLOYEE_NAME, tui.STATUS,tui.CREATE_TIME,tui.UPDATE_TIME
 		  from TAB_USER_INFO tui
 	 left join TAB_EMPLOYEE_INFO tei on tui.EMPLOYEE_ID = tei.id
 		 where tui.status = 1
