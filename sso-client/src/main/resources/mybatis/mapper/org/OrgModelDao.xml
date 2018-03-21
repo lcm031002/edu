@@ -143,7 +143,7 @@
 	          toi.org_kind as orgKind
 	     from TAB_ORGANIZATION_INFO toi
 	     left join user_personal_settings ups
-	       on ups.param_val = to_char(toi.id)
+	       on ups.param_val = toi.id
 	      and ups.param_name = #{paramName}
 	    where ups.user_id = #{userId}
 	</select>
