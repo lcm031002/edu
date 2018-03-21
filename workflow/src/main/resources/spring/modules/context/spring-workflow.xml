@@ -55,7 +55,7 @@
 			<props>
 				<!-- org.hibernate.dialect.OracleDialect -->
 				<prop key="hibernate.dialect">
-					org.hibernate.dialect.OracleDialect
+					org.hibernate.dialect.MySQL5Dialect
 				</prop>
 				<!-- org.hibernate.hql.ast.ASTQueryTranslatorFactory -->
 				<prop key="hibernate.query.factory_class">
