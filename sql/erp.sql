@@ -1639,6 +1639,7 @@ CREATE TABLE `tab_user_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
+
 -- ----------------------------
 -- Records of tab_user_info
 -- ----------------------------
