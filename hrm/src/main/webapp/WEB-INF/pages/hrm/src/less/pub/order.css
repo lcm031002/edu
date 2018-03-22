@@ -1,0 +1,5 @@
+.step{float:left; width:25%; text-align:center; font-weight:bold;}
+.steptitle{float:left;  width:90%; margin-left:10px;  font-weight:bold; }
+.condition_item_checked{color: #fff;background-color: #286090;padding:2px;border-radius: 2px;cursor: pointer;}
+.condition_item:hover{color: #fff;background-color: #286090;}
+.condition_item{padding:2px;border-radius: 2px;cursor: pointer;}

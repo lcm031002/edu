@@ -1,0 +1,15 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "data":[
+        {
+            "id":"1",
+            "name":"大小班"
+        },{
+            "id":"2",
+            "name":"个性化"
+        }
+    ]
+}

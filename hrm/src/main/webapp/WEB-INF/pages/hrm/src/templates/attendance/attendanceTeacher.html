@@ -1,0 +1,39 @@
+<div ng-controller="TeacherAttendanceCtrl">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+        <div class="panel-heading font-bold">
+            老师耗课配比
+        </div>
+        <div class="panel-body" style="padding: 15px;" id="panelBody">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>报班单</th>
+                    <th>报班金额</th>
+                    <th>课程名称</th>
+                    <th>老师</th>
+                    <th>内账课耗课时</th>
+                    <th>外账课耗课时</th>
+                    <th>占比</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="teacherAttendance in teacherAttendanceList">
+                    <td>{{teacherAttendance.orderCode}}</td>
+                    <td>{{teacherAttendance.orderAmount}}</td>
+                    <td>{{teacherAttendance.courseName}}</td>
+                    <td>{{teacherAttendance.teacherName}}</td>
+                    <td>{{teacherAttendance.ERPAttanceCourseTime}}</td>
+                    <td>{{teacherAttendance.PUBAttanceCourseTime}}</td>
+                    <td>{{teacherAttendance.rate}}%</td>
+                </tr>
+                <tr ng-if="!teacherAttendanceList || !teacherAttendanceList.length">
+                    <td colspan="7">无数据</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>

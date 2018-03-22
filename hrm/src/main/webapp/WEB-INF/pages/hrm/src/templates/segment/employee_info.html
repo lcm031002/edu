@@ -1,0 +1,85 @@
+
+<div ng-controller=EmployeeInfoCtrl style="left: 100px;">
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">id</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-readonly=true
+				ng-model=currentEmployee.id>
+		</div>
+	</div>
+
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">员工编码:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-model=currentEmployee.encoding ng-readonly="all"
+				ng-value=currentEmployee.encoding>
+		</div>
+	</div>
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">姓名:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-readonly="all"
+				ng-model=currentEmployee.employeeName>
+		</div>
+	</div>
+
+	<div class=form-group>
+		<label class="col-sm-3 fl">性别</label>
+		<div class="col-sm-6 input-group">
+			<input type="radio" ng-model="currentEmployee.sex" ng-value="1">
+			男 </label> <input type="radio" ng-model="currentEmployee.sex" ng-value="2">
+			女 </label>
+
+
+		</div>
+	</div>
+
+	<div class=form-group>
+		<label class="col-sm-3 fl"> 证件号:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-readonly=true 
+				ng-model=currentEmployee.identificationCard>
+		</div>
+	</div>
+
+
+
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">邮箱:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-model=currentEmployee.email ng-readonly="all">
+		</div>
+	</div>
+
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">电话:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-model=currentEmployee.phone ng-readonly="all"> 
+		</div>
+	</div>
+
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">地址:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-model=currentEmployee.address ng-readonly="all"
+				ng-value="currentEmployee.address">
+		</div>
+	</div>
+
+	<div class=form-group>
+		<label class="col-sm-3 fl" style="line-height: 34px;">描述:</label>
+		<div class="col-sm-6 input-group">
+			<input type=text class=form-control ng-readonly="all"
+				ng-model=currentEmployee.description>
+		</div>
+	</div>
+
+	<div class=modal-footer align="">
+		<button class="btn btn-default btn-lg" type=button
+			style="margin-right: 10%;" ng-click=updateReadonly() >{{readonly}}</button>
+			<input type="checkbox" ng-model="all" ng-show="fasle">
+		<button class="btn btn-default btn-lg" type=button
+			style="margin-right: 40%;" ng-click=updateCurrentEmployee()>确认修改</button>
+	</div>
+
+</div>

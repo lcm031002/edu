@@ -1,0 +1,833 @@
+<!-- Modal -->
+<div id="EmpPanel" class="modal fade " tabindex="-1"
+	role="dialog" aria-hidden="true" style="background-color:#D1E9E9;">
+	<div class="modal-header" >
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3>员工档案管理</h3>
+	</div>
+	<div class="container-fluid">
+        <!--tabs-left:选项卡在左边显示  -->
+        <div class="tabbable" >
+            <!--nav-pills，nav-tabs，nav-stacked :改变选项卡的样式-->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab1" data-toggle="tab">基本信息</a>
+                </li>
+                <li><a href="#tab2" data-toggle="tab" ng-show="!addEmp">教育经历</a>
+                </li>
+                <li><a href="#tab3" data-toggle="tab" ng-show="!addEmp">工作经历</a>
+                </li>
+                <li><a href="#tab4" data-toggle="tab" ng-show="!addEmp">工作总结</a>
+                </li>
+                <li><a href="#tab5" data-toggle="tab" ng-show="!addEmp">奖惩信息</a>
+                </li>
+            </ul>
+            <!-- 选项卡相对应的内容 -->
+            <div class="tab-content" >
+                 <div class="tab-pane active" id="tab1" >
+                    <div style="width:auto; height:400px" >
+	                    	<div style="width:300px; height:400px; float:left; display:inline" class="center" ng-show="!addEmp">
+	                    		  <div>
+		                    		<img src="{{selectedEmp.staff_head}}" 
+		                    		class="img-circle" 
+		                    		style="background-color:#D1E9E9;width:300; height:300;" />
+		                    	</div>
+		                 
+		                    	 <div >	
+		                    		<button class="btn btn-default" type="button"  ng-click="headPic()">添加头像</button>
+		                    	</div>  
+		                    </div>
+		                    
+	                    	 <div style="width:300px; height:400px; float:left; display:inline">
+	                    		<div class="form-group">
+									<h3>
+										<label class="col-sm-4 fl" style="line-height: 34px;">姓名：</label>
+										<div class="col-sm-6 input-group">
+											<input type="text" 
+												class="form-control" ng-model="selectedEmp.employee_name"/>
+										</div>
+									</h3>
+								</div>
+	                    		<div>
+	                    				<label class="col-sm-3 fl" style="line-height: 34px;">工号：</label>
+										<div class="col-sm-6 input-group">
+											<input type="text" 
+												class="form-control" ng-model="selectedEmp.encoding"/>
+										</div>
+	                    		</div>
+	                    	</div> 
+	                    	<div  style="width:300px; height:atuo; float:left; display:inline">
+	                    		<div class="form-group">
+	                    				<label class="col-sm-4 fl" style="line-height: 34px;">业务线：</label>
+										<div class="col-sm-6 input-group">
+											<input type="text" 
+												class="form-control" ng-model="selectedEmp.business"/>
+										</div>
+	                    		</div>
+	                    		<div class="form-group">
+	                    				<label class="col-sm-4 fl" style="line-height: 34px;">所属部门：</label>
+										<div class="col-sm-6 input-group">
+											<select class="form-control"   ng-model="selectedEmp.dept" >
+				                                    <option value="">部门</option>
+				                                    <option value="部门1">部门1</option>
+				                                    <option value="部门2">部门2</option>
+				                                    <option value="部门3">部门3</option>
+				                           </select>
+										</div>
+	                    		</div>
+	                    		<div class="form-group">
+	                    				<label class="col-sm-4 fl" style="line-height: 34px;">手机号：</label>
+										<div class="col-sm-6 input-group">
+											<input type="text" 
+												class="form-control" ng-model="selectedEmp.phone"/>
+										</div>
+	                    		</div>
+	                    		<div class="form-group">
+	                    				<label class="col-sm-4 fl" style="line-height: 34px;">岗位：</label>
+										<div class="col-sm-6 input-group">
+			                                <select class="form-control" ng-options="m.ID as m.NAME for m in postList"  ng-model="selectedEmp.post">
+												 <option  value="">-- 请选择 --</option> 
+											</select>
+										</div>
+	                    		</div>
+	                    		<div class="form-group">
+	                    				<label class="col-sm-4 fl" style="line-height: 34px;">等级：</label>
+										<div class="col-sm-6 input-group">
+			                                <select class="form-control" ng-options="m.id as m.name for m in poslevelList"  ng-model="selectedEmp.poslevel">
+												 <option  value="">-- 请选择 --</option> 
+											</select>
+										</div>
+	                    		</div>
+	                    		<div class="form-group">
+	                    				<label class="col-sm-4 fl" style="line-height: 34px;">在职类型：</label>
+										<div class="col-sm-6 input-group">
+			                                <select class="form-control" ng-options="m.id as m.name for m in enterTypeList"  ng-model="selectedEmp.enterType">
+												 <option  value="">-- 请选择 --</option> 
+											</select>
+										</div>
+	                    		</div>
+	                    	</div>
+                    </div>
+                   
+                     <div style=" height:auto;" class="col-lg-12">
+                    	<div style=" height:auto; display:inline" ng-repeat="empInfo in temp" class="col-lg-6">
+                    		<div class="form-group">
+								<label class="col-sm-4 fl" style="line-height: 34px;">{{empInfo.fieldName}}：</label>
+								<div class="col-sm-4 input-group">
+									<input class="form-control" ng-if="empInfo.fieldType=='字符串'" ng-model="empInfo.fieldKey"></input>
+									<select class="form-control" ng-options="m.code as m.name for m in empInfo.selected" ng-if="empInfo.fieldType=='数据字典'" ng-model="empInfo.fieldKey">
+										 <option  value="">-- 请选择 --</option> 
+									</select>
+								</div>
+								<div class="col-sm-4 input-group" ng-controller="DatepickerDemoCtrl" ng-if="empInfo.fieldType=='日期'">
+									<input type="text" 
+										class="form-control" ng-model="empInfo.fieldKey" 
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+								</div>
+							</div>
+                    	</div>
+                    </div> 
+                    <div align="center">
+							<button class="btn btn-default" type="button" ng-show="addEmp"  ng-click="addEmployee()">确定添加</button>
+							<button class="btn btn-default" type="button" ng-show="!addEmp"  ng-click="updateEmployee()">确定修改</button>
+					</div>  
+                </div>
+               <!-- 教育经历 -->
+                <div class="tab-pane" id="tab2">
+                    <div class="panel-body" style="padding: 15px;" id="panelBody">
+                    	<form class="ng-pristine ng-valid" role="form">
+                    		<div class="col-lg-12">
+                    			<div>
+			                        <h3>教育经历<div class="fr cur" ><button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="toAddEdu()"><i class="fa fa-plus"></i> 添加</button></div></h3>
+			                    </div>
+			                    <table class="table table-striped table-hover table-bordered">
+			                        <tr>
+			                            <th>开始时间</th>
+			                            <th>截止时间</th>
+			                            <th>学校</th>
+			                            <th>专业</th>
+			                            <th>学位</th>
+			                            <th>学历</th>
+			                            <th>学制</th>
+			                            <th>附件</th>
+			                            <th>备注</th>
+			                            <th>操作</th>
+			                        </tr>
+			                        <tr ng-repeat="edu in employeeEdu" ng-if="employeeEdu&&employeeEdu.length" class="{{edu.checked?'success':''}}">
+			                            <td>{{edu.start_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{edu.end_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{edu.school}}</td>
+			                            <td>{{edu.major}}</td>
+			                            <td>{{edu.degree}}</td>
+			                            <td>{{edu.education}}</td>
+			                            <td>{{edu.school_system}}</td>
+			                            <td>{{edu.enclosure}}</td>
+			                            <td>{{edu.remark}}</td>
+			                            <td>
+			                                <a  ng-click="toUpdateEdu(edu)" href="javascript:void(0)">修改</a>
+			                                <a  data-toggle="modal" data-target="#DelModal" ng-click="toDeleteEdu(edu)" href="javascript:void(0)">删除</a>
+			                            </td>                           
+			                        </tr>
+			                        <tr ng-if="!employeeEdu||!employeeEdu.length">
+			                            <td colspan="12">暂无数据</td>
+			                        </tr>
+			                    </table>
+                    		</div>
+                    	</form>
+                    </div>
+                    		<!-- 模态框（Modal） -->
+					<div class="modal fade" id="eduModal" tabindex="-1" role="dialog" 
+					   aria-labelledby="myModalLabel" aria-hidden="true" >
+					   <div class="modal-dialog">
+					      <div class="modal-content">
+					         <div class="modal-header">
+					            <button type="button" class="close" data-dismiss="modal" 
+					               aria-hidden="true">
+					               &times;
+					            </button>
+					            <h4 ng-show="!eduUpdate" class="modal-title" id="myModalLabel">
+					               添加教育经历
+					            </h4>
+					            <h4 ng-show="eduUpdate" class="modal-title" id="myModalLabel">
+					               修改教育经历
+					            </h4>
+					         </div>
+					         <div class="modal-body">
+					         <div class="row">
+					         <div class="span5">
+							<form role="form" name="userForm" >
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">开始时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.start_time" placeholder="请输入开始时间" 
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">截止时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.end_time" placeholder="请输入截止时间" required
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							    <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">学校：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.school" placeholder="请输入学校" required/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">专业：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.major" />
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">学位：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.degree"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">学历：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.education"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">学制：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.school_system"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">附件：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.enclosure"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">备注：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedEdu.remark" />
+									</div>
+							   </div>
+							</form>
+							 </div>
+					         </div>
+					         <div class="modal-footer">
+					            <button type="button" class="btn btn-default" 
+					               data-dismiss="modal">关闭
+					            </button>
+					            <button type="button" ng-show="!eduUpdate"  class="btn btn-primary" ng-click="addEdu(selectedEdu)" >
+					               提交添加
+					            </button>
+					            <button type="button" ng-show="eduUpdate"  class="btn btn-primary" ng-click="updateEdu(selectedEdu)" >
+					               提交更改
+					            </button>
+					         </div>
+					         </div>
+					      </div><!-- /.modal-content -->
+					   </div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+                </div>
+                <!-- 工作经历 -->
+                <div class="tab-pane" id="tab3">
+                     <div class="panel-body" style="padding: 15px;" id="panelBody">
+                    	<form class="ng-pristine ng-valid" role="form">
+                    		<div class="col-lg-12">
+                    			<div>
+			                        <h3>工作经历<div class="fr cur" ><button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="toAddExp()" "><i class="fa fa-plus"></i> 添加</button></div></h3>
+			                    </div>
+			                    <table class="table table-striped table-hover table-bordered">
+			                        <tr>
+			                            <th>开始时间</th>
+			                            <th>截止时间</th>
+			                            <th>公司名称</th>
+			                            <th>公司性质</th>
+			                            <th>职位名称</th>
+			                            <th>工作职责</th>
+			                            <th>下属人数</th>
+			                            <th>离职原因</th>
+			                            <th>是否有证明</th>
+			                            <th>证明信息</th>
+			                            <th>操作</th>
+			                        </tr>
+			                        <tr ng-repeat="exp in employeeExp" ng-if="employeeExp&&employeeExp.length" class="{{exp.checked?'success':''}}">
+			                            <td>{{exp.start_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{exp.end_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{exp.company_name}}</td>
+			                            <td>{{exp.company_nature}}</td>
+			                            <td>{{exp.position}}</td>
+			                            <td>{{exp.operating_duty}}</td>
+			                            <td>{{exp.underling_number}}</td>
+			                            <td>{{exp.reason_for_leave}}</td>
+			                            <td>{{exp.proof==1?"有":"无"}}</td>
+			                            <td>{{exp.proof_information}}</td>
+			                            <td>
+			                                <a  ng-click="toUpdateExp(exp)" href="javascript:void(0)">修改</a>
+			                                <a  data-toggle="modal" data-target="#DelModal" ng-click="toDeleteExp(exp)" href="javascript:void(0)">删除</a>
+			                            </td>                           
+			                        </tr>
+			                        <tr ng-if="!employeeExp||!employeeExp.length">
+			                            <td colspan="12">暂无数据</td>
+			                        </tr>
+			                    </table>
+                    		</div>
+                    	</form>
+                    </div>
+                    		<!-- 模态框（Modal） -->
+					<div class="modal fade" id="expModal" tabindex="-1" role="dialog" 
+					   aria-labelledby="myModalLabel" aria-hidden="true" >
+					   <div class="modal-dialog">
+					      <div class="modal-content">
+					         <div class="modal-header">
+					            <button type="button" class="close" data-dismiss="modal" 
+					               aria-hidden="true">
+					               &times;
+					            </button>
+					            <h4 ng-show="!expUpdate" class="modal-title" id="myModalLabel">
+					               添加工作经历
+					            </h4>
+					            <h4 ng-show="expUpdate" class="modal-title" id="myModalLabel">
+					               修改工作经历
+					            </h4>
+					         </div>
+					         <div class="modal-body">
+					         <div class="row">
+					         <div class="span5">
+							<form role="form" name="userForm" >
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">开始时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.start_time" placeholder="请输入开始时间" required
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">截止时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.end_time" placeholder="请输入截止时间" required
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							    <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">公司名称：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.company_name" placeholder="请输入公司名称" required/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">公司性质：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.company_nature" />
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">职位名称：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.position"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">工作职责：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.operating_duty"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">下属人数：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.underling_number"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">离职原因：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.reason_for_leave"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">是否有证明：</label>
+									<div class="col-sm-6 input-group">
+										<select class="form-control" ng-model="selectedExp.proof"> 
+											<option value="1" >有</option>
+											<option value="0" >无</option>
+										</select>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">证明信息：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedExp.proof_information" />
+									</div>
+							   </div>
+							</form>
+							 </div>
+					         </div>
+					         <div class="modal-footer">
+					            <button type="button" class="btn btn-default" 
+					               data-dismiss="modal">关闭
+					            </button>
+					            <button type="button" ng-show="!expUpdate"  class="btn btn-primary" ng-click="addExp(selectedExp)" >
+					               提交添加
+					            </button>
+					            <button type="button" ng-show="expUpdate" class="btn btn-primary" ng-click="updateExp(selectedExp)" >
+					               提交更改
+					            </button>
+					         </div>
+					         </div>
+					      </div><!-- /.modal-content -->
+					   </div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+                </div>
+                
+                
+                <!-- 工作总结 -->
+                 <div class="tab-pane" id="tab4">
+                    <div class="panel-body" style="padding: 15px;" id="panelBody">
+                    	<form class="ng-pristine ng-valid" role="form">
+                    		<div class="col-lg-12">
+                    			<div>
+			                        <h3>工作总结<div class="fr cur" ><button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="toAddSum()" "><i class="fa fa-plus"></i> 添加</button></div></h3>
+			                    </div>
+			                    <table class="table table-striped table-hover table-bordered">
+			                        <tr>
+			                            <th>开始时间</th>
+			                            <th>截止时间</th>
+			                            <th>标题</th>
+			                            <th>内容</th>
+			                            <th>审批人</th>
+			                            <th>审批状态</th>
+			                            <th>审批意见</th>
+			                            <th>附件</th>
+			                            <th>操作</th>
+			                        </tr>
+			                        <tr ng-repeat="sum in employeeSum" ng-if="employeeSum&&employeeSum.length" class="{{sum.checked?'success':''}}">
+			                            <td>{{sum.start_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{sum.end_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{sum.title}}</td>
+			                            <td>{{sum.content}}</td>
+			                            <td>{{sum.approver}}</td>
+			                            <td>{{sum.approval_status==1?"审批完成":"审批中"}}</td>
+			                            <td>{{sum.approval_opinion}}</td>
+			                            <td>{{sum.enclosure}}</td>
+			                            <td>
+			                                <a  ng-click="toUpdateSum(sum)" href="javascript:void(0)">修改</a>
+			                                <a  data-toggle="modal" data-target="#DelModal" ng-click="toDeleteSum(sum)" href="javascript:void(0)">删除</a>
+			                            </td>                           
+			                        </tr>
+			                        <tr ng-if="!employeeSum||!employeeSum.length">
+			                            <td colspan="12">暂无数据</td>
+			                        </tr>
+			                    </table>
+                    		</div>
+                    	</form>
+                    </div>
+                    <!-- 模态框（Modal） -->
+					<div class="modal fade" id="sumModal" tabindex="-1" role="dialog" 
+					   aria-labelledby="myModalLabel" aria-hidden="true" >
+					   <div class="modal-dialog">
+					      <div class="modal-content">
+					         <div class="modal-header">
+					            <button type="button" class="close" data-dismiss="modal" 
+					               aria-hidden="true">
+					               &times;
+					            </button>
+					            <h4 ng-show="!sumUpdate" class="modal-title" id="myModalLabel">
+					               添加工作总结
+					            </h4>
+					            <h4 ng-show="sumUpdate" class="modal-title" id="myModalLabel">
+					               修改工作总结
+					            </h4>
+					         </div>
+					         <div class="modal-body">
+					         <div class="row">
+					         <div class="span5">
+							<form role="form" name="userForm" >
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">开始时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.start_time" placeholder="请输入开始时间" required
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">截止时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.end_time" placeholder="请输入截止时间" required
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							    <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">标题：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.title" placeholder="请输入学校" required/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">内容：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.content" />
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">审批人：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.approver"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">审批状态：</label>
+									<div class="col-sm-6 input-group">
+										<select class="form-control" ng-model="selectedSum.approval_status">
+											<option value="1">状态1</option>
+											<option value="2">状态2</option>
+											<option value="3">状态3</option>
+										</select>		
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">审批意见：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.approval_opinion"/>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">附件：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedSum.enclosure"/>
+									</div>
+							   </div>
+							</form>
+							 </div>
+					         </div>
+					         <div class="modal-footer">
+					            <button type="button" class="btn btn-default" 
+					               data-dismiss="modal">关闭
+					            </button>
+					            <button type="button" ng-show="!sumUpdate"  class="btn btn-primary" ng-click="addSum(selectedSum)" >
+					               提交添加
+					            </button>
+					            <button type="button" ng-show="sumUpdate"  class="btn btn-primary" ng-click="updateSum(selectedSum)" >
+					               提交更改
+					            </button>
+					         </div>
+					         </div>
+					      </div><!-- /.modal-content -->
+					   </div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+                </div>
+                <!-- 奖惩信息 -->
+                <div class="tab-pane" id="tab5">
+                     <div class="panel-body" style="padding: 15px;" id="panelBody">
+                    	<form class="ng-pristine ng-valid" role="form">
+                    		<div class="col-lg-12">
+                    			<div>
+			                        <h3>奖惩信息<div class="fr cur" ><button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="toAddRew()" "><i class="fa fa-plus"></i> 添加</button></div></h3>
+			                    </div>
+			                    <table class="table table-striped table-hover table-bordered">
+			                        <tr>
+			                            <th>获奖时间</th>
+			                            <th>发奖单位</th>
+			                            <th>奖项名称</th>
+			                            <th>备注</th>
+			                            <th>附件</th>
+			                            <th>操作</th>
+			                        </tr>
+			                        <tr ng-repeat="rew in employeeRew" ng-if="employeeRew&&employeeRew.length" class="{{rew.checked?'success':''}}">
+			                            <td>{{rew.winning_time|date:'yyyy-MM-dd'}}</td>
+			                            <td>{{rew.unit_awards}}</td>
+			                            <td>{{rew.award_name}}</td>
+			                            <td>{{rew.remark}}</td>
+			                            <td>{{rew.enclosure}}</td>
+			                            <td>
+			                                <a  ng-click="toUpdateRew(rew)" href="javascript:void(0)">修改</a>
+			                                <a  data-toggle="modal" data-target="#DelModal" ng-click="toDeleteRew(rew)" href="javascript:void(0)">删除</a>
+			                            </td>                           
+			                        </tr>
+			                        <tr ng-if="!employeeRew||!employeeRew.length">
+			                            <td colspan="12">暂无数据</td>
+			                        </tr>
+			                    </table>
+                    		</div>
+                    	</form>
+                    </div>
+                    		<!-- 模态框（Modal） -->
+					<div class="modal fade" id="rewModal" tabindex="-1" role="dialog" 
+					   aria-labelledby="myModalLabel" aria-hidden="true" >
+					   <div class="modal-dialog">
+					      <div class="modal-content">
+					         <div class="modal-header">
+					            <button type="button" class="close" data-dismiss="modal" 
+					               aria-hidden="true">
+					               &times;
+					            </button>
+					            <h4 ng-show="!rewUpdate" class="modal-title" id="myModalLabel">
+					               添加奖惩信息
+					            </h4>
+					            <h4 ng-show="rewUpdate" class="modal-title" id="myModalLabel">
+					               修改奖惩信息
+					            </h4>
+					         </div>
+					         <div class="modal-body">
+					         <div class="row">
+					         <div class="span5">
+							<form role="form" name="userForm" >
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">获奖时间：</label>
+									<div class="col-sm-6 input-group" ng-controller="DatepickerDemoCtrl">
+										<input type="text" 
+										class="form-control" ng-model="selectedRew.winning_time" placeholder="请输入获奖时间" required
+										uib-datepicker-popup="{{format}}"
+	                                   current-text="今天"
+	                                   close-text="关闭"
+	                                   clear-text="清理"
+	                                   is-open="opened"
+	                                   ng-readonly="true"
+	                                   id="beginDate"/>
+                                   		<span class="input-group-btn">
+				                            <button type="button" class="btn btn-default" ng-click="open($event)">
+				                                <i class="glyphicon glyphicon-calendar"></i>
+				                            </button>
+				                        </span>
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">发奖单位：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedRew.unit_awards" placeholder="请输入发奖单位" required/>
+									</div>
+							   </div>
+							    <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">奖项名称：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedRew.award_name" placeholder="请输入奖项名称" required/>
+									</div>
+							   </div>
+							  <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">备注：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedRew.remark" />
+									</div>
+							   </div>
+							   <div class="form-group">
+							      <label class="col-sm-4 fl" style="line-height: 34px;">附件：</label>
+									<div class="col-sm-6 input-group">
+										<input type="text" 
+										class="form-control" ng-model="selectedRew.enclosure"/>
+									</div>
+							   </div>
+							</form>
+							 </div>
+					         </div>
+					         <div class="modal-footer">
+					            <button type="button" class="btn btn-default" 
+					               data-dismiss="modal">关闭
+					            </button>
+					            <button type="button" ng-show="!rewUpdate"  class="btn btn-primary" ng-click="addRew(selectedRew)" >
+					               提交添加
+					            </button>
+					            <button type="button" ng-show="rewUpdate"  class="btn btn-primary" ng-click="updateRew(selectedRew)" >
+					               提交更改
+					            </button>
+					         </div>
+					         </div>
+					      </div><!-- /.modal-content -->
+					   </div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+                </div>
+                    <!-- 模态框（Modal） -->
+					<div class="modal fade" id="DelModal" tabindex="-1" role="dialog" 
+					   aria-labelledby="myModalLabel" aria-hidden="true" >
+					   <div class="modal-dialog">
+					      <div class="modal-content">
+					         <div class="modal-header">
+					            <button type="button" class="close" data-dismiss="modal" 
+					               aria-hidden="true">
+					               &times;
+					            </button>
+					            <h4 ng-show="eduDelete" class="modal-title" id="myModalLabel">
+					               删除教育经历
+					            </h4>
+					            <h4 ng-show="expDelete" class="modal-title" id="myModalLabel">
+					               删除工作经历
+					            </h4>
+					            <h4 ng-show="sumDelete" class="modal-title" id="myModalLabel">
+					               删除工作总结
+					            </h4>
+					            <h4 ng-show="rewDelete" class="modal-title" id="myModalLabel">
+					               删除奖惩信息
+					            </h4>
+					         </div>
+					         <div class="modal-body">
+					         <h3>确定要删除吗？</h3>
+					         <div class="modal-footer">
+					            <button type="button" class="btn btn-default" 
+					               data-dismiss="modal">关闭
+					            </button>
+					            <button ng-show="eduDelete" type="button"  class="btn btn-primary" ng-click="deleteEdu()" >
+					               确定
+					            </button>
+					            <button ng-show="expDelete" type="button"  class="btn btn-primary" ng-click="deleteExp()" >
+					               确定
+					            </button>
+					            <button ng-show="sumDelete" type="button"  class="btn btn-primary" ng-click="deleteSum()" >
+					               确定
+					            </button>
+					            <button ng-show="rewDelete" type="button"  class="btn btn-primary" ng-click="deleteRew()" >
+					               确定
+					            </button>
+					         </div>
+					         </div>
+					      </div><!-- /.modal-content -->
+					   </div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
+</div>

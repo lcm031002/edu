@@ -1,0 +1,18 @@
+{
+    "name": "待考勤学员列表",
+    "version": "0.0.1",
+    "error":"false",
+    "data":[
+        {
+            "id":"1",
+            "student_encoding":"DRCGH_7864565",
+            "student_name":"jkhgh_uty6u8t",
+            "school":"jhdgshjgsd",
+            "phone":"1213223",
+            "attendTypeName":"正常考勤",
+            "attendType":"10",
+            "teacherName":"张武",
+            "remark":""
+        }
+    ]
+}

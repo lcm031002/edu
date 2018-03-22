@@ -1,0 +1,14 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "account_1":{
+        "id":"122",
+        "account_type":"1",
+        "account_type_name":"储值账户",
+        "product":"大小班",
+        "product_type":"",
+        "value":"2000"
+    }
+}

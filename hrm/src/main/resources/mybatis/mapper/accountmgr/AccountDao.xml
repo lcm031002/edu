@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.AccountDao">
+
+<resultMap type="com.ebusiness.hrm.model.Account" id="modelMap">    
+    <id column="id" property="user_id"/>    
+    <result column="userName" property="accountName"/>
+    <result column="status" property="status"/>    
+    <result column="password" property="password"/>    
+    <result column="old_password" property="oldPassword"/>    
+    <result column="remark" property="remark"/>    
+    <result column="employee_id" property="employeeId"/>    
+    <result column="employee_name" property="employeeName"/>    
+    <result column="org_id" property="orgId"/>    
+    <result column="bu_id" property="buId"/>    
+    <result column="sch_id" property="branchId"/>    
+    <result column="create_user" property="createUser"/>    
+    <result column="create_time" property="createTime"/>    
+    <result column="update_user" property="updateUser"/>    
+    <result column="update_time" property="updateTime"/>           
+</resultMap> 
+	
+	<!-- 查询账户信息列表 -->
+	<select id="queryAccountForPage" parameterType="java.util.Map"
+	resultMap="modelMap">
+		SELECT
+			tuf.id,
+			tuf.userName,
+			tuf.password,
+			tef.employee_name,
+			tuf.employee_id,
+			tuf.status
+		FROM TAB_USER_INFO tuf
+		left join TAB_EMPLOYEE_INFO tef 
+		on tuf.employee_id=tef.id
+		where tef.status != 0
+		  and tuf.status != 0
+			<!-- 账户名查询 -->
+			<if test="accountName!=null and accountName!=''">
+				and tuf.userName like '%'||#{accountName,jdbcType=VARCHAR}||'%'
+			</if>
+			<if test="employeeId!=null and employeeId!=-1">
+				and tuf.employee_id=#{employeeId,jdbcType=NUMERIC}
+			</if>
+			<if test="employeeName!=null and employeeName!=''">
+				and tef.employee_name like '%'||#{employeeName,jdbcType=VARCHAR}||'%'
+			</if>
+		order by tuf.create_time  desc
+
+	</select>
+	
+	<!-- 添加账户 -->
+	<insert id="addAccount" parameterType="com.ebusiness.hrm.model.Account">
+		INSERT INTO TAB_USER_INFO
+		(
+			 id,
+		userName,
+		employee_id,
+		password,
+		status,
+		create_user,
+		create_time
+		)
+	VALUES(
+		seq_tab_user_info.nextval,
+		#{accountName,jdbcType=VARCHAR},/*账户名称*/
+		#{employeeId,jdbcType=NUMERIC},/*员工编码*/
+		#{password,jdbcType=VARCHAR},/*账户密码*/
+		1,
+		#{createUser,jdbcType=NUMERIC},
+		(SELECT sysdate FROM dual)
+		)
+		<!-- FROM DUAL -->
+	</insert>
+	
+	<!-- 修改账户 -->
+	<update id="updateAccount" parameterType="com.ebusiness.hrm.model.Account">
+		UPDATE TAB_USER_INFO t
+		SET
+			t.username = #{accountName,jdbcType=VARCHAR},
+				<!-- 只有旧密码和新密码不一样时才修改为新的密码 -->
+			<if test="password != null and password != '' and password!=oldPassword and oldPassword!=''">
+				t.password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="oldPassword != null and oldPassword != '' and oldPassword!=password">
+			t.old_password = #{oldPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="employeeId != null and employeeId != ''">
+			t.employee_id = #{employeeId,jdbcType=NUMERIC},
+			</if>
+			t.update_user = #{updateUser,jdbcType=NUMERIC},
+			t.update_time = sysdate
+		WHERE t.id = #{user_id,jdbcType =NUMERIC}			
+	</update>
+	
+	<!-- 禁用指定的一个账户 -->
+	<update id="deleteAccount" >
+		         update tab_user_info t set t.status=#{status, jdbcType =NUMERIC} where t.id=#{accountId, jdbcType =NUMERIC}
+	</update>
+	
+	<!-- 查询已存在账户 -->
+	<select id="queryAccountId" parameterType="String" resultType="Long">
+		select tf.id from tab_user_info tf WHERE tf.username=#{accountName, jdbcType =VARCHAR} and rownum=1 
+	</select>
+
+	<select id="queryEmployeeBindedCount" parameterType="com.ebusiness.hrm.model.Account" resultType="integer">
+		select count(0)
+		from tab_user_info tui
+		where tui.status != 0
+		and tui.employee_id = #{employeeId}
+		<if test="user_id != null and user_id != ''">
+		and tui.id != #{user_id}
+		</if>
+	</select>
+
+</mapper>

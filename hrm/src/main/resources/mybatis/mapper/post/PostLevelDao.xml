@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.PostLevelDao">
+	<resultMap type="com.ebusiness.hrm.model.PostLevel" id="dataMap">    
+	    <id column="id" property="id"/>    
+	    <result column="level_code" property="level_code"/>    
+	    <result column="level_type" property="level_type"/>    
+	    <result column="level_type_name" property="level_type_name"/>  
+	    <result column="remark" property="remark"/>  
+	    <result column="create_user" property="create_user"/> 
+	    <result column="create_time" property="create_time"/> 
+	    <result column="update_user" property="update_user"/> 
+	    <result column="update_time" property="update_time"/>
+	    <result column="deleted" property="deleted"/>  
+    </resultMap> 
+    
+	<insert id="insert" parameterType="com.ebusiness.hrm.model.PostLevel">
+		INSERT INTO tp_post_level
+		(
+			id,
+			level_code,
+			level_type,
+			remark,
+			create_user,
+			create_time,
+			update_user,
+			update_time,
+			deleted
+		)
+		VALUES
+		(
+			#{id,jdbcType=VARCHAR},
+			#{level_code,jdbcType=VARCHAR},
+			#{level_type,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP},
+			#{update_user,jdbcType=NUMERIC},
+			#{update_time,jdbcType=TIMESTAMP},
+			0
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.ebusiness.hrm.model.PostLevel">
+		UPDATE tp_post_level
+		SET
+			level_code=#{level_code,jdbcType=VARCHAR},
+			level_type=#{level_type,jdbcType=VARCHAR},
+			update_user=#{update_user,jdbcType=NUMERIC},
+			update_time=#{update_time,jdbcType=TIMESTAMP}
+		WHERE id=#{id, jdbcType = VARCHAR}
+	</update>
+	
+	<select id="selectList" resultMap="dataMap">
+		select t.id, t.level_code, t.level_type,
+			   decode(t.level_type,
+			   		  'PROFESSIONAL', '专业通道(P)',
+			   		  'TECHNOLOGY', '技术通道(T)',
+			   		  'MANAGEMENT', '管理通道(M)', '') as level_type_name,
+			   t.remark
+		from tp_post_level t 
+		order by t.level_code
+	</select>
+	
+</mapper>

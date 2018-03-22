@@ -1,0 +1,234 @@
+<!-- Modal -->
+<div id="studentAccountCashPanel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="studentAccountCashPanel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="studentAccountCashPanelLabel">现金缴费</h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body" style="padding: 15px;" id="panelBody">
+                <div class="col-lg-5">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">充值金额</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="number" class="form-control" ng-model="cashPay.value" min="1" max="50000"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">备注</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="cashPay.remark"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2" align="center">
+                    <button type="submit" class="btn btn-default" ng-click="addPay()">添加</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>充值信息<span class="fr">合计：{{cashPay.total}}</span></h3>
+        </div>
+        <table class="table">
+            <tr>
+                <th>充值类型</th>
+                <th>金额</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-if="!cashPay.cashList||!cashPay.cashList.length">
+                <td colspan="4" align="center">暂无数据.</td>
+            </tr>
+            <tr ng-repeat="cash in cashPay.cashList" ng-if="cashPay.cashList&&cashPay.cashList.length">
+                <td>{{cash.typeName}}</td>
+                <td>{{cash.value}}</td>
+                <td>{{cash.remark}}</td>
+                <td><a href="javascript:void(0)" ng-click="removePay(cash)">删除</a></td>
+            </tr>
+        </table>
+        <div class="col-lg-12" align="center">
+            <button type="submit" class="btn btn-primary" ng-click="confirmPay()">确定</button>
+        </div>
+    </div>
+</div>
+
+<div id="studentAccountCardPanel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="studentAccountCardPanel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="studentAccountCardPanelLabel">刷卡缴费</h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body" style="padding: 15px;" id="panelBody">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">金额</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="number" class="form-control" ng-model="cardPay.value" min="1" max="50000"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">付款卡号</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="cardPay.card" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">公司账号</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="cardPay.companyAccount" ng-readonly="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">公司pos机</label>
+                        <div class="input-group col-sm-9 ">
+                            <select class="form-control" ng-model="cardPay.pos"  ng-options="pos.name for  pos in cardPay.posList track by pos.id"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">备注</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="cardPay.remark"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" align="center">
+                    <button type="submit" class="btn btn-default" ng-click="addPay()">添加</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>充值信息<span class="fr">合计：{{cardPay.total}}</span></h3>
+        </div>
+        <table class="table">
+            <tr>
+                <th>金额</th>
+                <th>付款卡号</th>
+                <th>公司账号</th>
+                <th>公司POS机</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-if=" !cardPay.cardList || !cardPay.cardList.length ">
+                <td colspan="6" align="center">暂无数据.</td>
+            </tr>
+            <tr ng-repeat="card in cardPay.cardList" ng-if=" cardPay.cardList && cardPay.cardList.length ">
+                <td>{{card.value}}</td>
+                <td>{{card.card}}</td>
+                <td>{{card.companyAccount}}</td>
+                <td>{{card.posName}}</td>
+                <td>{{card.remark}}</td>
+                <td><a href="javascript:void(0)" ng-click="removePay(card)">删除</a></td>
+            </tr>
+        </table>
+        <div class="col-lg-12" align="center">
+            <button type="submit" class="btn btn-primary" ng-click="confirmPay()">确定</button>
+        </div>
+    </div>
+</div>
+
+<div id="studentAccountTransferPanel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="studentAccountTransferPanel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="studentAccountTransferPanelLabel">转账缴费</h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body" style="padding: 15px;">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">金额</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="number" class="form-control" ng-model="transferPay.value" min="1" max="50000"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">付款卡号</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="transferPay.card" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">公司账号</label>
+                        <div class="input-group col-sm-9 ">
+                          <select class="form-control" ng-model="transferPay.account"  
+                          ng-options="account.name for  account in transferPay.accountList track by account.id"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">备注</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="transferPay.remark"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" align="center">
+                    <button type="submit" class="btn btn-default" ng-click="addPay()">添加</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>充值信息<span class="fr">合计：{{transferPay.total}}</span></h3>
+        </div>
+        <table class="table">
+            <tr>
+                <th>金额</th>
+                <th>付款卡号</th>
+                <th>公司账号</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-if=" !transferPay.transferList || !transferPay.transferList.length ">
+                <td colspan="6" align="center">暂无数据.</td>
+            </tr>
+            <tr ng-repeat="transfer in transferPay.transferList" ng-if="transferPay.transferList && transferPay.transferList.length ">
+                <td>{{transfer.value}}</td>
+                <td>{{transfer.card}}</td>
+                <td>{{transfer.companyAccount}}</td>
+                <td>{{transfer.remark}}</td>
+                <td><a href="javascript:void(0)" ng-click="removePay(transfer)">删除</a></td>
+            </tr>
+        </table>
+        <div class="col-lg-12" align="center">
+            <button type="submit" class="btn btn-primary" ng-click="confirmPay()">确定</button>
+        </div>
+    </div>
+</div>
+<div id="studentAccountPanel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="studentAccountPanel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="studentAccountPanelLabel">账户缴费</h3>
+    </div>
+    <div class="modal-body">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="col-sm-3 fl" style="line-height: 34px;">金额</label>
+                <div class="input-group col-sm-9 ">
+                    <input type="number" class="form-control" ng-model="accountPay.total" min="1" max="50000"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6" align="left">
+            <button type="submit" class="btn btn-primary" ng-click="confirmPay()">确定</button>
+        </div>
+    </div>
+</div>

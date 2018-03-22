@@ -1,0 +1,37 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "orderNo":"BJK_20160525000070",
+            "orgName":"厦门文屏大小班校区",
+            "COURSE_BRANCH_NAME":"厦门文屏大小班校区",
+            "studentNo":"BXBH_20160525000070",
+            "studentName":"文涛89",
+            "courseName":"厦门高一语文",
+            "courseTotalCount":"10",
+            "attendAmount":"100.00",
+            "courseCnt":"100.00",
+            "courseTimes":"13",
+            "teacherName":"董伟12",
+            "hourLen":"12",
+            "courseDate":"2016-01-04",
+            "startTime":"9:00",
+            "endTime":"12:00",
+            "attendDate":"2015-01-04",
+            "attType":"置空",
+            "lastAtt":"正常考勤",
+            "kuaYue":"是",
+            "cnselorName":"咨询1",
+            "courseTeacherCn":"董伟1",
+            "courseTeacherCn_len":"10",
+            "courseTeacherEn":"董伟2",
+            "courseTeacherEn_len":"10"
+        }
+    ]
+}

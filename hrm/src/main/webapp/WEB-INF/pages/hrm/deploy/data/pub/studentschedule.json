@@ -1,0 +1,27 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "data":[
+        {
+            "courseDate":"2016-06-04",
+            "courseName":"厦门大小班语文",
+            "courseCode":"WEHJU",
+            "courseTime":"1",
+            "courseTeacherName":"张武老师",
+            "courseTeacherCode":"DESHJ",
+            "startTime":"17:54",
+            "endTime":"23:00"
+        },
+        {
+            "courseDate":"2016-06-05",
+            "courseName":"厦门大小班数学",
+            "courseCode":"WEHJU",
+            "courseTime":"2",
+            "courseTeacherName":"李四老师",
+            "courseTeacherCode":"DESHJ22",
+            "startTime":"13:54",
+            "endTime":"15:00"
+        }
+    ]
+}

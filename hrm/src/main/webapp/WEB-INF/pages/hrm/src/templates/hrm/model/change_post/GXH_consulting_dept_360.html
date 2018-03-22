@@ -1,0 +1,517 @@
+				<div ng-if="openPanel=='7'" class="container" >
+						<p>&nbsp;</p>
+						<p>&nbsp;</p>
+                   		<div align="center">
+                   			<h2>快乐学习个性化咨询部360度考评问卷</h2>
+                   		</div>
+						<p>&nbsp;</p>
+						<div class="form-group col-lg-12">
+							<strong>
+								  <div class="form-group fl">
+								     <label class="fl" style="line-height: 34px;">教师姓名：</label>
+								    <div class="input-group">
+						              <input type="text" class="form-control" ng-model="selecteditem.employeeName"/>
+						                  <p   ng-show="(!selecteditem.employeeId||selecteditem.employeeId=='')&&isSbumitting==true"
+								               class="help-block" style="color:#a94442" desc="教师姓名不能为空">教师姓名不能为空........</p> 
+						               <span class="input-group-addon"  id="showSpan" ng-click="showEmployeeQuery()">
+						                 <i class="fa fa-edit"></i></span>
+						                 <!-- 隐藏账户所属员工Id -->
+						                 <input type="hidden" ng-model="selecteditem.employeeId" na-value="selecteditem.employeeId" > 
+						                   <div class="associatebox" ng-if="showQuery==true" >
+						                  <ul >
+						                <div class="input-group drop-field"  ng-controller="TooltipDemoCtrl" >         
+						                <input type="text" class="form-control ng-pristine ng-valid ng-touched" 
+						                 ng-model="searchInfo" 
+						                 ng-class="{'has-error' : !selecteditem.employeeId}"
+						                 id="employee_search_info"
+						                 ng-change="queryEmployeeInfo()"
+						                 tooltip-placement="top" 
+								         tooltip-placement="{dynamicTooltip}}" 
+								         uib-tooltip="{{dynamicTooltip}}"  
+								         tooltip-enable="!selecteditem.employeeId"
+						                 placeholder="请输入教师姓名或编码....">
+						                 <span id="selectSpan" class="input-group-addon"   ng-click="queryEmployeeInfo()">
+						                 <i class="fa fa-search"></i></span>
+						                 </div>
+						                 <!-- 迭代员工 -->
+						                   <li ng-if="onGoingQuery==true" ng-repeat="employee in employeeList" ng-click="selectedEmployee(employee)">
+						                   {{employee.ENCODING}}-{{employee.EMPLOYEE_NAME}}</li>
+						                         </ul>
+						                     </div>
+						            </div>
+						   		  </div>
+							  	  <div class="form-group fl">
+										<label class="fl" >所在校区：</label>
+										<div class="input-group">
+											<input type="text" class="form-control" ng-model="selecteditem.school"/>
+										</div>
+								  </div>
+								  							  
+								<div>
+								  <button type="button" ng-click="toScore(scoreList)" class="btn  btn-warning">
+									得分
+									</button>
+								  {{selecteditem.total_score}}
+								 </div>
+						    </strong>
+						</div>
+						<div class="pull-left">
+							<div class="pull-left">
+								<p>（为保证调查结果的准确性及有效性，请您客观回答以下问题。您的回答对于我们得出正确的评价很重要，谢谢您
+								的支持与配合！）</p>
+							</div>
+							<div class="pull-left">
+								 <div class="pull-left"><strong>评价人姓名：</strong><input ng-model="selecteditem.evaluate_name" type="text" size="10" /> （需与被评价伙伴同校区）<strong> 对被评价伙伴的熟悉了解程度如何：</strong></div>
+								 <div class="pull-left col-lg-12">
+									 <label class="radio-inline col-sm-6">
+									  <input name="display0" type="radio" value="A" ng-model="selecteditem.know" >
+									    A．经常接触，十分了解
+									</label>
+									<label class="radio-inline col-sm-6">
+									  <input name="display0" type="radio" value="B" ng-model="selecteditem.know"  >
+									    B．不太接触，了解一般
+									</label>
+									<label class="radio-inline">
+									  <input name="display0" type="radio" value="C" ng-model="selecteditem.know"  >
+									    C．未接触过，不清楚<strong>（若选择此选项，则不参与下列问题的考核评价）
+									</label>
+								</div>
+							</div>
+						 </div>
+						 <div class="pull-left">
+						 	<div>
+								  <div class="pull-left"><strong>一、选择题。考核标准及分数：优秀（ 5 分）、良好（ 4 分）、一般（ 3 分）、较差（ 2 分）、差（ 1 分）</strong>。</div>
+								  <div class="pull-left">
+									<div>
+										<strong>1.工作态度：</strong>能够以热情饱满的状态投入工作，对于上级制定的规章制度能有力贯彻执行，不迟到早退，爱岗敬业，
+						 				上班时间不做与工作无关的事，起到很好的模范带头作用。 
+							 		</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display1" type="radio" value="5" ng-model="scoreList[0]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display1" type="radio" value="4" ng-model="scoreList[0]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display1" type="radio" value="3" ng-model="scoreList[0]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display1" type="radio" value="2" ng-model="scoreList[0]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display1" type="radio" value="1" ng-model="scoreList[0]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div> <strong>2.责任意识：</strong>能自觉服从校区领导，完成相应职责，勇于承担职责范围内全部事情的责任，凡事自我检讨， 积极改
+											进，校区内无矛盾纠纷、责任推诿现象。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display2" type="radio" value="5" ng-model="scoreList[1]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display2" type="radio" value="4" ng-model="scoreList[1]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display2" type="radio" value="3" ng-model="scoreList[1]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display2" type="radio" value="2" ng-model="scoreList[1]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display2" type="radio" value="1" ng-model="scoreList[1]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div> 
+										<strong>3.协作意识：</strong> 以大局为重，能积极主动地参与本校区及部门间相关工作的开展和协作，并跟进落实完成情况，配合
+										默契。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display3" type="radio" value="5" ng-model="scoreList[2]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display3" type="radio" value="4" ng-model="scoreList[2]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display3" type="radio" value="3" ng-model="scoreList[2]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display3" type="radio" value="2" ng-model="scoreList[2]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display3" type="radio" value="1" ng-model="scoreList[2]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div > 
+										<strong>4.互相尊重：</strong> 正确认识部门间分工不同，理解并尊重平行部门的工作（如和教学部老师沟通反馈）。。 		
+							 		
+							 		</div>
+							 		<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display4" type="radio" value="5" ng-model="scoreList[3]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display4" type="radio" value="4" ng-model="scoreList[3]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display4" type="radio" value="3" ng-model="scoreList[3]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display4" type="radio" value="2" ng-model="scoreList[3]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display4" type="radio" value="1" ng-model="scoreList[3]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div> 
+											<strong>5.学习能力：</strong> 对定期的培训辅导能及时有效地吸收学习，并很好地运用到工作中，同时会不断进行相关专业技能的
+											自我学习和提升。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display5" type="radio" value="5" ng-model="scoreList[4]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display5" type="radio" value="4" ng-model="scoreList[4]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display5" type="radio" value="3" ng-model="scoreList[4]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display5" type="radio" value="2" ng-model="scoreList[4]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display5" type="radio" value="1" ng-model="scoreList[4]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left col-lg-12">
+									<div class="pull-left"> 
+										<strong>6.业绩意识：</strong> 关心校区业绩，个人业绩意识强，为校区业绩作出突出努力和贡献。                                                                                         
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display6" type="radio" value="5" ng-model="scoreList[5]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display6" type="radio" value="4" ng-model="scoreList[5]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display6" type="radio" value="3" ng-model="scoreList[5]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display6" type="radio" value="2" ng-model="scoreList[5]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display6" type="radio" value="1" ng-model="scoreList[5]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								
+								  <div class="pull-left">
+									<div> 
+											<strong>7.人头意识：</strong> 人头挖掘意识强，打营销电话，点对点，跟单等积极主动，拼尽全力进人头。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display7" type="radio" value="5" ng-model="scoreList[6]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display7" type="radio" value="4" ng-model="scoreList[6]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display7" type="radio" value="3" ng-model="scoreList[6]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display7" type="radio" value="2" ng-model="scoreList[6]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display7" type="radio" value="1" ng-model="scoreList[6]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div> 
+											<strong>8.家长、学生满意度：</strong> 能够与自己咨询的家长、学生保持良好沟通，具备很好的理解能力，额外的服务帮助学管师提升家长满意度。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display8" type="radio" value="5" ng-model="scoreList[7]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display8" type="radio" value="4" ng-model="scoreList[7]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display8" type="radio" value="3" ng-model="scoreList[7]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display8" type="radio" value="2" ng-model="scoreList[7]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display8" type="radio" value="1" ng-model="scoreList[7]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div> 
+											<strong>9.处理问题能力：</strong> 对各种家长各种问题能迅速做出正确的判断，有效解决问题，达到令人满意的效果。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display9" type="radio" value="5" ng-model="scoreList[8]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display9" type="radio" value="4" ng-model="scoreList[8]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display9" type="radio" value="3" ng-model="scoreList[8]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display9" type="radio" value="2" ng-model="scoreList[8]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display9" type="radio" value="1" ng-model="scoreList[8]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								 
+								  <div class="pull-left">
+									<div> 
+										<strong>10.校区担当：</strong> 为增加校区人头数和耗课，提升校区业绩，能主动承担付出，用心思考改进工作，提出有创造性的
+										方案并加以实行。
+									</div>
+								 	<p>&nbsp;</p>
+									<div class="pull-left">
+										<label class="radio-inline">
+										  <input name="display10" type="radio" value="5" ng-model="scoreList[9]" >
+										    A.5分
+										</label>
+										<label class="radio-inline">
+										  <input name="display10" type="radio" value="4" ng-model="scoreList[9]"  >
+										    B.4分
+										</label>
+										<label class="radio-inline">
+										  <input name="display10" type="radio" value="3" ng-model="scoreList[9]"  >
+										    C.3分
+										</label>
+										<label class="radio-inline">
+										  <input name="display10" type="radio" value="2" ng-model="scoreList[9]" >
+										    D.2分
+										</label>
+										<label class="radio-inline">
+										  <input name="display10" type="radio" value="1" ng-model="scoreList[9]" >
+										    E.1分
+										</label>
+								 	</div>
+								 </div>
+								</div>
+							</div>
+							<p>&nbsp;</p>
+							<p>&nbsp;</p>
+							<div class="pull-left">
+							 	<div class="pull-left"><strong>二.分析题</strong></div>
+							 	<p>&nbsp;</p>
+							 	<div class="pull-left">从动物的特点角度来看，认为 TA 属于哪种动物，并举例说明原因。</div>
+							 	<p>&nbsp;</p>
+						 		<div class="pull-left">
+						 				<div>
+						 					<strong>A.老虎</strong>（性格优势：雷厉风行，处事果断，主动，有威胁；性格缺陷：忽略细节，专断，容易和他人产生摩擦）
+						 				</div>
+						 		</div>
+						 		
+						 		<p>&nbsp;</p>
+						 		<p>&nbsp;</p>
+						 		<div class="pull-left">
+					 				<div>
+					 					<strong>B.孔雀</strong>（性格优势：开朗有感染力，乐心肠，口才好，交际通，表现欲强烈；性格缺陷：对事情的专注度不易长久，<br>
+										忽略细节，不够耐心和容易情绪化）
+									</div>
+						 		</div>
+						 		
+						 		<p>&nbsp;</p>
+						 		<p>&nbsp;</p>
+						 		<div class="pull-left">
+						 			<div>
+						 				<strong>C.啄木鸟</strong>（性格优势：注重细节，稳重，不容易感情用事，忠诚，有责任感；性格缺陷：制度化，墨守成规，难以<br>
+											突破创新，过分注重细节，忽略重点和大局的把控，过于稳重而缺乏激情）
+						 			</div>
+						 		</div>
+						 		
+						 		<p>&nbsp;</p>
+						 		<p>&nbsp;</p>
+						 		<div class="pull-left">
+						 			<div>
+						 				<strong>D.熊猫</strong>（性格优势：心地善良，好相处，不容易和他人发生冲突；性格缺陷：缺乏进取和自信心，不擅于接受挑战<br>
+											和大胆创新，缺乏适应和变化的能力）
+						 			</div>
+						 		</div>
+						 		
+						 		<p>&nbsp;</p>
+						 		<p>&nbsp;</p>
+						 		<div class="pull-left">
+						 			<div >
+						 				<strong>E.变色龙</strong>（性格优势：应变能力强，有极强的适应能力和自我调节能力，处事圆滑， 中庸；性格缺陷：缺乏原则和<br>
+													立场，容易动摇内心，不够坚定和果断）
+						 			</div>
+						 		</div>
+							 
+							 <p>&nbsp;</p>
+							 <p>&nbsp;</p>
+							 <div class="pull-left">
+							 	<div>
+			                    	<label class="col-lg-2 control-label">原因分析：</label>
+			                    	<div class="col-lg-10">
+					                    <textarea ng-model="selecteditem.reason" class="form-control" style="width: 300px;height: 100px;">
+										</textarea>
+									</div>
+								</div>
+							 </div>
+							 
+							<p>&nbsp;</p>
+							<p>&nbsp;</p>
+							<p>&nbsp;</p>
+							<p>&nbsp;</p>
+							<div class="pull-left ">
+								<table class="col-lg-12" border="1">
+									 <tr ng-if="step==1||step==2">
+									    <td><div align="center"><strong>校区<br />意见</strong></div>
+									   	</td>
+									    <td  contentEditable="true" width="700px">
+									    	<div class="form-group">
+						                        <label ng-if="step==1" class="col-lg-3 control-label">可选操作</label>
+						                        <label ng-if="step!=1" class="col-lg-3 control-label">审批结果</label>
+						                        <div class="col-lg-9">
+						                            <div class="btn-group">
+						                                <label ng-if="step==1" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+						                                <label   ng-if="step!=1">{{handler_opinionList[0]}}</label>
+						                            </div>
+						                        </div>
+						                    </div>
+						                    <div>
+							                    <div>
+							                    	<label class="col-lg-3 control-label">操作备注</label>
+							                    	<div class="col-lg-9">
+									                    <textarea ng-model="remark[0]" class="form-control" style="width: 300px;height: 100px;">
+														</textarea>
+													</div>
+												</div>
+												<div class="pull-right">
+													<div >
+														{{handler_nameList[0]}}
+													</div>
+													<div >
+														{{last_update_timeList[0]|date:'yyyy-MM-dd HH:mm:ss'}}
+													</div>
+												</div>
+											</div>
+										</td>
+									  </tr> 
+									  <tr ng-if="step==2">
+									    <td><div align="center"><strong>人力资源<br />意见</strong></div>
+									    </td>
+									    <td colspan="2">
+									    	<div class="form-group">
+						                        <label ng-if="step==2" class="col-lg-2 control-label">可选操作</label>
+						                        <label ng-if="step!=2" class="col-lg-2 control-label">审批结果</label>
+						                        <div class="col-lg-10">
+						                            <div class="btn-group">
+						                                <label ng-if="step==2" class="btn btn-default"  ng-click="processTask(outcome)" ng-repeat="outcome in outcomeList">{{outcome}}</label>
+						                                <label  ng-if="step!=2">{{handler_opinionList[1]}}</label>
+						                            </div>
+						                        </div>
+						                    </div>
+						                    <div>
+							                    <div>
+							                    	<label class="col-lg-2 control-label">操作备注</label>
+							                    	<div class="col-lg-10">
+									                    <textarea ng-model="remark[1]" class="form-control" style="width: 300px;height: 100px;">
+														</textarea>
+													</div>
+												</div>
+												<div class="pull-right">
+													<div >
+														{{handler_nameList[1]}}
+													</div>
+													<div >
+														{{last_update_timeList[1]|date:'yyyy-MM-dd HH:mm:ss'}}
+													</div>
+												</div>
+											</div>
+									     </td>
+									  </tr> 
+								</table>
+							</div>
+						</div>
+					</div>
+						

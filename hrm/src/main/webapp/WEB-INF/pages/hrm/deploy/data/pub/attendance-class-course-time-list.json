@@ -1,0 +1,16 @@
+{
+    "name": "外账待考勤课程课次信息服务",
+    "version": "0.0.1",
+    "error":"false",
+    "data":[
+        {
+            "id":"675",
+            "courseTime":"1",
+            "scheduleDate":"2016-06-25",
+            "tobeCount":"12",
+            "hangUpCount":"11",
+            "listeningTestCount":"10",
+            "attendance":"83%"
+        }
+    ]
+}

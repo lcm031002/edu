@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.DictTypeDao">
+<resultMap type="Map" id="typeMap">    
+    <id column="id" property="id"/>    
+    <id column="key" property="key"/>    
+    <result column="name" property="name"/>    
+    <result column="status" property="status"/>    
+    <result column="remark" property="remark"/>    
+    <result column="mod" property="mod"/>    
+</resultMap> 
+
+<resultMap type="Map" id="dataMap">    
+    <id column="id" property="id"/>    
+    <result column="dictTypeid" property="dictTypeId"/>  
+    <result column="name" property="name"/>    
+    <result column="code" property="code"/>    
+    <result column="remark" property="remark"/>    
+</resultMap> 
+
+	<!-- 查询字典定义项-->
+	<select id="queryDicTypes" resultMap="typeMap">
+		SELECT
+		edt.id ,
+		edt.key,
+		edt.name ,
+		 case
+         when edt.status = '0' then
+          '禁用'
+         when edt.status = '1' then
+          '启用'
+          else ''
+       	end status ,
+		edt.remark ,
+		edt.mod
+		FROM ebs_dict_type edt
+		order by edt.id 
+	</select>
+	
+	<!-- 添加字典定义项 -->
+	<insert id="insertDicTypes" parameterType="com.ebusiness.hrm.model.DictType" keyColumn="id"  >
+	<selectKey resultType="java.lang.Integer"  keyProperty="id" order="BEFORE">
+	       SELECT seq_ebs_dict_type.nextval as id FROM dual
+	   </selectKey>
+	 INSERT INTO ebs_dict_type
+		(  id,
+		   name,
+		   status,
+		   remark,
+		   mod
+		)
+		
+	    select #{id,jdbcType=NUMERIC},
+		#{name, jdbcType=VARCHAR},
+		#{status, jdbcType=NUMERIC},
+		#{remark, jdbcType=VARCHAR},
+		#{mod,jdbcType=VARCHAR}
+		 from dual
+		</insert>
+   
+</mapper>   
+  

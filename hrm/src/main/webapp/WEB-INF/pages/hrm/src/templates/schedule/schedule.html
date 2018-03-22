@@ -1,0 +1,224 @@
+
+<div ng-controller="ScheduleCtrl">
+    <!--<div>
+        <h3>课程排课</h3>
+    </div>
+
+    <div class="alert fade in alert-info">
+        <p>功能说明:</p>
+        <p>1、课程排课功能，提供财务专员查询外账系统的课程，并修改上课老师；</p>
+        <p>2、课程排课功能，提供财务专员查询外账系统的课程，并修改上课时间；</p>
+    </div>-->
+
+    <div>
+        <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-heading font-bold">
+                课程排课
+            </div>
+            <div class="panel-body" style="padding: 15px;" id="panelBody">
+                <form class="ng-pristine ng-valid" role="form">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 fl" style="line-height: 34px;">归属公司</label>
+                            <div class="input-group col-sm-9 ">
+                                <select class="form-control" ng-model="selectedCompany"
+                                 ng-options="company.name for company in companyList track by company.id" ng-change="queryBranchsWithId(selectedCompany)">
+                                    <option value=" ">全部校区</option>
+                         </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 fl" style="line-height: 34px;">归属校区</label>
+                            <div class="input-group col-sm-9 ">
+                                <select class="form-control"  ng-options="branch.name for branch in branchsList track by branch.id" ng-model="selectedBranch" ng-change="changeParam(selectedBranch)" >
+                                    <option value=" ">全部校区</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 fl" style="line-height: 34px;">搜索关键字</label>
+                            <div class="input-group col-sm-9 ">
+                                <input type="text" class="form-control" ng-model="search_info"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12" align="center">
+                        <button type="submit" class="btn btn-default" ng-click="queryCourseIndex(1)">查询</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <!--<div class="tool_bar">
+            &lt;!&ndash;<div class="form-group col-lg-3 fr">
+                <div class="input-group" style="margin-bottom: 5px;">
+                    <input class="form-control" type="text" ng-model="search_info">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="queryInfo()">搜索</button>
+                    </span>
+                </div>
+            </div>&ndash;&gt;
+           &lt;!&ndash; <div class="form-group col-lg-3 fr">
+                <select class="form-control" ng-model="selectedBranch" >
+                    <option value=" ">全部校区</option>
+                    <option value="{{branch.id}}" ng-repeat="branch in branchsList">{{branch.name}}</option>
+                </select>
+            </div>
+            <div class="form-group col-lg-3 fr">
+                <select class="form-control" ng-model="selectedCompany" >
+                    <option value=" ">全部公司</option>
+                    <option value="{{company.id}}" ng-repeat="company in companyList">{{company.name}}</option>
+                </select>
+            </div>&ndash;&gt;
+        </div>-->
+        <table class="table table-striped">
+            <col align="center" width="25%"/>
+            <col align="center" width="8%"/>
+            <col align="center" width="25%"/>
+            <col align="center" width="10%"/>
+            <col align="center" width="14%"/>
+            <col align="center" width="5%"/>
+            <col align="center" width="13%"/>
+            <tr>
+                <th>课程</th>
+                <th>老师</th>
+                <th>开课信息</th>
+                <th>ERP学生数</th>
+                <th>外账学生数</th>
+                <th>占比</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-if="(!courseInfoList||!courseInfoList.length)&&isLoadingCourses==''">
+                <td  colspan="7" align="center">无数据.</td>
+            </tr>
+            <tr ng-repeat="courseInfo in courseInfoList" ng-if="courseInfoList&&courseInfoList.length">
+                <td colspan="7">
+                    <table style="width:100%;">
+                        <col align="center" width="25%"/>
+                        <col align="center" width="8%"/>
+                        <col align="center" width="25%"/>
+                        <col align="center" width="10%"/>
+                        <col align="center" width="14%"/>
+                        <col align="center" width="5%"/>
+                        <col align="center" width="13%"/>
+                        <tr>
+                            <td>{{courseInfo.courseName}}</td>
+                            <td>
+                                <span style="background-color:red;color:#fff"
+                                      class="cur"
+                                      ng-if="courseInfo.scheduleConflict"
+                                      title="上课冲突，单击查看详情" ng-click="showScheduleConflict(courseInfo)">
+                                    {{courseInfo.tearch_name}}
+                                </span>
+                                <span ng-if="!courseInfo.scheduleConflict">{{courseInfo.tearch_name}}</span>
+                                <a href="javascript:void(0)"  ng-click="searchTeacher(courseInfo)" ng-if="courseInfo.edit"><i class="fa fa-edit"></i></a>
+                            </td>
+                            <td>
+                                {{courseInfo.courseBeginDate}}~{{courseInfo.courseEndDate}}，{{courseInfo.startTime}}-{{courseInfo.endTime}}<a href="javascript:void(0)"  ng-click="changeCourse(courseInfo)" ng-if="courseInfo.edit"> <i class="fa fa-edit"></i></a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" ng-click="queryERPStudentList(courseInfo)">{{courseInfo.erpNumber}}</a>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" ng-click="queryPUBStudentList(courseInfo)">{{courseInfo.pubNumber}}</a>
+                            </td>
+                            <td>{{courseInfo.rate}}</td>
+                            <td>
+                                <a href="javascript:void(0)" ng-click="aditCourse(courseInfo)" ng-if="!courseInfo.edit">编辑</a>
+                                <a href="javascript:void(0)" ng-click="saveCourse(courseInfo)" ng-if="courseInfo.edit">保存</a>
+
+                                <a href="javascript:void(0)" ng-click="showCourseTimes(courseInfo)" >课次信息</a>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <table class="table  table-striped" ng-if="courseInfo.showCourseTime" style="background-color: #fff;">
+                        <tr>
+                            <th>课次</th>
+                            <th>老师</th>
+                            <th>老师编码</th>
+                            <th>上课信息</th>
+                            <th>备注</th>
+                            <td>操作</td>
+                        </tr>
+                        <tr ng-repeat="courseTime in courseInfo.courseTimeList">
+                            <td>{{courseTime.courseTime}}</td>
+                            <td>
+                                <span style="background-color:red;color:#fff"
+                                      class="cur"
+                                      ng-if="courseTime.scheduleConflict"
+                                      title="上课冲突，单击查看详情" ng-click="showScheduleConflict(courseTime)">
+                                    {{courseTime.tearch_name}}
+                                </span>
+                                <span ng-if="!courseTime.scheduleConflict">{{courseTime.tearch_name}}</span>
+                                <a href="javascript:void(0)"  ng-click="searchTeacher(courseTime)" ng-if="courseTime.edit"><i class="fa fa-edit"></i></a>
+                            </td>
+                            <td>{{courseTime.tearch_code}}</td>
+                            <td>
+                                <p>
+                                    上课日期:{{courseTime.courseDate}}                                </p>
+                                <p>
+                                    上课时间:{{courseTime.startTime}}-{{courseTime.endTime}}
+                                    <a href="javascript:void(0)"  ng-click="changeCourse(courseTime)" ng-if="courseTime.edit"><i class="fa fa-edit"></i></a>
+                                </p>
+                            </td>
+                            <td>
+                                {{courseTime.remark}}
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" ng-click="aditCourse(courseTime)" ng-if="!courseTime.edit">编辑</a>
+                                <a href="javascript:void(0)" ng-click="saveCourse(courseTime)" ng-if="courseTime.edit">保存</a>
+                            </td>
+                        </tr>
+                        <tr ng-if="(!courseInfo.courseTimeList||!courseInfo.courseTimeList.length)&&isLoadingCourseTimes == ''">
+                            <td colspan="6" align="center">暂无数据</td>
+                        </tr>
+                        <tr ng-if="isLoadingCourseTimes == 'loading...'">
+                            <td colspan="6" align="center">
+                                <img src="img/icons/big_load.gif">
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+
+            </tr>
+
+            <tr ng-if="isLoadingCourses == 'loading...'">
+                <td colspan="7" align="center">
+                    <img src="img/icons/big_load.gif">
+                </td>
+            </tr>
+        </table>
+       <div class="fr"  ng-if="totalPage>=1" >
+            <ul class="pagination">
+             <li ng-model="currentPage"   ng-click="queryCourseIndex(1)">
+                    <span >首页</span>
+                </li>
+                  <li  ng-if="currentPage>1"   ng-click="queryCourseIndex(currentPage-1)" >
+                    <span>上一页</span>
+                </li>
+                <li    ng-repeat="i in paginationBars track by $index" class="{{ i==currentPage ? 'active':'' }}"  >
+                    <span ng-click="queryCourseIndex(i)" >{{i}}</span>
+                </li>
+                <li ng-model="currentPage"  ng-if="currentPage<totalPage"     ng-click="queryCourseIndex(currentPage+1)">
+                    <span >下一页</span>
+                </li>
+                <li ng-model="totalPage"    ng-click="queryCourseIndex(totalPage)">
+                    <span >尾页</span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    <div ng-include="'templates/segment/student_list.html'"></div>
+    <div ng-include="'templates/segment/teacher_list.html'"></div>
+    <div ng-include="'templates/segment/teacher_schedule.html'"></div>
+    <div ng-include="'templates/segment/course_info.html'"></div>
+</div>
+

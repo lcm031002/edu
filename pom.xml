@@ -263,6 +263,7 @@
 		<module>common</module>
 		<module>edu</module>
 		<module>erp</module>
+		<module>hrm</module>
 		<module>workflow</module>
 	</modules>
 </project>

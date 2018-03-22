@@ -1,0 +1,46 @@
+{
+    "name": "外账系统组织机构服务",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "data":[
+        {
+            "id":"0",
+            "text":"快乐学习教育科技集团",
+            "type":"menus",
+            "state" : {
+                "opened" :  "true"
+            },
+            "children":[
+                {
+                    "id":"1",
+                    "text":"厦门地区文灶分公司",
+                    "type":"menus",
+                    "parent_id":"0",
+                    "state" : {
+                        "opened" :  "true"
+                    },
+                    "children":[
+                        {
+                            "id":"1001",
+                            "type":"leaf",
+                            "state" : {
+                                "opened" :  "true",
+                                "selected" : "true"
+                            },
+                            "text":"厦门文灶大小班1"
+                        },{
+                            "id":"1002",
+                            "text":"厦门文灶大小班2",
+                            "state" : {
+                                "opened" :  "true"
+                            },
+                            "type":"leaf",
+                            "checked":"true"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

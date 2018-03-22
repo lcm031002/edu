@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.AccountOrgRelDao">
+<resultMap type="com.ebusiness.hrm.model.Account" id="modelMap">    
+    <id column="id" property="accountId"/>    
+    <result column="username" property="accountName"/>
+    <result column="status" property="status"/>    
+    <result column="password" property="password"/>    
+    <result column="old_password" property="oldPassword"/>    
+    <result column="remark" property="remark"/>    
+    <result column="employee_id" property="employeeId"/>    
+    <result column="org_id" property="orgId"/>    
+    <result column="create_user" property="createUser"/>    
+    <result column="create_time" property="createTime"/>    
+    <result column="update_user" property="updateUser"/>    
+    <result column="update_time" property="updateTime"/>           
+</resultMap>
+
+	<!-- 根据账户查询账户的校区列表,返回校区的编号 -->
+	<select id="queryAccountOrg" parameterType="Long" resultType="Integer">
+	   select ear.orgId from ebs_accountorg_rel ear where ear.accountId=#{user_id, jdbcType =NUMERIC}
+	</select>
+
+	<!-- 删除账户组织关系 -->
+	<delete id="deleteAccountOrg" parameterType="Long">
+		delete from ebs_accountorg_rel where accountId=#{user_id,jdbcType = NUMERIC}
+	</delete>
+	
+	<!-- 添加账户组织列表 -->
+	<insert id="addAccountOrg" parameterType="Map">
+	 INSERT INTO ebs_accountorg_rel ( id,accountId,orgId)
+	  <!-- 账户校区列表为空则录入空结果集 -->
+	  <if test="selectedBranch==null || selectedBranch.size==0">
+	   SELECT null,null,null from dual where 1=2
+	  </if>
+	    <if test="selectedBranch!=null and selectedBranch.size>0">
+   	  SELECT
+            seq_ebs_accountorg_rel.nextval,t.* from
+            (
+   	  <foreach collection="selectedBranch" item="element" index="index" separator="union" open="(" close=")">
+         SELECT
+             #{accountId, jdbcType = NUMERIC},
+            #{element, jdbcType = NUMERIC}
+              FROM dual 
+        </foreach>
+        ) t
+        </if>
+	</insert>
+	
+</mapper>

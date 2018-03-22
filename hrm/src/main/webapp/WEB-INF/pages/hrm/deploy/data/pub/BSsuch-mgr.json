@@ -1,0 +1,23 @@
+{
+    "name": "点名表查询",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "data":[
+        {
+            "id":"1",
+            "branchName":"学校1",
+            "branchId":"学校1",
+            "gradeName":"年级1",
+            "gradeId":"年级1",
+            "subjectName":"科目1",
+            "subjectId":"科目1",
+            "teacherName":"张武",
+            "teacherCount":"10",
+            "teacherId":"张武",
+            "courseId":"张武",
+            "courseName":"XXX科目1",
+            "studentCount":"30"
+        }
+    ]
+}

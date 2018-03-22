@@ -59,7 +59,7 @@ public class OrgServiceImpl implements OrgService {
 		List<OrgModel> queryList = orgModelDao.queryByUserId(queryObj);
 		OrgModel ROOT = new OrgModel();
 		ROOT.setId(-1L);
-		ROOT.setText("快乐学习教育集团");
+		ROOT.setText("厝边素高事业部");
 		ROOT.setChildren(queryList);
 		if (log.isDebugEnabled()) {
 			log.debug("end to query User Orgs.");
@@ -103,7 +103,7 @@ public class OrgServiceImpl implements OrgService {
 
 		OrgModel ROOT = new OrgModel();
 		ROOT.setId(-1L);
-		ROOT.setText("快乐学习教育集团");
+		ROOT.setText("厝边素高事业部");
 		if (log.isDebugEnabled()) {
 			log.debug("end to query User Orgs,not found orgs.");
 		}

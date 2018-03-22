@@ -1,0 +1,196 @@
+<div id="orderDetailsCapacity" class="modal fade" tabindex="-1"
+	role="dialog" aria-labelledby="studentAccountWithdrawPanel"
+	aria-hidden="true">
+	    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    </div>
+	<div class="mass-att-hidden txt-rignt">
+		<span class="ng-binding">报班单号：{{currentOrder.order_no}}</span> <span
+			class="ml20 ng-binding">时间：{{currentOrder.create_date}}</span> <span
+			class="yellow-num ml20 ng-scope"
+			ng-if="orderMap.orderInfo.check_status==3 &amp;&amp; orderMap.orderInfo.valid_status != 0">
+			报班审核通过 </span>
+	</div>
+	<table class="table table-striped table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>课程商品名称</th>
+				<th>课程单价</th>
+				<th>报班次数</th>
+				<th>课时</th>
+			</tr>
+		</thead>
+		<tbody>
+		
+		<tr ng-repeat="order in orderDetails" ng-if=orderDetails&&orderDetails.length>
+		<td>{{order.course.course_name}}</td>
+		<td>{{order.former_unit_price}}</td>
+		<td>{{order.course_total_count}}</td>
+		<td>{{currentOrder.courseTimes}}</td>
+		</tr>
+		</tbody>
+	</table>
+	<div class="col-lg-12" style="border-bottom: 1px dashed #ddd;">
+		<span class="ml20  ng-binding">订单原价：{{currentOrder.fee_amount}}</span> <span
+			class="ml20  ng-binding">订单现价：{{currentOrder.actural_amount}}</span> <span
+			class="ml20 fw ng-scope">未缴费</span>
+	</div>
+	<div class="tabbable" id="tabs-834736">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#panel-405662" data-toggle="tab"
+				contenteditable="false">缴费</a></li>
+			<li class=""><a href="#panel-pres" data-toggle="tab"
+				contenteditable="false">预结转</a></li>
+			<li class=""><a href="#panel-584262" data-toggle="tab"
+				contenteditable="false">考勤</a></li>
+			<li class=""><a href="#panel-replenishs" data-toggle="tab"
+				contenteditable="false">补结转</a></li>
+			<li class=""><a href="#panel-transfer" data-toggle="tab"
+				contenteditable="false"> 转班</a></li>
+			<li class=""><a href="#panel-refunds" data-toggle="tab"
+				contenteditable="false">退费</a></li>
+			
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="panel-405662">
+				<table class="table table-striped table-hover table-bordered">
+					<colgroup>
+						<col width="20%">
+						<col width="25%">
+						<col>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>金额</th>
+							<th>缴费方式</th>
+							<th>备注</th>
+						</tr>
+						<tr ng-repeat="pay in currentOrder.payFees" ng-if=currentOrder.payFees&&currentOrder.payFees.length>
+							<td>{{pay.fee_amount}}</td>
+							<td>{{pay.pay_way_desc}}</td>
+							<td>{{pay.client_card_no}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane" id="panel-pres">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>金额</th>
+							<th>日期</th>
+							<th>预结转说明</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="preamount in currentOrder.preamounts" ng-if=currentOrder.payFees&&currentOrder.payFees.length>
+							<td>{{preamount.fee_amount}}</td>
+							<td>{{preamount.date}}</td>
+							<td>{{preamount.desc}}</td>
+							<td>{{preamount.remark}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane " id="panel-584262">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>日期</th> 
+							<th>课程明细</th> 
+							<th>金额</th> 
+							<th>课次</th> 
+							<th>经办人</th> 
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="attand in currentOrder.attendances" ng-if=currentOrder.attendances&&currentOrder.attendances.length>
+							<td>{{attand.create_time_day}}</td>
+							<td>{{attand.create_time_hour}}</td>
+							<td>{{attand.course_name}}</td>
+							<td>￥{{attand.attend_amount}}</td>
+							<td>{{attand.course_times}}</td>
+							<td>{{attand.create_name}}</td>
+							<td>{{attand.name}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane " id="panel-replenishs">
+				<table class="table">
+					<thead>
+							<tr>
+							<th>金额</th>
+							<th>日期</th>
+							<th>补结转说明</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="replenish in currentOrder.replenishs" ng-if=currentOrder.payFees&&currentOrder.payFees.length>
+					<td>{{replenish.fee_amount}}</td>
+					<td>{{replenish.date}}</td>
+					<td>{{replenish.desc}}</td>
+					<td>{{replenish.remark}}</td>
+				    </tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane" id="panel-transfer">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>日期</th>
+							<th>转班说明</th>
+							<th>转班金额</th>
+							<th>转入课次</th>
+							<th>转出课次</th>
+							<th>经办人</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="transfer in currentOrder.transfers" 
+						   ng-if=currentOrder.transfers&&currentOrder.transfers.length>
+							<td>{{transfer.transferDate}}</td>
+							<td>{{transfer.desc}}</td>
+							<td>{{transfer.fee_amount}}</td>
+						    <td>{{transfer.transferInCourseTimes}}</td>
+						    <td>{{transfer.transferOutCourseTimes}}</td>
+						    <td>{{transfer.operator}}</td>
+						    <td>{{transfer.remark}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="tab-pane " id="panel-refunds">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>日期</th>
+							<th>退费说明</th>
+							<th>金额</th>
+							<th>课次</th>
+							<th>经办人</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+				  <tr ng-repeat="refund in currentOrder.refunds" ng-if=currentOrder.refunds&&currentOrder.refunds.length>
+					<td>{{refund.date}}</td>
+					<td>{{refund.desc}}</td>
+					<td>{{refund.fee_amount}}</td>
+					<td>{{refund.operator}}</td>
+					<td>{{refund.remark}}</td>
+				    </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+
+</div>

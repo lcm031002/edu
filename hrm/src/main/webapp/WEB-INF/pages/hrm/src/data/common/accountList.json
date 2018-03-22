@@ -1,0 +1,20 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "id":"1",
+            "companyName":"快乐学习",
+            "companyId":"76",
+            "branchName":"厦门大小班文屏校区",
+            "branchId":"2345",
+            "accountName":"zly",
+            "accountId":"4567"
+        }
+    ]
+}

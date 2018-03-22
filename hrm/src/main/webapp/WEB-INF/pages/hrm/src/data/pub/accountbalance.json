@@ -1,0 +1,17 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "studentEncoding":"BXBH_20160525000070",
+            "studentName":"永克",
+            "productLine":"大小班",
+            "balance":"1000.0"
+        }
+    ]
+}

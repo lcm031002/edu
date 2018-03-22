@@ -1,0 +1,70 @@
+<div id="addBranchListPanel" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="addBranchListPanelLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="addBranchListPanelLabel">添加校区列表</h3>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default" style="margin-bottom: 10px;">
+            <div class="panel-body" style="padding: 15px;" id="panelBody">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">归属地区</label>
+                        <div class="col-sm-9 input-group">
+                     
+                            <select class="form-control" ng-options="area.name for area in areaList track by area.id " ng-change="queryTeams(area)" ng-model="area" >
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">归属团队</label>
+                        <div class="col-sm-9 input-group">
+                            <select class="form-control" ng-options="team.name for team in teamList track by team.id" ng-change="queryBranchs(team)" ng-model="team" >
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+           <!--      <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">归属校区</label>
+                        <div class="col-sm-9 input-group">
+                            <select class="form-control" ng-model="curAccount.branchId" >
+                                <option value="{{branch.id}}" ng-repeat="branch in branchsList ">{{branch.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div class="col-lg-12" align="center" >
+                    <button class="btn btn-default" type="button" ng-click="updatecCourseInfo(currentCourse)" >查询</button>
+                </div> -->
+            </div>
+        </div>
+        <table class="table table-striped table-hover table-bordered">
+            <tr>
+                <th>  
+                <input type="checkbox" ng-click="toggleAll()"  
+                ng-true-value="'1'" 
+                ng-false-value="'0'" 
+                ng-model="isAllSelected"/> </th>
+                <th>id</th>
+                <th>校区名称1</th>
+            </tr>
+            <tr  ng-if="branchsList&&branchsList.length" ng-repeat="branch in branchsList">
+                <td>
+                    <input type="checkbox" ng-click="checkedRow(branch)" checked ng-if="branch.checked"/>
+                    <input type="checkbox" ng-click="checkedRow(branch)" ng-if="!branch.checked"/>
+                </td>
+                <td>{{branch.id}}</td>
+                <td>{{branch.name}}</td>
+            </tr>
+            <tr ng-if="!branchsList||!branchsList.length">
+                <td colspan="3">暂无数据.</td>
+            </tr>
+        </table>
+        <div class="col-lg-12" align="center" >
+            <button class="btn btn-default" type="button" ng-click="addBranch()" >添加</button>
+        </div>
+    </div>
+</div>

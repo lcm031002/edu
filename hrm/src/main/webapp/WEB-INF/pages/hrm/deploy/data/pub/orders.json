@@ -1,0 +1,35 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "id":"525334102",
+            "order_no":"BJK_20160525000070",
+            "branch_id":"38",
+            "branch_name":"厦门文屏大小班校区",
+            "student_name":"夏云龙",
+            "student_encoding":"XYBH_20150710000106",
+            "type":"1",
+            "type_name":"报班",
+            "amount":"100.00",
+            "actual_amount":"100.00",
+            "company":"122",
+            "company_name":"XXX公司",
+            "cash":"10",
+            "payByCard":"10",
+            "transfer":"50",
+            "account":"30",
+            "commentTime":"2016-03-01 14:00",
+            "commentPerson":"22",
+            "commentPersonName":"张辉",
+            "payer":"23",
+            "payerName":"小张",
+            "payerTime":"2016-05-27 15:00"
+        }
+    ]
+}

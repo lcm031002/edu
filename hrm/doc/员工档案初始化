@@ -1,0 +1,42 @@
+/*insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '编码', 'ENCODING', 2, '字符串', null, null, null, null, null, '编码');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '姓名', 'EMPLOYEE_NAME', 2, '字符串', null, null, null, null, null, '姓名');
+*/
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '性别', 'SEX', 2, '数据字典', 231, null, null, null, null, '性别');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '手机号', 'PHONE', 2, '字符串', null, null, null, null, null, '手机号');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '邮箱', 'EMAIL', 2, '字符串', null, null, null, null, null, '邮箱');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '身份证', 'ID_ID', 2, '字符串', null, null, null, null, null, '身份证');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '联系地址', 'ADDRESS', 2, '字符串',null, null, null, null, null, '联系地址');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '备注', 'DESCRIPTION', 2, '字符串', null, null, null, null, null, '备注');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '微信', 'WECHAT', 2, '字符串',null, null, null, null, null, '微信');
+
+/*insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '在职类型', 'USER_TYPE', 2, '数据字典', 2, null, null, null, null, '在职类型');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '岗位', 'POST', 2, '数据字典', 3,null, null, null, null, '岗位');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '部门', 'DEPT', 2, '数据字典', 4, null, null, null, null, '部门');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '等级', 'POSLEVEL', 2, '数据字典', 5, null, null, null, null, '等级');
+
+insert into ebs_employeeext_reg (ID, FIELDNAME, FIELDKEY, FIELDSTATUS, FIELDTYPE, FIELDDICTTYPE, CREATEID, CREATETIME, UPDATEID, UPDATETIME, REMARK)
+values (seq_ebs_employeeext_reg.nextval, '业务线', 'BUSINESS', 2, '字符串', null, null, null, null, null, '业务线');
+*/

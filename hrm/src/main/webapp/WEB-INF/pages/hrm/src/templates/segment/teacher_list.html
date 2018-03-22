@@ -1,0 +1,71 @@
+<!-- Modal -->
+<div id="teacherSeacher" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="teacherSeacherLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="teacherSeacherLabel">教师搜索</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <div class="input-group" style="margin-bottom: 5px;">
+                <input class="form-control" type="text" ng-model="teacherPage.teacher_search_info">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="queryTeacherIndex(1)">搜索</button>
+                    </span>
+            </div>
+        </div>
+
+        <table class="table">
+            <tr>
+                <th> </th>
+                <th>号码</th>
+                <th>姓名</th>
+                <th>编码</th>
+                <th>类型</th>
+                <th>是否兼职</th>
+                <th>科目</th>
+                <th>所属地区</th>
+            </tr>
+            <tr ng-if="!teacherList||!teacherList.length ">
+                <td colspan="8" align="center"> 暂无数据 </td>
+            </tr>
+            <tr ng-repeat="teacher in teacherList" class="tr_radio"  ng-if="teacherList&&teacherList.length "  ng-click="checked(teacher)">
+                <td >
+                    <input type="checkbox"     checked ng-if="teacher.checked"/>
+                    <input type="checkbox"     ng-if="!teacher.checked"/>
+                </td>
+                <td>{{teacher.id}}</td>
+                <td>{{teacher.name}}</td>
+                <td>{{teacher.code}}</td>
+                <td>{{teacher.typeName}}</td>
+                <td>{{teacher.isPartTimeName}}</td>
+                <td>{{teacher.subjectName}}</td>
+                <td>{{teacher.area}}</td>
+            </tr>
+            <tr ng-if="isteacherListLoading == 'loading...'">
+                <td colspan="8" align="center">
+                    <img src="img/icons/big_load.gif">
+                </td>
+            </tr>
+        </table>
+    
+
+         <div class="center"  ng-if="teacherPage.totalPage>=1" >
+            <ul class="pagination">
+                  <li  ng-if="teacherPage.currentPage>=2"  ng-click="queryTeacherIndex(teacherPage.currentPage-1)" >
+                    <span>上一页</span>
+                </li>
+                <li    ng-repeat="i in teacherPage.paginationBars track by $index" class="{{ i==teacherPage.currentPage ? 'active':'' }}"  >
+                    <span ng-click="queryTeacherIndex(i)" >{{i}}</span>
+                </li>
+                <li ng-model="teacherPage.currentPage"      ng-click="queryTeacherIndex(teacherPage.currentPage+1)">
+                    <span >下一页</span>
+                </li>
+                
+            </ul>
+        </div>
+        <div align="center">
+            <button class="btn btn-default" type="button" ng-click="comfirmSelectedTeacher()" ng-disabled="!selectedTeacher">确定</button>
+        </div>
+    </div>
+</div>
+

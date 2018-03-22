@@ -1,0 +1,19 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "courSeasonName":"南门春季班",
+            "dateTime":"厦门文屏大小班校区",
+            "business1":"厦门文屏大小班校区",
+            "business3":"BXBH_20160525000070",
+            "claimAmount":"10002",
+            "allAmount":"100"
+        }
+    ]
+}

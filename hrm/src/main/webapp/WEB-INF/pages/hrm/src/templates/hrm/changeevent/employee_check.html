@@ -1,0 +1,47 @@
+ <div ng-controller="EmployeeCheckCtrl">
+ 
+
+<div class="panel panel-default " style="margin-bottom: 10px;">
+        <div class="panel-heading font-bold">
+	审批流程
+		</div>
+		<div class="form-group pull-left">
+                <label class="control-label"> 考核模板：</label>
+                <div class="col-lg-10 fl">
+					<select class="form-control"  ng-model="selected" ng-change="selectModel(selected)">
+	                	<option value="1">快乐学习大小班教师转正考核表</option>
+	                	<option value="2">快乐学习大小班校区部转正考核表</option>
+	                	<option value="3" >快乐学习个性化教学部试讲评价表</option>
+	                	<option value="4" >快乐学习个性化教师转正考核表</option>
+	                	<option value="5" >快乐学习个性化学管部 360 度考评问卷</option>
+	                	<option value="6" >快乐学习个性化学管部转正考核表</option>
+	                	<option value="7" >快乐学习个性化咨询部 360 度考评问卷</option>
+	                	<option value="8" >快乐学习个性化咨询部转正考核表</option>
+	                 </select>
+	            </div>
+            </div>
+		<div class="panel-body container" style="padding: 15px;">
+				
+			<div  align="center">
+					
+				<div ng-include="'templates/hrm/model/change_post/DXB_school_post.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/DXB_teacher_post.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/GXH_teacher_post.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/GXH_teaching_dept_360.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/GXH_teaching_dept_lecture.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/GXH_teaching_dept_post.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/GXH_consulting_dept_360.html'"></div>
+				<div ng-include="'templates/hrm/model/change_post/GXH_consulting_dept_post.html'"></div> 
+			</div>
+		</div>
+		<div align="center">
+			<button type="button" class="btn btn-default" ng-click="cancel()">取消
+			</button>
+			<button type="button" ng-click="save(selecteditem)" class="btn  btn-warning">
+				确认
+			</button>
+		</div> 
+</div>
+  
+
+</div>

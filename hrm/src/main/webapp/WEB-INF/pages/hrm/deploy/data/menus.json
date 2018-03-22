@@ -1,0 +1,413 @@
+{
+    "name": "home",
+    "key": "home",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "menus":[
+        {
+            "index":"A1001",
+            "name":"首页",
+            "key":"index",
+            "icon":"fa fa-home",
+            "type":"$state",
+            "active":"true",
+            "value":"index",
+            "href":"templates/pub/index.html",
+            "path":"/index"
+        },
+        {
+            "index":"A9101",
+            "name":"业务",
+            "key":"businessSystem",
+            "icon":"fa fa-fire",
+            "type":"$state",
+            "value":"businessSystem",
+            "path":"/businessSystem",
+            "menus":[
+                {
+                    "index":"A9101",
+                    "name":"报班业务",
+                    "key":"BSorderMgr",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "path":"/businessSystem/orderMgr",
+                    "href":"templates/orderMgr/orders.html",
+                    "value":"BSorderMgr"
+                },
+                {
+                    "index":"A91011",
+                    "name":"报班业务流程",
+                    "key":"BSorderMgr2placeAnOrder",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "path":"/businessSystem/BSorderMgr2placeAnOrder",
+                    "href":"templates/orderMgr/BSorderMgr2placeAnOrder.html",
+                    "value":"BSorderMgr2placeAnOrder",
+                    "showMenu":"false"
+                },
+                {
+                    "index":"A9102",
+                    "name":"退费业务",
+                    "key":"BSrefundMgr",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "path":"/businessSystem/refundMgr",
+                    "href":"templates/refundMgr/refundMgr.html",
+                    "value":"BSrefundMgr"
+                },{
+                    "index":"A91021",
+                    "name":"退费业务流程",
+                    "key":"BSrefundMgr2refund",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "path":"/businessSystem/BSrefundMgr2refund",
+                    "href":"templates/refundMgr/BSrefundMgr2refund.html",
+                    "value":"BSrefundMgr2refund",
+                    "showMenu":"false"
+                },
+                {
+                    "index":"A9103",
+                    "name":"转班业务",
+                    "key":"BStransferClassMgr",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BStransferClassMgr",
+                    "path":"/businessSystem/BStransferClassMgr",
+                    "href":"templates/transferClassMgr/transferClassMgr.html"
+                },{
+                    "index":"A9104",
+                    "name":"转班业务流程",
+                    "key":"BStransferClassMgr2transferClass",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BStransferClassMgr2transferClass",
+                    "path":"/businessSystem/BStransferClassMgr2transferClass",
+                    "href":"templates/transferClassMgr/transferClassMgr2transferClass.html",
+                    "showMenu":"false"
+                },
+                {
+                    "index":"A9105",
+                    "name":"考勤业务",
+                    "key":"BSattendanceMgr",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BSattendanceMgr",
+                    "path":"/businessSystem/BSattendanceMgr",
+                    "href":"templates/attendanceMgr/attendanceMgr.html"
+                },{
+                    "index":"A9106",
+                    "name":"会员账户",
+                    "key":"BSaccountMgr",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BSaccountMgr",
+                    "path":"/businessSystem/PUBBSaccountMgr",
+                    "href":"templates/accountMgr/PUBBSaccountMgr.html"
+                },
+                {
+                    "index":"A9106",
+                    "name":"充值业务",
+                    "key":"BSorder",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BSorder",
+                    "showMenu":"false"
+                },
+                {
+                    "index":"A9106",
+                    "name":"理赔业务",
+                    "key":"BSorder",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BSorder",
+                    "showMenu":"false"
+                },
+                {
+                    "index":"A9107",
+                    "name":"取款业务",
+                    "key":"BSorder",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BSorder",
+                    "showMenu":"false"
+                },{
+                    "index":"A9108",
+                    "name":"转账业务",
+                    "key":"BSorder",
+                    "icon":"fa fa-navicon",
+                    "type":"$state",
+                    "value":"BSorder",
+                    "showMenu":"false"
+                },{
+                    "index":"A9010",
+                    "name":"点名表",
+                    "key":"BSsuchMgr",
+                    "icon":"fa fa-list-ol",
+                    "type":"$state",
+                    "value":"BSsuchMgr",
+                    "path":"/businessSystem/BSsuchMgr",
+                    "href":"templates/BSsuchMgr/BSsuchMgr.html"
+                }
+            ]
+        },
+        {
+            "index":"A9002",
+            "name":"报表",
+            "key":"BSreports",
+            "icon":"fa fa-bar-chart-o",
+            "type":"$state",
+            "value":"report",
+            "path":"/report",
+                "menus":[
+                    {
+                        "index":"A9002",
+                        "name":"剩余课时费用",
+                        "key":"leftcoursetimes",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"leftcoursetimes",
+                        "href":"templates/report/leftcoursetimes.html",
+                        "path":"/report/leftcoursetimes"
+                    },
+                    {
+                        "index":"A9003",
+                        "name":"账户剩余",
+                        "key":"BSResidualAccount",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"accountbalance",
+                        "href":"templates/report/accountbalance.html",
+                        "path":"/report/accountbalance"
+                    },
+                    {
+                        "index":"A9004",
+                        "name":"业绩明细",
+                        "key":"BSAccomplishmentdetail",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"accomplishmentdetail",
+                        "href":"templates/report/accomplishmentdetail.html",
+                        "path":"/report/accomplishmentdetail"
+                    },
+                    {
+                        "index":"A9005",
+                        "name":"报班退费转班",
+                        "key":"BSChange",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"newretreatturn",
+                        "href":"templates/report/newretreatturn.html",
+                        "path":"/report/newretreatturn"
+                    },
+                    {
+                        "index":"A9006",
+                        "name":"业绩总表",
+                        "key":"BSPerformanceSummary",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"countaccomplishmenteveryday",
+                        "href":"templates/report/countaccomplishmenteveryday.html",
+                        "path":"/report/countaccomplishmenteveryday"
+                    },
+                    {
+                        "index":"A9007",
+                        "name":"充值取款",
+                        "key":"BSPrepaidWithdrawals",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"rechargeandenchashment",
+                        "href":"templates/report/rechargeandenchashment.html",
+                        "path":"/report/rechargeandenchashment"
+                    },
+                    {
+                        "index":"A9008",
+                        "name":"账户流水",
+                        "key":"BSAccountFlow",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"accountdaybooks",
+                        "href":"templates/report/accountdaybooks.html",
+                        "path":"/report/accountdaybooks"
+                    },
+                    {
+                        "index":"A9009",
+                        "name":"考勤消耗",
+                        "key":"BSAttendance",
+                        "icon":"fa fa-align-justify",
+                        "type":"$state",
+                        "value":"attendanceconsume",
+                        "href":"templates/report/attendanceconsume.html",
+                        "path":"/report/attendanceconsume"
+                }
+            ]
+        },
+        {
+            "index":"A7000",
+            "name":"后台",
+            "key":"financial",
+            "icon":"fa fa-bar-chart",
+            "type":"$state",
+            "value":"financial",
+            "path":"/financial",
+            "menus":[
+                {
+                    "index":"A7100",
+                    "name":"外账管理",
+                    "key":"ExternalAccountManagement",
+                    "icon":"fa fa-minus-square-o",
+                    "type":"",
+                    "value":"",
+                    "path":"/financial/ExternalAccountManagement",
+                    "menus":[
+                        {
+                            "index":"A7101",
+                            "name":"报班单批注",
+                            "key":"EAMorderSettings",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMorders",
+                            "checked":"true",
+                            "href":"templates/EAMorders/eAMorders.html",
+                            "path":"/financial/ExternalAccountManagement/EAMorders"
+                        },
+                        {
+                            "index":"A7102",
+                            "name":"充值单批注",
+                            "key":"EAMrechargeSettings",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"rechargeSettings",
+                            "checked":"true",
+                            "href":"templates/recharge/recharge.html",
+                            "path":"/financial/ExternalAccountManagement/rechargeSettings"
+                        },
+                        {
+                            "index":"A7103",
+                            "name":"课程排课",
+                            "key":"EAMcourseArrangement",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMcourseArrangement",
+                            "checked":"true",
+                            "href":"templates/schedule/schedule.html",
+                            "path":"/financial/ExternalAccountManagement/EAMcourseArrangement"
+                        },
+                        {
+                            "index":"A7104",
+                            "name":"老师耗课配比",
+                            "key":"EAMTeacherConsumptionRatio",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMTeacherConsumptionRatio",
+                            "checked":"true",
+                            "href":"templates/attendance/attendanceTeacher.html",
+                            "path":"/financial/ExternalAccountManagement/EAMTeacherConsumptionRatio"
+                        },{
+                            "index":"A7110",
+                            "name":"文件上传",
+                            "key":"EAMfileUpload",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMfileUpload",
+                            "path":"/financial/ExternalAccountManagement/fileUpload",
+                            "href":"templates/fileUpload/fileUpload.html"
+                        },{
+                            "index":"A9011",
+                            "name":"自动核算",
+                            "key":"BSAutomaticAccounting",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"BSAutomaticAccounting"
+                        }
+                    ]
+                },{
+                    "index":"A7200",
+                    "name":"系统设置",
+                    "key":"ExternalAccountManagement",
+                    "icon":"fa fa-minus-square-o",
+                    "type":"",
+                    "value":"",
+                    "path":"/financial/ExternalAccountManagement",
+                    "menus":[
+                        {
+                            "index":"A7201",
+                            "name":"审计日志",
+                            "key":"EAMAuditLog",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMAuditLog",
+                            "checked":"true",
+                            "href":"templates/log/auditLog.html",
+                            "path":"/financial/ExternalAccountManagement/EAMAuditLog"
+                        },
+                        {
+                            "index":"A7202",
+                            "name":"字典管理",
+                            "key":"EAMDictMgr",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMDictMgr",
+                            "checked":"true",
+                            "href":"templates/dict/dictMgr.html",
+                            "path":"/financial/ExternalAccountManagement/EAMDictMgr"
+                        },
+                        {
+                            "index":"A7203",
+                            "name":"角色管理",
+                            "key":"EAMRoleMgr",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "value":"EAMRoleMgr",
+                            "path":"/financial/ExternalAccountManagement/EAMRoleMgr",
+                            "checked":"true",
+                            "href":"templates/rolemgr/role.html"
+                        },
+                        {
+                            "index":"A7204",
+                            "name":"账户管理",
+                            "key":"EAMAccountMgr",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "checked":"true",
+                            "path":"/financial/ExternalAccountManagement/EAMAccountMgr",
+                            "value":"EAMAccountMgr",
+                            "href":"templates/accountMgr/accountMgr.html"
+                        },
+                        {
+                            "index":"A7205",
+                            "name":"校区归属",
+                            "key":"CampusBelongingMgr",
+                            "icon":"fa fa-navicon",
+                            "type":"$state",
+                            "checked":"true",
+                            "path":"/financial/ExternalAccountManagement/CampusBelongingMgr",
+                            "value":"CampusBelongingMgr",
+                            "href":"templates/CampusBelongingMgr/CampusBelongingMgr.html"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "index":"A10000",
+            "name":"IT",
+            "key":"ITBusinessSystem",
+            "icon":"fa fa-diamond",
+            "type":"$state",
+            "value":"ITBusinessSystem",
+            "path":"/ITBusinessSystem",
+            "menus":[
+                {
+                    "index":"A10001",
+                    "name":"树形控件",
+                    "key":"treePanel01",
+                    "icon":"fa fa-video-camera",
+                    "type":"$state",
+                    "value":"treePanel01",
+                    "href":"templates/it/tree/tree01.html"
+                }
+            ]
+        }
+    ]
+}

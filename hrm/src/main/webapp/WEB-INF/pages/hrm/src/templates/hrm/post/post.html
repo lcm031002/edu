@@ -1,0 +1,98 @@
+<div ng-controller="PostCtrl">
+    <div class="panel panel-default" style="margin-bottom: 10px;">
+        <div class="panel-heading font-bold">
+            	岗位管理
+        </div>
+
+        <div class="panel-body" style="padding: 15px;" id="panelBody">
+            <form class="ng-pristine ng-valid" role="form">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">团队</label>
+                        <div class="input-group col-sm-9 ">
+                           <select class="form-control"  ng-options="org.org_name for org in orgs track by org.id" ng-model="selectedBuId" >
+                                    <option value="">全部</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">校区</label>
+                        <div class="input-group col-sm-9 ">
+                           <select class="form-control"  ng-options="org.org_name for org in orgs track by org.id" ng-model="selectedBranchId" >
+                                    <option value="">全部</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="col-sm-3 fl" style="line-height: 34px;">名称</label>
+                        <div class="input-group col-sm-9 ">
+                            <input type="text" class="form-control" ng-model="selectedName"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12" align="center">
+                    <button type="submit" class="btn btn-default" ng-click="queryInfo(1)">查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        			<div class="tool_bar">
+        				<button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="toAddPostPanel()"><i class="fa fa-plus"></i> 添加</button>
+        			</div>
+                    <table class="table table-striped table-hover table-bordered">
+                        <tr>
+                            <th>id</th>
+                            <th>岗位编码</th>
+                            <th>岗位名称</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr ng-repeat="post in postList" ng-if="postList&&postList.length" >
+                            <td>{{post.id}}</td>
+                            <td>{{post.post_code}}</td>
+                            <td>{{post.post_name}}</td>
+                            <td>
+                                <a ng-click="toUpdateItem(post)" href="javascript:void(0)">修改</a>
+                                <a ng-if="post.status == 0" ng-click="toDeleteItem(post)" href="javascript:void(0)">启用</a>
+                                <a ng-if="post.status == 1" ng-click="toDeleteItem(post)" href="javascript:void(0)">禁用</a>
+                            </td>                           
+                        </tr>
+                        <tr ng-if="!postList||!postList.length">
+                            <td colspan="4">暂无数据</td>
+                        </tr>
+                        
+                        <tr ng-if="isLoading == 'loading...'">
+                        	<td colspan="4" align="center">
+			                    <img src="img/icons/big_load.gif">
+			                </td>
+                        </tr>
+                    </table>
+                    
+                    <div class="center"  ng-if="pageParam.pages>=1" >
+                    	<ul class="pagination">
+			             <li ng-model="pageParam.pageNum" ng-if="pageParam.pages>=1"  ng-click="queryInfo(1)">
+			                    <span >首页</span>
+			                </li>
+			                  <li    ng-if="pageParam.pageNum>1"    ng-click="queryInfo(pageNum-1)" >
+			                    <span>上一页</span>
+			                </li>
+			                <li     ng-repeat="i in paginationBars track by $index" class="{{ i==pageNum ? 'active':'' }}"  >
+			                    <span ng-click="queryInfo(i)" >{{i}}</span>
+			                </li>
+			                <li ng-model="pageParam.pageNum"  ng-if="pageParam.pageNum<pageParam.pages"    ng-click="queryInfo(pageNum+1)">
+			                    <span >下一页</span>
+			                </li>
+			                <li ng-model="pageParam.pages"    ng-click="queryInfo(pageParam.pages)">
+			                    <span >尾页</span>
+			                </li>
+			                
+			            </ul>
+                    </div>
+        </div>
+    <div ng-include="'templates/hrm/post/post_info.html'"></div>
+    <div ng-include="'templates/hrm/post/post_delete.html'"></div>
+</div>

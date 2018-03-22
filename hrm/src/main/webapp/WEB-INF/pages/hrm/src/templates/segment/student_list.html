@@ -1,0 +1,82 @@
+<!-- Modal -->
+<div id="myModal" class="modal  fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="StudentListCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">内帐学生名单</h3>
+    </div>
+    <div class="modal-body">
+        <!--<input type="hidden" ng-model="courseId" value="{{course.id}}"/>-->
+        <table class="table">
+            <tr>
+               <th>序号</th>
+                <th>学生编码</th>
+                <th>学生姓名</th>
+                <th>报班金额</th>
+              <!--   <th>科目数</th> -->
+            </tr>
+
+            <tr ng-repeat="student in ERPCourseStudentList" ng-if="ERPCourseStudentList&&ERPCourseStudentList.length">
+                <td>{{$index+1}}</td>
+                <td>{{student.student_encoding}}</td>
+                <td>{{student.student_name}}</td>
+                <td>{{student.order_amount}}</td>
+                <!-- <td>{{student.subject_num}}</td> -->
+            </tr>
+
+            <tr ng-if="ERPCourseStudentQuery == 'isLoading...'" align="center">
+                <td colspan="4">
+                    <img src="img/icons/big_load.gif">
+                </td>
+            </tr>
+
+            <tr ng-if="!ERPCourseStudentList||!ERPCourseStudentList.length">
+                <td colspan="4" align="center">
+                    暂无数据
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal2" class="modal  fade " tabindex="-1" role="dialog" aria-labelledby="myModal2Label" aria-hidden="true" ng-controller="StudentListCtrl">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModal2Label">外账学生名单</h3>
+    </div>
+    <div class="modal-body">
+        <!--<input type="hidden" ng-model="courseId" value="{{course.id}}"/>-->
+        <table class="table">
+            <tr>
+                 <th>序号</th>
+                <th>学生编码</th>
+                <th>学生姓名</th>
+                <th>报班金额</th>
+                <!-- <th>科目数</th> -->
+            </tr>
+            <tr ng-repeat="student in PUBCourseStudentList" ng-if="PUBCourseStudentList&&PUBCourseStudentList.length">
+                <td>{{$index+1}}</td>
+                <td>{{student.student_encoding}}</td>
+                <td>{{student.student_name}}</td>
+                <td>{{student.order_amount}}</td>
+               <!--  <td>{{student.subject_num}}</td> -->
+            </tr>
+            <tr ng-if="PUBCourseStudentQuery == 'isLoading...'" align="center">
+                <td colspan="4">
+                    <img src="img/icons/big_load.gif">
+                </td>
+            </tr>
+            <tr ng-if="!PUBCourseStudentList||!PUBCourseStudentList.length">
+                <td colspan="4" align="center">
+                    暂无数据
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer" align="center">
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "data":[
+        {
+            "id":"1",
+            "name":"归属公司定义",
+            "code":"type_company",
+            "remark":"",
+            "items":[
+                {
+                    "id":"0001",
+                    "name":"XX公司",
+                    "remark":"X无"
+                }
+            ]
+        },{
+            "id":"2",
+            "name":"字典2",
+            "code":"type_def",
+            "remark":""
+        }
+    ]
+}

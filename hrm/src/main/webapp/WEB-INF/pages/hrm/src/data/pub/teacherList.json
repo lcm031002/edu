@@ -1,0 +1,25 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "id":"100003031",
+            "name":"白敏",
+            "code":"jsxm-bm-1601",
+            "typeName":"正式员工",
+            "type":"1",
+            "isPartTimeName":"否",
+            "isPartTime":"0",
+            "subjectName":"地理",
+            "area":"厦门地区",
+            "areaId":"",
+            "grades":"1,2,3",
+            "gradeNames":"初一、初二、初三"
+        }
+    ]
+}

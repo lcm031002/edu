@@ -1,0 +1,33 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "id":"1",
+            "typeName":"报班",
+            "type":"1",
+            "createTime":"2016/06/05 12:42",
+            "description":"报班单号：edrtfgyhujik，金额：36573",
+            "operator":"1",
+            "operatorName":"系统",
+            "statusName":"成功",
+            "status":"1",
+            "failReason":""
+        },{
+            "id":"2",
+            "typeName":"报班",
+            "type":"1",
+            "createTime":"2016/06/05 14:42",
+            "description":"报班单号：edrtfgyhujik，金额：36573",
+            "operator":"1",
+            "operatorName":"系统",
+            "statusName":"成功",
+            "status":"1",
+            "failReason":""
+        }
+    ]
+}

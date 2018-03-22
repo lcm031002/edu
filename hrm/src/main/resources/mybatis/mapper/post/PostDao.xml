@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.PostDao">
+	<resultMap type="Map" id="dataMap">    
+	    <id column="id" property="id"/>    
+	    <result column="post_name" property="post_name"/>    
+	    <result column="post_type_name" property="post_type_name"/>    
+	    <result column="post_code" property="post_code"/>    
+	    <result column="rank_id" property="rank_id"/>
+	    <result column="post_type_id" property="post_type_id"/>   
+	    <result column="rank_code" property="rank_code"/>
+    </resultMap> 
+    
+    <resultMap type="Map" id="dictSubMap">    
+	    <id column="id" property="id"/>    
+	    <result column="name" property="name"/>    
+	    <result column="remark" property="remark"/>    
+	    <result column="code" property="code"/>    
+	    <result column="dictTypeId" property="dictTypeId"/>    
+    </resultMap>
+    
+	<!-- 查询岗位信息列表 -->
+	<!-- <select id="queryPostForPage" parameterType="java.util.Map"
+	resultType="com.ebusiness.hrm.model.Post">
+		SELECT ep.id,
+			ep.post_name,
+			ep.post_code
+		FROM TP_POST ep
+		where ep.id in (select distinct teop.post_id
+		from TAB_EMP_ORG_POST teop
+		<where> 1=1
+			<if test="BuId !=null and BuId !=''">
+				and teop.bu_id=#{BuId,jdbcType=NUMERIC}
+			</if>
+			<if test="BranchId !=null and BranchId !=''">
+				and teop.branch_id=#{BranchId,jdbcType=NUMERIC}
+			</if>
+		</where>
+		)
+		<if test="name !=null and name !=''">
+			and	ep.post_name like '%'||#{name,jdbcType=VARCHAR}||'%'
+		</if>
+		
+		
+	</select> -->
+	
+	<!-- 添加岗位 -->
+	<insert id="addPost" parameterType="com.ebusiness.hrm.model.Post">
+		INSERT INTO TP_POST
+		(
+			id,
+			post_name,
+			post_code,
+			post_type_id,
+			rank_id
+		)
+		VALUES
+		(
+			seq_TP_POST.nextval,
+			#{post_name,jdbcType=VARCHAR},
+			#{post_code,jdbcType=VARCHAR},
+			#{post_type_id,jdbcType=VARCHAR},
+			#{rank_id,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 修改岗位 -->
+	<update id="updatePost" parameterType="com.ebusiness.hrm.model.Post">
+		UPDATE TP_POST
+		SET
+			post_name=#{post_name,jdbcType=VARCHAR},
+			post_type_id=#{post_type_id,jdbcType=VARCHAR},
+			rank_id=#{rank_id,jdbcType=VARCHAR}
+		WHERE id=#{id, jdbcType = NUMERIC}
+	
+	</update>
+	
+	<!-- 作废岗位 -->
+	<!-- <update id="deletePost" parameterType="Integer">
+		 update TP_POST t set t.status=abs(nvl(t.status,0)-1) WHERE id=#{id, jdbcType = NUMERIC}
+	</update> -->
+	
+	<!-- 查询已存在岗位 -->
+	<select id="queryPostId" parameterType="String" resultType="Long">
+		select ep.id from TP_POST ep WHERE ep.post_name=#{name, jdbcType =VARCHAR} and rownum=1 
+	</select>
+	
+	<!-- 查询所有岗位id，名称信息 -->
+	<select id="queryPost"   resultMap="dataMap" parameterType="Map">
+		select 
+			ep.id,
+			ep.post_code,
+			ep.post_name,
+			ep.rank_id,
+			ep.post_type_id,
+			duty.duty_name as post_type_name,
+			tpr.rank_code
+		from TP_POST ep
+		left join tp_post_duty duty on duty.id = ep.post_type_id
+		left join tp_post_rank tpr on tpr.id = ep.rank_id
+		where 1=1
+		<if test="searchInfo != null and searchInfo != ''">
+			and (ep.post_code like '%${searchInfo}%' or ep.post_name like '%${searchInfo}%')
+		</if> 
+		order by ep.post_type_id, tpr.rank_code, ep.post_code
+	</select>
+	
+	<!-- 查询数据字典获取岗位类型-->
+	<select id="queryPostType"   resultMap="dictSubMap">
+		select * from ebs_dict_type_sub where dictTypeId=3
+	</select>
+</mapper>

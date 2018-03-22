@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.EmployeeManageDao">
+
+	<resultMap type="Map" id="dataMap">    
+	    <id column="id" property="id"/>    
+	    <result column="buName" property="buName"/>    
+	    <result column="branchName" property="branchName"/>    
+	    <result column="post_name" property="post_name"/>    
+	    <result column="status" property="status"/>    
+	    <result column="emp_id" property="emp_id"/>    
+	    <result column="post_id" property="post_id"/>    
+    </resultMap> 
+	
+	<!-- 查询员工档案信息列表 -->
+	<select id="queryEmployeeForPage" parameterType="java.util.Map" 
+	resultType="com.ebusiness.hrm.model.Employee">
+		select  tef.id,
+				tef.encoding,
+				tef.employee_name,
+				tef.sex,
+				tef.phone,
+				tef.ID_ID,
+				tef.address,
+				tef.status,
+				<!-- tef.dept,
+				tef.post,
+				tep.post_name as postName, -->
+				tef.position,
+				tef.poslevel,
+				edts.name as levelName,
+				tef.email,
+				<!-- tef.business, -->
+				tef.enterType,
+				tedts.name as enterTypeName,
+				tef.staff_head
+		from TAB_EMPLOYEE_INFO tef
+		left join TP_POST tep
+		on tef.post=tep.id
+		left join ebs_dict_type_sub edts
+		on tef.poslevel=edts.id
+		left join ebs_dict_type_sub tedts
+		on tef.enterType=tedts.id
+		<where>
+			<if test="employee_name!=null and employee_name!=''">
+				  <trim prefix="AND" prefixOverrides="and |or">  
+				    (
+				    tef.employee_name like '%'||#{employee_name,jdbcType=VARCHAR}||'%'
+					or tef.encoding like '%'||#{employee_name,jdbcType=VARCHAR}||'%'
+				    )
+				    </trim>
+			</if>
+			<!-- <if test="org_id!=null and org_id!=''">
+				and org_id=#{org_id,jdbcType=NUMERIC}
+			</if> -->
+			<if test="dept!=null and dept!=''">
+				and tef.dept=#{dept,jdbcType=VARCHAR}
+			</if>
+			<if test="post!=null and post!=-1">
+				and tef.post=#{post,jdbcType=NUMERIC}
+			</if>
+			<if test="enterType!=null and enterType!=-1">
+				and tef.enterType=#{enterType,jdbcType=NUMERIC}
+			</if>
+		</where>
+		order by tef.id desc
+	</select>
+	
+	<!-- 按照员工id查询该员工信息-->
+	<select id="queryEmployeeById" parameterType="java.lang.Long" 
+	resultType="com.ebusiness.hrm.model.Employee">
+		select  tef.id,
+				tef.encoding,
+				tef.employee_name,
+				tef.sex,
+				tef.phone,
+				tef.dept,
+				tef.post,
+				tep.post_name as postName,
+				tef.position,
+				tef.id_id,
+				tef.poslevel,
+				edts.name as levelName,
+				tef.email,
+				tef.business,
+				tef.enterType,
+				tedts.name as enterTypeName,
+				tef.staff_head,
+				to_char(tef.entry_date,'yyyy-mm-dd') as entryDate
+		from TAB_EMPLOYEE_INFO tef
+		left join TP_POST tep
+		on tef.post=tep.id
+		left join ebs_dict_type_sub edts
+		on tef.poslevel=edts.id
+		left join ebs_dict_type_sub tedts
+		on tef.enterType=tedts.id
+		where tef.id = #{employeeId}
+		order by tef.id desc
+	</select>
+	
+	<select id="queryFieldKey" resultType="java.util.Map">
+		select fieldKey
+		from ebs_employeeext_reg 
+		where fieldStatus=2 or fieldStatus=1
+	</select>
+	
+	<!-- 根据id查询员工档案 -->
+	<select id="queryEmployee" parameterType="Map" resultType="java.util.Map">
+		SELECT ${str}
+		FROM TAB_EMPLOYEE_INFO
+		WHERE id=#{id,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 根据encoding查询员工档案 -->
+	<select id="queryEmployeeByEncoding" parameterType="Map" resultType="com.ebusiness.hrm.model.Employee">
+		SELECT *
+		FROM TAB_EMPLOYEE_INFO
+		WHERE encoding=#{encoding,jdbcType=VARCHAR}
+	</select>
+	<!-- 查询员工档案 -->
+	<select id="queryOtherEmployeeByParam" parameterType="com.ebusiness.hrm.model.Employee" resultType="com.ebusiness.hrm.model.Employee">
+		SELECT *
+		FROM TAB_EMPLOYEE_INFO
+		WHERE status != 0
+		<if test="id !=null">
+			and id!= #{id,jdbcType=NUMERIC}
+		</if>
+		<if test="ID_ID != null">
+			and id_id=#{ID_ID,jdbcType=VARCHAR}
+		</if>
+		<if test="employee_name != null">
+        	and employee_name=#{employee_name,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null">
+        	and phone=#{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="encoding != null">
+        	and encoding=#{encoding,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+
+		
+	<!-- 添加员工 -->
+	<insert id="insertEmployee" parameterType="java.util.Map">
+	<selectKey resultType="java.lang.Long"  keyProperty="id" order="BEFORE">
+	       SELECT seq_TAB_EMPLOYEE_INFO.nextval as id FROM dual
+	   </selectKey>
+	INSERT INTO TAB_EMPLOYEE_INFO
+	(	
+		id,status
+		<if test="key!=null and key!=''">
+		,${key}
+		</if>
+	)
+	select
+		#{id,jdbcType=NUMERIC},1
+		<if test="value!=null and value!=''">
+		,${value}
+		</if>
+	from dual	
+	</insert>
+	
+	<!-- 更新员工档案 -->
+	<update id="updateEmployee" parameterType="java.util.Map">
+		UPDATE
+			TAB_EMPLOYEE_INFO
+		SET
+				${str}		
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 根据条件查询符合条件的员工id和编码和姓名 -->
+	<select id="queryEmployeeInfo" parameterType="String" resultType="java.util.Map">
+		select
+		taf.encoding as encoding,
+		taf.id as id,
+		taf.employee_name as employee_name
+		FROM tab_employee_info taf 
+	 <where>
+	 rownum&lt;=10
+	 and taf.status=1
+	 <if test="searchInfo!=null and searchInfo!=''">
+	 AND(  taf.encoding like  '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
+	  OR taf.employee_name like  '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
+	  )
+	  </if>
+	 </where> 
+	</select>
+	
+	<!-- 查询员工教育经历 -->
+	<select id="queryEmployeeEdu" parameterType="Long" resultType="com.ebusiness.hrm.model.EmployeeEdu">
+		select * from TAB_EMPLOYEE_EDU where employee_id=#{employee_id,jdbcType=NUMERIC} order by id
+	</select>
+	
+	<!-- 添加员工教育经历 -->
+	<insert id="addEmployeeEdu" parameterType="com.ebusiness.hrm.model.EmployeeEdu">
+		insert into TAB_EMPLOYEE_EDU
+			(
+				   id,
+				   employee_id,            
+				   begin_time,          
+				   end_time,            
+				   school,                
+				   profession,                 
+				   degree,               
+				   certificate,              
+				   length_school,         
+				   enclosure,             
+				   remark                 
+			)
+		select
+			seq_TAB_EMPLOYEE_EDU.nextval,
+			#{employee_id,jdbcType=NUMERIC},
+			#{begin_time,jdbcType=DATE},
+			#{end_time,jdbcType=DATE},
+			#{school,jdbcType=VARCHAR},
+			#{profession,jdbcType=VARCHAR},
+			#{degree,jdbcType=VARCHAR},
+			#{certificate,jdbcType=VARCHAR},
+			#{length_school,jdbcType=NUMERIC},
+			#{enclosure,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+			from dual
+	</insert>
+	
+	<!-- 修改员工教育经历 -->
+	<update id="updateEmployeeEdu" parameterType="com.ebusiness.hrm.model.EmployeeEdu">
+		update TAB_EMPLOYEE_EDU
+		set	
+			   begin_time=#{begin_time,jdbcType=DATE},          
+			   end_time= #{end_time,jdbcType=DATE},           
+			   school= #{school,jdbcType=VARCHAR},               
+			   profession=#{profession,jdbcType=VARCHAR},                 
+			   degree= #{degree,jdbcType=VARCHAR},              
+			   certificate= #{certificate,jdbcType=VARCHAR},            
+			   length_school=#{length_school,jdbcType=NUMERIC},          
+			   enclosure=#{enclosure,jdbcType=VARCHAR},             
+			   remark=#{remark,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 删除员工教育经历 -->
+	<delete id="deleteEmployeeEdu" parameterType="Long">
+		delete from TAB_EMPLOYEE_EDU where id=#{id,jdbcType=NUMERIC}
+	</delete>
+	
+	
+	<!-- 查询员工工作经历 -->
+	<select id="queryEmployeeExp" parameterType="Long" resultType="com.ebusiness.hrm.model.EmployeeExperience">
+		select * from TAB_EMPLOYEE_EXPERIENCE where employee_id=#{employee_id,jdbcType=NUMERIC} order by id
+	</select>
+	
+	<!-- 添加员工工作经历 -->
+	<insert id="addEmployeeExp" parameterType="com.ebusiness.hrm.model.EmployeeExperience">
+		insert into TAB_EMPLOYEE_EXPERIENCE
+			(
+				   id,
+				   employee_id,            
+				   begin_time,          
+				   end_time,            
+				   company_name,          
+			       company_type,         
+			       job_title,             
+			       responsibility,         
+			       subordinates,      
+			       reasons,       
+			       has_prove,                
+			       reterence,
+			       enclosure             
+			)
+		select
+			seq_TAB_EMPLOYEE_EXPERIENCE.nextval,
+			#{employee_id,jdbcType=NUMERIC},
+			#{begin_time,jdbcType=DATE},
+			#{end_time,jdbcType=DATE},
+			#{company_name,jdbcType=VARCHAR},
+			#{company_type,jdbcType=VARCHAR},<!-- 公司性质 -->
+			#{job_title,jdbcType=VARCHAR},<!-- 职位名称 -->
+			#{responsibility,jdbcType=VARCHAR},<!-- 工作职责 -->
+			#{subordinates,jdbcType=NUMERIC},<!-- 下属人数 -->
+			#{reasons,jdbcType=VARCHAR},<!-- 离职原因 -->
+			#{has_prove,jdbcType=NUMERIC},<!-- 是否有证明 -->
+			#{reterence,jdbcType=VARCHAR}<!-- 证明信息 -->
+			#{enclosure,jdbcType=VARCHAR}<!-- 附件 -->
+			from dual
+	</insert>
+	
+	<!-- 修改员工工作经历 -->
+	<update id="updateEmployeeExp" parameterType="com.ebusiness.hrm.model.EmployeeExperience">
+		update TAB_EMPLOYEE_EXPERIENCE
+		set	
+			    begin_time=#{begin_time,jdbcType=DATE},
+				end_time=#{end_time,jdbcType=DATE},
+				company_name=#{company_name,jdbcType=VARCHAR},
+				company_type=#{company_type,jdbcType=VARCHAR},
+				job_title=#{job_title,jdbcType=VARCHAR},
+				responsibility=#{responsibility,jdbcType=VARCHAR},
+				subordinates=#{subordinates,jdbcType=NUMERIC},
+				reasons=#{reasons,jdbcType=VARCHAR},
+				has_prove=#{has_prove,jdbcType=NUMERIC},
+				reterence=#{reterence,jdbcType=VARCHAR},
+				enclosure=#{enclosure,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 删除员工工作经历 -->
+	<delete id="deleteEmployeeExp" parameterType="Long">
+		delete from TAB_EMPLOYEE_EXPERIENCE where id=#{id,jdbcType=NUMERIC}
+	</delete>
+	
+	
+	<!-- 查询员工工作总结 -->
+	<select id="queryEmployeeSum" parameterType="Long" resultType="com.ebusiness.hrm.model.EmployeeSummarize">
+		select 
+				tes.id,
+			   tes.employee_id,          
+			   tes.start_time,          
+			   tes.end_time,            
+			   tes.title ,             
+		       tes.content,            
+		       tes.approver, 
+		       tef.employee_name as employeeName,         
+		       tes.approval_status,   
+		       tes.approval_opinion,   
+		       tes.enclosure 
+		from TAB_EMPLOYEE_SUMMARIZE tes
+		left join tab_employee_info tef
+		on tes.approver=tef.id
+		 where tes.employee_id=#{employee_id,jdbcType=NUMERIC} order by id
+	</select>
+	
+	<!-- 添加员工工作总结 -->
+	<insert id="addEmployeeSum" parameterType="com.ebusiness.hrm.model.EmployeeSummarize">
+		insert into TAB_EMPLOYEE_SUMMARIZE
+			(
+				   id,
+				   employee_id,            
+				   start_time,          
+				   end_time,            
+				   title ,             
+			       content,            
+			       approver,           
+			       approval_status,   
+			       approval_opinion,   
+			       enclosure                            
+			)
+		select
+			seq_TAB_EMPLOYEE_SUMMARIZE.nextval,
+			#{employee_id,jdbcType=NUMERIC},
+			#{start_time,jdbcType=DATE},
+			#{end_time,jdbcType=DATE},
+			#{title,jdbcType=VARCHAR},
+			#{content,jdbcType=VARCHAR},
+			#{approver,jdbcType=NUMERIC},
+			#{approval_status,jdbcType=NUMERIC},
+			#{approval_opinion,jdbcType=VARCHAR},
+			#{enclosure,jdbcType=VARCHAR}
+			from dual
+	</insert>
+	
+	<!-- 修改员工工作总结 -->
+	<update id="updateEmployeeSum" parameterType="com.ebusiness.hrm.model.EmployeeSummarize">
+		update TAB_EMPLOYEE_SUMMARIZE
+		set	
+			    start_time=#{start_time,jdbcType=VARCHAR},
+				end_time=#{end_time,jdbcType=VARCHAR},
+				title=#{title,jdbcType=VARCHAR},
+				content=#{content,jdbcType=VARCHAR},
+				approver=#{approver,jdbcType=NUMERIC},
+				approval_status=#{approval_status,jdbcType=NUMERIC},
+				approval_opinion=#{approval_opinion,jdbcType=VARCHAR},
+				enclosure=#{enclosure,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 删除员工工作总结 -->
+	<delete id="deleteEmployeeSum" parameterType="Long">
+		delete from TAB_EMPLOYEE_SUMMARIZE where id=#{id,jdbcType=NUMERIC}
+	</delete>
+	
+	
+	<!-- 查询员工奖惩信息 -->
+	<select id="queryEmployeeRew" parameterType="Long" resultType="com.ebusiness.hrm.model.EmployeeReward">
+		select * from TAB_EMPLOYEE_REWARD where employee_id=#{employee_id,jdbcType=NUMERIC} order by id
+	</select>
+	
+	<!-- 添加员工奖惩信息 -->
+	<insert id="addEmployeeRew" parameterType="com.ebusiness.hrm.model.EmployeeReward">
+		insert into TAB_EMPLOYEE_REWARD
+			(
+				   id,
+				   employee_id,            
+				   date_time,      
+			       award_party,         
+			       award_name,          
+			       describe,             
+			       enclosure                          
+			)
+		select
+			seq_TAB_EMPLOYEE_REWARD.nextval,
+			#{employee_id,jdbcType=NUMERIC},
+			#{date_time,jdbcType=DATE},
+			#{award_party,jdbcType=VARCHAR},
+			#{award_name,jdbcType=VARCHAR},
+			#{describe,jdbcType=VARCHAR},
+			#{enclosure,jdbcType=VARCHAR}
+			from dual
+	</insert>
+	
+	<!-- 修改员工奖惩信息-->
+	<update id="updateEmployeeRew" parameterType="com.ebusiness.hrm.model.EmployeeReward">
+		update TAB_EMPLOYEE_REWARD
+		set	
+			    date_time=#{date_time,jdbcType=DATE},
+				award_party=#{award_party,jdbcType=VARCHAR},
+				award_name=#{award_name,jdbcType=VARCHAR},
+				describe=#{describe,jdbcType=VARCHAR},
+				enclosure=#{enclosure,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 删除员工奖惩信息-->
+	<delete id="deleteEmployeeRew" parameterType="Long">
+		delete from TAB_EMPLOYEE_REWARD where id=#{id,jdbcType=NUMERIC}
+	</delete>
+
+	
+	<!-- 修改员工任职/固定信息-->
+	<update id="updateEmployeeStatic" parameterType="Map">
+		update TAB_EMPLOYEE_INFO
+		set	
+			    employee_name=#{employee_name,jdbcType=VARCHAR},
+				encoding=#{encoding,jdbcType=VARCHAR},
+				phone=#{phone,jdbcType=VARCHAR},
+				dept=#{dept,jdbcType=VARCHAR},
+				post=#{post,jdbcType=NUMERIC},
+				position=#{position,jdbcType=VARCHAR},
+				poslevel=#{poslevel,jdbcType=NUMERIC},
+				email=#{email,jdbcType=VARCHAR},
+				enterType=#{enterType,jdbcType=NUMERIC},
+				id_id=#{ID_ID,jdbcType=NUMERIC},
+				business=#{business,jdbcType=VARCHAR}
+				<if test="entryDate!=null || entryDate!=''">
+				,entry_date=to_date(#{entryDate}, 'yyyy-mm-dd')
+				</if>
+                where id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	
+	<!-- 修改员工头像-->
+	<update id="updateEmployeeImage" parameterType="Map">
+		update TAB_EMPLOYEE_INFO
+		set	
+				staff_head=#{staff_head,jdbcType=VARCHAR} 
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	
+	<!-- 根据员工id查询该员工绑定的岗位信息-->
+	<select id="queryPostByEmpId" parameterType="Long" resultMap="dataMap">
+		select a.id,a.status,a.post_id,a.emp_id,tof.org_name as buName, 
+		case         　　
+       	when a.branch_id = -1 then '全部校区'         　　
+       	else tof2.org_name 　　end branchName,
+		tp.post_name
+		  from (select id,bu_id, branch_id, post_id, status,emp_id
+		          from TAB_EMP_ORG_POST teop
+		         <where> 1=1
+		         	<if test="employee_id!=null">
+			        	and teop.emp_id=#{employee_id,jdbcType=NUMERIC}
+			        </if>
+		        </where>
+		        ) a
+		  left join tab_organization_info tof on tof.id = a.bu_id
+		  left join tab_organization_info tof2 on tof2.id = a.branch_id
+		  left join Tp_Post tp on tp.id = a.post_id
+		
+	</select>
+	
+	<!-- 添加员工岗位信息 -->
+	<insert id="addEmpPost" parameterType="java.util.Map">
+		insert into TAB_EMP_ORG_POST
+			(
+				id,
+				emp_id,
+				bu_id,
+				branch_id,
+				post_id,
+				create_user,
+				status,
+				create_time
+			)
+		values(
+				seq_TAB_EMP_ORG_POST.nextval,
+				#{emp_id,jdbcType=NUMERIC},
+				#{bu_Id,jdbcType=NUMERIC},
+				#{branch_Id,jdbcType=NUMERIC},
+				#{post_Id,jdbcType=NUMERIC},
+				#{create_user,jdbcType=NUMERIC},
+				1,
+				(select sysdate from dual)
+				)		
+	</insert>
+	
+	<!-- 禁用 启用员工岗位-->
+	<update id="removeEmpPost" parameterType="Long">
+		UPDATE TAB_EMP_ORG_POST teop
+		SET    teop.status=abs(nvl(teop.status,0)-1) 
+		WHERE  teop.id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	
+	<!-- 禁用 启用员工状态-->
+	<update id="setStatus" parameterType="Long">
+		UPDATE tab_employee_info tef
+		SET    tef.status=abs(nvl(tef.status,0)-1) 
+		WHERE  tef.id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+</mapper>

@@ -1,0 +1,79 @@
+<!-- Modal -->
+<div id="roleMgrPanel" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="roleMgrPanelLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="roleMgrPanelLabel">{{selectedRole.name}}</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">id</label>
+            <div class="col-sm-9 input-group">
+                <input type="text" class="form-control"ng-readonly="true" ng-model="selectedRole.id"/>
+            </div>
+        </div>
+		<div class="form-group" ng-class="{'has-error' : !selectedRole.roleName}" >
+		<label class="col-sm-3 fl" style="line-height: 34px;">角色名称</label>
+		      <div class="col-sm-9 input-group" ng-controller="TooltipDemoCtrl" >
+		             <input type="text" 
+		              class="form-control ng-pristine ng-valid ng-empty ng-touched" 
+		              tooltip-placement="top" 
+		              tooltip-placement="{dynamicTooltip}}" 
+		              uib-tooltip="{{dynamicTooltip}}"  
+		              tooltip-enable="!selectedRole.roleName"
+		              ng-model="selectedRole.roleName"
+		              placeholder="请输入角色名称"
+		              class="btn btn-default">
+		             </div>
+		    </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">归属公司</label>
+            <div class="col-sm-9 input-group">
+            <select class="form-control" ng-model="selectedRole.companyId"  ng-change="queryBranchsWithId(selectedRole.companyId)">
+                         <option value=" ">全部校区</option>
+                          <option value="{{company.id}}" ng-selected="company.id==selectedRole.companyId" ng-repeat="company in companyList">{{company.name}}</option>
+              </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">归属校区</label>
+            <div class="col-sm-9 input-group">
+                <select class="form-control" ng-model="selectedRole.branchId">
+                <option value=" ">全部校区</option>
+                    <option value="{{branch.id}}" ng-selected="branch.id==selectedRole.branchId" ng-repeat="branch in branchs ">{{branch.name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 fl" style="line-height: 34px;">备注</label>
+            <div class="col-sm-9 input-group">
+                <input type="text" class="form-control" ng-model="selectedRole.remark"/>
+            </div>
+        </div>
+
+        <div class="form-group" style="height: 260px;">
+            <!--<div class="col-lg-5">
+                <div>已选权限</div>
+                <div style="overflow-y: scroll;height:260px;">
+                    <div id="treeSelectedRole"></div>
+                </div>
+            </div>
+            <div class="col-lg-2" align="center">
+                 <div class="btn btn-default" ng-click="unselectNode()" type="button" style="width:80%; margin: 10px;margin-top: 100px;"><i class="fa fa-arrow-right"></i></div>
+                <div class="btn btn-default" ng-click="selectNode()" type="button" style="width:80%; margin: 10px;"><i class="fa fa-arrow-left"></i></div>
+            </div>-->
+            <div class="col-lg-5">
+                <div><label class="col-sm-3 fl" style="line-height: 34px;">归属模块</label></div>
+                <div style="overflow-y: scroll;height:260px;border: 1px solid #f5f5f5;">
+                    <div id="treeRole"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer" align="center">
+        <button class="btn btn-default" type="button"  ng-click="saveRole()">确定</button>
+    </div>
+</div>

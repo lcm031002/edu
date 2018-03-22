@@ -1,0 +1,23 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "BRANCH_NAME":"BJK_20160525000070",
+            "STUDENT_NO":"厦门文屏大小班校区",
+            "STUDENT_NAME":"厦门文屏大小班校区",
+            "CHANGE_TYPE_NAME":"BXBH_20160525000070",
+            "CHANGE_AMOUNT":"test912",
+            "PRE_AMOUNT":"厦门高一语文",
+            "NEXT_AMOUNT":"10",
+            "PAY_NAME":"100.00",
+            "OPER_TIME":"100.00",
+            "OPER_USER_NAME":"122"
+        }
+    ]
+}

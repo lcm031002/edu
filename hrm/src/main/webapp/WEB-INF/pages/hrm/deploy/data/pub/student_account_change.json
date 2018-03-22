@@ -1,0 +1,33 @@
+{
+    "name": "学生账户操作流水",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "id":"1",
+            "student_encoding":"ERHJU",
+            "student_name":"你好",
+            "account_id":"456",
+            "pay_type":"充值",
+            "pay_detail_type":"现金",
+            "amount":"100",
+            "remark":"",
+            "pay_time":""
+        },{
+            "id":"2",
+            "student_encoding":"ERH222JU",
+            "student_name":"你好你好你好",
+            "account_id":"456222",
+            "pay_type":"转账",
+            "pay_detail_type":"转出",
+            "amount":"100",
+            "remark":"",
+            "pay_time":""
+        }
+
+    ]
+}

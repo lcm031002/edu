@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebusiness.hrm.dao.OrganizationInfoDao">
+	<!-- 查询组织机构 -->
+	<select id="queryOrg" resultType="com.ebusiness.hrm.model.OrganizationInfo">
+				SELECT 
+				tof.id ,
+				tof.org_name, 
+				tof.parent_id,
+		        tof.org_type ,
+		        tof.status,
+		        case
+		        when tof.org_type= '2' then '地区'
+		        when tof.org_type= '3' then '团队'
+		        when tof.org_type= '4' then '校区'
+		        else ''
+		        end org_type_name,
+		        tof.address,
+		        tof.product_line,
+		        tof1.org_name as parent_org_name,
+		        tof.logo,
+		        tof.phone,
+		        tof.org_kind as orgKind,
+		        tof.email,
+		        tof.short_org_name as shortOrgName
+		FROM tab_organization_info tof
+		 left join tab_organization_info tof1
+		   on tof1.id = tof.parent_id
+		WHERE 1=1
+		order by parent_id
+	</select>
+	
+	
+	  <!--查询子机构 -->
+		<select id="querySubOrganizations" resultType="Map" parameterType="Integer">
+			SELECT tof.id as "id", tof.org_name as "name",
+			t.org_name as "buName",
+			t1.org_name as "cityName"
+			FROM tab_organization_info tof
+			left join (
+			select taf.id,taf.parent_id,taf.org_name from tab_organization_info taf
+			where taf.org_type=3
+			) t
+			ON t.id=tof.parent_id
+			left join (
+			select taf.id,taf.parent_id,taf.org_name from tab_organization_info taf
+			where taf.org_type=1
+			) t1
+			ON t1.id=t.parent_id
+		WHERE tof.parent_id=#{parentId, jdbcType=NUMERIC}
+	</select>
+	
+	<!--添加子机构 -->
+	<insert id="addOrganizationInfo" parameterType="com.ebusiness.hrm.model.OrganizationInfo">
+		INSERT INTO tab_organization_info
+		(  id,
+		   org_name,
+		   parent_id,
+		   org_type,
+		   product_line,
+		   sort_number,
+		   status,
+		   create_user,
+		   create_time
+		)
+		VALUES
+		(  seq_tab_organization_info.nextval,
+		   #{org_name, jdbcType=VARCHAR},
+		   #{parent_id, jdbcType=NUMERIC},
+		   #{org_type, jdbcType=NUMERIC},
+		   #{product_line, jdbcType=NUMERIC},
+		   #{sort_number, jdbcType=NUMERIC},
+		   #{status, jdbcType=NUMERIC},
+		   #{create_user, jdbcType=VARCHAR},
+		   #{create_time, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!--更新子机构 -->
+	<update id="updateOrganizationInfo" parameterType="com.ebusiness.hrm.model.OrganizationInfo">
+		UPDATE 
+		   tab_organization_info 
+		SET 
+		   org_name = #{org_name, jdbcType=VARCHAR}, 
+		   org_type = #{org_type, jdbcType=NUMERIC},
+		   product_line = #{product_line, jdbcType=NUMERIC},
+		   sort_number = #{sort_number, jdbcType=NUMERIC},
+		   update_user = #{update_user, jdbcType=VARCHAR}, 
+		   update_time = #{update_time, jdbcType=VARCHAR}
+		   WHERE id = #{id,jdbcType = NUMERIC} 	 
+	</update>
+	
+	<!--禁用子机构 -->
+	<update id="removeOrganizationInfo" parameterType="Integer">
+            UPDATE tab_organization_info tof
+            set
+               tof.status = abs(nvl(tof.status,0)-1)     
+               WHERE id = #{item.id}
+	</update>
+	
+	<!-- 查询团队级别的组织机构 -->
+	<select id="queryAreas" resultType="com.ebusiness.hrm.model.OrganizationInfo">
+		SELECT tof.id , 
+		       tof.org_name 
+		FROM tab_organization_info tof
+		WHERE tof.org_type = 3
+		AND STATUS=1
+	</select>
+	
+	<!-- 查询校区级别的组织机构 -->
+	<select id="querySch" parameterType="Long" resultType="java.util.Map">
+		SELECT tof.id as "id", 
+		       tof.org_name as "org_name"
+		FROM tab_organization_info tof
+		WHERE tof.org_type = 4
+		<if test="buId!=null">
+			AND  tof.parent_id=#{buId,jdbcType = NUMERIC}
+		</if>
+		AND STATUS=1
+	</select>
+</mapper>

@@ -1,0 +1,138 @@
+<div ng-controller="EmployeeCtrl">
+		    <div class="panel panel-default" style="margin-bottom: 10px;">
+		        <div class="panel-heading font-bold">
+		            	员工档案管理
+		        </div>
+		
+		        <div class="panel-body" style="padding: 15px;" id="panelBody">
+		            <form class="ng-pristine ng-valid" role="form">
+		                <!-- <div class="col-lg-6">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 fl" style="line-height: 34px;">组织</label>
+		                        <div class="input-group col-sm-9 ">
+		                           <select class="form-control"   ng-model="selectedOrgId" >
+		                                    <option value="">组织</option>
+		                                    <option value="{{org.id}}" ng-repeat="org in orgs">{{org.org_name}}</option>
+		                                </select>
+		                        </div>
+		                    </div>
+		                </div> -->
+		                <div class="col-lg-6">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 fl" style="line-height: 34px;">部门</label>
+		                        <div class="input-group col-sm-9 ">
+		                           <select class="form-control"   ng-model="selectedDept" >
+		                                    <option value="">部门</option>
+		                                    <option value="部门1">部门1</option>
+		                                    <option value="部门2">部门2</option>
+		                                    <option value="部门3">部门3</option>
+		                           </select>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="col-lg-6">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 fl" style="line-height: 34px;">岗位</label>
+		                        
+		                        <div class="col-sm-9 input-group">
+	                                <select class="form-control" ng-options="m.ID as m.NAME for m in postList"  ng-model="selectedPostId">
+										 <option  value="">-- 请选择 --</option> 
+									</select>
+								</div>
+		                    </div>
+		                </div>
+		                <div class="col-lg-6">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 fl" style="line-height: 34px;">在职类型</label>
+		                        <div class="input-group col-sm-9 ">
+		                            	<select class="form-control" ng-options="m.id as m.name for m in enterTypeList"  ng-model="selectedEnterType">
+												 <option  value="">-- 请选择 --</option> 
+										</select>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="col-lg-6">
+		                    <div class="form-group">
+		                        <label class="col-sm-3 fl" style="line-height: 34px;">员工号/姓名</label>
+		                        <div class="input-group col-sm-9 " >
+		                            <input type="text" class="form-control" ng-model="selectedName"/>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="col-lg-12" align="center">
+		                    <button type="submit" class="btn btn-default" ng-click="queryInfo(1)">搜索</button>
+		                </div>
+		            </form>
+		        </div>
+		    </div>
+		    <div>
+			    	<div class="tool_bar">
+			        	<button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="toAddEmpPanel()"><i class="fa fa-plus"></i> 添加</button>
+			        	<button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="导入()">导入</button>
+			        	<button type="button" style="margin-bottom: 5px;" class="btn btn-default" ng-click="导出()">导出</button>
+			        </div>
+	        		<table class="table table-striped table-hover table-bordered">
+	                        <tr>
+	                            <th>id</th>
+	                            <th>员工号</th>
+	                            <th>姓名</th>
+	                            <th>性别</th>
+	                            <th>手机号</th>
+	                            <th>部门</th>
+	                            <th>岗位</th>
+	                            <th>职位</th>
+	                            <th>等级</th>
+	                            <th>企业邮箱</th>
+	                            <th>在职类型</th>
+	                            <th>操作</th>
+	                        </tr>
+	                        <tr ng-repeat="emp in employeeList" ng-if="employeeList&&employeeList.length" >
+	                            <td>{{emp.id}}</td>
+	                            <td>{{emp.encoding}}</td>
+	                            <td>{{emp.employee_name}}</td>
+	                            <td>{{emp.sex==1?"男":"女"}}</td>
+	                            <td>{{emp.phone}}</td>
+	                            <td>{{emp.dept}}</td>
+	                            <td>{{emp.postName}}</td>
+	                            <td>{{emp.position}}</td>
+	                            <td>{{emp.levelName}}</td>
+	                            <td>{{emp.email}}</td>
+	                            <td>{{emp.enterTypeName}}</td>
+	                            <td>
+	                                <a  ng-click="toQueryItem(emp)" href="javascript:void(0)">具体信息</a>
+	                            </td>                           
+	                        </tr>
+	                        <tr ng-if="!employeeList||!employeeList.length">
+	                            <td colspan="12" align="center">暂无数据</td>
+	                        </tr>
+	                        
+				            <tr ng-if="isLoading == 'loading...'">
+				                <td colspan="12" align="center">
+				                    <img src="img/icons/big_load.gif">
+				                </td>
+				            </tr>                        
+	       			</table> 
+                    
+			         <div class="center"  ng-if="pageParam.pages>=1" >
+			            <ul class="pagination">
+			             <li ng-model="pageParam.pageNum" ng-if="pageParam.pages>=1"  ng-click="queryInfo(1)">
+			                    <span >首页</span>
+			                </li>
+			                  <li    ng-if="pageParam.pageNum>1"    ng-click="queryInfo(pageNum-1)" >
+			                    <span>上一页</span>
+			                </li>
+			                <li     ng-repeat="i in paginationBars track by $index" class="{{ i==pageParam.pageNum ? 'active':'' }}"  >
+			                    <span ng-click="queryInfo(i)" >{{i}}</span>
+			                </li>
+			                <li ng-model="pageParam.pageNum"  ng-if="pageParam.pageNum<pageParam.pages"    ng-click="queryInfo(pageNum+1)">
+			                    <span >下一页</span>
+			                </li>
+			                <li ng-model="pageParam.pages"    ng-click="queryInfo(pageParam.pages)">
+			                    <span >尾页</span>
+			                </li>
+			                
+			            </ul>
+			        </div> 			   	                  
+    		</div>
+    <div ng-include="'templates/hrm/employee/employee_info.html'"></div>
+</div>

@@ -1,0 +1,49 @@
+<!-- Modal -->
+<div id="refundCancelPanel" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="refundCancelPanelLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="refundCancelPanelLabel">退费单据作废</h3>
+    </div>
+    <div class="modal-body" >
+        <div class="form-group" align="center">
+            <p>您确认要作废该退费单据吗? </p>
+        </div>
+        <div class="col-lg-12" align="center">
+            <button type="submit" class="btn btn-default" ng-click="confirmDelete()">是</button>
+            <button type="submit" class="btn btn-default" ng-click="cancelDelete()">否</button>
+        </div>
+    </div>
+</div>
+
+<div id="refundDetailPanel" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="refundDetailPanelLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="refundDetailPanelLabel">退费单据详情</h3>
+    </div>
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>退费课程</th>
+                <th>退费课次</th>
+                <th>退费金额</th>
+                <th>预结转</th>
+                <th>补结转</th>
+                <th>退费补扣</th>
+                <th>经办人</th>
+            </tr>
+            <tr ng-repeat="refund in selectedRefund.refundDetailList" ng-if="selectedRefund.refundDetailList && selectedRefund.refundDetailList.length">
+                <td>{{selectedRefund.courseName}}</td>
+                <td>{{refund.courseTime}}</td>
+                <td>{{selectedRefund.amount | number:2}}</td>
+                <td>{{refund.forward}}</td>
+                <td>{{refund.repair}}</td>
+                <td>{{refund.premiumDeduction}}</td>
+                <td>{{refund.operator}}</td>
+            </tr>
+
+            <tr ng-if="!selectedRefund.refundDetailList||!selectedRefund.refundDetailList.length">
+                <td colspan="7" align="center">暂无数据.</td>
+            </tr>
+        </table>
+    </div>
+</div>

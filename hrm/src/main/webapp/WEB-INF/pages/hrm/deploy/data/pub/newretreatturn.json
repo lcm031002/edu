@@ -1,0 +1,34 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "pageSize":"20",
+    "currentPage":"1",
+    "totalPage":"10",
+    "data":[
+        {
+            "orderEncoding":"BJK_20160525000070",
+            "orgName":"厦门文屏大小班校区",
+            "courseBranchName":"厦门文屏大小班校区",
+            "studentEncoding":"BXBH_20160525000070",
+            "studentName":"文涛23",
+            "gradeName":"二年级",
+            "courseName":"厦门高一语文",
+            "branchName":"文凭大小班校区",
+            "bus_date":"2015-01-01",
+            "bus_type":"退费",
+            "baoBan":"100.00",
+            "bao":"100.00",
+            "yuJieZhuan":"122",
+            "bujiezhuan":"122",
+            "tui":"122",
+            "tuiKeShi":"122",
+            "zhuanChu":"122",
+            "zhuanChuKeShi":"122",
+            "zhuanRu":"122",
+            "zhuanRuKeShi":"122",
+            "order_status":"有效"
+        }
+    ]
+}

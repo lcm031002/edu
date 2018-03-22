@@ -1,0 +1,27 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "data":[
+        {
+            "id":"1",
+            "text":"厦门地区",
+            "children":[
+                {
+                    "id":"123",
+                    "text":"XX公司",
+                    "children":[
+                        {
+                            "id":"234",
+                            "text":"XX校区1"
+                        },{
+                            "id":"235",
+                            "text":"XX校区2"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

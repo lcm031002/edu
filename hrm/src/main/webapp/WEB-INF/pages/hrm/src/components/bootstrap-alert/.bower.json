@@ -1,0 +1,34 @@
+{
+  "name": "bootstrap-alert",
+  "version": "0.0.2",
+  "authors": [
+    "Jarvys <yuhan534@126.com>"
+  ],
+  "description": "shortcuts to show messages with bootstrap alert",
+  "main": "alert.js",
+  "homepage": "https://github.com/jarvys/bootstrap-alert",
+  "keywords": [
+    "bootstrap",
+    "alert",
+    "message",
+    "shortcut"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.2",
+    "commit": "a264984bc392782e9d62beac4117c4737f79fb4e"
+  },
+  "_source": "https://github.com/jarvys/bootstrap-alert.git",
+  "_target": "~0.0.2",
+  "_originalSource": "bootstrap-alert",
+  "_direct": true
+}

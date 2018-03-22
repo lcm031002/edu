@@ -1,0 +1,28 @@
+{
+    "name": "application-name",
+    "version": "0.0.1",
+    "error":"false",
+    "message":"",
+    "data":[
+        {
+            "id":"305576021",
+            "courseNo":"16cjbfzg1hxztao_1cssun08",
+            "courseName":"2016春季福州高一周日化学【仓山校区】",
+            "courseId":"100013550",
+            "teacherId":"3856",
+            "teacherName":"张涛",
+            "teacherCode":"ztao_1",
+            "branchId":"73",
+            "branchName":"福州仓山大小班校区",
+            "courseAmount":"85",
+            "courseTime":"20",
+            "gradeName":"高一",
+            "gradeId":"12",
+            "unit_price":"80",
+            "beginDate":"2016/6/17",
+            "endDate":"2016/6/17",
+            "startTime":"18:00",
+            "endTime":"18:00"
+        }
+    ]
+}
