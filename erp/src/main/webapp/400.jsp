@@ -4,7 +4,7 @@
 <head lang="en">
     <meta  http-equiv="Content-Type" content="text/html; charset=utf-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>快乐学习信息化平台</title>
+    <title>厝边素高信息化平台</title>
     
 </head>
 <body>

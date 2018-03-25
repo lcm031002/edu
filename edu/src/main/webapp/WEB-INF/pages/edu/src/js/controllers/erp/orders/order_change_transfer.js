@@ -680,7 +680,7 @@ function erp_orderChangeTransferController(
 };
 
     function initial(){
-        $('title').text('转班 | 快乐学习');
+        $('title').text('转班 | 厝边素高');
         $scope.studentId = $("#rootIndex_studentId").val();
         $scope.step = 1;
 

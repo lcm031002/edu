@@ -14,7 +14,7 @@ import org.jasig.cas.authentication.handler.PasswordEncoder;
 
 /**
  * @ClassName: KLXXPasswordEncoder
- * @Description: 快乐学习密码加密算法
+ * @Description: 厝边素高密码加密算法
  * @author zhuliyong zly@entstudy.com
  * @date 2016年7月8日 下午5:03:50
  *

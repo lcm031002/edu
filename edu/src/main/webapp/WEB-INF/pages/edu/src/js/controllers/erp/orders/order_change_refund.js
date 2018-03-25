@@ -544,7 +544,7 @@ function erp_orderChangeRefundController(
     };
 
     function initial(){
-        $('title').text('退费 | 快乐学习');
+        $('title').text('退费 | 厝边素高');
         $scope.studentId = $("#rootIndex_studentId").val();
         $scope.step = 1;
 

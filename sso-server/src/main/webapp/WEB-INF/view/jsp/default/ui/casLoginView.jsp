@@ -5,7 +5,7 @@
 <head lang="zh-cn">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>快乐学习</title>
+    <title>厝边素高</title>
     <jsp:directive.include file="includes/head.jsp" />
     
     <!-- STYLES -->
@@ -105,7 +105,7 @@
 <body ng-controller="LoginCtrl" style="height: 100%;">
     <div class="wrapper">
         <div class="login-container">
-            <div class="logo"></div>    
+            <!--<div class="logo"></div> -->
             <div class="login-wrapper">
                 <form:form  method="post" commandName="${commandName}" htmlEscape="true">
                     <div class="title">登 录</div>
@@ -141,7 +141,7 @@
             </div>
         </div>
     </div>
-    <div id="footer-wrapper" class="text-center" ng-include="'templates/block/bottom.html'" style="color: #999;font-size: 12px;"></div>
+    <!--  <div id="footer-wrapper" class="text-center" ng-include="'templates/block/bottom.html'" style="color: #999;font-size: 12px;"></div> -->
 </body>
 <script type="text/javascript">
 	function changeValideCode(){

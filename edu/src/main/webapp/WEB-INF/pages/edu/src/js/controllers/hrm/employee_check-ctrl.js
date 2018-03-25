@@ -44,67 +44,67 @@ function EmployeeCheckCtrl($scope,
     var _ = (new Date()).getTime();
     $scope.modelDefineList = [
         {
-            "name":"快乐学习大小班教师转正考核表",
+            "name":"大小班教师转正考核表",
             "value":"1",
             "url":"templates/hrm/model/change_post/DXB_teacher_post.html?_="+_,
             "processKeyModel":"hrm.DXB_zhuanz"
         },{
-            "name":"快乐学习大小班校区部转正考核表",
+            "name":"大小班校区部转正考核表",
             "value":"2",
             "url":"templates/hrm/model/change_post/DXB_school_post.html?_="+_,
             "processKeyModel":"hrm.DXB_school_zhuanz"
         },/*{
-            "name":"快乐学习个性化教学部试讲评价表",
+            "name":"个性化教学部试讲评价表",
             "value":"3",
             "url":"templates/hrm/model/change_post/GXH_teaching_dept_lecture.html?_="+_,
             "processKeyModel":"hrm.gxh_school_pingjia"
         },*/{
-            "name":"快乐学习个性化教师转正考核表",
+            "name":"个性化教师转正考核表",
             "value":"4",
             "url":"templates/hrm/model/change_post/GXH_teacher_post.html?_="+_,
             "processKeyModel":"hrm.gxh_zhuanz"
         },/*{
-            "name":"快乐学习个性化学管部 360 度考评问卷",
+            "name":"个性化学管部 360 度考评问卷",
             "value":"5",
             "url":"templates/hrm/model/change_post/GXH_teaching_dept_360.html?_="+_,
             "processKeyModel":"hrm.gxh_manger_360kaoping"
         },*/{
-            "name":"快乐学习个性化学管部转正考核表",
+            "name":"个性化学管部转正考核表",
             "value":"6",
             "url":"templates/hrm/model/change_post/GXH_teaching_dept_post.html?_="+_,
             "processKeyModel":"hrm.gxh_manger_zhuanz"
         },/*{
-            "name":"快乐学习个性化咨询部 360 度考评问卷",
+            "name":"个性化咨询部 360 度考评问卷",
             "value":"7",
             "url":"templates/hrm/model/change_post/GXH_consulting_dept_360.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_360kaoping"
         },*/{
-            "name":"快乐学习个性化咨询部转正考核表",
+            "name":"个性化咨询部转正考核表",
             "value":"8",
             "url":"templates/hrm/model/change_post/GXH_consulting_dept_post.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_zhuanz"
         },{
-            "name":"快乐学习行政部职能部转正考核表",
+            "name":"行政部职能部转正考核表",
             "value":"9",
             "url":"templates/hrm/model/change_post/tobecontinue.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_zhuanz"
         },{
-            "name":"佳音英语（厦门）教师岗位转正考核表",
+            "name":"教师岗位转正考核表",
             "value":"10",
             "url":"templates/hrm/model/change_post/tobecontinue.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_zhuanz"
         },{
-            "name":"佳音英语（厦门）行政教务岗位转正考核表",
+            "name":"行政教务岗位转正考核表",
             "value":"11",
             "url":"templates/hrm/model/change_post/tobecontinue.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_zhuanz"
         },{
-            "name":"佳音英语（厦门）课程顾问岗位转正考核表",
+            "name":"课程顾问岗位转正考核表",
             "value":"12",
             "url":"templates/hrm/model/change_post/tobecontinue.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_zhuanz"
         },{
-            "name":"佳音英语（厦门）学管师岗位转正考核表",
+            "name":"学管师岗位转正考核表",
             "value":"13",
             "url":"templates/hrm/model/change_post/tobecontinue.html?_="+_,
             "processKeyModel":"hrm.gxh_zixun_zhuanz"

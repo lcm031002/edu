@@ -44,7 +44,7 @@ body{
 }
 
 .brand .logo{
-    width: 74px;
+    width: 100px;
     height: 60px;
     background: url(../img/block/logo.png) no-repeat center;
 }

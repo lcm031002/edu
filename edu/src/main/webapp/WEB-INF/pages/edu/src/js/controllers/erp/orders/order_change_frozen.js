@@ -191,7 +191,7 @@ function erp_orderChangeFrozenController(
         }
     }
     function initial(){
-        $('title').text('冻结 | 快乐学习');
+        $('title').text('冻结 | 厝边素高');
         $scope.studentId = $("#rootIndex_studentId").val();
         $scope.step = 1;
 

@@ -85,7 +85,7 @@ function klxxedu_indexController(
     })
   }
 
-  $('title').text('首页 | 快乐学习');
+  $('title').text('首页 | 厝边素高');
 
   $scope.queryNotice();
 };

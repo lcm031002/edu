@@ -238,7 +238,7 @@ function erp_attendanceBJKController(
            }
         });
     }
-    $('title').text("班级课考勤 | 快乐学习");
+    $('title').text("班级课考勤 | 厝边素高");
     querySubject();
     queryGrade();
     queryBuOrgs();

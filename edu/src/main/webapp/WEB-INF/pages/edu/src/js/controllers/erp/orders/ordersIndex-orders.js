@@ -108,7 +108,7 @@ function erp_OrdersIndexOrdersController(
     showAllGrade: false,
     showAllSubject: false
   }
-  $('title').text('报班 | 快乐学习');
+  $('title').text('报班 | 厝边素高');
   //整体优惠规则类型定义
   $scope.Preferential = {
     tabType: 'PreferentialRules',

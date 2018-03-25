@@ -29,7 +29,7 @@
 		 left join tab_organization_info tof1
 		   on tof1.id = tof.parent_id
 		WHERE 1=1
-		order by parent_id
+		order by tof.sort_num
 	</select>
 	
 	

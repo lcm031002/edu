@@ -211,7 +211,7 @@ function erp_courseRoomController($rootScope,
         })
     } 
 
-    $('title').text("课次教室绑定 | 快乐学习");
+    $('title').text("课次教室绑定 | 厝边素高");
     queryBuOrgs();
     queryTimeSeason();
 }

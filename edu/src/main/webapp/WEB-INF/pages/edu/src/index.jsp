@@ -11,7 +11,7 @@ pageEncoding="utf-8"%>
 <meta http-equiv="Expires" content="-10">
 <meta http-equiv="Cache-Control" content="no-store">
 <meta http-equiv="Cache-Control" content="Max-stale=0">
-<title>快乐学习|教育</title>
+<title>厝边素高|教育</title>
 <link rel="icon" href="/sso-server/favicon.ico" type="image/x-icon">
 <link rel="dns-prefetch" href="//cdn.bootcss.com" />
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2y0piaocOl3cXXmgKkj25EGjSLr6XLH6"></script>

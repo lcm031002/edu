@@ -59,7 +59,7 @@ function erp_StudentIndexController(
     function initial(){
         queryIndexAccount();
         queryIndexCounselors();
-        $('title').text($scope.student.student_name +" | 快乐学习");
+        $('title').text($scope.student.student_name +" | 厝边素高");
         $scope._d = (new Date()).getTime();
         $scope.studentOrdersUrl = 'templates/erp/student/studentIndex-order.html?_='+ $scope._d;
         $scope.studentOrderBJKUrl = 'templates/erp/student/studentIndex-order-bjk.html?_='+ $scope._d;
