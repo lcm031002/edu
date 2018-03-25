@@ -1480,7 +1480,11 @@ CREATE TABLE `tab_organization_info` (
 -- ----------------------------
 -- Records of tab_organization_info
 -- ----------------------------
-INSERT INTO `tab_organization_info` VALUES ('1', '厝边素高事业部', '厝边素高', '0', '1', '1', '0', null, null, null, null, null, null, null, null, null, null);
+INSERT INTO `tab_organization_info` VALUES (1, '厝边素高事业部', '厝边素高', 0, NULL, 1, 10000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tab_organization_info` VALUES (2, '厦门地区', '厦门地区', 1, 2, 1, 11000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tab_organization_info` VALUES (3, '龙岩地区', '龙岩地区', 1, 2, 1, 12000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tab_organization_info` VALUES (4, '厦门运营团队', '厦门运营团队', 2, 3, 1, 11100, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tab_organization_info` VALUES (5, '水晶湖郡校区', '水晶湖郡校区', 4, 4, 1, 11101, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tab_privilege_rule
@@ -1683,3 +1687,14 @@ CREATE TABLE `user_personal_settings` (
 -- Records of user_personal_settings
 -- ----------------------------
 
+-- ----------------------------
+-- Table structure for bu_dict_rel
+-- ----------------------------
+DROP TABLE IF EXISTS `bu_dict_rel`;
+CREATE TABLE `bu_dict_rel` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `bu_id` bigint(10) NOT NULL COMMENT '团队ID',
+  `dict_id` bigint(10) NOT NULL COMMENT '字典ID',
+  `dict_type` varchar(50) NOT NULL COMMENT '字典类型',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
