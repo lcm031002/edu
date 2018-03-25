@@ -1360,7 +1360,7 @@ CREATE TABLE `tab_data_grade` (
   `last_grade_name` varchar(50) DEFAULT NULL COMMENT '上一级年级名称',
   `description` varchar(100) DEFAULT NULL COMMENT '描述',
   `status` int(1) NOT NULL COMMENT '状态(1=有效 0=逻辑删除)',
-  `sort_num` int(5) DEFAULT NULL COMMENT '排序',
+  `sort` int(5) DEFAULT NULL COMMENT '排序',
   `create_user` bigint(10) DEFAULT NULL COMMENT '创建用户',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_user` bigint(10) DEFAULT NULL COMMENT '修改用户',
@@ -1401,6 +1401,7 @@ CREATE TABLE `tab_data_school` (
   `school_name` varchar(50) NOT NULL COMMENT '学校名称',
   `short_school_name` varchar(50) DEFAULT NULL COMMENT '简称',
   `school_type` int(1) DEFAULT NULL COMMENT '学校类型(1=幼儿园 2=小学 3=初中 4=高中 5=初高中-完全中学 6=九年一贯制 7=十二年一贯制 8=职业教育 9=特殊教育 10=成人教育 11=其它)',
+  `org_id` bigint(10) DEFAULT NULL COMMENT '组织ID',
   `link_man` varchar(50) DEFAULT NULL COMMENT '联系人',
   `phone` varchar(15) DEFAULT NULL COMMENT '联系电话',
   `description` varchar(100) DEFAULT NULL COMMENT '描述',
@@ -1698,3 +1699,58 @@ CREATE TABLE `bu_dict_rel` (
   `dict_type` varchar(50) NOT NULL COMMENT '字典类型',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tab_region`;
+CREATE TABLE `tab_region` (
+  `rid` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `parent_id` bigint(10) NOT NULL COMMENT '父id',
+  `rname` varchar(100) DEFAULT NULL,
+  `display_order` bigint(10) DEFAULT NULL,
+  `catagery` varchar(100) DEFAULT NULL,
+  `postal_code` varchar(100) DEFAULT NULL,
+  `old_id` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`rid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tp_dict_data`;
+CREATE TABLE `tp_dict_data` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `code` varchar(100) NOT NULL COMMENT '编码',
+  `name` varchar(100) NOT NULL COMMENT '名称',
+  `status` int(1) NOT NULL COMMENT '状态(1=有效 0=逻辑删除)',
+  `order_no` bigint(10) DEFAULT NULL COMMENT '',
+  `type_id` bigint(10) DEFAULT NULL COMMENT '',
+  `descdtl` varchar(300) DEFAULT NULL COMMENT '',
+  `bu_id` bigint(10) NOT NULL  COMMENT '组织id',
+  `simp_name` varchar(100) DEFAULT NULL COMMENT '',
+  `orig_id` bigint(10) DEFAULT NULL COMMENT '',
+  `product_line` bigint(10) DEFAULT NULL COMMENT '',
+  `create_user` bigint(10) DEFAULT NULL COMMENT '创建用户',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user` bigint(10) DEFAULT NULL COMMENT '修改用户',
+  `update_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tp_dict_type`;
+CREATE TABLE `tp_dict_type` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `code` varchar(100) NOT NULL COMMENT '编码',
+  `name` varchar(100) NOT NULL COMMENT '名称',
+  `status` int(1) NOT NULL COMMENT '状态(1=有效 0=逻辑删除)',
+  `descdtl` varchar(300) DEFAULT NULL COMMENT '',
+  `create_user` bigint(10) DEFAULT NULL COMMENT '创建用户',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_user` bigint(10) DEFAULT NULL COMMENT '修改用户',
+  `update_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tab_role_org_ref`;
+CREATE TABLE `tab_role_org_ref` (
+  `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role_id` bigint(10) NOT NULL COMMENT '角色id',
+  `org_id` bigint(10) NOT NULL COMMENT '组织id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
