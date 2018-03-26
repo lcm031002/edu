@@ -9,10 +9,7 @@
 		<result property="paramVal" column="PARAM_VAL" />
 	</resultMap>
 	<insert id="addSettings" parameterType="com.ebusiness.cas.client.common.model.UserPersonalSettings">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
-      		SELECT seq_user_personal_settings.nextval AS id from dual
-   		</selectKey>
-		insert into user_personal_settings (id,user_id,param_name,param_val) 
+		insert into user_personal_settings (id,user_id,param_name,param_val)
 		values
 		(
 			#{id,jdbcType=NUMERIC},
