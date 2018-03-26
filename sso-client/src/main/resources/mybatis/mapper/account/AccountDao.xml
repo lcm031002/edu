@@ -24,7 +24,7 @@
 	</select>
 	<select id="queryAccountById" resultMap="pojoMap"
 		parameterType="com.ebusiness.cas.client.common.model.Account">
-		select tui.id, tui.USERNAME, tui.PASSWORD,tui.OLD_PASSWORD,tui.EMPLOYEE_ID,tei.EMPLOYEE_NAME, tui.STATUS,tui.CREATE_TIME,tui.UPDATE_TIME
+		select tui.id, tui.USERNAME, tui.PASSWORD,tui.EMPLOYEE_ID,tei.EMPLOYEE_NAME, tui.STATUS,tui.CREATE_TIME,tui.UPDATE_TIME
 		  from TAB_USER_INFO tui
 	 left join TAB_EMPLOYEE_INFO tei on tui.EMPLOYEE_ID = tei.id
 		 where tui.id = #{id}
@@ -40,9 +40,6 @@
 		</if>
 		<if test="password!=null">
 			,password = #{password}
-		</if>
-		<if test="oldPassword!=null">
-			,OLD_PASSWORD = #{oldPassword}
 		</if>
 		<if test="status!=null">
 			,status = #{status}

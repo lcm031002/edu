@@ -77,7 +77,6 @@ public class AccountServiceImpl implements SSOAccountService {
 		//查询当前用户密码和前台传过来的面永远不会相等的;所以要修改成不相等的时候才把password.Set进去
 		if (null != account.getPassword()
 				&& ! accountQuery.getPassword().equals(account.getPassword())) {
-			accountQuery.setOldPassword(accountQuery.getPassword());
 			accountQuery.setPassword(PwdEncryptUtil.encrypt(account.getPassword()));
 		}
 		
