@@ -30,8 +30,6 @@ public class Account implements Serializable {
 
 	private transient String password;
 
-	private transient String oldPassword;
-
 	private Long employeeId;
 	
 	private String employeeName;
@@ -64,14 +62,6 @@ public class Account implements Serializable {
 
 	public final void setPassword(String password) {
 		this.password = password;
-	}
-
-	public final String getOldPassword() {
-		return oldPassword;
-	}
-
-	public final void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
 	}
 
 	public final Long getEmployeeId() {
