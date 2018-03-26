@@ -68,6 +68,7 @@ CREATE TABLE `ebs_accountorg_rel` (
 -- ----------------------------
 -- Records of ebs_accountorg_rel
 -- ----------------------------
+INSERT INTO `ebs_accountorg_rel` VALUES (5, 1, 5);
 
 -- ----------------------------
 -- Table structure for ebs_rolemenu_rel
