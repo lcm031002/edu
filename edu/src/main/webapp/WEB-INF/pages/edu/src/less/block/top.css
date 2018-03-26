@@ -25,7 +25,7 @@ body{
     left: 0;
     right: 0;
     height:60px;
-    background: #1b8cf2 none repeat scroll 0% 0%;
+    background: #4AB6E4 none repeat scroll 0% 0%;
     color: #FFF;
     z-index: 99;
 }
@@ -72,7 +72,7 @@ body{
 .sel-org .dropdown-menu {
     position: fixed;
     top: 60px;
-    left: 220px;
+    left: 200px;
     bottom: 20px;
     overflow: auto;
 }
@@ -96,7 +96,7 @@ body{
     text-align: center;
 }
 .top_bar_item_active{
-    background-color: #0f6bd6;
+    background-color: #81DFD2;
 }
 .top_bar_item {
     color: #fff;

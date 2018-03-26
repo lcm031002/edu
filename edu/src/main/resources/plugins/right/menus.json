@@ -3839,7 +3839,7 @@
 									"method": "PUT"
 								},
 								{
-									"name": "删除科目",
+									"name": "删除课程季",
 									"key": "systemsTimeSeason.delete",
 									"url": "/erp/dictionary/timeSeason/service",
 									"method": "DELETE"
@@ -4048,37 +4048,22 @@
 				},
 				{
 					"index": "A16004",
-					"name": "通知管理",
-					"key": "noticeMgr",
-					"icon": "iconfont icon-systems_message",
+					"name": "员工管理",
+					"key": "rightControl",
+					"icon": "iconfont icon-systems_rights",
 					"type": "$state",
-					"value": "noticeMgr",
-					"href": "templates/erp/sysmgr/notice.html",
-					"path": "/systems/noticeMgr",
-					"services": [
+					"value": "rightControl",
+					"path": "/systems/rightControl",
+					"menus": [
 						{
-							"name": "通知查询",
-							"key": "noticeMgr.query",
-							"url": "/erp/notice/service",
-							"method": "GET"
-						},
-						{
-							"name": "新增通知",
-							"key": "noticeMgr.add",
-							"url": "/erp/notice/service",
-							"method": "POST"
-						},
-						{
-							"name": "修改通知",
-							"key": "noticeMgr.update",
-							"url": "/erp/notice/service",
-							"method": "PUT"
-						},
-						{
-							"name": "删除通知",
-							"key": "noticeMgr.delete",
-							"url": "/erp/notice/service",
-							"method": "DELETE"
+							"index": "A1600401",
+							"name": "员工信息",
+                            "key": "hrmEmployee",
+                            "icon": "iconfont icon-staff",
+                            "type": "$state",
+                            "path": "/hrm/hrmEmployeeArchives/hrmEmployee",
+                            "href": "templates/hrm/employee/employee.html",
+                            "value": "hrmEmployee"
 						}
 					]
 				},
