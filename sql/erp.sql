@@ -1688,6 +1688,8 @@ CREATE TABLE `user_personal_settings` (
 -- ----------------------------
 -- Records of user_personal_settings
 -- ----------------------------
+INSERT INTO `user_personal_settings` VALUES (6, 1, 'V5_DEFAULT_ORG', '5');
+
 
 -- ----------------------------
 -- Table structure for bu_dict_rel
