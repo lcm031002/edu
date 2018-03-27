@@ -9,8 +9,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import com.ebusiness.common.qinniu.QiNiuCoreCall;
-import com.ebusiness.common.util.ModelDataUtils;
+import com.edu.common.qinniu.QiNiuCoreCall;
+import com.edu.common.util.ModelDataUtils;
 import com.klxx.common.util.IdcardUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;

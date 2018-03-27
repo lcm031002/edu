@@ -7,7 +7,7 @@
  */
 package com.ebusiness.klxxedu.index;
 
-import com.ebusiness.common.util.PropertiesTools;
+import com.edu.common.util.PropertiesTools;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;

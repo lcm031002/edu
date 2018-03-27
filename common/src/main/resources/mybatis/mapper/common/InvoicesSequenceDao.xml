@@ -2,14 +2,14 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ebusiness.common.dao.InvoicesSequenceDao">
+<mapper namespace="com.edu.common.dao.InvoicesSequenceDao">
 	
 	<!-- 根据编号类型 查询编号序列号 -->
-	<select id="querySequenceByInvoicesType" resultType="com.ebusiness.common.model.InvoicesSequence" parameterType="java.lang.Long">
+	<select id="querySequenceByInvoicesType" resultType="com.edu.common.model.InvoicesSequence" parameterType="java.lang.Long">
 		SELECT * FROM tab_invoices_sequence t WHERE t.invoices_type = #{invoices_type}
 	</select>
 	
-	<parameterMap id="seqParam" type="com.ebusiness.common.model.InvoicesSequence">
+	<parameterMap id="seqParam" type="com.edu.common.model.InvoicesSequence">
 		<parameter mode="IN" property="invoices_type"  javaType="long" jdbcType="NUMERIC"/>
 		<parameter mode="OUT" property="sequence" javaType="long" jdbcType="NUMERIC"/>
 	</parameterMap>
@@ -22,7 +22,7 @@
 	
 	
 	<!-- 如果未找到对应编号类型 则插入新编号类型 -->
-	<insert id="insert" parameterType="com.ebusiness.common.model.InvoicesSequence">
+	<insert id="insert" parameterType="com.edu.common.model.InvoicesSequence">
 		INSERT INTO 
 			tab_invoices_sequence (id,invoices_type, sequence)
 		VALUES 
@@ -34,7 +34,7 @@
 	</insert>
 	
 	<!-- 根据编号类型 修改 编号序列内容 -->
-	<update id="update" parameterType="com.ebusiness.common.model.InvoicesSequence">
+	<update id="update" parameterType="com.edu.common.model.InvoicesSequence">
 		UPDATE 
 			tab_invoices_sequence 
 				

@@ -46,7 +46,7 @@
 		<!-- 配置Token拦截器，防止用户重复提交数据 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-			<bean class="com.ebusiness.common.interceptor.TokenInterceptor" />
+			<bean class="com.edu.common.interceptor.TokenInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>    

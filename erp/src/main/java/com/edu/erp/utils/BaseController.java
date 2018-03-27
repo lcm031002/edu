@@ -3,7 +3,7 @@ package com.edu.erp.utils;
 import com.ebusiness.cas.client.common.model.Account;
 import com.ebusiness.cas.client.common.model.OrgModel;
 import com.ebusiness.cas.client.common.util.WebContextUtils;
-import com.ebusiness.common.constants.Constants;
+import com.edu.common.constants.Constants;
 import com.edu.erp.model.BaseObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

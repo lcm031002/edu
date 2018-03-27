@@ -195,7 +195,7 @@
 
 	<filter>
 		<filter-name>requestReplacedFilter</filter-name>
-		<filter-class>com.ebusiness.common.filter.HttpServletRequestReplacedFilter</filter-class>
+		<filter-class>com.edu.common.filter.HttpServletRequestReplacedFilter</filter-class>
 	</filter>
 
 	<filter-mapping>

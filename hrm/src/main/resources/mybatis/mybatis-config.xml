@@ -20,7 +20,7 @@
 	<!-- 类型别名配置 -->
 	<typeAliases>
 		<!-- 分页对象配置 majun 2014-08-04 -->
-		<typeAlias type="com.ebusiness.common.mybatis.Page"
+		<typeAlias type="com.edu.common.mybatis.Page"
 			alias="page" />
 
 		<typeAlias type="java.util.Map" alias="Map" />
@@ -32,7 +32,7 @@
 	<!-- 插件配置 -->
 <!-- 	<plugins>
 		分页插件配置
-		<plugin interceptor="com.ebusiness.common.mybatis.PageInterceptor">
+		<plugin interceptor="PageInterceptor">
 			数据库方言
 			<property name="dialect" value="oracle" />
 			分页对应的SQL语句id(拦截以page结尾的SQL)
