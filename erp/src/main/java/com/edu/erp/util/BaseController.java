@@ -1,8 +1,8 @@
 package com.edu.erp.util;
 
-import com.ebusiness.cas.client.common.model.Account;
-import com.ebusiness.cas.client.common.model.OrgModel;
-import com.ebusiness.cas.client.common.util.WebContextUtils;
+import com.edu.cas.client.common.model.Account;
+import com.edu.cas.client.common.model.OrgModel;
+import com.edu.cas.client.common.util.WebContextUtils;
 import com.edu.common.constants.Constants;
 import com.edu.erp.model.BaseObject;
 import com.github.pagehelper.PageHelper;

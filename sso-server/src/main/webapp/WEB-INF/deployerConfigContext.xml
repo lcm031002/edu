@@ -143,7 +143,7 @@
 		class="org.jasig.cas.services.InMemoryServiceRegistryDaoImpl" />
 		
 	
-	<bean id="KLXXPasswordEncoder" class="com.ebusiness.cas.encoder.KLXXPasswordEncoder">
+	<bean id="KLXXPasswordEncoder" class="com.edu.cas.encoder.KLXXPasswordEncoder">
 		<constructor-arg index="0">
 			<value>MD5</value>
 		</constructor-arg>

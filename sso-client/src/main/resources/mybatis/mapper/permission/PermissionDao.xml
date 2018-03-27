@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ebusiness.cas.client.dao.PermissionDao">
-	<resultMap type="com.ebusiness.cas.client.common.model.Permission"
+<mapper namespace="com.edu.cas.client.dao.PermissionDao">
+	<resultMap type="com.edu.cas.client.common.model.Permission"
 		id="pojoMap">
 		<id property="permissionId" column="PERMISSION_ID" />
 		<result property="userId" column="USER_ID" />
@@ -9,7 +9,7 @@
 
 	<!-- 查询团队对应的数据对象 -->
 	<select id="queryByUserId" resultMap="pojoMap"
-		parameterType="com.ebusiness.cas.client.common.model.Permission">
+		parameterType="com.edu.cas.client.common.model.Permission">
 		SELECT PU.ID AS USER_ID, PRP.menu_id as PERMISSION_ID
 		FROM TAB_USER_INFO PU
 		LEFT JOIN tab_user_role_ref PUR

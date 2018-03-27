@@ -14,11 +14,11 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
             <mvc:mapping path="/*/**" />
-            <bean class="com.ebusiness.cas.client.common.interceptor.UserAccountInterceptor" />
+            <bean class="com.edu.cas.client.common.interceptor.UserAccountInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/*/**" />
-            <bean class="com.ebusiness.cas.client.common.interceptor.UserRightInterceptor" />
+            <bean class="com.edu.cas.client.common.interceptor.UserRightInterceptor" />
         </mvc:interceptor>
 	</mvc:interceptors>
 </beans>    

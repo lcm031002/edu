@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ebusiness.cas.client.dao.OrgModelDao">
-	<resultMap type="com.ebusiness.cas.client.common.model.OrgModel"
+<mapper namespace="com.edu.cas.client.dao.OrgModelDao">
+	<resultMap type="com.edu.cas.client.common.model.OrgModel"
 		id="pojoMap">
 		<id property="id" column="ID" />
 		<result property="text" column="TEXT" />
@@ -12,7 +12,7 @@
 		<collection property="children" resultMap="pojoMap2" />
 	</resultMap>
 	
-	<resultMap type="com.ebusiness.cas.client.common.model.OrgModel"
+	<resultMap type="com.edu.cas.client.common.model.OrgModel"
 		id="pojoMap3">
 		<id property="id" column="ID" />
 		<result property="text" column="TEXT" />
@@ -24,7 +24,7 @@
 		<result property="orgKind" column="ORGKIND" />
 	</resultMap>
 	
-	<resultMap type="com.ebusiness.cas.client.common.model.OrgModel"
+	<resultMap type="com.edu.cas.client.common.model.OrgModel"
 		id="pojoMap2">
 		<id property="id" column="ID_SUB" />
 		<result property="text" column="TEXT_SUB" />
@@ -36,7 +36,7 @@
 	
 	<!-- 查询当前用户可见的团队 -->
 	<select id="queryByUserId" resultMap="pojoMap"
-		parameterType="com.ebusiness.cas.client.common.model.OrgModel">
+		parameterType="com.edu.cas.client.common.model.OrgModel">
 		SELECT TOI.ID         AS ID_SUB,
 		       TOI.ORG_NAME   AS TEXT_SUB,
 		       TOI2.ID        parentId,
@@ -59,7 +59,7 @@
 	
 	<!-- 查询当前用户可见的校区 -->
 	<select id="queryOrgBuList" resultMap="pojoMap2"
-		parameterType="com.ebusiness.cas.client.common.model.OrgModel">
+		parameterType="com.edu.cas.client.common.model.OrgModel">
 		SELECT TOI.ID         AS ID_SUB,
 		       TOI.ORG_NAME   AS TEXT_SUB,
 		       TOI2.ID        parentId,
@@ -81,7 +81,7 @@
 	</select>
 	
 	<select id="queryAll" resultMap="pojoMap3"
-		parameterType="com.ebusiness.cas.client.common.model.OrgModel">
+		parameterType="com.edu.cas.client.common.model.OrgModel">
 			 select distinct TOI.ID AS ID,
 	                TOI.ORG_NAME AS TEXT,
 	                TOI.Parent_Id as parentId,
@@ -114,7 +114,7 @@
 	 order by TEXT asc
 	</select>
 	
-	<select id="querySelectedOrg" resultMap="pojoMap3" parameterType="com.ebusiness.cas.client.common.model.UserPersonalSettings">
+	<select id="querySelectedOrg" resultMap="pojoMap3" parameterType="com.edu.cas.client.common.model.UserPersonalSettings">
 	   select distinct toi.id as ID,
 	          toi.org_name as TEXT,
 	          toi.parent_Id as parentId,

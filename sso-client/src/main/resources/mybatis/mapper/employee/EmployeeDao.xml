@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ebusiness.cas.client.dao.EmployeeDao">
-	<resultMap type="com.ebusiness.cas.client.common.model.Employee"
+<mapper namespace="com.edu.cas.client.dao.EmployeeDao">
+	<resultMap type="com.edu.cas.client.common.model.Employee"
 		id="pojoMap">
 		<id property="id" column="id" />
 		<result property="encoding" column="ENCODING" />
@@ -22,7 +22,7 @@
 	
 	<!-- 查询团队对应的数据对象 -->
 	<select id="queryEmployeeById" resultMap="pojoMap"
-		parameterType="com.ebusiness.cas.client.common.model.Employee">
+		parameterType="com.edu.cas.client.common.model.Employee">
 		select id, ENCODING, EMPLOYEE_NAME,SEX,ID_CARD, EMAIL,PHONE,ADDRESS,DESCRIPTION,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
 		  from TAB_EMPLOYEE_INFO
 		 where id = #{id}
@@ -30,7 +30,7 @@
 	
 	<!-- 修改账户 -->
 	<update id="updateEmployee" 
-		parameterType="com.ebusiness.cas.client.common.model.Employee">
+		parameterType="com.edu.cas.client.common.model.Employee">
 		update TAB_EMPLOYEE_INFO set
 		UPDATE_TIME = sysdate
 		,ENCODING = #{encoding,jdbcType = VARCHAR}
@@ -46,7 +46,7 @@
 		where id = #{id,jdbcType = NUMERIC}
 	</update>
 	
-	<insert id="addEmployee" parameterType="com.ebusiness.cas.client.common.model.Employee">
+	<insert id="addEmployee" parameterType="com.edu.cas.client.common.model.Employee">
 		<selectKey resultType="java.lang.Long" keyProperty="id"
 			order="BEFORE">
 			SELECT SEQ_TAB_EMPLOYEE_INFO.nextval AS id from dual

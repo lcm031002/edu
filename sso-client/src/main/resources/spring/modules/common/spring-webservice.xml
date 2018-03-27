@@ -11,9 +11,9 @@
     http://www.springframework.org/schema/context/spring-context-3.1.xsd  
     http://www.springframework.org/schema/mvc  
     http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
-	<context:component-scan base-package="com.ebusiness.cas.client" /> 
+	<context:component-scan base-package="com.edu.cas.client" />
 	
-	<bean id="casClientCommonEbusinessApplicationContextUtil" class="com.ebusiness.cas.client.common.util.ApplicationContextUtil"/>
+	<bean id="casClientCommonEbusinessApplicationContextUtil" class="com.edu.cas.client.common.util.ApplicationContextUtil"/>
 	
 	<!-- 解决ajax中文乱码 -->
 	<mvc:annotation-driven>
