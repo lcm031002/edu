@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentRecorderDao">
+	<resultMap type="com.edu.erp.model.StudentRecorder" id="studentRecorderBaseMapper" >
+		<id javaType="java.lang.Long" jdbcType="NUMERIC" column="id" property="id"/>	
+		<result javaType="java.lang.Long" jdbcType="NUMERIC" column="user_id" property="userId"/>	
+		<result javaType="java.util.Date" jdbcType="DATE" column="start_date" property="startDate"/>	
+		<result javaType="java.util.Date" jdbcType="DATE" column="end_date" property="endDate"/>	
+		<result javaType="java.lang.Long" jdbcType="NUMERIC" column="student_id" property="studentId"/>	
+		<result javaType="java.lang.String" jdbcType="VARCHAR" column="employee_name" property="employeeName"/>	
+		<result javaType="java.lang.String" jdbcType="VARCHAR" column="username" property="username"/>	
+		<result javaType="java.util.Date" jdbcType="TIMESTAMP" column="create_time" property="createTime"/>	
+		<result javaType="java.util.Date" jdbcType="TIMESTAMP" column="update_time" property="updateTime"/>	
+		<result javaType="java.lang.Long" jdbcType="NUMERIC" column="create_user" property="createUser"/>	
+		<result javaType="java.lang.Long" jdbcType="NUMERIC" column="update_user" property="updateUser"/>
+		<result javaType="java.lang.String" jdbcType="VARCHAR" column="create_user_name" property="createUserName"/>
+	</resultMap>
+
+	<insert id="insertStudentRecorder" parameterType="com.edu.erp.model.StudentRecorder">
+		insert into tab_student_recorder
+		(
+			id,
+			user_id,
+			start_date,
+			end_date,
+			student_id,
+			create_time,
+			create_user
+		) values (
+			seq_tab_student_recorder.nextval,
+			#{userId,jdbcType=NUMERIC},
+			#{startDate,jdbcType=DATE},
+			#{endDate,jdbcType=DATE},
+			#{studentId,jdbcType=NUMERIC},
+			#{createTime,jdbcType=TIMESTAMP},
+			#{createUser,jdbcType=NUMERIC}
+		)
+	</insert>
+	<select id="queryStudentRecorderPage" parameterType="java.util.Map" resultMap="studentRecorderBaseMapper"> 
+		select sr.id,sr.user_id,ui.username,ei.employee_name,sr.start_date,sr.end_date,sr.create_time,sr.update_time,sr.student_id,ei2.employee_name create_user_name
+		from tab_student_recorder sr
+		left join tab_user_info ui on sr.user_id = ui.id
+		left join tab_employee_info ei on ui.employee_id = ei.id
+		left join tab_user_info ui2 on sr.create_user = ui2.id
+		left join tab_employee_info ei2 on ui2.employee_id = ei2.id
+		<trim prefix="where" prefixOverrides="and">
+			<if test="id!=null"> and sr.id = #{id,jdbcType=NUMERIC}</if>
+			<if test="userId!=null"> and sr.user_id = #{userId,jdbcType=NUMERIC}</if>
+			<if test="startDate!=null"> and sr.start_date = #{startDate,jdbcType=DATE}</if>
+			<if test="endDate!=null"> and sr.end_date = #{endDate,jdbcType=DATE}</if>
+			<if test="createTime!=null"> and sr.create_time = #{createTime,jdbcType=TIMESTAMP}</if>
+			<if test="updateTime!=null"> and sr.update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+			<if test="studentId!=null"> and sr.student_id = #{studentId,jdbcType=NUMERIC}</if>
+		</trim>
+		order by sr.end_date desc
+	</select>
+	<update id="updateStudentRecorder" parameterType="com.edu.erp.model.StudentRecorder">
+		update tab_student_recorder
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userId!=null">  user_id = #{userId,jdbcType=NUMERIC},</if>
+			<if test="startDate!=null">  start_date = #{startDate,jdbcType=DATE},</if>
+			<if test="endDate!=null">  end_date = #{endDate,jdbcType=DATE},</if>
+			 update_time = #{updateTime,jdbcType=TIMESTAMP},
+			 update_user = #{updateUser,jdbcType=TIMESTAMP}
+		</trim>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<select id="queryRecorder" resultType="Map"> 
+		<![CDATA[select ui.id as id, ei.employee_name || '【'  || ui.username ||'】' as recorderInfo from tab_user_info ui
+		left join tab_employee_info ei on ui.employee_id=ei.id
+		where rownum <11 and ui.city_id = #{city_id,jdbcType=NUMERIC}
+		]]>
+		<trim prefix="and">
+			<if test="nameOrEncoding != null and nameOrEncoding!=''">
+				ui.username like '%${nameOrEncoding}%' or ei.employee_name like '%${nameOrEncoding}%'
+			</if>
+		</trim>
+	</select>
+	
+	<select id="queryNewestRecorder" parameterType="java.lang.Long" resultMap="studentRecorderBaseMapper">
+		select * from tab_student_recorder
+		where
+		student_id = #{studentId,jdbcType=NUMERIC}
+		and id = (
+			select max(id) from tab_student_recorder
+			where
+			student_id = #{studentId,jdbcType=NUMERIC}
+		)
+	</select>
+
+	<select id="queryStudentNameRecord" parameterType="long" resultType="com.edu.erp.model.StudentNameReviseNote">
+		select t.id as id,t.changeid as studentId,t.originalname as originalStudentName,t.changename as studentName,t.upuserid as operatorId,
+		tui.username as operatorName,t.updatetime as updateTime from STUDENT_UPDATE_RECORD t
+		left join tab_user_info tui
+		on t.upuserid =  tui.id
+		where t.changeid = #{studentId}
+		and t.recordtype = 0 order by id desc
+	</select>
+
+	<select id="queryStudentGradeRecord" parameterType="long" resultType="com.edu.erp.model.StudentGradeReviseNote">
+		select t.id as id,t.changeid as studentId,t.originalname as originalStudentGrade,t.changename as studentGrade,t.upuserid as operatorId,
+		tui.username as operatorName,t.updatetime as updateTime from STUDENT_UPDATE_RECORD t
+		left join tab_user_info tui
+		on t.upuserid =  tui.id
+		where t.changeid = #{studentId}
+		and t.recordtype = 1 order by id desc
+	</select>
+
+	<select id="queryProductLine" parameterType="map" resultType="long">
+		select product_line from tab_organization_info where id=#{buId}
+	</select>
+
+	<select id="queryStatusName" resultType="string">
+		select t.name from tp_dict_data t where t.order_no=#{status} and t.product_line=#{productLine}
+	</select>
+
+	<select id="queryStudentStatusRecord" parameterType="map" resultType="com.edu.erp.model.StudentStatusReviseNote">
+		select t.id as id,t.student_id as studentId,t.before_status as beforeStatus,t.after_status as afterStatus,t.bu_id as buId,
+		t.update_time as updateTime,tui.username as updateUserName from student_status_record t
+		left join tab_user_info tui on t.update_user=tui.id
+		where t.student_id = #{studentId} and t.bu_id = #{buId} and t.if_show=1 order by id desc
+	</select>
+</mapper>

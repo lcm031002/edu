@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DataCompanyAccountDao">
+	<!--查询公司的账户号信息 -->
+	<select id="selectForPage" parameterType="com.edu.erp.model.DataCompanyAccount"
+		resultType="java.util.Map">
+		select tdca.account_name,
+		tdca.id,
+		tdca.account_num,
+		tdca.city_id,
+		tdca.description,
+		tdca.status,
+		tdca.create_time crate_time,
+		tdca.update_time update_time,
+		decode(tdca.status, 0, '删除', 1,
+		'有效',2,'无效') statusstr,
+		tdca.id as company_card_id,
+		org.org_name,
+		us.username create_user_name,
+		emp.employee_name
+		create_user,
+		upemp.employee_name update_user,
+		concat(concat(tdca.account_name, '('), concat(tdca.account_num, ')'))
+		account_info
+		from tab_data_company_account tdca
+		left join
+		tab_organization_info org
+		on tdca.city_id = org.id
+		left join
+		tab_user_info us
+		on tdca.create_user = us.id
+		left join tab_employee_info
+		emp
+		on us.employee_id = emp.id
+		left join tab_user_info upus
+		on
+		tdca.update_user = upus.id
+		left join tab_employee_info upemp
+		on
+		upus.employee_id = upemp.id
+		where tdca.STATUS !=0
+		<if test="city_id != null">
+			and tdca.city_id = #{city_id,jdbcType=NUMERIC}
+		</if>
+		<if test="account_name != null and account_name != ''">
+			and tdca.account_name like '%' || #{account_name} || '%'
+		</if>
+		<if test="account_num != null and account_num != ''">
+			and tdca.account_num like '%' || #{account_num} || '%'
+		</if>
+		<if test="status != null and status != 0">
+			and tdca.STATUS =#{status,jdbcType=NUMERIC}
+		</if>
+		ORDER BY tdca.update_time DESC, tdca.id desc
+	</select>
+
+	<!--下拉列表 -->
+	<select id="selectList" parameterType="Map"
+		resultType="com.edu.erp.model.DataCompanyAccount">
+		select a.*,
+		concat(concat(a.account_name, '('), concat(a.account_num,
+		')')) account_info
+		from tab_data_company_account a
+		where a.status = 1
+		<if test="city_id != null">
+			and a.city_id = #{city_id}
+		</if>
+		order by id DESC
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.DataCompanyAccount">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select seq_tab_data_company_account.nextval as id from dual
+		</selectKey>
+		INSERT INTO tab_data_company_account T
+		(
+		ID,
+		account_name,
+		account_num,
+		city_id,
+		status,
+		description,
+		create_user,
+		create_time,
+		update_time
+		)
+		VALUES
+		(
+		#{id,jdbcType=NUMERIC},
+		#{account_name,jdbcType=VARCHAR},
+		#{account_num,jdbcType=VARCHAR},
+		#{city_id,jdbcType=NUMERIC},
+		#{status,jdbcType=NUMERIC},
+		#{description,jdbcType=VARCHAR},
+		#{create_user,jdbcType=VARCHAR},
+		#{create_time,jdbcType=VARCHAR},
+		sysdate
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.DataCompanyAccount">
+		UPDATE tab_data_company_account SET
+		account_num = #{account_num,jdbcType=VARCHAR},
+		account_name = #{account_name,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR},
+		UPDATE_USER = #{update_user,jdbcType=VARCHAR},
+		UPDATE_TIME = #{update_time,jdbcType=VARCHAR}
+		WHERE ID = #{id}
+	</update>
+
+	<update id="deleteById" parameterType="Map">
+		UPDATE
+		tab_data_company_account SET STATUS = '0' WHERE ID = #{id}
+	</update>
+
+</mapper>

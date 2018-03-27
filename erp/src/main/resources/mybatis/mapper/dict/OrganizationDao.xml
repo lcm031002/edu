@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.OrganizationDao">
+	<select id="selectList" parameterType="com.edu.erp.model.OrganizationInfo" resultType="com.edu.erp.model.OrganizationInfo">
+		SELECT t.id,
+		       t.org_name,
+		       t.parent_id,
+		       t.org_type,
+		       t.status,
+		       t.create_user,
+		       t.create_time,
+		       t.update_user,
+		       t.update_time,
+		       t.old_id,
+		       t.product_line,
+		       t.dept_id,
+		       t.sort_number,
+		       t.address,
+		       t.longitude,
+		       t.latitude,
+		       t.org,
+		       t.logo,
+					(select wm_concat(toe.extend_info)
+						from tab_organization_extend toe
+						where toe.extend_type = '1'
+						  and toe.org_id = t.id) as domain,
+		       t.mchid,
+               t.mid,
+               t.tid,
+			   t.email,
+		       t1.org_name as parent_org_name
+		  from tab_organization_info t
+		  left join tab_organization_info t1
+		    on t1.id = t.parent_id
+		WHERE 1=1
+		AND t.status = 1
+		<if test="id != null">
+			AND t.id = #{id}
+		</if>
+		<if test="parent_id != null">
+			AND t.parent_id = #{parent_id}
+		</if>
+		<if test="org_name != null and org_name != ''">
+			and t.org_name = #{org_name,jdbcType=NUMERIC}'
+		</if>
+		<if test="product_line != null">
+			AND t.product_line = #{product_line}
+		</if>
+		<if test="orgKind != null">
+			AND t.org_kind = #{orgKind}
+		</if>
+		ORDER BY t.sort_number ASC, t.id ASC
+	</select>
+	
+	<select id="queryBuBranchs" parameterType="HashMap" resultType="com.edu.erp.model.OrganizationInfo">
+		SELECT
+		    DISTINCT toi.*
+		FROM
+		    ebs_accountorg_rel ear LEFT JOIN tab_organization_info toi
+		        ON ear.Orgid = toi.id
+		WHERE
+		    ear.Accountid = #{userId}
+		    AND toi.Parent_Id = #{parentId}
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultType="com.edu.erp.model.OrganizationInfo">
+		SELECT t.*,t.id as buId FROM
+		tab_organization_info t
+		WHERE 1=1
+		AND status = 1
+		<if test="ids != null and ids != ''">
+			and id in (${ids})
+		</if>
+		<if test="org_type != null and org_type != ''">
+			and org_type = #{org_type}
+		</if>
+		<if test="org_name != null and org_name != ''">
+			and org_name like '%${org_name}%'
+		</if>
+		<!-- 严格匹配 -->
+		<if test="strict_org_name != null and strict_org_name != ''">
+			and org_name = #{strict_org_name, jdbcType=VARCHAR}
+		</if>
+		ORDER BY sort_number ASC, id ASC
+	</select>
+	
+	<select id="selectById" parameterType="java.lang.Long" resultType="com.edu.erp.model.OrganizationInfo">
+		SELECT t.*, t.org_kind as orgKind FROM
+		tab_organization_info t
+		WHERE id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.OrganizationInfo">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			SELECT seq_tab_organization_info.nextval AS id from dual
+		</selectKey>
+		INSERT INTO tab_organization_info
+		(  id,
+		   org_name,
+		   parent_id,
+		   org_type,
+		   product_line,
+		   sort_number,
+		   status,
+		 <if test="longitude != null">
+		   longitude,
+		 </if>
+		 <if test="latitude != null">
+		   latitude,
+		 </if>
+		 <if test="address != null and address != ''">
+		   address,
+		 </if>
+		 <if test="logo != null and logo != ''">
+		   logo,
+		 </if>
+		 <if test="mchid != null and mchid != ''">
+		   mchid,
+		 </if>
+		 <if test="terminalNo != null and terminalNo != ''">
+		   terminal_no,
+		 </if>
+        <if test="mid != null and mid != ''">
+            mid,
+        </if>
+        <if test="tid != null and tid != ''">
+            tid,
+        </if>
+		 <if test="phone != null and phone != ''">
+		   phone,
+		 </if>
+		 <if test="oldStuIntegral != null">
+		   old_stu_integral,
+		 </if>
+		 <if test="orgKind != null">
+		   org_kind,
+		 </if>
+		 <if test="email != null">
+		   email,
+		 </if>
+		<if test="shortOrgName != null">
+			short_org_name,
+		</if>
+		   org,
+		   create_user,
+		   create_time
+		)
+		VALUES
+		(  #{id, jdbcType=NUMERIC},
+		   #{org_name, jdbcType=VARCHAR},
+		   #{parent_id, jdbcType=NUMERIC},
+		   #{org_type, jdbcType=NUMERIC},
+		   #{product_line, jdbcType=NUMERIC},
+		   #{sort_number, jdbcType=NUMERIC},
+		   #{status, jdbcType=NUMERIC},
+		 <if test="longitude != null">
+		   #{longitude, jdbcType=NUMERIC},
+		 </if>
+		 <if test="latitude != null">
+		   #{latitude, jdbcType=NUMERIC},
+		 </if>
+		 <if test="address != null and address != ''">
+		   #{address, jdbcType=VARCHAR},
+		 </if>
+		 <if test="logo != null and logo != ''">
+		   #{logo, jdbcType=VARCHAR},
+		 </if>
+		 <if test="mchid != null and mchid != ''">
+		   #{mchid, jdbcType=VARCHAR},
+		 </if>
+		 <if test="terminalNo != null and terminalNo != ''">
+		   #{terminalNo, jdbcType=VARCHAR},
+		 </if>
+        <if test="mid != null and mid != ''">
+            #{mid, jdbcType=VARCHAR},
+        </if>
+        <if test="tid != null and tid != ''">
+            #{tid, jdbcType=VARCHAR},
+        </if>
+		 <if test="phone != null and phone != ''">
+		   #{phone, jdbcType=VARCHAR},
+		 </if>
+		 <if test="oldStuIntegral != null">
+		   #{oldStuIntegral, jdbcType=NUMERIC},
+		 </if>
+		 <if test="orgKind != null">
+		   #{orgKind, jdbcType=NUMERIC},
+		 </if>
+		 <if test="email != null">
+		   #{email, jdbcType=VARCHAR},
+		 </if>
+		<if test="shortOrgName != null">
+			#{shortOrgName, jdbcType=VARCHAR},
+		</if>
+		   #{org, jdbcType=NUMERIC},
+		   #{create_user, jdbcType=VARCHAR},
+		   #{create_time, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.OrganizationInfo">
+		UPDATE 
+		   tab_organization_info 
+		SET 
+		   org_name = #{org_name, jdbcType=VARCHAR}, 
+		   org_type = #{org_type, jdbcType=NUMERIC},
+		   product_line = #{product_line, jdbcType=NUMERIC},
+		   sort_number = #{sort_number, jdbcType=NUMERIC},
+		 <if test="longitude != null">
+		   longitude = #{longitude, jdbcType=NUMERIC},
+		 </if>
+		 <if test="latitude != null">
+		   latitude = #{latitude, jdbcType=NUMERIC},
+		 </if>
+		 <if test="address != null and address != ''">
+		   address = #{address, jdbcType=VARCHAR},
+		 </if>
+		 <if test="mchid != null and mchid != ''">
+		   mchid = #{mchid, jdbcType=VARCHAR},
+		 </if>
+		 <if test="terminalNo != null and terminalNo != ''">
+		   terminal_no = #{terminalNo, jdbcType=VARCHAR},
+		 </if>
+        <if test="mid != null and mid != ''">
+            mid = #{mid, jdbcType=VARCHAR},
+        </if>
+        <if test="tid != null and tid != ''">
+            tid = #{tid, jdbcType=VARCHAR},
+        </if>
+		 <if test="phone != null and phone != ''">
+		   phone = #{phone, jdbcType=VARCHAR},
+		 </if>
+		 <if test="oldStuIntegral != null">
+		   old_stu_integral = #{oldStuIntegral, jdbcType=NUMERIC},
+		 </if>
+		 <if test="orgKind != null">
+		   org_kind = #{orgKind, jdbcType=NUMERIC},
+		 </if>
+		 <if test="email != null">
+		   email = #{email, jdbcType=VARCHAR},
+		 </if>
+		<if test="shortOrgName != null">
+			short_org_name = #{shortOrgName, jdbcType=VARCHAR},
+		</if>
+		   org = #{org, jdbcType=NUMERIC},
+		   update_user = #{update_user, jdbcType=VARCHAR}, 
+		   update_time = #{update_time, jdbcType=VARCHAR}
+		   WHERE id = #{id} 	
+	</update>
+	
+	<update id="remove" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+            UPDATE tab_organization_info 
+            <set>
+                status = #{item.status, jdbcType=NUMERIC},
+                update_user = #{item.update_user, jdbcType=VARCHAR}, 
+		  		update_time = #{item.update_time, jdbcType=VARCHAR}
+            </set>
+               WHERE id = #{item.id}
+       </foreach>
+	</update>
+	
+	
+	<select id="selectByOrgType" parameterType="java.lang.String" resultType="com.edu.erp.model.OrganizationInfo">
+		SELECT * FROM 
+			tab_organization_info
+		WHERE 1=1
+		AND status = 1
+		AND org_type = #{org_type}
+		ORDER BY sort_number ASC, id ASC
+	</select>
+	<!--查询公司的账户号信息 -->
+	<select id="selectCompanyAccount" parameterType="com.edu.erp.model.DataCompanyAccount"
+	 resultType="java.util.Map">
+		select tdca.*, 
+		       tdd.id as pos_id,
+			   tdd.device_name as device_name,
+			   tdd.simple_name as simple_name,
+			   tdca.id as company_card_id
+		  from tab_data_company_account tdca
+		  left join tab_data_device tdd
+		    on tdd.account_id = tdca.ID
+		 where tdca.STATUS = 1
+		   and tdd.STATUS = 1
+		   <if test="city_id != null">
+			and tdd.city_id = #{city_id,jdbcType=NUMERIC}
+		   </if>
+		ORDER BY tdca.id ASC
+	</select>
+	
+	<select id="querySiblingsInBu" parameterType="map" resultType="com.edu.erp.model.OrganizationInfo">
+		SELECT * FROM 
+			tab_organization_info
+		WHERE status = 1
+		<if test="branch_id!=null">
+		  and parent_id = (select parent_id from tab_organization_info i where i.id = #{branch_id,jdbcType=NUMERIC})
+		</if>
+		<if test="bu_id!=null">
+		  and parent_id = #{bu_id,jdbcType=NUMERIC}
+		</if>
+		AND org_type = 4
+		ORDER BY sort_number ASC, id ASC
+	</select>
+	
+	<update id="updateLogo" parameterType="map">
+		update tab_organization_info set logo = #{logo, jdbcType=VARCHAR}
+		where id in (
+			select t.id
+			  from tab_organization_info t
+			 where t.id = #{id}
+			union all
+			select t1.id
+			  from tab_organization_info t1, tab_organization_info t2
+			 where t1.parent_id = t2.id
+			   and t2.org_type = 3
+			   and t1.logo is null
+			   and t2.id = #{id})
+	</update>
+	
+	<update id="deleteLogo" parameterType="map">
+		update tab_organization_info set logo = null
+		where id in (
+			select t.id
+			  from tab_organization_info t
+			 where t.id = #{id}
+			union all
+			select t1.id
+			  from tab_organization_info t1, tab_organization_info t2
+			 where t1.parent_id = t2.id
+			   and t2.org_type = 3
+			   and t1.logo = #{logo}
+			   and t2.id = #{id})
+	</update>
+	
+</mapper>

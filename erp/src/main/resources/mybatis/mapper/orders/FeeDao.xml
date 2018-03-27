@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TFeeDao">
+	
+	<!-- 保存费用总表 -->
+	<insert id="saveFee" parameterType="com.edu.erp.model.TFee">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			select  SEQ_T_FEE.nextval as id from dual
+		</selectKey>
+		insert into t_fee
+	      (id, 
+	       order_id, 
+	       fee_type, 
+	       fee_flag, 
+	       fee_amount, 
+	       pay_mode, 
+	       insert_time, 
+	       finish_time, 
+	       fee_status, 
+	       encoder_id, 
+	       operate_type, 
+	       operate_no, 
+	       old_id 
+	       )
+    	values
+	      (
+	      #{id,jdbcType=NUMERIC},
+		  #{order_id,jdbcType=NUMERIC},
+		  #{fee_type,jdbcType=NUMERIC},
+		  #{fee_flag,jdbcType=NUMERIC},
+		  #{fee_amount,jdbcType=NUMERIC},
+		  #{pay_mode,jdbcType=NUMERIC},
+		  #{insert_time,jdbcType=DATE},
+		  #{finish_time,jdbcType=DATE},
+		  #{fee_status,jdbcType=NUMERIC},
+		  #{encoder_id,jdbcType=NUMERIC},
+		  #{operate_type,jdbcType=NUMERIC},
+		  #{operate_no,jdbcType=NUMERIC},
+		  #{old_id,jdbcType=VARCHAR}
+	       )
+	</insert>
+	
+	<!-- 删除费用总表-->
+	<delete id="deleteFee" parameterType="HashMap">
+		  delete from t_fee t where t.order_id =#{order_id}
+		  <if test="fee_type!=null">
+		 	 and t.fee_type in (${fee_type}) 
+		  </if>
+	</delete>
+	
+	<select id="queryFeeAmountByOrderId"  parameterType="HashMap"  resultType="com.edu.erp.model.TFee">
+		   select sum(decode(t.fee_flag, 0, 0, 1, 1, 2, -1) * t.fee_amount) fee_amount  from t_fee t where t.order_id =#{order_id}
+		  <if test="fee_type!=null">
+		 	 and t.fee_type in (${fee_type}) 
+		  </if>
+	</select>
+	
+	<select id="queryFeeAmountByChangeId"  parameterType="HashMap"  resultType="com.edu.erp.model.TFee">
+		   select sum(fee_amount)  fee_amount from t_fee t where  t.operate_no =#{operate_no} 
+		   <if test="operate_type!=null">
+		 	 and t.operate_type =#{operate_type}
+		  </if>
+		  <if test="fee_type!=null">
+		 	 and t.fee_type in (${fee_type}) 
+		  </if>
+	</select>
+	
+	<update id="updateFeeEncoderIdByChangeId"  parameterType="HashMap">
+		 update t_fee t set t.encoder_id = #{encoder_id}
+	     where  t.operate_no =#{operate_no} 
+		   <if test="operate_type!=null">
+		 	 and t.operate_type =#{operate_type}
+		  </if>
+	</update>
+	
+	<update id="updateFeeEncoderIdByOrderId"  parameterType="HashMap">
+		 update t_fee t set t.encoder_id = #{encoder_id}
+	     where t.order_id =#{order_id} and t.fee_type in (${fee_type}) 
+	</update>
+	
+	<update id="updateFeeStatusByOrderId"  parameterType="HashMap">
+		 update t_fee t set t.finish_time = sysdate, t.fee_status = #{fee_status}
+	     where t.order_id =#{order_id} and t.fee_type in (${fee_type}) 
+	</update>
+	
+	<update id="updateFeeStatusByEncoderId"  parameterType="HashMap">
+		 update t_fee t set t.finish_time = sysdate, t.fee_status = #{fee_status}
+	     where t.encoder_id =#{encoder_id} 
+	</update>
+	
+	<select id="queryCancelFeeByChangeId" resultType="com.edu.erp.model.TFee" parameterType="Map">
+		select t.*  from t_fee t where  t.operate_no = #{changeId,jdbcType=NUMERIC} 
+		and t.fee_type!=32 
+		 <if test="operate_type!=null and operate_type!=''">
+		 	 and t.operate_type =#{operateType}
+		  </if>
+	</select>
+	
+</mapper>

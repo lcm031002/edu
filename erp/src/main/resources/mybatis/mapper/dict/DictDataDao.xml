@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DictDataDao">
+	<select id="selectForPage" resultType="com.edu.erp.model.TpDictData"
+		parameterType="page">
+		select t1.order_no orderNo,
+		ty.name type_name,
+		o.org_name bu_name,
+		t1.*
+		from tp_dict_data t1
+		left join tp_dict_type ty
+		on t1.type_id = ty.id
+		left join tab_organization_info o
+		on t1.bu_id = o.id
+		where t1.status != 0
+		<if test="paramMap.type_id!=null and paramMap.type_id > 0">
+			and t1.type_id = #{paramMap.type_id}
+		</if>
+		<if test="paramMap.type_ids != null and paramMap.type_ids != ''">
+			and t1.type_id in (${paramMap.type_ids})
+		</if>
+		<if test="paramMap.dictTypeName != null and paramMap.dictTypeName != ''">
+			and ty.name like '%${paramMap.dictTypeName}%'
+		</if>
+		<if test="paramMap.bu_id!=null and paramMap.bu_id > 0">
+			and (t1.bu_id = #{paramMap.bu_id} or t1.bu_id is null )
+		</if>
+		<if
+			test="paramMap.name_code_desc != null and paramMap.name_code_desc != ''">
+			and (t1.name like '%${paramMap.name_code_desc}%'
+			or t1.code like '%${paramMap.name_code_desc}%'
+			or t1.descdtl like '%${paramMap.name_code_desc}%'
+			)
+		</if>
+		order by t1.type_id ASC, t1.order_no ASC
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.TpDictData">
+		insert into tp_dict_data t
+		(
+		id,
+		name,
+		code,
+		status,
+		order_no,
+		type_id,
+		create_user,
+		create_time,
+		update_time,
+		BU_ID,
+		descdtl
+		)
+		values
+		(seq_tp_dict_data.nextval,
+		#{name,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR},
+		#{status,jdbcType=NUMERIC},
+		#{orderNo,jdbcType=NUMERIC},
+		#{type_id,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		sysdate,
+		sysdate,
+		#{bu_id,jdbcType=NUMERIC},
+		#{descdtl,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.TpDictData">
+		update tp_dict_data t
+		<set>
+			<if test="name!=null and name!=''">
+				t.name = #{name, jdbcType=VARCHAR},
+			</if>
+			<if test="code!=null and name!=''">
+				t.code = #{code, jdbcType=VARCHAR},
+			</if>
+			<if test="orderNo!=null and orderNo!=''">
+				t.order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="type_id!=null and type_id!=''">
+				t.type_id = #{type_id,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user!=null">
+				t.update_user = #{update_user,jdbcType=NUMERIC},
+			</if>
+			t.update_time = sysdate,
+			<if test="bu_id!=null">
+				t.bu_id = #{bu_id,jdbcType=NUMERIC},
+			</if>
+			<if test="descdtl!=null and descdtl!=''">
+				t.descdtl = #{descdtl,jdbcType=NUMERIC}
+			</if>
+		</set>
+		where t.id = #{id}
+	</update>
+
+	<update id="changeStatus" parameterType="java.util.Map">
+		update
+		tp_dict_data t
+		set t.status = ${status}
+		where t.id in (${ids})
+	</update>
+	
+	<select id="selectList" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.TpDictData">
+		select c.*,
+			   t.code as dict_type_code
+		from tp_dict_data c, tp_dict_type t
+		where c.type_id = t.id
+		and c.status != 0
+		<if test="dictTypeCodes != null and dictTypeCodes.size > 0">
+			and t.code in
+			<foreach collection="dictTypeCodes" item="dictTypeCode" open="(" separator=","  close=")">
+				#{dictTypeCode, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="typeCode != null and typeCode != ''">
+		    and t.code = #{typeCode, jdbcType=VARCHAR}
+		</if>
+		<if test="subTypeCode != null and subTypeCode != ''">
+		    and c.descdtl = #{subTypeCode, jdbcType=VARCHAR}
+		</if>
+		<if test="needProductLineCdtn == 'Y'.toString()">
+			  and c.product_line = #{product_line}
+		</if>
+	</select>
+	
+	<!-- 获取当前登陆用户所属团队及所属组织下的所有团队 -->
+	<resultMap type="HashMap" id="getBusByUserMap">
+		<result column="bu_id" property="buId" javaType="java.lang.Long" />
+		<result column="bu_name" property="buName" javaType="java.lang.String" />
+	</resultMap>
+	
+	<select id="getBusByUser" parameterType="Map" resultMap="getBusByUserMap">
+		select
+		distinct bu_id, bu_name
+		from (select b.id bu_id, b.org_name bu_name, b.org_type
+		from tab_user_role_ref a
+		join tab_role_org_ref t
+		on a.role_id = t.role_id
+		join tab_organization_info b
+		on t.org_id = b.id
+		connect by prior b.parent_id = b.id
+		start with a.user_id = #{userId, jdbcType=NUMERIC}
+		union all
+		select b.id bu_id, b.org_name bu_name, b.org_type
+		from tab_user_role_ref a
+		join tab_role_org_ref t
+		on a.role_id = t.role_id
+		join tab_organization_info b
+		on t.org_id = b.id
+		connect by b.parent_id = prior b.id
+		start with a.user_id = #{userId, jdbcType=NUMERIC})
+		where org_type = 3
+		order by bu_id
+	</select>
+	
+	<!-- 获取当前登陆用户所属学校及所属组织下且在所选团队下的所有学校 -->
+	<resultMap type="HashMap" id="getBranchsByUserBuMap">
+		<result column="branch_id" property="branchId" javaType="java.lang.Long" />
+		<result column="branch_name" property="branchName" javaType="java.lang.String" />
+		<result column="bu_id" property="buId" javaType="java.lang.String" />
+	</resultMap>
+	
+	<select id="getBranchsByUser" parameterType="Map"
+		resultMap="getBranchsByUserBuMap">
+		select distinct branch_id, branch_name,bu_id
+		from (select b.id branch_id,
+		b.org_name branch_name,
+		b.org_type,
+		b.parent_id bu_id
+		from tab_user_role_ref a
+		join tab_role_org_ref t
+		on a.role_id = t.role_id
+		join tab_organization_info b
+		on t.org_id = b.id
+		connect by b.parent_id = prior b.id
+		start with a.user_id = #{userId, jdbcType=NUMERIC})
+		where org_type = 4
+		<if test="bu_id != null and  bu_id > 0 ">
+			and bu_id = #{bu_id, jdbcType=NUMERIC}
+		</if>
+		<if test="branch_id != null and  branch_id>0">
+			and branch_id = #{branch_id, jdbcType=NUMERIC}
+		</if>
+		order by branch_id
+	</select>
+
+	<select id="queryPosts" parameterType="Map" resultType="map">
+		select id "id",post_code "post_code",post_name "post_name" from tp_post p
+	</select>
+
+	<select id="orgTree" resultType="map" parameterType="map">
+	 <![CDATA[
+		 select distinct o.id "id",parent_id "parent_id",org_type "org_type",
+		        o.org_name "name",
+		        case
+		          when exists
+		           (select 1
+		                  from TP_DICT_DATA_ORG m, tab_organization_info o2
+		                 where m.org_id = o2.id
+		                   and m.status != 0
+		                   and (m.org_id = o.id or o2.parent_id = o.id)
+		                   and m.data_id =#{data_id, jdbcType = NUMERIC}) then
+		           'true'
+		          else
+		           'false'
+		        end "checked"
+		   from tab_user_info         i,
+		        tab_user_role_ref     rr,
+		        TAB_ROLE_ORG_REF      ror,
+		        tab_organization_info o
+		  where i.id = rr.user_id
+		    and rr.role_id = ror.role_id
+		    and ror.org_id = o.id
+		    and o.org_type <= #{org_type,jdbcType=NUMERIC}
+		    and i.id = 0
+		  start with o.parent_id = 0
+		 connect by prior o.id = o.parent_id
+		  order siblings by o.org_name
+  ]]>
+	</select>
+
+	<insert id="batchAddDataOrg" parameterType="map">
+		<foreach collection="inserts" item="item" index="index" open="begin"
+			separator=";" close=";end;">
+			insert into TP_DICT_DATA_ORG
+			(id, org_id, data_id, status)
+			values
+			(seq_tp_dict_data_org.nextval,
+			#{item.id,jdbcType=NUMERIC},
+			#{data_id,jdbcType=NUMERIC},
+			1
+			)
+		</foreach>
+	</insert>
+	<insert id="batchDeleteDataOrg" parameterType="map">
+		update TP_DICT_DATA_ORG set status=0 where id in
+		<foreach collection="deletes" item="item" index="index" open="("
+			separator="," close=")">
+			#{item.id,jdbcType=NUMERIC}
+		</foreach>
+	</insert>
+
+	<select id="queryDataOrg" resultType="map">
+		select id "id", org_id "org_id", data_id "data_id", status "status"
+		from TP_DICT_DATA_ORG where data_id = #{data_id,jdbcType=NUMERIC}
+		and status!=0
+	</select>
+
+</mapper>

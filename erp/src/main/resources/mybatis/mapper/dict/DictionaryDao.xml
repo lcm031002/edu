@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DictionaryDao">
+	<!-- 	课程模型 -->
+	<select id="selectCourseModel" parameterType="java.util.Map" resultType="com.edu.erp.model.TPCourseModel">
+		select * from tp_course_model
+		where 1 = 1
+		order by id 
+	</select>
+	<!-- 	学生考勤状态	 -->
+	<select id="selectStudentAttendType" parameterType="java.util.Map" resultType="com.edu.erp.model.TPStudentAttendType">
+		select * from tp_student_attend_type
+		where 1 = 1
+		order by id
+	</select>
+	<!-- 	发票类型 -->
+	<select id="selectInvoiceType" parameterType="java.util.Map" resultType="com.edu.erp.model.TPInvoiceType">
+		select * from tp_invoice_type
+		where 1 = 1
+		order by id
+	</select>
+	<!-- 	团队（产品线） -->
+	<select id="selectProductLine" parameterType="java.util.Map" resultType="com.edu.erp.model.TPProductLine">
+		select * from tp_product_line
+		where 1 = 1
+		<!-- 严格匹配 -->
+		 <if test="strict_product_line_name != null and strict_product_line_name != ''">
+			and  name = #{strict_product_line_name, jdbcType=VARCHAR}
+		 </if>
+		order by id
+	</select>
+	<!-- 	学校类型 -->
+	<select id="selectSchoolType" parameterType="java.util.Map" resultType="com.edu.erp.model.TPSchoolType">
+		select * from tp_school_type
+		where 1 = 1
+		order by id
+	</select>
+	<!-- 	教师考勤状态 -->
+	<select id="selectTeacherAttendType" parameterType="java.util.Map" resultType="com.edu.erp.model.TPTeacherAttendType">
+		select * from tp_teacher_attend_type
+		where 1 = 1
+		order by id
+	</select>
+	<!-- 	课程目标-->
+	<select id="selectCourseGoal" parameterType="java.util.Map" resultType="com.edu.erp.model.TPCourseGoal">
+		select * from tp_course_goal
+		where 1 = 1
+		<!-- 严格匹配 -->
+		 <if test="strict_target_name != null and strict_target_name != ''">
+			and  name = #{strict_target_name, jdbcType=VARCHAR}
+		 </if>
+		order by id
+	</select>
+	<!-- 	课程商品类型 -->
+	<select id="selectCourseTypeList" parameterType="java.util.Map" resultType="com.edu.erp.model.CourseType" >
+		select a.*
+		from tab_course_type a
+		where a.status = 1
+		<if test="branch_id != null">
+			<!-- 根据校区id字符串查询 -->
+			and a.org_id = #{branch_id}
+		</if>
+		<!-- 严格匹配 -->
+		 <if test="strict_type_name != null and strict_type_name != ''">
+			and  a.type_name = #{strict_type_name, jdbcType=VARCHAR}
+		 </if>
+	</select>
+	<!-- 	课程科目 -->
+	<select id="selectSubject" parameterType="java.util.Map" resultType="com.edu.erp.model.TPSubject">
+		select * from tp_subject
+		where 1 = 1
+		<if test="bu_id!=null">
+		and id in (select dict_id from BU_DICT_REL where bu_id = #{bu_id} and dict_type = 'tp_subject')
+		</if>
+		order by id
+	</select>
+</mapper>

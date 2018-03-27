@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DelayCourseTimeChangeInfoDao">
+
+    <!-- 获取排课详细 -->
+    <select id="listCourseSchedulingDetail" parameterType="long" resultType="com.edu.erp.course_manager.business.DelayCourseTimeChangeInfo">
+        select
+           tcs.course_id courseId,
+           tcs.id courseSchedulingId,
+           tcs.course_date courseDateBeforeDelay,
+           tcs.start_time startTimeBeforeDelay,
+           tcs.end_time endTimeBeforeDelay,
+           tcs.course_times courseTime,
+           tc.more_teacher_courseid mtCourseId
+        from t_course_scheduling tcs
+        left join t_course tc on tcs.course_id = tc.id
+        where tcs.course_id = #{courseId,jdbcType = NUMERIC}
+        order by tcs.course_times
+    </select>
+
+    <!-- 查看双师延课课程 -->
+    <select id="listMTDelayCourse" parameterType="com.edu.erp.course_manager.business.DelayCourseQO" resultType="com.edu.erp.course_manager.business.DelayCourseVO">
+        select tc.id                 courseId,
+        tmtc.course_name      mtCourseName,
+        tmtc.id               mtCourseId,
+        tc.course_name        courseName,
+        tc.course_no          courseNo,
+        oi.org_name           branchName,
+        ts.course_season_name courseSeasonName,
+        dg.grade_name         gradeName,
+        tps.name              subjectName,
+        tti.teacher_name      teacherName,
+        tcs.course_times      courseTime,
+        tc.start_date         startDate,
+        tc.end_date           endDate
+        from T_MORE_TEACHER_COURSE tmtc
+        left join TAB_TEACHER_INFO tti
+        on tti.id = tmtc.teacher_id
+        left join t_course tc
+        on tc.more_teacher_courseid = tmtc.id
+        and tmtc.teacher_id = tc.teacher_id
+        left join tab_time_season ts
+        on ts.id = tc.season_id
+        left join tp_subject tps
+        on tps.id = tc.subject_id
+        left join tab_data_grade dg
+        on dg.id = tc.grade_id
+        join t_course_scheduling tcs
+        on tc.id = tcs.course_id
+        join tab_organization_info oi
+        on oi.id = tc.branch_id
+        where tmtc.status != 0
+        and tcs.course_date = #{delayCourseDateInteger,jdbcType = NUMERIC}
+        and tc.status = 1
+        <if test="branchId != null and branchId >0">
+            and tc.branch_id = #{branchId,jdbcType = NUMERIC}
+        </if>
+        <if test="type != null">
+            and tmtc.type = #{type,jdbcType = NUMERIC}
+        </if>
+        <if test="operationType != null">
+            and tmtc.operation_type = #{operationType,jdbcType = NUMERIC}
+        </if>
+        <if test="branchsInBu != null and branchsInBu !=''">
+            and tc.branch_id in (${branchsInBu})
+        </if>
+        <if test="seasonId != null and seasonId >0">
+            and tc.season_id = #{seasonId,jdbcType = NUMERIC}
+        </if>
+        <if test="gradeId != null and gradeId >0">
+            and tc.grade_id = #{gradeId,jdbcType = NUMERIC}
+        </if>
+        <if test="subjectId != null and subjectId >0">
+            and tc.subject_id = #{subjectId,jdbcType = NUMERIC}
+        </if>
+        <if test="teacherSearchInfo != null and teacherSearchInfo != ''">
+            and (
+            ti.teacher_name like '%' ||#{teacherSearchInfo,jdbcType = VARCHAR} || '%'
+            or ti.encoding like '%' ||#{teacherSearchInfo,jdbcType = VARCHAR} || '%'
+            )
+        </if>
+        <if test="courseSearchInfo != null and courseSearchInfo != ''">
+            and (
+            tc.course_name like '%' ||#{courseSearchInfo,jdbcType = VARCHAR} || '%'
+            or tc.course_no like '%' ||#{courseSearchInfo,jdbcType = VARCHAR} || '%'
+            )
+        </if>
+    </select>
+    <!-- 查看延课课程 -->
+    <select id="listDelayCourse" parameterType="com.edu.erp.course_manager.business.DelayCourseQO" resultType="com.edu.erp.course_manager.business.DelayCourseVO">
+        select
+           tc.id courseId,
+           tc.course_name courseName,
+           tc.course_no courseNo,
+           oi.org_name branchName,
+           ts.course_season_name courseSeasonName,
+           dg.grade_name gradeName,
+           tps.name subjectName,
+           ti.teacher_name teacherName,
+           tcs.course_times courseTime,
+           tc.start_date startDate,
+           tc.end_date endDate
+
+          from t_course tc
+          join t_course_scheduling tcs
+            on tc.id = tcs.course_id
+          join tab_organization_info oi
+            on oi.id = tc.branch_id
+          left join tab_time_season ts
+            on ts.id = tc.season_id
+          left join tab_data_grade dg
+            on dg.id = tc.grade_id
+          left join tp_subject tps
+            on tps.id = tc.subject_id
+          left join tab_teacher_info ti
+            on ti.id = tcs.teacher_id
+         where tcs.course_date = #{delayCourseDateInteger,jdbcType = NUMERIC}
+         and more_teacher_courseId is null
+         and tc.status = 1
+         <if test="branchId != null and branchId >0">
+             and tc.branch_id = #{branchId,jdbcType = NUMERIC}
+         </if>
+         <if test="branchsInBu != null and branchsInBu !=''">
+            and tc.branch_id in (${branchsInBu})
+         </if>
+         <if test="seasonId != null and seasonId >0">
+             and tc.season_id = #{seasonId,jdbcType = NUMERIC}
+         </if>
+         <if test="gradeId != null and gradeId >0">
+             and tc.grade_id = #{gradeId,jdbcType = NUMERIC}
+         </if>
+         <if test="subjectId != null and subjectId >0">
+             and tc.subject_id = #{subjectId,jdbcType = NUMERIC}
+         </if>
+         <if test="teacherSearchInfo != null and teacherSearchInfo != ''">
+             and (
+                    ti.teacher_name like '%' ||#{teacherSearchInfo,jdbcType = VARCHAR} || '%'
+                    or ti.encoding like '%' ||#{teacherSearchInfo,jdbcType = VARCHAR} || '%'
+                  )
+         </if>
+         <if test="courseSearchInfo != null and courseSearchInfo != ''">
+             and (
+                    tc.course_name like '%' ||#{courseSearchInfo,jdbcType = VARCHAR} || '%'
+                    or tc.course_no like '%' ||#{courseSearchInfo,jdbcType = VARCHAR} || '%'
+                  )
+         </if>
+    </select>
+
+    <!-- 保存课次变动详情 -->
+    <insert id="save" parameterType="com.edu.erp.course_manager.business.DelayCourseTimeChangeInfo">
+      <selectKey resultType="long" statementType="PREPARED" order="BEFORE" keyProperty="id">
+          select seq_delay_schedulling_change.nextval as id from dual
+      </selectKey>
+      insert into tab_delay_schedulling_change (
+        id,
+        delay_course_detail_id,
+        course_time,
+        course_date_before_delay,
+        course_date_after_delay,
+        start_time_before_delay,
+        start_time_after_delay,
+        end_time_before_delay,
+        end_time_after_delay,
+        is_delay_course_time
+      ) values (
+        #{id},
+        #{delayCourseDetailId},
+        #{courseTime},
+        #{courseDateBeforeDelay},
+        #{courseDateAfterDelay},
+        #{startTimeBeforeDelay},
+        #{startTimeAfterDelay},
+        #{endTimeBeforeDelay},
+        #{endTimeAfterDelay},
+        #{delayCourseTime}
+      )
+    </insert>
+
+    <!-- 获取课次变动详情 -->
+    <select id="listCourseSchedulingChangeInfo" parameterType="long" resultType="com.edu.erp.course_manager.business.DelayCourseTimeChangeInfo">
+        select sc.course_time courseTime,
+            sc.course_date_before_delay courseDateBeforeDelay,
+            sc.course_date_after_delay courseDateAfterDelay,
+            sc.start_time_before_delay startTimeBeforeDelay,
+            sc.start_time_after_delay startTimeAfterDelay,
+            sc.end_time_before_delay endTimeBeforeDelay,
+            sc.end_time_after_delay endTimeAfterDelay,
+            sc.is_delay_course_time delayCourseTime
+            from tab_delay_schedulling_change sc
+        where sc.delay_course_detail_id = #{delayCourseId}
+        order by sc.course_time
+    </select>
+</mapper>

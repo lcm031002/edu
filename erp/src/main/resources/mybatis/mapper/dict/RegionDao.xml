@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.RegionDao">
+	
+	<select id="queryRegionListByParentId" resultType="com.edu.erp.model.TabRegion" parameterType="java.lang.Long">
+		select * from tab_region t where t.parent_id = #{parent_id}
+	</select>
+	
+	<select id="list" resultType="com.edu.erp.model.TabRegion" parameterType="java.util.Map">
+		select * from tab_region where 1 = 1
+		<if test="rname != null">
+			and  rname like '%${rname}%'
+		</if> 
+	</select>
+	
+</mapper>

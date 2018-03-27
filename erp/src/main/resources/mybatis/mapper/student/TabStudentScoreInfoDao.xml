@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TabStudentScoreInfoDao">
+
+	<resultMap type="com.edu.erp.model.TabStudentScoreInfo" id="stuScoreInfoMap">
+		<id property="id" column="id" />
+		<result property="studentId" column="student_id" />
+		<result property="studentName" column="student_name" />
+		<result property="submitDate" column="submit_date" />
+		<result property="schoolId" column="school_id" />
+		<result property="schoolName" column="school_name" />
+		<result property="gradeId" column="grade_id" />
+		<result property="gradeName" column="grade_name" />
+		<result property="term" column="term" />
+		<result property="termName" column="term_name" />
+		<result property="examType" column="exam_type" />
+		<result property="examTypeName" column="exam_type_name" />
+		<result property="remark" column="remark" />
+		<result property="status" column="status" />
+		<result property="statusName" column="status_name" />
+		<result property="create_user" column="create_user" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_user_name" column="update_user_name" />
+		<result property="update_time" column="update_time" />
+
+		<collection property="studentScoreList" column="student_score_info_id"
+					javaType="ArrayList" ofType="com.edu.erp.model.TabStudentScore">
+			<id property="id" column="tss_id" />
+			<result property="studentScoreInfoId" column="tss_student_score_info_id" />
+			<result property="subjectId" column="subject_id" />
+			<result property="subjectName" column="subject_name" />
+			<result property="score" column="score" />
+			<result property="fullMark" column="full_mark" />
+			<result property="progress" column="progress" />
+			<result property="ranking" column="tss_ranking" />
+			<result property="classRanking" column="class_ranking" />
+			<result property="teacherId" column="teacher_id" />
+			<result property="teacherName" column="teacher_Name" />
+			<result property="remark" column="tss_remark" />
+		</collection>
+
+		<collection property="studentScoreRankingList" column="student_score_info_id"
+			javaType="ArrayList" ofType="com.edu.erp.model.TabStudentScoreRanking">
+			<id property="id" column="tssr_id" />
+			<result property="studentScoreInfoId" column="tssr_student_score_info_id" />
+			<result property="scoreRankingType" column="score_ranking_type" />
+			<result property="scoreRankingTypeName" column="score_ranking_type_name" />
+			<result property="ranking" column="tssr_ranking" />
+		</collection>
+	</resultMap>
+
+	<select id="selectForPage" parameterType="map"  resultType="java.lang.Long">
+		select tssi.id
+		  from tab_student_score_info tssi
+		 where 1 = 1
+		 <if test="studentId != null">
+			 and tssi.student_id = #{studentId, jdbcType=NUMERIC}
+		 </if>
+		 <if test="gradeId != null">
+			 and tssi.grade_id = #{gradeId, jdbcType=NUMERIC}
+		 </if>
+		 <if test="term != null and term != ''">
+			and tssi.term = #{term, jdbcType=VARCHAR}
+		 </if>
+		 <if test="examType != null and examType != ''">
+			and tssi.exam_type = #{examType, jdbcType=VARCHAR}
+		 </if>
+		 <if test="subjectId != null">
+			and exists (select 1 from tab_student_score tss where tss.student_score_info_id = tssi.id and tss.subject_id = #{subjectId, jdbcType=NUMERIC})
+		 </if>
+	</select>
+
+	<select id="selectForList" parameterType="map"  resultMap="stuScoreInfoMap">
+		select tssi.id,
+			    tssi.student_id,
+			    tsi.student_name,
+			    tssi.submit_date,
+			    tssi.school_id,
+			    tds.school_name,
+			    tssi.grade_id,
+			    tdg.grade_name,
+			    tssi.term,
+			    term.name as term_name,
+			    tssi.exam_type,
+			    examType.name as exam_type_name,
+			    tssi.remark,
+			    tssi.status,
+			    decode(tssi.status, 0, '删除', 2, '无效', 1, '有效') as status_name,
+			    cr_emp.employee_name as create_user_name,
+			    up_emp.employee_name as update_user_name,
+			    tss.id as tss_id,
+			    tss.student_score_info_id as tss_student_score_info_id,
+			    tss.subject_id,
+			    ts.name as subject_name,
+			    tss.score,
+			    tss.full_mark,
+			    tss.progress,
+				  tss.ranking as tss_ranking,
+		      tss.class_ranking,
+		      tss.teacher_id,
+		      tti.teacher_name,
+		      tss.remark as tss_remark,
+		      tssr.id as tssr_id,
+		      tssr.score_ranking_type,
+		      rankingType.name as score_ranking_type_name,
+		      tssr.ranking as tssr_ranking
+		  from tab_student_score_info tssi
+		  left join tab_student_score tss
+			on tss.student_score_info_id = tssi.id
+		  left join tab_student_score_ranking tssr
+		  on tssr.student_score_info_id = tssi.id
+		  left join tab_teacher_info tti
+		  on tti.id = tss.teacher_id
+		  left join tab_student_info tsi
+			on tsi.id = tssi.student_id
+		  left join tab_data_grade tdg
+			on tdg.id = tssi.grade_id
+		  left join tab_data_school tds
+			on tds.id = tssi.school_id
+		  left join tp_subject ts
+    		on ts.id = tss.subject_id
+		  left join vt_dict_data term
+			on term.typeCode = 'term'
+		   and term.code = tssi.term
+		  left join vt_dict_data examType
+			on examType.typeCode = 'examType'
+		   and examType.code = tssi.exam_type
+		  left join vt_dict_data rankingType
+		  on rankingType.typeCode = 'scoreRankingType'
+		   and rankingType.code = tssr.score_ranking_type
+		  left join vt_user_emp cr_emp
+			on cr_emp.user_id = tssi.create_user
+		  left join vt_user_emp up_emp
+			on up_emp.user_id = tssi.update_user
+		where 1 = 1
+		<if test="ids != null and ids != ''">
+			and tssi.id in (${ids})
+		</if>
+		<if test="studentId != null">
+			and tssi.student_id = #{studentId, jdbcType=NUMERIC}
+		</if>
+		order by tssi.submit_date desc, tssr.score_ranking_type
+	</select>
+
+	<select id="selectById" parameterType="java.lang.Long"  resultMap="stuScoreInfoMap">
+		select tssi.id,
+			    tssi.student_id,
+			    tsi.student_name,
+			    tssi.submit_date,
+			    tssi.school_id,
+			    tds.school_name,
+			    tssi.grade_id,
+			    tdg.grade_name,
+			    tssi.term,
+			    term.name as term_name,
+			    tssi.exam_type,
+			    examType.name as exam_type_name,
+			    tssi.remark,
+			    tssi.status,
+			    decode(tssi.status, 0, '删除', 2, '无效', 1, '有效') as status_name,
+			    cr_emp.employee_name as create_user_name,
+			    up_emp.employee_name as update_user_name,
+			    tss.id as tss_id,
+			    tss.student_score_info_id as tss_student_score_info_id,
+			    tss.subject_id,
+			    ts.name as subject_name,
+			    tss.score,
+			    tss.full_mark,
+			    tss.progress,
+			    tss.ranking as tss_ranking,
+		      tss.class_ranking,
+		      tss.teacher_id,
+		      tti.teacher_name,
+		      tss.remark as tss_remark,
+		      tssr.id as tssr_id,
+		      tssr.score_ranking_type,
+		      rankingType.name as score_ranking_type_name,
+		      tssr.ranking as tssr_ranking
+		  from tab_student_score_info tssi
+		  left join tab_student_score tss
+			on tss.student_score_info_id = tssi.id
+			left join tab_student_score_ranking tssr
+		  on tssr.student_score_info_id = tssi.id
+		  left join tab_teacher_info tti
+		  on tti.id = tss.teacher_id
+		  left join tab_student_info tsi
+			on tsi.id = tssi.student_id
+		  left join tab_data_grade tdg
+			on tdg.id = tssi.grade_id
+		  left join tab_data_school tds
+			on tds.id = tssi.school_id
+		  left join tp_subject ts
+    		on ts.id = tss.subject_id
+		  left join vt_dict_data term
+			on term.typeCode = 'term'
+		   and term.code = tssi.term
+		  left join vt_dict_data examType
+			on examType.typeCode = 'examType'
+		   and examType.code = tssi.exam_type
+		  left join vt_dict_data rankingType
+		  on rankingType.typeCode = 'scoreRankingType'
+		   and rankingType.code = tssr.score_ranking_type
+		  left join vt_user_emp cr_emp
+			on cr_emp.user_id = tssi.create_user
+		  left join vt_user_emp up_emp
+			on up_emp.user_id = tssi.update_user
+		where tssi.id = #{id, jdbcType=NUMERIC}
+		order by tssr.score_ranking_type
+	</select>
+
+	<insert id="save" parameterType="com.edu.erp.model.TabStudentScoreInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select seq_tab_student_score_info.nextval as id from dual
+		</selectKey>
+		insert into tab_student_score_info
+		(id,
+		student_id,
+		submit_date,
+		school_id,
+		grade_id,
+		term,
+		exam_type,
+		remark,
+		status,
+		create_user,
+		create_time
+		)
+		values
+		(
+		#{id, jdbcType=NUMERIC},
+		#{studentId, jdbcType=NUMERIC},
+		#{submitDate, jdbcType=TIMESTAMP},
+		#{schoolId, jdbcType=NUMERIC},
+		#{gradeId, jdbcType=NUMERIC},
+		#{term, jdbcType=VARCHAR},
+		#{examType, jdbcType=VARCHAR},
+		#{remark, jdbcType=VARCHAR},
+		#{status, jdbcType=NUMERIC},
+		#{create_user, jdbcType=NUMERIC},
+		#{create_time, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.TabStudentScoreInfo">
+		update tab_student_score_info
+		set 
+		<if test="submitDate != null">
+			submit_date = #{submitDate, jdbcType=DATE},
+		</if>
+		<if test="schoolId != null">
+			school_id = #{schoolId, jdbcType=NUMERIC},
+		</if>
+		<if test="gradeId != null">
+			grade_id = #{gradeId, jdbcType=NUMERIC},
+		</if>
+		<if test="term != null and term != ''">
+			term = #{term, jdbcType=VARCHAR},
+		</if>
+		<if test="examType != null and examType != ''">
+			exam_type = #{examType, jdbcType=VARCHAR},
+		</if>
+		<if test="remark != null and remark != ''">
+			remark = #{remark, jdbcType=VARCHAR},
+		</if>
+		<if test="status != null">
+			status = #{status, jdbcType=NUMERIC},
+		</if>
+			update_user = #{update_user, jdbcType=NUMERIC},
+			update_time = #{update_time, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<update id="changeStatus" parameterType="com.edu.erp.model.TabStudentScoreInfo">
+		update tab_student_score
+		set status = #{status, jdbcType=NUMERIC},
+		    update_user = #{update_user, jdbcType=NUMERIC},
+		    update_time = #{update_time, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from tab_student_score_info where id = #{id, jdbcType=NUMERIC}
+	</delete>
+
+</mapper>

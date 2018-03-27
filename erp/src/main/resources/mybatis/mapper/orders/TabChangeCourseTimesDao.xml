@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TabChangeCourseTimesDao">
+	<insert id="add" parameterType="com.edu.erp.model.TabChangeCourseTimes">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			select seq_tab_change_course_times.nextval as id from dual
+		</selectKey>
+		insert into tab_change_course_times (
+	    <if test="change_id != null">
+	       change_id,
+	    </if>
+	    <if test="change_course_id != null">
+	       change_course_id,
+	    </if>
+	    <if test="course_times != null">
+	       course_times,
+	    </if>
+	    <if test="pre_price != null">
+	       pre_price,
+	    </if>
+	    <if test="next_price != null">
+	       next_price,
+	    </if>
+	    <if test="change_no != null and change_no != ''">
+	       change_no,
+	    </if>
+	       id)
+	    values (
+	    <if test="change_id != null">
+	       #{change_id},
+	    </if>
+	    <if test="change_course_id != null">
+	       #{change_course_id},
+	    </if>
+	    <if test="course_times != null">
+	       #{course_times},
+	    </if>
+	    <if test="pre_price != null">
+	       #{pre_price},
+	    </if>
+	    <if test="next_price != null">
+	       #{next_price},
+	    </if>
+	    <if test="change_no != null and change_no != ''">
+	       #{change_no},
+	    </if>
+	       #{id})
+	</insert>
+	
+	<insert id="addList" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="; end;" separator=";">
+			insert into tab_change_course_times (
+		    <if test="item.change_id != null">
+		       change_id,
+		    </if>
+		    <if test="item.change_course_id != null">
+		       change_course_id,
+		    </if>
+		    <if test="item.course_times != null">
+		       course_times,
+		    </if>
+		    <if test="item.pre_price != null">
+		       pre_price,
+		    </if>
+		    <if test="item.next_price != null">
+		       next_price,
+		    </if>
+		    <if test="item.change_no != null and item.change_no != ''">
+		       change_no,
+		    </if>
+		       id)
+		    values (
+		    <if test="item.change_id != null">
+		       #{item.change_id},
+		    </if>
+		    <if test="item.change_course_id != null">
+		       #{item.change_course_id},
+		    </if>
+		    <if test="item.course_times != null">
+		       #{item.course_times},
+		    </if>
+		    <if test="item.pre_price != null">
+		       #{item.pre_price},
+		    </if>
+		    <if test="item.next_price != null">
+		       #{item.next_price},
+		    </if>
+		    <if test="item.change_no != null and item.change_no != ''">
+		       #{item.change_no},
+		    </if>
+		       seq_tab_change_course_times.nextval)
+		</foreach>
+	</insert>
+	
+	<update id="updateByChangeNo" parameterType="com.edu.erp.model.TabChangeCourseTimes">
+		update tab_change_course_times set change_id = #{change_id}
+	    where change_no = #{change_no}
+	</update>
+	
+	<select id="queryChangeCourseTimes" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1)
+         from tab_change_course_times t
+        where t.change_no = #{changeNo}
+          and t.change_course_id = #{changeCourseId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentRelDao">
+	<select id="queryStudentRel" parameterType="java.util.Map" resultType="com.edu.erp.model.StudentRel">
+			select a.*
+			from STUDENT_REL a
+			where 1=1
+		<if test="STUDENT_ID_NEW != null">
+			and a.STUDENT_ID_NEW = #{STUDENT_ID_NEW, jdbcType=NUMERIC}
+		</if>
+		<if test="STUDENT_ID_OLD != null">
+			AND a.STUDENT_ID_OLD = #{STUDENT_ID_OLD, jdbcType=NUMERIC}
+		</if>
+	</select>
+	
+	<insert id="insertStudentRel" parameterType="HashMap">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT SEQ_STUDENT_REL.currval AS id from dual
+		</selectKey>
+		INSERT INTO STUDENT_REL
+		(
+			ID,
+			STUDENT_ID_NEW,
+			STUDENT_ID_OLD,
+			NEW_USED,
+			OLD_USED
+		)
+		VAlUES
+		(
+		SEQ_STUDENT_REL.nextval,
+		#{STUDENT_ID_NEW, jdbcType=NUMERIC},
+		#{STUDENT_ID_OLD, jdbcType=NUMERIC},
+		#{NEW_USED, jdbcType=NUMERIC},
+		#{OLD_USED, jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<update id="updateStudentRel" parameterType="com.edu.erp.model.StudentRel">
+		update STUDENT_REL
+		set 
+			OLD_USED = #{old_used, jdbcType=NUMERIC},
+			NEW_USED = #{new_used, jdbcType=NUMERIC}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DelayCourseDetailDao">
+    <select id="listDelayCourseDetail" resultType="com.edu.erp.course_manager.business.DelayCourseDetail" parameterType="long">
+        select
+        tc.course_name courseName,
+        tc.course_no courseNo,
+        cd.course_time courseTime,
+        sc.course_date_before_delay courseDateBeforeDelay,
+        sc.course_date_after_delay courseDateAfterDelay,
+        cd.start_date startDateAfterDelay,
+        cd.end_date_after_delay endDateAfterDelay,
+        cd.id,
+        cd.error_message errorMessage,
+        cd.syn_error_message synErrorMessage,
+        tmtc.course_name mtCourseName,
+        tmtc.type type
+
+        from tab_delay_course_detail cd
+        join tab_delay_schedulling_change sc
+        on sc.delay_course_detail_id = cd.id
+        and sc.course_time = cd.course_time
+        left join t_course tc
+        on tc.id = cd.course_id
+        left join t_more_teacher_course tmtc on tmtc.id = cd.mt_course_id
+        where cd.delay_course_record_id=#{delayCourseRecordId}
+    </select>
+</mapper>

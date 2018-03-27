@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.CourseArrangeSpSubjectDao">
+
+  <insert id="add" parameterType="com.edu.erp.model.CourseArrangeSpSubject">
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+      select seq_t_course_arrange_sp_subj.nextval AS id from dual
+    </selectKey>
+    insert into t_course_arrange_sp_subject t
+    (
+    t.id,
+    t.arrange_sp_id,
+    t.subject_id,
+    t.create_user,
+    t.create_time
+    )
+    values
+    (
+    #{id, jdbcType=NUMERIC},
+    #{arrangeSpId,jdbcType=NUMERIC},
+    #{subjectId,jdbcType=NUMERIC},
+    #{create_user,jdbcType=NUMERIC},
+    sysdate
+    )
+  </insert>
+
+  <insert id="addList" parameterType="list">
+    <foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+      insert into t_course_arrange_sp_subject t
+      (
+      t.id,
+      t.arrange_sp_id,
+      t.subject_id,
+      t.create_user,
+      t.create_time
+      )
+      values
+      (
+      seq_t_course_arrange_sp_subj.nextval,
+      #{item.arrangeSpId,jdbcType=NUMERIC},
+      #{item.subjectId,jdbcType=NUMERIC},
+      #{item.create_user,jdbcType=NUMERIC},
+      sysdate
+      )
+    </foreach>
+  </insert>
+
+  <delete id="deleteByArrangeSpId" parameterType="long">
+		DELETE  from t_course_arrange_sp_subject where arrange_sp_id = #{arrangeSpId, jdbcType=NUMERIC}
+	</delete>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE  from t_course_arrange_sp_subject where id = #{id, jdbcType=NUMERIC}
+  </delete>
+
+</mapper>

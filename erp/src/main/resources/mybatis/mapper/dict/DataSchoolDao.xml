@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DataSchoolDao">
+
+	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="Map">
+		select 
+						a.*,
+						b.rname province_name,
+						c.rname city_name,
+						d.rname area_name,
+						e.org_name,
+						f.name school_type_name,
+						c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name 
+	  	from 			tab_data_school a 
+	  		left join 	tab_region b on a.province_id = b.rid 
+	  		left join	tab_region c on a.city_id = c.rid 
+	  		left join 	tab_region d on a.area_id = d.rid 
+	  		left join   tab_organization_info e on a.org_id = e.id
+	  		left join   tp_school_type f on a.school_type = f.id
+	  		
+	  		<!-- 新增用户-->
+			left join tab_user_info c_user on a.create_user = c_user.id
+			left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+			<!-- 修改用户-->
+			left join tab_user_info u_user on a.update_user = u_user.id
+			left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+			
+	  	where 
+	  					a.status != 0 
+	  		and 		a.org_id = #{city_id}
+	  	<if test="school_name != null and school_name != ''">
+	  		and			a.school_name like '%${school_name}%'
+	  	</if>	
+	  	order by 		a.update_time DESC, a.id DESC	
+	</select>
+
+	<select id="selectList" parameterType="Map" resultType="com.edu.erp.model.DataSchool">
+		select 
+			a.*
+	  	from 
+	  		tab_data_school a 
+	  		left join tab_region b on a.province_id = b.rid 
+	  		left join tab_region c on a.city_id = c.rid 
+	  		left join tab_region d on a.area_id = d.rid 
+	  	where 
+	  		a.status = 1
+  		<if test="province_id != null and province_id != -1 and province_id != ''">
+  			and a.province_id = #{province_id}
+  		</if>
+  		<if test="city_id != null and city_id != -1 and city_id != ''">
+  			and a.city_id = #{city_id}
+  		</if>
+  		<if test="area_id != null and area_id != -1 and area_id != ''">
+  			and a.area_id = #{area_id}
+  		</if>
+  		<if test="org_id != null and org_id != ''">
+  			and a.org_id = #{org_id}
+  		</if>
+  		<if test="school_name != null and school_name != ''">
+  			and a.school_name like '%${school_name}%'
+  		</if>
+  		<if test="_school_name != null and _school_name != ''">
+  			and a.school_name = #{_school_name}
+  		</if>
+  		<if test="row_num != null and row_num != ''">
+			and rownum = #{row_num}
+		</if>
+		order by id desc
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.DataSchool">
+		insert into tab_data_school
+		(
+			id,
+			school_name,
+			simple_name,
+			school_type,
+			linkman,
+			phone,
+			description,
+			province_id,
+			city_id,
+			area_id,
+			org_id,
+			address,
+			status,
+			update_user, 
+        	update_time,
+        	create_user, 
+        	create_time
+		)
+		VALUES
+		(
+			seq_tab_data_school.nextval,
+			#{school_name,jdbcType=VARCHAR},
+			#{simple_name,jdbcType=VARCHAR},
+			#{school_type,jdbcType=NUMERIC},
+			#{linkman,jdbcType=VARCHAR},
+			#{phone,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{province_id,jdbcType=NUMERIC},
+			#{city_id,jdbcType=NUMERIC},
+			#{area_id,jdbcType=NUMERIC},
+			#{org_id,jdbcType=NUMERIC},
+			#{address,jdbcType=VARCHAR},
+			#{status,jdbcType=NUMERIC},
+			#{update_user,jdbcType=NUMERIC},
+			#{update_time,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.DataSchool">
+		update tab_data_school 
+		set
+			school_name=#{school_name,jdbcType=VARCHAR},
+			simple_name=#{simple_name,jdbcType=VARCHAR},
+			school_type=#{school_type,jdbcType=VARCHAR},
+			linkman=#{linkman,jdbcType=VARCHAR},
+			phone=#{phone,jdbcType=VARCHAR},
+			description=#{description,jdbcType=VARCHAR},
+			province_id=#{province_id,jdbcType=NUMERIC},
+			city_id=#{city_id,jdbcType=NUMERIC},
+			area_id=#{area_id,jdbcType=NUMERIC},
+			address=#{address,jdbcType=VARCHAR},
+			update_user=#{update_user,jdbcType=VARCHAR},
+			update_time=#{update_time,jdbcType=VARCHAR}
+		where 
+			id = #{id}
+	</update>
+	<update id="changeStatus" parameterType="java.util.Map" >
+		update tab_data_school t
+		set t.status = ${status} 
+		where t.id in (${ids})
+	</update>	
+</mapper>

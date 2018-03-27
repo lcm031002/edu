@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TeacherInfoDao">
+
+	<resultMap type="com.edu.erp.model.Teacher" id="teacherMap">
+		<id property="id" column="id" />
+		<result property="encoding" column="encoding" />
+		<result property="teacher_name" column="teacher_name" />
+		<result property="is_pluralistic" column="is_pluralistic" />
+		<result property="photo" column="photo" />
+		<result property="description" column="description" />
+		<result property="phone" column="phone" />
+		<result property="invation_code" column="invation_code" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_user_name" column="update_user_name" />
+		<result property="update_time" column="update_time" />
+		<result property="employee_id" column="employee_id" />
+		<result property="employee_name" column="employee_name" />
+		<result property="sex" column="sex" />
+		<result property="city_name" column="city_name" />
+		<result property="teacher_age" column="teacher_age" />
+		<result property="seniority" column="seniority" />
+		<result property="teacher_type" column="teacher_type" />
+		<result property="nickname" column="nickname" />
+		<result property="subject" column="subject" />
+		<result property="bu_id" column="bu_id" />
+		<result property="bu_name" column="bu_name" />
+		<result property="synchro_dingdang" column="synchro_dingdang" />
+		<result property="synchro_details" column="synchro_details" />
+		<result property="email" column="email" />
+		<result property="old_id" column="old_id" />
+		<result property="subject_name" column="subject_name" />
+		<collection property="teacherSubjectList" column="teacher_id"
+			javaType="ArrayList" ofType="com.edu.erp.model.TeacherSubject">
+			<id property="id" column="c_id" />
+			<association property="subject" column="subject_id"
+				javaType="com.edu.erp.model.TPSubject">
+				<id property="id" column="d_id" />
+				<result property="encoding" column="d_encoding" />
+				<result property="name" column="d_name" />
+			</association>
+			<association property="bu" column="bu_id"
+				javaType="com.edu.erp.model.OrganizationInfo">
+				<id property="id" column="e_id" />
+				<result property="org_name" column="bu_name" />
+			</association>
+			<association property="grade" column="grade_id"
+				javaType="com.edu.erp.model.Grade">
+				<id property="id" column="f_id" />
+				<result property="grade_name" column="grade_name" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<select id="queryOrderTeacher" resultMap="teacherMap"
+		parameterType="java.lang.Long">
+		select a.id             id,
+		       a.city_id        city_id,
+		       a.create_time    create_time,
+		       a.encoding       encoding,
+		       a.teacher_name   teacher_name,
+		       a.status         status,
+		       a.photo          photo,
+		       a.sex            sex,
+		       a.create_time    create_time,
+		       a.update_time    update_time,
+		       a.description    description,
+		       a.phone          phone,
+		       a.invation_code  invation_code,
+		       a.is_pluralistic is_pluralistic,
+		       b.id             employee_id,
+		       b.employee_name  employee_name,
+		       c.org_name       city_name
+		  from tab_teacher_info a
+		  left join tab_employee_info b
+		    on a.employee_id = b.id
+		  left join tab_organization_info c
+		    on a.city_id = c.id
+		 where a.id in (select distinct tc.teacher_id
+		                  from t_order_course toc
+		                  left join t_course tc
+		                    on tc.id = toc.course_id
+						 where toc.order_id = #{orderId,jdbcType=NUMERIC})
+	</select>
+	<select id="queryOne" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.Teacher">
+		select a.id id,
+		a.city_id city_id,
+		a.create_time create_time,
+		a.encoding encoding,
+		a.teacher_name teacher_name,
+		a.status status,
+		a.photo photo,
+		a.sex sex,
+		a.create_time create_time,
+		a.update_time update_time,
+		a.description description,
+		a.phone phone,
+		a.invation_code invation_code,
+		a.is_pluralistic is_pluralistic,
+		b.id employee_id,
+		b.employee_name employee_name,
+		c.org_name city_name
+		from tab_teacher_info a
+		left join tab_employee_info b
+		on a.employee_id = b.id
+		left join tab_organization_info c
+		on a.city_id = c.id
+		where a.id = #{teacherId}
+	</select>
+
+	<!-- 查询教师信息列表 -->
+	<select id="page" resultMap="teacherMap" parameterType="java.util.Map">
+		select a.*,
+		decode(a.is_sended,
+              '0',
+              '未同步',
+              '1',
+              '已同步',
+              '2',
+              '同步失败',
+              '未同步') synchro_dingdang, 
+        a.syn_exception synchro_details,
+		b.org_name as city_name, c.employee_name,
+		b1.org_name as bu_name,
+		c_emp.employee_name as create_user_name, u_emp.employee_name as
+		update_user_name,
+		(select wm_concat(ts.name)
+			 from tp_subject ts, tab_teacher_subject_ref ttsr
+			where ttsr.teacher_id = a.id
+			  and ttsr.subject_id = ts.id) as subject_name
+		from tab_teacher_info a
+		left join tab_organization_info
+		b on a.city_id = b.id and b.status = 1
+		left join tab_organization_info
+		b1 on a.bu_id = b1.id and b1.status = 1
+		left join tab_employee_info c on
+		a.employee_id = c.id
+		<!-- 新增用户 -->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join
+		tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户 -->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join
+		tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		where a.status != 0
+		<if test="teacher_name != null and teacher_name != ''">
+			and a.teacher_name like '%' || #{teacher_name} || '%'
+		</if>
+		<if test="encoding != null and encoding != ''">
+			and a.encoding like '%' || #{encoding} || '%'
+		</if>
+		<if test="employee_name != null and employee_name != ''">
+			and c.employee_name like '%' || #{employee_name} || '%'
+		</if>
+		<if test="employee_no != null and employee_no != ''">
+			and c.encoding like '%' || #{employee_no} || '%'
+		</if>
+		<if test="teacher_type != null and teacher_type  != ''">
+			and a.teacher_type =#{teacher_type}
+		</if>
+		<if test="search_info != null and search_info != ''">
+			and (
+				c.encoding like '%' || #{search_info} || '%' 
+				or
+				c.employee_name like '%' || #{search_info} || '%'
+				or
+				a.encoding like '%' || #{search_info} || '%'
+				or
+				a.teacher_name like '%' || #{search_info} || '%'
+			)
+		</if>
+		<if test="bu_id != null and bu_id != '' and bu_id!=-1">
+			and (a.bu_id = #{bu_id} or exists (select 1 from tab_teacher_team_ref tttr where tttr.teacher_id = a.id and tttr.bu_id =#{bu_id})) and a.old_id is not null
+		</if>
+		<if test="status != null and status != ''">
+			and a.status = #{status}
+		</if>
+		<if test="subjectId != null">
+			and exists (select 1
+				from tab_teacher_subject_ref ttsr
+			where ttsr.teacher_id = a.id
+			<if test="bu_id != null">
+				and (ttsr.bu_id = #{bu_id} or exists (select 1 from tab_teacher_team_ref tttr where tttr.teacher_id = a.id and tttr.bu_id =#{bu_id}))
+			</if>
+				and ttsr.subject_id = #{subjectId})
+		</if>
+		<if test="onlyValidTeacher == 'Y'.toString()">
+			and a.status in (1,2,3)
+		</if>
+		<if test="teach_group_id != null">
+			and exists(select 1
+			from tab_teach_group ttg, tab_teach_group_ref ttgr
+			where ttg.id = ttgr.teach_group_id
+			and ttgr.teacher_id = a.id
+			and ttg.id = #{teach_group_id, jdbcType=NUMERIC})
+		</if>
+		<if test="courseDate != null and courseDate != ''">
+			and not exists
+			(select 1
+			from t_student_schedule_plan tssp
+			where tssp.teacher_id = a.id
+			and tssp.status = 2
+			and tssp.course_date = to_date(#{courseDate}, 'yyyy-MM-dd')
+			<if test="startTime != null and startTime != '' and (endTime == null or endTime == '')">
+			and (#{startTime} between tssp.start_time and tssp.end_time)
+			</if>
+			<if test="(startTime == null or startTime == '') and endTime != null and endTime != ''">
+				and (#{endTime} between tssp.start_time and tssp.end_time)
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (#{startTime} between tssp.start_time and tssp.end_time or
+				#{endTime} between tssp.start_time and tssp.end_time)
+			</if>
+			)
+			and not exists
+			(select 1
+			from t_attendance tatt
+			where tatt.teacher_id = a.id
+			and tatt.attend_type = 28
+			and to_char(to_date(tatt.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') = #{courseDate}
+			<if test="startTime != null and startTime != '' and (endTime == null or endTime == '')">
+				and (#{startTime} between tatt.start_time and tatt.end_time)
+			</if>
+			<if test="(startTime == null or startTime == '') and endTime != null and endTime != ''">
+				and (#{endTime} between tatt.start_time and tatt.end_time)
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (#{startTime} between tatt.start_time and tatt.end_time or
+				#{endTime} between tatt.start_time and tatt.end_time)
+			</if>
+			)
+			and not exists
+			(select 1
+			from t_course_scheduling tcs
+			where tcs.teacher_id = a.id
+			and to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') = #{courseDate}
+			<if test="startTime != null and startTime != '' and (endTime == null or endTime == '')">
+				and (#{startTime} between tcs.start_time and tcs.end_time)
+			</if>
+			<if test="(startTime == null or startTime == '') and endTime != null and endTime != ''">
+				and (#{endTime} between tcs.start_time and tcs.end_time)
+			</if>
+			<if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+				and (#{startTime} between tcs.start_time and tcs.end_time or
+				#{endTime} between tcs.start_time and tcs.end_time)
+			</if>
+			)
+		</if>
+		order by a.id DESC
+	</select>
+
+	<select id="selectList" parameterType="java.util.Map" resultMap="teacherMap">
+		select a.*, b.org_name as city_name, c.id as c_id, c.teacher_id,
+		c.subject_id,
+		d.id as d_id, d.encoding as d_encoding, d.name as d_name,
+		e.id as e_id, e.org_name as bu_name, f.id as f_id, f.grade_name
+		from
+		tab_teacher_info a
+		join tab_organization_info b on a.city_id = b.id and
+		b.status = 1
+		left join tab_teacher_subject_ref c on a.id = c.teacher_id
+		left join tp_subject d on c.subject_id = d.id
+		left join
+		tab_organization_info e on c.bu_id = e.id and e.status = 1
+		left join
+		tab_data_grade f on c.grade_id = f.id and f.status = 1
+		where a.status
+		!= 0
+		<if test="city_id != null and city_id != ''">
+			and a.city_id = #{city_id}
+		</if>
+		<if test="teacher_id != null and teacher_id != ''">
+			and a.id = #{teacher_id}
+		</if>
+		<if test="teacher_name != null and teacher_name != ''">
+			and a.teacher_name '%' || #{teacher_name} || '%'
+		</if>
+		<if test="grade_id != null and grade_id != ''">
+			and c.grade_id = #{grade_id}
+		</if>
+		<if test="subject_id != null and subject_id != ''">
+			and c.subject_id = #{subject_id}
+		</if>
+		<if test="valid_status == 'valid'">
+			<!-- 有效状态 -->
+			and a.status in (1,2,3)
+		</if>
+		<if test="ids != null">
+			and a.id in (${ids})
+		</if>
+		<if test="row_num != null and row_num != ''">
+			and rownum &lt;= #{row_num}
+		</if>
+		<!-- 严格匹配 -->
+	 	<if test="strict_teacher_code != null and strict_teacher_code != ''">
+			and  a.encoding = #{strict_teacher_code,jdbcType=VARCHAR}
+		 </if>
+		<if test="teach_group_id != null">
+			and exists(select 1
+				 from tab_teach_group ttg, tab_teach_group_ref ttgr
+				where ttg.id = ttgr.teach_group_id
+			    and ttgr.teacher_id = a.id
+			    and ttg.id = #{teach_group_id, jdbcType=NUMERIC})
+		</if>
+	</select>
+	<select id="list" parameterType="java.util.Map" resultMap="teacherMap">
+		select a.*, b.org_name as city_name, c.id as c_id, c.teacher_id,
+		c.subject_id,
+		d.id as d_id, d.encoding as d_encoding, d.name as d_name,
+		e.id as e_id, e.org_name as bu_name, f.id as f_id, f.grade_name
+		from
+		tab_teacher_info a
+		join tab_organization_info b on a.city_id = b.id and
+		b.status = 1
+		left join tab_teacher_subject_ref c on a.id = c.teacher_id
+		left join tp_subject d on c.subject_id = d.id
+		left join
+		tab_organization_info e on c.bu_id = e.id and e.status = 1
+		left join
+		tab_data_grade f on c.grade_id = f.id and f.status = 1
+		where a.status
+		!= 0
+		<if test="city_id != null and city_id != ''">
+			and a.city_id = #{city_id}
+		</if>
+		<if test="teacher_id != null and teacher_id != ''">
+			and a.id = #{teacher_id}
+		</if>
+		<if test="teacher_name != null and teacher_name != ''">
+			and a.teacher_name '%' || #{teacher_name} || '%'
+		</if>
+		<if test="grade_id != null and grade_id != ''">
+			and c.grade_id = #{grade_id}
+		</if>
+		<if test="subject_id != null and subject_id != ''">
+			and c.subject_id = #{subject_id}
+		</if>
+		<if test="valid_status == 'valid'">
+			<!-- 有效状态 -->
+			and a.status in (1,2,3)
+		</if>
+		<if test="ids != null">
+			and a.id in (${ids})
+		</if>
+		<if test="row_num != null and row_num != ''">
+			and rownum &lt;= #{row_num}
+		</if>
+	</select>
+
+	<select id="selectOne" parameterType="java.util.Map" resultMap="teacherMap">
+		select a.*, b.org_name as city_name, c.id as c_id, c.teacher_id,
+		c.subject_id,
+		d.id as d_id, d.encoding as d_encoding, d.name as d_name,
+		e.id as e_id, e.org_name as bu_name, f.id as f_id, f.grade_name
+		from
+		tab_teacher_info a
+		join tab_organization_info b on a.city_id = b.id and
+		b.status = 1
+		left join tab_teacher_subject_ref c on a.id = c.teacher_id
+		left join tp_subject d on c.subject_id = d.id
+		left join
+		tab_organization_info e on c.bu_id = e.id and e.status = 1
+		left join
+		tab_data_grade f on c.grade_id = f.id and f.status = 1
+		where a.status
+		!= 0
+		and a.id = #{id}
+	</select>
+
+	<select id="queryStudentTeachers" parameterType="com.edu.erp.model.Teacher"
+		resultType="com.edu.erp.model.Teacher">
+		SELECT distinct TTI.*,ts.name as subject_name
+		FROM
+		TAB_ORDER_INFO_DETAIL TOID
+		inner JOIN TAB_TEACHER_INFO TTI
+		ON
+		TOID.TEACHER_ID = TTI.ID
+		left join t_course tc on tc.id =
+		TOID.course_id
+		left join TP_SUBJECT ts on ts.id = tc.subject_id
+		WHERE
+		TOID.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
+		and TOID.business_type
+		= 1
+		and tc.branch_id = #{branchId,jdbcType=NUMERIC}
+	</select>
+
+	<!-- 根据ID查询教师信息对象 -->
+	<select id="selectById" resultType="com.edu.erp.model.Teacher"
+		parameterType="java.lang.String">
+		SELECT T.ID,
+		T.ENCODING,
+		T.TEACHER_NAME,
+		T.CITY_ID,
+		T.PHOTO,
+		T.IS_PLURALISTIC,
+		T.STATUS,
+		T.DESCRIPTION,
+		T.CREATE_USER,
+		T.CREATE_TIME,
+		T.UPDATE_USER,
+		T.UPDATE_TIME,
+		T.employee_id
+		FROM
+		TAB_TEACHER_INFO T
+		WHERE T.STATUS = 1 and T.ID=#{id}
+		ORDER BY T.ID ASC
+	</select>
+
+	<!-- 插入教师信息数据 -->
+	<insert id="toAdd" parameterType="com.edu.erp.model.Teacher">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			SELECT SEQ_TAB_TEACHER_INFO.nextval AS id from dual
+		</selectKey>
+
+		insert into tab_teacher_info t
+		(
+		id,
+		old_id,
+		encoding,
+		teacher_name,
+		city_id,
+		bu_id,
+		photo,
+		is_pluralistic,
+		description,
+		status,
+		employee_id,
+		phone,
+		sex,
+		create_user,
+		create_time,
+		teacher_age,
+		seniority,
+		teacher_type,
+		nickname,
+		email
+		)
+		values
+		(
+		#{id,jdbcType=NUMERIC}, <!--主键序列 -->
+		#{id,jdbcType=NUMERIC}, <!--主键序列 -->
+		trim(#{encoding,jdbcType=VARCHAR}),
+		trim(#{teacher_name,jdbcType=VARCHAR}),
+		#{city_id,jdbcType=NUMERIC},
+		#{bu_id,jdbcType=NUMERIC},
+		#{photo,jdbcType=VARCHAR},
+		#{is_pluralistic,jdbcType=NUMERIC},
+		#{description,jdbcType=VARCHAR},
+		#{status,jdbcType=NUMERIC},
+		#{employee_id,jdbcType=NUMERIC},
+		#{phone,jdbcType=VARCHAR},
+		#{sex,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		sysdate,
+		#{teacher_age,jdbcType=NUMERIC},
+		#{seniority,jdbcType=NUMERIC},
+		#{teacher_type,jdbcType=NUMERIC},
+		#{nickname,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="toUpdate" parameterType="com.edu.erp.model.Teacher">
+		update
+		tab_teacher_info
+		<set>
+			<if test="employee_id != null ">
+				employee_id = #{employee_id,jdbcType=NUMERIC},
+			</if>
+			<if test="encoding != null and encoding != '' ">
+				encoding = #{encoding,jdbcType=VARCHAR},
+			</if>
+			<if test="teacher_name != null and teacher_name != '' ">
+				teacher_name = #{teacher_name,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null and nickname != '' ">
+				nickname = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="teacher_age != null and teacher_age != '' ">
+				teacher_age = #{teacher_age,jdbcType=NUMERIC},
+			</if>
+			<if test="seniority != null  ">
+				seniority = #{seniority,jdbcType=NUMERIC},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=NUMERIC},
+			</if>
+				<if test="sex != null">
+				sex = #{sex,jdbcType=NUMERIC},
+			</if>
+			<if test="teacher_type != null  ">
+				teacher_type = #{teacher_type,jdbcType=NUMERIC},
+			</if>
+				<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="is_pluralistic != null  ">
+				is_pluralistic = #{is_pluralistic,jdbcType=NUMERIC},
+			</if>
+			<if test="city_id != null and city_id != '' ">
+				city_id = #{city_id,jdbcType=NUMERIC},
+			</if><if test="bu_id != null and bu_id != '' ">
+				bu_id = #{bu_id,jdbcType=NUMERIC},
+			</if>
+			<if test="description != null and description != '' ">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=NUMERIC},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email,jdbcType=NUMERIC},
+			</if>
+				old_id = nvl(old_id,id),
+			update_time =sysdate
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+
+	<update id="toChangeStatus" parameterType="java.util.Map"
+		statementType="STATEMENT">
+		update tab_teacher_info t
+		set t.status =
+		${status},update_time=sysdate
+		where t.id in (${ids})
+	</update>
+
+	<update id="genInvation" parameterType="java.util.Map">
+		update tab_teacher_info t
+		set t.invation_code =#{invation_code,jdbcType=VARCHAR},
+		update_user =
+		#{update_user,jdbcType=NUMERIC},
+		update_time=sysdate
+		where t.id = ${id}
+	</update>
+
+	<insert id="insertSubjectRef" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="; end;" separator=";">
+			insert into tab_teacher_subject_ref
+			(
+			id,
+			teacher_id,
+			subject_id,
+			bu_id,
+			status
+			)
+			values
+			(
+			seq_tab_teacher_subject_ref.nextval,
+			#{item.teacher_id},
+			#{item.subject_id},
+			#{item.bu_id},
+			#{item.status}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="toRemoveSubjectRef" parameterType="java.lang.String">
+		delete from
+		tab_teacher_subject_ref
+		where teacher_id in (${_parameter})
+	</delete>
+
+	<update id="setPhoto" parameterType="java.util.Map">
+		update tab_teacher_info t
+		set t.photo = #{photo}
+		where t.id = #{teacher_id}
+	</update>
+
+	<insert id="toAddTemplateTeacherInfo" parameterType="com.edu.erp.model.TEDocTemplateTeacherInfo">
+		insert into
+		t_edoc_template_teacher_info
+		(
+		id,
+		edoc_id,
+		seq,
+		row_no,
+
+		ENCODING,
+		TEACHER_NAME,
+		IS_PLURALISTIC,
+		EMPLOYEE_ENCODING,
+		phone,
+		status_name,
+		create_user,
+		create_time,
+		city_name
+		)
+		values
+		(
+		SEQ_template_teacher_info.nextval,
+		#{edoc_id, jdbcType=NUMERIC},
+		#{seq,
+		jdbcType=NUMERIC},
+		#{row_no, jdbcType=NUMERIC},
+		#{encoding,
+		jdbcType=VARCHAR},
+		#{teacher_name, jdbcType=VARCHAR},
+		#{is_pluralistic,
+		jdbcType=VARCHAR},
+		#{employee_encoding, jdbcType=VARCHAR},
+		#{phone,
+		jdbcType=VARCHAR},
+		#{status_name, jdbcType=VARCHAR},
+		#{create_user,
+		jdbcType=NUMERIC},
+		sysdate,
+		#{city_name, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="toCheckTemplateTeacherInfo" statementType="CALLABLE"
+		parameterType="java.util.Map">
+		{call
+		pkg_async_task.p_check_template_teacher_info(#{edoc_id, mode=IN,
+		jdbcType=NUMERIC},
+		#{edoc_type, mode=IN, jdbcType=NUMERIC},
+		#{error_code, mode=OUT, jdbcType=NUMERIC},
+		#{error_desc, mode=OUT,
+		jdbcType=VARCHAR}
+		)
+		}
+	</select>
+	<select id="getAsyn" parameterType="map" resultType="map">
+		select a.id,
+		a.encoding,
+		a.teacher_name,
+		a.city_id,
+		a.status,
+		a.photo,
+		a.is_pluralistic,
+		a.create_user,
+		to_char(a.create_time,'yyyy-mm-dd
+		HH24:mi:ss') create_time,
+		a.update_user,
+		to_char(a.update_time,'yyyy-mm-dd HH24:mi:ss') update_time,
+		a.old_id,
+		a.sex,
+		a.phone,
+		a.employee_id,
+		a.wechat,
+		a.email,
+		a.invation_code
+		from
+		tab_teacher_info a
+		where a.status != 0
+		and nvl(update_time,create_time)
+		>=to_date(#{last_update_time,jdbcType=VARCHAR},'yyyy-mm-dd
+		HH24:mi:ss')
+	</select>
+	
+	<select id="isEncodingExisted" parameterType="com.edu.erp.model.Teacher" resultType="java.lang.Integer">
+		select count(0) from tab_teacher_info
+		where status != 0
+		  <if test="id !=null and id!=''">
+		  	and id != #{id}
+		  </if>
+		  and encoding = #{encoding}
+		  and city_id = #{city_id}
+		  
+	</select>
+	
+	<select id="isPhoneExisted" parameterType="com.edu.erp.model.Teacher" resultType="java.lang.Integer">
+		select count(0) from tab_teacher_info
+		where status != 0
+		  <if test="id !=null and id!=''">
+		  	and id != #{id}
+		  </if>
+		  and phone = #{phone}
+		  and city_id = #{city_id}
+	</select>
+
+	<select id="searchTeacherSubjects" parameterType="int" resultType="map">
+		select distinct * from (select ts.id,t.teacher_id,t.grade_id,ts.name from tab_teacher_subject_ref t
+		left join tp_subject ts on ts.id = t.subject_id
+		 where t.status=1 and t.teacher_id=#{teacherId})
+	</select>
+
+	<!-- 查询老师课程表 -->
+	<select id="queryCourseSched" parameterType="map" resultType="map">
+			select tcou.course_no          as "courseNo",
+						 tcou.course_name         as "courseName",
+						 toi.org_name             as "branchName",
+						 tts.course_season_name   as "seasonName",
+						 tdg.grade_name           as "gradeName",
+						 ts.name                  as "subjectName",
+						 tcou.start_date          as "startDate",
+						 tcou.end_date            as "endDate",
+						 tcou.start_time          as "startTime",
+						 tcou.end_time            as "endTime",
+						 tcou.attend_class_period as "attendClassPeriod"
+				from t_course tcou
+				left join tab_organization_info toi
+					on toi.id = tcou.branch_id
+				left join tab_time_season tts
+					on tts.id = tcou.season_id
+				left join tab_data_grade tdg
+					on tdg.id = tcou.grade_id
+				left join tp_subject ts
+					on ts.id = tcou.subject_id
+			 where tcou.business_type = 1
+				 and nvl(tcou.is_textbooks, 0) = 0
+				 and tcou.status = 1
+				 and to_char(sysdate, 'yyyy-MM-dd') between tcou.start_date and
+						 tcou.end_date
+				 and tcou.teacher_id = #{teacherId}
+				 <if test="branchId != null">
+					 and tcou.branch_id = #{branchId}
+				 </if>
+				 <if test="seasonId != null">
+					 and tcou.season_id = #{seasonId}
+				 </if>
+		     <if test="gradeId != null">
+					 and tcou.grade_id = #{gradeId}
+				 </if>
+		     <if test="subjectId != null">
+					 and tcou.subject_id = #{subjectId}
+				 </if>
+		     <if test="courseName != null and courseName != ''">
+					 and tcou.course_name like '%${courseName}%'
+				 </if>
+			union all
+			select tcou.course_no as "courseNo",
+						 max(tcou.course_name) as "courseName",
+						 max(toi.org_name) as "branchName",
+						 max(tts.course_season_name) as "seasonName",
+						 max(tdg.grade_name) as "gradeName",
+						 max(ts.name) as "subjectName",
+						 max(tcou.start_date) as "startDate",
+						 max(tcou.end_date) as "endDate",
+						 min(tatt.start_time) as "startTime",
+						 min(tatt.end_time) as "endTime",
+						 null as "attendClassPeriod"
+				from t_course tcou
+				left join t_order_course toc
+					on toc.course_id = tcou.id
+				left join t_attendance tatt
+					on tatt.order_course_id = toc.id
+				left join tab_organization_info toi
+					on toi.id = tcou.branch_id
+				left join tab_time_season tts
+					on tts.id = tcou.season_id
+				left join tab_data_grade tdg
+					on tdg.id = tcou.grade_id
+				left join tp_subject ts
+					on ts.id = tatt.subject_id
+			 where tcou.business_type = 2
+				 and nvl(tcou.is_textbooks, 0) = 0
+				 and tcou.status = 1
+				 and to_char(sysdate, 'yyyy-MM-dd') between tcou.start_date and
+						 tcou.end_date
+				 and toc.status = 1
+				 and tatt.teacher_id = #{teacherId}
+				<if test="branchId != null">
+					and tcou.branch_id = #{branchId}
+				</if>
+				<if test="gradeId != null">
+					and tcou.grade_id = #{gradeId}
+				</if>
+				<if test="subjectId != null">
+					and tatt.subject_id = #{subjectId}
+				</if>
+				<if test="courseName != null and courseName != ''">
+					and tcou.course_name like '%${courseName}%'
+				</if>
+			 group by tcou.course_no
+	</select>
+
+	<!-- 查询老师日程安排 -->
+	<select id="queryTeacherSched" parameterType="map" resultType="map">
+		select to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') as "courseDate",
+					 tcs.teacher_id as "teacherId",
+					 tcs.start_time as "startTime",
+					 tcs.end_time as "endTime",
+					 ts.name as "subjectName",
+					 tcou.course_name as "courseName",
+					 toi.org_name as "branchName",
+					 tr.room_name as "roomName",
+					 '' as "studentName",
+					 (to_date(substr(tcs.start_time, 1, 2), 'hh24') - to_date('07:00', 'hh24:mi')) * 24 * 60 as "yIndex",
+					 (to_date(tcs.start_time, 'hh24:mi') - to_date('07:00', 'hh24:mi')) * 24 * 60 as "yAxis",
+					 decode(to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'd'), 7, 0, to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'd')) as "xAxis",
+					 (to_date(tcs.end_time, 'hh24:mi') -
+					 to_date(tcs.start_time, 'hh24:mi')) * 24 * 60 as "courseLen",
+					 '正' as "schedStatusName",
+					 '' as "courseAdmin",
+					 nvl(toi.short_org_name, toi.org_name) as "shortBranchName",
+					 tcou.grade_id as "gradeId",
+       		 tdg.grade_name as "gradeName"
+			from t_course_scheduling tcs
+			left join t_course tcou
+				on tcou.id = tcs.course_id
+			left join tab_organization_info toi
+				on toi.id = tcou.branch_id
+			left join tp_subject ts
+				on ts.id = tcs.subject_id
+			left join t_course_room_rel tcrr
+				on tcrr.course_id = tcou.id
+			 and tcrr.seq = tcs.course_times
+			left join t_room tr
+				on tcrr.room_id = tr.id
+			left join tab_data_grade tdg
+    		on tdg.id = tcou.grade_id
+		 where tcou.business_type = 1
+		   and tcs.start_time >= '07:00'
+		   and tcs.end_time >= '07:00'
+			 and to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') between
+					 #{startDate} and #{endDate}
+			 and tcs.teacher_id = #{teacherId}
+		union all
+		select to_char(to_date(tatt.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') as "courseDate",
+					 tatt.teacher_id as "teacherId",
+					 tatt.start_time as "startTime",
+					 tatt.end_time as "endTime",
+					 ts.name as "subjectName",
+					 tcou.course_name as "courseName",
+					 toi.org_name as "branchName",
+					 '' as "roomName",
+					 tsi.student_name as "studentName",
+					 (to_date(substr(tatt.start_time, 1, 2), 'hh24') - to_date('07:00', 'hh24:mi')) * 24 * 60 as "yIndex",
+					 (to_date(tatt.start_time, 'hh24:mi') - to_date('07:00', 'hh24:mi')) * 24 * 60 as "yAxis",
+					 decode(to_char(to_date(tatt.course_date, 'yyyyMMdd'), 'd'), 7, 0, to_char(to_date(tatt.course_date, 'yyyyMMdd'), 'd')) as "xAxis",
+					 (to_date(tatt.end_time, 'hh24:mi') -
+					 to_date(tatt.start_time, 'hh24:mi')) * 24 * 60 as "courseLen",
+					 '正' as "schedStatusName",
+					 tei.employee_name as "courseAdmin",
+       		 nvl(toi.short_org_name, toi.org_name) as "shortBranchName",
+       		 tsi.grade_id as "gradeId",
+       		 tdg.grade_name as "gradeName"
+			from t_attendance tatt
+			left join tab_student_info tsi
+				on tsi.id = tatt.student_id
+			left join t_order_course toc
+				on toc.id = tatt.order_course_id
+			left join t_course tcou
+				on tcou.id = toc.course_id
+			left join tab_organization_info toi
+				on toi.id = tatt.attend_branch_id
+			left join tp_subject ts
+				on ts.id = tatt.subject_id
+			left join tab_employee_info tei
+    		on tei.id = tatt.counselor_id
+    	left join tab_data_grade tdg
+    	  on tdg.id = tsi.grade_id
+		 where tcou.business_type = 2
+			 and tatt.attend_type in (28, 21)
+			 and tatt.start_time >= '07:00'
+		   and tatt.end_time >= '07:00'
+			 and to_char(to_date(tatt.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') between
+					 #{startDate} and #{endDate}
+			 and tatt.teacher_id = #{teacherId}
+		union all
+		select to_char(tssp.course_date, 'yyyy-MM-dd') as "courseDate",
+					 tssp.teacher_id as "teacherId",
+					 tssp.start_time as "startTime",
+					 tssp.end_time as "endTime",
+					 tssp.subject_name as "subjectName",
+					 '' as "courseName",
+					 tsai.class_place as "branchName",
+					 '' as "roomName",
+					 tsi.student_name as "studentName",
+					 (to_date(substr(tssp.start_time, 1, 2), 'hh24:mi') - to_date('07:00', 'hh24:mi')) * 24 * 60 as "yIndex",
+					 (to_date(tssp.start_time, 'hh24:mi') - to_date('07:00', 'hh24:mi')) * 24 * 60 as "yAxis",
+					 decode(to_char(tssp.course_date, 'd'), 7, 0, to_char(tssp.course_date, 'd')) as "xAxis",
+					 (to_date(tssp.end_time, 'hh24:mi') -
+					 to_date(tssp.start_time, 'hh24:mi')) * 24 * 60 as "courseLen",
+					 '预' as "schedStatusName",
+					 tsai.course_admin as "courseAdmin",
+       		 nvl(toi.short_org_name, tsai.class_place) as "shortBranchName",
+       		 tsi.grade_id as "gradeId",
+       		 tdg.grade_name as "gradeName"
+			from t_student_schedule_plan tssp
+			left join t_schedule_apply_info tsai
+				on tsai.id = tssp.apply_id
+			left join tab_student_info tsi
+				on tsi.id = tsai.student_id
+			left join tab_organization_info toi
+    		on toi.id = tsai.branch_id
+    	left join tab_data_grade tdg
+    		on tdg.id = tsi.grade_id
+		 where tssp.status = 2
+		   and tssp.start_time >= '07:00'
+		   and tssp.end_time >= '07:00'
+			 and tssp.course_date between to_date(#{startDate}, 'yyyy-MM-dd') and
+       	to_date(#{endDate}, 'yyyy-MM-dd')
+			 and tssp.teacher_id = #{teacherId}
+	</select>
+
+	<insert id="insertTeamRef" parameterType="com.edu.erp.model.TeacherTeamRel">
+			insert into TAB_TEACHER_TEAM_REF
+			(
+			id,
+			teacher_id,
+			bu_id
+			)
+			values
+			(
+			seq_tab_teacher_team_ref.nextval,
+			#{teacherTeamRel.teacherId},
+			#{teacherTeamRel.buId}
+			)
+	</insert>
+
+	<select id="searchTeacherTeam" parameterType="int" resultType="com.edu.erp.model.TeacherTeamRel">
+		select t.id as id,t.teacher_id as teacherId,t.bu_id as buId,toi.org_name as org_name from tab_teacher_team_ref t
+		left join tab_organization_info toi on t.bu_id = toi.id
+		where t.teacher_id=#{teacherId}
+	</select>
+
+	<delete id="toRemoveTeamRef" parameterType="long">
+		delete from
+		TAB_TEACHER_TEAM_REF
+		where teacher_id =#{teacherId}
+	</delete>
+
+</mapper>

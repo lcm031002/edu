@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.MTCourseDao">
+	<resultMap type="com.edu.erp.model.TMoreTeacherCourse" id="MTCourseMap">
+		<id property="id" column="id"/>
+		<result property="course_name" column="course_name"/>
+		<result property="teacher_id" column="teacher_id"/>
+		<result property="course_id" column="course_id"/>
+		<result property="teacher_name" column="teacher_names"/>
+		<result property="course_count" column="course_count"/>
+		<result property="unit_price" column="unit_price"/>
+		<result property="hour_len" column="hour_len"/>
+		<result property="attend_class_period" column="attend_class_period"/>
+		<result property="start_date" column="start_date"/>
+		<result property="end_date" column="end_date"/>
+		<result property="start_time" column="start_time"/>
+		<result property="end_time" column="end_time"/>
+		<result property="is_sended" column="is_sended"/>
+		<result property="type" column="type"/>
+		<result property="status" column="status"/>
+		<result property="branch_id" column="branch_id"/>
+		<result property="branch_name" column="branch_name"/>
+		<result property="create_user" column="create_user"/>
+		<result property="create_time" column="create_time"/>
+		<result property="update_user" column="update_user"/>
+		<result property="update_time" column="update_time"/>
+		<result property="operation_type" column="operation_type"/>
+	</resultMap>
+	
+	<resultMap type="com.edu.erp.model.TMoreCourseTeacher" id="MTCourseTeacherMap">
+		<id property="id" column="id"/>
+		<result property="moreCourseId" column="MORE_COURSE_ID"/>
+		<result property="moreCourseTimeId" column="MORE_COURSE_TIME_ID"/>
+		<result property="teacherId" column="TEACHER_ID"/>
+		<result property="teacherName" column="TEACHER_NAME"/>
+		<result property="teacherNo" column="TEACHER_ENCODING"/>
+		<result property="courseName" column="COURSE_NAME"/>
+		<result property="courseNo" column="COURSE_NO"/>
+		<result property="courseId" column="COURSE_ID"/>
+	</resultMap>
+	
+	<resultMap type="com.edu.erp.model.TMoreCourseScheduling" id="MTCourseSchedulingMap">
+		<id property="id" column="id"/>
+		<result property="moreCourseId" column="MORE_COURSE_ID"/>
+		<result property="startTime" column="start_Time"/>
+		<result property="endTime" column="end_Time"/>
+		<result property="courseDate" column="course_Date"/>
+		<result property="weekNumber" column="week_Number"/>
+		<result property="courseTimes" column="course_Times"/>
+		<result property="courseCnt" column="course_Cnt"/>
+		<result property="remark" column="remark"/>
+		<result property="create_user" column="create_user"/>
+		<result property="create_time" column="create_time"/>
+		<result property="update_user" column="update_user"/>
+		<result property="update_time" column="update_time"/>
+	</resultMap>
+	
+	
+	
+	<select id="selectForPage"
+			parameterType="map"
+			resultMap="MTCourseMap">
+		select tmtc.*,tti.teacher_name,tc.id course_id
+		  	from T_MORE_TEACHER_COURSE tmtc
+	 		left join TAB_TEACHER_INFO tti
+		    on tti.id = tmtc.teacher_id
+		    left join t_course tc
+		    on tc.more_teacher_courseid=tmtc.id
+		    and tmtc.teacher_id=tc.teacher_id
+		 where tmtc.status != 0 
+		<if test="teacher != null and teacher != ''">
+			and (tti.id like '%${teacher}%' or tti.encoding like '%${teacher}%' or tti.teacher_name like '%${teacher}%')
+		</if>
+		<if test="mtcourse != null and mtcourse != ''">
+			and (tmtc.course_name like '%${mtcourse}%' or tmtc.id like '%${mtcourse}%')
+		</if>
+		<if test="mtcourse_type != null and mtcourse_type != '' and mtcourse_type != -1 ">
+			and tmtc.type = #{mtcourse_type}
+		</if>
+		<if test="mtcourse_status != null and mtcourse_status != '' and mtcourse_status != -1 ">
+			and tmtc.status = #{mtcourse_status}
+		</if>
+		<if test="branch_id != null and branch_id != -1">
+			AND tmtc.branch_id = #{branch_id}
+		</if>
+		<if test="per_branch_ids != null and per_branch_ids != ''">
+			AND tmtc.branch_id in (${per_branch_ids})
+		</if>
+		order by tmtc.create_time DESC
+	</select>
+	
+	<select id="queryMTCourseById"
+			parameterType="java.lang.Long"
+			resultMap="MTCourseMap">
+		select tmtc.*
+		  from T_MORE_TEACHER_COURSE tmtc
+		 where tmtc.id = #{courseId,jdbcType=NUMERIC}
+	</select>
+	
+	<insert id="addMoreTeacherCourse" parameterType="com.edu.erp.model.TMoreTeacherCourse">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      		SELECT SEQ_T_MORE_TEACHER_COURSE.nextval AS id from dual
+   		</selectKey>
+		insert into T_MORE_TEACHER_COURSE t 
+		(
+			t.id,
+			t.course_name,
+			t.teacher_id,
+			t.unit_price,
+			t.hour_len,
+			t.course_count,
+			t.status,
+			t.type,
+			t.start_date,
+			t.end_date,
+			t.start_time,
+			t.end_time,
+			t.attend_class_period,
+			t.is_sended,
+			t.branch_id,
+			t.branch_name,
+			t.description,
+			t.create_user,
+			t.create_time,
+			t.update_user,
+			t.update_time,
+		  t.operation_type
+		)   
+		values 
+		(
+			#{id,jdbcType=NUMERIC},
+			#{course_name,jdbcType=VARCHAR},
+			#{teacher_id,jdbcType=NUMERIC},
+			#{unit_price,jdbcType=NUMERIC},
+			#{hour_len,jdbcType=NUMERIC},
+			#{course_count,jdbcType=NUMERIC},
+			#{status,jdbcType=NUMERIC},
+			#{type,jdbcType=NUMERIC},
+			#{start_date,jdbcType=VARCHAR},
+			#{end_date,jdbcType=VARCHAR},
+			#{start_time,jdbcType=VARCHAR},
+			#{end_time,jdbcType=VARCHAR},
+			#{attend_class_period,jdbcType=VARCHAR},
+			#{is_sended,jdbcType=NUMERIC},
+			#{branch_id,jdbcType=NUMERIC},
+			(select o.org_name from tab_organization_info o where o.id = #{branch_id,jdbcType=NUMERIC}),
+			#{description,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			sysdate,
+			#{update_user,jdbcType=NUMERIC},
+			sysdate,
+		  #{operation_type,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<insert id="addMoreCourseScheduling" parameterType="com.edu.erp.model.TMoreCourseTeacher">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      		SELECT SEQ_T_MORE_COURSE_SCHEDULING.nextval AS id from dual
+   		</selectKey>
+		insert into T_MORE_COURSE_SCHEDULING t 
+		(
+			t.id,
+			t.MORE_COURSE_ID,
+			t.COURSE_DATE,
+			t.START_TIME,
+			t.END_TIME,
+			t.WEEK_NUMBER,
+			t.COURSE_TIMES,
+			t.COURSE_CNT,
+			t.CREATE_USER,
+			t.CREATE_TIME,
+			t.UPDATE_USER,
+			t.UPDATE_TIME,
+			t.REMARK
+		)   
+		values 
+		(
+			#{id,jdbcType=NUMERIC},
+			#{moreCourseId,jdbcType=NUMERIC},
+			#{courseDate,jdbcType=VARCHAR},
+			#{startTime,jdbcType=VARCHAR},
+			#{endTime,jdbcType=VARCHAR},
+			#{weekNumber,jdbcType=NUMERIC},
+			#{courseTimes,jdbcType=NUMERIC},
+			#{courseCnt,jdbcType=NUMERIC},
+			#{create_user,jdbcType=NUMERIC},
+			sysdate,
+			#{update_user,jdbcType=NUMERIC},
+			sysdate,
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<update id="updateMoreTeacherCourse" parameterType="com.edu.erp.model.TMoreTeacherCourse">
+		update T_MORE_TEACHER_COURSE t 
+		set 
+			t.course_name = #{course_name,jdbcType=VARCHAR},
+			t.teacher_id = #{teacher_id,jdbcType=NUMERIC},
+			t.unit_price = #{unit_price,jdbcType=NUMERIC},
+			t.hour_len = #{hour_len,jdbcType=NUMERIC},
+			t.course_count = #{course_count,jdbcType=NUMERIC},
+ 			t.start_date = #{start_date,jdbcType=VARCHAR},
+			t.end_date = #{end_date,jdbcType=VARCHAR},
+			t.start_time = #{start_time,jdbcType=VARCHAR},
+			t.end_time = #{end_time,jdbcType=VARCHAR},
+			t.attend_class_period = #{attend_class_period,jdbcType=VARCHAR},
+			t.type = #{type,jdbcType=NUMERIC},
+			t.status = #{status,jdbcType=NUMERIC},
+			t.branch_id = #{branch_id,jdbcType=NUMERIC},
+			t.branch_name = (select o.org_name from tab_organization_info o where o.id = #{branch_id,jdbcType=NUMERIC}),
+			t.description = #{description,jdbcType=VARCHAR},
+			t.operation_type = #{operation_type, jdbcType=VARCHAR},
+			t.update_user = #{update_user,jdbcType=NUMERIC},
+			t.update_time = sysdate
+		where t.id = #{id}
+	</update>
+	
+	
+	<select id="queryMTCourseScheduling"
+			parameterType="java.lang.Long"
+			resultMap="MTCourseSchedulingMap">
+		select tmtc.*
+		  from T_MORE_COURSE_SCHEDULING tmtc
+		 where tmtc.MORE_COURSE_ID = #{moreCourseId,jdbcType=NUMERIC}
+		 order by tmtc.course_times
+	</select>
+	
+	<delete id="deleteMoreCourseScheduling"
+			parameterType="java.lang.Long">
+		delete from T_MORE_COURSE_SCHEDULING where MORE_COURSE_ID = #{moreCourseId,jdbcType=NUMERIC}
+	</delete>
+	
+	<insert id="addMoreCourseTeacher"
+			parameterType="com.edu.erp.model.TMoreCourseTeacher"
+	>
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+      		SELECT SEQ_T_MORE_COURSE_TEACHER.nextval AS id from dual
+   		</selectKey>
+		insert into T_MORE_COURSE_TEACHER t 
+		(
+			t.id,
+			t.MORE_COURSE_ID,
+			t.MORE_COURSE_TIME_ID,
+			t.TEACHER_ID
+		)   
+		values 
+		(
+			#{id,jdbcType=NUMERIC},
+			#{moreCourseId,jdbcType=NUMERIC},
+			#{moreCourseTimeId,jdbcType=NUMERIC},
+			#{teacherId,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<select id="queryMoreCourseTeacher" 
+		parameterType="com.edu.erp.model.TMoreCourseTeacher"
+		resultMap="MTCourseTeacherMap">
+		SELECT TMCT.*,
+		       TTI.TEACHER_NAME,
+		       TTI.ENCODING AS TEACHER_ENCODING,
+		       TC.COURSE_NO,
+		       TC.COURSE_NAME
+		  FROM T_MORE_COURSE_TEACHER TMCT
+		  LEFT JOIN TAB_TEACHER_INFO TTI
+		    ON TMCT.TEACHER_ID = TTI.ID
+		  LEFT JOIN T_COURSE TC
+		    ON TC.MORE_TEACHER_COURSEID = TMCT.MORE_COURSE_ID
+		    	and TC.Teacher_Id = TTI.id	
+		 WHERE TMCT.status != 0 
+		 	and TMCT.MORE_COURSE_ID = #{moreCourseId,jdbcType=NUMERIC}
+		   AND TMCT.MORE_COURSE_TIME_ID = #{moreCourseTimeId,jdbcType=NUMERIC}
+	</select>
+	<resultMap type="com.edu.erp.model.TCourse" id="courseMap">
+		<id property="id" column="id"/>
+		<result property="course_no" column="course_no"/>
+		<result property="course_name" column="course_name"/>
+		<result property="business_type" column="business_type"/>
+		<result property="city_id" column="city_id"/>
+		<result property="city_name" column="city_name"/>
+		<result property="branch_id" column="branch_id"/>
+		<result property="branch_name" column="branch_name"/>
+		<result property="season_id" column="season_id"/>
+		<result property="season_name" column="season_name"/>
+		<result property="grade_id" column="grade_id"/>
+		<result property="grade_name" column="grade_name"/>
+		<result property="subject_id" column="subject_id"/>
+		<result property="subject_name" column="subject_name"/>
+		<result property="teacher_id" column="teacher_id"/>
+		<result property="teacher_name" column="teacher_name"/>
+		<result property="teacher_code" column="teacher_code"/>
+		<result property="assteacher_name" column="assteacher_name"/>
+		<result property="assteacher_code" column="assteacher_code"/>
+		<result property="unit_price" column="unit_price"/>
+		<result property="sum_price" column="sum_price"/>
+		<result property="course_count" column="course_count"/>
+		<result property="product_type" column="product_type"/>
+		<result property="verify_status" column="verify_status"/>
+		<result property="verify_no" column="verify_no"/>
+		<result property="verify_time" column="verify_time"/>
+		<result property="verify_user" column="verify_user"/>
+		<result property="validaty_date" column="validaty_date"/>
+		<result property="invalidity_date" column="invalidity_date"/>
+		<result property="start_date" column="start_date"/>
+		<result property="end_date" column="end_date"/>
+		<result property="start_time" column="start_time"/>
+		<result property="end_time" column="end_time"/>
+		<result property="hour_len" column="hour_len"/>
+		<result property="course_surplus" column="course_surplus"/>
+		<result property="people_count" column="people_count"/>
+		<result property="actual_people_count" column="actual_people_count"/>
+		<result property="attend_class_period" column="attend_class_period"/>
+		<result property="course_type" column="course_type"/>
+		<result property="type_name" column="type_name"/>
+		<result property="description" column="description"/>
+		<result property="proceed_status" column="proceed_status"/>
+		<result property="status" column="status"/>
+		<result property="is_approve" column="is_approve"/>
+		<result property="create_user" column="create_user"/>
+		<result property="create_time" column="create_time"/>
+		<result property="update_user" column="update_user"/>
+		<result property="update_time" column="update_time"/>
+		<collection property="courseSchoolRefs" column="course_id" 
+			javaType="ArrayList" ofType="com.edu.erp.model.TCourseSchool">
+			<id property="id" column="h_id"/>
+			<association property="organizationInfo" column="school_id" javaType="com.edu.erp.model.OrganizationInfo">
+				<id property="id" column="i_id" />
+				<result property="parent_id" column="i_parent_id" />
+				<result property="org_name" column="i_org_name" />
+				<result property="org_type" column="i_org_type" />
+				<result property="status" column="i_status" />
+				<result property="create_user" column="i_create_user" />
+				<result property="create_time" column="i_create_time" />
+				<result property="update_user" column="i_update_user" />
+				<result property="update_time" column="i_update_time" />
+			</association>
+		</collection>
+	</resultMap>
+	<select id="queryMTCourseCourseList" 
+		parameterType="java.lang.Long"
+		resultMap="courseMap">
+		SELECT DISTINCT TC.*, i.teacher_name,o.org_name as branch_name,i.encoding teacher_code,tti.teacher_name assteacher_name,tti.encoding assteacher_code 
+		FROM T_COURSE TC
+		left join tab_teacher_info i
+		on tc.teacher_id = i.id 
+		left join tab_teacher_info tti
+		on  tti.id=tc.assteacher_id
+		left join tab_organization_info o
+		on o.id = tc.branch_id
+		 WHERE  TC.MORE_TEACHER_COURSEID = #{moreCourseId,jdbcType=NUMERIC}
+	</select>
+	
+	<update id="updateTCourseMTCourse" parameterType="com.edu.erp.model.TCourse">
+		update T_COURSE set MORE_TEACHER_COURSEID = #{more_teacher_courseid,jdbcType=NUMERIC}
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<update id="updateTCourse" parameterType="java.lang.Long">
+		update T_COURSE set MORE_TEACHER_COURSEID = null
+		where MORE_TEACHER_COURSEID = #{moreCourseId,jdbcType=NUMERIC}
+	</update>
+	
+	<delete id="deleteMoreCourseTeacher" parameterType="java.lang.Long">
+		delete from T_MORE_COURSE_TEACHER where MORE_COURSE_ID = #{moreCourseId,jdbcType=NUMERIC}
+	</delete>
+	
+	 <update id="changeStatus" parameterType="java.util.Map" >
+		UPDATE t_more_teacher_course t
+		SET t.status = ${status} ,update_time=sysdate,update_user=${updateUser} 
+		WHERE t.id IN (${ids})
+	</update>
+	
+	<select id="queryTeachersByDoubleCourseId" resultType="long" parameterType="long">
+	     select c.teacher_id
+		  from t_course c
+		 where c.more_teacher_courseid = #{doubleCourseId,jdbcType=NUMERIC}
+		   and exists (select 1
+		          from t_more_teacher_course t
+		         where t.id =   #{doubleCourseId,jdbcType=NUMERIC}
+		           and t.type = 4)
+			union
+			select t.teacher_id
+			  from t_more_teacher_course t
+			 where t.id =   #{doubleCourseId,jdbcType=NUMERIC}
+			   and t.type = 4
+	</select>
+	
+	<select id="queryAssTeachersByDoubleCourseId" resultType="long" parameterType="long">
+	     select c.assteacher_id
+		  from t_course c
+		 where c.more_teacher_courseid = #{doubleCourseId,jdbcType=NUMERIC}
+		   and exists (select 1
+		          from t_more_teacher_course t
+		         where t.id =   #{doubleCourseId,jdbcType=NUMERIC}
+		           and t.type = 3)
+		  union
+				 select c.teacher_id
+		  from t_course c
+		 where c.more_teacher_courseid = #{doubleCourseId,jdbcType=NUMERIC}
+		   and exists (select 1
+		          from t_more_teacher_course t
+		         where t.id =   #{doubleCourseId,jdbcType=NUMERIC}
+		           and t.type = 3)
+	</select>
+
+	<!-- 更新课程同步双师系统结果 -->
+	<update id="updateSendInfo" parameterType="map">
+		update t_more_teacher_course tmtc
+		   set tmtc.is_sended = #{isSended}
+		   <if test="synException != null and synException != ''">
+			   ,tmtc.syn_exception = #{synException}
+		   </if>
+		 where tmtc.id = #{id}
+	</update>
+	
+</mapper>

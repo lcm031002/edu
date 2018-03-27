@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.OrderInfoDetailDao">
+
+	<select id="queryCourseInfoByTeacher"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		SELECT TOID.*,
+		TTI.TEACHER_NAME,
+		<!-- TDD.DATA_NAME AS -->
+		TDD.NAME AS
+		SUBJECT_NAME,
+		TC.SUBJECT_ID as SUBJECT_ID
+		FROM TAB_ORDER_INFO_DETAIL
+		TOID
+		LEFT JOIN TAB_TEACHER_INFO TTI
+		ON TTI.ID = TOID.TEACHER_ID
+		LEFT JOIN
+		T_COURSE TC
+		ON TC.SUBJECT_ID = TOID.COURSE_ID
+		LEFT JOIN
+		<!-- TAB_DATA_DICTIONARY TDD -->
+		TP_SUBJECT TDD
+		ON TDD.ID = TC.SUBJECT_ID
+		WHERE TOID.STUDENT_ID
+		= #{student_id,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="queryCourseInfoDetailByCourseId"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="Map">
+		select  toid.*
+        from tab_order_info_detail toid
+        left join tab_order_info toi
+        on toid.order_id=toi.id 
+        where toid.course_id=#{course_id,jdbcType=NUMERIC} and toi.pay_status=0
+	</select>
+
+	<select id="queryTabOrderInfoDetail"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		select toid.*, tc.course_name, toi.org_name branch_name
+		  from TAB_ORDER_INFO_DETAIL toid
+		  left join tab_organization_info toi
+		  	on toi.id=toid.branch_id
+		  left join t_course tc
+		    on toid.course_id = tc.id
+		 where order_id = #{order_id,jdbcType=NUMERIC}
+	</select>
+
+	<select id="queryOrderDetailInfo"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		SELECT
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.ID
+		        ELSE TOID.ID
+		    END AS ID ,
+		    TOIII.ID AS ORDER_ID ,
+		    TOIII.ENCODING ,
+		    TOIII.STUDENT_ID ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.COURSE_ID
+		        ELSE TOID.COURSE_ID
+		    END AS COURSE_ID ,
+		    TOIII.BUSINESS_TYPE ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.FORMER_UNIT_PRICE
+		        ELSE TOID.FORMER_UNIT_PRICE
+		    END AS FORMER_UNIT_PRICE ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.FORMER_SUM_PRICE
+		        ELSE TOID.FORMER_SUM_PRICE
+		    END AS FORMER_SUM_PRICE ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.DISCOUNT_UNIT_PRICE
+		        ELSE TOID.DISCOUNT_UNIT_PRICE
+		    END AS DISCOUNT_UNIT_PRICE ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.DISCOUNT_SUM_PRICE
+		        ELSE TOID.DISCOUNT_SUM_PRICE
+		    END AS DISCOUNT_SUM_PRICE ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.MANAGE_FEE
+		        ELSE TOID.PRE_FORWARD
+		    END AS PRE_FORWARD ,
+		    COURSE_INFO.START_DATE ,
+		    COURSE_INFO.END_DATE ,
+		    COURSE_INFO.START_TIME ,
+		    COURSE_INFO.END_TIME ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.COURSE_TOTAL_COUNT
+		        ELSE TOID.COURSE_TOTAL_COUNT
+		    END AS COURSE_TOTAL_COUNT ,
+		    COURSE_INFO.TEACHER_ID ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.COURSE_SURPLUS_COUNT
+		        ELSE TOID.COURSE_SURPLUS_COUNT
+		    END AS COURSE_SURPLUS_COUNT ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.SURPLUS_COST
+		        ELSE TOID.SURPLUS_COST
+		    END AS SURPLUS_COST ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.QUIT_FLAG
+		        ELSE TOID.QUIT_FLAG
+		    END AS QUIT_FLAG ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.CREATE_USER
+		        ELSE TOID.CREATE_USER
+		    END AS CREATE_USER ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.CREATE_TIME
+		        ELSE TOID.CREATE_TIME
+		    END AS CREATE_TIME ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.UPDATE_USER
+		        ELSE TOID.UPDATE_USER
+		    END AS UPDATE_USER ,
+		    CASE
+		        WHEN TOIII.PAY_STATUS = 1
+		        THEN TOC.UPDATE_TIME
+		        ELSE TOID.UPDATE_TIME
+		    END AS UPDATE_TIME ,
+		    TOID.EXTEND_COLUMN ,
+		    TOID.EXTEND_COLUMN2 ,
+		    TOID.EXTEND_COLUMN3 ,
+		    TOID.EXTEND_COLUMN4 ,
+		    TOID.V3_MARK ,
+		    TOID.IMMEDIATE_REDUCE ,
+		    COURSE_INFO.COURSE_NAME ,
+		    COURSE_INFO.COURSE_SEASON_NAME ,
+		    COURSE_INFO.SEASON ,
+		    COURSE_INFO.SEASON_ID AS SEASON_ID ,
+		    COURSE_INFO.GRADE_NAME ,
+		    COURSE_INFO.GRADE_ID AS GRADE_ID ,
+		    COURSE_INFO.BRANCH_NAME ,
+		    COURSE_INFO.BRANCH_ID,
+		    COURSE_INFO.BRANCH_ID COURSE_BRANCH_ID,
+		    COURSE_INFO.SUBJECT_NAME ,
+		    COURSE_INFO.SUBJECT_ID AS SUBJECT_ID ,
+		    TTI.TEACHER_NAME ,
+		    TTI.PHOTO AS TEACHER_HEAD ,
+		    COURSE_INFO.COURSE_NO ,
+		    COURSE_INFO.COURSE_COUNT ,
+		    TOC.COURSE_SURPLUS_COUNT AS COURSE_SURPLUS_COUNT_ING ,
+		    TOIII.CHECK_STATUS,
+		    TCOC2.ORDER_COURSE_ID as SRC_ORDER_COURSE_ID,
+		    TOID.rule_id as RULE_ID,
+		    TPR.RULE_NAME as RULE_NAME,
+		    TOID.COURSE_PACK_TYPE,
+		    TOID.COURSE_PACK_PRICE,
+		    tu.UNION_NAME as COURSE_PACK_NAME,
+		    TOID.IS_SEND,
+		    TOC.STATUS,
+		    course_info.is_approve,
+       		tol.status lock_status,
+       		w.combo_name
+		FROM
+		    TAB_ORDER_INFO TOIII LEFT JOIN(
+		        SELECT
+		            ID ,
+		            ORDER_ID ,
+		            COURSE_ID
+		        FROM
+		            T_ORDER_COURSE
+		        WHERE
+		            ORDER_ID = #{order_id,jdbcType=NUMERIC}
+		    UNION SELECT
+		            ID ,
+		            ORDER_ID ,
+		            COURSE_ID
+		        FROM
+		            TAB_ORDER_INFO_DETAIL
+		        WHERE
+		            ORDER_ID = #{order_id,jdbcType=NUMERIC}
+		    ) DETAIL_ROW
+		        ON DETAIL_ROW.ORDER_ID = TOIII.ID LEFT JOIN TAB_ORDER_INFO_DETAIL TOID
+		        ON DETAIL_ROW.ORDER_ID = TOID.ORDER_ID
+		    AND DETAIL_ROW.ID = TOID.ID LEFT JOIN T_ORDER_COURSE TOC
+		        ON TOC.ID = DETAIL_ROW.ID
+		    AND DETAIL_ROW.ORDER_ID = TOC.ORDER_ID LEFT JOIN(
+		        SELECT
+		            TC.ID ,
+		            TC.COURSE_NAME ,
+		            TC.SEASON_ID ,
+		            TTS.COURSE_SEASON_NAME ,
+		            TTS.SEASON AS SEASON ,
+		            TC.GRADE_ID ,
+		            TDG.GRADE_NAME ,
+		            TOOI.ID AS BRANCH_ID ,
+		            TOOI.ORG_NAME AS BRANCH_NAME ,
+		            TDD.NAME AS SUBJECT_NAME ,
+		            TC.ATTEND_CLASS_PERIOD AS ATTEND_CLASS_PERIOD ,
+		            TC.COURSE_NO ,
+		            TC.COURSE_COUNT ,
+		            TC.SUBJECT_ID ,
+		            TC.START_DATE ,
+		            TC.END_DATE ,
+		            TC.START_TIME ,
+		            TC.END_TIME ,
+		            TC.TEACHER_ID,
+                    tc.is_approve
+		        FROM
+		            T_COURSE TC LEFT JOIN TAB_TIME_SEASON TTS
+		                ON TTS.ID = TC.SEASON_ID LEFT JOIN TAB_DATA_GRADE TDG
+		                ON TDG.ID = TC.GRADE_ID LEFT JOIN TAB_ORGANIZATION_INFO TOOI
+		                ON TOOI.ID = TC.BRANCH_ID
+		            AND TOOI.ORG_TYPE = 4 LEFT JOIN TP_SUBJECT TDD
+		                ON TDD.ID = TC.SUBJECT_ID
+		    ) COURSE_INFO
+		        ON COURSE_INFO.ID = DETAIL_ROW.COURSE_ID LEFT JOIN TAB_TEACHER_INFO TTI
+		        ON TTI.ID = COURSE_INFO.TEACHER_ID
+		    LEFT JOIN TC_ORDER_COURSE TCOC
+		        ON TCOC.ORDER_ID = TOC.ORDER_ID
+		    AND TCOC.ORDER_COURSE_ID = TOC.ID
+		    AND TCOC.TRANSFER_FLAG = 1 LEFT JOIN TC_ORDER_COURSE TCOC2
+		        ON TCOC.CHANGE_ID = TCOC2.CHANGE_ID
+		    AND TCOC.ORDER_ID = TCOC2.ORDER_ID
+		    AND TCOC2.TRANSFER_FLAG = 0
+		    LEFT JOIN TAB_PRIVILEGE_RULE TPR ON TPR.ID = TOID.rule_id
+		    left join T_UNION tu on tu.id = TOID.COURSE_PACK_TYPE
+		    left join t_order_lock tol on tol.order_id = TOIII.ID
+		  	left join t_course_combo_wfd w on toid.extend_column2 = w.id 
+		WHERE
+		    TOIII.ID = #{order_id,jdbcType=NUMERIC}
+		    <if test="course_id!=null">
+		    and (TOC.COURSE_ID = #{course_id,jdbcType=NUMERIC} or TOID.COURSE_ID = #{course_id,jdbcType=NUMERIC})
+		    </if>
+		order by TOID.COURSE_PACK_PRICE    
+	</select>
+
+
+	<select id="queryOrderDetailBJKInfo"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+			select oc.id,
+				   o.id as order_id,
+				   o.order_no as encoding,
+				   o.student_id,
+				   o.business_type,
+				   ts.course_season_name,
+			       ps.name as subject_name,
+			       ti.teacher_name,
+			       c.start_time ,
+			       c.end_time,
+			       oc.course_total_count,
+			       nvl(trans.in_times, 0) transfer_in_count,
+			       nvl(trans.out_times, 0) transfer_out_count,
+			       nvl(rm.times, 0) quit_lesson,
+			       att.att_times as attend_count,
+			       oc.course_surplus_count as course_surplus_count_ing,
+			       c.id as course_id
+			  from t_order o
+			  left join t_order_course     oc on o.id = oc.order_id
+			  left join t_course           c  on oc.course_id = c.id
+			  left join tp_subject         ps on c.subject_id = ps.id
+			  left join tab_time_season    ts on c.season_id = ts.id
+			  left join tab_teacher_info   ti on c.teacher_id = ti.id
+			  left join (select  b.order_course_id,
+			                     sum(decode(b.transfer_flag, 0, 1, 0) * b.course_times) out_times,
+			                     sum(decode(b.transfer_flag, 1, 1, 0) * b.course_times) in_times
+			                from t_order_change a join tc_order_course b on a.id = b.change_id
+			               where a.change_type = 2 and a.change_status = 5
+			               group by b.order_course_id) trans on oc.id = trans.order_course_id
+			  left join (select  b.order_course_id,
+			                     sum(b.course_times) times
+			                from t_order_change a, tc_order_course b
+			               where a.id = b.change_id
+			                 and a.change_status = 5
+			                 and a.change_type = 1
+			               group by b.order_course_id) rm on oc.id = rm.order_course_id
+			  left join (select order_course_id,
+			                    sum(decode(a.attend_type, 10, 0, 20, 0, 30, 0, -1, 0, 1)) att_times  --考勤状态需重新考虑
+			               from t_attendance a
+			              group by a.order_course_id) att on att.order_course_id = oc.id
+			  left join tab_organization_info toooi on toooi.id = o.bu_id
+			 where o.business_type = 1 
+			 and o.STUDENT_ID = #{student_id,jdbcType=NUMERIC}
+			 <if test="product_line!=null">
+			 	and toooi.product_line = #{product_line,jdbcType=NUMERIC}
+			 </if>
+			 <if test="branch_id!=null">
+			 and o.branch_id = #{branch_id,jdbcType=NUMERIC}
+			 </if>
+			 <if test="branchs!=null">
+			 and o.branch_id in 
+	 			<foreach item="item" index="index" collection="branchs" open="(" separator="," close=")">  
+			  		#{item} 
+			 	</foreach>
+			 </if>
+			 and o.order_status = 1
+			 <if test=" season_id != null">
+				AND c.SEASON_ID = #{season_id,jdbcType=NUMERIC}
+			 </if>
+			 <if test="subject_id != null">
+				AND c.SUBJECT_ID = #{subject_id,jdbcType=NUMERIC}
+			 </if>
+	</select>
+
+	<select id="queryOrderDetailYDYInfo"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		<!-- SELECT TDD.DATA_NAME as subject_name, -->
+		SELECT TDD.NAME as subject_name,
+		       TC.SUBJECT_ID,
+		       TOID.*,
+		       TTI.TEACHER_NAME,
+		       ATTEND_INFO.ATTEND_COUNT,
+		       toc.course_surplus_count as course_surplus_count_ing,
+		       toi.check_status,
+		       toi.pay_status,
+		       TC.id as course_id
+		  FROM TAB_ORDER_INFO_DETAIL TOID
+		  LEFT JOIN T_COURSE TC
+		    ON TC.ID = TOID.COURSE_ID
+		  <!-- LEFT JOIN TAB_DATA_DICTIONARY TDD -->
+		  LEFT JOIN TP_SUBJECT TDD
+		    ON TDD.ID = TC.SUBJECT_ID
+		   <!-- AND TDD.DATA_TYPE = 'TYPE_KM' -->
+		  LEFT JOIN TAB_TEACHER_INFO TTI
+		    ON TTI.ID = TOID.TEACHER_ID
+		  LEFT JOIN (select t.order_course_id as  order_detail_id,
+					       count(t.id) as attend_count
+					  from t_attendance t
+					 where t.attend_type in (2, 3, 4, 5, 6, 7, 8, 9)
+					 group by t.order_course_id) ATTEND_INFO
+		    ON ATTEND_INFO.ORDER_DETAIL_ID = TOID.ID
+		  left join t_order_course toc on toc.id = toid.id
+		  left join tab_order_info toi on toi.id = toid.order_id
+		  left join tab_organization_info toooi on toooi.id = toi.bu_id
+		 WHERE TOID.STUDENT_ID = #{student_id,jdbcType=NUMERIC}
+		 <if test="product_line!=null">
+			 	and toooi.product_line = #{product_line,jdbcType=NUMERIC}
+		 </if>
+		   AND TOID.BUSINESS_TYPE = 2
+		   <!-- and toi.valid_status = 1 -->
+		<if test="subject_id != null">
+		   AND TC.SUBJECT_ID = #{subject_id,jdbcType=NUMERIC}
+		</if>
+	</select>
+
+	<select id="queryOrderDetailWFDInfo"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		SELECT TOID.*,
+		       ATTD.attend_count,
+		       toc.course_surplus_count as course_surplus_count_ing,
+		       toi.check_status,
+		       toi.pay_status,
+		       toi.valid_status,
+		       toc.course_id,
+		       tc.course_name,
+		       w.combo_name,
+		       w.id combo_id
+		  FROM TAB_ORDER_INFO_DETAIL TOID
+		  LEFT JOIN (select t.order_course_id as  order_detail_id,
+					       count(t.id) as attend_count
+					  from t_attendance t
+					 where t.attend_type in (31)
+					 and t.TS_FLAG = 'S'
+					 group by t.order_course_id) ATTD
+		    ON ATTD.ORDER_DETAIL_ID = TOID.ID
+		  left join t_order_course toc
+		    on toc.id = toid.id
+		  left join t_order_course_combo occ
+		      on toc.id = occ.order_course_id
+		  left join t_course_combo_wfd w
+		      on toid.EXTEND_COLUMN2 = w.id
+		  join t_course tc
+		    on tc.id = toid.course_id
+		  left join tab_order_info toi
+		    on toi.id = toid.order_id
+		  left join tab_organization_info toooi on toooi.id = toi.bu_id
+		 WHERE TOID.STUDENT_ID = #{student_id,
+		 jdbcType = NUMERIC} AND TOID.BUSINESS_TYPE = 3
+		 and toooi.product_line = #{product_line,jdbcType=NUMERIC}
+		   AND TOID.create_time BETWEEN #{beginDate, jdbcType = DATE}
+		   AND #{endDate, jdbcType = DATE}
+		    <if test="branchs!=null">
+			 and toi.branch_id in 
+	 			<foreach item="item" index="index" collection="branchs" open="(" separator="," close=")">  
+			  		#{item} 
+			 	</foreach>
+			 </if>
+		  <!--  and toi.valid_status = 1 -->
+	</select>
+	
+	<select id="updateOrderWfdStardate" parameterType="HashMap" statementType="CALLABLE">
+	     <![CDATA[ 
+	      { call 
+	       pkg_wfd_change.p_change_startdate(
+	          #{order_detail_id,mode=IN,jdbcType=NUMERIC},
+	          to_date(#{start_date,mode=IN,jdbcType=DATE},'yyyy-mm-dd'),
+	          #{end_date,mode=OUT,jdbcType=VARCHAR},
+	          #{err_code,mode=OUT,jdbcType=NUMERIC},
+	          #{err_msg,mode=OUT,jdbcType=VARCHAR}
+	        )
+	    }
+		]]>
+	</select>
+
+	<select id="queryStudentOrderDetailInfo"
+		resultType="com.edu.erp.model.TabOrderInfoDetail"
+		parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		SELECT TOID.*,
+		       COURSE_INFO.COURSE_NAME,
+		       COURSE_INFO.COURSE_SEASON_NAME,
+		       COURSE_INFO.SEASON,
+		       COURSE_INFO.GRADE_NAME,
+		       COURSE_INFO.BRANCH_NAME,
+		       COURSE_INFO.SUBJECT_NAME,
+		       w.combo_name
+		  FROM TAB_ORDER_INFO_DETAIL TOID
+		  LEFT JOIN (SELECT TC.ID,
+					       TC.COURSE_NAME,
+					       TC.SEASON_ID,
+					       TTS.COURSE_SEASON_NAME,
+					       TTS.SEASON             AS SEASON,
+					       TC.GRADE_ID,
+					       TDG.GRADE_NAME,
+					       TOOI.ID                AS BRANCH_ID,
+					       TOOI.ORG_NAME          AS BRANCH_NAME,
+					       <!-- TDD.DATA_NAME          AS SUBJECT_NAME, -->
+					       TDD.NAME          AS SUBJECT_NAME,
+					       TC.ATTEND_CLASS_PERIOD AS ATTEND_CLASS_PERIOD
+					  FROM T_COURSE TC
+					  LEFT JOIN TAB_TIME_SEASON TTS
+					    ON TTS.ID = TC.SEASON_ID
+					  LEFT JOIN TAB_DATA_GRADE TDG
+					    ON TDG.ID = TC.GRADE_ID
+					  LEFT JOIN TAB_ORGANIZATION_INFO TOOI
+					    ON TOOI.ID = TC.BRANCH_ID
+					   AND TOOI.ORG_TYPE = 4
+					  <!-- LEFT JOIN TAB_DATA_DICTIONARY TDD -->
+					  LEFT JOIN TP_SUBJECT TDD
+					    ON TDD.ID = TC.SUBJECT_ID
+					   <!-- AND TDD.DATA_TYPE = 'TYPE_KM' -->
+						) COURSE_INFO
+		    ON COURSE_INFO.ID = TOID.COURSE_ID
+		 left join t_course_combo_wfd w on toid.extend_column2 = w.id
+		 WHERE TOID.STUDENT_ID = #{student_id,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 保存订单详情 -->
+	<insert id="saveOrderInfoDetail" parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			<!-- SELECT seq_tab_order_info_detail.nextval AS id from dual -->
+			select  to_number(to_char(sysdate,'mmdd')||to_number(seq_tab_order_info_detail.nextval,'999999'),'999999000000') as id from dual
+		</selectKey>
+		INSERT INTO TAB_ORDER_INFO_DETAIL
+		(ID,
+		ORDER_ID,
+		ENCODING,
+		STUDENT_ID,
+		COURSE_ID,
+		BUSINESS_TYPE,
+		FORMER_UNIT_PRICE,
+		FORMER_SUM_PRICE,
+		DISCOUNT_UNIT_PRICE,
+		DISCOUNT_SUM_PRICE,
+		PRE_FORWARD,
+		START_DATE,
+		END_DATE,
+		START_TIME,
+		END_TIME,
+		COURSE_TOTAL_COUNT,
+		TEACHER_ID,
+		COURSE_SURPLUS_COUNT,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		EXTEND_COLUMN,
+		EXTEND_COLUMN2,
+		EXTEND_COLUMN3,
+		EXTEND_COLUMN4,
+		V3_MARK,
+		IMMEDIATE_REDUCE,
+		surplus_cost,
+		quit_flag,
+		RULE_ID,
+		COURSE_PACK_TYPE,
+		course_pack_price,
+		IS_SEND,
+		ORDER_COURSE_TYPE,
+		BRANCH_ID
+		)
+		VALUES
+		(#{id,jdbcType=NUMERIC},
+		#{order_id,jdbcType=NUMERIC},
+		#{encoding,jdbcType=VARCHAR},
+		#{student_id,jdbcType=NUMERIC},
+		#{course_id,jdbcType=NUMERIC},
+		#{business_type,jdbcType=NUMERIC},
+		#{former_unit_price,jdbcType=NUMERIC},
+		#{former_sum_price,jdbcType=NUMERIC},
+		#{discount_unit_price,jdbcType=NUMERIC},
+		#{discount_sum_price,jdbcType=NUMERIC},
+		#{pre_forward,jdbcType=NUMERIC},
+		#{start_date,jdbcType=VARCHAR},
+		#{end_date,jdbcType=VARCHAR},
+		#{start_time,jdbcType=VARCHAR},
+		#{end_time,jdbcType=VARCHAR},
+		#{course_total_count,jdbcType=NUMERIC},
+		#{teacher_id,jdbcType=NUMERIC},
+		#{course_surplus_count,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		#{create_time,jdbcType=TIMESTAMP},
+		#{update_user,jdbcType=NUMERIC},
+		#{update_time,jdbcType=TIMESTAMP},
+		#{extend_column,jdbcType=VARCHAR},
+		#{extend_column2,jdbcType=VARCHAR},
+		#{extend_column3,jdbcType=NUMERIC},
+		#{extend_column4,jdbcType=NUMERIC},
+		#{v3_mark,jdbcType=NUMERIC},
+		#{immediate_reduce,jdbcType=NUMERIC},
+		#{surplus_cost,jdbcType=NUMERIC},
+		#{quit_flag,jdbcType=NUMERIC},
+		#{rule_id,jdbcType=NUMERIC},
+		#{course_pack_type,jdbcType=NUMERIC},
+		#{course_pack_price,jdbcType=NUMERIC},
+		#{is_send,jdbcType=NUMERIC},
+		#{order_course_type,jdbcType=NUMERIC},
+		#{branch_id,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<!-- 修改报班单详情 -->
+	<update id="updateOrderInfoDetail" parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		update TAB_ORDER_INFO_DETAIL set
+		discount_unit_price = #{discount_unit_price,jdbcType=NUMERIC},
+		discount_sum_price = #{discount_sum_price,jdbcType=NUMERIC},
+		pre_forward=#{pre_forward,jdbcType=NUMERIC},
+		course_surplus_count=#{course_surplus_count,jdbcType=NUMERIC},
+		course_total_count=#{course_total_count,jdbcType=NUMERIC},
+		update_user=#{update_user,jdbcType=NUMERIC},
+		update_time=#{update_time,jdbcType=DATE},
+		immediate_reduce=#{immediate_reduce,jdbcType=NUMERIC},
+		surplus_cost= #{surplus_cost,jdbcType=NUMERIC},
+		quit_flag= #{quit_flag,jdbcType=NUMERIC},
+		rule_id = #{rule_id,jdbcType=NUMERIC},
+		extend_column3 = #{extend_column3,jdbcType=NUMERIC},
+		extend_column4 = #{extend_column4,jdbcType=NUMERIC},
+		course_pack_type=#{course_pack_type,jdbcType=NUMERIC},
+		course_pack_price=#{course_pack_price,jdbcType=NUMERIC}
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 删除报班单详情 -->
+	<delete id="deleteOrderInfoDetail"  parameterType="com.edu.erp.model.TabOrderInfoDetail">
+		delete from TAB_ORDER_INFO_DETAIL where order_id = #{order_id,jdbcType=NUMERIC}
+	</delete>
+	
+	<!-- 设置业绩归属 -->
+	<update id="updatePerformanceAttribution" parameterType="java.util.Map">
+		update t_order set agent_id = #{user_id} where id = #{order_id}
+	</update>
+</mapper>

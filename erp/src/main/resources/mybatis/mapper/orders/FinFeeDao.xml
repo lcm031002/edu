@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TFinFeeDao">
+	
+	<!-- 保存资金往来信息 -->
+	<insert id="saveTFinFee" parameterType="com.edu.erp.model.TFinFee">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			select  SEQ_T_FIN_FEE.nextval as id from dual
+		</selectKey>
+		 insert into t_fin_fee
+	      (id, 
+	       student_id, 
+	       pay_flag, 
+	       pay_mode, 
+	       fee_amount, 
+	       insert_time, 
+	       insert_user, 
+	       confirm_time, 
+	       confirm_user 
+	       )
+	    values
+	      (
+	      #{id,jdbcType=NUMERIC},
+		  #{student_id,jdbcType=NUMERIC},
+		  #{pay_flag,jdbcType=NUMERIC},
+		  #{pay_mode,jdbcType=NUMERIC},
+		  #{fee_amount,jdbcType=NUMERIC},
+		  #{insert_time,jdbcType=DATE},
+		  #{insert_user,jdbcType=NUMERIC},
+		  #{confirm_time,jdbcType=DATE},
+		  #{confirm_user,jdbcType=NUMERIC}
+	       )
+	</insert>
+	
+	<!--保存资金用途表-->
+	<insert id="saveTFinFeeUse" parameterType="com.edu.erp.model.TFinFeeUse">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			select  SEQ_T_FIN_FEE_USE.nextval as id from dual
+		</selectKey>
+		 insert into t_fin_fee_use
+	      (id, 
+	       fin_fee_id, 
+	       use_type, 
+	       order_id, 
+	       fee_amount, 
+	       encoder_id, 
+	       old_id, 
+	       account_id 
+	       )
+	    values
+	      (
+	      #{id,jdbcType=NUMERIC},
+		  #{fin_fee_id,jdbcType=NUMERIC},
+		  #{use_type,jdbcType=NUMERIC},
+		  #{order_id,jdbcType=NUMERIC},
+		  #{fee_amount,jdbcType=NUMERIC},
+		  #{encoder_id,jdbcType=NUMERIC},
+		  #{old_id,jdbcType=VARCHAR},
+		  #{account_id,jdbcType=NUMERIC}
+	       )
+	</insert>
+	
+	<insert id="saveTBankAccount" parameterType="com.edu.erp.model.TBankAccount">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			select  SEQ_T_BANK_ACCOUNT.nextval as id from dual
+		</selectKey>
+		 insert into t_bank_account
+	      (id, 
+	       fin_fee_id, 
+	       bank_code, 
+	       account_owner, 
+	       account_no, 
+	       old_id 
+	       )
+	    values
+	      (
+	      #{id,jdbcType=NUMERIC},
+		  #{fin_fee_id,jdbcType=NUMERIC},
+		  #{bank_code,jdbcType=VARCHAR},
+		  #{account_owner,jdbcType=VARCHAR},
+		  #{account_no,jdbcType=VARCHAR},
+		  #{old_id,jdbcType=VARCHAR}
+	       )
+	</insert>
+	
+</mapper>

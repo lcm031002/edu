@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TCourseSchedulingAssistDao">
+
+	<insert id="addCourseSchedulingAssist" parameterType="com.edu.erp.model.TCourseSchedulingAssist">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select  SEQ_T_COURSE_SCHEDULING_ASSIST.nextval as id from dual
+		</selectKey>
+		insert into T_COURSE_SCHEDULING_ASSIST
+			(
+			   ID                 ,
+			   COURSE_ID          ,
+			   COURSE_NAME        ,
+			   COURSE_KEY         ,
+			   COURSE_VAL         ,
+			   COURSE_CFG_SCOPE   ,
+			   COURSE_TIME        ,
+			   EXTAND_VAL1        ,
+			   EXTAND_VAL2        ,
+			   EXTAND_VAL3        ,
+			   EXTAND_VAL4        ,
+			   REMARK             
+			)
+		 values
+		 (
+		 	#{id,		jdbcType=NUMERIC},
+		 	#{courseId,		jdbcType=NUMERIC},
+		 	#{courseName,	jdbcType=VARCHAR},
+		 	#{courseKey,	jdbcType=VARCHAR},
+		 	#{courseVal,	jdbcType=VARCHAR},
+		 	#{courseCfgScope,	jdbcType=NUMERIC},
+		 	#{courseTime,		jdbcType=NUMERIC},
+		 	#{extandVal1,		jdbcType=NUMERIC},
+		 	#{extandVal2,		jdbcType=NUMERIC},
+		 	#{extandVal3,		jdbcType=VARCHAR},
+		 	#{extandVal4,		jdbcType=VARCHAR},
+		 	#{remark,		jdbcType=VARCHAR}
+		 )
+	</insert>
+	
+	<!-- 查询课程辅助参数 -->
+	<select id="queryCourseSchedulingAssist"
+			parameterType="java.lang.Long"
+			resultType="com.edu.erp.model.TCourseSchedulingAssist">
+		      	   select tcsa.ID               as id,
+				   tcsa.COURSE_ID        as courseId,
+				   tcsa.COURSE_NAME      as courseName,
+				   tcsa.COURSE_KEY       as courseKey,
+				   tcsa.COURSE_VAL       as courseVal,
+				   tcsa.COURSE_CFG_SCOPE as courseCfgScope,
+				   tcsa.COURSE_TIME      as courseTime,
+				   tcsa.EXTAND_VAL1      as extandVal1,
+				   tcsa.EXTAND_VAL2      as extandVal2,
+				   tcsa.EXTAND_VAL3      as extandVal3,
+				   tcsa.EXTAND_VAL4      as extandVal4,
+				   tcsa.REMARK           as remark,
+				   case
+					 when tcsa.course_key = 'course_manager' and
+						  tcsa.course_val is not null then
+					  tei.employee_name
+					 when (tcsa.course_key = 'course_tearcher_cn' or
+						  tcsa.course_key = 'course_tearcher_en') and
+						  tcsa.course_val is not null then
+					  tti.TEACHER_NAME
+					 else
+					  ''
+				   end as "courseValName"
+			  from T_COURSE_SCHEDULING_ASSIST tcsa
+			   left join tab_employee_info tei
+				on tei.id = tcsa.course_val
+			   and tcsa.course_key = 'course_manager'
+			  left join tab_teacher_info tti
+				on (tti.id || '') = tcsa.COURSE_VAL
+			   and tcsa.COURSE_KEY in
+				   ('course_tearcher_cn', 'course_tearcher_en')
+				 where tcsa.course_id = #{courseId, jdbcType = NUMERIC}
+				   and tcsa.COURSE_TIME is null
+			   order by tcsa.COURSE_KEY asc
+	</select>
+	
+	<!-- 查询课程课次辅助参数 -->
+	<select id="queryCourseTimeSchedulingAssist"
+			parameterType="HashMap"
+			resultType="com.edu.erp.model.TCourseSchedulingAssist">
+		      	select tcsa.ID               as id,
+				       tcsa.COURSE_ID        as courseId,
+				       tcsa.COURSE_NAME      as courseName,
+				       tcsa.COURSE_KEY       as courseKey,
+				       tcsa.COURSE_VAL       as courseVal,
+				       tti.teacher_name      as courseValName,
+				       tcsa.COURSE_CFG_SCOPE as courseCfgScope,
+				       tcsa.COURSE_TIME      as courseTime,
+				       tcsa.EXTAND_VAL1      as extandVal1,
+				       tcsa.EXTAND_VAL2      as extandVal2,
+				       tcsa.EXTAND_VAL3      as extandVal3,
+				       tcsa.EXTAND_VAL4      as extandVal4,
+				       tcsa.REMARK           as remark
+				  from T_COURSE_SCHEDULING_ASSIST tcsa
+				  left join tab_teacher_info tti
+				    on (tti.id || '') = tcsa.COURSE_VAL
+				   and tcsa.COURSE_KEY in
+				       ('course_tearcher_cn', 'course_tearcher_en', 'course_manager')
+				 where tcsa.course_id = #{courseId, jdbcType = NUMERIC}
+				   and tcsa.COURSE_TIME = #{courseTime, jdbcType = NUMERIC}
+	</select>
+	
+	<delete id="deleteCourseSchedulingAssist" parameterType="HashMap">
+		delete from T_COURSE_SCHEDULING_ASSIST where course_id = #{courseId, jdbcType = NUMERIC}
+		and COURSE_TIME is null
+	</delete>
+
+	<!-- 查询佳音考勤单个课程课次高级参数 -->
+	<select id="queryCourseSchedulingTimeAssist" resultType="com.edu.erp.model.TCourseSchedulingAssist">
+		select tcsa.scheduling_id as "schedulingId",
+			   tcsa.course_name as "courseName",
+			   tcsa.course_key as "courseKey",
+			   tcsa.course_val as "courseVal",
+			   tcsa.extand_val1 as "extandVal1",
+			   tcsa.extand_val2 as "extandVal2",
+			   tcsa.extand_val3 as "extandVal3",
+			   tcsa.extand_val4 as "extandVal4",
+			   tcsa.remark as "remark",
+			   case
+				 when tcsa.course_key = 'course_manager' and tcsa.course_val is not null
+				   then
+					  tei.employee_name
+				 when (tcsa.course_key = 'course_tearcher_cn' or tcsa.course_key = 'course_tearcher_en') and
+					  tcsa.course_val is not null then
+				  tti.TEACHER_NAME
+				 else
+				  ''
+			   end as "courseValName"
+		  from t_scheduling_times_assist tcsa
+		  left join tab_employee_info tei
+			on tei.id = tcsa.course_val
+		   and tcsa.course_key = 'course_manager'
+		  left join tab_teacher_info tti
+			on tti.id = tcsa.course_val
+		   and (tcsa.course_key = 'course_tearcher_cn' or
+			   tcsa.course_key = 'course_tearcher_en')
+		 where tcsa.scheduling_id = #{schedulingId ,jdbcType= NUMERIC}
+		 order by tcsa.course_key asc
+	</select>
+
+	<delete id="deleteCourseSchedulingTimeAssist" parameterType="long">
+		delete from t_scheduling_times_assist where scheduling_id = #{schedulingId ,jdbcType= NUMERIC}
+	</delete>
+
+	<delete id="batchDeleteCourseSchedulingTimeAssist" parameterType="string">
+		delete from t_scheduling_times_assist where scheduling_id in (${schedulingIds})
+	</delete>
+
+	<insert id="insertCourseSchedulingTimeAssist" parameterType="list">
+		<foreach collection="highParams" item="param" separator=";" open="begin" close=";end;">
+			insert into
+			t_scheduling_times_assist
+			(id, scheduling_id, course_name, course_key, course_val, extand_val1, extand_val2, extand_val3, extand_val4, remark )
+			values
+			(
+				seq_t_scheduling_times_assist.nextval,
+				#{param.schedulingId},#{param.courseName},
+				#{param.courseKey},#{param.courseVal},
+				#{param.extandVal1},#{param.extandVal2},
+				#{param.extandVal3},#{param.extandVal4},
+				#{param.remark}
+			)
+		</foreach>
+	</insert>
+    
+    <select id="getCourseManagerOfCourse" resultType="com.edu.erp.model.TCourseSchedulingAssist">
+        select
+           tcsa.ID               as id,
+           tcsa.COURSE_ID        as courseId,
+           tcsa.COURSE_NAME      as courseName,
+           tcsa.COURSE_KEY       as courseKey,
+           tcsa.COURSE_VAL       as courseVal,
+           tcsa.COURSE_TIME      as courseTime,
+           tcsa.EXTAND_VAL1      as extandVal1,
+           tcsa.EXTAND_VAL2      as extandVal2,
+           tcsa.EXTAND_VAL3      as extandVal3,
+           tcsa.EXTAND_VAL4      as extandVal4,
+           tcsa.REMARK           as remark
+        from t_course_scheduling_assist tcsa
+        join tab_employee_info employee
+           on to_char(employee.id) = tcsa.course_val
+           and tcsa.course_key = 'course_manager'
+          where course_id = #{courseId ,jdbcType= NUMERIC}
+    </select>
+</mapper>

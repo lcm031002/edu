@@ -1,0 +1,1295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentInfoDao">
+	<select id="queryStudents" parameterType="java.util.Map" resultType="com.edu.erp.model.StudentInfo">
+		 select * from (
+		 <choose>
+            <when test="searchInfo == null or searchInfo == ''">
+				select
+								a.ID, 
+								a.ENCODING, 
+								a.STUDENT_NAME,
+								a.SEX, 
+								a.BIRTHDAY, 
+								nvl((select student_status from tab_student_status where student_id = a.id and bu_id = #{buId}),a.STUDENT_STATUS) as student_status,
+								a.ADDRESS, 
+								a.QQ,
+							<if test="studentId == null or studentId == ''">
+								(case when a.phone is not null and length(a.phone) >= 11 then substr(a.phone, 1, 3) || '****' || substr(a.phone, 8) else a.phone end) as phone,
+							</if>
+							<if test="studentId != null and studentId != ''">
+								a.phone,
+							</if>
+								a.contact_id, 
+								a.relation_name, 
+								a.EMAIL, 
+								a.GRADE_ID, 
+								a.HEAD_PIC, 
+								a.ATTEND_SCHOOL_ID, 
+								a.BRANCH_ID, 
+								a.BU_ID,
+								a.CITY_ID, 
+								a.IS_OLD_STUDENT, 
+								a.PASSWORD, 
+								a.REMARK, 
+								a.CREATE_USER, 
+								a.CREATE_TIME, 
+								a.UPDATE_USER, 
+								a.UPDATE_TIME, 
+								a.OLD_ID, 
+								a.R_CITY, 
+								a.CODE, 
+								a.PHONE_VERIFY,
+								a.syn_exception,
+								b.org_name as city_name, 
+								c.org_name as branch_name, 
+								f.org_name as bu_name, 
+								d.grade_name,
+								e.school_name as attend_school_name, 
+								b.org_name r_city_name,
+								c.product_line,
+							<if test="studentId == null or studentId == ''">
+								(case when a.login_no is not null and length(a.login_no) >= 11 then substr(a.login_no, 1, 3) || '****' || substr(a.login_no, 8) else a.login_no end) as login_no,
+							</if>
+							<if test="studentId != null and studentId != ''">
+								a.login_no,
+							</if>
+								a2.id as referrals_id,
+                				a2.student_name as referrals,
+				                TSCI.COUNSELOR_ID  AS counselor_id,
+				                TEI.EMPLOYEE_NAME  as counselor_name,
+				                TSCI2.COUNSELOR_ID AS learningmgr_id,
+				                TEI2.EMPLOYEE_NAME AS learningmgr_name,
+								0 as course_schedule_count,
+							 nvl((select nvl(tsa.active, 0) from tab_student_active tsa where tsa.student_id = a.id), 0) as active,
+							(case
+								when a.bu_id = #{buId} then 0
+								when f.parent_id = bu.parent_id then
+									decode(c.product_line, 1, 1, 12, 2, 11, 3, 2, 4, 5)
+								else
+									decode(c.product_line, 1, 6, 12, 7, 11, 8, 2, 9, 10) end) as sort_field
+					from 		tab_student_info a
+				left join 	tab_organization_info b on a.city_id = b.id and b.status = 1
+				left join 	tab_organization_info c on a.branch_id = c.id and c.status = 1
+				left join 	tab_organization_info f on a.bu_id = f.id and c.status = 1
+				left join tab_organization_info bu on bu.id = #{bu_id}
+				left join 	tab_data_grade d on a.grade_id = d.id and d.status = 1
+				left join 	tab_data_school e on a.attend_school_id = e.id
+				left join STUDENT_REL srel on srel.student_id_new = a.id
+        left join tab_student_info a2 on srel.student_id_old = a2.id
+				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
+				ON TSCI.STUDENT_ID = a.ID
+				AND TSCI.COUNSELOR_TYPE = 1
+				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+				TSCI.END_DATE
+				AND TSCI.IS_VALID = 1
+				AND TSCI.BU_ID = #{buId}
+				LEFT JOIN TAB_EMPLOYEE_INFO TEI
+				ON TEI.ID = TSCI.COUNSELOR_ID
+				AND TEI.STATUS = 1
+				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
+				ON TSCI2.STUDENT_ID = a.ID
+				AND TSCI2.COUNSELOR_TYPE = 2
+				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+				TSCI2.END_DATE
+				AND TSCI2.IS_VALID = 1
+				AND TSCI2.BU_ID = #{buId}
+				LEFT JOIN TAB_EMPLOYEE_INFO TEI2
+				ON TEI2.ID = TSCI2.COUNSELOR_ID
+				AND TEI2.STATUS = 1
+				where 1 = 1
+							<if test="studentId == null or studentId == ''">
+							   and a.bu_id = #{buId}
+								 and a.student_status != 2
+							</if>
+					<if test="(searchType == '1' or searchType == 1) and searchInfo != null and searchInfo != ''">
+						AND (a.student_name = #{searchInfo} or a.encoding = #{searchInfo} or a.phone = #{searchInfo} or exists (select 1 from tab_order_info toi where toi.encoding = #{searchInfo}))
+					</if>
+					<if test="studentId != null and studentId != ''">
+						AND (a.id = #{studentId}) 
+					</if>
+            </when>
+            <otherwise>
+				select 
+								distinct a.ID,
+								a.ENCODING, 
+								a.STUDENT_NAME, 
+								a.SEX, 
+								a.BIRTHDAY,
+				             nvl((select student_status from
+				                  tab_student_status where
+				                  bu_id = #{buId}
+				                  and student_id = a.id
+				                 )
+				                  ,a.STUDENT_STATUS) as student_status,
+								a.ADDRESS, 
+								a.QQ,
+							<if test="studentId == null or studentId == ''">
+								(case when a.phone is not null and length(a.phone) >= 11 then substr(a.phone, 1, 3) || '****' || substr(a.phone, 8) else a.phone end) as phone,
+							</if>
+							<if test="studentId != null and studentId != ''">
+								a.phone,
+							</if>
+								a.contact_id, 
+								a.relation_name, 
+								a.EMAIL, 
+								a.GRADE_ID, 
+								a.HEAD_PIC, 
+								a.ATTEND_SCHOOL_ID, 
+								a.BRANCH_ID, 
+								a.BU_ID,
+								a.CITY_ID, 
+								a.IS_OLD_STUDENT, 
+								a.PASSWORD, 
+								a.REMARK, 
+								a.CREATE_USER, 
+								a.CREATE_TIME, 
+								a.UPDATE_USER, 
+								a.UPDATE_TIME, 
+								a.OLD_ID, 
+								a.R_CITY, 
+								a.CODE, 
+								a.PHONE_VERIFY,
+								a.syn_exception,
+								b.org_name as city_name, 
+								c.org_name as branch_name, 
+								f.org_name as bu_name, 
+								d.grade_name,
+								e.school_name as attend_school_name, 
+								b.org_name r_city_name,
+								c.product_line,
+							<if test="studentId == null or studentId == ''">
+								(case when a.login_no is not null and length(a.login_no) >= 11 then substr(a.login_no, 1, 3) || '****' || substr(a.login_no, 8) else a.login_no end) as login_no,
+							</if>
+							<if test="studentId != null and studentId != ''">
+								a.login_no,
+							</if>
+								a2.id as referrals_id,
+                				a2.student_name as referrals,
+				                TSCI.COUNSELOR_ID  AS counselor_id,
+				                TEI.EMPLOYEE_NAME  as counselor_name,
+				                TSCI2.COUNSELOR_ID AS learningmgr_id,
+				                TEI2.EMPLOYEE_NAME AS learningmgr_name,
+								0 as course_schedule_count,
+							 nvl((select nvl(tsa.active, 0) from tab_student_active tsa where tsa.student_id = a.id), 0) as active,
+							(case
+								when a.bu_id = #{buId} then 0
+								when f.parent_id = bu.parent_id then
+									decode(c.product_line, 1, 1, 12, 2, 11, 3, 2, 4, 5)
+								else
+									decode(c.product_line, 1, 6, 12, 7, 11, 8, 2, 9, 10) end) as sort_field
+					from 		(select tsi.*
+							from tab_student_info tsi
+							where 1 = 1
+							<if test="searchType == '1' or searchType == 1">
+								AND (tsi.student_name = #{searchInfo} or tsi.encoding = #{searchInfo} or tsi.phone = #{searchInfo})
+							</if>
+							<if test="searchType != '1' and searchType != 1">
+								and (tsi.student_name like '%'||#{searchInfo}||'%' or tsi.encoding like '%'||#{searchInfo}||'%' or tsi.id like '%'||#{searchInfo}||'%' or tsi.phone like '%'||#{searchInfo}||'%')
+							</if>
+							union all
+							select tsi.*
+							from tab_student_info tsi
+							left join tab_order_info toi
+							on tsi.id = toi.student_id
+							where 1 = 1
+							<if test="searchType == '1' or searchType == 1">
+								and toi.encoding = #{searchInfo}
+							</if>
+							<if test="searchType != '1' and searchType != 1">
+								and toi.encoding like #{searchInfo}||'%'
+							</if>) a
+				left join 	tab_organization_info b on a.city_id = b.id and b.status = 1
+				left join 	tab_organization_info c on a.branch_id = c.id and c.status = 1
+				left join 	tab_organization_info f on a.bu_id = f.id and c.status = 1
+				left join tab_organization_info bu on bu.id = #{bu_id}
+				left join 	tab_data_grade d on a.grade_id = d.id and d.status = 1
+				left join 	tab_data_school e on a.attend_school_id = e.id
+				left join STUDENT_REL srel on srel.student_id_new = a.id
+        left join tab_student_info a2 on srel.student_id_old = a2.id
+				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
+				ON TSCI.STUDENT_ID = a.ID
+				AND TSCI.COUNSELOR_TYPE = 1
+				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+				TSCI.END_DATE
+				AND TSCI.IS_VALID = 1
+				AND TSCI.BU_ID = #{buId}
+				LEFT JOIN TAB_EMPLOYEE_INFO TEI
+				ON TEI.ID = TSCI.COUNSELOR_ID
+				AND TEI.STATUS = 1
+				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
+				ON TSCI2.STUDENT_ID = a.ID
+				AND TSCI2.COUNSELOR_TYPE = 2
+				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+				TSCI2.END_DATE
+				AND TSCI2.IS_VALID = 1
+				AND TSCI2.BU_ID = #{buId}
+				LEFT JOIN TAB_EMPLOYEE_INFO TEI2
+				ON TEI2.ID = TSCI2.COUNSELOR_ID
+				AND TEI2.STATUS = 1
+				where 1 = 1
+					<if test="studentId == null or studentId == ''">
+						and a.student_status != 2
+					</if>
+					<if test="studentId != null and studentId != ''">
+						AND (a.id = #{studentId}) 
+					</if>
+					</otherwise>
+				</choose>
+        )
+			order by active desc, sort_field, id DESC, create_time desc, update_time desc
+	</select>
+	<select id="queryStudentById" parameterType="java.util.Map" resultType="com.edu.erp.model.StudentInfo">
+		select distinct a.ID, 
+						a.ENCODING, 
+						a.STUDENT_NAME, 
+						a.SEX, 
+						a.BIRTHDAY, 
+						a.STUDENT_STATUS,
+						a.ADDRESS, 
+						a.QQ, 
+						a.PHONE, 
+						a.contact_id, 
+						a.relation_name, 
+						a.EMAIL, 
+						a.GRADE_ID, 
+						a.HEAD_PIC, 
+						a.ATTEND_SCHOOL_ID, 
+						a.BRANCH_ID, 
+						a.CITY_ID, 
+						a.IS_OLD_STUDENT, 
+						a.PASSWORD, 
+						a.REMARK, 
+						a.CREATE_USER, 
+						a.CREATE_TIME, 
+						a.UPDATE_USER, 
+						a.UPDATE_TIME, 
+						a.OLD_ID, 
+						a.R_CITY, 
+						a.CODE, 
+						a.syn_exception,
+						a.PHONE_VERIFY,
+						a.login_no,
+						b.org_name as city_name, 
+						c.org_name as branch_name, 
+						d.grade_name,
+						e.school_name as attend_school_name, 
+						b.org_name r_city_name
+			   			,(select sum(nvl(irl.crrent_integral, 0))
+	                        from tab_student_integral  irl,
+	                             tab_organization_info irl_org
+	                        where irl.branch_id = irl_org.id
+	                         and irl_org.parent_id = a.bu_id
+	                         and irl.student_id = a.id)
+	                         as integral,
+					    c.product_line,
+					    a.login_no,
+					    bu.org_name as bu_name
+			from 		tab_student_info a
+		left join 		tab_organization_info b on a.city_id = b.id and b.status = 1
+		left join 		tab_organization_info c on a.branch_id = c.id and c.status = 1
+		left join 		tab_organization_info bu on a.bu_id = bu.id and bu.status = 1
+		left join 		tab_data_grade d on a.grade_id = d.id and d.status = 1
+		left join 		tab_data_school e on a.attend_school_id = e.id
+		left join       tab_order_info toi on toi.student_id = a.id
+		where a.id = #{studentId}
+	</select>
+	<!-- 查询学员首页的四个指标信息，需要分团队 -->
+	<select id="queryStudentIndexAccount" parameterType="java.util.Map"  resultType="java.util.Map">
+		select 	sti.id, 
+				nvl(LISTENING_INFO.LISTENING_COUNT, 0) as LISTENING_COUNT,
+				nvl(UNPAYMENT_INFO.UNPAYMENT, 0) as UNPAYMENT,
+				nvl(PAYMENT_INFO.PAYMENT, 0) as PAYMENT,
+				nvl(PAYMENT_INFO.courseScheduleCount, 0) as courseScheduleCount,
+				nvl(ACCOUNT01_INFO.STORE_ACCOUNT, 0) as STORE_ACCOUNT,
+				nvl(ACCOUNT01_INFO.FROZEN_ACCOUNT, 0) as FROZEN_ACCOUNT,
+				nvl(ACCOUNT01_INFO.REFUND_ACCOUNT, 0) as REFUND_ACCOUNT
+		from tab_student_info sti
+		left join (
+			SELECT COUNT(1) LISTENING_COUNT, STUDENT_ID
+			  FROM T_COURSE_LISTENING
+			 WHERE STUDENT_ID = #{studentId}
+			   AND BRANCH_ID in
+			       (select id from tab_organization_info where parent_id = #{buId})
+			   <!-- AND (PAY_STATUS IS NULL or PAY_STATUS = 2) -->
+			 GROUP BY STUDENT_ID
+		) LISTENING_INFO on LISTENING_INFO.STUDENT_ID = sti.id
+		left join (
+			SELECT SUM(ACTUAL_PRICE) AS UNPAYMENT, STUDENT_ID
+			  FROM TAB_ORDER_INFO
+			 WHERE STUDENT_ID = #{studentId}
+			   AND PAY_STATUS = 0
+			   and bu_id = #{buId}
+			   and CHECK_STATUS = 3
+			   and VALID_STATUS = 1
+			 GROUP BY STUDENT_ID
+		) UNPAYMENT_INFO on UNPAYMENT_INFO.STUDENT_ID = sti.id
+		left join (
+			SELECT
+            SUM(TOID.course_surplus_count) AS PAYMENT,
+			SUM(TOID.course_schedule_count) AS courseScheduleCount,
+            TOIII.STUDENT_ID              AS STUDENT_ID
+        FROM
+            t_order_course TOID
+        LEFT JOIN
+            t_order TOIII
+        ON
+            TOIII.ID = TOID.ORDER_ID
+        WHERE
+            TOIII.STUDENT_ID = #{studentId}
+        AND TOIII.BU_ID = #{buId}
+        AND TOIII.ORDER_STATUS = 1
+        GROUP BY
+            TOIII.STUDENT_ID
+		
+		) PAYMENT_INFO on  PAYMENT_INFO.STUDENT_ID = sti.id
+		left join (
+			SELECT FEE_AMOUNT as STORE_ACCOUNT, FROZEN_ACCOUNT,REFUND_ACCOUNT, STUDENT_ID
+			  FROM T_ACCOUNT
+			 WHERE STUDENT_ID = #{studentId}
+			   AND BU_ID = #{buId}
+			   AND ACCOUNT_TYPE = 0
+		) ACCOUNT01_INFO on ACCOUNT01_INFO.STUDENT_ID = sti.id
+		where sti.id = #{studentId}
+	</select>
+	<!-- 查询学员当前的咨询师和学管师  -->
+	<select id="queryStudentCurrCounselors" parameterType="java.util.Map"  resultType="java.util.Map">
+		SELECT TSI.ID,
+		       TSCI.COUNSELOR_ID  AS CONSULTANT_ID,
+		       TEI.EMPLOYEE_NAME  AS CONSULTANT_NAME,
+		       TSCI2.COUNSELOR_ID AS LEARNINGMGR_ID,
+		       TEI2.EMPLOYEE_NAME AS LEARNINGMGR_NAME
+		  FROM TAB_STUDENT_INFO TSI
+		<!-- 咨询师 -->
+		  LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
+		ON TSCI.STUDENT_ID = TSI.ID
+		AND TSCI.COUNSELOR_TYPE = 1
+		AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+		TSCI.END_DATE
+		AND TSCI.IS_VALID = 1
+		AND TSCI.BU_ID = #{buId}
+		LEFT JOIN TAB_EMPLOYEE_INFO TEI
+		ON TEI.ID = TSCI.COUNSELOR_ID
+		AND TEI.STATUS = 1
+		<!-- 学管师 -->
+		LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
+		ON TSCI2.STUDENT_ID = TSI.ID
+		AND TSCI2.COUNSELOR_TYPE = 2
+		AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+		TSCI2.END_DATE
+		AND TSCI2.IS_VALID = 1
+		AND TSCI2.BU_ID = #{buId}
+		   <!-- ND TSCI2.BRANCH_ID = #{branchId}-->
+		  LEFT JOIN TAB_EMPLOYEE_INFO TEI2
+		    ON TEI2.ID = TSCI2.COUNSELOR_ID
+		   AND TEI2.STATUS = 1
+		 WHERE TSI.ID = #{studentId}
+	</select>
+	
+	<!-- 学生首页订单信息查询，需要区分校区 -->
+	<select id="queryStudentOrders" parameterType="java.util.Map"  resultType="java.util.Map">
+		  SELECT TOI.*,
+		         PAYMENT_INFO.course_total_count,
+		         changecourse.premium_amount,
+		         decode(toi.check_status,3,4,2,3,1,2,4,1) orderNumber<!-- 审核状态1：未审核   2：审核中  3：已通过   4 ：未通过 -->
+		    FROM TAB_ORDER_INFO TOI
+		    LEFT JOIN (select toid.order_id,
+		                      sum(toid.course_total_count) as course_total_count
+		                 from tab_order_info_detail toid
+		                where toid.student_id = #{studentId,jdbcType=NUMERIC}
+		                group by toid.order_id) PAYMENT_INFO
+		      ON PAYMENT_INFO.ORDER_ID = TOI.ID
+		    left join (select t.order_id, sum(t.fee_amount) as premium_amount
+		                 from t_order_change t
+		                where t.change_type = 1
+		                  and t.change_status = 5
+		                group by t.ORDER_ID) changecourse
+		      on changecourse.order_id = TOI.id
+		    left join tab_organization_info toooi
+		      on toooi.id = TOI.bu_id
+		   WHERE TOI.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
+		      AND to_char(TOI.CREATE_TIME,'yyyy-MM-dd') BETWEEN
+		      to_char(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
+		      to_char(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+		     and TOI.bu_id = #{buId,jdbcType=NUMERIC}
+		   order by 
+		   toi.VALID_STATUS desc, <!-- 有效状态1：有效  0：无效,删除，作废 -->
+		   toi.PAY_STATUS asc,<!-- 缴费状态:0未缴费,1已缴费 -->
+		   orderNumber desc,
+		   TOI.create_time desc
+	</select>
+	
+	<!-- 学生首页订单信息查询，需要区分校区 -->
+	<select id="queryStudentOrdersBJK" parameterType="java.util.Map"  resultType="java.util.Map">
+		  select oc.id,
+				   o.id as order_id,
+				   o.order_no as encoding,
+				   o.student_id,
+				   o.business_type,
+				   ts.course_season_name,
+			       ps.name as subject_name,
+			       ti.teacher_name,
+			       c.start_time ,
+			       c.end_time,
+			       oc.course_total_count,
+			       nvl(trans.in_times, 0) transfer_in_count,
+			       nvl(trans.out_times, 0) transfer_out_count,
+			       nvl(rm.times, 0) quit_lesson,
+			       att.att_times as attend_count,
+			       oc.course_surplus_count as course_surplus_count_ing,
+			       c.id as course_id
+			  from t_order o
+			  left join t_order_course     oc on o.id = oc.order_id
+			  left join t_course           c  on oc.course_id = c.id
+			  left join tp_subject         ps on c.subject_id = ps.id
+			  left join tab_time_season    ts on c.season_id = ts.id
+			  left join tab_teacher_info   ti on c.teacher_id = ti.id
+			  left join (select  b.order_course_id,
+			                     sum(decode(b.transfer_flag, 0, 1, 0) * b.course_times) out_times,
+			                     sum(decode(b.transfer_flag, 1, 1, 0) * b.course_times) in_times
+			                from t_order_change a join tc_order_course b on a.id = b.change_id
+			               where a.change_type = 2 and a.change_status = 5
+			               group by b.order_course_id) trans on oc.id = trans.order_course_id
+			  left join (select  b.order_course_id,
+			                     sum(b.course_times) times
+			                from t_order_change a, tc_order_course b
+			               where a.id = b.change_id
+			                 and a.change_status = 5
+			                 and a.change_type = 1
+			               group by b.order_course_id) rm on oc.id = rm.order_course_id
+			  left join (select order_course_id,
+			                    sum(decode(a.attend_type, 10, 0, 20, 0, 30, 0, -1, 0, 1)) att_times
+			               from t_attendance a
+			              group by a.order_course_id) att on att.order_course_id = oc.id
+			  left join tab_organization_info toooi on toooi.id = o.bu_id
+			 where o.business_type = 1 
+			 and o.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
+			 and toooi.id = #{buId,jdbcType=NUMERIC}
+			 and o.order_status = 1
+			 <if test="seasonId != null and seasonId > 0">
+				AND c.SEASON_ID = #{seasonId,jdbcType=NUMERIC}
+			 </if>
+			 <if test="subjectId != null and subjectId > 0">
+				AND c.SUBJECT_ID = #{subjectId,jdbcType=NUMERIC}
+			 </if>
+	</select>
+	
+	<select id="queryStudentOrdersWFD" parameterType="java.util.Map"  resultType="java.util.Map">
+		SELECT TOID.*,
+		       ATTD.attend_count,
+		       toc.course_surplus_count as course_surplus_count_ing,
+		       toi.check_status,
+		       toi.pay_status,
+		       toi.valid_status,
+		       toc.course_id,
+		       tc.course_name,
+		       w.combo_name,
+		       w.id combo_id
+		  FROM TAB_ORDER_INFO_DETAIL TOID
+		  LEFT JOIN (select t.order_course_id as  order_detail_id,
+					       count(t.id) as attend_count
+					  from t_attendance t
+					 where t.attend_type in (31)
+					 and t.TS_FLAG = 'S'
+					 group by t.order_course_id) ATTD
+		    ON ATTD.ORDER_DETAIL_ID = TOID.ID
+		  left join t_order_course toc
+		    on toc.id = toid.id
+		  left join t_order_course_combo occ
+		      on toc.id = occ.order_course_id
+		  left join t_course_combo_wfd w
+		      on toid.EXTEND_COLUMN2 = w.id
+		  join t_course tc
+		    on tc.id = toid.course_id
+		  left join tab_order_info toi
+		    on toi.id = toid.order_id
+		  left join tab_organization_info toooi on toooi.id = toi.bu_id
+		 WHERE TOID.STUDENT_ID = #{studentId,jdbcType = NUMERIC} AND TOID.BUSINESS_TYPE = 3
+		 and toooi.id = #{buId,jdbcType=NUMERIC}
+		 AND to_char(TOID.CREATE_TIME,'yyyy-MM-dd') BETWEEN
+		      to_char(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
+		      to_char(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+	</select>
+	
+	<!-- 查询学员订单详细信息 -->
+	<select id="queryStudentOrdersDetail" parameterType="java.util.Map"  resultType="java.util.Map">
+		SELECT TOID.*,
+		 	   toc.course_total_count as course_total_count_real,
+			   toc.course_surplus_count as course_surplus_count_ing,
+			   toc.order_type order_type_real,
+		       COURSE_INFO.COURSE_NAME,
+		       COURSE_INFO.COURSE_SEASON_NAME,
+		       COURSE_INFO.SEASON,
+		       COURSE_INFO.GRADE_NAME,
+		       COURSE_INFO.BRANCH_NAME,
+		       COURSE_INFO.SUBJECT_NAME,
+		       W.COMBO_NAME,
+		       TOI.BU_ID
+		  FROM TAB_ORDER_INFO_DETAIL TOID
+		  LEFT JOIN (SELECT TC.ID,
+		                    TC.COURSE_NAME,
+		                    TC.SEASON_ID,
+		                    TTS.COURSE_SEASON_NAME,
+		                    TTS.SEASON             AS SEASON,
+		                    TC.GRADE_ID,
+		                    TDG.GRADE_NAME,
+		                    TOOI.ID                AS BRANCH_ID,
+		                    TOOI.ORG_NAME          AS BRANCH_NAME,
+		                    TDD.NAME               AS SUBJECT_NAME,
+		                    TC.ATTEND_CLASS_PERIOD AS ATTEND_CLASS_PERIOD
+		               FROM T_COURSE TC
+		               LEFT JOIN TAB_TIME_SEASON TTS
+		                 ON TTS.ID = TC.SEASON_ID
+		               LEFT JOIN TAB_DATA_GRADE TDG
+		                 ON TDG.ID = TC.GRADE_ID
+		               LEFT JOIN TAB_ORGANIZATION_INFO TOOI
+		                 ON TOOI.ID = TC.BRANCH_ID
+		                AND TOOI.ORG_TYPE = 4
+		               LEFT JOIN TP_SUBJECT TDD
+		                 ON TDD.ID = TC.SUBJECT_ID) COURSE_INFO
+		    ON COURSE_INFO.ID = TOID.COURSE_ID
+		  left join t_order_course toc
+		    on toc.id = TOID.id  or toc.root_course_id = toid.id
+		  LEFT JOIN T_COURSE_COMBO_WFD W
+		    ON TOID.EXTEND_COLUMN2 = W.ID
+		  LEFT JOIN TAB_ORDER_INFO TOI
+		    ON TOI.ID = TOID.ORDER_ID
+		 WHERE TOID.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
+		 AND TOI.BU_ID = #{buId,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 校验学生信息名称重复 -->
+	<select id="checkStudentName" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select  	count(*)
+			from 	tab_student_info
+		where 		student_name = #{studentName}
+		<if test="id != null and id != ''">
+			and		id != #{id}
+		</if>
+		<if test="phone != null and phone != ''">
+			and		phone != #{phone}
+		</if>
+		<if test="phones != null and phones != ''">
+			and		phone in (${phones})
+		</if>
+	</select>
+	
+	<!-- 修改学员信息 -->
+	<update id="updateStudent" parameterType="com.edu.erp.model.StudentInfo">
+		update 		tab_student_info
+			SET
+					student_name 	= #{student_name,   jdbcType=VARCHAR},
+					sex			 	= #{sex,			jdbcType=NUMERIC},
+					birthday 	 	= #{birthday, 		jdbcType=VARCHAR},
+					student_status 	= #{student_status, jdbcType=NUMERIC},
+					address 		= #{address, 		jdbcType=VARCHAR},
+					qq 				= #{qq, 			jdbcType=VARCHAR},
+					phone 			= #{phone, 			jdbcType=VARCHAR},
+					contact_id 		= #{contact_id, 	jdbcType=NUMERIC},
+					relation_name 	= #{relation_name, 	jdbcType=VARCHAR},
+					email 			= #{email, 			jdbcType=VARCHAR},
+					grade_id 		= #{grade_id, 		jdbcType=NUMERIC},
+					attend_school_id= #{attend_school_id, jdbcType=NUMERIC},
+					city_id			= #{city_id, 		jdbcType=NUMERIC},
+					r_city			= #{r_city, 		jdbcType=NUMERIC},
+					code			= #{code, 			jdbcType=VARCHAR},
+					phone_verify	= #{phone_verify, 	jdbcType=NUMERIC},
+					update_user		= #{update_user, 	jdbcType=NUMERIC},
+					update_time 	= #{update_time, 	jdbcType=VARCHAR},
+					head_pic 	= #{head_pic, 	jdbcType=VARCHAR},
+					login_no 	= #{login_no, 	jdbcType=VARCHAR}
+	 	WHERE
+					id 				= #{id}
+	</update>
+	
+	<!-- 校验学生联系方式手机重复 -->
+	<select id="checkStudentContactPhone" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select  	count(*) 
+			from 	tab_student_contact
+		where 		student_id = #{student_id}
+			and		link_phone = #{phone}
+			and		is_valid = 1
+		<if test="id != null and id != ''">
+			and		id != #{id}
+		</if>	
+	</select>
+	
+	<select id="queryStudentCourse" parameterType="java.util.Map"  resultType="java.util.Map">
+	select *
+  	from (select max(TC.COURSE_NAME) COURSE_NAME,
+               max(TC.COURSE_NO) COURSE_NO,
+               TC.ID,
+               max(TTI.TEACHER_NAME) TEACHER_NAME,
+               max(TTI.ENCODING) ENCODING,
+               max(TTI.PHOTO) PHOTO,
+               max(TS.NAME) NAME,
+               max(TC.START_DATE) START_DATE,
+               max(TC.END_DATE) END_DATE,
+               max(TOC.CREATE_TIME) CREATE_TIME
+          FROM T_ORDER_COURSE TOC
+          LEFT JOIN T_ORDER TOD
+            ON TOC.ORDER_ID = TOD.ID
+          LEFT JOIN T_COURSE TC
+            ON TC.ID = TOC.COURSE_ID
+          LEFT JOIN TAB_TEACHER_INFO TTI
+            ON TTI.ID = TC.TEACHER_ID
+           AND TTI.STATUS = 1
+          LEFT JOIN TP_SUBJECT TS
+            ON TS.ID = TC.SUBJECT_ID
+	 WHERE TOD.ORDER_STATUS = 1
+	   AND TOD.BU_ID = #{buId, jdbcType=NUMERIC}
+	   AND TOD.STUDENT_ID = #{studentId, jdbcType=NUMERIC}
+	   AND TC.BUSINESS_TYPE = #{businessType, jdbcType=NUMERIC}
+	   <if test="seacherName != null">
+		   AND (
+			   TC.COURSE_NAME like '%' || #{seacherName} || '%'
+			   OR TTI.TEACHER_NAME LIKE '%' || #{seacherName} || '%'  
+			   OR TOD.ORDER_NO LIKE '%' || #{seacherName} || '%'  
+		   )
+	   </if>
+		   group by tc.id) temp
+	 order by CREATE_TIME desc
+	</select>
+	
+	<select id="queryStudentCourseTimes"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select o.id "order_id",
+			   si.student_name "student_name",
+			   o.order_no "order_encoding",
+		       oc.id "order_detail_id",
+		       ta.id "attendance_id",
+		       nvl(ta.attend_type, 10) "attend_type",
+		       oc.course_id "course_id",
+		       c.course_name "course_name",
+		       c.season_id "season_id",
+		       ts.course_season_name "season_name",
+		       branch.org_name "school_name",
+		       oi.id "city_id",
+		       oi.org_name "city_name",
+		       tcs.teacher_id "teacher_id",
+		       teach.teacher_name as "teacher_name",
+		       oct.times "course_times",
+		       to_char(to_date(tcs.course_date, 'yyyymmdd'), 'yyyy-mm-dd') "course_date",
+		       to_char(ta.attend_date, 'yyyy-mm-dd') "attend_date",
+		       tcs.start_time "start_time",
+		       tcs.end_time "end_time",
+		       tcs.id as schedulingId,
+		       vocti.is_valid,
+		       vocti.is_valid_name,
+		       vocti.status_type_name,
+		       ta.remark "remark",
+		       tol.STATUS "lock_status",
+		       pkg_utils.check_order_return(oc.id) "is_return",
+		       case
+		         when (select count(1)
+		                 from user_application_task t
+		                where t.busi_id = ta.id
+		                  and t.busi_type = 11
+		                  and t.current_state is null) > 0 then
+		          1
+		         else
+		          0
+		       end "att_shenpi_status",
+		       oct.is_valid "is_valid",
+		       tcs.assteacher_id as "assteacher_id",
+       		   ass.teacher_name as "assteacher_name",
+       		   teli.activation_code as "activation_code",
+       		   teli.valid_start_date as "valid_start_date",
+       		   teli.valid_end_date as "valid_end_date"
+		  from t_order o
+		  join tab_organization_info oi
+		    on o.city_id = oi.id
+		  join tab_organization_info branch
+		    on o.branch_id = branch.id
+		  join t_order_course oc
+		    on o.id = oc.order_id
+		  join t_order_course_times oct
+		    on oc.id = oct.ocid
+		  join t_course c
+		    on oc.course_id = c.id
+		  join tab_time_season ts
+		    on c.season_id = ts.id
+		  join t_course_scheduling tcs
+		    on oc.course_id = tcs.course_id
+		   and oct.times = tcs.course_times
+		  left join t_attendance ta
+		    on tcs.id = ta.scheduling_id
+		   and oc.id = ta.order_course_id
+		   and ta.student_id = o.student_id
+		  left join tab_student_info si on si.id = o.student_id
+		  left join VIEW_ORDER_COURSE_TIMES_INFO vocti
+		    on vocti.ORDER_DETAIL_ID = oc.id
+		   and tcs.course_times = vocti.course_times
+		  left join T_ORDER_LOCK tol
+		    on tol.ORDER_ID = o.id
+		  left join tab_teacher_info teach
+		    on teach.id = tcs.teacher_id
+		  left join tab_teacher_info ass
+    		on ass.id = tcs.assteacher_id
+    	  left join T_EL_INFO teli on teli.student_id = o.STUDENT_ID 
+    	  			and teli.order_course_id = oc.id
+    	  			and teli.scheduling_id = tcs.id
+		where 	c.id = #{courseId, jdbcType=NUMERIC}
+				and o.STUDENT_ID = #{studentId, jdbcType=NUMERIC}
+				and o.bu_id = #{buId, jdbcType=NUMERIC}
+				and o.order_status = 1
+				and (oc.status != 2 or oc.status is null)
+				and 
+		        (teli.id in (
+		              select max(id) from T_EL_INFO where student_id = o.STUDENT_ID 
+		              and order_course_id = oc.id
+		              and scheduling_id = tcs.id
+		         )or teli.id is null )
+				order by o.id,oc.id,oc.course_id, tcs.course_times
+	</select>
+	
+	<select id="queryStudentAllCourseTimes" parameterType="Map" resultType="Map">
+	select nvl(sum(toc.course_total_count), 0) course_total_count,
+	       nvl(sum(toc.course_surplus_count), 0) as course_surplus_count
+		  from t_order tod
+		  left join t_order_course toc
+		    on tod.id = toc.order_id
+		 where tod.student_id = #{student_id}
+		   and tod.bu_id = #{bu_id}
+		   and tod.order_status = 1
+	</select>
+	
+	<!-- 学员主页-学员考勤-晚辅导 订单列表 -->
+	<select id="queryStudentCourseWfd" parameterType="Map" resultType="Map">
+		select tord.id,
+			   toco.id as order_course_id,
+		       tord.order_no,
+		       tord.student_id,
+		       tcou.course_name,
+		       tcou.start_date,
+		       tcou.end_date,
+		       toco.course_total_count,
+		       toco.course_surplus_count,
+		       nvl(toco.course_total_count, 0) - nvl(toco.course_surplus_count, 0) as course_used_count,
+		       tsci.id as counselor_id
+		  from t_order tord
+		  left join t_order_course toco on tord.id = toco.order_id
+		  left join t_course tcou on tcou.id = toco.course_id
+		  left join tab_student_counselor_info tsci on tord.student_id = tsci.student_id 
+           and tsci.counselor_type = 2
+           and tsci.is_valid != 0
+           and to_date(tsci.start_date, 'yyyy-mm-dd') &lt;= trunc(sysdate)
+           and to_date(tsci.end_date, 'yyyy-mm-dd') &gt;= trunc(sysdate)
+		 where tord.order_status = 1
+		   and (toco.status != 2 or toco.status is null)
+		   and tord.business_type = #{businessType}
+		   and tord.student_id = #{studentId}
+		<if test="searcherName != null and searcherName != ''">
+		   and (tord.order_no like '%${seacherName}%' or tcou.course_no like '%${seacherName}%' or tcou.course_name like '%${seacherName}%')
+		</if>
+		order by tord.order_no desc
+	</select>
+	
+	<!-- 暑假更新学生年级前，先记录更新历史信息，以便有问题可以回滚 -->
+	<insert id="addGradeUpgradeHis" parameterType="java.lang.String">
+		insert into tab_grade_upgrade_his
+		  (id, student_id, grade_id, next_grade_id, create_time)
+		  select seq_tab_grade_upgrade_his.nextval,
+		         tsi.id,
+		         tsi.grade_id,
+		         nvl(tdg2.id, tdg.id),
+		         sysdate
+			 from tab_student_info tsi, tab_data_grade tdg, tab_data_grade tdg2
+			where tsi.grade_id is not null
+			  and tsi.grade_id = tdg.id
+			  and tdg2.last_id = tdg.id
+			  and tdg2.status = 1
+			  and tdg.status = 1
+		   <if test="isSummerNode = 'Y'">
+		     and tdg.grade_name in ('小一',
+		                          '小二',
+		                          '小三',
+		                          '小四',
+		                          '小五',
+		                          '小六',
+		                          '初一',
+		                          '初二',
+		                          '初三',
+		                          '高一',
+		                          '高二',
+		                          '高三')
+		   </if>
+		   <if test="isSummerNode = 'N'">
+		     and tdg.grade_name like '新%'
+		   </if>
+	</insert>
+	
+	<!-- 暑假更新学生年级 -->
+	<update id="upgradeStudentGrade" parameterType="java.lang.String">
+		update tab_student_info tsi
+			set tsi.grade_id =
+			(select nvl(t.id, t.last_id)
+				 from tab_data_grade t, bu_dict_rel bdr
+				where t.last_id = tsi.grade_id
+				  and bdr.bu_id = tsi.bu_id
+				  and bdr.dict_id = t.id
+				  and bdr.dict_type = 'bu_grade_rel'
+				  and t.status = 1)
+				where tsi.grade_id is not null
+				and exists (select 1
+					 from tab_data_grade tdg, tab_data_grade tdg2
+					where tdg.id = tsi.grade_id
+					  and tdg2.last_id = tdg.id
+					  and tdg.status = 1
+					  and tdg2.status = 1
+				<if test="isSummerNode = 'Y'">
+					and tdg.grade_name in ('小一',
+										'小二',
+										'小三',
+										'小四',
+										'小五',
+										'小六',
+										'初一',
+										'初二',
+										'初三',
+										'高一',
+										'高二',
+										'高三')
+				</if>
+				<if test="isSummerNode = 'N'">
+					 and tdg.grade_name like '新%'
+				 </if>)
+	</update>
+	
+	<select id="selectOneStudent" parameterType="com.edu.erp.model.StudentBusiness"
+		resultType="com.edu.erp.model.StudentBusiness">
+		SELECT
+		    DISTINCT tsi.* ,
+		    tdg.grade_name ,
+		    toi.org_name AS branch_name ,
+		    tei1.EMPLOYEE_NAME AS counselorName ,
+		    tei2.EMPLOYEE_NAME AS customerRelName ,
+		    ta001.FEE_AMOUNT AS balance1 ,
+		    ta002.FEE_AMOUNT AS balance2 ,
+		    ta003.FEE_AMOUNT AS balance3 ,
+		    sysdate,
+		    tds.SCHOOL_NAME as school_name
+		    <if test="branch_id!=null">
+   			  ,(select sum(nvl(irl.crrent_integral, 0))
+                        from TAB_STUDENT_INTEGRAL  irl,
+                             tab_organization_info irl_org
+                       where irl.branch_id = irl_org.id
+                         and irl_org.parent_id =
+                             (select tmp.parent_id
+                                from tab_organization_info tmp
+                               where tmp.id = #{branch_id})
+                         and irl.STUDENT_ID = tsi.ID)
+                         as INTEGRAL
+		    </if>
+		FROM
+		    tab_student_info tsi LEFT JOIN tab_data_grade tdg
+		        ON tsi.GRADE_ID = tdg.id LEFT JOIN tab_organization_info toi
+		        ON toi.id = tsi.BRANCH_ID
+		    AND toi.org_type = 4 LEFT JOIN tab_student_counselor_info tsci1
+		        ON tsci1.STUDENT_ID = tsi.ID
+		    AND TO_CHAR(
+		        sysdate ,
+		        'YYYY-MM-DD'
+		    ) BETWEEN tsci1.START_DATE AND tsci1.END_DATE
+		    AND tsci1.IS_VALID = 1
+		    and tsci1.bu_id = #{bu_id,jdbcType=NUMERIC}
+		    AND tsci1.COUNSELOR_TYPE = 1 LEFT JOIN tab_student_counselor_info tsci2
+		        ON tsci2.STUDENT_ID = tsi.ID
+		    AND TO_CHAR(
+		        sysdate ,
+		        'YYYY-MM-DD'
+		    ) BETWEEN tsci2.START_DATE AND tsci2.END_DATE
+		    AND tsci2.IS_VALID = 1
+		    and tsci2.bu_id = #{bu_id,jdbcType=NUMERIC}
+		    AND tsci2.COUNSELOR_TYPE = 2 LEFT JOIN tab_employee_info tei1
+		        ON tei1.ID = tsci1.COUNSELOR_ID LEFT JOIN tab_employee_info tei2
+		        ON tei2.ID = tsci2.COUNSELOR_ID LEFT JOIN (
+		        select sum(FEE_AMOUNT) as FEE_AMOUNT, student_id 
+		        from t_account 
+		        where 1=1
+		        <if test="bu_id!=null">
+				 	and bu_id = #{bu_id,jdbcType=NUMERIC}
+				</if>
+				AND PRODUCT_LINE = 1
+		    	AND ACCOUNT_TYPE = 0
+		        group by student_id
+		        ) ta001
+		        ON ta001.student_id = tsi.id
+		     LEFT JOIN (
+		    select sum(FEE_AMOUNT) as FEE_AMOUNT, student_id 
+		        from t_account 
+		        where 1=1
+		        <if test="bu_id!=null">
+				 	and bu_id = #{bu_id,jdbcType=NUMERIC}
+				</if>
+				AND PRODUCT_LINE = 2
+		    	AND ACCOUNT_TYPE = 0
+		        group by student_id
+		    ) ta002
+		        ON ta002.student_id = tsi.id
+		     LEFT JOIN (
+		    select sum(FEE_AMOUNT) as FEE_AMOUNT, student_id 
+		        from t_account 
+		        where 1=1
+		        <if test="bu_id!=null">
+				 	and bu_id = #{bu_id,jdbcType=NUMERIC}
+				</if>
+				AND PRODUCT_LINE = 3
+		    	AND ACCOUNT_TYPE = 0
+		        group by student_id
+		    ) ta003
+		        ON ta003.student_id = tsi.id
+		    left join TAB_DATA_SCHOOL tds 
+		    	on tds.id = tsi.ATTEND_SCHOOL_ID
+		<where>
+		 <if test="id!=null">
+		 	and tsi.id = #{id,jdbcType=NUMERIC}
+		 </if>
+		 <if test="encoding!=null">
+		 	and tsi.encoding = #{encoding,jdbcType=NUMERIC}
+		 </if>
+		</where>
+	</select>
+	<insert id="addStudentInfo" parameterType="com.edu.erp.model.StudentInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT seq_tab_student_info.currval AS id from dual
+		</selectKey>
+		INSERT INTO tab_student_info
+		(
+		id,
+		encoding,
+		student_name,
+		sex,
+		birthday,
+		student_status,
+		address,
+		QQ,
+		phone,
+		email,
+		grade_id,
+		head_pic,
+		attend_school_id,
+		branch_id,
+		city_id,
+		is_old_student,
+		password,
+		phone_verify,
+		remark,
+		create_user,
+		create_time,
+		bu_id
+		)
+		VAlUES
+		(
+		seq_tab_student_info.nextval,
+		#{encoding, jdbcType=VARCHAR},
+		#{student_name, jdbcType=VARCHAR},
+		#{sex, jdbcType=NUMERIC},
+		#{birthday, jdbcType=VARCHAR},
+		#{student_status, jdbcType=NUMERIC},
+		#{address, jdbcType=VARCHAR},
+		#{qq, jdbcType=VARCHAR},
+		#{phone, jdbcType=VARCHAR},
+		#{email,
+		jdbcType=VARCHAR},
+		#{grade_id, jdbcType=NUMERIC},
+		#{head_pic,
+		jdbcType=VARCHAR},
+		#{attend_school_id, jdbcType=NUMERIC},
+		#{branch_id,
+		jdbcType=NUMERIC},
+		#{city_id, jdbcType=NUMERIC},
+		#{is_old_student,
+		jdbcType=NUMERIC},
+		#{password, jdbcType=VARCHAR},
+		0,
+		#{remark,
+		jdbcType=VARCHAR},
+		#{create_user, jdbcType=NUMERIC},
+		#{create_time,
+		jdbcType=VARCHAR},
+		#{bu_id,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<insert id="addStudentActive" parameterType="long">
+		insert into tab_student_active (id, student_id, active)
+		values (seq_tab_student_active.nextval, #{studentId}, 1)
+	</insert>
+	
+	<insert id="insertStudentRel" parameterType="map">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT SEQ_STUDENT_REL.currval AS id from dual
+		</selectKey>
+		INSERT INTO STUDENT_REL
+		(
+			ID,
+			STUDENT_ID_NEW,
+			STUDENT_ID_OLD,
+			NEW_USED,
+			OLD_USED
+		)
+		VAlUES
+		(
+		SEQ_STUDENT_REL.nextval,
+		#{STUDENT_ID_NEW, jdbcType=NUMERIC},
+		#{STUDENT_ID_OLD, jdbcType=NUMERIC},
+		#{NEW_USED, jdbcType=NUMERIC},
+		#{OLD_USED, jdbcType=NUMERIC}
+		)
+	</insert>
+	<delete id="delStudentRel">
+		delete from STUDENT_REL where STUDENT_ID_NEW = #{id,jdbcType=NUMERIC}
+	</delete>
+	
+	<update id="modifyPhoto" parameterType="map">
+		update tab_student_info set head_pic=#{head_pic} where id=#{id}
+	</update>
+	
+	<update id="updateStudentContace" parameterType="com.edu.erp.model.StudentInfo">
+		update tab_student_info 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="phone != null and phone !=''">phone = #{phone,jdbcType=VARCHAR},</if>
+			<if test="contact_id != null">contact_id=#{contact_id,jdbcType=NUMERIC},</if>
+			<if test="relation_name != null">relation_name=#{relation_name,jdbcType=VARCHAR},</if>
+			<if test="phone_verify != null">phone_verify = #{phone_verify,jdbcType=NUMERIC}</if>
+		</trim>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+	<insert id="insertNewReferenceStudent" parameterType="com.edu.erp.model.ReferenceStudent">
+		INSERT INTO tab_reference_ht
+		(
+			ID,
+			STUDENT_ID,
+			REFERENCE_STUDENT_ID,
+			CREATE_TIME,
+			CREATE_USER
+		)
+		VAlUES
+		(
+		SEQ_tab_reference_ht.nextval,
+		#{student_id, jdbcType=NUMERIC},
+		#{reference_student_id, jdbcType=NUMERIC},
+		#{create_time, jdbcType=TIMESTAMP},
+		#{create_user, jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<select id="queryNewestRecord" parameterType="long" resultType="com.edu.erp.model.ReferenceStudent">
+		select * from tab_reference_ht where 
+		id = (select max(id) from tab_reference_ht where student_id=#{studentId, jdbcType=NUMERIC})
+		and student_id = #{studentId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="queryReferenceStudentHt"  parameterType="long" resultType="com.edu.erp.model.ReferenceStudent">
+		select ht.id,si.student_name as reference_student_name,ei.employee_name as operator,ht.create_time from tab_reference_ht ht
+		left join tab_student_info si on ht.reference_student_id=si.id
+		left join tab_user_info ui on ui.id = ht.create_user
+		left join tab_employee_info ei on ui.employee_id = ei.id
+		where ht.student_id = #{studentId, jdbcType=NUMERIC}
+		order by ht.create_time desc
+	</select>
+
+	<!-- 校验学生信息重复 -->
+	<select id="getRepeatStudentCount" resultType="int">
+			select count(1) from tab_student_info si
+			where     student_name = #{studentName}
+			and bu_id = #{buId,jdbcType=NUMERIC}
+			and exists(
+			select sc.link_phone from tab_student_contact sc where si.id = sc.student_id
+			and sc.link_phone in (${phones})
+			)
+	</select>
+	<!-- 通过姓名和联系方式查询学员id，姓名 -->
+	<select id="queryStudentByNameAndPhone" resultType="com.edu.erp.model.StudentInfo">
+		select si.id,
+					 si.student_name,
+					 si.encoding,
+					 si.bu_id,
+					 bu.org_name as bu_name,
+					 si.branch_id,
+					 branch.org_name as branch_name,
+					 si.login_no,
+		       si.phone
+			from tab_student_info si
+			left join tab_organization_info bu
+				on bu.id = si.bu_id
+			left join tab_organization_info branch
+				on branch.id = si.branch_id
+		  left join tab_student_active tsa
+		    on tsa.student_id = si.id
+		where si.student_name = #{studentName,jdbcType=VARCHAR}
+		and si.student_status != 2
+		and tsa.active = 1
+		and (si.phone in (${phones}) or exists (
+			select 1 from tab_student_contact sc where sc.student_id = si.id and sc.is_valid = 1
+			and sc.link_phone in(${phones}))
+		)
+		<if test="studentId != null">
+			and si.id != #{studentId}
+		</if>
+	</select>
+
+	<select id="queryStuCourseSchedCount" parameterType="map" resultType="com.edu.erp.model.StudentInfo">
+		select tord.student_id as id, nvl(sum(nvl(toco.course_schedule_count, 0)), 0) as course_schedule_count
+		  from t_order tord, t_order_course toco
+		where tord.id = toco.order_id
+		  and tord.order_status = 1
+		  and tord.city_id = #{city_id}
+		<if test="buId != null and buId != ''">
+			and tord.bu_id = #{buId}
+		</if>
+		  and tord.student_id in (${ids})
+		 group by tord.student_id
+	</select>
+
+	<select id="queryStudentByOrderId" parameterType="long" resultType="com.edu.erp.model.StudentInfo">
+		select tsi.id,
+					tsi.encoding,
+					tsi.student_name,
+					tsi.sex,
+					tsi.birthday,
+					tsi.student_status,
+					tsi.address,
+					tsi.qq,
+					tsi.phone,
+					tsi.contact_id,
+					tsi.relation_name,
+					tsi.email,
+					tsi.grade_id,
+					tsi.head_pic,
+					tsi.attend_school_id,
+					tsi.branch_id,
+					tsi.city_id,
+					tsi.is_old_student,
+					tsi.password,
+					tsi.remark,
+					tsi.create_user,
+					tsi.create_time,
+					tsi.update_user,
+					tsi.update_time,
+					tsi.old_id,
+					tsi.r_city,
+					tsi.code,
+					tsi.syn_exception,
+					tsi.phone_verify,
+					tsi.login_no
+		from 	tab_student_info tsi, t_order tord
+		where tsi.id = tord.student_id
+			and tord.id = #{orderId}
+	</select>
+
+	<insert id="saveStudentNameRecord" parameterType="com.edu.erp.model.StudentNameReviseNote">
+		insert into STUDENT_UPDATE_RECORD (id,changeid,originalname,changename,upuserid,updatetime,recordtype)
+		VALUES (SEQ_STUDENT_UPDATE_RECORD.nextval,#{studentId},#{originalStudentName},#{studentName},#{operatorId},#{updateTime},0)
+	</insert>
+
+	<insert id="saveStudentGradeRecord" parameterType="com.edu.erp.model.StudentGradeReviseNote">
+		insert into STUDENT_UPDATE_RECORD (id,changeid,originalname,changename,upuserid,updatetime,recordtype)
+		VALUES (SEQ_STUDENT_UPDATE_RECORD.nextval,#{studentId},#{originalStudentGrade},#{studentGrade},#{operatorId},#{updateTime},1)
+	</insert>
+
+	<insert id="saveStudentStatusInfo" parameterType="com.edu.erp.model.StudentStatusInfo">
+        insert into tab_student_status (id,student_id,student_status,bu_id,update_time,update_user)
+        VALUES (seq_student_status_info.nextval,#{studentId},#{status},#{buId},#{updateTime},#{updateUserId})
+	</insert>
+
+	<update id="updateStudentStatus" parameterType="com.edu.erp.model.StudentStatusInfo">
+        update tab_student_status set student_status=#{status},update_time=#{updateTime},update_user=#{updateUserId}
+        where  student_id =#{studentId} and bu_id = #{buId}
+	</update>
+
+	<select id="ifStudentExist" parameterType="com.edu.erp.model.StudentStatusInfo" resultType="int">
+         select count(0) from tab_student_status where student_id = #{studentId} and bu_id = #{buId}
+	</select>
+
+	<select id="queryStudentStatusInfo" parameterType="map" resultType="com.edu.erp.model.StudentStatusInfo">
+		 select t.id as id,t.student_id as studentId,t.student_status as status,t.update_time as updateTime
+         from tab_student_status t
+		 where t.student_id = #{studentId} and t.bu_id = #{buId}
+	</select>
+
+	<insert id="saveStudentStatusReviseNote" parameterType="com.edu.erp.model.StudentStatusReviseNote">
+		insert into student_status_record (id,student_id,before_status,after_status,bu_id,update_user,update_time,if_Show)
+		VALUES (seq_student_status_record.nextval,#{studentId},#{beforeStatus},#{afterStatus},#{buId},#{updateUser},#{updateTime},#{ifShow})
+	</insert>
+
+	<update id="updateStudentLoginNo" parameterType="com.edu.erp.model.StudentInfo">
+		update tab_student_info set login_no = #{login_no} where id = #{id}
+	</update>
+
+	<select id="queryStudentAccounts" parameterType="map" resultType="com.edu.erp.student.business.StudentAccount">
+		select tsi.id,
+		tsi.encoding         as studentEncoding,
+		tsi.student_name     as studentName,
+		ta.bu_id             as buId,
+		toi.org_name         as buName,
+		tsi.attend_school_id as schoolId,
+		tds.school_name      as schoolName,
+		tsi.grade_id         as gradeId,
+		tdg.grade_name       as gradeName,
+		ta.fee_amount        as feeAccount,
+		ta.frozen_account    as frozenAccount,
+		ta.refund_account    as refundAccount,
+		(case
+			when tsi.phone is not null and length(tsi.phone) >= 11 then
+				substr(tsi.phone, 1, 3) || '****' || substr(tsi.phone, 8)
+			else
+				tsi.phone
+			end) as phone
+		from tab_student_info tsi
+		left join tab_student_active tsa
+		on tsa.student_id = tsi.id
+		left join tab_data_school tds
+		on tds.id = tsi.attend_school_id
+		left join tab_data_grade tdg
+		on tdg.id = tsi.grade_id
+		left join t_account ta
+		on ta.student_id = tsi.id
+		left join tab_organization_info toi
+		on toi.id = ta.bu_id
+		where ta.bu_id is not null
+		<if test="transOutBuId != null">
+			and ta.bu_id != #{transOutBuId}
+		</if>
+		<if test="(transType == null or transType == '' or transType == 1) and transOutStudentId != null">
+			and tsi.id = #{transOutStudentId}
+		</if>
+		<if test="transType != null and transType != ''">
+			and tsa.active = 1
+		</if>
+		<if test="transType == 2 and transOutStudentId != null">
+			and tsi.id != #{transOutStudentId}
+		</if>
+		<if test="stuSearchInfo != null and stuSearchInfo != ''">
+			and (tsi.encoding = #{stuSearchInfo,jdbcType=VARCHAR} or tsi.student_name = #{stuSearchInfo,jdbcType=VARCHAR})
+		</if>
+	</select>
+
+	<select id="transStuAccount" statementType="CALLABLE" parameterType="java.util.HashMap">
+		<![CDATA[
+    	{call pkg_account_dynamic_v5.pro_do_stu_account_transfer_v5 (
+						#{p_dynamic_id,mode=IN,jdbcType=NUMERIC},
+						#{p_audit_status,mode=IN,jdbcType=VARCHAR},
+						#{o_err_code,mode=OUT,jdbcType=NUMERIC},
+						#{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+			]]>
+	</select>
+
+	<select id="queryStuActiveValue" parameterType="long" resultType="integer">
+		select nvl(active, 0) as active from tab_student_active where student_id = #{studentId}
+	</select>
+
+	<!-- 校验学生信息号码重复 -->
+	<select id="checkStudentselfPhone" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select   count(*)
+		from  tab_student_info
+		where   phone = #{phone}
+		<if test="id != null and id != ''">
+			and  id != #{id}
+		</if>
+	</select>
+</mapper>

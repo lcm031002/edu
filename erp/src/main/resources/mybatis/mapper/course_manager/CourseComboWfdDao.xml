@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.CourseComboWfdDao">
+	
+	<select id="selectForPage" parameterType="Map" resultType="com.edu.erp.model.TCourseComboWfd">
+		select a.*, c.org_name as city_name,d.org_name branch_name,
+			c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,
+            g.grade_name
+		from t_course_combo_wfd a
+		left join tab_organization_info c on a.city_id = c.id and c.status = 1
+		left join tab_organization_info d on a.branch_id = d.id
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		left join tab_data_grade g on a.grade_id = g.id
+		
+		where a.status != 0 
+		<if test="city_id != null and city_id != '' and city_id > 0">
+			and a.city_id = ${city_id}
+		</if>
+		<if test="branch_id != null and branch_id != '' and branch_id > 0">
+			and a.branch_id in(${branch_id})
+		</if>
+		<if test="bu_id != null and bu_id != '' and bu_id > 0">
+			and d.parent_id = ${bu_id} 
+		</if>
+		<if test="combo_type != null and combo_type != '' and combo_type > 0">
+			and a.combo_type = #{combo_type}
+		</if>
+		<if test="month_count != null and month_count != '' and month_count > 0">
+			and a.month_count = #{month_count}
+		</if>
+		<if test="combo_name != null and combo_name != ''">
+			and a.combo_name like '%${combo_name}%'
+		</if>
+		<if test="grade_id != null and grade_id != ''">
+			and a.grade_id = #{grade_id}
+		</if>
+		<if test="grade_name != null and grade_name != ''">
+			and g.grade_name like '%${grade_name}%'
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="selectForList" parameterType="Map" resultType="com.edu.erp.model.TCourseComboWfd">
+		select a.*
+		from t_course_combo_wfd a
+		where a.status != 0 
+		<if test="city_id != null and city_id != '' and city_id > 0">
+			and a.city_id = ${city_id}
+		</if>
+		<if test="branch_id != null and branch_id != '' and branch_id > 0">
+			and a.branch_id in(${branch_id})
+		</if>
+		<if test="combo_type != null and combo_type != '' and combo_type > 0">
+			and a.combo_type = #{combo_type}
+		</if>
+		<if test="month_count != null and month_count != '' and month_count > 0">
+			and a.month_count = #{month_count}
+		</if>
+		<if test="combo_name != null and combo_name != ''">
+			and a.combo_name like '%${combo_name}%'
+		</if>
+		<if test="grade_name != null and grade_name != ''">
+			and g.grade_name like '%${grade_name}%'
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.TCourseComboWfd">
+		insert into t_course_combo_wfd
+			(
+				id,
+				combo_name,
+				city_id,
+				branch_id,
+				combo_type,
+				month_count,
+				course_count,
+				price,
+				img_path,
+				status,
+				create_user,
+				create_time,
+				update_user,
+				update_time,
+				grade_id
+			 ) values 
+			 (
+			 	seq_t_course_combo_wfd.nextval,
+			 	#{combo_name, jdbcType=VARCHAR},
+			 	#{city_id, jdbcType=NUMERIC},
+			 	#{branch_id, jdbcType=NUMERIC},
+			 	#{combo_type, jdbcType=NUMERIC},
+			 	#{month_count, jdbcType=NUMERIC},
+			 	#{course_count, jdbcType=NUMERIC},
+			 	#{price, jdbcType=NUMERIC},
+			 	#{img_path, jdbcType=VARCHAR},
+			 	#{status, jdbcType=NUMERIC},
+			 	#{create_user, jdbcType=NUMERIC},
+			 	#{create_time, jdbcType=VARCHAR},
+			 	#{update_user, jdbcType=NUMERIC},
+			 	#{update_time, jdbcType=VARCHAR},
+			 	#{grade_id, jdbcType=NUMERIC}
+			 )
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.TCourseComboWfd">
+		update t_course_combo_wfd 
+		set 
+			combo_name = #{combo_name, jdbcType=VARCHAR},
+			branch_id = #{branch_id, jdbcType=NUMERIC},
+			combo_type = #{combo_type, jdbcType=NUMERIC},
+			month_count = #{month_count, jdbcType=NUMERIC},
+			course_count = #{course_count, jdbcType=NUMERIC},
+			price = #{price, jdbcType=NUMERIC},
+			img_path = #{img_path, jdbcType=VARCHAR},
+			update_user = #{update_user, jdbcType=NUMERIC},
+			update_time = sysdate,
+			grade_id = #{grade_id, jdbcType=NUMERIC}
+		where id = #{id}	
+	</update>
+	
+	<update id="changeStatus" parameterType="Map" >
+		UPDATE t_course_combo_wfd t
+		SET t.status = ${status},
+		    update_time = sysdate,
+		    update_user = #{update_user,jdbcType=NUMERIC} 
+		WHERE t.id IN (${ids})
+	</update>
+</mapper>

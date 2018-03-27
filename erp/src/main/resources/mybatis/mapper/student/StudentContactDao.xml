@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentContactDao">
+	<select id="selectForPage" parameterType="java.util.Map" resultType="com.edu.erp.model.StudentContact">
+		SELECT a.*, b.student_name,decode(b.contact_id,a.id,1,0) default_phone 
+		FROM tab_student_contact a
+		JOIN tab_student_info b ON a.student_id = b.id 
+		WHERE 1=1
+		<if test="student_id != null and student_id != ''"> 
+			and a.student_id = #{student_id}
+		</if>
+		<if test="is_valid != null"> 
+			and a.is_valid = #{is_valid}
+		</if>
+		order by a.is_valid DESC, a.id DESC
+	</select>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="com.edu.erp.model.StudentContact">
+		SELECT a.*, b.student_name 
+		FROM tab_student_contact a
+		JOIN tab_student_info b ON a.student_id = b.id 
+		WHERE 1=1
+		<if test="student_id != null and student_id != ''"> 
+			and a.student_id = #{student_id}
+		</if>
+		<if test="contact_id != null and contact_id != ''">
+			and a.id = #{contact_id}
+		</if>
+		order by a.id DESC
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.StudentContact">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			select seq_tab_student_contact.currval AS id from dual
+		</selectKey>
+		INSERT INTO tab_student_contact t 
+		(
+			t.id,
+			t.student_id,
+			t.link_phone,
+			t.link_name,
+			t.relation,
+			t.is_valid,
+			t.remark,
+			t.create_user,
+			t.create_time
+		)
+			VALUES 
+		(
+			seq_tab_student_contact.nextval,
+			#{student_id, jdbcType=NUMERIC},
+			#{link_phone, jdbcType=VARCHAR},
+			#{link_name, jdbcType=VARCHAR},
+			#{relation, jdbcType=NUMERIC},
+			#{is_valid, jdbcType=NUMERIC},
+			#{remark, jdbcType=VARCHAR},
+			#{create_user, jdbcType=NUMERIC},
+			#{create_time, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.StudentContact">
+		UPDATE tab_student_contact t SET
+			t.link_name = #{link_name, jdbcType=VARCHAR},
+			t.relation = #{relation, jdbcType=VARCHAR},
+			t.link_phone = #{link_phone, jdbcType=VARCHAR},
+			t.remark = #{remark, jdbcType=VARCHAR},
+			t.update_user = #{update_user, jdbcType=NUMERIC},
+			t.update_time = #{update_time, jdbcType=VARCHAR}
+			WHERE t.id = #{id} and t.student_id = #{student_id} 
+	</update>
+	
+<!-- <update id="changeStatus" parameterType="java.util.Map">
+		update tab_student_contact set is_valid = #{status} where id in (${contact_ids})
+	</update>	 -->
+	<delete id="changeStatus" parameterType="java.util.Map">
+		delete from tab_student_contact where id in (${contact_ids})
+	</delete>	
+	<update id="updateDefaultPhone">
+		update tab_student_info set phone = #{phone, jdbcType=VARCHAR},phone_verify = 0
+		where contact_id = #{id, jdbcType=NUMERIC}
+	</update>
+</mapper>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TaskOwServiceDao">
+     <resultMap type="com.edu.erp.workflow.business.TaskBusiness" id="taskBusinessResult">
+       <id property="id" column="dbid_"/>
+       <result property="name" column="name_"/>
+       <result property="assignee" column="assignee_"/>
+       <result property="description" column="descr_"/>
+       <result property="duedate" column="duedate_"/>
+       <result property="createTime" column="create_"/>
+       <result property="progress" column="progress_"/>
+       <result property="priority" column="priority_"/>
+       <result property="executionId" column="execution_"/>
+       <collection property="extDataL" ofType="com.edu.erp.workflow.business.MapType" javaType="ArrayList">
+          <result property="key_field" column="variable_key"/>
+          <result property="value_field" column="variable_value"/>
+       </collection>
+    </resultMap>
+	<select id="findTasksWithBranch" parameterType="java.util.Map" resultMap="taskBusinessResult">
+			select t.dbid_     ,
+			       t.name_     ,
+			       t.assignee_ ,
+			       t.descr_    ,
+			       t.duedate_  ,
+			       t.create_   ,
+			       t.create_   ,
+			       t.progress_  ,
+			       t.priority_ ,
+			       t.execution_   ,
+			       v.key_  variable_key,
+			       pkg_workflow_common.f_proc_variable(v.class_,v.dbid_,v.string_value_) variable_value
+			  from jbpm4_participation p,jbpm4_task t, jbpm4_execution e, jbpm4_variable v
+			 <where> 
+			 <trim prefix="(" prefixOverrides="and|or" suffix=")">
+				 <if test="candidate != null and candidate != ''">
+				   and p.userid_ = #{candidate,jdbcType=VARCHAR}
+				 </if>
+				 <if test="recandidate != null and recandidate != ''">
+				   or p.userid_ = #{recandidate,jdbcType=VARCHAR}
+				 </if> 
+			 </trim>
+			   and p.task_ = t.dbid_
+			   and t.execution_ = e.dbid_
+			   and e.dbid_ = v.execution_
+			   and p.type_ = 'candidate'
+			   and exists(select 1
+	           from user_application_task ts, jbpm4_variable l
+	          where (ts.id = l.string_value_ or ts.id = l.long_value_)
+	           and l.execution_ = e.dbid_
+	           <if test="APPLICATION_ID != null">
+			      ts.APPLICATION_ID = #{APPLICATION_ID,jdbcType=NUMERIC}
+			   </if>
+			   <if test="start_date != null and end_date != null">
+				  and substr(ts.createtime,0,10) between #{start_date} and #{end_date}
+			   </if>
+			   <if test="auditStatus != null and auditStatus == '待审核'">
+				  and ts.current_state is null
+			   </if>
+			   <if test="auditStatus != null and auditStatus != '' and auditStatus != '待审核' and auditStatus != '全部'">
+				   and ts.current_state = #{auditStatus}
+			   </if>
+			   <if test="task_info != null and task_info != ''">
+				  and (ts.application like  '%'||#{task_info,jdbcType=VARCHAR}||'%'
+				  or ts.createtime like '%'||#{task_info,jdbcType=VARCHAR}||'%'
+				  or  exists (select 1
+                 from jbpm4_variable v2
+                  where v2.execution_ = l.execution_
+                   and pkg_workflow_common.f_proc_variable(v2.class_,
+                                                          v2.dbid_,
+                                                          v2.string_value_) like  '%'||#{task_info,jdbcType=VARCHAR}||'%')
+				  )
+			    </if>
+	           and l.key_ = 'application_id'
+			   <if test="id != null">
+			       and ts.id = #{id,jdbcType=NUMERIC}
+			    </if>
+	           )
+			 <if test="assignee != null and assignee != ''">
+			   and t.assignee_ = #{assignee,jdbcType=VARCHAR}
+			 </if>
+			 <if test="unassignee != null and unassignee != ''">
+			   and t.assignee_ is null
+			 </if>
+		     <if test="execution_id != null and execution_id != ''">
+		        and t.execution_id_ like '%${execution_id,jdbcType=VARCHAR}%'
+		     </if>
+		     <if test="branch_id !=null and branch_id != ''">
+		        and pkg_workflow_common.f_match_variable(e.dbid_, 'branch_id',#{branch_id,jdbcType=VARCHAR}, 0) = 1 --匹配到了校区了
+		     </if>
+		     <if test="startDate !=null and startDate != '' and endDate !=null and endDate != ''">
+		        and to_char(t.create_,'yyyy-mm-dd') between #{startDate,jdbcType=VARCHAR} and #{endDate,jdbcType=VARCHAR}
+		     </if>
+		     <if test="branch_ids !=null and branch_ids != ''">
+		       and
+		       <foreach collection="branch_ids" item="item" index="index" open="(" close=")" separator="or">
+		           pkg_workflow_common.f_match_variable(e.dbid_, 'branch_id',#{item,jdbcType=VARCHAR}, 0) = 1 --匹配到了校区了
+               </foreach>		        
+		     </if>
+		     
+		   </where>
+			   order by t.create_ desc
+	</select>
+	<select id="findBranchTasks" parameterType="Map" resultType="com.edu.erp.workflow.business.TaskBusiness">
+		select 		task.dbid_ 			id,
+					task.name_ 			name,
+					task.assignee_ 		assignee,
+					task.descr_  		description,
+					task.duedate_ 		duedate,
+					task.create_ 		createTime,
+					task.create_ ,
+					task.progress_ 		progress,
+					task.priority_ 		priority,
+					task.execution_ 	executionId   
+		 from  		jbpm4_task task
+		 where 		pkg_workflow_common.f_match_variable(task.execution_, 'branch_id', #{branch_id}, 0) = 1 
+            <if test="start_date != null and start_date != '' and end_date!=null and end_date!='' ">
+				and 	to_char(task.create_,'yyyy-mm-dd') between #{start_date} and #{end_date}
+			</if>
+			<if test="module != null and module != '' and module != '-1'">
+				and 	task.execution_id_ like ''||#{module}||'%'
+			</if>
+            and 
+            exists  (select 	1 
+            		 from 		user_application_task userApp
+            		 join		jbpm4_variable v on v.key_ = 'application_id'
+            		 	and		(userApp.id = v.string_value_ or userApp.id = v.long_value_)	
+            		 where 		v.execution_ = task.execution_
+            		 <if test="auditStatus != null and auditStatus == '待审核'">
+						and 	userApp.current_state is null
+					 </if>
+					 <if test="auditStatus != null and auditStatus != '' and auditStatus != '待审核' and auditStatus != '全部'">
+						and 	userApp.current_state = #{auditStatus}
+					 </if>
+					 <if test="task_info != null and task_info != ''">
+						and    (userApp.application like '%'||#{task_info}||'%' 
+								or userApp.createtime like '%'||#{task_info}||'%'
+							 	or 
+							 	exists (select 1
+			                 			from jbpm4_variable v2
+			                  			where v2.execution_ = v.execution_
+			                   			and pkg_workflow_common.f_proc_variable(v2.class_,
+			                                                          			 v2.dbid_,
+			                                                          			 v2.string_value_) like '%'||#{task_info}||'%')
+						 	   )
+					</if>   				
+            		)
+		 order by 	task.create_ DESC
+	</select>
+	
+	<select id="findGroupTasksWithCdts" parameterType="java.util.Map" resultMap="taskBusinessResult">
+			select t.dbid_     ,
+			       t.name_     ,
+			       t.assignee_ ,
+			       t.descr_    ,
+			       t.duedate_  ,
+			       t.create_   ,
+			       t.create_   ,
+			       t.progress_  ,
+			       t.priority_ ,
+			       t.execution_   ,
+			       v.key_  variable_key,
+			       pkg_workflow_common.f_proc_variable(v.class_,v.dbid_,v.string_value_) variable_value
+			  from jbpm4_participation p,jbpm4_task t, jbpm4_execution e, jbpm4_variable v
+			 <where> 
+			 <trim prefix="(" prefixOverrides="and|or" suffix=")">
+				 <if test="candidate != null and candidate != ''">
+				   and p.userid_ = #{candidate,jdbcType=VARCHAR}
+				 </if>
+				 <if test="recandidate != null and recandidate != ''">
+				   or p.userid_ = #{recandidate,jdbcType=VARCHAR}
+				 </if> 
+			 </trim>
+			   and p.task_ = t.dbid_
+			   and t.execution_ = e.dbid_
+			   and e.dbid_ = v.execution_
+			   and p.type_ = 'candidate'
+			 <if test="assignee != null and assignee != ''">
+			   and t.assignee_ = #{assignee,jdbcType=VARCHAR}
+			 </if>
+			 <if test="unassignee != null and unassignee != ''">
+			   and t.assignee_ is null
+			 </if>
+			 <if test="task_info != null and task_info != ''">
+			    and exists (select 1
+                 from jbpm4_variable v2
+                where v2.execution_ = e.dbid_
+                  and pkg_workflow_common.f_proc_variable(v2.class_,
+                                                          v2.dbid_,
+                                                          v2.string_value_) like  '%'||#{task_info,jdbcType=VARCHAR}||'%')
+			 </if>
+		     <if test="execution_id != null and execution_id != ''">
+		       t.execution_id_ like '%${execution_id,jdbcType=VARCHAR}%'
+		     </if>
+		   </where>
+			   order by t.create_ desc
+	</select>
+	<select id="countGroupTasksWithCdts" parameterType="java.util.Map" resultType="long">
+			select count(distinct t.dbid_) n
+			  from jbpm4_participation p,jbpm4_task t, jbpm4_execution e, jbpm4_variable v
+			 <where> 
+			 <trim prefix="(" prefixOverrides="and|or" suffix=")">
+				 <if test="candidate != null and candidate != ''">
+				   and p.userid_ = #{candidate,jdbcType=VARCHAR}
+				 </if>
+				 <if test="recandidate != null and recandidate != ''">
+				   or p.userid_ = #{recandidate,jdbcType=VARCHAR}
+				 </if> 
+			 </trim>
+			   and p.task_ = t.dbid_
+			   and t.execution_ = e.dbid_
+			   and e.dbid_ = v.execution_
+			   and p.type_ = 'candidate'
+			 <if test="assignee != null and assignee != ''">
+			   and t.assignee_ = #{assignee,jdbcType=VARCHAR}
+			 </if>
+			 <if test="unassignee != null and unassignee != ''">
+			   and t.assignee_ is null
+			 </if>
+			 <if test="task_info != null and task_info != ''">
+			    and exists (select 1
+                 from jbpm4_variable v2
+                where v2.execution_ = e.dbid_
+                  and pkg_workflow_common.f_proc_variable(v2.class_,
+                                                          v2.dbid_,
+                                                          v2.string_value_) like  '%'||#{task_info,jdbcType=VARCHAR}||'%')
+			 </if>
+		     <if test="execution_id != null and execution_id != ''">
+		       t.execution_id_ like '%${execution_id,jdbcType=VARCHAR}%'
+		     </if>
+		   </where>
+			   order by t.create_ desc
+	</select>
+	
+	<select id="findTasks" parameterType="java.util.HashMap" resultType="com.edu.erp.workflow.business.TaskBusiness">
+		select 		task.dbid_ 			id,
+					task.name_ 			name,
+					task.assignee_ 		assignee,
+					task.descr_  		description,
+					task.duedate_ 		duedate,
+					task.create_ 		createTime,
+					task.create_ ,
+					task.progress_ 		progress,
+					task.priority_ 		priority,
+					task.execution_ 	executionId,
+					tei.employee_name employeeName
+		from 		jbpm4_task task
+		join   (select  p.task_,
+						p.userid_ 
+				from 	jbpm4_participation p 
+				where 	p.type_ = 'candidate' 
+				group by p.task_, p.userid_) part on task.dbid_ = part.task_
+		left join jbpm4_variable jva  on task.execution_ = jva.execution_ and jva.key_ = 'application_id'
+		left join USER_APPLICATION_TASK uat on  uat.id = long_value_ || string_value_
+		left join tab_user_info tui on uat.application_id = tui.id
+		left join tab_employee_info tei on tui.employee_id = tei.id
+		where  
+		<trim prefix="(" prefixOverrides="and|or" suffix=")">
+			<if test="candidates != null and candidates != ''">
+		   		and  part.userid_  = #{candidates,jdbcType=NUMERIC}
+			</if>
+			<if test="recandidate != null and recandidate != ''">
+		   		or   part.userid_ = #{recandidate,jdbcType=NUMERIC}
+			</if> 	
+	    </trim>
+		<if test="assignee != null and assignee != ''">
+	   	   and  task.assignee_ = #{assignee,jdbcType=VARCHAR}
+		</if>
+		<if test="unassignee != null and unassignee != ''">
+	   	   and  task.assignee_ is null
+	    </if>
+	    <if test="module != null and module != '' and module != '-1'">
+			and task.execution_id_ like ''||#{module,jdbcType=VARCHAR}||'%'
+		</if>
+	    <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+	   	   and  to_char(task.create_,'yyyy-MM-dd') between #{startDate,jdbcType=VARCHAR} and #{endDate,jdbcType=VARCHAR}
+	    </if>
+		    and exists (select 1
+                from jbpm4_variable v2
+               where v2.execution_ = task.execution_
+			    and string_value_ like '%'||#{task_info,jdbcType=VARCHAR}||'%'
+				<if test="branch_id != null and branch_id != '-1'">
+					and v2.execution_ in (
+						select execution_ from
+						jbpm4_variable where key_ = 'branch_id' AND long_value_ = #{branch_id}
+					)
+				</if>
+		    )
+		 order by task.create_ desc
+	</select>
+	<select id="findVariables" parameterType="Map" resultType="com.edu.erp.workflow.business.MapType">
+		select 	key_ key_field,
+				pkg_workflow_common.f_proc_variable(class_, dbid_, string_value_)  value_field 
+		from 	jbpm4_variable
+		where 	execution_ = #{executionId}
+	</select>
+	
+	<select id="findTaskByOrderId" parameterType="Map" resultType="com.edu.erp.workflow.business.TaskBusiness">
+		select 		task.dbid_ 			id,
+					task.name_ 			name,
+					task.assignee_ 		assignee,
+					task.descr_  		description,
+					task.duedate_ 		duedate,
+					task.create_ 		createTime,
+					task.create_ ,
+					task.progress_ 		progress,
+					task.priority_ 		priority,
+					task.execution_ 	executionId
+		from 		jbpm4_task task
+		join   (select  p.task_,
+						p.userid_ 
+				from 	jbpm4_participation p 
+				where 	p.type_ = 'candidate' 
+				group by p.task_, p.userid_) part on task.dbid_ = part.task_
+		left join jbpm4_ext_processrole_def jepd
+		   on instr(task.execution_id_, jepd.process_key) > 0
+		   and task.name_ = jepd.process_task
+		left join jbpm4_ext_businessrole_mapping jebm
+		   on jebm.process_role_def_id = jepd.id
+		where part.userid_ = jebm.business_role_id
+		   and exists (select 1
+               from jbpm4_variable v2
+              where v2.execution_ = task.execution_
+                and v2.key_ = 'order_id'
+                and pkg_workflow_common.f_proc_variable(v2.class_,
+                                                        v2.dbid_,
+                                                        v2.string_value_) = #{orderId,jdbcType=VARCHAR})
+                and rownum = 1
+	</select>
+</mapper>

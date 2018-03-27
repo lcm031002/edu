@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TimeSeasonDao">
+
+	<select id="selectForPage" resultType="com.edu.erp.model.TimeSeason" parameterType="java.util.Map">
+				select
+					   t1.*,
+					   t4.name product_line_name,
+					   decode(t1.business_type, 1,'班级课', 2,'一对一', 3,'晚辅导') business_type_name,
+					   decode(t1.season, 1, '春季', 2, '夏季', 3, '秋季', 4, '冬季') season_name,
+                       t2.COURSE_SEASON_NAME  as last_course_season_name,
+                       t3.org_name city_name,
+                       c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+                       
+                  from tab_time_season t1
+                  left join TAB_TIME_SEASON t2 on t1.LAST_SEASON_ID = t2.id
+                  left join	tab_organization_info t3 on t1.city_id = t3.id
+                  left join tp_product_line t4 on t1.product_line = t4.id
+                  
+                 <!-- 新增用户-->
+				 left join tab_user_info c_user on t1.create_user = c_user.id
+				 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+				 <!-- 修改用户-->
+				 left join tab_user_info u_user on t1.update_user = u_user.id
+				 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+                 <if test="bu_id!=null">
+                 	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
+                 	and bdr.DICT_ID = t1.id
+                 	and bdr.DICT_TYPE = 'tab_time_season'
+                 </if>
+                  where t1.status != 0 and t1.city_id = #{city_id}
+                 <if test="course_season_name != null and course_season_name != ''">
+                 	 and t1.course_season_name like '%${course_season_name}%'
+                 </if>
+                 ORDER BY nvl(t1.update_time, nvl(t1.create_time, to_date('1900-01-01', 'yyyy-MM-dd'))) DESC, t1.id DESC
+	</select>
+	
+	<select id="selectSeasons" resultType="com.edu.erp.model.DataDictionary" parameterType="com.edu.erp.model.DataDictionary">
+			SELECT ID AS VALUE, COURSE_SEASON_NAME AS LABEL
+			  FROM TAB_TIME_SEASON
+			 WHERE BUSINESS_TYPE = #{businessType,jdbcType=NUMERIC}
+			   AND STATUS = 1
+			   AND PRODUCT_LINE = #{product_line,jdbcType=NUMERIC}
+			   AND CITY_ID = #{city_id,jdbcType=NUMERIC}
+			   AND id in (select dict_id
+			                from BU_DICT_REL
+			               where bu_id = 11
+			                 and dict_type = 'tab_time_season')
+			 order by ID desc
+	</select>
+	
+	<select id="selectList"  parameterType="java.util.Map" resultType="com.edu.erp.model.TimeSeason">
+		SELECT 
+			t.*
+	  	FROM TAB_TIME_SEASON t
+	  	<if test="bu_id!=null">
+         	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
+         	and bdr.DICT_ID = t.id
+         	and bdr.DICT_TYPE = 'tab_time_season'
+         </if>
+	 	WHERE t.STATUS = 1
+	 	<if test="city_id != null">
+	 		and t.city_id = #{city_id}
+	 	</if>
+	 	<if test="season_id != null and season_id != '' and season_id != -1">
+	 	   and t.id = #{season_id}
+	 	</if>
+	 	<if test="product_line != null and product_line != '' and product_line != -1">
+	   		and t.product_line = #{product_line,jdbcType=NUMERIC}
+	   </if>
+	 	<!-- 严格匹配 -->
+	 	<if test="strict_season_name != null and strict_season_name != ''">
+			and  t.course_season_name = #{strict_season_name,jdbcType=VARCHAR}
+		 </if>
+		ORDER BY t.end_date DESC
+	</select>
+	
+	<select id="selectById" resultType="com.edu.erp.model.TimeSeason" parameterType="java.lang.String">
+		SELECT 
+		*
+	  	FROM TAB_TIME_SEASON
+	 	WHERE STATUS = 1 AND ID = #{id} 
+		ORDER BY ID ASC
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.TimeSeason">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select  seq_TAB_TIME_SEASON.nextval as id from dual
+		</selectKey>
+		INSERT INTO TAB_TIME_SEASON T
+		(
+			ID,
+	       	ENCODING,
+	       	LAST_SEASON_ID,
+	       	COURSE_SEASON_NAME,
+	       	SEASON,
+	       	START_DATE,
+	       	END_DATE,
+	       	BUSINESS_TYPE,
+	       	product_line,
+	       	STATUS,
+	       	CITY_ID,
+	       	DESCRIPTION,
+	       	CREATE_USER,
+	       	CREATE_TIME
+		) 
+		VALUES
+		(
+			#{id,jdbcType=NUMERIC},
+			#{encoding,jdbcType=VARCHAR},
+			#{last_season_id,jdbcType=NUMERIC},
+			#{course_season_name,jdbcType=VARCHAR},
+			#{season,jdbcType=NUMERIC},
+			#{start_date,jdbcType=VARCHAR},
+			#{end_date,jdbcType=VARCHAR},
+			#{business_type,jdbcType=NUMERIC},
+			#{product_line,jdbcType=NUMERIC},
+			#{status,jdbcType=NUMERIC},
+			#{city_id,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{create_user,jdbcType=VARCHAR},
+			#{create_time,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.TimeSeason">
+            UPDATE TAB_TIME_SEASON SET 
+	       	LAST_SEASON_ID = #{last_season_id, jdbcType=NUMERIC},
+	       	COURSE_SEASON_NAME = #{course_season_name, jdbcType=VARCHAR},
+	       	SEASON = #{season, jdbcType=NUMERIC},
+	       	START_DATE = #{start_date, jdbcType=VARCHAR},
+	       	END_DATE = #{end_date, jdbcType=VARCHAR},
+	       	BUSINESS_TYPE = #{business_type, jdbcType=NUMERIC},
+	       	PRODUCT_LINE = #{product_line, jdbcType=NUMERIC},
+	       	CITY_ID = #{city_id, jdbcType=VARCHAR},
+	       	DESCRIPTION = #{description, jdbcType=VARCHAR},
+	       	UPDATE_USER = #{update_user, jdbcType=VARCHAR},
+	       	UPDATE_TIME = #{update_time, jdbcType=VARCHAR},
+	       	ENCODING = #{encoding, jdbcType=VARCHAR}
+	       	WHERE ID = #{id}
+	</update>
+	
+	<update id="deleteByIds" parameterType="java.util.List">
+            UPDATE TAB_TIME_SEASON SET STATUS = '0' WHERE ID IN
+            <foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+			</foreach>
+	</update>
+	
+	<update id="changeStatus" parameterType="Map" >
+		UPDATE tab_time_season t
+		SET t.status = ${status},
+		    update_time = sysdate,
+		    update_user = #{update_user,jdbcType=NUMERIC} 
+		WHERE t.id IN (${ids})
+	</update>
+	
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TPScheduleTimeDao">
+
+	<select id="selectForPage" resultType="com.edu.erp.model.TPScheduleTime" parameterType="Map">
+		select
+			a.name,a.start_time startTime,a.end_time endTime
+			c_emp.employee_name as create_user_name,
+			u_emp.employee_name as update_user_name
+	  	from 			tp_schedule_time a
+	  		<!-- 新增用户-->
+			left join tab_user_info c_user on a.create_user = c_user.id
+			left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+			<!-- 修改用户-->
+			left join tab_user_info u_user on a.update_user = u_user.id
+			left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+	  	where 
+	  		a.status != 0
+	  		and 		a.org_id = #{city_id}
+		<if test="city_id != null and city_id != -1 and city_id != ''">
+			and a.city_id = #{city_id}
+		</if>
+		<if test="bu_id != null and bu_id != -1 and bu_id != ''">
+			and a.bu_id = #{buId}
+		</if>
+		<if test="branch_id != null and branch_id != ''">
+			and a.branch_id = #{branchId}
+		</if>
+		<if test="name != null and name != ''">
+			and a.name like '%${name}%'
+		</if>
+	  	order by a.update_time DESC, a.id DESC
+	</select>
+
+	<select id="selectList" parameterType="Map" resultType="com.edu.erp.model.TPScheduleTime">
+		select 
+			a.name,a.start_time startTime,a.end_time endTime
+	  	from 
+	  		tp_schedule_time a
+	  	where 
+	  		a.status = 1
+  		<if test="city_id != null and city_id != -1 and city_id != ''">
+  			and a.city_id = #{city_id}
+  		</if>
+  		<if test="bu_id != null and bu_id != -1 and bu_id != ''">
+  			and a.bu_id = #{bu_id}
+  		</if>
+  		<if test="branch_id != null and branch_id != ''">
+  			and a.branch_id = #{branchId}
+  		</if>
+  		<if test="name != null and name != ''">
+  			and a.name like '%${name}%'
+  		</if>
+		order by a.name ASC
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.TPScheduleTime">
+		insert into tp_schedule_time
+		(
+			id,
+			name,
+			start_time,
+			end_time,
+			branch_id,
+			bu_id,
+			city_id,
+			status,
+			update_user, 
+        	update_time,
+        	create_user, 
+        	create_time
+		)
+		VALUES
+		(
+			seq_tp_schedule_time.nextval,
+			#{name,jdbcType=VARCHAR},
+			#{startTime,jdbcType=VARCHAR},
+			#{endTime,jdbcType=VARCHAR},
+			#{branchId,jdbcType=NUMERIC},
+			#{buId,jdbcType=NUMERIC},
+			#{city_id,jdbcType=NUMERIC},
+			#{status,jdbcType=NUMERIC},
+			#{update_user,jdbcType=NUMERIC},
+			#{update_time,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.TPScheduleTime">
+		update tp_schedule_time
+		set
+			name=#{name,jdbcType=VARCHAR},
+			start_time=#{startTime,jdbcType=VARCHAR},
+			end_time=#{endTime,jdbcType=VARCHAR},
+			update_user=#{update_user,jdbcType=VARCHAR},
+			update_time=#{update_time,jdbcType=VARCHAR}
+		where 
+			id = #{id}
+	</update>
+
+	<update id="changeStatus" parameterType="java.util.Map" >
+		update tp_schedule_time t
+		set t.status = ${status} 
+		where t.id in (${ids})
+	</update>	
+</mapper>

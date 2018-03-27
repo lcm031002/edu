@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TabInvoiceReceiveLogDao">
+	<select id="queryByInvoiceId" parameterType="long" resultType="com.edu.erp.model.TabInvoiceReceiveLog">
+    select tirl.id,
+            tirl.invoice_id as invoiceId,
+            tirl.receiver_code as receiverCode,
+            (select vdd.name
+              from vt_dict_data vdd
+             where vdd.typecode = 'receiverCode'
+               and vdd.code = tirl.receiver_code) as receiver,
+            tirl.status,
+            (select vdd.name
+              from vt_dict_data vdd
+             where vdd.typecode = 'invoiceReceiveStatus'
+               and vdd.code = to_char(tirl.status)) as statusName,
+            tirl.remark,
+            tirl.create_user,
+            vue.employee_name as create_user_name,
+            tirl.create_time
+       from tab_invoice_receive_log tirl
+       left join vt_user_emp vue
+    on vue.user_id = tirl.create_user
+      where tirl.invoice_id = #{invoiceId}
+  </select>
+
+  <insert id="add" parameterType="com.edu.erp.model.TabInvoiceReceiveLog">
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+      SELECT SEQ_TAB_INVOICE_RECEIVE_LOG.nextval AS id from dual
+    </selectKey>
+    insert into tab_invoice_receive_log (
+      id,
+      invoice_id,
+      receiver_code,
+      status,
+      <if test="remark != null and remark != ''">
+      remark,
+      </if>
+      create_user,
+      create_time
+    ) values (
+      #{id},
+      #{invoiceId},
+      #{receiverCode},
+      #{status},
+      <if test="remark != null and remark != ''">
+      #{remark},
+      </if>
+      #{create_user},
+      #{create_time}
+    )
+  </insert>
+
+  <delete id="deleteByInvoiceId" parameterType="long">
+    delete from tab_invoice_receive_log where invoice_id = #{invoiceId}
+  </delete>
+
+  <delete id="deleteById" parameterType="long">
+    delete from tab_invoice_receive_log where id = #{id}
+  </delete>
+</mapper>

@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.CourseSchedulingDao">
+
+	<select id="selectForPage" parameterType="page" resultType="com.edu.erp.model.CourseScheduling">
+		select 
+	      a.*, b.course_name, c.teacher_name,
+	      c_user.username as create_user_name, u_user.username as update_user_name
+	    from t_course_scheduling a
+	    join t_course b on a.course_id = b.id and b.status in (1,2,3)
+	    left join tab_teacher_info c on a.teacher_id = c.id and c.status = 1
+	    left join tab_user_info c_user on a.create_user = c_user.id
+	    left join tab_user_info u_user on a.update_user = u_user.id
+	    where a.valid_status = 1   
+	    <if test="paramMap.course_id != null and paramMap.course_id != ''">
+	      and a.course_id = #{paramMap.course_id}
+	      </if>
+	    order by a.course_date ASC, a.start_time ASC, a.end_time ASC
+	</select>
+	
+	<update id="update" parameterType="com.edu.erp.model.CourseScheduling">
+		update t_course_scheduling set 
+			<if test="teacher_id!=null">
+				teacher_id = #{teacher_id},
+			</if>
+				assteacher_id = #{assteacher_id,jdbcType=NUMERIC},
+			<if test="course_date!=null">
+				course_date = #{course_date},
+			</if>
+			<if test="start_time!=null">
+				start_time = #{start_time},
+			</if>
+			<if test="end_time!=null">
+				end_time = #{end_time},
+			</if>
+			<if test="week_number!=null">
+				week_number = #{week_number,jdbcType=NUMERIC},
+			</if>
+			<if test="update_user!=null">
+				update_user = #{update_user},
+			</if>
+			<if test="update_time!=null">
+				update_time = sysdate,
+			</if>
+			remark	= #{remark}
+		where id = #{id}
+	</update>
+	
+	<select id="queryOne" parameterType="java.lang.Long" resultType="com.edu.erp.model.CourseScheduling">
+		select a.*,
+		       b.course_name,
+		       c.teacher_name,
+		       c_user.username as create_user_name,
+		       u_user.username as update_user_name
+		  from t_course_scheduling a
+		  join t_course b
+		    on a.course_id = b.id
+		   and b.status in (1, 2, 3)
+		  left join tab_teacher_info c
+		    on a.teacher_id = c.id
+		   and c.status = 1
+		  left join tab_user_info c_user
+		    on a.create_user = c_user.id
+		  left join tab_user_info u_user
+		    on a.update_user = u_user.id
+		 where a.valid_status = 1
+		   and a.id = #{id,jdbcType=NUMERIC}
+		 order by a.course_date ASC, a.start_time ASC, a.end_time ASC
+	</select>
+	
+	<!-- 查询课程的排课信息 -->
+	<select id="queryCourseScheduling" parameterType="com.edu.erp.model.CourseScheduling" resultType="com.edu.erp.model.CourseScheduling">
+		select a.*,
+		       b.course_name,
+		       c.teacher_name,
+		       c.encoding as teacher_code,
+		       d.teacher_name as assteacher_name,
+		       d.encoding as assteacher_code,
+		       c_user.username as create_user_name,
+		       u_user.username as update_user_name,
+		       <if test="student_id!=null">
+		       case
+		         when student_course_time.is_valid = 1 then
+		          1
+		         else
+		          0
+		       end is_ordered,
+		       ${student_id} student_id,
+		        tsi.num sort_num,
+		       </if>
+		       a.remark,
+		       tctt.title,
+		       nvl(tcrr.room_id, -1) as class_room_id
+		  from t_course_scheduling a
+		  join t_course b
+		    on a.course_id = b.id
+		   and b.status in (1, 2, 3)
+		  left join tab_teacher_info c
+		    on a.teacher_id = c.id
+		  left join tab_teacher_info d
+		    on a.assteacher_id = d.id
+		  left join tab_user_info c_user
+		    on a.create_user = c_user.id
+		  left join tab_user_info u_user
+		    on a.update_user = u_user.id
+		  left join t_course_times_title tctt
+		  on tctt.course_id=a.course_id and tctt.course_times=a.course_times
+		  left join t_course_room_rel tcrr
+		   on tcrr.course_id = a.course_id
+		  and tcrr.seq = a.course_times
+		  <if test="student_id!=null">
+		  left join t_sortnum_info tsi 
+		  on tsi.course_id=a.course_id  and tsi.seq=a.course_times 
+		  and tsi.student_id= #{student_id} and tsi.status=1
+		  left join (select toc.course_id, toct.times, toct.is_valid,tod.student_id
+		               from t_order tod
+		               left join t_order_course toc
+		                 on tod.id = toc.order_id
+		               left join T_ORDER_COURSE_TIMES toct
+		                 on toct.ocid = toc.id
+		              where tod.student_id = #{student_id}
+		               and toc.course_id = #{course_id}
+		                and tod.ORDER_STATUS = 1 
+		                and toct.is_valid = 1) student_course_time
+		    on student_course_time.course_id = b.id
+		   and a.course_times = student_course_time.times
+		   </if>
+		 where a.valid_status = 1
+		   and a.course_id = #{course_id}
+		 order by a.COURSE_TIMES ASC, a.start_time ASC, a.end_time ASC
+	</select>
+	
+	<!-- 查询学生报班中待确认的课次信息 -->
+	<select id="queryConfirmCourseScheduling" parameterType="com.edu.erp.model.CourseScheduling" resultType="com.edu.erp.model.CourseScheduling">
+		select a.*,
+		       b.course_name,
+		       c.teacher_name,
+		       c.encoding as teacher_code,
+		       d.teacher_name as assteacher_name,
+		       d.encoding as assteacher_code,
+		       c_user.username as create_user_name,
+		       u_user.username as update_user_name,
+		       <if test="student_id!=null">
+		       case
+		         when student_course_time.is_valid = 1 then
+		          1
+		         else
+		          0
+		       end is_ordered,
+		       ${student_id} student_id,
+		        tsi.num sort_num,
+		       </if>
+		       a.remark,
+		       tctt.title
+		  from t_course_scheduling a
+		  join t_course b
+		    on a.course_id = b.id
+		   and b.status in (1, 2, 3)
+		  left join tab_teacher_info c
+		    on a.teacher_id = c.id
+		  left join tab_teacher_info d
+		    on a.assteacher_id = d.id
+		  left join tab_user_info c_user
+		    on a.create_user = c_user.id
+		  left join tab_user_info u_user
+		    on a.update_user = u_user.id
+		  left join t_course_times_title tctt
+		  on tctt.course_id=a.course_id and tctt.course_times=a.course_times 
+		  <if test="student_id!=null">
+		  left join t_sortnum_info tsi 
+		  on tsi.course_id=a.course_id  and tsi.seq=a.course_times 
+		  and tsi.student_id= #{student_id} and tsi.status=1
+		  left join (SELECT distinct toc.course_id, toct.course_times times, 1 is_valid,tod.student_id
+	        FROM tab_order_info tod
+	        LEFT JOIN  tab_order_info_detail toc
+	        ON tod.id = toc.order_id
+	        LEFT JOIN TAB_ORDER_COURSE_TIMES_INFO toct
+	        ON toct.order_detail_id = toc.id
+	        WHERE  tod.student_id = #{student_id}
+	        AND toc.course_id = #{course_id}
+	        AND tod.valid_status = 1 and tod.check_status!=4) student_course_time
+		    on student_course_time.course_id = b.id
+		   and a.course_times = student_course_time.times
+		   </if>
+		 where a.valid_status = 1
+		   and a.course_id = #{course_id}
+		 order by a.COURSE_TIMES ASC, a.start_time ASC, a.end_time ASC
+	</select>
+	
+	<select id="queryCourseSchedulingTimesByStudent" parameterType="com.edu.erp.model.CourseScheduling" resultType="com.edu.erp.model.TOrderCourseTimes">
+		select   toct.times, toct.is_valid,tod.student_id,toct.ocid 
+		               from t_order tod
+		               left join t_order_course toc
+		                 on tod.id = toc.order_id
+		               left join T_ORDER_COURSE_TIMES toct
+		                 on toct.ocid = toc.id
+		              where tod.student_id = #{student_id}
+		               and toc.course_id = #{course_id}
+		                and tod.ORDER_STATUS = 1 
+	</select>
+	
+	<select id="queryConfirmTimesByCoursesStudent" parameterType="com.edu.erp.model.CourseScheduling" resultType="com.edu.erp.model.TOrderCourseTimes">
+			SELECT DISTINCT
+		    toc.course_id,
+		    toct.course_times times,
+		    1                 is_valid,
+		    tod.student_id
+		FROM
+		    tab_order_info tod
+		LEFT JOIN
+		    tab_order_info_detail toc
+		ON
+		    tod.id = toc.order_id
+		LEFT JOIN
+		    TAB_ORDER_COURSE_TIMES_INFO toct
+		ON
+		    toct.order_detail_id = toc.id
+		WHERE
+		    tod.student_id = #{student_id}
+		AND toc.course_id = #{course_id}
+		AND tod.valid_status = 1
+		AND tod.check_status!=4
+		AND toct.order_detail_id NOT IN
+		    (
+		        SELECT
+		            toct.ocid
+		        FROM
+		            t_order tod
+		        LEFT JOIN
+		            t_order_course toc
+		        ON
+		            tod.id = toc.order_id
+		        LEFT JOIN
+		            T_ORDER_COURSE_TIMES toct
+		        ON
+		            toct.ocid = toc.id
+		        WHERE
+		            tod.student_id = #{student_id}
+		        AND toc.course_id = #{course_id}
+		        AND tod.ORDER_STATUS = 1 )
+	</select>
+	
+	<select id="queryTransferTimesByCoursesStudent" parameterType="com.edu.erp.model.CourseScheduling" resultType="com.edu.erp.model.TOrderCourseTimes">
+		SELECT
+		    toct.ocid,
+		    toct.is_valid,
+		    toct.times
+		FROM
+		    t_order tod
+		LEFT JOIN
+		    t_order_course toc
+		ON
+		    tod.id = toc.order_id
+		LEFT JOIN
+		    T_ORDER_COURSE_TIMES toct
+		ON
+		    toct.ocid = toc.id
+		WHERE
+		    tod.student_id =#{student_id}
+		AND toc.course_id =#{course_id}
+		AND tod.ORDER_STATUS = 1
+		AND toct.is_valid=1
+		AND toct.ocid NOT IN
+		    (
+		        SELECT
+		            toct.order_detail_id
+		        FROM
+		            tab_order_info tod
+		        LEFT JOIN
+		            tab_order_info_detail toc
+		        ON
+		            tod.id = toc.order_id
+		        LEFT JOIN
+		            TAB_ORDER_COURSE_TIMES_INFO toct
+		        ON
+		            toct.order_detail_id = toc.id
+		        WHERE
+		            tod.student_id =#{student_id}
+		        AND toc.course_id =#{course_id}
+		        AND tod.valid_status = 1 )
+	</select>
+	
+	<select id="queryOrderCourseScheduling" parameterType="java.lang.Long" resultType="com.edu.erp.model.CourseScheduling">
+		select a.*,
+		       b.course_name,
+		       c.teacher_name,
+		       c.encoding as teacher_code,
+		       c_user.username as create_user_name,
+		       u_user.username as update_user_name,
+		       a.remark
+		  from t_course_scheduling a
+		  join t_course b
+		    on a.course_id = b.id
+		   and b.status in (1, 2, 3)
+		  left join tab_teacher_info c
+		    on a.teacher_id = c.id
+		  left join tab_user_info c_user
+		    on a.create_user = c_user.id
+		  left join tab_user_info u_user
+		    on a.update_user = u_user.id
+		 where a.valid_status = 1
+		   and a.course_id in
+		       (select course_id from t_order_course where order_id = #{orderId,jdbcType=NUMERIC})
+		 order by a.course_id, a.COURSE_TIMES ASC, a.start_time ASC, a.end_time ASC
+	</select>
+	
+	<!-- 获取需要排课的课程 -->
+	<select id="getSchedulingCourseID" resultType="java.lang.Long">
+    	select 			t1.id
+			from		t_course t1
+		left join 		t_course_scheduling t2 on t1.id = t2.course_id
+		where t1.status = 1
+		group by 		t1.id, t1.course_count 
+		having 			t1.course_count > count(t2.id) or count(t2.id) = 0 and t1.course_count > 0
+	</select>
+	
+	<select id="p_update_Scheduling" statementType="CALLABLE" parameterType="java.util.Map">
+   	    {call pkg_course_main.p_update_scheduling(	
+   	    											#{course_id,mode=IN,jdbcType=NUMERIC},
+								              		#{course_times,mode=IN,jdbcType=NUMERIC},
+								              		#{course_date,mode=IN,jdbcType=VARCHAR},
+								              		#{start_time,mode=IN,jdbcType=VARCHAR},
+								              		#{end_time,mode=IN,jdbcType=VARCHAR},
+								              		#{user_id,mode=IN,jdbcType=NUMERIC},
+								              		#{error_code,mode=OUT,jdbcType=NUMERIC},
+								             		#{error_desc,mode=OUT,jdbcType=VARCHAR}
+								             	)
+        }
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.CourseScheduling">
+		<selectKey resultType="java.lang.Long" keyProperty="id"  order="BEFORE">
+			SELECT seq_t_course_scheduling.nextval AS id from dual
+		</selectKey>
+		insert into t_course_scheduling
+		(id,
+		 course_id,
+		 branch_id,
+		 grade_id,
+		 subject_id,
+		 teacher_id,
+		 business_type,
+		 course_date,
+		 start_time,
+		 end_time,
+		 week_number,
+		 course_times,
+	     course_cnt,
+		<!-- order_course_id,-->
+		 attended,
+		 valid_status,
+		 create_user,
+		 create_time,
+		 update_user,
+		 update_time,
+		 remark,
+		 assteacher_id
+		 )
+		 values
+		 (
+			#{id,		        jdbcType=NUMERIC},
+		 	#{course_id,		jdbcType=NUMERIC},
+		 	#{branch_id,		jdbcType=NUMERIC},
+		 	#{grade_id,			jdbcType=NUMERIC},
+		 	#{subject_id,		jdbcType=NUMERIC},
+		 	#{teacher_id,		jdbcType=NUMERIC},
+		 	#{business_type,	jdbcType=NUMERIC},
+		 	#{course_date,		jdbcType=NUMERIC},
+		 	#{start_time,		jdbcType=VARCHAR},
+		 	#{end_time,			jdbcType=VARCHAR},
+		 	#{week_number,		jdbcType=NUMERIC},
+		 	#{course_times,		jdbcType=VARCHAR},
+	        #{course_cnt,		jdbcType=NUMERIC},
+		 	<!--#{order_course_id,	jdbcType=NUMERIC},-->
+		 	'N',
+		 	 1,
+		 	#{create_user,		jdbcType=NUMERIC},
+		 	#{create_time,		jdbcType=VARCHAR},
+		 	#{update_user,		jdbcType=NUMERIC},
+		 	#{update_time,		jdbcType=VARCHAR},
+			#{remark,		    jdbcType=VARCHAR},
+			#{assteacher_id,	jdbcType=NUMERIC}
+		 )
+	</insert>
+	
+	<!-- 排课 -->
+	<select id="schedulingCourse" statementType="CALLABLE" parameterType="java.util.HashMap">
+		<![CDATA[
+		    {call pkg_course_main.p_course_plan(#{course_id,mode=IN,jdbcType=NUMERIC},
+										        #{error_code,mode=OUT,jdbcType=NUMERIC},
+										        #{error_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 删除排课 -->
+	<select id="deleteSchedulingCourse" statementType="CALLABLE" 			parameterType="java.util.HashMap">
+			<![CDATA[
+			    	{
+			call pkg_course_main.p_delete_course_plan(
+			#{course_id,mode=IN,jdbcType=NUMERIC},
+						#{error_code,mode=OUT,jdbcType=NUMERIC},
+			         		#{error_desc,mode=OUT,jdbcType=VARCHAR})}
+			]]>
+	</select>
+	
+	
+	<select id="queryCourseSchedulingStudents" parameterType="HashMap" resultType="HashMap">
+		select distinct a.id "attendanceId",
+                o.student_id "studentId",
+                stu.encoding "studentEncodeing",
+                stu.student_name "studentName",
+                stu.head_pic "headPic",
+                case when a.attend_type is null then 10 
+                when a.attend_type is not null then a.attend_type end as "attendType",
+                vocti.IS_VALID as isValid,
+                vocti.IS_VALID_NAME as isValidName,
+                vocti.STATUS_TYPE_NAME as statusTypeName,
+                oc.id as "orderCourseId",
+                o.order_no "orderEncoding",
+                stu.id,
+                stu.phone,
+                a.remark,
+                tds.school_name "schoolName",
+                t.id as "schedulingId",
+                teacher.id "teacherId",
+                teacher.teacher_name "teacherName",
+                pkg_utils.check_order_return(oc.id) "isReturn",
+                case
+                  when (select count(1)
+                          from user_application_task t
+                         where t.busi_id = a.id
+                           and t.busi_type = 11
+                           and t.current_state is null) > 0 then
+                   1
+                  else
+                   0
+                end "attShenpiStatus",
+                t.course_date as "courseDate",
+                a.remark as "remark",
+                t.assteacher_id as "assteacherId",
+                ass.teacher_name as "assteacherName",
+                tei.activation_code as "activation_code",
+                tei.valid_start_date as "valid_start_date",
+                tei.valid_end_date as "valid_end_date"
+		  from t_course_scheduling t
+		  join t_order_course oc
+		    on t.course_id = oc.course_id
+		  join t_order o
+		    on oc.order_id = o.id
+		  join tab_student_info stu
+		    on o.student_id = stu.id
+		  left join tab_data_school tds
+		    on stu.ATTEND_SCHOOL_ID = tds.id
+		  join t_order_course_times oct
+		    on oc.id = oct.ocid
+		   and t.course_times = oct.times
+		   and oct.is_valid = 1
+		  left join t_attendance a
+		    on t.id = a.scheduling_id
+		   and a.student_id = o.student_id
+		   and oc.id = a.order_course_id
+		  left join VIEW_ORDER_COURSE_TIMES_INFO vocti
+		    on oc.id = vocti.ORDER_DETAIL_ID
+		   and vocti.COURSE_TIMES = t.course_times
+		  left join T_ORDER_LOCK tolock
+		    on tolock.ORDER_ID = o.id
+		  left join tab_teacher_info teacher
+		    on teacher.id = t.teacher_id
+		  left join t_course tcou
+		    on t.course_id = tcou.id
+		  left join tab_teacher_info ass
+		    on t.assteacher_id = ass.id
+		  left join T_EL_INFO tei
+		    on a.scheduling_id = tei.scheduling_id and a.student_id = tei.student_id and tei.order_course_id = oc.id
+		 where t.course_id 		= #{courseId,		jdbcType=NUMERIC}
+		   and t.COURSE_TIMES 	= #{courseTime,	jdbcType=NUMERIC}
+		   and (oc.status != 2 or oc.status is null)
+		   and o.order_status = 1
+		   and (tolock.STATUS is null or tolock.STATUS = 3)
+		   and 
+		        (tei.id in (
+                  select max(id) from T_EL_INFO where student_id = o.STUDENT_ID 
+                  and order_course_id = oc.id
+                  and scheduling_id = t.id
+             )or tei.id is null )
+		 order by nlssort(stu.student_name,'NLS_SORT=SCHINESE_PINYIN_M')
+	</select>
+	
+	<select id="querySchedulingAttendanceMakeup" resultType="HashMap" parameterType="HashMap">
+				select stu.encoding as "stuEncoding",
+				       stu.student_name as "stuName",
+				       t.activation_code as "actCode",
+				       to_char(t.valid_start_date, 'yyyy-mm-dd') as "vsDate",
+				       to_char(t.valid_end_date, 'yyyy-mm-dd') as "veDate",
+				       to_char(t.start_time, 'yyyy-mm-dd') as "startTime",
+				       to_char(t.end_time, 'yyyy-mm-dd') as "endTime",
+				       tcs.Course_Cnt as "courseCnt",
+				       t.status as "status",
+				       case
+				         when t.status = 0 then
+				          '无效'
+				         else
+				          '有效'
+					     end as "statusName",
+				       tcs.start_time as "startTime0",
+       				   tcs.end_time as "endTime0"
+				  from T_EL_INFO t
+				  left join tab_student_info stu
+				    on stu.id = t.student_id
+				  left join t_course_scheduling tcs
+				    on tcs.id = t.scheduling_id
+				 where tcs.course_id = #{courseId}
+				   and tcs.course_times = #{courseTime}
+				   <if test="queryInfo!=null and queryInfo!=''">
+				   		and tsi.student_name like '%'||#{queryInfo}||'%'
+				   </if>
+	</select>
+	
+	<select id="queryCourseTimeTitleInfo" resultType="com.edu.erp.model.TCourseTimesTitle" parameterType="HashMap">
+				select * from t_course_times_title where 1=1 
+				<if test="id!=null and id!=''">
+				   		and id=#{id}
+			    </if>
+				<if test="course_times!=null and course_times!=''">
+				   		and course_times =#{course_times}
+			    </if>
+			    <if test="course_id!=null and course_id!=''">
+			   		and course_id =#{course_id}
+			    </if>
+	</select>
+	
+	<insert id="addCourseTimeTitleInfo" parameterType="com.edu.erp.model.TCourseTimesTitle">
+		insert into t_course_times_title t 
+		(
+			t.id,
+			t.course_id,
+			t.course_times,
+			t.title,
+			t.CREATE_USER,
+			t.CREATE_TIME,
+			t.UPDATE_USER,
+			t.UPDATE_TIME
+		)   
+		values 
+		(
+			#{id,jdbcType=NUMERIC},
+			#{course_id,jdbcType=NUMERIC},
+			#{course_times,jdbcType=NUMERIC},
+			#{title,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			sysdate,
+			#{update_user,jdbcType=NUMERIC},
+			sysdate
+		)
+	</insert>
+	
+	
+	<update id="updateCourseTimeTitleInfo" parameterType="com.edu.erp.model.TCourseTimesTitle">
+		update t_course_times_title t set t.title = #{title,jdbcType=VARCHAR} where t.id = #{id}
+	</update>
+	
+	<!-- 双师课程排课查询 -->
+	<select id="queryMultiTchCourseSched" parameterType="Map" resultType="com.edu.erp.model.CourseScheduling">
+	    select a.*
+      from t_course_scheduling a
+      join t_course b
+        on a.course_id = b.id
+       and b.status in (1, 2, 3)
+     where a.valid_status = 1
+       and a.course_id = #{courseId}
+       and exists (select 1
+              from t_more_teacher_course c
+             where c.type = 4
+               and b.more_teacher_courseid = c.id)
+	</select>
+	
+	<update id="batchUpdateCourseTimesTitle" parameterType="list">
+		declare
+			v_course_scheduling_id number;
+		begin
+			delete from t_course_times_title where course_id = #{lists[0].course_id} and
+			course_times in (
+				<foreach collection="lists" separator="," item="item"> 
+					#{item.course_times}
+				</foreach>
+			);
+			
+			<foreach collection="lists" item="item" >
+				select id into v_course_scheduling_id from t_course_scheduling 
+				where course_id = #{item.course_id} and course_times = #{item.course_times};
+				insert into t_course_times_title
+				(id,course_id,course_times,title,create_user,create_time) 
+				values
+				(
+					v_course_scheduling_id,
+					#{item.course_id},
+					#{item.course_times},
+					#{item.title},
+					#{item.create_user},
+					#{item.create_time}
+				);
+			</foreach>
+			exception
+		    when NO_DATA_FOUND 
+		       then dbms_output.put_line('不存在该课次');
+		end;
+	</update>
+
+	<select id="queryValidCourseTimeByStudentAndSchedualing" resultType="int">
+		  <!--校验当前课次依然有效-->
+   		 select count(1)
+		  from t_order tod
+		  left join t_order_course toc
+		    on toc.order_id = tod.id
+		  left join t_order_course_times toct
+		    on toct.ocid = toc.id
+		  left join T_COURSE_SCHEDULING tcs
+		    on tcs.course_id = toc.course_id
+		   and toct.times = tcs.course_times
+		 where toct.is_valid = 1
+		   and tod.order_status = 1
+		   and tod.student_id = #{studentId,jdbcType=NUMERIC}
+		   and tcs.id = #{schedualingId,jdbcType=NUMERIC}
+	</select>
+
+	<select id="validIsRefund" resultType="int">
+		 select count(1)
+		  from t_order tod
+		  left join t_order_course toc
+			on toc.order_id = tod.id
+		  left join t_order_course_times toct
+			on toct.ocid = toc.id
+		  join T_COURSE_SCHEDULING tcs
+			on tcs.course_id = toc.course_id
+		   and toct.times = tcs.course_times
+		   and tcs.id = #{schedualingId,jdbcType=NUMERIC}
+		  join t_order_change c
+		   on  c.order_id = tod.id
+			and c.change_type = 1                /*--退费*/
+			and c.change_status = 3              /*--审核中*/
+		  join tc_order_course cc
+			on cc.change_id = c.id
+			 and cc.order_course_id = toc.id     /*--退的订单课程*/
+		  join tc_order_course_times ct
+		   on ct.change_id = c.id
+			and ct.CHANGE_COURSE_ID = cc.id
+			and ct.course_times = toct.times      /*--退的课次*/
+		 where toct.is_valid = 1                 /*--订单课程课次有效*/
+		   and tod.order_status = 1              /*--订单有效*/
+		   and tod.student_id =  #{studentId,jdbcType=NUMERIC}
+	</select>
+
+	<select id="queryAttendanceSchedualingInfo" resultType="com.edu.erp.model.AttendanceAuxiliaryData">
+		select o.id orderId,c.id orderCourseId, c.discount_unit_price discountUnitPrice,tc.branch_id courseBranchId
+        from t_order              o,
+             t_order_course       c,
+             t_order_course_times t,
+             t_course_scheduling  d,
+             t_course tc
+       where d.course_times = t.times
+         and t.is_valid = 1
+         and t.ocid = c.id
+         and c.course_id = d.course_id
+         and c.order_id = o.id
+         and o.order_status = 1
+         and tc.id = c.course_id
+         and o.student_id = #{studentId,jdbcType=NUMERIC}
+         and d.id = #{schedualingId,jdbcType=NUMERIC}
+	</select>
+
+	<!-- 批量更新双师分场课次标题信息 -->
+	<update id="batchUpdateSubCourseTimesTitle" parameterType="long">
+		begin
+		delete from t_course_times_title where course_id in (
+			select sc.id
+			  from t_course mc, t_course sc
+			 where mc.more_teacher_courseid = sc.more_teacher_courseid
+			   and mc.id != sc.id
+			   and mc.id = #{mainCourseId}
+		);
+
+		insert into t_course_times_title
+			(id, course_id, course_times, title, create_user, create_time)
+		select tcs.id,
+					 sc.id,
+					 tcs.course_times,
+					 tctt.title,
+					 tctt.create_user,
+					 tctt.create_time
+			from t_course             mc,
+					 t_course             sc,
+					 t_course_times_title tctt,
+					 t_course_scheduling  tcs
+		 where mc.more_teacher_courseid = sc.more_teacher_courseid
+			 and tctt.course_id = mc.id
+			 and tcs.course_id = sc.id
+			 and tcs.course_times = tctt.course_times
+			 and mc.id != sc.id
+			 and mc.id =  #{mainCourseId}
+		 order by sc.id, tcs.course_times;
+		end;
+	</update>
+
+	<update id="updateSubCourseScheduling" parameterType="com.edu.erp.model.CourseScheduling">
+		update t_course_scheduling t set
+				<if test="course_date!=null">
+					course_date = #{course_date},
+				</if>
+				<if test="start_time!=null">
+					start_time = #{start_time},
+				</if>
+				<if test="end_time!=null">
+					end_time = #{end_time},
+				</if>
+				<if test="remark!=null and remark != ''">
+					remark	= #{remark},
+				</if>
+				<if test="update_user!=null">
+					update_user = #{update_user},
+				</if>
+				update_time = sysdate
+			 where t.course_id in
+						 (select sc.id
+								from t_course sc, t_course mc
+							 where sc.more_teacher_courseid = mc.more_teacher_courseid
+								 and sc.id != mc.id
+								 and mc.id = #{course_id})
+   			and t.course_times = #{course_times}
+	</update>
+
+	<update id="updateSubCourseTimesTitle" parameterType="com.edu.erp.model.CourseScheduling">
+		begin
+		delete from t_course_times_title where course_id in (
+		select sc.id
+		from t_course mc, t_course sc
+		where mc.more_teacher_courseid = sc.more_teacher_courseid
+		and mc.id != sc.id
+		and mc.id = #{course_id}
+		)
+		and course_times = #{course_times};
+
+		insert into t_course_times_title
+		(id, course_id, course_times, title, create_user, create_time)
+		select tcs.id,
+						sc.id,
+						tcs.course_times,
+						tctt.title,
+						#{update_user},
+						sysdate
+			from t_course             mc,
+						t_course             sc,
+						t_course_times_title tctt,
+						t_course_scheduling  tcs
+		 where mc.more_teacher_courseid = sc.more_teacher_courseid
+			 and tctt.course_id = mc.id
+			 and tcs.course_id = sc.id
+			 and tcs.course_times = tctt.course_times
+		   and mc.id != sc.id
+		   and tcs.course_times = #{course_times}
+			 and mc.id =  #{course_id};
+		end;
+	</update>
+
+	<update id="updateCouseScheduling" parameterType="com.edu.erp.model.CourseScheduling">
+		update T_COURSE_SCHEDULING set
+  		  course_id=#{course_id},
+  		  branch_id=#{branch_id},
+		  grade_id=#{grade_id},
+		  subject_id=#{subject_id},
+		  teacher_id=#{teacher_id},
+		  business_type=#{business_type},
+		  course_date=#{course_date},
+		  start_time=#{start_time},
+		  end_time=#{end_time},
+		  week_number=#{week_number},
+		  course_times=#{course_times},
+		  course_cnt=#{course_cnt},
+		  attended =#{attended},
+		  valid_status=#{valid_status},
+		  create_user=#{create_user},
+		  create_time=#{create_time},
+		  update_user=#{update_user},
+		  update_time=#{update_time},
+		  remark=#{remark},
+		  assteacher_id=#{assteacher_id}
+  		where id = #{id}
+	</update>
+
+	<select id="queryDuplicateTeacherSched" parameterType="long" resultType="integer">
+		select count(0)
+			from t_course_scheduling t
+		 where t.course_id = #{courseId}
+			 and exists
+		 (select 1
+							from t_course_scheduling tcs, t_course tcou
+						 where tcs.teacher_id = t.teacher_id
+							 and tcs.course_id != t.course_id
+							 and tcs.course_id = tcou.id
+               and tcou.status = 1
+							 and tcs.course_date = t.course_date
+							 and ((tcs.start_time between t.start_time and t.end_time) or
+									 (tcs.end_time between t.start_time and t.end_time)))
+	</select>
+</mapper>

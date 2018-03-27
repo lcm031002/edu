@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.SubjectDao">
+
+	<select id="selectForPage" resultType="com.edu.erp.model.TPSubject" parameterType="java.util.HashMap">
+				select
+					   t1.ID as id,
+				       t1.ENCODING as encoding,
+				       t1.NAME as "name",
+				       t1.DESCRIPTION as description,
+				       t1.CREATE_TIME as create_time,
+				       t1.UPDATE_TIME as update_time,
+                       c_emp.employee_name as create_user_name, 
+                       u_emp.employee_name as update_user_name
+                  from tp_subject t1
+                 <!-- 新增用户-->
+				 left join tab_user_info c_user on t1.create_user = c_user.id
+				 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+				 <!-- 修改用户-->
+				 left join tab_user_info u_user on t1.update_user = u_user.id
+				 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+                 <if test="bu_id!=null">
+                 	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
+                 	and bdr.DICT_ID = t1.id
+                 	and bdr.DICT_TYPE = 'tp_subject'
+                 </if>
+                  where 1 = 1
+                 <if test="subject_name != null and subject_name != ''">
+                 	 and t1.name like '%${subject_name}%'
+                 </if>
+                 ORDER BY t1.update_time DESC, t1.id DESC
+	</select>
+	
+	<!-- 下拉菜单的科目列表 （跟进课程筛选科目）-->
+	<select id="queryList"  parameterType="java.util.Map" resultType="com.edu.erp.model.TPSubject">
+		SELECT 
+			distinct t.*
+	  	FROM tp_subject t
+	  	<if test="bu_id!=null">
+         	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
+         	and bdr.DICT_ID = t.id
+         	and bdr.DICT_TYPE = 'tp_subject'
+        </if>
+        inner join t_course tc on tc.subject_id = t.id
+	 	WHERE 1 = 1
+	 	<if test="id != null">
+	 	   and t.id = #{id,jdbcTyper=NUMERIC}
+	 	</if>
+	    <if test="name != null">
+	 	   and t.name like '%'||#{name,jdbcType=VARCHAR}||'%'
+	 	</if>
+	 	<if test="season_id != null and season_id > 0">
+	 	   and tc.season_id = #{season_id,jdbcType=NUMERIC}
+	 	</if>
+	 	<if test="branch_id != null and branch_id > 0">
+	 	   and tc.branch_id = #{branch_id,jdbcType=NUMERIC}
+	 	</if>
+	 	<if test="grade_id != null and grade_id > 0">
+	 	   and tc.grade_id = #{grade_id,jdbcType=NUMERIC}	
+	 	</if>
+	 	<!-- 严格匹配 -->
+	 	<if test="strict_subject_name != null and strict_subject_name != ''">
+			and  t.name = #{strict_subject_name,jdbcType=VARCHAR}
+		 </if>
+		ORDER BY t.encoding,t.id 
+	</select>	
+	<!-- 下拉科目列表 -->
+	<select id="querySubjectListByNameOrEncoding"  parameterType="java.util.Map" resultType="com.edu.erp.model.TPSubject">
+		SELECT 
+			distinct t.*
+	  	FROM tp_subject t
+		where t.name = #{name,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectById" resultType="com.edu.erp.model.TPSubject" parameterType="java.lang.String">
+		SELECT 
+		*
+	  	FROM tp_subject
+	 	WHERE STATUS = 1 AND ID = #{id} 
+		ORDER BY ID ASC
+	</select>
+	
+	<insert id="saveData" parameterType="com.edu.erp.model.TPSubject">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select  seq_tp_subject.nextval as id from dual
+		</selectKey>
+		INSERT INTO tp_subject T
+		(
+			ID,
+	       	ENCODING,
+	       	name,
+	       	STATUS,
+	       	DESCRIPTION,
+	       	CREATE_USER,
+	       	CREATE_TIME,
+	       	update_user,
+	       	update_time
+		) 
+		VALUES
+		(
+			#{id,jdbcType=NUMERIC},
+			#{encoding,jdbcType=VARCHAR},
+			#{name,jdbcType=VARCHAR},
+			#{status,jdbcType=NUMERIC},
+			#{description,jdbcType=VARCHAR},
+			#{create_user,jdbcType=VARCHAR},
+			sysdate,
+			#{create_user,jdbcType=VARCHAR},
+			sysdate
+		)
+	</insert>
+	
+	<update id="updateData" parameterType="com.edu.erp.model.TPSubject">
+            UPDATE tp_subject SET 
+	       	encoding = #{encoding,jdbcType=NUMERIC},
+	       	name = #{name,jdbcType=VARCHAR},
+	       	DESCRIPTION = #{description,jdbcType=VARCHAR},
+	       	UPDATE_USER = #{update_user,jdbcType=VARCHAR},
+	       	UPDATE_TIME = sysdate
+	       	WHERE ID = #{id}
+	</update>
+
+	<delete id="deleteData" parameterType="HashMap">
+		delete from BU_DICT_REL t where t.DICT_ID = #{dict_id}
+		and t.bu_id =  #{bu_id}
+		and t.dict_type = 'tp_subject'
+	</delete>
+
+</mapper>

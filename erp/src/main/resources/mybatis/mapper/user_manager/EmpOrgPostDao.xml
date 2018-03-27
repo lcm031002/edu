@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.EmpOrgPostDao">
+	
+	<resultMap type="com.edu.erp.model.EmpOrgPost" id="EmpOrgPostMap">
+		<id property="id" column="id"/>
+		<result property="emp_id" column="emp_id"/>
+		<result property="employee_name" column="employee_name"/>
+		<result property="bu_id" column="bu_id"/>
+		<result property="bu_name" column="bu_name"/>
+		<result property="branch_id" column="branch_id"/>
+		<result property="branch_name" column="branch_name"/>
+		<result property="post_id" column="post_id"/>
+		<result property="post_name" column="post_name"/>
+		<result property="status" column="status"/>
+		<result property="create_user" column="create_user"/>
+		<result property="create_user_name" column="create_user_name"/>
+		<result property="create_time" column="create_time"/>
+		<result property="update_user" column="update_user"/>
+		<result property="update_user_name" column="update_user_name"/>
+		<result property="update_time" column="update_time"/>
+	</resultMap>
+	
+	<select id="page" parameterType="page" resultType="com.edu.erp.model.EmpOrgPost">
+		    select a.*,
+           c_emp.employee_name as create_user_name,
+           u_emp.employee_name as update_user_name,
+           EMP.EMPLOYEE_NAME   EMP_NAME,
+           BU.ORG_NAME         BU_NAME,
+           BRANCH.ORG_NAME     BRANCH_NAME
+      from TAB_EMP_ORG_POST a
+      LEFT JOIN TAB_EMPLOYEE_INFO EMP
+        ON EMP.ID = A.EMP_ID
+      LEFT JOIN TP_POST POST
+        ON POST.ID = A.POST_ID
+      LEFT JOIN TAB_ORGANIZATION_INFO BU
+        ON BU.ID = A.BU_ID
+      LEFT JOIN TAB_ORGANIZATION_INFO BRANCH
+        ON BRANCH.ID = A.BRANCH_ID
+      left join tab_user_info c_user
+        on a.create_user = c_user.id
+      left join tab_employee_info c_emp
+        on c_user.employee_id = c_emp.id
+      left join tab_user_info u_user
+        on a.update_user = u_user.id
+      left join tab_employee_info u_emp
+        on u_user.employee_id = u_emp.id
+      where nvl(a.status,0) != 0
+		<if test="emp_id != null and emp_id != ''">
+			<!-- 分页表格模糊查询-->
+			and  a.emp_id = #{emp_id,jdbcType=NUMERIC}
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="EmpOrgPostMap">
+	    select a.*,
+           c_emp.employee_name as create_user_name,
+           u_emp.employee_name as update_user_name,
+           EMP.EMPLOYEE_NAME   EMP_NAME,
+           BU.ORG_NAME         BU_NAME,
+           BRANCH.ORG_NAME     BRANCH_NAME
+      from TAB_EMP_ORG_POST a
+      LEFT JOIN TAB_EMPLOYEE_INFO EMP
+        ON EMP.ID = A.EMP_ID
+      LEFT JOIN TP_POST POST
+        ON POST.ID = A.POST_ID
+      LEFT JOIN TAB_ORGANIZATION_INFO BU
+        ON BU.ID = A.BU_ID
+      LEFT JOIN TAB_ORGANIZATION_INFO BRANCH
+        ON BRANCH.ID = A.BRANCH_ID
+      left join tab_user_info c_user
+        on a.create_user = c_user.id
+      left join tab_employee_info c_emp
+        on c_user.employee_id = c_emp.id
+      left join tab_user_info u_user
+        on a.update_user = u_user.id
+      left join tab_employee_info u_emp
+        on u_user.employee_id = u_emp.id
+     where nvl(a.status,0) != 0
+	  <if test="emp_id != null and emp_id != ''">
+			and  a.emp_id = #{emp_id,jdbcType=NUMERIC}
+		</if>
+		ORDER BY a.id DESC, a.create_time DESC, a.update_time DESC
+	</select>
+	
+	
+	<insert id="toAdd" parameterType="com.edu.erp.model.EmpOrgPost">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      		SELECT SEQ_TAB_EMP_ORG_POST.currval AS id from dual
+   		</selectKey>
+		insert into TAB_EMP_ORG_POST t
+			(
+		    id,
+		    EMP_ID,
+		    BU_ID,
+		    BRANCH_ID,
+		    POST_ID,
+		    status,
+		    create_user,
+		    create_time
+			)
+		values
+			(
+		   	seq_tab_employee_info.nextval,
+		   	#{emp_id,jdbcType=NUMERIC},
+		   	#{bu_id,jdbcType=NUMERIC},
+		   	#{branch_Id,jdbcType=NUMERIC},
+		   	#{post_id,jdbcType=NUMERIC},
+		   	#{status,jdbcType=NUMERIC},
+		   	#{create_user,jdbcType=NUMERIC},
+		   	sysdate,
+		   	#{update_time,jdbcType=VARCHAR}
+		   	)
+	</insert>
+		
+	<update id="toUpdate" parameterType="com.edu.erp.model.EmpOrgPost">
+		update TAB_EMP_ORG_POST t set
+		   	emp_id = #{encoding,jdbcType=NUMERIC},
+		   	bu_id = #{employee_name,jdbcType=NUMERIC},
+		   	branch_id = #{sex,jdbcType=NUMERIC},
+		   	post_id = #{ID_ID,jdbcType=VARCHAR},
+		   	update_user = #{update_user,jdbcType=NUMERIC},
+		   	update_time = sysdate
+		 where t.id = #{id}
+	</update>
+	
+	<update id="toChangeStatus" parameterType="java.util.Map" >
+		UPDATE TAB_EMP_ORG_POST t
+		SET t.status = #{status,jdbcType=NUMERIC} 
+		WHERE t.id IN (${ids})
+	</update>
+	
+	  <insert id="toBatchAdd" parameterType="list">
+	  <foreach collection="list" item="item" index="index" open="begin" separator=";" close=";end;">
+		insert into TAB_EMP_ORG_POST
+            (id,bu_id, branch_id, emp_id,status,post_id,create_time)
+           values
+            (seq_TAB_EMP_ORG_POST.nextval,
+			#{item.bu_id,jdbcType=NUMERIC},
+			#{item.branch_id,jdbcType=NUMERIC},
+			#{item.emp_id,jdbcType=NUMERIC},
+			1,
+			#{item.post_id,jdbcType=NUMERIC},
+			sysdate
+		)
+   	 </foreach>
+	</insert>
+	<insert id="toBatchUpdate" parameterType="list">
+		  <foreach collection="list" item="item" index="index" open="begin" separator=";" close=";end;">
+	         update TAB_EMP_ORG_POST 
+	             <set>
+	                <if test="item.bu_id!=null">
+	                  bu_id = #{item.bu_id,jdbcType=NUMERIC},
+	                </if>
+	                <if test="item.branch_id!=null">
+	                  branch_id = #{item.branch_id,jdbcType=NUMERIC},
+	                </if>
+	                <if test="item.emp_id!=null">
+	                  emp_Id = #{item.emp_id,jdbcType=NUMERIC},
+	                </if>
+	                <if test="item.post_id!=null">
+	                  post_id = #{item.post_id,jdbcType=NUMERIC},
+	                </if>
+	                  update_time=sysdate
+	             </set>
+	           where id = #{item.id,jdbcType=NUMERIC}
+   	      </foreach>
+	</insert>
+</mapper>

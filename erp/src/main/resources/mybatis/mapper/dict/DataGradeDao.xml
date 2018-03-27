@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DataGradeDao">
+
+	<!-- 查询年级信息列表 -->
+	<select id="selectForPage" resultType="com.edu.erp.model.Grade" parameterType="java.util.HashMap">
+		select 		a.id,
+						a.encoding,
+						a.grade_name,
+						a.last_id,
+						a.description ,
+                       	a.sort,
+						a.status,
+                       	a.create_user,
+                       	a.create_time,
+                       	a.update_user,
+                       	a.update_time,
+						b.encoding last_encoding,
+						b.grade_name last_name,
+						c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name 
+			from 		tab_data_grade a
+		left join 		tab_data_grade b on a.last_id = b.id and b.status = 1
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		<if test="bu_id!=null">
+			inner join BU_DICT_REL bdr on bdr.bu_id =#{bu_id,jdbcType=NUMERIC}
+			and bdr.dict_id = a.id
+			and bdr.dict_type = 'bu_grade_rel'
+		</if>
+		where 1 = 1
+		<if test="grade_name!= null and grade_name!= ''">
+			and	a.grade_name like '%${grade_name}%' 		
+		</if>
+		order by a.update_time DESC
+	</select>
+	
+	<!-- 查询全部已经添加年级列表 -->
+	<select id="selectList" resultType="com.edu.erp.model.Grade" parameterType="Map">
+		select distinct a.id,
+		       a.encoding,
+		       a.grade_name,
+		       a.last_id,
+		       a.description,
+		       a.sort,
+		       concat(concat(a.grade_name, '('), concat(a.encoding, ')')) grade_info,
+		       a.status,
+		       a.create_user,
+		       a.create_time,
+		       a.update_user,
+		       a.update_time,
+		       b.encoding last_encoding,
+		       b.grade_name last_name
+		  from tab_data_grade a
+		  left join tab_data_grade b
+		    on a.last_id = b.id
+		   and b.status = 1
+		 <if test="bu_id != null">  
+		 inner join BU_DICT_REL bdr
+		    on bdr.bu_id = #{bu_id,jdbcType=NUMERIC}
+		   and bdr.dict_id = a.id
+		   and bdr.dict_type = 'bu_grade_rel'
+		 </if>
+		 where 1 = 1
+		 <if test="grade_name != null and grade_name != ''">
+			and  a.grade_name like '%'||#{grade_name}||'%'
+		 </if>
+		 <!-- 严格匹配 -->
+		 <if test="strict_grade_name != null and strict_grade_name != ''">
+			and  a.grade_name = #{strict_grade_name, jdbcType=VARCHAR}
+		 </if>
+		 order by a.encoding ASC
+	</select>
+	
+	<!-- 插入年级数据 -->
+	<insert id="insert" parameterType="com.edu.erp.model.Grade">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select  SEQ_TAB_DATA_GRADE.nextval as id from dual
+		</selectKey>
+		insert into tab_data_grade g
+		(
+			id,
+			encoding,
+       		grade_name,
+       		last_id,
+       		sort,
+       		description,
+      		create_user,
+       		create_time,
+       		update_user,
+       		update_time,
+       		status
+		) 
+		values
+		(
+			
+			#{id,jdbcType=NUMERIC},
+			#{encoding,jdbcType=VARCHAR},
+			#{grade_name,jdbcType=VARCHAR},
+			#{last_id,jdbcType=NUMERIC},
+			#{sort,jdbcType=NUMERIC},
+			#{description,jdbcType=VARCHAR},
+			#{create_user,jdbcType=VARCHAR},
+			#{create_time,jdbcType=VARCHAR},
+			#{update_user,jdbcType=VARCHAR},
+			#{update_time,jdbcType=VARCHAR},
+			#{status,jdbcType=NUMERIC}
+		)
+	</insert>
+
+
+	<select id="queryGradeListByNameOrEncoding"  parameterType="java.util.Map" resultType="com.edu.erp.model.Grade">
+		SELECT
+		t.*
+		FROM tab_data_grade t
+		where t.grade_name = #{grade_name,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertGradeBuRel" parameterType="java.util.HashMap">
+		insert into BU_DICT_REL g
+		(
+			id,
+			BU_ID,
+       		DICT_ID,
+       		DICT_TYPE
+		) 
+		values
+		(
+			SEQ_BU_DICT_REL.nextval,
+			#{bu_id,jdbcType=NUMERIC},
+			#{dict_id,jdbcType=NUMERIC},
+			#{dict_type,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateGradeBuRel" parameterType="java.util.HashMap">
+		update BU_DICT_REL 
+		set BU_ID = #{bu_id,jdbcType=NUMERIC},
+			DICT_ID = #{dict_id,jdbcType=NUMERIC},
+			DICT_TYPE = #{dict_type,jdbcType=VARCHAR}
+			where id = #{id}
+	</update>
+	
+	<update id="update" parameterType="com.edu.erp.model.Grade">
+		update 
+			tab_data_grade
+			set 
+				encoding = #{encoding,jdbcType=VARCHAR},
+				grade_name = #{grade_name,jdbcType=VARCHAR},
+				last_id = #{last_id,jdbcType=NUMERIC},
+				sort = #{sort,jdbcType=NUMERIC},
+				description = #{description,jdbcType=VARCHAR},
+				update_user = #{update_user,jdbcType=VARCHAR},
+				update_time = #{update_time,jdbcType=VARCHAR}
+				where id = #{id} 	
+	</update>
+	
+	<delete id="deleteData" parameterType="HashMap">
+		delete from BU_DICT_REL t where t.DICT_ID = #{dict_id}
+		and t.bu_id =  #{bu_id}
+		and t.dict_type = 'bu_grade_rel'
+	</delete>
+
+	<select id="queryGradeNameById" parameterType="long" resultType="string">
+       select grade_name from tab_data_grade where id=#{id}
+	</select>
+
+</mapper>

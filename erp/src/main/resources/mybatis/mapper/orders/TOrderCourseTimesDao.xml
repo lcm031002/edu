@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TOrderCourseTimesDao">
+	
+	<!-- 查询报班单所有课次信息 -->
+	<select id="queryAllTOrderCourseTimes" resultType="com.edu.erp.model.TOrderCourseTimes"
+		parameterType="java.lang.Long">
+		    select toct.*
+		      from T_ORDER_COURSE_TIMES toct
+		      left join t_order_course toc
+		        on toc.id = toct.ocid
+		     where toc.order_id = #{orderId,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 查询报班单详单的课次信息 -->
+	<select id="queryOrderCourseTimes" resultType="com.edu.erp.model.TOrderCourseTimes"
+		parameterType="java.lang.Long">
+		    select toct.*
+		      from T_ORDER_COURSE_TIMES toct
+		     where toct.ocid = #{orderDetailId,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 查询报班单详单的课次信息 -->
+	<select id="queryOrderCourseTimesByMap" resultType="com.edu.erp.model.TOrderCourseTimes"
+		parameterType="Map">
+		    select toct.*
+		      from T_ORDER_COURSE_TIMES toct
+		     where toct.ocid = #{orderDetailId,jdbcType=NUMERIC} and toct.times in (${times} )
+		     <if test="is_valid != null and is_valid != ''">
+				  and toct.is_valid=  #{is_valid,jdbcType=NUMERIC}
+			</if>
+	</select>
+	
+	
+	<!-- 查询订单课程课次信息 -->
+	<select id="queryOrderCourseTimesInfo" resultType="HashMap" parameterType="java.lang.Long">
+		select distinct toct.*,
+                tcs.teacher_id,
+                tti.teacher_name,
+                tc.course_name,
+                tc.course_no,
+                tat.name,
+                to_char(ta.attend_date,'yyyy-mm-dd') as attend_date,
+                ta.attend_branch_id,
+                ta.attend_amount,
+                ta.attend_user,
+                ta.attend_type,
+                tei.employee_name as attend_user_name,
+                ta.teacher_id,
+                ta.student_id,
+                to_char(to_date(tcs.course_date||'','yyyymmdd'),'yyyy-mm-dd') as course_date
+		  from t_order_course_times toct
+		  left join t_order_course toc
+		    on toc.id = toct.ocid
+		  left join T_COURSE_SCHEDULING tcs
+		    on tcs.course_id = toc.course_id
+		   and tcs.course_times = toct.times
+		  left join t_attendance ta
+		    on ta.scheduling_id = tcs.id
+		   and ta.order_course_id = toc.id
+		  left join tab_teacher_info tti
+		    on tti.id = tcs.teacher_id
+		  left join t_course tc
+		    on tc.id = toc.course_id
+		  left join tp_attend_type tat
+		    on tat.id = ta.attend_type
+		  left join tab_user_info tui
+		    on tui.id = ta.attend_user
+		  left join tab_employee_info tei
+		    on tei.id = tui.employee_id
+		 where toct.ocid = #{orderDetailId,jdbcType=NUMERIC}
+		   and toct.is_valid = 1
+		 order by toct.times
+	</select>
+	
+	<update id="updateTOrderCourseTimes"  parameterType="HashMap">
+		  update t_order_course_times t
+          set 
+          <if test="is_valid != null and is_valid != ''">
+         	 t.is_valid=#{is_valid}
+          </if>
+         where t.id =#{id}
+	</update>
+	
+</mapper>

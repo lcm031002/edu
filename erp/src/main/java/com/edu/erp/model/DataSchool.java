@@ -1,191 +1,184 @@
 package com.edu.erp.model;
 
-public class DataSchool extends BaseObject {
 
-    // 学校名称
-    private String schoolName;
+public class DataSchool extends BaseObject
+{
+	private static final long serialVersionUID = 1L;
 
-    // 简称
-    private String shortSchoolName;
+	private String school_name;//学校名称
+	
+	private String simple_name;//学校简称
+	
+	private Integer school_type;//学校类型
+	
+	private String linkman;//联系人
+	
+	private String phone;//电话号码
+	
+	private String description;//描述
+	
+	private Integer province_id;//省份
+	
+	private Integer area_id;//地区
+	
+	private Long org_id;//所属地区
+	
+	private String address;//学校地址
+	
+	private String province_name;
+	
+	private String area_name;
+	
+	private String org_name; //所属地区
+	
+	private String school_type_name; 
+	
+	public String getSchool_name() {
+		return school_name;
+	}
 
-    // 学校类型(1=幼儿园 2=小学 3=初中 4=高中 5=初高中-完全中学 6=九年一贯制 7=十二年一贯制 8=职业教育 9=特殊教育 10=成人教育 11=其它)
-    private Integer schoolType;
+	public void setSchool_name(String school_name) {
+		this.school_name = school_name;
+	}
 
-    // 组织ID
-    private Long orgId;
+	public String getSimple_name() {
+		return simple_name;
+	}
 
-    // 联系人
-    private String linkMan;
+	public void setSimple_name(String simple_name) {
+		this.simple_name = simple_name;
+	}
 
-    // 联系电话
-    private String phone;
+	public Integer getSchool_type() {
+		return school_type;
+	}
 
-    // 描述
-    private String description;
+	public void setSchool_type(Integer school_type) {
+		this.school_type = school_type;
+	}
 
-    // 省份
-    private Long provinceId;
+	public String getPhone() {
+		return phone;
+	}
 
-    // 城市
-    private Long cityId;
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    // 县/区
-    private Long areaId;
+	public String getDescription() {
+		return description;
+	}
 
-    // 地址
-    private String address;
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    /**
-     * 设置 学校名称,对应字段 tab_data_school.school_name
-     */
-    public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
-    }
+	public Integer getProvince_id() {
+		return province_id;
+	}
 
-    /**
-     * 获取 学校名称,对应字段 tab_data_school.school_name
-     */
-    public String getSchoolName() {
-        return this.schoolName;
-    }
+	public void setProvince_id(Integer province_id) {
+		this.province_id = province_id;
+	}
 
-    /**
-     * 设置 简称,对应字段 tab_data_school.short_school_name
-     */
-    public void setShortSchoolName(String shortSchoolName) {
-        this.shortSchoolName = shortSchoolName;
-    }
+	public Integer getArea_id() {
+		return area_id;
+	}
 
-    /**
-     * 获取 简称,对应字段 tab_data_school.short_school_name
-     */
-    public String getShortSchoolName() {
-        return this.shortSchoolName;
-    }
+	public void setArea_id(Integer area_id) {
+		this.area_id = area_id;
+	}
 
-    /**
-     * 设置 学校类型(1=幼儿园 2=小学 3=初中 4=高中 5=初高中-完全中学 6=九年一贯制 7=十二年一贯制 8=职业教育 9=特殊教育 10=成人教育 11=其它),对应字段 tab_data_school.school_type
-     */
-    public void setSchoolType(Integer schoolType) {
-        this.schoolType = schoolType;
-    }
+	public Long getOrg_id() {
+		return org_id;
+	}
 
-    /**
-     * 获取 学校类型(1=幼儿园 2=小学 3=初中 4=高中 5=初高中-完全中学 6=九年一贯制 7=十二年一贯制 8=职业教育 9=特殊教育 10=成人教育 11=其它),对应字段 tab_data_school.school_type
-     */
-    public Integer getSchoolType() {
-        return this.schoolType;
-    }
+	public void setOrg_id(Long org_id) {
+		this.org_id = org_id;
+	}
 
-    /**
-     * 设置 组织ID,对应字段 tab_data_school.org_id
-     */
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    /**
-     * 获取 组织ID,对应字段 tab_data_school.org_id
-     */
-    public Long getOrgId() {
-        return this.orgId;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    /**
-     * 设置 联系人,对应字段 tab_data_school.link_man
-     */
-    public void setLinkMan(String linkMan) {
-        this.linkMan = linkMan;
-    }
+	public String getProvince_name() {
+		return province_name;
+	}
 
-    /**
-     * 获取 联系人,对应字段 tab_data_school.link_man
-     */
-    public String getLinkMan() {
-        return this.linkMan;
-    }
+	public void setProvince_name(String province_name) {
+		this.province_name = province_name;
+	}
 
-    /**
-     * 设置 联系电话,对应字段 tab_data_school.phone
-     */
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public String getArea_name() {
+		return area_name;
+	}
 
-    /**
-     * 获取 联系电话,对应字段 tab_data_school.phone
-     */
-    public String getPhone() {
-        return this.phone;
-    }
+	public void setArea_name(String area_name) {
+		this.area_name = area_name;
+	}
 
-    /**
-     * 设置 描述,对应字段 tab_data_school.description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getOrg_name() {
+		return org_name;
+	}
 
-    /**
-     * 获取 描述,对应字段 tab_data_school.description
-     */
-    public String getDescription() {
-        return this.description;
-    }
+	public void setOrg_name(String org_name) {
+		this.org_name = org_name;
+	}
 
-    /**
-     * 设置 省份,对应字段 tab_data_school.province_id
-     */
-    public void setProvinceId(Long provinceId) {
-        this.provinceId = provinceId;
-    }
+	public String getSchool_type_name() {
+		return school_type_name;
+	}
 
-    /**
-     * 获取 省份,对应字段 tab_data_school.province_id
-     */
-    public Long getProvinceId() {
-        return this.provinceId;
-    }
+	public void setSchool_type_name(String school_type_name) {
+		this.school_type_name = school_type_name;
+	}
 
-    /**
-     * 设置 城市,对应字段 tab_data_school.city_id
-     */
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
-    }
+	public String getLinkman() {
+		return linkman;
+	}
 
-    /**
-     * 获取 城市,对应字段 tab_data_school.city_id
-     */
-    public Long getCityId() {
-        return this.cityId;
-    }
+	public void setLinkman(String linkman) {
+		this.linkman = linkman;
+	}
 
-    /**
-     * 设置 县/区,对应字段 tab_data_school.area_id
-     */
-    public void setAreaId(Long areaId) {
-        this.areaId = areaId;
-    }
-
-    /**
-     * 获取 县/区,对应字段 tab_data_school.area_id
-     */
-    public Long getAreaId() {
-        return this.areaId;
-    }
-
-    /**
-     * 设置 地址,对应字段 tab_data_school.address
-     */
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    /**
-     * 获取 地址,对应字段 tab_data_school.address
-     */
-    public String getAddress() {
-        return this.address;
-    }
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("ID：");
+		buff.append(getId());
+		buff.append("，");
+		buff.append("学校名称： ");
+		buff.append(getSchool_name());
+		buff.append("，");
+		buff.append("学校简称：");
+		buff.append(getSimple_name());
+		buff.append("，");
+		buff.append("联系人：");
+		buff.append(getLinkman());
+		buff.append("，");
+		buff.append("联系电话：");
+		buff.append(getPhone());
+		buff.append("，");
+		buff.append("省ID：");
+		buff.append(getProvince_id());
+		buff.append("，");
+		buff.append("市ID：");
+		buff.append(getCity_id());
+		buff.append("，");
+		buff.append("区ID：");
+		buff.append(getArea_id());
+		buff.append("，");
+		buff.append("学校类型：");
+		buff.append(getSchool_type());
+		buff.append("，");
+		buff.append("地址：");
+		buff.append(getAddress());
+		buff.append("，");
+		buff.append("描述：");
+		buff.append(getDescription());
+		return buff.toString();
+	}
 }

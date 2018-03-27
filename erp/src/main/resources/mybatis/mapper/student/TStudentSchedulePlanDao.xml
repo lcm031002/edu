@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TStudentSchedulePlanDao">
+	<select id="queryByApplyId" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.TStudentSchedulePlan">
+		select tssp.id,
+		       tssp.apply_id as applyId,
+		       tssp.course_date as courseDate,
+		       tssp.start_time as startTime,
+		       tssp.end_time as endTime,
+		       tssp.weekday,
+		       tssp.teacher_id as teacherId,
+		       tssp.teacher_name as teacherName,
+		       tti.encoding as teacherEncoding,
+		       tssp.subject_id as subjectId,
+		       tssp.subject_name as subjectName,
+		       tssp.course_arranger_id as courseArrangerId,
+		       tei.employee_name as courseArranger,
+		       tssp.course_arrange_date as courseArrangeDate,
+		       tssp.status,
+		       (select vdd.name
+		          from vt_dict_data vdd
+		         where vdd.code = to_char(tssp.status)
+		           and vdd.typeCode = 'schedApplyCourseReqStatus') as statusName,
+		       tssp.remark,
+		       tsai.class_place as branchName,
+		       tsai.encoding as applyNo,
+		       tsi.encoding as studentEncoding,
+		       tsi.student_name as studentName,
+		       tti.phone as teacherPhone,
+		       decode(tti.sex, 1, '男', 2, '女', '未知') as teacherGender,
+		       vcas.employee_id as courseSpId,
+           tsr.teach_group_id as teachGroupId
+		  from t_student_schedule_plan tssp
+		  left join t_student_requirement tsr
+		    on tsr.apply_id = tssp.apply_id
+		    and tsr.subject_id = tssp.subject_id
+		  left join t_schedule_apply_info tsai
+		    on tsai.id = tssp.apply_id
+		  left join tab_student_info tsi
+		    on tsi.id = tsai.student_id
+		  left join tab_teacher_info tti
+		  	on tti.id=tssp.teacher_id
+		  left join tab_employee_info tei
+		    on tei.id = tssp.course_arranger_id
+		  left join tab_organization_info toi
+				on toi.id = tsai.branch_id
+			left join vt_course_arranger_sp vcas
+				on vcas.subject_id = tssp.subject_id
+			 and vcas.grade_id = tsai.grade_id
+			 and vcas.bu_id = toi.parent_id
+		 where tssp.apply_id = #{applyId, jdbcType=NUMERIC}
+		 order by tsr.seq
+	</select>
+
+	<insert id="save" parameterType="com.edu.erp.model.TStudentSchedulePlan">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select seq_t_student_schedule_plan.nextval as id from dual
+		</selectKey>
+		insert into t_student_schedule_plan
+		(id,
+		apply_id,
+		<if test="courseDate != null">
+		course_date,
+		</if>
+		<if test="startTime != null and startTime != ''">
+		start_time,
+		</if>
+		<if test="endTime != null and endTime != ''">
+		end_time,
+		</if>
+		<if test="weekday != null and weekday != ''">
+		weekday,
+		</if>
+		<if test="teacherId != null">
+		teacher_id,
+		</if>
+		<if test="teacherName != null and teacherName != ''">
+		teacher_name,
+		</if>
+		<if test="subjectId != null">
+		subject_id,
+		</if>
+		<if test="subjectName != null and subjectName != ''">
+		subject_name,
+		</if>
+		<if test="courseArrangerId != null">
+		course_arranger_id,
+		</if>
+		<if test="courseArrangeDate != null">
+		course_arrange_date,
+		</if>
+		<if test="status != null">
+		status,
+		</if>
+		<if test="remark != null and remark != ''">
+		remark,
+		</if>
+		create_user,
+		create_time
+		)
+		values
+		(
+		#{id, jdbcType=NUMERIC},
+		#{applyId, jdbcType=NUMERIC},
+		<if test="courseDate != null">
+		#{courseDate, jdbcType=DATE},
+		</if>
+		<if test="startTime != null and startTime != ''">
+		#{startTime, jdbcType=VARCHAR},
+		</if>
+		<if test="endTime != null and endTime != ''">
+		#{endTime, jdbcType=VARCHAR},
+		</if>
+		<if test="weekday != null and weekday != ''">
+		#{weekday, jdbcType=VARCHAR},
+		</if>
+		<if test="teacherId != null">
+		#{teacherId, jdbcType=NUMERIC},
+		</if>
+		<if test="teacherName != null and teacherName != ''">
+		#{teacherName, jdbcType=VARCHAR},
+		</if>
+		<if test="subjectId != null">
+		#{subjectId, jdbcType=NUMERIC},
+		</if>
+		<if test="subjectName != null and subjectName != ''">
+		#{subjectName, jdbcType=VARCHAR},
+		</if>
+		<if test="courseArrangerId != null">
+		#{courseArrangerId, jdbcType=NUMERIC},
+		</if>
+		<if test="courseArrangeDate != null">
+		#{courseArrangeDate, jdbcType=TIMESTAMP},
+		</if>
+		<if test="status != null">
+		#{status, jdbcType=NUMERIC},
+		</if>
+		<if test="remark != null and remark != ''">
+		#{remark, jdbcType=VARCHAR},
+		</if>
+		#{create_user, jdbcType=NUMERIC},
+		#{create_time, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="saveList" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+			insert into t_student_schedule_plan
+			(id,
+			apply_id,
+			<if test="item.courseDate != null">
+			course_date,
+			</if>
+			<if test="item.startTime != null and item.startTime != ''">
+			start_time,
+			</if>
+			<if test="item.endTime != null and item.endTime != ''">
+			end_time,
+			</if>
+			<if test="item.weekday != null and item.weekday != ''">
+			weekday,
+			</if>
+			<if test="item.teacherId != null">
+			teacher_id,
+			</if>
+			<if test="item.teacherName != null and teacherName != ''">
+			teacher_name,
+			</if>
+			<if test="item.subjectId != null">
+			subject_id,
+			</if>
+			<if test="item.subjectName != null and item.subjectName != ''">
+			subject_name,
+			</if>
+			<if test="item.courseArrangerId != null">
+			course_arranger_id,
+			</if>
+			<if test="item.courseArrangeDate != null">
+			course_arrange_date,
+			</if>
+			<if test="item.status != null">
+			status,
+			</if>
+			<if test="item.remark != null and item.remark != ''">
+			remark,
+			</if>
+			create_user,
+			create_time
+			)
+			values
+			(
+			seq_t_student_schedule_plan.nextval,
+			#{item.applyId, jdbcType=NUMERIC},
+			<if test="item.courseDate != null">
+			#{item.courseDate, jdbcType=DATE},
+			</if>
+			<if test="item.startTime != null and item.startTime != ''">
+			#{item.startTime, jdbcType=VARCHAR},
+			</if>
+			<if test="item.endTime != null and item.endTime != ''">
+			#{item.endTime, jdbcType=VARCHAR},
+			</if>
+			<if test="item.weekday != null and item.weekday != ''">
+			#{item.weekday, jdbcType=VARCHAR},
+			</if>
+			<if test="item.teacherId != null">
+			#{item.teacherId, jdbcType=NUMERIC},
+			</if>
+			<if test="item.teacherName != null and item.teacherName != ''">
+			#{item.teacherName, jdbcType=VARCHAR},
+			</if>
+			<if test="item.subjectId != null">
+			#{item.subjectId, jdbcType=NUMERIC},
+			</if>
+			<if test="item.subjectName != null and item.subjectName != ''">
+			#{item.subjectName, jdbcType=VARCHAR},
+			</if>
+			<if test="item.courseArrangerId != null">
+			#{item.courseArrangerId, jdbcType=NUMERIC},
+			</if>
+			<if test="item.courseArrangeDate != null">
+			#{item.courseArrangeDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="item.status != null">
+			#{item.status, jdbcType=NUMERIC},
+			</if>
+			<if test="item.remark != null and item.remark != ''">
+			#{item.remark, jdbcType=VARCHAR},
+			</if>
+			#{item.create_user, jdbcType=NUMERIC},
+			#{item.create_time, jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.TStudentSchedulePlan">
+		update t_student_schedule_plan
+		set 
+			<if test="courseDate != null and courseDate != ''">
+			course_date = #{courseDate, jdbcType=DATE},
+			</if>
+			<if test="startTime != null and startTime != ''">
+			start_time = #{startTime, jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null and endTime != ''">
+			end_time = #{endTime, jdbcType=VARCHAR},
+			</if>
+			<if test="weekday != null and weekday != ''">
+			weekday = #{weekday, jdbcType=VARCHAR},
+			</if>
+			<if test="teacherId != null">
+			teacher_id = #{teacherId, jdbcType=NUMERIC},
+			</if>
+			<if test="teacherName != null and teacherName != ''">
+			teacher_name = #{teacherName, jdbcType=VARCHAR},
+			</if>
+			<if test="subjectId != null">
+			subject_id = #{subjectId, jdbcType=NUMERIC},
+			</if>
+			<if test="subjectName != null and subjectName != ''">
+			subject_name = #{subjectName, jdbcType=VARCHAR},
+			</if>
+			<if test="courseArrangerId != null">
+			course_arranger_id = #{courseArrangerId, jdbcType=NUMERIC},
+			</if>
+			<if test="courseArrangeDate != null">
+			course_arrange_date = #{courseArrangeDate, jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+			status = #{status, jdbcType=NUMERIC},
+			</if>
+			<if test="remark != null and remark != ''">
+			remark = #{remark, jdbcType=VARCHAR},
+			</if>
+			update_user = #{update_user, jdbcType=NUMERIC},
+			update_time = #{update_time, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<update id="pressPlan" parameterType="com.edu.erp.model.TStudentSchedulePlan">
+		update t_student_schedule_plan
+		set course_date = '',
+			start_time = '',
+			end_time = '',
+			weekday = '',
+			teacher_id = '',
+			teacher_name = '',
+			status = #{status, jdbcType=NUMERIC},
+			<if test="remark != null and remark != ''">
+			remark = #{remark, jdbcType=VARCHAR},
+			</if>
+			update_user = #{update_user, jdbcType=NUMERIC},
+			update_time = #{update_time, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+	
+	<update id="updateStatus" parameterType="list">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+			update t_student_schedule_plan set
+				status = #{item.status, jdbcType=NUMERIC},
+			<if test="item.remark != null and item.remark != ''">
+				remark = #{item.remark, jdbcType=VARCHAR},
+			</if>
+				update_user = #{item.update_user, jdbcType=VARCHAR},
+				update_time = #{item.update_time, jdbcType=TIMESTAMP}
+			where id = #{item.id, jdbcType=NUMERIC}
+		</foreach>
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from t_student_schedule_plan where id = #{id, jdbcType=NUMERIC}
+	</delete>
+
+	<delete id="deleteByApplyId" parameterType="java.lang.Long">
+		delete from t_student_schedule_plan where apply_id = #{applyId, jdbcType=NUMERIC}
+	</delete>
+	
+	<select id="isStuSchedPlanExisted" parameterType="com.edu.erp.model.TStudentSchedulePlan" resultType="java.lang.Integer">
+		select count(0)
+		  from t_student_schedule_plan tssp
+		 where tssp.course_date = #{courseDate, jdbcType=DATE}
+		   and tssp.start_time = #{startTime, jdbcType=VARCHAR}
+		   and tssp.end_time = #{endTime, jdbcType=VARCHAR}
+		   and tssp.apply_id = #{applyId, jdbcType=NUMERIC}
+		   <if test="id != null">
+		   and tssp.id != #{id, jdbcType=NUMERIC}
+		   </if>
+	</select>
+  <!-- 查询需要在当前排课计划前就要处理的排课计划数量。如果大于0，则当前排课计划不能处理 -->
+	<select id="queryNeedMatchedPlanCount" parameterType="map" resultType="integer">
+		with schedPlan as
+				(select tsr.seq
+				from t_student_schedule_plan tssp
+				left join t_student_requirement tsr
+				on tsr.apply_id = tssp.apply_id
+				and tsr.subject_id = tssp.subject_id
+				where tssp.id in (${planIds}))
+
+				select count(0)
+				from t_student_schedule_plan tssp
+				left join t_student_requirement tsr
+				on tsr.apply_id = tssp.apply_id
+				and tsr.subject_id = tssp.subject_id
+				left join t_schedule_apply_info tsai
+				on tsai.id = tssp.apply_id
+				left join tab_organization_info toi
+				on toi.id = tsai.branch_id
+				left join vt_course_arranger_sp vcas
+				on vcas.subject_id = tssp.subject_id
+				and vcas.grade_id = tsai.grade_id
+				and vcas.bu_id = toi.parent_id
+				where tssp.apply_id = #{applyId, jdbcType=NUMERIC}
+				and tssp.status = 1
+				and exists (select 1 from schedPlan sp where tsr.seq &lt; sp.seq)
+	</select>
+
+</mapper>

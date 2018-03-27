@@ -1,244 +1,170 @@
 package com.edu.erp.model;
 
-import java.util.Date;
+import java.util.List;
 
+
+/**
+ * 员工信息
+ * 
+ * @author wCong
+ *
+ */
 public class EmployeeInfo extends BaseObject {
+	private static final long serialVersionUID = -4622009327158529384L;
 
-    // 员工编码
-    private String encoding;
-
-    // 员工姓名
-    private String employeeName;
-
-    // 性别(1=男 2=女)
-    private Integer Sex;
-
-    // 身份证号
-    private String idCard;
-
+	// 编号
+	private String encoding;
+	// 姓名
+    private String employee_name; 
+    // 性别
+    private Integer sex; 
+    // 身份证
+    private String ID_ID; 
     // 邮箱
-    private String email;
-
-    // 电话
+    private String email; 
+    // 手机
     private String phone;
-
     // 地址
-    private String address;
+    private String address; 
+    // 备注
+    private String description; 
+    // 员工类型
+    private Long user_type;
+    
+    private String branch_post_names; //所属校区/职位（多个以,分隔）
+    
+    private String tel;
+    
+    private String counselor_type;
+    
+    //员工部门关系
+    private List<EmployeeDepartmentRef> edrList;
 
-    // 描述
-    private String description;
-
-    // 员工类型(1=正式员工 2=试用员工 3=实习员工)
-    private Integer userType;
-
-    // 微信
-    private String wechat;
-
-    // 部门
-    private String dept;
-
-    // 组织id
-    private Long orgId;
-
-    // 职位
-    private String position;
-
-    // 入职日期
-    private Date entryDate;
-
-    /**
-     * 设置 员工编码,对应字段 tab_employee_info.encoding
-     */
+	public String getEncoding() {
+      return encoding;
+    }
+	
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+      this.encoding = encoding;
     }
-
-    /**
-     * 获取 员工编码,对应字段 tab_employee_info.encoding
-     */
-    public String getEncoding() {
-        return this.encoding;
+  		
+    public String getEmployee_name() {
+      return employee_name;
     }
-
-    /**
-     * 设置 员工姓名,对应字段 tab_employee_info.employee_name
-     */
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
+	
+    public void setEmployee_name(String employee_name) {
+      this.employee_name = employee_name;
     }
-
-    /**
-     * 获取 员工姓名,对应字段 tab_employee_info.employee_name
-     */
-    public String getEmployeeName() {
-        return this.employeeName;
-    }
-
-    /**
-     * 设置 性别(1=男 2=女),对应字段 tab_employee_info.Sex
-     */
-    public void setSex(Integer Sex) {
-        this.Sex = Sex;
-    }
-
-    /**
-     * 获取 性别(1=男 2=女),对应字段 tab_employee_info.Sex
-     */
+  		
     public Integer getSex() {
-        return this.Sex;
+      return sex;
     }
-
-    /**
-     * 设置 身份证号,对应字段 tab_employee_info.id_card
-     */
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
+	
+    public void setSex(Integer sex) {
+      this.sex = sex;
     }
-
-    /**
-     * 获取 身份证号,对应字段 tab_employee_info.id_card
-     */
-    public String getIdCard() {
-        return this.idCard;
-    }
-
-    /**
-     * 设置 邮箱,对应字段 tab_employee_info.email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
-     * 获取 邮箱,对应字段 tab_employee_info.email
-     */
+  		
+  		
     public String getEmail() {
-        return this.email;
+      return email;
     }
-
-    /**
-     * 设置 电话,对应字段 tab_employee_info.phone
-     */
-    public void setPhone(String phone) {
-        this.phone = phone;
+	
+    public void setEmail(String email) {
+      this.email = email;
     }
-
-    /**
-     * 获取 电话,对应字段 tab_employee_info.phone
-     */
+  		
     public String getPhone() {
-        return this.phone;
+      return phone;
     }
-
-    /**
-     * 设置 地址,对应字段 tab_employee_info.address
-     */
-    public void setAddress(String address) {
-        this.address = address;
+	
+    public void setPhone(String phone) {
+      this.phone = phone;
     }
-
-    /**
-     * 获取 地址,对应字段 tab_employee_info.address
-     */
+  		
     public String getAddress() {
-        return this.address;
+      return address;
     }
-
-    /**
-     * 设置 描述,对应字段 tab_employee_info.description
-     */
-    public void setDescription(String description) {
-        this.description = description;
+	
+    public void setAddress(String address) {
+      this.address = address;
     }
-
-    /**
-     * 获取 描述,对应字段 tab_employee_info.description
-     */
+  		
     public String getDescription() {
-        return this.description;
+      return description;
+    }
+	
+    public void setDescription(String description) {
+      this.description = description;
     }
 
-    /**
-     * 设置 员工类型(1=正式员工 2=试用员工 3=实习员工),对应字段 tab_employee_info.user_type
-     */
-    public void setUserType(Integer userType) {
-        this.userType = userType;
+	public List<EmployeeDepartmentRef> getEdrList() {
+		return edrList;
+	}
+
+	public void setEdrList(List<EmployeeDepartmentRef> edrList) {
+		this.edrList = edrList;
+	}
+
+	public String getID_ID() {
+		return ID_ID;
+	}
+
+	public void setID_ID(String iD_ID) {
+		ID_ID = iD_ID;
+	}
+
+	public Long getUser_type() {
+		return user_type;
+	}
+
+	public void setUser_type(Long user_type) {
+		this.user_type = user_type;
+	}
+
+	public String getBranch_post_names() {
+		return branch_post_names;
+	}
+
+	public void setBranch_post_names(String branch_post_names) {
+		this.branch_post_names = branch_post_names;
+	}
+
+	public String getTel() {
+        return tel;
     }
 
-    /**
-     * 获取 员工类型(1=正式员工 2=试用员工 3=实习员工),对应字段 tab_employee_info.user_type
-     */
-    public Integer getUserType() {
-        return this.userType;
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
-    /**
-     * 设置 微信,对应字段 tab_employee_info.wechat
-     */
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
+    public String getCounselor_type() {
+        return counselor_type;
     }
 
-    /**
-     * 获取 微信,对应字段 tab_employee_info.wechat
-     */
-    public String getWechat() {
-        return this.wechat;
+    public void setCounselor_type(String counselor_type) {
+        this.counselor_type = counselor_type;
     }
 
-    /**
-     * 设置 部门,对应字段 tab_employee_info.dept
-     */
-    public void setDept(String dept) {
-        this.dept = dept;
-    }
-
-    /**
-     * 获取 部门,对应字段 tab_employee_info.dept
-     */
-    public String getDept() {
-        return this.dept;
-    }
-
-    /**
-     * 设置 组织id,对应字段 tab_employee_info.org_id
-     */
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
-    }
-
-    /**
-     * 获取 组织id,对应字段 tab_employee_info.org_id
-     */
-    public Long getOrgId() {
-        return this.orgId;
-    }
-
-    /**
-     * 设置 职位,对应字段 tab_employee_info.position
-     */
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    /**
-     * 获取 职位,对应字段 tab_employee_info.position
-     */
-    public String getPosition() {
-        return this.position;
-    }
-
-    /**
-     * 设置 入职日期,对应字段 tab_employee_info.entry_date
-     */
-    public void setEntryDate(Date entryDate) {
-        this.entryDate = entryDate;
-    }
-
-    /**
-     * 获取 入职日期,对应字段 tab_employee_info.entry_date
-     */
-    public Date getEntryDate() {
-        return this.entryDate;
-    }
-}
+    public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("ID：");
+		buff.append(getId());
+		buff.append("编号：");
+		buff.append(getEncoding());
+		buff.append("姓名：");
+		buff.append(getEmployee_name());
+		buff.append("身份证：");
+		buff.append(getID_ID());
+		buff.append("性别：");
+		buff.append(getSex());
+		buff.append("手机：");
+		buff.append(getPhone());
+		buff.append("邮箱：");
+		buff.append(getEmail());
+		buff.append("地址：");
+		buff.append(getAddress());
+		buff.append("备注：");
+		buff.append(getDescription());
+		return buff.toString();
+	}
+}	

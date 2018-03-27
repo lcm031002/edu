@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.CouponInfoDao">
+	<resultMap type="com.edu.erp.model.CouponInfo"
+			 id="privilegeRuleBusinessObj">
+		<id property="id" column="id" />
+		<result property="encoding" column="encoding" />
+		<result property="name" column="name" />
+		<result property="rule_id" column="rule_id" />
+		<result property="valid_date" column="valid_date" />
+		<result property="activity_id" column="activity_id"/>
+		<result property="activity_name" column="activity_name"/>
+		<result property="city_id" column="city_id" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		<result property="branch_ids" column="branch_ids" />
+		<result property="branch_names" column="branch_names" />
+		<association property="privilegeRule" column="rule_id"
+				javaType="com.edu.erp.model.PrivilegeRule">
+				<id property="id" column="pr_id" />
+				<result property="rule_name" column="pr_rule_name" />
+				<result property="coupon_content" column="pr_coupon_content" />
+				<result property="coupon_type" column="pr_coupon_type" />
+				<result property="start_date" column="pr_start_date" />
+				<result property="end_date" column="pr_end_date" />
+				<result property="bu_id" column="pr_bu_id" />
+				<result property="city_id" column="pr_city_id" />
+				<result property="is_check" column="pr_is_check" />
+				<result property="status" column="pr_status" />
+				<result property="create_user" column="pr_create_user" />
+				<result property="create_time" column="pr_create_time" />
+				<result property="update_user" column="pr_update_user" />
+				<result property="update_time" column="pr_update_time" />
+				<result property="use_scope" column="pr_use_scope" />
+				<collection property="privilegeCriterias" column="pc_id"
+					javaType="ArrayList" ofType="com.edu.erp.model.PrivilegeCriteria">
+					<id property="id" column="pc_id" />
+					<result property="name" column="pc_name" />
+					<result property="description" column="pc_description" />
+					<result property="sum_price" column="pc_sum_price" />
+					<result property="sum_hour" column="pc_sum_hour" />
+					<result property="sum_integral" column="pc_sum_integral" />
+					<result property="status" column="pc_status" />
+					<result property="create_user" column="pc_create_user" />
+					<result property="create_user_name" column="pc_create_user_name" />
+					<result property="create_time" column="pc_create_time" />
+					<result property="update_user" column="pc_update_user" />
+					<result property="update_user_name" column="pc_update_user_name" />
+					<result property="update_time" column="pc_update_time" />
+					<result property="rule_id" column="pc_rule_id" />
+				</collection>
+			</association>
+	</resultMap>
+	<!-- 通过优惠券查询优惠信息 -->
+	<select id="queryCouponInfoByCode" parameterType="com.edu.erp.model.CouponInfo" resultMap="privilegeRuleBusinessObj">
+		select tci.*,
+		       tpr.id             as pr_id,
+		       tpr.rule_name      as pr_rule_name,
+		       tpr.coupon_content as pr_coupon_content,
+		       tpr.coupon_type    as pr_coupon_type,
+		       tpr.start_date     as pr_start_date,
+		       tpr.end_date       as pr_end_date,
+		       tpr.bu_id          as pr_bu_id,
+		       tpr.city_id        as pr_city_id,
+		       tpr.is_check       as pr_is_check,
+		       tpr.status         as pr_status,
+		       tpr.create_user    as pr_create_user,
+		       tpr.create_time    as pr_create_time,
+		       tpr.update_user    as pr_update_user,
+		       tpr.update_time    as pr_update_time,
+		       tpr.use_scope      as pr_use_scope,
+		       tpc.ID             as pc_id,
+		       tpc.name           as pc_name,
+		       tpc.description    as pc_description,
+		       tpc.rule_id        as pc_rule_id,
+		       tpc.sum_price      as pc_sum_price,
+		       tpc.sum_hour       as pc_sum_hour,
+		       tpc.sum_integral   as pc_sum_integral,
+		       tpc.bu_id          as pc_bu_id,
+		       tpc.status         as pc_status,
+		       tpc.create_user    as pc_create_user,
+		       tpc.create_time    as pc_create_time,
+		       tpc.update_user    as pc_update_user,
+		       tpc.update_time    as pc_update_time
+		  from tab_coupon_info tci
+		  left join tab_privilege_rule tpr
+		    on tpr.id = tci.rule_id
+		  left join tab_privilege_criteria tpc
+		    on tpc.RULE_ID = tpr.id
+		 where nvl(tci.status,0)!= 0
+		   and tci.ENCODING = #{encoding,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="queryCouponsByOrderId" parameterType="com.edu.erp.model.CouponInfo" resultMap="privilegeRuleBusinessObj">
+		select tci.*,
+		       tpr.id             as pr_id,
+		       tpr.rule_name      as pr_rule_name,
+		       tpr.coupon_content as pr_coupon_content,
+		       tpr.coupon_type    as pr_coupon_type,
+		       tpr.start_date     as pr_start_date,
+		       tpr.end_date       as pr_end_date,
+		       tpr.bu_id          as pr_bu_id,
+		       tpr.city_id        as pr_city_id,
+		       tpr.is_check       as pr_is_check,
+		       tpr.status         as pr_status,
+		       tpr.create_user    as pr_create_user,
+		       tpr.create_time    as pr_create_time,
+		       tpr.update_user    as pr_update_user,
+		       tpr.update_time    as pr_update_time,
+		       tpr.use_scope      as pr_use_scope,
+		       tpc.ID             as pc_id,
+		       tpc.name           as pc_name,
+		       tpc.description    as pc_description,
+		       tpc.rule_id        as pc_rule_id,
+		       tpc.sum_price      as pc_sum_price,
+		       tpc.sum_hour       as pc_sum_hour,
+		       tpc.sum_integral   as pc_sum_integral,
+		       tpc.bu_id          as pc_bu_id,
+		       tpc.status         as pc_status,
+		       tpc.create_user    as pc_create_user,
+		       tpc.create_time    as pc_create_time,
+		       tpc.update_user    as pc_update_user,
+		       tpc.update_time    as pc_update_time
+		  from tab_coupon_info tci
+		  left join tab_privilege_rule tpr
+		    on tpr.id = tci.rule_id
+		  left join tab_privilege_criteria tpc
+		    on tpc.RULE_ID = tpr.id
+		 where tci.id in (
+		 	select COUPON_ID 
+		 	from TAB_ORDER_COUPON_REL
+		 	where ORDER_ID =  #{orderId,jdbcType= NUMERIC}
+		 )
+	</select>
+	
+	<select id="queryCouponInfoForPage" parameterType="java.util.Map" resultType="com.edu.erp.model.CouponInfo">
+		SELECT a.*, b.org_name AS city_name,e.rule_name,
+			c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		FROM tab_coupon_info a
+		JOIN tab_organization_info b ON a.city_id = b.id AND b.status != 0
+		LEFT JOIN tab_privilege_rule e ON a.rule_id = e.id AND e.status != 0
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		
+		WHERE a.status != 0 and a.bu_id = #{bu_id}
+		<if test="searchInfo != null and searchInfo != ''">
+			AND (a.name like '%'||#{searchInfo}||'%' or a.encoding like '%'||#{searchInfo}||'%') 
+		</if> 
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="selectList" parameterType="java.util.Map" resultType="com.edu.erp.model.CouponInfo">
+		SELECT a.*,
+		        b.org_name          AS city_name,
+		        e.rule_name,
+		        i.id                activity_id,
+		        i.activity_name,
+		        c_emp.employee_name as create_user_name,
+		        u_emp.employee_name as update_user_name
+		   FROM tab_coupon_info a
+		   left JOIN tab_organization_info b
+		     ON a.city_id = b.id
+		    AND b.status != 0
+		   LEFT JOIN tab_privilege_rule e
+		     ON a.rule_id = e.id
+		    AND e.status != 0
+		 
+		   left join tab_user_info c_user
+		     on a.create_user = c_user.id
+		   left join tab_employee_info c_emp
+		     on c_user.employee_id = c_emp.id
+		 
+		   left join tab_user_info u_user
+		     on a.update_user = u_user.id
+		   left join tab_employee_info u_emp
+		     on u_user.employee_id = u_emp.id
+		
+		   left join tab_activity_info i
+		     on a.activity_id = i.id
+		  WHERE a.status != 0
+		<if test="city_id!=null">
+		  AND a.city_id = #{city_id,jdbcType=NUMERIC}
+		</if>
+		<if test="activity_id!=null">
+		  and i.id = #{activity_id}
+		</if>
+		<if test="name!=null and name!=''">
+		  and a.name||a.encoding like '%'||#{name,jdbcType=VARCHAR}||'%'
+		</if>
+		ORDER BY a.id DESC, a.create_time DESC
+	</select>
+
+	<select id="selectOne" parameterType="java.lang.Long" resultType="com.edu.erp.model.CouponInfo">
+		SELECT a.*, b.org_name AS city_name,e.rule_name
+		FROM tab_coupon_info a
+		JOIN tab_organization_info b ON a.city_id = b.id AND b.status != 0
+		LEFT JOIN tab_privilege_rule e ON a.rule_id = e.id AND e.status != 0
+		WHERE a.status != 0
+		AND a.id = #{id}
+	</select>
+	
+	<select id="queryCouponInfoByCodeStudentId" parameterType="map" resultType="map">
+	<![CDATA[	SELECT count(1) "num"
+		  FROM tab_coupon_info a, tab_student_coupon sc
+		 WHERE a.id = sc.coupon_id
+		   and a.status != 0
+		   and sc.student_id != #{studentId,jdbcType=NUMERIC}
+		   and a.encoding = #{encoding,jdbcType=VARCHAR}
+     ]]>
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.CouponInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      		SELECT seq_tab_coupon_info.currval AS id from dual
+   		</selectKey>
+		insert into tab_coupon_info
+		(   
+			id,
+		    encoding,
+		    name,
+		    rule_id,
+		    valid_date,
+		    city_id,
+		    bu_id,
+		    status,
+		    create_user,
+       		create_time,
+       		update_time,
+       		branch_ids,
+       		branch_names
+		)	VALUES
+		(
+		    seq_tab_coupon_info.nextval,
+			#{encoding, jdbcType=VARCHAR},
+			#{name, jdbcType=VARCHAR},
+			#{rule_id, jdbcType=NUMERIC},
+			#{valid_date, jdbcType=VARCHAR},
+			#{city_id, jdbcType=NUMERIC},
+			#{bu_id, jdbcType=NUMERIC},
+			#{status, jdbcType=NUMERIC},
+			#{create_user,jdbcType=NUMERIC},
+			sysdate,
+			sysdate,
+			#{branch_ids,jdbcType=VARCHAR},
+			#{branch_names,jdbcType=VARCHAR}
+		)
+		
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.CouponInfo">
+		UPDATE tab_coupon_info
+		<set>
+		   <if test="encoding!=null">
+		      encoding = #{encoding, jdbcType=VARCHAR},
+		   </if>
+		   <if test="name!=null">
+		      name = #{name, jdbcType=VARCHAR},
+		   </if>
+		   <if test="rule_id!=null">
+			   rule_id = #{rule_id, jdbcType=NUMERIC},
+		   </if>
+		   <if test="valid_date!=null">
+		       valid_date = #{valid_date, jdbcType=VARCHAR},
+		   </if>
+		   <if test="update_user!=null">
+			   update_user = #{update_user, jdbcType=NUMERIC},
+		   </if>
+		   <if test="status!=null">
+		      status = #{status, jdbcType=NUMERIC},
+		   </if>
+		    <if test="branch_ids!=null">
+			   branch_ids = #{branch_ids, jdbcType=VARCHAR},
+		   </if>
+		   <if test="branch_names!=null">
+			   branch_names = #{branch_names, jdbcType=VARCHAR},
+		   </if>
+		   update_time = sysdate
+	    </set> 
+		WHERE id = #{id, jdbcType=NUMERIC}	
+	</update>
+
+	<update id="deleteByIds" parameterType="java.util.List">
+            UPDATE tab_coupon_info SET STATUS = '0' WHERE ID IN
+            <foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+			</foreach>
+	</update>
+	
+	<update id="changeStatus" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+            UPDATE tab_coupon_info 
+            <set>
+                status = #{item.status, jdbcType=NUMERIC},
+                update_user = #{item.update_user, jdbcType=NUMERIC}, 
+		  		update_time = #{item.update_time, jdbcType=VARCHAR}
+            </set>
+               WHERE id = #{item.id}
+       </foreach>
+	</update>
+</mapper>

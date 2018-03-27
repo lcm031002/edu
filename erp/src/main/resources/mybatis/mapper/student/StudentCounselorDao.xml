@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentCounselorDao">
+
+	<select id="selectForToPage" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.EmpOrgPost">
+		select distinct a.id emp_id,
+		a.encoding emp_encoding,
+		a.employee_name
+		emp_name,
+		d.org_name branch_name,
+		c.post_name post_name
+		from
+		tab_employee_info a
+		left join tab_emp_org_post b
+		on a.id
+		= b.emp_id
+		left
+		join tp_post c
+		on
+		b.post_id = c.id
+		left join
+		tab_organization_info d
+		on
+		b.branch_id = d.id
+		<where>
+			(c.post_code =
+			'LearningManagementDivision'
+			or
+			c.post_code =
+			'LearningManagementDivision_admin')
+			<if test="emp_name != null and emp_name != ''">
+				and a.employee_name like '%' || #{emp_name} || '%'
+			</if>
+			<if test="bu_id != null and bu_id != ''">
+				and b.bu_id = #{bu_id}
+			</if>
+		</where>
+		order by a.employee_name asc
+	</select>
+
+	<select id="selectForFromPage" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.EmpOrgPost">
+		select distinct b.id emp_id, b.encoding emp_encoding, b.employee_name
+		emp_name
+		from tab_student_counselor_info a
+		left join tab_employee_info b
+		on a.counselor_id = b.id
+		where 1=1
+		and a.counselor_type =2
+		<if test="bu_id != null and bu_id != ''">
+			and a.bu_id = #{bu_id}
+		</if>
+		<if test="emp_name != null and emp_name != ''">
+			and b.employee_name like '%' || #{emp_name} || '%'
+		</if>
+		order by b.employee_name asc
+	</select>
+
+	<select id="queryStudentListPage" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.StudentCounselorInfo">
+		select a.id stu_counselor_id,a.student_id student_id, b.student_name
+		student_name,decode(a.is_valid, 1,'有效', '0','无效') valid_name,
+		a.is_valid, b.encoding
+		from tab_student_counselor_info a
+		left join
+		tab_student_info b
+		on a.student_id = b.id
+		where a.is_valid = 1
+		and a.counselor_type =2
+		<if test="counselor_id != null and counselor_id != ''">
+			and a.counselor_id = #{counselor_id}
+		</if>
+	</select>
+
+	<select id="querStudentCounselorInfoByCounselorId" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.StudentCounselorInfo">
+		select a.id stu_counselor_id,a.student_id student_id, b.student_name
+		student_name,decode(a.is_valid, 1,'有效', '0','无效') valid_name,
+		a.is_valid, b.encoding
+		from tab_student_counselor_info a
+		left join
+		tab_student_info b
+		on a.student_id = b.id
+		where a.is_valid = 1
+		and a.counselor_type = 2
+		<if test="counselor_id != null and counselor_id != ''">
+			and a.counselor_id = #{counselor_id}
+		</if>
+	</select>
+
+	<select id="selectForPage" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.StudentCounselorInfo">
+		select *
+		from (select distinct tei.id as counselor_id,
+									max(tei.encoding) as encoding,
+									decode(tsci.counselor_type,
+									2,
+									max(tei.employee_name),
+									(select t2.employee_name
+									from tab_student_counselor_info t1,
+									tab_employee_info          t2
+									where t1.counselor_id = t2.id
+									and t1.student_id = tsi.id
+									and t1.is_valid = 1
+									and to_char(sysdate, 'yyyy-MM-dd') between
+									t1.start_date and t1.end_date
+									and t1.counselor_type = 2
+									and rownum = 1)) as name,
+									decode(tsci.counselor_type,
+									1,
+									max(tei.employee_name),
+									(select t2.employee_name
+									from tab_student_counselor_info t1,
+									tab_employee_info          t2
+									where t1.counselor_id = t2.id
+									and t1.student_id = tsi.id
+									and t1.is_valid = 1
+									and to_char(sysdate, 'yyyy-MM-dd') between
+									t1.start_date and t1.end_date
+									and t1.counselor_type = 1
+									and rownum = 1)) as counselor_name,
+									tsi.id as student_id,
+									max(tsi.encoding) as student_encoding,
+									max(tsi.student_name) as student_name,
+									max(tds.school_name) as school_name,
+									max(tdg.grade_name) as grade_name,
+									sum(toco.course_surplus_count) as course_surplus_count,
+									sum(toco.course_schedule_count) as course_schedule_count,
+									max(tdg.id) as grade_id,
+									max(tsi.bu_id) as bu_id
+		from (select distinct tsci.counselor_id, tsci.student_id, tsci.counselor_type
+			from tab_student_counselor_info tsci
+		  where tsci.bu_id = #{bu_id,jdbcType=NUMERIC} and to_char(sysdate, 'yyyy-MM-dd') between tsci.start_date and tsci.end_date
+			and tsci.is_valid = 1
+		<if test="counselor_id != null">
+			and tsci.counselor_id = #{counselor_id}
+		</if>
+		<if test="counselor_type != null">
+			and tsci.counselor_type = #{counselor_type}
+		</if>) tsci
+		left join tab_employee_info tei
+			on tsci.counselor_id = tei.id
+		left join tab_student_info tsi
+			on tsci.student_id = tsi.id
+		<if test="student_status!=null and student_status!='' and student_status!=1">
+			and tsi.student_status=#{student_status}
+		</if>
+		<if test="student_status==1">
+            and (tsi.student_status=1 or tsi.student_status=3)
+		</if>
+		left join tab_data_school tds
+			on tsi.attend_school_id = tds.id
+		left join tab_data_grade tdg
+			on tsi.grade_id = tdg.id
+		left join t_order tord
+		on tord.student_id = tsi.id
+		left join t_order_course toco
+			on toco.order_id = tord.id
+		where tord.order_status = 1
+		  and tord.business_type = 2
+		  <!-- and tsi.bu_id = #{bu_id}-->
+		  and tdg.grade_name not like '%高中毕业%'
+		<if test="student_name != null and student_name != ''">
+			and tsi.student_name like '%${student_name}%'
+		</if>
+		and course_surplus_count>0
+		group by tei.id, tsi.id, tsci.counselor_type) t
+		order by grade_id,student_name
+	</select>
+
+	<select id="selectOne" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.StudentCounselorInfo">
+		select a.*
+		from tab_student_counselor_info a
+		where 1 = 1
+		<if test="id != null and id != ''">
+			and a.id = #{id}
+		</if>
+	</select>
+
+	<select id="selectList" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.StudentCounselorInfo">
+		select a.*,
+		b.student_name,
+		c.org_name bu_name,
+		d.employee_name name,
+		d.encoding
+		from tab_student_counselor_info a
+		join tab_student_info b on
+		a.student_id = b.id
+		join tab_organization_info c on a.bu_id = c.id
+		join
+		tab_employee_info d on a.counselor_id = d.id
+		where 1 = 1
+		and is_valid != 0
+		<if test="id != null and id != ''">
+			and a.id = #{id}
+		</if>
+		<if test="student_id != null and student_id != ''">
+			and a.student_id = #{student_id}
+		</if>
+		<if test="bu_id != null and bu_id != ''">
+			and a.bu_id = #{bu_id}
+		</if>
+		<!--<if test="counselor_type == 2">-->
+			<!--&lt;!&ndash; 如果是查询学管师，根据当前的学员选中的校区查询 &ndash;&gt;-->
+			<!--and a.branch_id = #{branch_id}-->
+		<!--</if>-->
+		<if test="is_valid != null">
+			and a.is_valid = #{is_valid}
+		</if>
+		<if test="counselor_type != null">
+			and a.counselor_type = #{counselor_type}
+		</if>
+		<if test="counselor_name != null and counselor_name != ''">
+			and d.employee_name like '%${counselor_name}%'
+		</if>
+		<if test="cur_date != null">
+			and to_char(sysDate,'yyyy-MM-dd') between a.start_date and
+			a.end_date
+		</if>
+		order by a.start_date DESC, a.end_date DESC
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.StudentCounselorInfo">
+		INSERT INTO
+		tab_student_counselor_info t
+		(
+		t.id,
+		t.student_id,
+		t.counselor_id,
+		t.bu_id,
+		t.branch_id,
+		t.counselor_type,
+		t.start_date,
+		t.end_date,
+		t.is_valid,
+		t.remark,
+		t.create_user,
+		t.create_time
+		)
+		VALUES
+		(
+		seq_tab_student_counselor_info.nextval,
+		#{student_id,
+		jdbcType=NUMERIC},
+		#{counselor_id, jdbcType=NUMERIC},
+		#{bu_id,
+		jdbcType=NUMERIC},
+		#{branch_id,
+		jdbcType=NUMERIC},
+		#{counselor_type, jdbcType=NUMERIC},
+		#{start_date,
+		jdbcType=VARCHAR},
+		#{end_date, jdbcType=VARCHAR},
+		#{is_valid,
+		jdbcType=NUMERIC},
+		#{remark, jdbcType=VARCHAR},
+		#{create_user,
+		jdbcType=NUMERIC},
+		sysdate
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.StudentCounselorInfo">
+		UPDATE tab_student_counselor_info t SET
+		<trim suffixOverrides=",">
+			<if test="is_valid != null and is_valid != ''">
+				t.is_valid = #{is_valid, jdbcType=NUMERIC},
+			</if>
+			<if test="update_user != null and update_user != ''">
+				t.update_user = #{update_user, jdbcType=NUMERIC},
+			</if>
+			<if test="update_time != null and update_time != ''">
+				t.update_time = #{update_time},
+			</if>
+			<if test="start_date != null and start_date != ''">
+				t.start_date = #{start_date,jdbcType=VARCHAR},
+			</if>
+			<if test="end_date != null and end_date != ''">
+				t.end_date = #{end_date, jdbcType=VARCHAR},
+			</if>
+			<if test="counselor_id != null and counselor_id != ''">
+				t.counselor_id = #{counselor_id, jdbcType=NUMERIC},
+			</if>
+			<if test="remark != null and remark != ''">
+				t.remark = #{remark, jdbcType=VARCHAR}
+			</if>
+		</trim>
+		WHERE t.id = #{id}
+	</update>
+
+	<update id="updateInValid" parameterType="java.util.Map">
+		UPDATE tab_student_counselor_info t SET t.is_valid = 0, t.end_date = trunc(sysdate) - 1
+		<where>
+			t.id = #{id}
+		</where>
+	</update>
+
+	<!-- 每次新增学管和咨询师  都会将小于当前日期的所有咨询学管变为无效 -->
+	<delete id="changeStatus" parameterType="java.util.Map">
+		
+		delete 	
+			from  	tab_student_counselor_info  
+		where 		student_id = #{student_id}
+			and		bu_id = #{bu_id}
+			and		counselor_type = #{counselor_type}
+			<![CDATA[
+			and		(start_date >= #{start_date} or end_date >= #{start_date})
+			and  	(start_date <= #{end_date} or end_date <= #{end_date})
+			]]> 
+			<!-- 如果是学管师，还需通过校区过滤-->
+			<if test="counselor_type == 2">
+				and branch_id = #{branch_id}
+			</if>
+	</delete>
+	
+	<!-- 查找学员最近的咨询师（学管师）-->	
+	<select id="queryNewest" parameterType="map" resultType="com.edu.erp.model.StudentCounselorInfo">
+		select * from TAB_STUDENT_COUNSELOR_INFO 
+		where student_id=#{student_id}
+		and	bu_id = #{bu_id}
+		and	counselor_type = #{counselor_type}
+		and is_valid=1
+		and start_date = (
+		 	select max(start_date) from TAB_STUDENT_COUNSELOR_INFO where student_id=#{student_id}
+			and	bu_id = #{bu_id}
+			and	counselor_type = #{counselor_type}
+			and is_valid=1
+		)
+	</select>
+	
+	<!-- 判断新插入的咨询师（如果是学管师，需要根据branch_id过滤） 是否和数据库中已经存在的学员的咨询师（学管师）的日期交叉-->	
+	<select id="isDateIntersect" parameterType="map" resultType="int">
+		select count(1) from TAB_STUDENT_COUNSELOR_INFO 
+		where student_id=#{student_id}
+		and	bu_id = #{bu_id}
+		and	counselor_type = #{counselor_type}
+		and is_valid=1
+		<if test="counselor_type==2">
+			and branch_id = #{branch_id}
+		</if>
+		<if test="id != null ">
+			and id != #{id} 
+		</if>
+		 and
+		 <![CDATA[
+			 ((start_date >=#{start_date,jdbcType=VARCHAR} and start_date <=#{end_date, jdbcType=VARCHAR})
+			or
+			(end_date >=#{start_date,jdbcType=VARCHAR} and end_date <=#{end_date, jdbcType=VARCHAR})
+			or
+			 (start_date>=#{start_date,jdbcType=VARCHAR} and end_date <=#{end_date, jdbcType=VARCHAR})
+			 or
+			 (start_date<=#{start_date,jdbcType=VARCHAR} and end_date >=#{end_date, jdbcType=VARCHAR})
+			)
+		 ]]>
+	</select>
+	<!-- 将符合条件的所有的学管师和咨询师设置为无效 -->	
+	<!-- <select id="inValidAllCounselor" parameterType="map" resultType="int">
+		update TAB_STUDENT_COUNSELOR_INFO 
+		set
+		<if test="update_user != null and update_user != ''">
+			t.update_user = #{update_user, jdbcType=NUMERIC},
+		</if>
+		<if test="update_time != null and update_time != ''">
+			t.update_time = #{update_time, jdbcType=VARCHAR},
+		</if>
+		is_valid=0
+		where student_id=#{student_id}
+		and	bu_id = #{bu_id}
+		and	counselor_type = #{counselor_type}
+		and is_valid=1
+		<if test="counselor_type==2">
+			and branch_id = #{branch_id}
+		</if>
+	</select> -->
+	
+</mapper>

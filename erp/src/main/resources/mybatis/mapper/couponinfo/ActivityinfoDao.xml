@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.ActivityInfoDao">
+	
+	<select id="queryActivityInfoForPage" parameterType="java.util.Map" resultType="com.edu.erp.model.ActivityInfo">
+		SELECT a.*, b.org_name AS city_name, e.rule_name,
+		
+			c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		FROM tab_activity_info a
+		JOIN tab_organization_info b ON a.city_id = b.id and b.status　!= 0
+		LEFT JOIN tab_privilege_rule e ON a.rule_id = e.id AND e.status != 0
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		
+		WHERE a.status != 0
+		AND a.bu_id = #{bu_id}
+		<if test="searchInfo != null and searchInfo != ''">
+			AND a.activity_name like '%${searchInfo}%'
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="selectList" parameterType="map" resultType="com.edu.erp.model.ActivityInfo">
+		SELECT a.*, b.org_name AS city_name, e.rule_name,
+		
+			   c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		FROM tab_activity_info a
+		JOIN tab_organization_info b ON a.city_id = b.id and b.status　!= 0
+		LEFT JOIN tab_privilege_rule e ON a.rule_id = e.id AND e.status != 0
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		
+		WHERE a.status != 0
+		<if test="city_id!=null">
+		   AND a.city_id = #{city_id,jdbcType=NUMERIC]}
+		</if>
+		<if test="activity_name != null and activity_name != ''">
+			AND a.activity_name like '%'||#{activity_name,jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="is_pub!=null">
+		    and nvl(a.is_pub,0)=#{is_pub,jdbcType=NUMERIC}
+		</if>
+	    <if test="activitys">
+	        and a.id in
+			<foreach collection="activitys" open="(" separator="," item="id" close=")">
+			   #{id}
+			</foreach>
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.ActivityInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      		SELECT seq_tab_activity_info.currval AS id from dual
+   		</selectKey>
+		insert into tab_activity_info
+		(   
+			id,
+		    activity_name,
+		    activity_date,
+		    people_count,
+		    rule_id,
+		    city_id,
+		    bu_id,
+		    status,
+		    create_user,
+       		create_time,
+      		update_user,
+       		update_time,
+       		coupon_prefix,
+       		branch_ids,
+       		branch_names,
+       		is_pub
+		)	VALUES
+		(
+		    seq_tab_activity_info.nextval,
+			#{activity_name, jdbcType=VARCHAR},
+			#{activity_date, jdbcType=VARCHAR},
+			#{people_count, jdbcType=NUMERIC},
+			#{rule_id, jdbcType=NUMERIC},
+			#{city_id, jdbcType=NUMERIC},
+			#{bu_id, jdbcType=NUMERIC},
+			#{status, jdbcType=NUMERIC},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=VARCHAR},
+			#{update_user,jdbcType=NUMERIC},
+			#{update_time,jdbcType=VARCHAR},
+			#{coupon_prefix,jdbcType=VARCHAR},
+			#{branch_ids,jdbcType=VARCHAR},
+			#{branch_names,jdbcType=VARCHAR},
+			0
+		)
+		
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.ActivityInfo">
+		UPDATE tab_activity_info
+		<set>
+		   <if test="activity_name!=null">
+		     activity_name = #{activity_name, jdbcType=VARCHAR},
+		   </if>
+		   <if test="activity_date!=null">
+		     activity_date = #{activity_date, jdbcType=VARCHAR},
+		   </if>
+		   <if test="people_count!=null">
+		     people_count = #{people_count, jdbcType=NUMERIC},
+		   </if>
+		   <if test="rule_id!=null">
+		    rule_id = #{rule_id, jdbcType=NUMERIC},
+		   </if>
+		   <if test="coupon_prefix!=null">
+		     coupon_prefix = #{coupon_prefix, jdbcType=NUMERIC},
+		   </if>
+		   <if test="update_user!=null">
+		      update_user = #{update_user, jdbcType=NUMERIC},
+		   </if>
+		   <if test="branch_ids!=null">
+			   branch_ids = #{branch_ids, jdbcType=VARCHAR},
+		   </if>
+		   <if test="branch_names!=null">
+			   branch_names = #{branch_names, jdbcType=VARCHAR},
+		   </if>
+		   <if test="is_pub!=null">
+			   is_pub = #{is_pub, jdbcType=NUMERIC},
+		   </if>
+		   <if test="status!=null">
+			   status = #{status, jdbcType=NUMERIC},
+		    </if>
+		      update_time =sysdate,
+		 </set>
+		WHERE id = #{id, jdbcType=NUMERIC}	
+	</update>
+
+	<update id="deleteByIds" parameterType="java.util.List">
+            UPDATE tab_activity_info SET STATUS = '0' WHERE ID IN
+            <foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+			</foreach>
+	</update>
+	
+	<update id="changeIsPub" parameterType="map">
+	     UPDATE tab_activity_info 
+	     <set>
+	        <if test="is_pub!=null">
+	         is_pub = #{is_pub,jdbcType=NUMERIC},
+	        </if>
+	         update_time = sysdate
+	     </set>
+	     where id=#{id,jdbcType=NUMERIC}
+	</update>
+	
+	<insert id="generateCouponDepot" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+            INSERT INTO tab_coupon_info
+            (
+	            id,
+	            name,
+	            activity_id,
+	            encoding,
+	            rule_id,
+	            city_id,
+	            bu_id,
+	            valid_date,
+	            status,
+	            create_user,
+	            create_time,
+	            update_time,
+	            branch_ids,
+	            branch_names
+             )
+             VALUES
+            (
+                seq_tab_coupon_info.nextval,
+	          	#{item.name, jdbcType=VARCHAR},     
+	          	#{item.activity_id, jdbcType=NUMERIC},     
+	          	#{item.encoding, jdbcType=VARCHAR},      
+	          	#{item.rule_id, jdbcType=NUMERIC},     
+	          	#{item.city_id, jdbcType=NUMERIC},  
+	          	#{item.bu_id, jdbcType=NUMERIC},  
+	          	(select r.end_date from tab_privilege_rule r where r.id =#{item.rule_id, jdbcType=NUMERIC}),     
+	          	#{item.status, jdbcType=NUMERIC},     
+	          	#{item.create_user, jdbcType=NUMERIC},     
+	          	sysdate,
+	          	sysdate,
+	          	#{item.branch_ids, jdbcType=VARCHAR},     
+	          	#{item.branch_names, jdbcType=VARCHAR}
+            ) 
+       </foreach>
+	</insert>
+	
+</mapper>

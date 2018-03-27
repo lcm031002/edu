@@ -2,177 +2,263 @@ package com.edu.erp.model;
 
 public class OrganizationInfo extends BaseObject {
 
-    // 组织名称
-    private String orgName;
+    private static final long serialVersionUID = 1L;
 
+    // 上级组织
+    private Long parent_id;
+    // 产品线
+    private Long product_line;
+    // 组织名称
+    private String org_name;
+    //组织id
+    private String buId;
+    // 组织类型
+    private Integer org_type;/* 1：地区级别 2：部门级别 3：团队级别 4：校区级别 */
+    private Integer sort_number;
+    // 地址
+    private String address;
+    // 经度
+    private Double longitude;
+    // 纬度
+    private Double latitude;
+
+    private String org_type_name;
+
+    private String parent_org_name;
+    // 机构代号
+    private Integer org;
+    // logo
+    private String logo;
+    // 域名
+    private String domain;
+    // 商户号
+    private String mchid;
+    // 终端编号
+    private String terminalNo;
+    // 商户号(WEB)
+    private String mid;
+    // 终端编号(WEB)
+    private String tid;
+    // 电话
+    private String phone;
+    // 老学员积分
+    private Integer oldStuIntegral;
+    // 校区类型
+    private Integer orgKind;
+    // 校区邮箱
+    private String email;
     // 组织机构简称
     private String shortOrgName;
 
-    // 上级组织
-    private Long parentId;
+    public static enum OrgTypeEnum {
+        CITY(1, "地区级别"), DEP(2, "部门级别"), // 部门和团队是同级的
+        BU(3, "团队级别"), BRANCH(4, "校区级别");
+        private Integer code;
+        private String desc;
 
-    // 组织级别 1=地区级别 2=部门级别 3=团队级别 4=校区级别
-    private Integer orgType;
+        private OrgTypeEnum(Integer code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
 
-    // 排序
-    private Integer sortNum;
+        public Integer getCode() {
+            return code;
+        }
 
-    // 地址
-    private String address;
+        public void setCode(Integer code) {
+            this.code = code;
+        }
 
-    // logo
-    private String Logo;
+        public String getDesc() {
+            return desc;
+        }
 
-    // 电话
-    private String phone;
-
-    // 邮箱
-    private String email;
-
-    private Integer productLine;
-
-    private Integer orgKind;
-
-
-    /**
-     * 设置 组织名称,对应字段 tab_organization_info.org_name
-     */
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
     }
 
-    /**
-     * 获取 组织名称,对应字段 tab_organization_info.org_name
-     */
-    public String getOrgName() {
-        return this.orgName;
+    public Long getParent_id() {
+        return parent_id;
     }
 
-    /**
-     * 设置 组织机构简称,对应字段 tab_organization_info.short_org_name
-     */
-    public void setShortOrgName(String shortOrgName) {
-        this.shortOrgName = shortOrgName;
+    public void setParent_id(Long parent_id) {
+        this.parent_id = parent_id;
     }
 
-    /**
-     * 获取 组织机构简称,对应字段 tab_organization_info.short_org_name
-     */
-    public String getShortOrgName() {
-        return this.shortOrgName;
+    public String getOrg_name() {
+        return org_name;
     }
 
-    /**
-     * 设置 上级组织,对应字段 tab_organization_info.parent_id
-     */
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void setOrg_name(String org_name) {
+        this.org_name = org_name;
     }
 
-    /**
-     * 获取 上级组织,对应字段 tab_organization_info.parent_id
-     */
-    public Long getParentId() {
-        return this.parentId;
+    public Integer getOrg_type() {
+        return org_type;
     }
 
-    /**
-     * 设置 组织级别 1=地区级别 2=部门级别 3=团队级别 4=校区级别 ,对应字段 tab_organization_info.org_type
-     */
-    public void setOrgType(Integer orgType) {
-        this.orgType = orgType;
+    public void setOrg_type(Integer org_type) {
+        this.org_type = org_type;
     }
 
-    /**
-     * 获取 组织级别 1=地区级别 2=部门级别 3=团队级别 4=校区级别 ,对应字段 tab_organization_info.org_type
-     */
-    public Integer getOrgType() {
-        return this.orgType;
+    public Long getProduct_line() {
+        return product_line;
     }
 
-    /**
-     * 设置 排序,对应字段 tab_organization_info.sort_num
-     */
-    public void setSortNum(Integer sortNum) {
-        this.sortNum = sortNum;
+    public void setProduct_line(Long product_line) {
+        this.product_line = product_line;
     }
 
-    /**
-     * 获取 排序,对应字段 tab_organization_info.sort_num
-     */
-    public Integer getSortNum() {
-        return this.sortNum;
+    public Integer getSort_number() {
+        return sort_number;
     }
 
-    /**
-     * 设置 地址,对应字段 tab_organization_info.address
-     */
+    public void setSort_number(Integer sort_number) {
+        this.sort_number = sort_number;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
 
-    /**
-     * 获取 地址,对应字段 tab_organization_info.address
-     */
-    public String getAddress() {
-        return this.address;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    /**
-     * 设置 logo,对应字段 tab_organization_info.Logo
-     */
-    public void setLogo(String Logo) {
-        this.Logo = Logo;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
-    /**
-     * 获取 logo,对应字段 tab_organization_info.Logo
-     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getOrg_type_name() {
+        return org_type_name;
+    }
+
+    public void setOrg_type_name(String org_type_name) {
+        this.org_type_name = org_type_name;
+    }
+
+    public String getParent_org_name() {
+        return parent_org_name;
+    }
+
+    public void setParent_org_name(String parent_org_name) {
+        this.parent_org_name = parent_org_name;
+    }
+
+    public Integer getOrg() {
+        return org;
+    }
+
+    public void setOrg(Integer org) {
+        this.org = org;
+    }
+
     public String getLogo() {
-        return this.Logo;
+        return logo;
     }
 
-    /**
-     * 设置 电话,对应字段 tab_organization_info.phone
-     */
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getMchid() {
+        return mchid;
+    }
+
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
+    }
+
+    public String getTerminalNo() {
+        return terminalNo;
+    }
+
+    public void setTerminalNo(String terminalNo) {
+        this.terminalNo = terminalNo;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    /**
-     * 获取 电话,对应字段 tab_organization_info.phone
-     */
-    public String getPhone() {
-        return this.phone;
+    public Integer getOldStuIntegral() {
+        return oldStuIntegral;
     }
 
-    /**
-     * 设置 邮箱,对应字段 tab_organization_info.email
-     */
-    public void setEmail(String email) {
-        this.email = email;
+    public void setOldStuIntegral(Integer oldStuIntegral) {
+        this.oldStuIntegral = oldStuIntegral;
     }
 
-    /**
-     * 获取 邮箱,对应字段 tab_organization_info.email
-     */
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setProductLine(Integer productLine) {
-        this.productLine = productLine;
-    }
-
-    public Integer getProductLine() {
-        return this.productLine;
+    public Integer getOrgKind() {
+        return orgKind;
     }
 
     public void setOrgKind(Integer orgKind) {
         this.orgKind = orgKind;
     }
 
-    public Integer getOrgKind() {
-        return this.orgKind;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
+    public String getShortOrgName() {
+        return shortOrgName;
+    }
+
+    public void setShortOrgName(String shortOrgName) {
+        this.shortOrgName = shortOrgName;
+    }
+
+    public String getBuId() {
+        return buId;
+    }
+
+    public void setBuId(String buId) {
+        this.buId = buId;
     }
 }

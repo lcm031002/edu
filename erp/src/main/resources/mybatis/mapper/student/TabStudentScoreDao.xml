@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TabStudentScoreDao">
+	<select id="queryByStuScoreInfoId" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.TabStudentScore">
+		select tss.id,
+		       tss.student_score_info_id as studentScoreInfoId,
+		       tss.subject_id            as subjectId,
+		       tss.score,
+		       tss.full_mark             as fullMark,
+		       tss.progress,
+		       tss.ranking,
+		       tss.class_ranking         as classRanking,
+		       tss.teacherId             as teacherId,
+		       tti.teacher_name          as teacherName,
+		       tss.remark
+		  from tab_student_score tss
+		  left join tab_teacher_info tti on tti.id = tss.teacher_id
+		 where tss.student_score_info_id = #{stuScoreInfoId, jdbcType=NUMERIC}
+	</select>
+
+	<insert id="save" parameterType="com.edu.erp.model.TabStudentScore">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select seq_tab_student_score.nextval as id from dual
+		</selectKey>
+		insert into tab_student_score
+		(id,
+		student_score_info_id,
+		subject_id,
+		score,
+		full_mark,
+		progress,
+		ranking,
+		class_ranking,
+		teacher_id,
+		remark,
+		create_user,
+		create_time
+		)
+		values
+		(
+		#{id, jdbcType=NUMERIC},
+		#{studentScoreInfoId, jdbcType=NUMERIC},
+		#{subjectId, jdbcType=NUMERIC},
+		#{score, jdbcType=NUMERIC},
+		#{fullMark, jdbcType=NUMERIC},
+		#{progress, jdbcType=VARCHAR},
+		#{ranking, jdbcType=NUMERIC},
+		#{classRanking, jdbcType=NUMERIC},
+		#{teacherId, jdbcType=NUMERIC},
+		#{remark, jdbcType=VARCHAR},
+		#{create_user, jdbcType=NUMERIC},
+		#{create_time, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="saveList" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+			insert into tab_student_score
+			(id,
+			student_score_info_id,
+			subject_id,
+			score,
+			full_mark,
+			progress,
+			ranking,
+			class_ranking,
+			teacher_id,
+			remark,
+			create_user,
+			create_time
+			)
+			values
+			(
+			seq_tab_student_score.nextval,
+			#{item.studentScoreInfoId, jdbcType=NUMERIC},
+			#{item.subjectId, jdbcType=NUMERIC},
+			#{item.score, jdbcType=NUMERIC},
+			#{item.fullMark, jdbcType=NUMERIC},
+			#{item.progress, jdbcType=VARCHAR},
+			#{item.ranking, jdbcType=NUMERIC},
+			#{item.classRanking, jdbcType=NUMERIC},
+			#{item.teacherId, jdbcType=NUMERIC},
+			#{item.remark, jdbcType=VARCHAR},
+			#{item.create_user, jdbcType=NUMERIC},
+			#{item.create_time, jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.TabStudentScore">
+		update tab_student_score
+		set 
+		<if test="subjectId != null">
+			subject_id = #{subjectId, jdbcType=NUMERIC},
+		</if>
+		<if test="score != null">
+			score = #{score, jdbcType=NUMERIC},
+		</if>
+		<if test="fullMark != null">
+			full_mark = #{fullMark, jdbcType=NUMERIC},
+		</if>
+		<if test="progress != null and progress != ''">
+			progress = #{progress, jdbcType=VARCHAR},
+		</if>
+		<if test="ranking != null">
+			ranking = #{ranking, jdbcType=NUMERIC},
+		</if>
+		<if test="classRanking != null">
+			class_ranking = #{classRanking, jdbcType=NUMERIC},
+		</if>
+		<if test="teacherId != null">
+			teacher_id = #{teacherId, jdbcType=NUMERIC},
+		</if>
+		<if test="remark != null">
+			remark = #{remark, jdbcType=VARCHAR},
+		</if>
+			update_user = #{update_user, jdbcType=NUMERIC},
+			update_time = #{update_time, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from tab_student_score where id = #{id, jdbcType=NUMERIC}
+	</delete>
+
+	<delete id="deleteByStuScoreInfoId" parameterType="java.lang.Long">
+		delete from tab_student_score where student_score_info_id = #{studentScoreInfoId, jdbcType=NUMERIC}
+	</delete>
+
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.OrderCourseTimesInfoDao">
+
+	<insert id="saveOrderCourseTimesInfo" parameterType="com.edu.erp.model.TabOrderCourseTimesInfo">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT SEQ_ORDER_COURSE_TIMES_INFO.nextval AS id from dual
+		</selectKey>
+		INSERT INTO TAB_ORDER_COURSE_TIMES_INFO
+		(ID, STUDENT_ID,ORDER_ID,
+		ORDER_DETAIL_ID, COURSE_TIMES)
+		VALUES
+		(SEQ_ORDER_COURSE_TIMES_INFO.nextval,
+		#{student_id,jdbcType=NUMERIC},
+		#{order_id,jdbcType=NUMERIC},
+		#{order_detail_id,jdbcType=NUMERIC},
+		#{course_times,jdbcType=NUMERIC})
+	</insert>
+
+	<delete id="deleteOrderCourseTimesInfo" parameterType="com.edu.erp.model.TabOrderCourseTimesInfo">
+		delete
+		from TAB_ORDER_COURSE_TIMES_INFO where ORDER_ID =
+		#{order_id,jdbcType=NUMERIC}
+	</delete>
+	
+	<select id="queryOrderCourseTimesInfo" parameterType="com.edu.erp.model.TabOrderCourseTimesInfo"
+		resultType="com.edu.erp.model.TabOrderCourseTimesInfo">
+		select * from TAB_ORDER_COURSE_TIMES_INFO where order_detail_id = #{order_detail_id,jdbcType=NUMERIC} order by course_times
+	</select>
+	
+	<select id="queryOrderCourseTimesInfoByMap" parameterType="Map"
+		resultType="com.edu.erp.model.TabOrderCourseTimesInfo">
+		select * from TAB_ORDER_COURSE_TIMES_INFO tocti 
+		left join tab_order_info  toi on tocti.order_id=toi.id
+		 where tocti.order_detail_id = #{order_detail_id,jdbcType=NUMERIC} and tocti.course_times in (${course_times} )
+		 and toi.valid_status=1 and toi.check_status!=4
+	</select>
+	
+	
+	
+	<select id="queryOrderTimesInfo" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.TabOrderCourseTimesInfo">
+		select *
+	      from TAB_ORDER_COURSE_TIMES_INFO
+	     where order_detail_id in
+	           (select id
+	              from tab_order_info_detail
+	             where order_id = #{orderId, jdbcType = NUMERIC})
+	     order by course_times
+	</select>
+	
+	<update id="updateChangeIdOnChangeTimes" parameterType="Map">
+		update tab_change_course_times t set t.change_id = #{change_id} where t.change_no =  #{change_no}
+	</update>
+	
+	
+	<update id="updateValidOrderCourseTimes" parameterType="Map">
+		update t_order_course_times t set t.is_valid = 0 where exists (select 1
+              from tc_order_course_times c
+             where t.ocid = c.order_course_id
+               and t.times = c.course_times
+               and c.change_id = = #{change_id})
+	</update>
+	
+	<select id="queryTabChangeCourseTimesInfo"  parameterType="Map" resultType="com.edu.erp.model.TCChangeCourseTimes">
+		select * from tab_change_course_times
+	      where change_no =#{change_no} and change_course_id = #{change_course_id} 
+	</select>
+	
+	<insert id="saveTcOrderCourseTimes" >
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			select  seq_tc_order_course_times.nextval as id from dual
+		</selectKey>
+		insert into tc_order_course_times
+          (id,
+           change_id,
+           change_course_id,
+           order_id,
+           order_course_id,
+           course_times)
+      values
+        (
+         #{id,jdbcType=NUMERIC},
+		  #{changeId,jdbcType=NUMERIC},
+		  #{changeCourseId,jdbcType=NUMERIC},
+		  #{orderId,jdbcType=NUMERIC},
+		  #{orderCourseId,jdbcType=NUMERIC},
+		  #{courseTimes,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<!-- 查询课次的考勤情况-->
+	<select id="queryCourseTimesAttendType" resultType="HashMap" parameterType="HashMap">
+		select t.course_times,a.attend_type
+        from tc_order_course_times t
+        join tc_order_course tcoc on t.order_course_id = tcoc.id
+        join t_order_course c on tcoc.order_course_id = c.id
+        join t_course_scheduling e on c.course_id = e.course_id and t.course_times = e.course_times
+        join t_attendance        a on a.scheduling_id = e.id and a.order_course_id = c.id
+       where a.attend_type not in (-1, 10)  and t.change_course_id  = #{change_course_id,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 查询某个课次的正式人数列表 -->
+	<select id="queryCheckPeopleByCourseTimes" parameterType="Map" resultType="Map">
+		SELECT
+		    tor.order_no  as "orderNo",
+		    tor.student_id as "studentId" ,
+		    tsi.student_name as "studentName",
+		    tor.order_status "status"
+		FROM
+		    t_order_course_times toct
+		LEFT JOIN
+		    t_order_course toc
+		ON
+		    toc.id=toct.ocid
+		LEFT JOIN
+		    t_order tor
+		ON
+		    tor.id=toc.order_id
+		LEFT JOIN
+		    tab_student_info tsi
+		ON
+		    tsi.id=tor.student_id
+		WHERE
+		    toc.course_id  = #{course_id}
+		AND toct.times =#{course_times}
+		AND toct.is_valid= 1
+		AND tor.order_status=1
+	</select>
+	
+	<!-- 查询某个课次的待确定人数列表 -->
+	<select id="queryUncheckPeopleByCourseTimes" parameterType="Map" resultType="Map">
+		SELECT
+		    toi.encoding  as "orderNo",
+		    toi.student_id as "studentId" ,
+		    tsi.student_name as "studentName",
+		    toi.check_status "status"
+		FROM
+		    tab_order_course_times_info tocti
+		LEFT JOIN
+		    tab_order_info toi
+		ON
+		    tocti.order_id=toi.id
+		left join 
+			tab_order_info_detail  toid 
+		on 
+			toid.id=tocti.order_detail_id
+		LEFT JOIN
+		    tab_student_info tsi
+		ON
+		    tsi.id=toi.student_id
+		WHERE
+		    toid.course_id  = #{course_id,jdbcType=NUMERIC}
+		AND tocti.course_times =#{course_times}
+		AND toi.valid_status=1
+		AND toi.pay_status=0
+	</select>
+</mapper>

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DataInvoiceDao">
+	
+	<select id="queryByOrderId"
+	    resultMap="pojoInvoice"
+		parameterType="java.lang.Long">
+		SELECT torder.ORDER_NO       as order_encoding,
+		       tdi.*,
+		       decode(tdi.heading, '1', '个人', '2', '公司') as heading_name,
+		       tdic.COMPANY_NAME     as invoice_Compamy_Name,
+		       torder.ACTURAL_AMOUNT as order_money,
+		       tsi.encoding          as student_encoding,
+		       tsi.student_name      as student_name,
+		       toio.org_name         as branch_name,
+		       tei.EMPLOYEE_NAME     as apply_user_name,
+		       tei2.EMPLOYEE_NAME    as invoice_user_name,
+		       decode(tdi.status, 1, '已开票', 2, '已回收作废', 3, '未回收作废', 4, '申请中', 5, '拒绝') as status_name
+		  FROM tab_data_invoice tdi
+		  LEFT JOIN t_order torder
+		    ON torder.id = tdi.ORDER_ID
+		  LEFT JOIN tab_data_invoice_company tdic
+		    ON tdic.ID = tdi.invoice_compamy
+		  left join TAB_STUDENT_INFO tsi
+		    on tsi.id = torder.student_id
+		  left join TAB_ORGANIZATION_INFO toio
+		    on toio.id = torder.branch_id
+		  left join TAB_USER_INFO tui
+		    on tui.id = tdi.APPLY_USER
+		  left join TAB_EMPLOYEE_INFO tei
+		    on tei.id = tui.EMPLOYEE_ID
+		  left join TAB_USER_INFO tui2
+		    on tui2.id = tdi.INVOICE_USER
+		  left join TAB_EMPLOYEE_INFO tei2
+		    on tei2.id = tui2.EMPLOYEE_ID
+		 WHERE tdi.order_id = #{orderId, jdbcType = NUMERIC}
+		 order by tdi.apply_date desc
+	</select>
+	
+	<select id="queryForPage"
+	    parameterType="java.util.HashMap"
+	    resultMap="pojoInvoice">
+		SELECT torder.ORDER_NO       as order_encoding,
+		       tdi.*,
+		       decode(tdi.heading, '1', '个人', '2', '公司') as heading_name,
+		       tdic.COMPANY_NAME     as invoice_Compamy_Name,
+		       torder.ACTURAL_AMOUNT as money,
+		       tsi.encoding          as student_encoding,
+		       tsi.student_name      as student_name,
+		       toio.org_name         as branch_name,
+		       tei.EMPLOYEE_NAME     as apply_user_name,
+		       tei2.EMPLOYEE_NAME    as invoice_user_name,
+		       tei3.EMPLOYEE_NAME    as update_user_name,
+		       decode(tdi.status, 1, '已开票', 2, '已回收作废', 3, '未回收作废', 4, '申请中', 5, '拒绝') as status_name,
+		      tdi.receive_status as receiveStatus,
+					(select vdd.name
+					  from vt_dict_data vdd
+					where vdd.typecode = 'invoiceReceiveStatus'
+					  and vdd.code = to_char(tdi.receive_status)) as receiveStatusName
+		  FROM tab_data_invoice tdi
+		  LEFT JOIN t_order torder
+		    ON torder.id = tdi.ORDER_ID
+		  LEFT JOIN tab_data_invoice_company tdic
+		    ON tdic.ID = tdi.invoice_compamy
+		  left join TAB_STUDENT_INFO tsi
+		    on tsi.id = torder.student_id
+		  left join TAB_ORGANIZATION_INFO toio
+		    on toio.id = torder.branch_id
+		  left join TAB_USER_INFO tui
+		    on tui.id = tdi.APPLY_USER
+		  left join TAB_EMPLOYEE_INFO tei
+		    on tei.id = tui.EMPLOYEE_ID
+		  left join TAB_USER_INFO tui2
+		    on tui2.id = tdi.INVOICE_USER
+		  left join TAB_EMPLOYEE_INFO tei2
+		    on tei2.id = tui2.EMPLOYEE_ID
+		  left join TAB_USER_INFO tui3
+		    on tui3.id = tdi.UPDATE_USER
+		  left join TAB_EMPLOYEE_INFO tei3
+		    on tei3.id = tui3.EMPLOYEE_ID
+		WHERE
+			1=1
+			<if test="bu_id != null">
+		    AND torder.BU_ID = #{bu_id,jdbcType=NUMERIC}
+		    </if>
+		    <if test="start_date != null">
+		    	AND tdi.create_time >=  to_date(#{start_date}, 'yyyy-MM-dd')
+		    </if>
+		     <if test="end_date != null">
+		    AND tdi.create_time &lt; to_date(#{end_date}, 'yyyy-MM-dd') + 1
+		    </if>
+		    <if test="status != null and status > 0">
+		    AND tdi.status = #{status,jdbcType=NUMERIC}
+		    </if>
+		    <if test="invoice_code != null and invoice_code != ''">
+		    	AND (tdi.invoice_code like '%'||#{invoice_code}||'%' or torder.ORDER_NO like '%'||#{invoice_code}||'%' or tsi.id like '%'||#{invoice_code}||'%' or tsi.ENCODING like '%'||#{invoice_code}||'%' or tsi.STUDENT_NAME like '%'||#{invoice_code}||'%' or tdic.COMPANY_NAME like '%'||#{invoice_code}||'%')
+		    </if>
+		    <if test="branch_id != null">
+		    	AND torder.branch_id = #{branch_id,jdbcType=NUMERIC}
+		    </if>
+				<if test="receiveStatus != null and receiveStatus != ''">
+					AND nvl(tdi.receive_status, decode(tdi.status, 1, 1, -1)) = #{receiveStatus,jdbcType=VARCHAR}
+				</if>
+		    <if test="studentId != null">
+					and torder.student_id = #{studentId, jdbcType=NUMERIC}
+				</if>
+		order by tdi.apply_date desc
+	</select>
+	
+	<select id="queryById"
+	    resultMap="pojoInvoice"
+		parameterType="java.lang.Long">
+		SELECT
+		    torder.ORDER_NO as order_encoding,
+		    tdi.*,
+		    decode(tdi.heading, '1', '个人', '2', '公司') as heading_name,
+		    tdic.COMPANY_NAME as invoice_Compamy_Name,
+		    torder.ACTURAL_AMOUNT as money,
+		    tei.EMPLOYEE_NAME as apply_user_name,
+		    tei2.EMPLOYEE_NAME as invoice_user_name,
+		    tooi.org_name as branch_name,
+		    decode(tdi.status, 1, '已开票', 2, '已回收作废', 3, '未回收作废', 4, '申请中', 5, '拒绝') as status_name
+		FROM
+		    tab_data_invoice tdi LEFT JOIN t_order torder
+		        ON torder.id = tdi.ORDER_ID LEFT JOIN tab_data_invoice_company tdic
+		        ON tdic.ID = tdi.invoice_compamy
+		    left join TAB_USER_INFO tui on tui.id = tdi.APPLY_USER    
+		    left join TAB_EMPLOYEE_INFO tei on tei.id = tui.EMPLOYEE_ID
+		    left join TAB_USER_INFO tui2 on tui2.id = tdi.INVOICE_USER    
+		    left join TAB_EMPLOYEE_INFO tei2 on tei2.id = tui2.EMPLOYEE_ID
+		    left join TAB_ORGANIZATION_INFO tooi on tooi.id = torder.branch_id
+		WHERE
+		    tdi.id = #{id,jdbcType=NUMERIC}
+	</select>
+	<!-- 查询所在地公司 -->
+	<select id="selectCompanys" parameterType="com.edu.erp.model.TabDataInvoice" resultType="com.edu.erp.model.TabDataInvoice">
+		select id,company_name 
+		from tab_data_invoice_company
+		where city_id = #{city_id,jdbcType=NUMERIC}
+		and status = 1
+	</select>
+	
+	<!-- 查询订单下已经开票的总金额 -->
+	<select id="queryOrderInvoceMoney" parameterType="java.lang.Long" resultType="com.edu.erp.model.TabDataInvoice">
+		SELECT torder.id as orderId,
+			   torder.student_id as studentId,
+			   tsi.student_name as studentName,
+		       torder.branch_id as branchId,
+		       nvl(torder.ACTURAL_AMOUNT, 0) - nvl(tinvoice.actual_money, 0) - nvl(tchange.premium_amount, 0) - nvl(payInfo.frozen_pay, 0) as orderMoney,
+		       nvl(tinvoice.actual_money, 0) as money,
+		       torder.branch_id as branchId
+		  FROM t_order torder
+		  left join TAB_STUDENT_INFO tsi
+		    on tsi.id = torder.student_id
+		  left join (SELECT tdi.order_id,
+		                    sum(nvl(decode(tdi.status,
+		                                   1,
+		                                   tdi.actual_money,
+		                                   tdi.required_money),
+		                            0)) AS actual_money
+		               FROM tab_data_invoice tdi
+		              WHERE tdi.STATUS in (1, 4)
+		                AND tdi.ORDER_ID = #{orderId, jdbcType = NUMERIC}
+		              group by tdi.order_id) tinvoice
+		    on torder.ID = tinvoice.order_id
+		  left join (select toc.order_id,
+		                    sum(nvl(toc.fee_amount, 0)) as premium_amount
+		               from t_order_change toc
+		              where toc.change_type = 1
+		                and toc.change_status = 5
+		                and toc.order_id = #{orderId, jdbcType = NUMERIC}
+		              group by toc.ORDER_ID) tchange
+		    on tchange.order_id = torder.id
+		  left join (select topc.order_id, sum(nvl(topc.frozen_account_price,0)) as frozen_pay
+		  			from tab_order_pay_cost topc
+		  		   where topc.order_id = #{orderId, jdbcType = NUMERIC}
+		  		   group by topc.order_id) payInfo
+		  	on payInfo.order_id = torder.id	   
+		 where torder.ID = #{orderId, jdbcType = NUMERIC}
+	</select>
+	
+	<!-- 判断发票是否存在 -->
+	<select id="isExist" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		SELECT count(0) from tab_data_invoice tdi
+		 where tdi.ID = #{id, jdbcType = NUMERIC}
+	</select>
+	
+	<insert id="save" parameterType="com.edu.erp.model.TabDataInvoice">
+			<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
+	      		SELECT seq_tab_data_invoice.nextval AS id from dual
+	   		</selectKey>
+			INSERT INTO TAB_DATA_INVOICE(
+			            ID,
+			            ENCODING,
+			            ORDER_ID,
+			            STUDENT_ID,
+			            CITY_ID,
+			            BRANCH_ID,
+			            HEADING,
+			            COMPANY_NAME,
+			            TAX_NUM,
+			            INVOICE_EXPLAIN,
+			            REQUIRED_MONEY,
+			            ACTUAL_MONEY,
+			            INVOICE_CODE,
+			            INVOICE_COMPAMY,
+			            STATUS,
+			            DESCRIPTION,
+			            CREATE_USER,
+			            CREATE_TIME,
+			            UPDATE_USER,
+			            UPDATE_TIME,
+			            APPLY_DATE,
+			            APPLY_USER,
+			            INVOICE_DATE,
+			            INVOICE_USER,
+									RECEIVE_STATUS
+			        )
+			    VALUES(
+			        #{id,jdbcType=NUMERIC},
+			        #{encoding,jdbcType=VARCHAR},
+			        #{orderId,jdbcType=NUMERIC},
+			        #{studentId,jdbcType=NUMERIC},
+			        #{city_id,jdbcType=NUMERIC},
+			        #{branchId,jdbcType=NUMERIC},
+			        #{heading,jdbcType=VARCHAR},
+			        #{companyName,jdbcType=VARCHAR},
+			        #{taxNum,jdbcType=VARCHAR},
+			        #{invoiceExplain,jdbcType=VARCHAR},
+			        #{requiredMoney,jdbcType=NUMERIC},
+			        #{actualMoney,jdbcType=NUMERIC},
+			        #{invoiceCode,jdbcType=NUMERIC},
+			        #{invoiceCompamy,jdbcType=NUMERIC},
+			        #{status,jdbcType=NUMERIC},
+			        #{description,jdbcType=NUMERIC},
+			        #{create_user,jdbcType=NUMERIC},
+			        #{create_time,jdbcType=TIMESTAMP},
+			        #{update_user,jdbcType=NUMERIC},
+			        #{update_time,jdbcType=TIMESTAMP},
+			        #{applyDate,jdbcType=TIMESTAMP},
+			        #{applyUser,jdbcType=NUMERIC},
+			        #{invoiceDate,jdbcType=TIMESTAMP},
+			        #{invoiceUser,jdbcType=NUMERIC},
+							#{receiveStatus,jdbcType=NUMERIC}
+			    )
+	</insert>
+	<update id="update" parameterType="com.edu.erp.model.TabDataInvoice">
+			update TAB_DATA_INVOICE
+		       set 
+		       		<if test="companyName != null">
+		       			COMPANY_NAME = #{companyName,jdbcType=VARCHAR},
+		       		</if>
+		       		<if test="fees != null">
+		       			FEES= #{fees,jdbcType=NUMERIC},
+		       		</if>
+							<if test="receiveStatus != null">
+								RECEIVE_STATUS= #{receiveStatus,jdbcType=NUMERIC},
+							</if>
+		            ACTUAL_MONEY = #{actualMoney,jdbcType=NUMERIC},
+		            INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR},
+		            INVOICE_COMPAMY = #{invoiceCompamy,jdbcType=NUMERIC},
+		            STATUS = #{status,jdbcType=NUMERIC},
+		            INVOICE_DATE = #{invoiceDate,jdbcType=DATE},
+		            INVOICE_USER= #{invoiceUser,jdbcType=NUMERIC},
+		            UPDATE_USER = #{update_user,jdbcType=NUMERIC},
+		            UPDATE_TIME = #{update_time,jdbcType=DATE},
+		            DESCRIPTION = #{description,jdbcType=VARCHAR}
+		        where id = #{id,jdbcType=NUMERIC}
+	</update>
+
+	<update id="receiveInvoice" parameterType="com.edu.erp.model.TabDataInvoice">
+		update TAB_DATA_INVOICE
+		set
+		RECEIVE_STATUS = #{receiveStatus,jdbcType=VARCHAR},
+		UPDATE_USER = #{update_user,jdbcType=NUMERIC},
+		UPDATE_TIME = #{update_time,jdbcType=DATE}
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<resultMap type="com.edu.erp.model.TabDataInvoice" id="pojoInvoice">
+		<id property="id" column="id" />
+		<result property="encoding" column="encoding" />
+		<result property="orderId" column="order_id" />
+		<result property="studentId" column="student_id" />
+		<result property="branchId" column="branch_id" />
+		<result property="heading" column="heading" />
+		<result property="headingName" column="heading_name" />
+		<result property="companyName" column="company_Name" />
+		<result property="taxNum" column="tax_Num" />
+		<result property="invoiceExplain" column="invoice_Explain" />
+		<result property="requiredMoney" column="required_Money" />
+		<result property="actualMoney" column="actual_Money" />
+		<result property="invoiceCode" column="invoice_Code" />
+		<result property="invoiceCompamy" column="invoice_Compamy" />
+		<result property="description" column="description" />
+		<result property="oldId" column="old_Id" />
+		<result property="applyDate" column="apply_Date" />		
+		<result property="applyUser" column="apply_User" />
+		<result property="invoiceDate" column="invoice_Date" />
+		<result property="invoiceUser" column="invoice_User" />
+		<result property="fees" column="fees" />
+		<result property="orderEncoding" column="order_Encoding" />
+		<result property="invoiceCompamyName" column="invoice_Compamy_Name" />
+		<result property="money" column="money" />
+		<result property="premiumAmount" column="premium_Amount" />
+		<result property="studentEncoding" column="student_Encoding" />
+		<result property="studentName" column="student_Name" />
+		<result property="branchName" column="branch_Name" />
+		<result property="orderMoney" column="order_money" />
+		<result property="applyUserName" column="apply_user_name" />
+		<result property="invoiceUserName" column="invoice_user_name" />
+		<result property="statusName" column="status_name" />
+		
+		<result property="status" column="status" />
+		<result property="city_id" column="city_id" />
+		<result property="city_name" column="city_name" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="update_user_name" column="update_user_name" />
+		
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		
+	</resultMap>
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.UserTaskAppicationDao">
+	<insert id="insertApplication"  parameterType="java.util.HashMap">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+			SELECT SEQ_USER_APPLICATION_TASK.currval AS id from dual
+		</selectKey>
+		insert into USER_APPLICATION_TASK t 
+		(
+			t.ID,
+			t.APPLICATION,
+			t.REMARK,
+			t.CREATETIME,
+			t.CURRENT_STATE,
+			t.CURRENT_STEP,
+			t.STATUS,
+			t.APPLICATION_ID,
+			t.UPDATETIME,
+			t.WORKURL,
+			t.CURRENT_MAN,
+			t.BUSI_ID,
+			t.BUSI_TYPE
+		)   
+		values 
+		(
+			SEQ_USER_APPLICATION_TASK.nextval,
+			#{APPLICATION,jdbcType=VARCHAR},
+			#{REMARK,jdbcType=VARCHAR},
+			#{CREATETIME,jdbcType=VARCHAR},
+			#{CURRENT_STATE,jdbcType=VARCHAR},
+			#{CURRENT_STEP,jdbcType=VARCHAR},
+			#{STATUS,jdbcType=NUMERIC},
+			#{APPLICATION_ID,jdbcType=NUMERIC},
+			#{UPDATETIME,jdbcType=VARCHAR},
+			#{WORKURL,jdbcType=VARCHAR},
+			#{CURRENT_MAN,jdbcType=VARCHAR},
+			#{BUSI_ID,jdbcType=VARCHAR},
+			#{BUSI_TYPE,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateApplication"  parameterType="java.util.HashMap">
+		update USER_APPLICATION_TASK t set
+			t.CURRENT_STEP = #{CURRENT_STEP,jdbcType=VARCHAR},
+			t.CURRENT_STATE = #{CURRENT_STATE,jdbcType=VARCHAR},
+			t.STATUS = #{STATUS,jdbcType=NUMERIC},
+			t.CURRENT_MAN = #{CURRENT_MAN,jdbcType=VARCHAR}
+		where t.id = #{ID,jdbcType=NUMERIC}
+	</update>
+	
+	<delete id="deleteApplication"  parameterType="java.lang.Long">
+		delete from user_application_task where id = #{applicationId}
+	</delete>
+	
+	<select id="queryApplication"  parameterType="java.util.HashMap" resultType="HashMap">
+			SELECT
+			    uat.*,jt.dbid_ as "taskId"
+			FROM
+			    USER_APPLICATION_TASK uat
+			left join jbpm4_variable jva
+		      on jva.key_ = 'application_id'
+		     and uat.id = jva.string_value_
+		    left join jbpm4_task jt
+		      on jt.execution_ = jva.execution_
+			WHERE
+				1 = 1
+				<if test="APPLICATION_ID != null and APPLICATION_ID != ''">
+			    	and uat.APPLICATION_ID = #{APPLICATION_ID,jdbcType=NUMERIC}
+			    </if>
+			    <if test="start_date != null and end_date != null and start_date != '' and end_date != ''">
+					and substr(uat.createtime,0,10) between #{start_date} and #{end_date}
+				</if>
+				<if test="auditStatus != null and auditStatus == '待审核'">
+					and uat.current_state is null
+				</if>
+				<if test="auditStatus != null and auditStatus != ''and auditStatus != '-1' and auditStatus != '待审核' and auditStatus != '全部'">
+					and uat.current_state = #{auditStatus}
+				</if>
+				<if test="app_info != null and app_info != ''">
+					and uat.application like '%'||#{app_info}||'%'
+				</if>
+				<if test="module != null and module != '' and module != '-1'">
+					and jt.execution_id_ like ''||#{module}||'%'
+				</if>
+			order by uat.createtime desc
+	</select>
+	
+	<select id="queryUserApplicationsPage"  parameterType="java.util.HashMap" resultType="HashMap">
+			SELECT
+			    uat.*
+			FROM
+			    USER_APPLICATION_TASK uat
+			WHERE
+			    uat.APPLICATION_ID = #{paramMap.APPLICATION_ID,jdbcType=NUMERIC}
+			<if test="paramMap.start_date != null and paramMap.end_date != null">
+				and substr(uat.createtime,0,10) between #{paramMap.start_date} and #{paramMap.end_date}
+			</if>
+			<if test="paramMap.auditStatus != null and paramMap.auditStatus == '待审核'">
+				and uat.current_state is null
+			</if>
+			<if test="paramMap.auditStatus != null and paramMap.auditStatus != '' and paramMap.auditStatus != '待审核' and paramMap.auditStatus != '全部'">
+				and uat.current_state = #{paramMap.auditStatus}
+			</if>
+			<if test="paramMap.app_info != null and paramMap.app_info != ''">
+				and uat.application like '%${paramMap.app_info}%'
+			</if>
+			order by uat.CREATETIME desc
+	</select>
+	
+	<select id="queryApplicationById"  parameterType="java.util.HashMap" resultType="HashMap">
+			SELECT
+			    uat.*
+			FROM
+			    USER_APPLICATION_TASK uat
+			<where>
+			<if test="APPLICATION_ID != null">
+			    uat.APPLICATION_ID = #{APPLICATION_ID,jdbcType=NUMERIC}
+			</if>
+			<if test="start_date != null and end_date != null">
+				and substr(uat.createtime,0,10) between #{start_date} and #{end_date}
+			</if>
+			<if test="auditStatus != null and auditStatus == '待审核'">
+				and uat.current_state is null
+			</if>
+			<if test="auditStatus != null and auditStatus != '' and auditStatus != '待审核' and auditStatus != '全部'">
+				and uat.current_state = #{auditStatus}
+			</if>
+			<if test="app_info != null and app_info != ''">
+				and uat.application like '%${app_info}%'
+			</if>
+			<if test="id != null">
+			    and uat.id = #{id,jdbcType=NUMERIC}
+			</if>
+			</where>
+			order by uat.CREATETIME desc
+	</select>
+	
+	<select id="queryLockShenPiStatus" parameterType="java.util.HashMap" resultType="HashMap">
+		select *  from user_application_task uat
+		left join t_order_lock tol on uat.busi_id = tol.id
+		where tol.order_id = #{orderId,jdbcType=VARCHAR}
+		and uat.current_state is null
+	</select>
+</mapper>

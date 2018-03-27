@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentCourseDao">
+	<select id="queryStudentYDY" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.CourseYDYInfo">
+		select t_o_c.id as id,t_o_c.course_total_count,t_o_c.course_surplus_count,
+		t_c.course_name,t_c.course_no,
+		t_d_g.grade_name,
+		t_o_c.course_schedule_count  course_cnt,
+		t_o_c.course_attend_count course_attend_times,
+		(select sum(tc_o_c.course_times) from tc_order_course tc_o_c inner join t_order_change t_o_ch on t_o_ch.id=tc_o_c.change_id and t_o_ch.change_status=5 where tc_o_c.order_course_id= t_o_c.id and t_o_ch.change_type=1)course_quit_times,
+        (select sum(tc_o_c.course_times) from tc_order_course tc_o_c inner join t_order_change t_o_ch on t_o_ch.id=tc_o_c.change_id and t_o_ch.change_status=5 where tc_o_c.order_course_id= t_o_c.id and t_o_ch.change_type=5)course_lock,
+        (select sum(tc_o_c.course_times) from tc_order_course tc_o_c inner join t_order_change t_o_ch on t_o_ch.id=tc_o_c.change_id and t_o_ch.change_status=5 where tc_o_c.order_course_id= t_o_c.id and t_o_ch.change_type=2 and tc_o_c.transfer_flag=1)change_in,
+        (select sum(tc_o_c.course_times) from tc_order_course tc_o_c inner join t_order_change t_o_ch on t_o_ch.id=tc_o_c.change_id and t_o_ch.change_status=5 where tc_o_c.order_course_id= t_o_c.id and t_o_ch.change_type=2 and tc_o_c.transfer_flag=0)change_out
+		from t_order_course t_o_c
+		inner join t_order t_o on t_o.id=t_o_c.order_id
+		inner join t_course t_c on t_o_c.course_id=t_c.id
+		inner join tab_data_grade t_d_g on t_c.grade_id = t_d_g.id
+		left join t_course_scheduling t_c_s on t_c_s.course_id=t_c.id
+		WHERE 1=1
+		<if test="buId != null and buId != ''">
+			and t_o.bu_id = #{buId}
+		</if>
+		<if test="studentId != null and studentId != ''">
+			and t_o.student_id = #{studentId}
+		</if>
+		<if test="businessType != null and businessType != ''">
+			and t_o.business_type = #{businessType}
+		</if>
+		<if test="month != null and month != '' and month != -1">
+			and t_o.create_date>add_months(sysdate,-#{month})
+		</if>
+	</select>
+
+</mapper>

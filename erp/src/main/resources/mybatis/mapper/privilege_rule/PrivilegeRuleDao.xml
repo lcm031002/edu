@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.PrivilegeRuleDao">
+	<resultMap type="com.edu.erp.model.PrivilegeRule" id="privilegeRuleBusiness">
+		<id property="id" column="id" />
+		<result property="rule_name" column="rule_name" />
+		<result property="coupon_content" column="coupon_content" />
+		<result property="coupon_type" column="coupon_type" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="bu_id" column="bu_id" />
+		<result property="city_id" column="city_id" />
+		<result property="is_check" column="is_check" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		<result property="use_scope" column="use_scope" />
+		<result property="product_line" column="product_line" />
+		<result property="branch_ids" column="branch_ids" />		
+		<result property="course_surplus_count" column="course_surplus_count" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="update_user_name" column="update_user_name" />
+		
+		<collection property="privilegeCriterias" column="id"
+			javaType="ArrayList" ofType="com.edu.erp.model.PrivilegeCriteria">
+			<id property="id" column="pc_id" />
+			<result property="name" column="pc_name" />
+			<result property="description" column="pc_description" />
+			<result property="sum_price" column="pc_sum_price" />
+			<result property="sum_hour" column="pc_sum_hour" />
+			<result property="sum_integral" column="pc_sum_integral" />
+			<result property="status" column="pc_status" />
+			<result property="create_user" column="pc_create_user" />
+			<result property="create_user_name" column="pc_create_user_name" />
+			<result property="create_time" column="pc_create_time" />
+			<result property="update_user" column="pc_update_user" />
+			<result property="update_user_name" column="pc_update_user_name" />
+			<result property="update_time" column="pc_update_time" />
+			<result property="rule_id" column="pc_rule_id" />
+			<result property="grade_id" column="pc_grade_id" />
+		</collection>
+	</resultMap>
+	
+	<!-- 查询给定校区对应的优惠规则的信息 -->
+	<select id="queryRuleByBranchId"
+		 parameterType="java.util.Map"
+		 resultMap="privilegeRuleBusiness">
+		select distinct tpr.*,
+		       tpc.ID           as pc_id,
+		       tpc.name         as pc_name,
+		       tpc.description  as pc_description,
+		       tpc.rule_id      as pc_rule_id,
+		       tpc.sum_price    as pc_sum_price,
+		       tpc.sum_hour     as pc_sum_hour,
+		       tpc.sum_integral as pc_sum_integral,
+		       tpc.bu_id        as pc_bu_id,
+		       tpc.status       as pc_status,
+		       tpc.create_user  as pc_create_user,
+		       tpc.create_time  as pc_create_time,
+		       tpc.update_user  as pc_update_user,
+		       tpc.update_time  as pc_update_time,
+		       tpc.grade_id  	as pc_grade_id,
+		       tpr.course_surplus_count as course_surplus_count
+		  from tab_privilege_rule tpr
+		  left join tab_privilege_criteria tpc
+		    on tpc.RULE_ID = tpr.ID
+		  left join tab_privilege_school_ref tpsr
+		    on tpsr.RULE_ID = tpr.ID
+		 where 1=1 
+		 and tpr.bu_id = #{bu_id,jdbcType=NUMERIC}
+		 and tpsr.branch_id = #{branchId,jdbcType=NUMERIC}
+		 and tpr.status = 1
+		 and to_char(sysdate,'yyyy-mm-dd') BETWEEN tpr.start_date and tpr.END_DATE
+		<if test="isOrder != null ">
+		 	and tpr.id not in (
+				select distinct rule_id from tab_coupon_info where rule_id is not null
+			)
+		</if>
+	</select>
+	
+	<select id="queryRuleById"
+		 parameterType="java.util.Map"
+		 resultMap="privilegeRuleBusiness">
+		select distinct tpr.*,
+		       tpc.ID           as pc_id,
+		       tpc.name         as pc_name,
+		       tpc.description  as pc_description,
+		       tpc.rule_id      as pc_rule_id,
+		       tpc.sum_price    as pc_sum_price,
+		       tpc.sum_hour     as pc_sum_hour,
+		       tpc.sum_integral as pc_sum_integral,
+		       tpc.bu_id        as pc_bu_id,
+		       tpc.status       as pc_status,
+		       tpc.create_user  as pc_create_user,
+		       tpc.create_time  as pc_create_time,
+		       tpc.update_user  as pc_update_user,
+		       tpc.update_time  as pc_update_time,
+		       tpc.grade_id  	as pc_grade_id,
+		       tpr.course_surplus_count as course_surplus_count
+		  from tab_privilege_rule tpr
+		  left join tab_privilege_criteria tpc
+		    on tpc.RULE_ID = tpr.ID
+		  left join tab_privilege_school_ref tpsr
+		    on tpsr.RULE_ID = tpr.ID
+		 where 1=1 
+		 and tpr.id = #{id,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="queryOrderRule"
+		 parameterType="java.lang.Long"
+		 resultMap="privilegeRuleBusiness">
+		select distinct tpr.*,
+	                   tpc.ID                   as pc_id,
+	                   tpc.name                 as pc_name,
+	                   tpc.description          as pc_description,
+	                   tpc.rule_id              as pc_rule_id,
+	                   tpc.sum_price            as pc_sum_price,
+	                   tpc.sum_hour             as pc_sum_hour,
+	                   tpc.sum_integral         as pc_sum_integral,
+	                   tpc.bu_id                as pc_bu_id,
+	                   tpc.status               as pc_status,
+	                   tpc.create_user          as pc_create_user,
+	                   tpc.create_time          as pc_create_time,
+	                   tpc.update_user          as pc_update_user,
+	                   tpc.update_time          as pc_update_time,
+	                   tpc.grade_id             as pc_grade_id,
+	                   tpr.course_surplus_count as course_surplus_count
+	     from tab_privilege_rule tpr
+	     left join tab_privilege_criteria tpc
+	       on tpc.RULE_ID = tpr.ID
+	     left join tab_privilege_school_ref tpsr
+	       on tpsr.RULE_ID = tpr.ID
+	    where 1 = 1
+	      and tpr.id in (select distinct rule_id
+	                       from tab_order_info_detail
+	                      where order_id = #{orderId,jdbcType=NUMERIC}
+	                        and rule_id is not null
+	                     union
+	                     select rule_id
+	                       from tab_order_info
+	                      where id = #{orderId,jdbcType=NUMERIC}
+	                        and rule_id is not null)
+	</select>
+
+	<select id="queryPrivilegeRuleForPage" parameterType="page" resultMap="privilegeRuleBusiness">
+		select distinct tpr.*,c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,tpsr.branch_ids
+		  from tab_privilege_rule tpr
+		  		<!-- 新增用户-->
+		left join tab_user_info c_user on tpr.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on tpr.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		left join (select r.rule_id , to_char(wm_concat(r.branch_id)) branch_ids from tab_privilege_school_ref r group by r.rule_id) tpsr on tpsr.RULE_ID = tpr.ID
+		where 1=1 
+		and tpr.status !=0
+		and tpr.bu_id = #{bu_id,jdbcType=NUMERIC}
+		 <if test="searchInfo != null and searchInfo != ''">
+			AND (tpr.RULE_NAME like '%'||#{searchInfo}||'%') 
+		 </if>
+		order by  tpr.status ,tpr.update_time desc,tpr.create_time desc
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.PrivilegeRule">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      		SELECT SEQ_TAB_PRIVILEGE_RULE.currval AS id from dual
+   		</selectKey>
+		insert into tab_privilege_rule
+		(   
+			id,
+		    rule_name,
+		    coupon_content,
+		    coupon_type,
+		    start_date,
+		    end_date,
+		    city_id,
+		    bu_id,
+		    use_scope,
+		    status,
+		    create_user, 
+		    create_time,
+		    update_user, 
+		    update_time,
+		    product_line,
+		    course_surplus_count
+		)	VALUES
+		(
+		    SEQ_TAB_PRIVILEGE_RULE.nextval,
+			#{rule_name, jdbcType=VARCHAR},
+			#{coupon_content, jdbcType=NUMERIC},
+			#{coupon_type, jdbcType=NUMERIC},
+			#{start_date, jdbcType=VARCHAR},
+			#{end_date, jdbcType=VARCHAR},
+			#{city_id, jdbcType=NUMERIC},
+			#{bu_id, jdbcType=NUMERIC},
+			#{use_scope,jdbcType=NUMERIC},
+			#{status, jdbcType=NUMERIC},
+			#{create_user, jdbcType=NUMERIC},
+			#{create_time, jdbcType=VARCHAR},
+			#{update_user, jdbcType=NUMERIC},
+			#{update_time, jdbcType=VARCHAR},
+			#{product_line, jdbcType=VARCHAR},
+			#{course_surplus_count, jdbcType=VARCHAR}
+		)
+		
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.PrivilegeRule">
+		UPDATE tab_privilege_rule
+		SET 
+		   rule_name = #{rule_name, jdbcType=VARCHAR},
+		   coupon_content = #{coupon_content, jdbcType=NUMERIC},
+		   coupon_type = #{coupon_type, jdbcType=NUMERIC},
+		   use_scope = #{use_scope,jdbcType=NUMERIC},
+		   start_date = #{start_date, jdbcType=VARCHAR},
+		   end_date = #{end_date, jdbcType=VARCHAR},
+		   update_user = #{update_user, jdbcType=NUMERIC},
+		   update_time = #{update_time, jdbcType=VARCHAR},
+		   product_line = #{product_line, jdbcType=VARCHAR},
+		   status = #{status, jdbcType=VARCHAR},
+		   course_surplus_count = #{course_surplus_count, jdbcType=VARCHAR}
+		WHERE id = #{id, jdbcType=NUMERIC}	
+	</update>
+
+	<update id="deleteByIds" parameterType="java.util.List">
+            UPDATE tab_privilege_rule SET STATUS = '0' WHERE ID IN
+            <foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+			</foreach>
+	</update>
+	
+	<insert id="addPrivilegeSchoolRef" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+            INSERT INTO tab_privilege_school_ref 
+            (
+               id,
+               branch_id,
+               rule_id
+            )
+            VALUES
+            (
+               seq_tab_privilege_school_ref.nextval,
+               #{item.org_id},
+               #{item.p_id}
+            )
+       </foreach>
+	</insert>
+	
+	<delete id="deletePrivilegeSchoolRef" parameterType="java.util.List">
+		DELETE FROM tab_privilege_school_ref
+		WHERE rule_id in
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="queryOutPrivilegeRule" parameterType="Map" resultType="java.lang.Long">
+		select id
+			from 	tab_privilege_rule
+		where		status = 1
+			and		start_date &lt; #{cur_date}		
+			and		end_date &lt; #{cur_date}		
+	</select>
+	
+	<update id="changeStatus" parameterType="Map">
+		update tab_privilege_rule
+			set status = #{status}
+		where id in (${ids})
+	</update>
+</mapper>

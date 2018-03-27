@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.CourseLadderDao">
+
+	<resultMap type="com.edu.erp.model.TCourseLadder" id="courseLadderMap">
+		<id property="id" column="id" />
+		<result property="ladder_name" column="ladder_name" />
+		<result property="branch_id" column="branch_id" />
+		<result property="branch_name" column="branch_name" />
+		<result property="grade_id" column="grade_id" />
+		<result property="grade_name" column="grade_name" />
+		<result property="city_id" column="city_id" />
+		<result property="city_name" column="city_name" />
+		<result property="ladder_type" column="ladder_type" />
+		<result property="ladder_algorithm" column="ladder_algorithm" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_user_name" column="update_user_name" />
+		<result property="update_time" column="update_time" />
+		<collection property="ladderList" javaType="ArrayList" 
+				ofType="com.edu.erp.model.TLadder">
+			<id property="id" column="h_id" />
+			<result property="course_ladder_id" column="h_course_ladder_id" />
+			<result property="ladder_level_name" column="ladder_level_name" />
+			<result property="level_price" column="level_price" />
+			<result property="level_condition" column="level_condition" />
+			<result property="img_path" column="img_path" />
+		</collection>
+		<collection property="courseLadderRelList" javaType="ArrayList" 
+				ofType="com.edu.erp.model.TCourseLadderRel">
+			<id property="id" column="j_id" />
+			<result property="course_ladder_id" column="j_course_ladder_id" />
+			<result property="course_id" column="j_course_id" />
+			<result property="course_code" column="k_course_code" />
+			<result property="course_name" column="k_course_name" />
+			<result property="is_course_book" column="is_course_book" />
+		</collection>
+	</resultMap>
+	
+	<select id="selectForPage" parameterType="Map" resultType="com.edu.erp.model.TCourseLadder">
+		select a.*, b.org_name as city_name, c.org_name as branch_name, d.grade_name,
+			c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		from t_course_ladder a 
+		join tab_organization_info b on a.city_id = b.id and b.status = 1
+		left join tab_organization_info c on a.branch_id = c.id and c.status = 1
+		left join tab_data_grade d on a.grade_id = d.id and d.status = 1
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		
+		where a.status != 0 and a.city_id = #{city_id}
+		<if test="ladder_name != null and ladder_name != ''">
+			and a.ladder_name like '%${ladder_name}%'
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="selectByIds" parameterType="Map" resultMap="courseLadderMap">
+		select  a.id, a.ladder_name, a.branch_id, a.grade_id, a.city_id, a.status,
+		    a.ladder_type, a.ladder_algorithm, a.create_user, a.create_time, a.update_user, a.update_time,
+		    b.org_name as city_name, c.org_name as branch_name, d.grade_name,
+			c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,
+			h.id as h_id, h.course_ladder_id as h_course_ladder_id, h.ladder_level_name,
+			h.level_price, h.level_condition, h.img_path,
+			j.id as j_id, j.course_ladder_id as j_course_ladder_id, j.course_id as j_course_id,
+			k.course_no as k_course_code, k.course_name as k_course_name,
+			case when k.actual_people_count is null then null when k.actual_people_count>0 then 1 else 0 end as is_course_book
+		from t_course_ladder a 
+		join tab_organization_info b on a.city_id = b.id and b.status = 1
+		left join tab_organization_info c on a.branch_id = c.id and c.status = 1
+		left join tab_data_grade d on a.grade_id = d.id and d.status = 1
+		
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		
+		left join t_ladder h on a.id = h.course_ladder_id
+		left join t_course_ladder_rel j on a.id = j.course_ladder_id
+		left join t_course k on j.course_id = k.id and k.status = 1
+		
+		where a.status != 0 
+		<if test="ids != null and ids != ''">
+			and a.id in (${ids})
+		</if>
+		<if test="city_id != null and city_id != ''">
+			and a.city_id = #{city_id}
+		</if>
+		<if test="ladder_name != null and ladder_name != ''">
+			and a.ladder_name like '%${ladder_name}%'
+		</if>
+		<if test="course_id != null">
+		    and k.id = #{course_id}
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="selectForList" parameterType="Map" resultType="com.edu.erp.model.TCourseLadder">
+		select a.*
+		from t_course_ladder a 
+		left join t_course_ladder_rel b
+		on a.id=b.course_ladder_id 
+		where a.status = 1 and a.city_id = #{city_id} and b.course_id=#{course_id}
+		<if test="ladder_name != null and ladder_name != ''">
+			and a.ladder_name like '%${ladder_name}%'
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.TCourseLadder">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
+			SELECT seq_t_course_ladder.nextval FROM dual
+		</selectKey>
+		insert into t_course_ladder
+			(
+		    id,
+		    ladder_name,
+		    branch_id,
+		    grade_id,
+		    city_id,
+		    status,
+		    ladder_type,
+		    ladder_algorithm,
+		    create_user,
+		    create_time,
+		    update_user,
+		    update_time
+			)
+		values
+			(
+		    #{id,jdbcType=NUMERIC},
+		   	#{ladder_name,jdbcType=VARCHAR},
+		   	#{branch_id,jdbcType=NUMERIC},
+		   	#{grade_id,jdbcType=NUMERIC},
+		   	#{city_id,jdbcType=NUMERIC},
+		   	#{status,jdbcType=NUMERIC},
+	   		#{ladder_type,jdbcType=NUMERIC},
+		   	#{ladder_algorithm,jdbcType=NUMERIC},
+		   	#{create_user,jdbcType=NUMERIC},
+		   	#{create_time,jdbcType=VARCHAR},
+		   	#{update_user,jdbcType=NUMERIC},
+		   	#{update_time,jdbcType=VARCHAR}
+		  	)
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.TCourseLadder">
+		update t_course_ladder set
+		   	ladder_name = #{ladder_name,jdbcType=VARCHAR},
+		   	branch_id = #{branch_id,jdbcType=NUMERIC},
+		   	grade_id = #{grade_id,jdbcType=NUMERIC},
+		   	ladder_type = #{ladder_type,jdbcType=NUMERIC},
+		   	ladder_algorithm = #{ladder_algorithm,jdbcType=NUMERIC},
+		   	update_user = #{update_user,jdbcType=NUMERIC},
+		   	update_time = sysdate
+		 where id = #{id}
+	</update>
+	
+	<update id="changeStatus" parameterType="Map" >
+		UPDATE t_course_ladder t
+		SET t.status = ${status},
+			update_time = sysdate,
+		    update_user = #{update_user,jdbcType=NUMERIC} 
+		WHERE t.id IN (${ids})
+	</update>
+	
+</mapper>

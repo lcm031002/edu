@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.DeviceDao">
+
+	<!-- 分页查询设备列表 -->
+	<select id="selectForPage" resultType="com.edu.erp.model.TabDataDevice" parameterType="Map">
+		select		a.*, 	
+					b.org_name as city_name,
+					b1.org_name as bu_name,
+					concat(concat(c.account_name, '('), concat(c.account_num, ')')) as account_info,
+					c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,
+					c.account_name,
+					c.id as company_card_id
+  			from 	tab_data_device a
+  		left join 	tab_organization_info b on a.city_id = b.id
+  		left join 	tab_organization_info b1 on a.bu_id = b1.id
+  		left join 	tab_data_company_account c on a.account_id = c.id and c.status = 1
+  		
+  		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+    	
+    	where 		a.status != 0 and a.city_id = #{city_id}
+    	<if test="bu_id != null"> 
+    		 and (a.bu_id = #{bu_id} or a.bu_id is null)
+    	</if>
+    	<if test="status != null"> 
+    		 and a.status = #{status}
+    	</if>
+    	<if test="device_code != null and device_code != ''">
+    		and 	(a.device_code like '%${device_code}%' or a.simple_name like '%${device_code}%')
+    	</if>
+    	<if test="account_num != null and account_num != ''">
+    		and 	c.account_num like '%${account_num}%'
+    	</if>
+    	order by 	a.update_time DESC, a.id DESC
+	</select>
+	
+	<!-- 查询设备列表 -->
+	<select id="selectForList" resultType="com.edu.erp.model.TabDataDevice" parameterType="Map">
+		select		a.*
+  			from 	tab_data_device a
+    	where 		a.status != 0 and a.city_id = #{city_id}
+    	<if test="device_code != null and device_code != ''">
+    		and 	(a.device_code like '%${device_code}%' or a.simple_name like '%${device_code}%')
+    	</if>
+    	<if test="account_num != null and account_num != ''">
+    		and 	c.account_num like '%${account_num}%'
+    	</if>
+    	order by 	a.update_time DESC, a.id DESC
+	</select>
+	
+	<select id="selectById" resultType="com.edu.erp.model.TabDataDevice" parameterType="String">
+		select *  from tab_data_device device where device.id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.edu.erp.model.TabDataDevice">
+		insert into tab_data_device d
+		(
+			id,
+			device_name,
+			device_code,
+			simple_name,
+       		account_id,
+			city_id,
+			bu_id,
+       		description,
+       		status,
+      		update_user, 
+        	update_time,
+        	create_user, 
+        	create_time
+		) 
+		values
+		(
+			
+			SEQ_TAB_DATA_DEVICE.nextval, <!--主键序列 -->
+			#{device_name,jdbcType=VARCHAR},
+			#{device_code,jdbcType=VARCHAR},
+			#{simple_name,jdbcType=VARCHAR},
+			#{account_id,jdbcType=NUMERIC},
+			#{city_id,jdbcType=NUMERIC},
+			#{bu_id,jdbcType=NUMERIC},
+			#{description,jdbcType=VARCHAR},
+			#{status,jdbcType=NUMERIC},
+			#{update_user,jdbcType=NUMERIC},
+			#{update_time,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.edu.erp.model.TabDataDevice">
+		update 
+			tab_data_device 
+			set 
+				device_name = #{device_name,jdbcType=VARCHAR},
+				device_code = #{device_code,jdbcType=VARCHAR},
+				simple_name = #{simple_name,jdbcType=VARCHAR},
+				account_id = #{account_id,jdbcType=NUMERIC},
+				description = #{description,jdbcType=VARCHAR},
+				bu_id = #{bu_id,jdbcType=NUMERIC},
+				update_user = #{update_user,jdbcType=NUMERIC},
+				update_time = #{update_time,jdbcType=VARCHAR}
+				WHERE id = #{id} 
+	</update>
+	
+	<update id="changeStatus" parameterType="Map" >
+		update tab_data_device t
+		set t.status = ${status},
+		    update_time=sysdate,
+		    update_user =#{update_user,jdbcType=NUMERIC}
+		where t.id in (${ids})
+	</update>
+	
+</mapper>

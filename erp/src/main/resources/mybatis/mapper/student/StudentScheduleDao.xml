@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.StudentScheduleDao">
+
+	<select id="queryYDYSchedule"  parameterType="Map" resultType="com.edu.erp.model.TAttendance">
+	    select  a.*, 
+	    	c.course_name, c.course_no, d.org_name as branch_name, tea.teacher_name as schedulingTeacherName,
+	    	sub.name as subject_name
+           from t_attendance a 
+           left join t_order_course b on a.order_course_id=b.id
+		       left join t_order tod on tod.id = b.order_id
+           left join t_course c on c.id=b.course_id 
+           left join tab_organization_info d on a.attend_branch_id = d.id 
+           left join tab_teacher_info tea on a.teacher_id = tea.id 
+           left join tp_subject sub on a.subject_id = sub.id
+        where a.student_id= #{student_id} and (b.status != 2 or b.status is null)
+        	and c.business_type = 2
+		      and tod.order_status = 1
+        <if test="attend_type != null and attend_type != ''">
+			and a.attend_type in (${attend_type})
+		</if>
+		<if test="branch_id != null and branch_id != ''">
+			and a.attend_branch_id = #{branch_id}
+		</if>
+		<if test="start_date != null and start_date != '' and (end_date != null and end_date != '')">
+			<![CDATA[
+				and to_char(to_date(a.course_date || '', 'YYYYMMDD'), 'yyyy-mm-dd') BETWEEN #{start_date} AND #{end_date}
+			 ]]>
+		</if>
+		  order by a.course_date ASC, a.start_time ASC, a.end_time ASC
+	</select>
+	
+	<select id="queryBJKSchedule"  parameterType="Map" resultType="com.edu.erp.model.TAttendance">
+	    select
+		distinct a.id, a.course_id, a.branch_id, a.subject_id, a.teacher_id, a.course_date, a.start_time,
+	    	a.end_time, ta.carried,
+	    	c.course_name, c.course_no, d.org_name as branch_name, tea.teacher_name as schedulingTeacherName, 
+	    	sub.name as subject_name, tr.room_code, tr.room_name
+           from t_order tod
+           inner join t_order_course toc on tod.id = toc.order_id
+           inner join t_course c on c.id = toc.course_id 
+           inner join t_order_course_times toct on toct.ocid = toc.id
+           inner join t_course_scheduling a on a.course_id = toc.course_id and a.course_times = toct.times
+           left join t_attendance ta on ta.scheduling_id = a.id and ta.student_id = tod.student_id
+           left join tab_organization_info d on d.id = a.branch_id
+           left join tab_teacher_info tea on a.teacher_id = tea.id 
+           left join tp_subject sub on a.subject_id = sub.id
+           left join t_course_room_rel tcrr on tcrr.course_id = a.course_id and tcrr.seq = a.course_times
+		   left join t_room tr on tr.id = tcrr.room_id
+        where tod.student_id = #{student_id} and toct.is_valid = 1
+        	and a.business_type = 1 and a.valid_status = 1
+		      and tod.order_status = 1
+		<if test="branch_id != null and branch_id != ''">
+			and a.branch_id = #{branch_id}
+		</if>
+		<if test="start_date != null and start_date != '' and (end_date != null and end_date != '') ">
+			<![CDATA[
+				and to_char(to_date(a.course_date || '', 'YYYYMMDD'), 'yyyy-mm-dd') BETWEEN #{start_date} AND #{end_date}
+			 ]]>
+		</if>
+		 order by a.course_date ASC, a.start_time ASC, a.end_time ASC
+	</select>
+
+</mapper>

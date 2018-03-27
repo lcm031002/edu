@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TStudentScheduleDao">
+	<select id="queryByApplyId" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.TStudentSchedule">
+		select tss.id,
+		       tss.apply_id            as applyId,
+		       tss.start_time          as startTime,
+		       tss.end_time            as endTime,
+		       tss.weekday,
+		       tss.is_free             as isFree,
+		       tss.schedule
+		  from t_student_schedule tss
+		  left join tab_employee_info tei
+		    on tei.id = tss.course_arranger_id
+		 where tss.apply_id = #{applyId, jdbcType=NUMERIC}
+	</select>
+
+	<insert id="save" parameterType="com.edu.erp.model.TStudentSchedule">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select seq_t_student_schedule.nextval as id from dual
+		</selectKey>
+		insert into t_student_schedule
+		(id,
+		apply_id,
+		schedule,
+		create_user,
+		create_time
+		)
+		values
+		(
+		#{id, jdbcType=NUMERIC},
+		#{applyId, jdbcType=NUMERIC},
+		#{schedule, jdbcType=VARCHAR},
+		#{create_user, jdbcType=NUMERIC},
+		#{create_time, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="saveList" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+			insert into t_student_schedule
+			(id,
+			apply_id,
+			schedule,
+			create_user,
+			create_time
+			)
+			values
+			(
+			seq_t_student_schedule.nextval,
+			#{item.applyId, jdbcType=NUMERIC},
+			#{item.schedule, jdbcType=VARCHAR},
+			#{item.create_user, jdbcType=NUMERIC},
+			#{item.create_time, jdbcType=TIMESTAMP}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.TStudentSchedule">
+		update t_student_schedule
+		set 
+			schedule = #{schedule, jdbcType=VARCHAR},
+			update_user = #{update_user, jdbcType=NUMERIC},
+			update_time = #{update_time, jdbcType=TIMESTAMP}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from t_student_schedule where id = #{id, jdbcType=NUMERIC}
+	</delete>
+
+	<delete id="deleteByApplyId" parameterType="java.lang.Long">
+		delete from t_student_schedule where apply_id = #{applyId, jdbcType=NUMERIC}
+	</delete>
+	
+	<select id="isStuSchedExisted" parameterType="com.edu.erp.model.TStudentSchedule" resultType="java.lang.Integer">
+		select count(0)
+		  from t_student_schedule tss
+		 where (#{startTime} between tss.start_time and tss.end_time or
+		       #{endTime} between tss.start_time and tss.end_time)
+		   and tss.apply_id = #{applyId}
+		   and tss.id != #{id}
+	</select>
+
+</mapper>
