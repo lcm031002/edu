@@ -85,10 +85,10 @@
 								</div>
 								<div class="klxx-erp-form-item-label form-group">
 									<label class="klxx-erp-form-item-required col-sm-2 control-label">年级名称</label>
-									<div class="col-sm-10" ng-class="{'has-error': dictGradeForm.grade_name.$invalid && dictGradeForm.grade_name.$dirty}">
-										<input type="text" class="klxx-erp-input  form-control" name="grade_name" required 
-											ng-model='gradeDetail.grade_name'>
-										<div class="klxx-erp-form-explain" ng-show="dictGradeForm.grade_name.$invalid && dictGradeForm.grade_name.$dirty && dictGradeForm.grade_name.$error.required">年级名称一定要填写哟</div>
+									<div class="col-sm-10" ng-class="{'has-error': dictGradeForm.gradeName.$invalid && dictGradeForm.gradeName.$dirty}">
+										<input type="text" class="klxx-erp-input  form-control" name="gradeName" required
+											ng-model='gradeDetail.gradeName'>
+										<div class="klxx-erp-form-explain" ng-show="dictGradeForm.gradeName.$invalid && dictGradeForm.gradeName.$dirty && dictGradeForm.gradeName.$error.required">年级名称一定要填写哟</div>
 									</div>
 								</div>
 								<div class="klxx-erp-form-item-label form-group">
@@ -103,7 +103,7 @@
 									<label class="col-sm-2 control-label">上一年级</label>
 									<div class="col-sm-10">
 										<select class=form-control ng-model="gradeDetail.last_id"
-											ng-options="grade.id as grade.grade_name for grade in lastGradeList"></select>
+											ng-options="grade.id as grade.gradeName for grade in lastGradeList"></select>
 									</div>
 								</div>
 								<div class="klxx-erp-form-item-label form-group">

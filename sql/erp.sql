@@ -1351,8 +1351,8 @@ CREATE TABLE `tab_data_device` (
 -- ----------------------------
 -- Table structure for tab_data_grade
 -- ----------------------------
-DROP TABLE IF EXISTS `tab_data_grade`;
-CREATE TABLE `tab_data_grade` (
+DROP TABLE IF EXISTS `t_bas_grade`;
+CREATE TABLE `t_bas_grade` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `encoding` varchar(50) NOT NULL COMMENT '年级编码',
   `grade_name` varchar(50) NOT NULL COMMENT '年级名称',
@@ -1361,7 +1361,7 @@ CREATE TABLE `tab_data_grade` (
   `last_grade_name` varchar(50) DEFAULT NULL COMMENT '上一级年级名称',
   `description` varchar(100) DEFAULT NULL COMMENT '描述',
   `status` int(1) NOT NULL COMMENT '状态(1=有效 0=逻辑删除)',
-  `sort` int(5) DEFAULT NULL COMMENT '排序',
+  `sort_num` int(5) DEFAULT NULL COMMENT '排序',
   `create_user` bigint(10) DEFAULT NULL COMMENT '创建用户',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_user` bigint(10) DEFAULT NULL COMMENT '修改用户',
