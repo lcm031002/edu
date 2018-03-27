@@ -35,10 +35,6 @@
 					<th>上一年级编码</th>
 					<th>排序</th>
 					<th>状态</th>
-					<th>创建人</th>
-					<th>创建时间</th>
-					<th>修改人</th>
-					<th>修改时间</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,11 +46,11 @@
 						class="cur" 
 						ng-click="handleDeleteGrade(grade.id)"><i class="iconfont 
 						text-danger icon-delete"></i>删除</span></td>
-					<td>{{grade.grade_name}}</td>
+					<td>{{grade.gradeName}}</td>
 					<td>{{grade.encoding}}</td>
-					<td>{{grade.last_name}}</td>
-					<td>{{grade.last_encoding}}</td>
-					<td>{{grade.sort}}</td>
+					<td>{{grade.lastGradeName}}</td>
+					<td>{{grade.lastEncoding}}</td>
+					<td>{{grade.sortNum}}</td>
 					<td>
 						<input type="checkbox"
 								bs-switch
@@ -64,10 +60,6 @@
 								switch-change="onStatusChange(grade)"
 							>
 					</td>
-					<td>{{grade.create_user_name}}</td>
-					<td>{{grade.create_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-					<td>{{grade.update_user_name}}</td>
-					<td>{{grade.update_time | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 				</tr>
 			</tbody>
 		</table>

@@ -32,12 +32,12 @@ function erp_gradeController(
     // 与表单绑定的数据，用于添加和修改
     $scope.gradeDetail = {
         id: '',
-        grade_name: '',
+        gradeName: '',
         encoding: '',
-        last_id: '',
-        last_encoding: '',
-        last_name: '',
-        sort: '',
+        lastId: '',
+        lastEncoding: '',
+        lastGradeName: '',
+        sortNum: '',
         description: ''
     };
     /**

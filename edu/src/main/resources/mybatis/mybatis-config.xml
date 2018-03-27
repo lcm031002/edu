@@ -34,7 +34,7 @@
 		<!-- 分页插件配置 -->
 		<plugin interceptor="com.ebusiness.common.mybatis.PageInterceptor">
 			<!-- 数据库方言 -->
-			<property name="dialect" value="oracle" />
+			<property name="dialect" value="mysql" />
 			<!-- 分页对应的SQL语句id(拦截以page结尾的SQL) -->
 			<property name="pageSqlId" value=".*Page$" />
 		</plugin>
