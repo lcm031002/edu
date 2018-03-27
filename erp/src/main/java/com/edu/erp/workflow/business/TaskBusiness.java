@@ -9,7 +9,7 @@ import org.jbpm.pvm.internal.task.SwimlaneImpl;
 import org.jbpm.pvm.internal.util.Priority;
 
 import com.edu.erp.model.BaseObject;
-import com.edu.erp.utils.StringUtil;
+import com.edu.erp.util.StringUtil;
 
 
 public class TaskBusiness extends BaseObject {

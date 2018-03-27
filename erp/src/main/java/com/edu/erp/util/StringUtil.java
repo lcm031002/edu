@@ -1,4 +1,4 @@
-package com.edu.erp.utils;
+package com.edu.erp.util;
 
 import java.util.List;
 import java.util.Map;

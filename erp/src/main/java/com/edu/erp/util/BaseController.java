@@ -1,4 +1,4 @@
-package com.edu.erp.utils;
+package com.edu.erp.util;
 
 import com.ebusiness.cas.client.common.model.Account;
 import com.ebusiness.cas.client.common.model.OrgModel;
