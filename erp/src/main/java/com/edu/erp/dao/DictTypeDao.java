@@ -6,6 +6,9 @@ import java.util.Map;
 import com.edu.erp.model.TpDictType;
 import com.github.pagehelper.Page;
 
+import javax.annotation.Resource;
+
+@Resource(name = "dictTypeDao")
 public interface DictTypeDao {
 	
 	/**
