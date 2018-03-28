@@ -42,7 +42,7 @@
 	</select>
 	
 	<!-- 查询全部已经添加年级列表 -->
-	<select id="selectList" resultType="com.edu.erp.model.Grade" parameterType="Map">
+	<select id="selectList" resultType="com.edu.erp.model.Grade" parameterType="map">
 		select distinct a.id,
 		       a.encoding,
 		       a.grade_name,
@@ -79,14 +79,9 @@
 	</select>
 	
 	<!-- 插入年级数据 -->
-	<insert id="insert" parameterType="com.edu.erp.model.Grade">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-			order="BEFORE">
-			select  SEQ_TAB_DATA_GRADE.nextval as id from dual
-		</selectKey>
-		insert into tab_data_grade g
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.edu.erp.model.Grade">
+		insert into tab_data_grade
 		(
-			id,
 			encoding,
        		grade_name,
        		last_id,
@@ -100,8 +95,6 @@
 		) 
 		values
 		(
-			
-			#{id,jdbcType=NUMERIC},
 			#{encoding,jdbcType=VARCHAR},
 			#{grade_name,jdbcType=VARCHAR},
 			#{last_id,jdbcType=NUMERIC},
@@ -115,7 +108,6 @@
 		)
 	</insert>
 
-
 	<select id="queryGradeListByNameOrEncoding"  parameterType="java.util.Map" resultType="com.edu.erp.model.Grade">
 		SELECT
 		t.*
@@ -124,16 +116,14 @@
 	</select>
 
 	<insert id="insertGradeBuRel" parameterType="java.util.HashMap">
-		insert into BU_DICT_REL g
+		insert into BU_DICT_REL
 		(
-			id,
 			BU_ID,
        		DICT_ID,
        		DICT_TYPE
 		) 
 		values
 		(
-			SEQ_BU_DICT_REL.nextval,
 			#{bu_id,jdbcType=NUMERIC},
 			#{dict_id,jdbcType=NUMERIC},
 			#{dict_type,jdbcType=VARCHAR}
@@ -163,9 +153,9 @@
 	</update>
 	
 	<delete id="deleteData" parameterType="HashMap">
-		delete from BU_DICT_REL t where t.DICT_ID = #{dict_id}
-		and t.bu_id =  #{bu_id}
-		and t.dict_type = 'bu_grade_rel'
+		delete from BU_DICT_REL where DICT_ID = #{dict_id}
+		and bu_id =  #{bu_id}
+		and dict_type = 'bu_grade_rel'
 	</delete>
 
 	<select id="queryGradeNameById" parameterType="long" resultType="string">
