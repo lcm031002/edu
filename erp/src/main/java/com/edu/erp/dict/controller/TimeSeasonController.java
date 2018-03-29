@@ -199,29 +199,10 @@ public class TimeSeasonController extends BaseController {
 			Account account = WebContextUtils.genUser(request);
 			Long loginUserId = account.getId();
 			timeSeasonService.toChangeStatus(String.valueOf(pojo.getId()), pojo.getStatus(), loginUserId);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(pojo.getId());
-//			buff.append("，");
-//			buff.append("变更状态：");
-//			buff.append(pojo.getStatus());
-//			logUtil.LogOperate("课程季-状态变更", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
 		} catch (Exception e) {
 			log.error("error found,see:", e);
 			resultMap.put("error", true);
 			resultMap.put("message", "更改状态失败: "+ e.getMessage());
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(pojo.getId());
-//			buff.append("，");
-//			buff.append("变更状态：");
-//			buff.append(pojo.getStatus());
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("课程季-状态变更", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 
 		return resultMap;
