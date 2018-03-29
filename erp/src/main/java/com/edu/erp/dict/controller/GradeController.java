@@ -1,10 +1,3 @@
-/**  
- * @Title: GradeController.java
- * @Package com.edu.erp.dict.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月14日 下午5:05:13
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dict.controller;
 
 import java.util.HashMap;
@@ -26,9 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.edu.cas.client.common.model.Account;
 import com.edu.cas.client.common.model.OrgModel;
 import com.edu.cas.client.common.util.WebContextUtils;
-import com.edu.common.util.DateUtil;
 import com.edu.erp.dict.service.DataGradeService;
-import com.edu.erp.model.BaseObject;
 import com.edu.erp.model.Grade;
 import com.edu.erp.util.BaseController;
 import com.edu.erp.util.ModelDataUtils;
@@ -111,25 +102,14 @@ public class GradeController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = { "/service" }, method = RequestMethod.POST, headers = { "Accept=application/json" })
 	public Map<String, Object> addGrade(@RequestBody Map<String, Object> param,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			Account account = WebContextUtils.genUser(request);
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 			Grade grade = ModelDataUtils.getPojoMatch(Grade.class, param);
-			grade.setCreate_user(account.getId());
-			grade.setStatus(BaseObject.StatusEnum.VALID.getCode());
-			grade.setUpdate_user(account.getId());
-			grade.setUpdate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
-			grade.setCreate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
+			setDefaultValue(request, grade, false);
 			grade.setBu_id(orgModel.getBuId());
-			long gradeId = dataGradeService.toAdd(grade);
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("bu_id", orgModel.getBuId());
-			data.put("dict_id", gradeId);
-			data.put("dict_type", "bu_grade_rel");
-			dataGradeService.toAddBuRel(data);
+			dataGradeService.toAdd(grade);
 			resultMap.put("error", false);
 			resultMap.put("message", "新增成功!");
 		} catch (Exception e) {
@@ -156,8 +136,7 @@ public class GradeController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			Account account = WebContextUtils.genUser(request);
-			grade.setUpdate_user(account.getId());
-			grade.setUpdate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
+			setDefaultValue(request, grade, true);
 			dataGradeService.toUpdate(grade);
 			resultMap.put("error", false);
 			resultMap.put("message", "修改成功!");

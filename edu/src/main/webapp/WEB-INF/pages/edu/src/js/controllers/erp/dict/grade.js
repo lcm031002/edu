@@ -36,8 +36,8 @@ function erp_gradeController(
         encoding: '',
         last_id: '',
         last_encoding: '',
-        last_grade_name: '',
-        sort: '',
+        lastGradeName: '',
+        sortNum: '',
         description: ''
     };
     /**

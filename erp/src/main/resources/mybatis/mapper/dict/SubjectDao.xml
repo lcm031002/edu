@@ -27,8 +27,8 @@
                  	and bdr.DICT_TYPE = 'tp_subject'
                  </if>
                   where 1 = 1
-                 <if test="subject_name != null and subject_name != ''">
-                 	 and t1.name like '%${subject_name}%'
+                 <if test="subjectName != null and subjectName != ''">
+                 	 and t1.name like '%${subjectName}%'
                  </if>
                  ORDER BY t1.update_time DESC, t1.id DESC
 	</select>
@@ -82,14 +82,9 @@
 		ORDER BY ID ASC
 	</select>
 	
-	<insert id="saveData" parameterType="com.edu.erp.model.TPSubject">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-			order="BEFORE">
-			select  seq_tp_subject.nextval as id from dual
-		</selectKey>
-		INSERT INTO tp_subject T
+	<insert id="saveData" parameterType="com.edu.erp.model.TPSubject" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tp_subject
 		(
-			ID,
 	       	ENCODING,
 	       	name,
 	       	STATUS,
@@ -101,15 +96,14 @@
 		) 
 		VALUES
 		(
-			#{id,jdbcType=NUMERIC},
 			#{encoding,jdbcType=VARCHAR},
 			#{name,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC},
 			#{description,jdbcType=VARCHAR},
 			#{create_user,jdbcType=VARCHAR},
-			sysdate,
+			#{create_time,jdbcType=VARCHAR},
 			#{create_user,jdbcType=VARCHAR},
-			sysdate
+			#{create_time,jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -119,14 +113,14 @@
 	       	name = #{name,jdbcType=VARCHAR},
 	       	DESCRIPTION = #{description,jdbcType=VARCHAR},
 	       	UPDATE_USER = #{update_user,jdbcType=VARCHAR},
-	       	UPDATE_TIME = sysdate
+	       	UPDATE_TIME = #{update_time,jdbcType=VARCHAR}
 	       	WHERE ID = #{id}
 	</update>
 
 	<delete id="deleteData" parameterType="HashMap">
-		delete from BU_DICT_REL t where t.DICT_ID = #{dict_id}
-		and t.bu_id =  #{bu_id}
-		and t.dict_type = 'tp_subject'
+		delete from BU_DICT_REL where DICT_ID = #{dict_id}
+		and bu_id =  #{bu_id}
+		and dict_type = 'tp_subject'
 	</delete>
 
 </mapper>

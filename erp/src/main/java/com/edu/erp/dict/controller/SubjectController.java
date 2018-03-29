@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,41 +66,15 @@ public class SubjectController extends BaseController {
 	public Map<String, Object> querySubject(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			Map<String, Object> param = new HashMap<String, Object>();
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 			if (orgModel == null || orgModel.getBuId() == null) {
 				throw new Exception("请选择校区！");
 			}
-			
+			Map<String, Object> param = initParamMap(request, true, StringUtils.EMPTY);
 			param.put("bu_id", orgModel.getBuId());
-			param.put("branch_id", genLongParameter("branch_id", request));
-			param.put("grade_id", genLongParameter("grade_id", request));
-			param.put("season_id", genLongParameter("season_id", request));
-			param.put("subject_name", request.getParameter("subjectName")); //科目名称
-	
-			// 当前页数
-			Integer currentPage = genIntParameter("currentPage", request);
-			// 每页显示记录数
-			Integer pageSize = genIntParameter("pageSize", request);
-
-			if (currentPage == null) {
-				currentPage = 1;
-			}
-
-			if (pageSize == null) {
-				pageSize = 10;
-			}
-
-			// 获取第1页，10条内容，默认查询总数count
-			PageHelper.startPage(currentPage, pageSize);
 
 			Page<TPSubject> result = subjectService.queryDataList(param);
-			resultMap.put("error", false);
-			resultMap.put("data", result.toArray());
-			resultMap.put("total", result.getTotal());
-			resultMap.put("totalPage", result.getPages());
-			resultMap.put("currentPage", currentPage);
-			resultMap.put("pageSize", pageSize);
+			setRespDataForPage(request, result.getResult(), resultMap);
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "查询失败: "+ e.getMessage());
@@ -120,18 +95,13 @@ public class SubjectController extends BaseController {
 	public Map<String, Object> querySubjectList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			Map<String, Object> param = new HashMap<String, Object>();
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 			if (orgModel == null || orgModel.getBuId() == null) {
 				throw new Exception("请选择校区！");
 			}
-			
-			param.put("bu_id", orgModel.getBuId());
-			param.put("branch_id", genLongParameter("branch_id", request));
-			param.put("grade_id", genLongParameter("grade_id", request));
-			param.put("season_id", genLongParameter("season_id", request));
-			param.put("subject_name", request.getParameter("subjectName")); //科目名称
 
+			Map<String, Object> param = initParamMap(request, false, StringUtils.EMPTY);
+			param.put("bu_id", orgModel.getBuId());
 			List<TPSubject> result = subjectService.queryList(param);
 			resultMap.put("error", false);
 			resultMap.put("data", result.toArray());
@@ -162,7 +132,6 @@ public class SubjectController extends BaseController {
 			}
 			Long bu_id = genLongParameter("bu_id",request);
 			param.put("bu_id", bu_id==null?orgModel.getBuId():bu_id);
-			
 			List<TPSubject> result = subjectService.querySubjectListByBuID(param);
 			resultMap.put("error", false);
 			resultMap.put("data", result.toArray());
@@ -173,8 +142,7 @@ public class SubjectController extends BaseController {
 		}
 		return resultMap;
 	}
-	
-	
+
 	/**
 	 * 新增科目
 	 * @Title: addSubject
@@ -197,32 +165,14 @@ public class SubjectController extends BaseController {
 			}
 			
 			// 默认状态
-			subject.setStatus(BaseObject.StatusEnum.VALID.getCode());
+			setDefaultValue(request, subject, false);
+			subject.setBuId(orgModel.getBuId());
 			subject.setCity_id(orgModel.getCityId());
-			Account account = WebContextUtils.genUser(request);
-			subject.setCreate_user(account.getId());
-			subject.setCreate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
-			
-			Map<String, Object> buRel = new HashMap<String, Object>();
-			buRel.put("bu_id", orgModel.getBuId());
-			buRel.put("dict_type", "tp_subject");
-			
-			subjectService.save(subject, buRel);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(subject.toString());
-//			logUtil.LogOperate("科目-添加", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
+			subjectService.save(subject);
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "新增失败: "+ e.getMessage());
 			log.error("error found ,see:", e);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(subject.toString());
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("科目-添加", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 		return resultMap;
 	}
@@ -244,34 +194,13 @@ public class SubjectController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("error", false);
 		try {
-			// 获取该数据对象
-			TPSubject data = subjectService.queryData(String.valueOf(subject.getId()));
-			// 更新科目描述
-			data.setDescription(subject.getDescription());
-			// 更新编码
-			data.setEncoding(subject.getEncoding());
-			// 更新科目名称
-			data.setName(subject.getName());
-			Account account = WebContextUtils.genUser(request);
-			data.setUpdate_user(account.getId());
-			data.setUpdate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
+			setDefaultValue(request, subject, true);
 			// 执行更新
-			subjectService.updateData(data);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(subject.toString());
-//			logUtil.LogOperate("科目-修改", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
+			subjectService.updateData(subject);
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "更新失败: "+ e.getMessage());
 			log.error("error found ,see:", e);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(subject.toString());
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("科目-修改", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 		return resultMap;
 	}
@@ -288,23 +217,10 @@ public class SubjectController extends BaseController {
 			param.put("dict_id", subjectId);
 			subjectService.deleteData(param);
 			resultMap.put("error", false);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(subjectId);
-//			logUtil.LogOperate("科目-删除", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "删除失败: "+ e.getMessage());
 			log.error("error found ,see:", e);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(subjectId);
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("科目-删除", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 		return resultMap;
 	}

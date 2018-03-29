@@ -19,11 +19,10 @@ public interface SubjectService {
 	 * @Title: save
 	 * @Description: 
 	 * @param subject 科目对象
-	 * @param buRel 团队科目关系
 	 *      设定文件 void 返回类型
 	 *
 	 */
-	void save(TPSubject subject, Map<String, Object> buRel) throws Exception;
+	void save(TPSubject subject) throws Exception;
 
 	Page<TPSubject> queryDataList(Map<String,Object> param) throws Exception;
 

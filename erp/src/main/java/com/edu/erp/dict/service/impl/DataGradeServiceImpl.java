@@ -20,18 +20,6 @@ public class DataGradeServiceImpl implements DataGradeService{
 	@Resource(name = "dataGradeDao")
 	private DataGradeDao dataGradeDao;
 	
-	/**
-	 * 分页查询
-	 * 
-	 * @param page 
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public Page<Grade> page(Page<Grade> page) throws Exception {
-		return dataGradeDao.selectForPage(page);
-	}
-	
 	@Override
 	public Page<Map<String, Object>> queryPage(Map<String, Object> paramMap) throws Exception {
 		return dataGradeDao.selectForPage(paramMap);
@@ -71,6 +59,11 @@ public class DataGradeServiceImpl implements DataGradeService{
 			pojo.setId(grade.getId());
 		}
 
+		Map<String, Object> buRelMap = new HashMap<String, Object>();
+		buRelMap.put("bu_id", pojo.getBu_id());
+		buRelMap.put("dict_id", pojo.getId());
+		buRelMap.put("dict_type", "bu_grade_rel");
+		toAddBuRel(buRelMap);
 		return pojo.getId();
 	}
 	
@@ -108,10 +101,5 @@ public class DataGradeServiceImpl implements DataGradeService{
 	@Override
 	public void deleteData(Map<String,Object> param) throws Exception {
 		dataGradeDao.deleteData(param);
-	}
-
-	@Override
-	public String queryGradeNameById(Long id) {
-		return dataGradeDao.queryGradeNameById(id);
 	}
 }

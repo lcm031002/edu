@@ -10,20 +10,11 @@ import com.edu.erp.model.Grade;
 import com.github.pagehelper.Page;
 @Repository(value = "dataGradeDao")
 public interface DataGradeDao {
-	
+
 	/**
 	 * 分页查询
-	 * 
-	 * @param page
-	 * @return
-	 * @throws Exception
-	 */
-	Page<Grade> selectForPage(Page<Grade> page) throws Exception;
-	
-	/**
-	 * 分页查询
-	 * 
-	 * @param page
+	 *
+	 * @param paramMap
 	 * @return
 	 * @throws Exception
 	 */
@@ -60,29 +51,11 @@ public interface DataGradeDao {
 	/**
 	 * 根据ids字符串改变状态
 	 * 
-	 * @param ids
-	 * @param status
+	 * @param param
 	 * @throws Exception
 	 * @return 影响行数
 	 */
 	Integer deleteData(Map<String, Object> param) throws Exception;
-	/**
-	 * 新增校区关系
-	 * 
-	 * @param refs
-	 * @return
-	 * @throws Exception
-	 */
-	Integer toAddOrgRef(List<Map<String, Long>> refs) throws Exception;
-	
-	/**
-	 * 删除校区关系
-	 * 
-	 * @param 课程IDS
-	 * @return
-	 * @throws Exception
-	 */
-	Integer toRemoveOrgRef(String ids) throws Exception;
 
 	/**
 	 * 查询年级冲突列表
@@ -91,7 +64,4 @@ public interface DataGradeDao {
 	 * @throws Exception
 	 */
 	Grade queryGradeListByNameOrEncoding(Map<String, Object> param) throws Exception;
-
-
-	String queryGradeNameById(@Param("id") Long id);
 }

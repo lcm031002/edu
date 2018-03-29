@@ -26,12 +26,12 @@ public class SubjectServiceImpl implements SubjectService {
 	private DataGradeService dataGradeService;
 	
 	@Override
-	public void save(TPSubject subject, Map<String, Object> buRel) throws Exception {
+	public void save(TPSubject subject) throws Exception {
 		//0.查看在该团队下是否已经存在该科目
 		HashMap<String,Object> param = new HashMap<>();
 		param.put("name", subject.getName());
 		param.put("encoding", subject.getEncoding());
-		param.put("bu_id", buRel.get("bu_id"));
+		param.put("bu_id", subject.getBuId());
 		TPSubject  tpSubject= subjectDao.querySubjectListByNameOrEncoding(param);
 		if(tpSubject == null ) {
 			subjectDao.saveData(subject);
@@ -40,6 +40,9 @@ public class SubjectServiceImpl implements SubjectService {
 		}
 
 		//2.保存 团队科目关系
+		Map<String, Object> buRel = new HashMap<String, Object>();
+		buRel.put("bu_id", subject.getBuId());
+		buRel.put("dict_type", "tp_subject");
 		buRel.put("dict_id", subject.getId());
 		subjectDao.deleteData(buRel);
 		dataGradeService.toAddBuRel(buRel);

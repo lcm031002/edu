@@ -102,8 +102,8 @@
 			#{description,jdbcType=VARCHAR},
 			#{create_user,jdbcType=VARCHAR},
 			#{create_time,jdbcType=VARCHAR},
-			#{update_user,jdbcType=VARCHAR},
-			#{update_time,jdbcType=VARCHAR},
+			#{create_user,jdbcType=VARCHAR},
+			#{create_time,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC}
 		)
 	</insert>
@@ -157,9 +157,5 @@
 		and bu_id =  #{bu_id}
 		and dict_type = 'bu_grade_rel'
 	</delete>
-
-	<select id="queryGradeNameById" parameterType="long" resultType="string">
-       select grade_name from tab_data_grade where id=#{id}
-	</select>
 
 </mapper>

@@ -9,15 +9,6 @@ import com.github.pagehelper.Page;
 public interface DataGradeService {
 	
 	/**
-	 * 分页查询
-	 * 
-	 * @param page
-	 * @return
-	 * @throws Exception
-	 */
-	Page<Grade> page(Page<Grade> page) throws Exception;
-	
-	/**
 	 * 查询分页效果
 	 * @param param
 	 * @return
@@ -55,7 +46,5 @@ public interface DataGradeService {
 	 * @throws Exception
 	 */
 	void deleteData(Map<String,Object> param) throws Exception;
-
-	String queryGradeNameById(Long id);
 	
 }

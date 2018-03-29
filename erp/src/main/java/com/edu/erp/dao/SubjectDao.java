@@ -30,8 +30,6 @@ public interface SubjectDao {
 	Page<TPSubject> selectForPage(Map<String, Object> param) throws Exception;
 
 	/**
-	 * @param empIdStr
-	 *            ID数组
 	 * @return 空
 	 * @throws Exception
 	 */
