@@ -1,10 +1,3 @@
-/**  
- * @Title: DataCompanyAccountService.java
- * @Package com.edu.erp.common.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月20日 下午4:48:45
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.common.service;
 
 import java.util.List;
@@ -44,7 +37,7 @@ public interface DataCompanyAccountService {
 	/**
 	 * 保存公司账户
 	 * 
-	 * @param timeSeason 课程季对象
+	 * @param companyAccount 公司账户对象
 	 * @return
 	 */
 	void save(DataCompanyAccount companyAccount) throws Exception;
@@ -52,15 +45,15 @@ public interface DataCompanyAccountService {
 	/**
 	 * 删除公司账户
 	 * 
-	 * @param timeSeason 课程季对象
+	 * @param id 公司账户ID
 	 * @return
 	 */
-	void deleteById(String strId) throws Exception;
+	void deleteById(Long id) throws Exception;
 	
 	/**
 	 * 更新公司账户
 	 * 
-	 * @param timeSeason 课程季对象
+	 * @param companyAccount 公司账户对象
 	 * @return
 	 */
 	void update(DataCompanyAccount companyAccount) throws Exception;

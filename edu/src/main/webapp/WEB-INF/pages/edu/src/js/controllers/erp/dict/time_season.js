@@ -64,7 +64,7 @@ function erp_timeSeasonController(
         season: 0,
         season_name: "",
         start_date: "",
-        status: 0,
+        status: 1,
         update_time: null,
         update_user: 0,
         update_user_name: ""

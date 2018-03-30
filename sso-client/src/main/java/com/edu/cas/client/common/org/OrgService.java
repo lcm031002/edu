@@ -71,7 +71,6 @@ public interface OrgService {
 	 * 
 	 * @Title: querySelectedOrg
 	 * @Description: 查询用户选中的组织
-	 * @param userPersonalSettings
 	 * @throws Exception
 	 *             设定文件
 	 * @return OrgModel 返回类型

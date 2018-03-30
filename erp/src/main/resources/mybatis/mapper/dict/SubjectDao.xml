@@ -100,21 +100,21 @@
 			#{name,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC},
 			#{description,jdbcType=VARCHAR},
-			#{create_user,jdbcType=VARCHAR},
-			#{create_time,jdbcType=VARCHAR},
-			#{create_user,jdbcType=VARCHAR},
-			#{create_time,jdbcType=VARCHAR}
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	
 	<update id="updateData" parameterType="com.edu.erp.model.TPSubject">
             UPDATE tp_subject SET 
-	       	encoding = #{encoding,jdbcType=NUMERIC},
+	       	encoding = #{encoding,jdbcType=VARCHAR},
 	       	name = #{name,jdbcType=VARCHAR},
-	       	DESCRIPTION = #{description,jdbcType=VARCHAR},
-	       	UPDATE_USER = #{update_user,jdbcType=VARCHAR},
-	       	UPDATE_TIME = #{update_time,jdbcType=VARCHAR}
-	       	WHERE ID = #{id}
+	       	description = #{description,jdbcType=VARCHAR},
+	       	update_user = #{update_user,jdbcType=NUMERIC},
+	       	update_time = #{update_time,jdbcType=TIMESTAMP}
+	       	WHERE id = #{id}
 	</update>
 
 	<delete id="deleteData" parameterType="HashMap">

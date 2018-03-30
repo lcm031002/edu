@@ -136,8 +136,8 @@ public class DataCompanyAccountController extends BaseController {
 	public @ResponseBody Map<String, Object> delete(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-		String id = request.getParameter("id");
-		if (StringUtils.isEmpty(id)) {
+		Long id = genLongParameter("id", request);
+		if (id == null) {
 			result.put("error", true);
 			result.put("message", "请选择删除数据");
 			return result;

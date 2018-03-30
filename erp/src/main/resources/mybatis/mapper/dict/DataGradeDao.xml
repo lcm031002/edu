@@ -100,10 +100,10 @@
 			#{last_id,jdbcType=NUMERIC},
 			#{sort,jdbcType=NUMERIC},
 			#{description,jdbcType=VARCHAR},
-			#{create_user,jdbcType=VARCHAR},
-			#{create_time,jdbcType=VARCHAR},
-			#{create_user,jdbcType=VARCHAR},
-			#{create_time,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP},
 			#{status,jdbcType=NUMERIC}
 		)
 	</insert>
@@ -147,8 +147,8 @@
 				last_id = #{last_id,jdbcType=NUMERIC},
 				sort = #{sort,jdbcType=NUMERIC},
 				description = #{description,jdbcType=VARCHAR},
-				update_user = #{update_user,jdbcType=VARCHAR},
-				update_time = #{update_time,jdbcType=VARCHAR}
+				update_user = #{update_user,jdbcType=NUMERIC},
+				update_time = #{update_time,jdbcType=TIMESTAMP}
 				where id = #{id} 	
 	</update>
 	

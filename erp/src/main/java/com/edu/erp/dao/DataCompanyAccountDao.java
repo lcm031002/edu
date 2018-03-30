@@ -52,19 +52,19 @@ public interface DataCompanyAccountDao {
 	List<DataCompanyAccount> selectList(Map<String, Object> param) throws Exception;
 
 	/**
-	 * @param empIdStr
-	 *            ID数组
+	 * 删除公司账户记录
+	 * @param id 公司账户ID
 	 * @return 空
 	 * @throws Exception
 	 */
 
-	void deleteById(Map<String, Object> param) throws Exception;
+	void deleteById(Long id) throws Exception;
 	
 	
 	/**
 	 * 修改
 	 * 
-	 * @param DataCompanyAccount
+	 * @param companyAccount
 	 *            公司账户
 	 * @return 空
 	 * @throws Exception
@@ -75,7 +75,7 @@ public interface DataCompanyAccountDao {
 	/**
 	 * 修改
 	 * 
-	 * @param DataCompanyAccount
+	 * @param companyAccount
 	 *            公司账户
 	 * @return 空
 	 * @throws Exception

@@ -18,10 +18,10 @@ import com.github.pagehelper.Page;
 @Repository(value = "timeSeasonDao")
 public interface TimeSeasonDao {
 	/**
-	 * 保存数据字典
+	 * 保存课程季
 	 * 
-	 * @param dataDictionary
-	 *            数据字典对象
+	 * @param timeSeason
+	 *            课程季对象
 	 * @return
 	 * @throws Exception
 	 */
@@ -30,7 +30,7 @@ public interface TimeSeasonDao {
 	Page<TimeSeason> selectForPage(Map<String, Object> param) throws Exception;
 
 	/**
-	 * @param empIdStr
+	 * @param ids
 	 *            ID数组
 	 * @return 空
 	 * @throws Exception
@@ -41,7 +41,6 @@ public interface TimeSeasonDao {
 	/**
 	 * @param id
 	 *            数据ID
-	 * @return DataDictionary 数据字典对象
 	 * @throws Exception
 	 */
 	TimeSeason selectById(String id) throws Exception;
@@ -49,12 +48,12 @@ public interface TimeSeasonDao {
 	/**
 	 * 修改
 	 * 
-	 * @param dataDictionary
-	 *            数据字典对象
+	 * @param timeSeason
+	 *            课程季对象
 	 * @return 空
 	 * @throws Exception
 	 */
-	void update(TimeSeason dataDictionary) throws Exception;
+	void update(TimeSeason timeSeason) throws Exception;
 
 	List<TimeSeason> selectList(Map<String, Object> param) throws Exception;
 

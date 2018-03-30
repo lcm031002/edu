@@ -29,7 +29,6 @@ public class TimeSeasonServiceImpl implements TimeSeasonService {
 
 	@Override
 	public void save(TimeSeason timeSeason, Long buId) throws Exception {
-		timeSeason.setStatus(1);
 		timeSeasonDao.insert(timeSeason);
 		
 		Map<String, Object> data = new HashMap<String, Object>();

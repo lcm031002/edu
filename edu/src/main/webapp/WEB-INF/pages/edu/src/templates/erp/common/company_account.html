@@ -35,7 +35,6 @@
 					<th>账户号码</th>
 					<th>状态</th>
 					<th>描述</th>
-					<th>所属地区</th>
 					<th>创建时间</th>
 					<th>创建用户</th>
 					<th>修改时间</th>
@@ -53,15 +52,14 @@
 							<i class="iconfont icon-delete text-danger"></i>删除
 						</span>
 					</td>
-					<td>{{account.ACCOUNT_NAME}}</td>
-					<td>{{account.ACCOUNT_NUM}}</td>
-					<td>{{account.STATUSSTR}}</td>
-					<td>{{account.DESCRIPTION}}</td>
-					<td>{{account.ORG_NAME}}</td>
-					<td>{{account.CRATE_TIME | date:'yyyy-MM-dd HH:mm'}}</td>
-					<td>{{account.CREATE_USER}}</td>
-					<td>{{account.UPDATE_TIME | date:'yyyy-MM-dd HH:mm'}}</td>
-					<td>{{account.UPDATE_USER}}</td>
+					<td>{{account.account_name}}</td>
+					<td>{{account.account_num}}</td>
+					<td>{{account.statusstr}}</td>
+					<td>{{account.description}}</td>
+					<td>{{account.crate_time | date:'yyyy-MM-dd HH:mm'}}</td>
+					<td>{{account.create_user_name}}</td>
+					<td>{{account.update_time | date:'yyyy-MM-dd HH:mm'}}</td>
+					<td>{{account.update_user_name}}</td>
 				</tr>
 			</tbody>
 		</table>

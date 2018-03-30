@@ -63,16 +63,13 @@ public class DataCompanyAccountServiceImpl implements DataCompanyAccountService 
 	}
 
 	@Override
-	public void deleteById(String strId) throws Exception {
-		Map<String,Object> param = new HashMap<String,Object>();
-		param.put("id", strId);
-		dataCompanyAccountDao.deleteById(param);
+	public void deleteById(Long id) throws Exception {
+		dataCompanyAccountDao.deleteById(id);
 		
 	}
 
 	@Override
 	public void update(DataCompanyAccount companyAccount) throws Exception {
 		dataCompanyAccountDao.update(companyAccount);
-		
 	}
 }

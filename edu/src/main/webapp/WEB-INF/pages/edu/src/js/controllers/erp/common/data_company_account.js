@@ -78,11 +78,11 @@ function erp_companyAccountController(
     $scope.handlePutAccount = function (account) {
         $scope.optype = 'put';
         $scope.companyAccountDetail = {
-            id: account.ID,
-            account_name: account.ACCOUNT_NAME,
-            account_num: account.ACCOUNT_NUM,
-            description: account.DESCRIPTION,
-            status : account.STATUS
+            id: account.id,
+            account_name: account.account_name,
+            account_num: account.account_num,
+            description: account.description,
+            status : account.status
         };
         $("#erpSystemDictAccountPanel").modal('show');
     };

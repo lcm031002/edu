@@ -118,7 +118,7 @@
 	   select distinct toi.id as ID,
 	          toi.org_name as TEXT,
 	          toi.parent_Id as parentId,
-	          toi.org_type||'' as type,
+	          toi.org_type as type,
 	          case
 	            when toi.org_type = 4 then
 	             toi.parent_Id

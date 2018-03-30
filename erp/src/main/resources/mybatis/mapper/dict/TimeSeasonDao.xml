@@ -8,7 +8,7 @@
 				select
 					   t1.*,
 					   t4.name product_line_name,
-						(case t1.business_typ when 1 then '班级课' when 2 then '一对一' when 3 then '晚辅导' end) business_type_name,
+						(case t1.business_type when 1 then '班级课' when 2 then '一对一' when 3 then '晚辅导' end) business_type_name,
 						(case t1.season when 1 then '春季' when 2 then '夏季' when 3 then '秋季' when 4 then '冬季' end) season_name,
                        t2.COURSE_SEASON_NAME  as last_course_season_name,
                        t3.org_name city_name,
@@ -32,7 +32,7 @@
                  <if test="course_season_name != null and course_season_name != ''">
                  	 and t1.course_season_name like '%${course_season_name}%'
                  </if>
-                 ORDER BY nvl(t1.update_time, nvl(t1.create_time, to_date('1900-01-01', 'yyyy-MM-dd'))) DESC, t1.id DESC
+                 ORDER BY ifnull(t1.update_time, t1.create_time) DESC, t1.id DESC
 	</select>
 	
 	<select id="selectSeasons" resultType="com.edu.erp.model.DataDictionary" parameterType="com.edu.erp.model.DataDictionary">
@@ -113,8 +113,8 @@
 			#{status,jdbcType=NUMERIC},
 			#{city_id,jdbcType=VARCHAR},
 			#{description,jdbcType=VARCHAR},
-			#{create_user,jdbcType=VARCHAR},
-			#{create_time,jdbcType=VARCHAR}
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	
@@ -129,8 +129,8 @@
 	       	PRODUCT_LINE = #{product_line, jdbcType=NUMERIC},
 	       	CITY_ID = #{city_id, jdbcType=VARCHAR},
 	       	DESCRIPTION = #{description, jdbcType=VARCHAR},
-	       	UPDATE_USER = #{update_user, jdbcType=VARCHAR},
-	       	UPDATE_TIME = #{update_time, jdbcType=VARCHAR},
+	       	UPDATE_USER = #{update_user, jdbcType=NUMERIC},
+	       	UPDATE_TIME = #{update_time, jdbcType=TIMESTAMP},
 	       	ENCODING = #{encoding, jdbcType=VARCHAR}
 	       	WHERE ID = #{id}
 	</update>
