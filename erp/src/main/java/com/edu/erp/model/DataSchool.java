@@ -7,11 +7,11 @@ public class DataSchool extends BaseObject
 
 	private String school_name;//学校名称
 	
-	private String simple_name;//学校简称
+	private String short_school_name;//学校简称
 	
 	private Integer school_type;//学校类型
 	
-	private String linkman;//联系人
+	private String link_man;//联系人
 	
 	private String phone;//电话号码
 	
@@ -41,12 +41,12 @@ public class DataSchool extends BaseObject
 		this.school_name = school_name;
 	}
 
-	public String getSimple_name() {
-		return simple_name;
+	public String getShort_school_name() {
+		return short_school_name;
 	}
 
-	public void setSimple_name(String simple_name) {
-		this.simple_name = simple_name;
+	public void setShort_school_name(String short_school_name) {
+		this.short_school_name = short_school_name;
 	}
 
 	public Integer getSchool_type() {
@@ -137,12 +137,12 @@ public class DataSchool extends BaseObject
 		this.school_type_name = school_type_name;
 	}
 
-	public String getLinkman() {
-		return linkman;
+	public String getLink_man() {
+		return link_man;
 	}
 
-	public void setLinkman(String linkman) {
-		this.linkman = linkman;
+	public void setLink_man(String link_man) {
+		this.link_man = link_man;
 	}
 
 	public String toString(){
@@ -154,10 +154,10 @@ public class DataSchool extends BaseObject
 		buff.append(getSchool_name());
 		buff.append("，");
 		buff.append("学校简称：");
-		buff.append(getSimple_name());
+		buff.append(getShort_school_name());
 		buff.append("，");
 		buff.append("联系人：");
-		buff.append(getLinkman());
+		buff.append(getLink_man());
 		buff.append("，");
 		buff.append("联系电话：");
 		buff.append(getPhone());

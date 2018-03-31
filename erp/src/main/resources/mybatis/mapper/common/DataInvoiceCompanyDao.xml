@@ -8,11 +8,8 @@
 	<select id="selectPage" resultType="com.edu.erp.model.DataInvoiceCompany"
 		parameterType="java.util.Map">
 		select a.*,
-		b.org_name city_name,
 		c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
 		from tab_data_invoice_company a
-		left join tab_organization_info b on a.city_id = b.id
-
 		<!-- 新增用户 -->
 		left join tab_user_info c_user on a.create_user = c_user.id
 		left join
@@ -21,8 +18,7 @@
 		left join tab_user_info u_user on a.update_user = u_user.id
 		left join
 		tab_employee_info u_emp on u_user.employee_id = u_emp.id
-
-		where a.status != 0 and a.city_id = #{city_id}
+		where a.status != 0
 		<if test="company_name != null and company_name != ''">
 			AND a.company_name like '%${company_name}%'
 		</if>
@@ -33,29 +29,24 @@
 	<select id="selectList" resultType="com.edu.erp.model.DataInvoiceCompany"
 		parameterType="java.util.Map">
 		select a.*,
-		b.org_name city_name,
 		c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
 		from tab_data_invoice_company a
-		left join tab_organization_info b on a.city_id = b.id
 		<!-- 新增用户 -->
 		left join tab_user_info c_user on a.create_user = c_user.id
 		left join
 		tab_employee_info c_emp on c_user.employee_id = c_emp.id
 		<!-- 修改用户 -->
 		left join tab_user_info u_user on a.update_user = u_user.id
-		left join
-		tab_employee_info u_emp on u_user.employee_id = u_emp.id
-		where a.status = 1 and a.city_id = #{city_id}
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		where a.status = 1
 		order by a.update_time DESC, a.id DESC
 	</select>
 
 	<!-- 插入开票单位数据 -->
-	<insert id="save" parameterType="com.edu.erp.model.DataInvoiceCompany">
-		insert into tab_data_invoice_company c
+	<insert id="save" parameterType="com.edu.erp.model.DataInvoiceCompany" useGeneratedKeys="true" keyProperty="id">
+		insert into tab_data_invoice_company
 		(
-		id,
 		company_name,
-		city_id,
 		description,
 		create_user,
 		create_time,
@@ -65,34 +56,29 @@
 		)
 		values
 		(
-		seq_tab_data_invoice_company.nextval, <!--主键序列 -->
 		#{company_name,jdbcType=VARCHAR},
-		#{city_id,jdbcType=NUMERIC},
 		#{description,jdbcType=VARCHAR},
-		#{create_user,jdbcType=VARCHAR},
-		#{create_time,jdbcType=VARCHAR},
-		#{update_user,jdbcType=VARCHAR},
-		#{update_time,jdbcType=VARCHAR},
+		#{create_user,jdbcType=NUMERIC},
+		#{create_time,jdbcType=TIMESTAMP},
+		#{update_user,jdbcType=NUMERIC},
+		#{update_time,jdbcType=TIMESTAMP},
 		#{status,jdbcType=NUMERIC}
 		)
 	</insert>
 
 	<!-- 更新开票单位数据 -->
 	<update id="update" parameterType="com.edu.erp.model.DataInvoiceCompany">
-		update
-		tab_data_invoice_company
-		set
+		update tab_data_invoice_company set
 		company_name = #{company_name,jdbcType=VARCHAR},
 		description = #{description,jdbcType=VARCHAR},
-		update_user = #{update_user,jdbcType=VARCHAR},
-		update_time = #{update_time,jdbcType=VARCHAR}
+		update_user = #{update_user,jdbcType=NUMERIC},
+		update_time = #{update_time,jdbcType=TIMESTAMP}
 		WHERE id = #{id}
 	</update>
 
 	<!-- 更新开票单位状态 -->
 	<update id="changeStatus" parameterType="java.util.Map">
-		update
-		tab_data_invoice_company t
+		update tab_data_invoice_company t
 		set t.status = ${status}
 		where t.id in (${ids})
 	</update>

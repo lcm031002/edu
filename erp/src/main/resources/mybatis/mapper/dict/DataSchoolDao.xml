@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.erp.dao.DataSchoolDao">
 
-	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="Map">
+	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="map">
 		select 
 						a.*,
 						b.rname province_name,
@@ -36,7 +36,7 @@
 	  	order by 		a.update_time DESC, a.id DESC	
 	</select>
 
-	<select id="selectList" parameterType="Map" resultType="com.edu.erp.model.DataSchool">
+	<select id="selectList" parameterType="map" resultType="com.edu.erp.model.DataSchool">
 		select 
 			a.*
 	  	from 
@@ -70,14 +70,13 @@
 		order by id desc
 	</select>
 
-	<insert id="insert" parameterType="com.edu.erp.model.DataSchool">
+	<insert id="insert" parameterType="com.edu.erp.model.DataSchool" useGeneratedKeys="true" keyProperty="id">
 		insert into tab_data_school
 		(
-			id,
 			school_name,
-			simple_name,
+			short_school_name,
 			school_type,
-			linkman,
+			link_man,
 			phone,
 			description,
 			province_id,
@@ -93,11 +92,10 @@
 		)
 		VALUES
 		(
-			seq_tab_data_school.nextval,
 			#{school_name,jdbcType=VARCHAR},
-			#{simple_name,jdbcType=VARCHAR},
+			#{short_school_name,jdbcType=VARCHAR},
 			#{school_type,jdbcType=NUMERIC},
-			#{linkman,jdbcType=VARCHAR},
+			#{link_man,jdbcType=VARCHAR},
 			#{phone,jdbcType=VARCHAR},
 			#{description,jdbcType=VARCHAR},
 			#{province_id,jdbcType=NUMERIC},
@@ -107,9 +105,9 @@
 			#{address,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC},
 			#{update_user,jdbcType=NUMERIC},
-			#{update_time,jdbcType=VARCHAR},
+			#{update_time,jdbcType=TIMESTAMP},
 			#{create_user,jdbcType=NUMERIC},
-			#{create_time,jdbcType=VARCHAR}
+			#{create_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 
@@ -117,9 +115,9 @@
 		update tab_data_school 
 		set
 			school_name=#{school_name,jdbcType=VARCHAR},
-			simple_name=#{simple_name,jdbcType=VARCHAR},
+			short_school_name=#{short_school_name,jdbcType=VARCHAR},
 			school_type=#{school_type,jdbcType=VARCHAR},
-			linkman=#{linkman,jdbcType=VARCHAR},
+			link_man=#{link_man,jdbcType=VARCHAR},
 			phone=#{phone,jdbcType=VARCHAR},
 			description=#{description,jdbcType=VARCHAR},
 			province_id=#{province_id,jdbcType=NUMERIC},
@@ -127,7 +125,7 @@
 			area_id=#{area_id,jdbcType=NUMERIC},
 			address=#{address,jdbcType=VARCHAR},
 			update_user=#{update_user,jdbcType=VARCHAR},
-			update_time=#{update_time,jdbcType=VARCHAR}
+			update_time=#{update_time,jdbcType=TIMESTAMP}
 		where 
 			id = #{id}
 	</update>

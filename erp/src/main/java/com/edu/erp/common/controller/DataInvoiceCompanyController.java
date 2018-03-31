@@ -85,10 +85,8 @@ public class DataInvoiceCompanyController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/service" }, headers = { "Accept=application/json" }, method = RequestMethod.POST)
-	public Map<String, Object> save(
-			@RequestBody DataInvoiceCompany dataInvoiceCompany,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public Map<String, Object> save(@RequestBody DataInvoiceCompany dataInvoiceCompany,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			check(dataInvoiceCompany);
@@ -106,10 +104,8 @@ public class DataInvoiceCompanyController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping(value = { "/service" }, headers = { "Accept=application/json" }, method = RequestMethod.PUT)
-	public Map<String, Object> updateTimeSeason(
-			@RequestBody DataInvoiceCompany dataInvoiceCompany,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public Map<String, Object> updateTimeSeason(@RequestBody DataInvoiceCompany dataInvoiceCompany,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			check(dataInvoiceCompany);

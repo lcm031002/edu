@@ -39,7 +39,7 @@ function erp_schoolController(
     $scope.schoolDetail = {
         id: '',
         school_name: '',
-        simple_name: '',
+        short_school_name: '',
         school_type: '',
         linkman: '',
         phone: '',
@@ -90,8 +90,6 @@ function erp_schoolController(
     $scope.handlePutSchool = function(school) {
         $scope.optype = 'put';
         $scope.schoolDetail = school;
-        // console.log('schoolDetail');
-        // console.log($scope.schoolDetail);
         $scope.querySelectDatas('');
         $scope.queryRegionProvince('');
         if (school.province_id) {
