@@ -1,10 +1,3 @@
-/**
- * @Title: DeviceServiceImpl.java
- * @Package: com.edu.erp.common.service.impl
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:31:26
- * @version KLXX ERPV5.0
- */
 package com.edu.erp.common.service.impl;
 
 import java.util.HashMap;
@@ -13,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.edu.common.util.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -66,10 +60,8 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public void toAdd(TabDataDevice pojo) throws Exception {
 		Assert.notNull(pojo.getAccount_id(),"账户必填");
-		Assert.notNull(pojo.getCity_id(),"城市必填");
-		//Assert.notNull(pojo.getBu_id(),"团队必填");
-		Assert.notNull(pojo.getDevice_code(),"设备编码必填");
-		Assert.notNull(pojo.getSimple_name(),"设备名称必填");
+		Assert.notNull(pojo.getEncoding(),"设备编码必填");
+		Assert.notNull(pojo.getPos_name(),"设备名称必填");
 		deviceDao.insert(pojo);
 	}
 
@@ -80,10 +72,8 @@ public class DeviceServiceImpl implements DeviceService {
 	public void toUpdate(TabDataDevice pojo) throws Exception {
 		Assert.notNull(pojo.getAccount_id(),"账户必填");
 		Assert.notNull(pojo.getId(),"id必填");
-		Assert.notNull(pojo.getCity_id(),"城市必填");
-		//Assert.notNull(pojo.getBu_id(),"团队必填");
-		Assert.notNull(pojo.getDevice_code(),"设备编码必填");
-		Assert.notNull(pojo.getSimple_name(),"设备名称必填");
+		Assert.notNull(pojo.getEncoding(),"设备编码必填");
+		Assert.notNull(pojo.getPos_name(),"设备名称必填");
 		deviceDao.update(pojo);
 	}
 
@@ -96,6 +86,7 @@ public class DeviceServiceImpl implements DeviceService {
 		param.put("ids", ids);
 		param.put("status", status);
 		param.put("update_user", updateUser);
+		param.put("update_time", DateUtil.getCurrDateTime());
 		deviceDao.changeStatus(param);
 	}
 

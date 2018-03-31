@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,8 +76,6 @@ public class DeviceController extends BaseController {
 				return resultMap;
 			}
 			Map<String, Object> queryParam = new HashMap<String, Object>();
-			queryParam.put("city_id", orgModel.getCityId());
-			
 			List<DataCompanyAccount> accountList = selectOptionService.selectCompanyAccountList(queryParam);
 			resultMap.put("accountList", accountList);
 			
@@ -96,10 +95,7 @@ public class DeviceController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 		    Integer currentPage = genIntParameter("currentPage", request);
-			Map<String, Object> queryParam = super.initParamMap(request, currentPage != null);
-			queryParam.put("device_code", request.getParameter("device_code")); //匹配 设备代码 或 设备简称
-			queryParam.put("account_num", request.getParameter("account_num")); //匹配 账户号码
-			queryParam.put("bu_id",null);
+			Map<String, Object> queryParam = super.initParamMap(request, currentPage != null, StringUtils.EMPTY);
 			Page<TabDataDevice> page = deviceService.queryForPage(queryParam);
 			super.setRespDataForPage(request, page, resultMap);
 		} catch (Exception e) {
@@ -139,30 +135,12 @@ public class DeviceController extends BaseController {
 			}
 			
 			// 默认状态
-			device.setStatus(BaseObject.StatusEnum.VALID.getCode());
-			device.setCity_id(orgModel.getCityId());
-			Account account = WebContextUtils.genUser(request);
-			device.setCreate_user(account.getId());
-			device.setCreate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
-//			if(null == device.getBu_id()) {
-//				device.setBu_id(orgModel.getBuId());
-//			}
+			setDefaultValue(request, device, false);
 			deviceService.toAdd(device);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(device.toString());
-//			logUtil.LogOperate("设备管理-添加", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "新增失败: "+ e.getMessage());
 			log.error("error found ,see:", e);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(device.toString());
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("设备管理-添加", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 		return resultMap;
 	}
@@ -175,34 +153,12 @@ public class DeviceController extends BaseController {
 		try {
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 			// 获取该数据对象
-			TabDataDevice data = deviceService.queryById(String.valueOf(device.getId()));
-			data.setDevice_code(device.getDevice_code());
-			data.setSimple_name(device.getSimple_name());
-			data.setAccount_id(device.getAccount_id());
-			data.setDescription(device.getDescription());
-			data.setBu_id(device.getBu_id());
-			Account account = WebContextUtils.genUser(request);
-			data.setUpdate_user(account.getId());
-			data.setUpdate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
-//			if(null == data.getBu_id()) {
-//				data.setBu_id(orgModel.getBuId());
-//			}
-			deviceService.toUpdate(data);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(device.toString());
-//			logUtil.LogOperate("设备管理-修改", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
+			setDefaultValue(request, device, true);
+			deviceService.toUpdate(device);
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "更新失败: "+ e.getMessage());
 			log.error("error found ,see:", e);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append(device.toString());
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("设备管理-修改", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 		return resultMap;
 	}
@@ -217,23 +173,10 @@ public class DeviceController extends BaseController {
 			Account account = WebContextUtils.genUser(request);
 			Long loginUserId = account.getId();
 			deviceService.toChangeStatus(deviceId, BaseObject.StatusEnum.DELETE.getCode(), loginUserId);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(deviceId);
-//			logUtil.LogOperate("设备管理-删除", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
 		} catch (Exception e) {
 			resultMap.put("error", true);
 			resultMap.put("message", "删除失败: "+ e.getMessage());
 			log.error("error found ,see:", e);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(deviceId);
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("设备管理-删除", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 		return resultMap;
 	}
@@ -249,29 +192,10 @@ public class DeviceController extends BaseController {
 			Account account = WebContextUtils.genUser(request);
 			Long loginUserId = account.getId();
 			deviceService.toChangeStatus(deviceId, status, loginUserId);
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(deviceId);
-//			buff.append("，");
-//			buff.append("变更状态：");
-//			buff.append(status);
-//			logUtil.LogOperate("设备管理-状态变更", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "成功");
 		} catch (Exception e) {
 			log.error("error found,see:", e);
 			resultMap.put("error", true);
 			resultMap.put("message", "更改状态失败: "+ e.getMessage());
-			
-//			StringBuffer buff  = new StringBuffer();
-//			buff.append("ID：");
-//			buff.append(deviceId);
-//			buff.append("，");
-//			buff.append("变更状态：");
-//			buff.append(status);
-//			buff.append("，");
-//			buff.append("失败信息：");
-//			buff.append(e);
-//			logUtil.LogOperate("设备管理-状态变更", logUtil.subDetailInfo(buff.toString()), logUtil.genUserInfo(request), "失败");
 		}
 
 		return resultMap;

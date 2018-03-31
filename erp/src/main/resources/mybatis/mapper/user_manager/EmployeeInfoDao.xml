@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.EmployeeInfoDao">
+
+	<resultMap type="com.edu.erp.model.EmployeeInfo" id="employeeInfoMap">
+		<id property="id" column="id" />
+		<result property="encoding" column="encoding" />
+		<result property="employee_name" column="employee_name" />
+		<result property="sex" column="sex" />
+		<result property="ID_ID" column="ID_ID" />
+		<result property="email" column="email" />
+		<result property="phone" column="phone" />
+		<result property="address" column="address" />
+		<result property="description" column="description" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_user_name" column="update_user_name" />
+		<result property="update_time" column="update_time" />
+		<collection property="edrList" column="employee_id"
+			javaType="ArrayList" ofType="com.edu.erp.model.EmployeeDepartmentRef">
+			<id property="id" column="b_id" />
+			<association property="organizationInfo" column="dep_org_id"
+				javaType="com.edu.erp.model.OrganizationInfo">
+				<id property="id" column="c_id" />
+				<result property="parent_id" column="c_parent_id" />
+				<result property="org_name" column="c_org_name" />
+				<result property="org_type" column="c_org_type" />
+				<result property="status" column="c_status" />
+				<result property="create_user" column="c_create_user" />
+				<result property="create_time" column="c_create_time" />
+				<result property="update_user" column="c_update_user" />
+				<result property="update_time" column="c_update_time" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<select id="page" parameterType="page"
+		resultType="com.edu.erp.model.EmployeeInfo">
+		select a.*,
+		c_emp.employee_name as create_user_name,
+		u_emp.employee_name as update_user_name,
+		branch_post_info.branch_post_names
+		from tab_employee_info a
+
+		left join (
+		  	select teop.emp_id, wm_concat(org.org_name || '/' || post.post_name) branch_post_names
+		  	from tab_emp_org_post teop
+			left join tab_organization_info org on teop.branch_id = org.id and org.status = 1
+			left join tp_post post on post.id = teop.post_id
+			where teop.status = 1
+			group by teop.emp_id
+		  ) branch_post_info on branch_post_info.emp_id = a.id
+		
+		<!-- 新增用户 -->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join
+		tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户 -->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join
+		tab_employee_info u_emp on u_user.employee_id = u_emp.id
+
+		where a.status = 1
+		<if test="employee_name != null and employee_name != ''">
+			<!-- 分页表格模糊查询 -->
+			and (a.employee_name like '%${employee_name}%' or a.encoding like
+			'%${employee_name}%')
+		</if>
+		<if test="email != null and email !=''">
+			and a.email like '%${email}%'
+		</if>
+		<if test="phone != null and phone !=''">
+			and a.phone like '%${phone}%'
+		</if>
+		<if test="status != null and status != ''">
+			<!-- 用户选择员工场景 -->
+			and a.status = #{status}
+		</if>
+		<if test="counselor_type == 1">
+			and exists (select 1
+		          from tab_emp_org_post teop, tp_post tppo
+		         where teop.post_id = tppo.id
+		           and teop.emp_id = a.id
+				   and teop.status = 1
+		           and tppo.post_code in ('counselor','LearningManagementDivision','LearningManagementDivision_admin','counselor_admin') )
+		</if>
+		<if test="counselor_type == 2">
+			and exists (select 1
+		          from tab_emp_org_post teop, tp_post tppo
+		         where teop.post_id = tppo.id
+		           and teop.emp_id = a.id
+			       and teop.status = 1
+		           and tppo.post_code  in ('counselor','LearningManagementDivision','LearningManagementDivision_admin','counselor_admin'))
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<select id="list" parameterType="java.util.Map" resultMap="employeeInfoMap">
+		SELECT a.*, b.id AS b_id, b.employee_id, b.dep_org_id,
+		c.id AS c_id,
+		c.parent_id AS c_parent_id, c.org_name AS c_org_name, c.org_type AS
+		c_org_type,
+		c.status AS c_status, c.create_user AS c_create_user,
+		c.create_time AS c_create_time,
+		c.update_user AS c_update_user,
+		c.update_time AS c_update_time
+		FROM tab_employee_info a
+		LEFT JOIN
+		tab_employee_department_ref b ON a.id = b.employee_id
+		LEFT JOIN
+		tab_organization_info c ON b.dep_org_id = c.id AND c.status = 1
+		WHERE
+		a.status != 0
+		<if test="dep_org_id != null">
+			<!-- 用户绑定员工的时候使用 -->
+			AND b.dep_org_id = #{dep_org_id}
+		</if>
+		<if test="id != null">
+			AND a.id = #{id}
+		</if>
+		ORDER BY a.id DESC, a.create_time DESC, a.update_time DESC
+	</select>
+
+
+	<select id="selectListCounselor" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.EmployeeInfo">
+		select * from (
+		select a.*,
+		c_emp.employee_name as create_user_name,
+		u_emp.employee_name as update_user_name
+		from tab_employee_info a
+
+		<!-- 新增用户 -->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join
+		tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户 -->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join
+		tab_employee_info u_emp on u_user.employee_id = u_emp.id
+
+		where
+		(a.status != 0 or a.status is null)
+		<if test="counselor_name != null and counselor_name != ''">
+			and a.employee_name like '%${counselor_name}%'
+		</if>
+		ORDER BY a.id DESC, a.create_time DESC, a.update_time DESC
+		) where
+		rownum &lt; 15
+	</select>
+
+	<select id="queryEmployeeInfoByOrgAndRole" parameterType="java.util.Map"
+		resultMap="employeeInfoMap">
+		SELECT
+		distinct a.* ,
+		b.id AS b_id ,
+		b.employee_id ,
+		b.dep_org_id ,
+		c.id AS c_id ,
+		c.parent_id AS c_parent_id ,
+		c.org_name AS
+		c_org_name ,
+		c.org_type AS c_org_type ,
+		c.status AS c_status ,
+		c.create_user AS c_create_user ,
+		c.create_time AS c_create_time ,
+		c.update_user AS c_update_user ,
+		c.update_time AS c_update_time
+		FROM
+		tab_employee_info a LEFT JOIN tab_employee_department_ref b
+		ON a.id =
+		b.employee_id LEFT JOIN tab_organization_info c
+		ON b.dep_org_id = c.id
+		AND c.status = 1
+		inner join TAB_USER_INFO tui on tui.EMPLOYEE_ID = a.ID
+		inner join TAB_USER_ROLE_REF turr on turr.USER_ID = tui.ID
+		inner join
+		TAB_ROLE_INFO tri on tri.ID = turr.ROLE_ID
+		inner join TAB_ROLE_ORG_REF
+		tror on tror.ROLE_ID = tri.ID
+		inner join TAB_ORGANIZATION_INFO toi on
+		toi.ID = tror.ORG_ID
+		WHERE
+		a.status != 0
+		and toi.ID =
+		#{org_id,jdbcType=NUMERIC}
+		and toi.STATUS = 1
+		and tri.ID =
+		#{role_id,jdbcType=NUMERIC}
+		and tri.STATUS = 1
+		and tui.STATUS = 1
+		ORDER
+		BY
+		a.id DESC ,
+		a.create_time DESC ,
+		a.update_time DESC
+	</select>
+
+	<select id="queryEmpInfoById" resultType="com.edu.erp.model.EmployeeInfo">
+		select emp.*
+		from
+		tab_employee_info emp
+		left join tab_user_info u
+		on emp.id =
+		u.employee_id
+		where 1 = 1
+		and emp.id = #{id}
+	</select>
+	
+	<select id="queryEmpInfoByOrgIdAndId" parameterType="page" resultType="com.edu.erp.model.EmployeeInfo">
+		select distinct emp.*
+		from
+		tab_employee_info emp,tab_user_info u,ebs_accountorg_rel ear
+		where emp.id = u.employee_id
+    	and u.id = ear.accountid
+    	and u.status = 1
+    	and emp.id = #{id}
+    	and ear.orgid = #{branch_id}
+	</select>
+
+	<insert id="toAdd" parameterType="com.edu.erp.model.EmployeeInfo">
+		insert into tab_employee_info t
+		(
+		encoding,
+		employee_name,
+		sex,
+		id_id,
+		email,
+		phone,
+		address,
+		description,
+		status,
+		create_user,
+		create_time,
+		update_user,
+		update_time,
+		user_type
+		)
+		values
+		(
+		#{encoding,jdbcType=VARCHAR},
+		#{employee_name,jdbcType=VARCHAR},
+		#{sex,jdbcType=NUMERIC},
+		#{ID_ID,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{status,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		#{create_time,jdbcType=VARCHAR},
+		#{update_user,jdbcType=NUMERIC},
+		#{update_time,jdbcType=VARCHAR},
+		#{user_type,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<update id="toUpdate" parameterType="com.edu.erp.model.EmployeeInfo">
+		update tab_employee_info t
+		set
+		encoding = #{encoding,jdbcType=VARCHAR},
+		employee_name =
+		#{employee_name,jdbcType=VARCHAR},
+		sex = #{sex,jdbcType=NUMERIC},
+		ID_ID
+		= #{ID_ID,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		phone =
+		#{phone,jdbcType=VARCHAR},
+		address = #{address,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		update_user =
+		#{update_user,jdbcType=NUMERIC},
+		update_time =
+		#{update_time,jdbcType=VARCHAR},
+		user_type =
+		#{user_type,jdbcType=NUMERIC}
+		where t.id = #{id}
+	</update>
+
+	<update id="toChangeStatus" parameterType="java.util.Map">
+		UPDATE
+		tab_employee_info t
+		SET t.status = ${status}
+		WHERE t.id IN (${ids})
+	</update>
+
+	<insert id="toAddDepRef" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="; end;" separator=";">
+			INSERT INTO tab_employee_department_ref
+			(
+			id,
+			employee_id,
+			dep_org_id
+			)
+			VALUES
+			(
+			seq_employee_department_ref.nextval,
+			#{item.employee_id},
+			#{item.dep_org_id}
+			)
+		</foreach>
+	</insert>
+
+
+
+	<delete id="toRemoveDepRef" parameterType="java.lang.String">
+		DELETE FROM
+		tab_employee_department_ref
+		WHERE employee_id in (${_parameter})
+	</delete>
+
+	<select id="queryEmployByConditions" resultType="map"
+		parameterType="map">
+		select a.*
+		from tab_employee_info a
+		where (a.status != 0 or a.status is
+		null)
+		<if test="employee_id != null">
+			and a.id = #{employee_id}
+		</if>
+		<if test="employee_name != null and employee_name != ''">
+			and a.employee_name like
+			'%'||#{employee_name,jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="encoding != null and encoding != ''">
+			and a.encoding like '%'||#{encoding,jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="status != null and status != ''">
+			and a.status = #{status}
+		</if>
+		<if test="counselor_type != null and counselor_type != ''">
+			and exists (select 1 from tab_student_counselor_info t where t.counselor_id = a.id and t.counselor_type = #{counselor_type})
+		</if>
+		<if test="size != null">
+			<![CDATA[and rownum <= #{size}]]>
+		</if>
+		<if test="size==null">
+		   <![CDATA[and rownum <= 5]]>
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<select id="queryEmpSupervioer" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select
+		emp.supervisor
+		from tab_employee_info emp where
+		emp.id=#{employee_id}
+	</select>
+
+	<select id="queryChangeId" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select thc.id
+		from tab_hrm_changeevent thc
+		left
+		join
+		jbpm4_task jt on jt.dbid_ = thc.task_id
+		left join
+		tab_employee_info emp
+		on emp.id = thc.employee_id
+		where
+		jt.execution_id_=#{execution_id}
+	</select>
+	<!--hrm 第二层人员分配 -->
+	<select id="queryBranchHander" parameterType="java.lang.Integer"
+		resultType="com.edu.erp.model.EmployeeInfo">
+		select a.id id,
+		a.encoding encoding,
+		a.employee_name employee_name,
+		a.sex sex,
+		a.description description
+		from tab_employee_info a
+		where a.id in
+		(select teops.emp_id
+		from (select emp.*, teop.branch_id
+		from tab_hrm_changeevent thc
+		left join tab_employee_info emp on emp.id = thc.employee_id
+		left join TAB_EMP_ORG_POST teop on teop.emp_id = emp.id
+		where thc.id=#{event_id}
+		) t
+		left join TAB_EMP_ORG_POST teops on t.branch_id = teops.branch_id
+		where teops.status = 1
+		and teops.post_id in (5, 62, 63, 23))
+	</select>
+	<!--hrm 第三层人员分配 -->
+	<select id="queryBranchHander3" parameterType="java.lang.Integer"
+		resultType="com.edu.erp.model.EmployeeInfo">
+		select a.id id,
+		a.encoding encoding,
+		a.employee_name employee_name,
+		a.sex sex,
+		a.description description
+		from tab_employee_info a
+		where a.id in
+		(select teops.emp_id
+		from (select emp.*, teop.branch_id
+		from tab_hrm_changeevent thc
+		left join tab_employee_info emp on emp.id = thc.employee_id
+		left join TAB_EMP_ORG_POST teop on teop.emp_id = emp.id
+		where thc.id=#{event_id}
+		) t
+		left join TAB_EMP_ORG_POST teops on t.branch_id = teops.branch_id
+		where teops.status = 1
+		and teops.post_id in ( 61, 64))
+	</select>
+
+</mapper>

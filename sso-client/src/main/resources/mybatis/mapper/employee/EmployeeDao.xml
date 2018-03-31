@@ -7,7 +7,7 @@
 		<result property="encoding" column="ENCODING" />
 		<result property="employeeName" column="EMPLOYEE_NAME" />
 		<result property="sex" column="SEX" />
-		<result property="identificationCard" column="ID_ID" />
+		<result property="identificationCard" column="ID_CARD" />
 		<result property="email" column="EMAIL" />
 		<result property="phone" column="PHONE" />
 		<result property="address" column="ADDRESS" />
@@ -23,7 +23,7 @@
 	<!-- 查询团队对应的数据对象 -->
 	<select id="queryEmployeeById" resultMap="pojoMap"
 		parameterType="com.edu.cas.client.common.model.Employee">
-		select id, ENCODING, EMPLOYEE_NAME,SEX,ID_ID, EMAIL,PHONE,ADDRESS,DESCRIPTION,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
+		select id, ENCODING, EMPLOYEE_NAME,SEX,ID_CARD, EMAIL,PHONE,ADDRESS,DESCRIPTION,STATUS,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME
 		  from TAB_EMPLOYEE_INFO
 		 where id = #{id}
 	</select>
@@ -36,28 +36,24 @@
 		,ENCODING = #{encoding,jdbcType = VARCHAR}
 		,EMPLOYEE_NAME = #{employeeName,jdbcType = VARCHAR}
 		,SEX = #{sex,jdbcType = NUMERIC}
-		,ID_ID = #{identificationCard,jdbcType = VARCHAR}
+		,ID_CARD = #{identificationCard,jdbcType = VARCHAR}
 		,email = #{email,jdbcType = VARCHAR}
 		,phone = #{phone,jdbcType = VARCHAR}
 		,address = #{address,jdbcType = VARCHAR}
 		,DESCRIPTION = #{description,jdbcType = VARCHAR}
 		,STATUS = #{status,jdbcType = NUMERIC}
 		,UPDATE_USER = #{updateUser,jdbcType = NUMERIC}
+		,UPDATE_USER = #{updateTime,jdbcType = TIMESTAMP}
 		where id = #{id,jdbcType = NUMERIC}
 	</update>
 	
-	<insert id="addEmployee" parameterType="com.edu.cas.client.common.model.Employee">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-			order="BEFORE">
-			SELECT SEQ_TAB_EMPLOYEE_INFO.nextval AS id from dual
-		</selectKey>
+	<insert id="addEmployee" parameterType="com.edu.cas.client.common.model.Employee" useGeneratedKeys="true" keyProperty="id">
 		insert into TAB_EMPLOYEE_INFO t
 		(
-			ID,
 			ENCODING,
 			EMPLOYEE_NAME,
 			SEX,
-			ID_ID,
+			ID_CARD,
 			EMAIL,
 			PHONE,
 			ADDRESS,
@@ -70,7 +66,6 @@
 		)
 		values
 		(
-			#{id,jdbcType = NUMERIC},
 			#{encoding,jdbcType = VARCHAR},
 			#{employeeName,jdbcType = VARCHAR},
 			#{sex,jdbcType = NUMERIC},
@@ -81,9 +76,9 @@
 			#{description,jdbcType = VARCHAR},
 			#{status,jdbcType = NUMERIC},
 			#{createUser,jdbcType = NUMERIC},
-			sysdate,
+			#{createTime,jdbcType = TIMESTAMP},
 			#{updateUser,jdbcType = NUMERIC},
-			sysdate
+			#{updateTime,jdbcType = TIMESTAMP}
 		)
 	</insert>
 	
@@ -93,7 +88,7 @@
 		       tei.ENCODING,
 		       tei.EMPLOYEE_NAME,
 		       tei.SEX,
-		       tei.ID_ID,
+		       tei.ID_CARD,
 		       tei.EMAIL,
 		       tei.PHONE,
 		       tei.ADDRESS,
@@ -115,7 +110,7 @@
 			 	and (tei.EMPLOYEE_NAME like '%' || #{searchName} || '%'
 				    or tei.PHONE like '%' || #{searchName} || '%'
 				    or tei.ENCODING like '%' || #{searchName} || '%'
-				    or tei.ID_ID like '%' || #{searchName} || '%'
+				    or tei.ID_CARD like '%' || #{searchName} || '%'
 				    or tei.EMAIL like '%' || #{searchName} || '%'
 				    or tei.ADDRESS like '%' || #{searchName} || '%'
 				    or tei.DESCRIPTION like '%' || #{searchName} || '%'

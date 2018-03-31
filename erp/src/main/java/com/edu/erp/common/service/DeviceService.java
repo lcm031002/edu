@@ -1,10 +1,3 @@
-/**
- * @Title: DeviceService.java
- * @Package: com.edu.erp.common.service
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:29:06
- * @version KLXX ERPV5.0
- */
 package com.edu.erp.common.service;
 
 import java.util.List;
@@ -24,8 +17,7 @@ public interface DeviceService {
 
 	/**
 	 * 分页查询
-	 * 
-	 * @param page
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -52,7 +44,6 @@ public interface DeviceService {
 	 * 新增
 	 * 
 	 * @param pojo
-	 * @param org_ids 校区
 	 * @throws Exception
 	 */
 	void toAdd(TabDataDevice pojo) throws Exception;
