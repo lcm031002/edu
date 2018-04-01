@@ -194,7 +194,7 @@ public interface StudentAccountDao{
 	/**
 	 * 分页
 	 * 
-	 * @param page
+	 * @param pageParam
 	 * @return
 	 * @throws Exception
 	 */
@@ -250,16 +250,14 @@ public interface StudentAccountDao{
 	int updateFeeAccount(HashMap<String, Object> param) throws Exception;
 	/**
 	 * 更新退费账户金额
-	 * @param accountId
-	 * @param amount
+	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
 	int updateFrozenAccount(HashMap<String, Object> param) throws Exception;
 	/**
 	 * 更新冻结账户金额
-	 * @param accountId
-	 * @param amount
+	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
@@ -272,4 +270,8 @@ public interface StudentAccountDao{
 	 * @throws Exception
 	 */
 	Long queryIdByOrderEncoding(String encoding)throws Exception;
+
+	void transStuAccount(Map<String, Object> paramMap) throws Exception;
+
+	Map<String, Object> queryStuAccountInfo(Long dynamicId);
 }

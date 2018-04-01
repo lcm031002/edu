@@ -2,23 +2,27 @@ package com.edu.erp.util;
 
 import com.edu.cas.client.common.model.Account;
 import com.edu.cas.client.common.model.OrgModel;
+import com.edu.cas.client.common.org.OrgService;
+import com.edu.erp.dict.service.OrganizationService;
 import com.edu.cas.client.common.util.WebContextUtils;
 import com.edu.common.constants.Constants;
 import com.edu.erp.model.BaseObject;
+import com.edu.erp.model.OrganizationInfo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.util.WebUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BaseController {
     private static final Logger log = Logger.getLogger(BaseController.class);
+
+    @Resource(name = "organizationService")
+    private OrganizationService organizationService;
 
     /**
      * 获取页面参数Map
@@ -163,4 +167,54 @@ public class BaseController {
         PageHelper.startPage(currentPage, pageSize);
     }
 
+    /**
+     * 查询选中的团队下的所有具有权限的校区
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public String getAllowedBranchByBuId(HttpServletRequest request) throws Exception {
+        List<OrganizationInfo> orgList = new ArrayList<OrganizationInfo>();
+        OrganizationInfo param = new OrganizationInfo();
+
+        Long bu_id = genLongParameter("bu_id", request);
+        if (bu_id == null) {
+            OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
+            if ("4".equals(orgModel.getType())) {
+
+                if (orgModel.getBuId() == null) {
+                    throw new Exception("请选择校区或团队！");
+                } else {
+                    param.setParent_id(orgModel.getBuId());
+                }
+            } else if ("3".equals(orgModel.getType())) {
+                if (orgModel.getBuId() == null) {
+                    throw new Exception("请选择校区或团队！");
+                } else {
+                    param.setParent_id(orgModel.getId());
+                }
+            } else {
+                throw new Exception("请选择校区或团队！");
+            }
+
+        } else {
+            param.setParent_id(bu_id);
+        }
+
+        Account account = WebContextUtils.genUser(request);
+        if (WebContextUtils.isAdmin(request)) {
+            orgList = organizationService.queryBuBranchs(param.getParent_id());
+        } else {
+            orgList = organizationService.queryBuBranchs(account.getId(), param.getParent_id());
+        }
+        StringBuffer sb = new StringBuffer("");
+        for (OrganizationInfo organizationInfo : orgList) {
+            sb.append(",").append(organizationInfo.getId());
+        }
+        String ids = sb.toString();
+        StringUtils.isNotEmpty(ids);
+        ids = ids.substring(1);
+        return ids;
+    }
 }

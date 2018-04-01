@@ -1,0 +1,1925 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TCourseDao">
+
+	<resultMap type="com.edu.erp.model.TCourse" id="courseMap">
+		<id property="id" column="id" />
+		<result property="course_no" column="course_no" />
+		<result property="course_name" column="course_name" />
+		<result property="business_type" column="business_type" />
+		<result property="city_id" column="city_id" />
+		<result property="city_name" column="city_name" />
+		<result property="branch_id" column="branch_id" />
+		<result property="branch_name" column="branch_name" />
+		<result property="season_id" column="season_id" />
+		<result property="season_name" column="season_name" />
+		<result property="grade_id" column="grade_id" />
+		<result property="grade_name" column="grade_name" />
+		<result property="subject_id" column="subject_id" />
+		<result property="subject_name" column="subject_name" />
+		<result property="teacher_id" column="teacher_id" />
+		<result property="teacher_name" column="teacher_name" />
+		<result property="teacher_code" column="teacher_code" />
+		<result property="unit_price" column="unit_price" />
+		<result property="sum_price" column="sum_price" />
+		<result property="course_count" column="course_count" />
+		<result property="product_type" column="product_type" />
+		<result property="verify_status" column="verify_status" />
+		<result property="verify_no" column="verify_no" />
+		<result property="verify_time" column="verify_time" />
+		<result property="verify_user" column="verify_user" />
+		<result property="validaty_date" column="validaty_date" />
+		<result property="invalidity_date" column="invalidity_date" />
+		<result property="start_date" column="start_date" />
+		<result property="end_date" column="end_date" />
+		<result property="start_time" column="start_time" />
+		<result property="end_time" column="end_time" />
+		<result property="hour_len" column="hour_len" />
+		<result property="course_surplus" column="course_surplus" />
+		<result property="people_count" column="people_count" />
+		<result property="actual_people_count" column="actual_people_count" />
+		<result property="attend_class_period" column="attend_class_period" />
+		<result property="course_type" column="course_type" />
+		<result property="type_name" column="type_name" />
+		<result property="description" column="description" />
+		<result property="proceed_status" column="proceed_status" />
+		<result property="status" column="status" />
+		<result property="is_approve" column="is_approve" />
+		<result property="create_user" column="create_user" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_time" column="update_time" />
+		<result property="student_num" column="student_num" />
+
+		<result property="is_textbooks" column="is_textbooks" />
+		<result property="num_textbooks" column="num_textbooks" />
+		<result property="more_teacher_courseid" column="more_teacher_courseid" />
+		<result property="performance_belong_type" column="performance_belong_type" />
+		<result property="performance_belong_type_name" column="performance_belong_type_name" />
+
+		<collection property="courseSchoolRefs" column="course_id"
+					javaType="ArrayList" ofType="com.edu.erp.model.TCourseSchool">
+			<id property="id" column="h_id" />
+			<association property="organizationInfo" column="school_id"
+						 javaType="com.edu.erp.model.OrganizationInfo">
+				<id property="id" column="i_id" />
+				<result property="parent_id" column="i_parent_id" />
+				<result property="org_name" column="i_org_name" />
+				<result property="org_type" column="i_org_type" />
+				<result property="status" column="i_status" />
+				<result property="create_user" column="i_create_user" />
+				<result property="create_time" column="i_create_time" />
+				<result property="update_user" column="i_update_user" />
+				<result property="update_time" column="i_update_time" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<select id="selectForPage" parameterType="map"
+			resultType="com.edu.erp.model.TCourse">
+		select distinct a.id as course_id,ifnull(a.update_time,a.create_time) s_update_time,
+		a.*, b.org_name as city_name, c.org_name as branch_name, c.org_kind as branch_kind,
+		d.course_season_name as season_name,
+		<!-- e.grade_name, f.data_name as subject_name, g.teacher_name, j.type_name, -->
+		e.grade_name, f.name as subject_name, g.teacher_name, tti.teacher_name assteacher_name,tti.encoding assteacher_code,g.encoding teacher_code,
+		c_emp.employee_name as create_user_name, u_emp.employee_name as
+		update_user_name
+		from t_course a
+		join tab_organization_info b on
+		a.city_id = b.id and b.status = 1
+		left join tab_organization_info c on
+		a.branch_id = c.id and c.status = 1
+		left join tab_time_season d on
+		a.season_id = d.id and d.status = 1
+		left join tab_data_grade e on
+		a.grade_id = e.id and e.status = 1
+		left join tp_subject f on a.subject_id = f.id
+		left join tab_teacher_info g on a.teacher_id = g.id
+		left join tab_teacher_info tti on a.assteacher_id = tti.id and tti.status = 1
+		<!-- 新增用户 -->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户 -->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		left join t_course_scheduling tcs on tcs.course_id = a.id
+		where (a.status != 0 or a.status is null)
+		AND a.city_id = #{city_id}
+		<if test="course_name != null and course_name != ''">
+			<!-- 课程商品名称 -->
+			and (a.course_name like '%${course_name}%' or a.course_no like
+			'%${course_name}%' or a.id like '%${course_name}%')
+		</if>
+		<if test="search_info!= null and search_info != ''">
+			<!-- 课程商品名称 -->
+			and (lower(a.course_name) like '%${search_info}%' or lower(a.course_no) like
+			'%${search_info}%' or lower(a.id) like '%${search_info}%')
+		</if>
+
+		<if
+				test="business_type != null and business_type != -1 and business_type != ''">
+			<!-- 业务模式类型 -->
+			AND a.business_type = #{business_type}
+		</if>
+		<if test="course_id != null and course_id > 0">
+			and a.id = #{course_id,jdbcType=NUMERIC}
+		</if>
+		<if test="branch_id != null and branch_id != -1 and branch_id != ''">
+			<!-- 根据校区查询 课程联报使用 -->
+			AND a.branch_id = #{branch_id}
+		</if>
+		<if test="per_branch_ids != null and per_branch_ids != ''">
+			AND a.branch_id in (${per_branch_ids})
+		</if>
+		<if test="grade_id != null and grade_id != -1 and grade_id != ''">
+			<!-- 根据年级查询 课程联报使用 -->
+			AND a.grade_id = #{grade_id}
+		</if>
+		<if test="status != null and status != '' and status > 0">
+			<!-- 选择课程商品的时候 过滤掉未上架的课程商品 联报和代销中使用 -->
+			AND a.status = #{status}
+		</if>
+		<!--
+		<if test="status == 1">
+		    AND a.end_date &gt;= to_char(sysdate, 'yyyy-MM-dd')
+		</if>
+		 -->
+		<if test="status == -2">
+			<!-- 不为上架 下架的商品 -->
+			AND a.status is null
+		</if>
+		<if test="season_id != null and season_id != '' and season_id != -1 ">
+			and a.season_id = #{season_id}
+		</if>
+		<if test="course_type != null and course_type != '' and course_type != -1 ">
+			and a.course_type = #{course_type}
+		</if>
+		<if test="teacher_id != null and teacher_id != ''">
+			and (g.id like '%${teacher_id}%' or g.encoding like
+			'%${teacher_id}%' or
+			g.teacher_name like '%${teacher_id}%')
+		</if>
+		<if test="assteacher_id != null and assteacher_id != ''">
+			and (tti.id like '%${assteacher_id}%' or tti.encoding like
+			'%${assteacher_id}%' or
+			tti.teacher_name like '%${assteacher_id}%')
+		</if>
+		<if test="subject_id != null and subject_id != '' and subject_id != -1 ">
+			and a.subject_id = #{subject_id}
+		</if>
+
+		<if
+				test="product_type != null and product_type != '' and product_type != -1 ">
+			and a.product_type = #{product_type}
+		</if>
+		<if test="id_no_name != null and id_no_name != ''">
+			<!-- 课程商品名称 -->
+			and (a.course_name like '%${id_no_name}%' or a.course_no like
+			'%${id_no_name}%' or a.id like '%${id_no_name}%')
+		</if>
+		<if test="unit_price != null and unit_price != '' and unit_price > 0 ">
+			and a.unit_price = #{unit_price}
+		</if>
+
+		<if test="ydyLadder == 'yes'">
+			and not exists (select 1 from t_course_ladder_rel tclr where tclr.course_id = a.id)
+		</if>
+		<if test="month!=null and year!=null">
+			AND to_number(substr(to_char(tcs.course_date),0,4)) = #{year}
+			AND to_number(substr(to_char(tcs.course_date),5,2)) = #{month}
+		</if>
+		order by a.course_name asc
+	</select>
+
+	<select id="selectYDYForPage" parameterType="Map" resultType="com.edu.erp.model.TCourse">
+		select nvl(a.update_time,a.create_time) s_update_time,
+		a.*, b.org_name as city_name, c.org_name as branch_name,
+		d.course_season_name as season_name,
+		<!-- e.grade_name, f.data_name as subject_name, g.teacher_name, j.type_name, -->
+		e.grade_name, f.name as subject_name, g.teacher_name, tti.teacher_name assteacher_name,tti.encoding assteacher_code,g.encoding teacher_code, j.type_name,
+		c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		from t_course a
+		join tab_organization_info b on
+		a.city_id = b.id and b.status = 1
+		left join tab_organization_info c on
+		a.branch_id = c.id and c.status = 1
+		left join tab_time_season d on
+		a.season_id = d.id and d.status = 1
+		left join tab_data_grade e on
+		a.grade_id = e.id and e.status = 1
+		<!-- left join tab_data_dictionary f on a.subject_id = f.id and f.status
+			= 1 -->
+		left join tp_subject f on a.subject_id = f.id
+
+		left join
+		tab_teacher_info g on a.teacher_id = g.id
+
+		left join
+		tab_teacher_info tti on a.assteacher_id = tti.id and tti.status = 1
+
+		left join
+		tab_course_type j on a.course_type = j.id and j.status = 1
+
+		<!-- 新增用户 -->
+		left join tab_user_info c_user on a.create_user = c_user.id
+
+		left join
+		tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户 -->
+		left join tab_user_info u_user on a.update_user = u_user.id
+
+		left join
+		tab_employee_info u_emp on u_user.employee_id = u_emp.id
+
+		where (a.status != 0 or a.status is null)
+		AND a.city_id = #{city_id}
+		<if test="course_name != null and course_name != ''">
+			<!-- 课程商品名称 -->
+			and (a.course_name like '%${course_name}%' or a.course_no like
+			'%${course_name}%' or a.id like '%${course_name}%')
+		</if>
+		<if test="search_info!= null and search_info != ''">
+			<!-- 课程商品名称 -->
+			and (lower(a.course_name) like '%${search_info}%' or lower(a.course_no) like
+			'%${search_info}%' or lower(a.id) like '%${search_info}%')
+		</if>
+
+		<if test="business_type != null and business_type != -1 and business_type != ''">
+			<!-- 业务模式类型 -->
+			AND a.business_type = #{business_type}
+		</if>
+		<if test="course_id != null and course_id > 0">
+			and a.id = #{course_id,jdbcType=NUMERIC}
+		</if>
+		<if test="branch_id != null and branch_id != -1 and branch_id != ''">
+			and (exists (select 1 from t_course_branch_ref tcbr where tcbr.course_id = a.id and tcbr.branch_id =#{branch_id})
+			or a.is_all=1 )
+		</if>
+		<if test="per_branch_ids != null and per_branch_ids != ''">
+			and ( exists (select 1 from t_course_branch_ref tcbr where tcbr.course_id = a.id and tcbr.branch_id in (${per_branch_ids}))
+			or a.is_all=1 )
+		</if>
+		<if test="grade_id != null and grade_id != -1 and grade_id != ''">
+			<!-- 根据年级查询 课程联报使用 -->
+			AND a.grade_id = #{grade_id}
+		</if>
+		<if test="status != null and status != '' and status > 0">
+			<!-- 选择课程商品的时候 过滤掉未上架的课程商品 联报和代销中使用 -->
+			AND a.status = #{status}
+		</if>
+		<if test="status == -2">
+			<!-- 不为上架 下架的商品 -->
+			AND a.status is null
+		</if>
+		<if test="season_id != null and season_id != '' and season_id != -1 ">
+			and a.season_id = #{season_id}
+		</if>
+		<if test="course_type != null and course_type != '' and course_type != -1 ">
+			and a.course_type = #{course_type}
+		</if>
+		<if test="teacher_id != null and teacher_id != ''">
+			and (g.id like '%${teacher_id}%' or g.encoding like
+			'%${teacher_id}%' or
+			g.teacher_name like '%${teacher_id}%')
+		</if>
+		<if test="assteacher_id != null and assteacher_id != ''">
+			and (tti.id like '%${assteacher_id}%' or tti.encoding like
+			'%${assteacher_id}%' or
+			tti.teacher_name like '%${assteacher_id}%')
+		</if>
+		<if test="subject_id != null and subject_id != '' and subject_id != -1 ">
+			and a.subject_id = #{subject_id}
+		</if>
+
+		<if test="product_type != null and product_type != '' and product_type != -1 ">
+			and a.product_type = #{product_type}
+		</if>
+		<if test="id_no_name != null and id_no_name != ''">
+			<!-- 课程商品名称 -->
+			and (a.course_name like '%${id_no_name}%' or a.course_no like
+			'%${id_no_name}%' or a.id like '%${id_no_name}%')
+		</if>
+		<if test="unit_price != null and unit_price != '' and unit_price > 0 ">
+			and a.unit_price = #{unit_price}
+		</if>
+
+		order by s_update_time desc, a.id DESC
+	</select>
+
+	<!-- 查询订单课程信息 -->
+	<select id="queryOrderCourseList" parameterType="java.lang.Long"
+			resultMap="courseMap">
+		select a.*,
+		b.org_name as city_name,
+		c.org_name as
+		branch_name,
+		d.course_season_name as season_name,
+		e.grade_name,
+		f.name as
+		subject_name,
+		g.teacher_name,
+		j.type_name,
+		c_emp.employee_name as
+		create_user_name,
+		u_emp.employee_name as update_user_name,
+		a.update_time
+		from t_course
+		a
+		join tab_organization_info b
+		on a.city_id = b.id
+		and b.status = 1
+		left
+		join tab_organization_info c
+		on a.branch_id = c.id
+		and c.status = 1
+		left
+		join tab_time_season d
+		on a.season_id = d.id
+		and d.status = 1
+		left join
+		tab_data_grade e
+		on a.grade_id = e.id
+		and e.status = 1
+		left join
+		tp_subject f
+		on a.subject_id = f.id
+		left join tab_teacher_info g
+		on
+		a.teacher_id = g.id
+		and g.status = 1
+		left join tab_course_type j
+		on
+		a.course_type = j.id
+		and j.status = 1
+		left join tab_user_info c_user
+		on
+		a.create_user = c_user.id
+		left join tab_employee_info c_emp
+		on
+		c_user.employee_id = c_emp.id
+		left join tab_user_info u_user
+		on
+		a.update_user = u_user.id
+		left join tab_employee_info u_emp
+		on
+		u_user.employee_id = u_emp.id
+		where a.id in (
+		select course_id
+		from
+		tab_order_info_detail
+		where order_id = #{orderId,jdbcType=NUMERIC}
+		union
+		select course_id from t_order_course where order_id =
+		#{orderId,jdbcType=NUMERIC}
+		)
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<!-- 根据权限查询 -->
+	<select id="selectList" parameterType="java.util.Map" resultMap="courseMap">
+		select
+		a.*, b.org_name as city_name, c.org_name as branch_name,
+		d.course_season_name as season_name,
+		<!-- e.grade_name, f.data_name as subject_name, g.teacher_name, -->
+		e.grade_name, f.name as subject_name, g.teacher_name,
+		h.id as h_id,
+		h.course_id, h.branch_id as school_id, i.id as i_id, i.org_name as
+		i_org_name,
+		i.create_user as i_create_user, i.create_time as
+		i_create_time, i.update_user as i_update_user, i.update_time as
+		i_update_time,
+		j.type_name
+		from t_course a
+		join tab_organization_info b
+		on a.city_id = b.id and b.status = 1
+		left join tab_organization_info c
+		on a.branch_id = c.id and c.status = 1
+		left join tab_time_season d on
+		a.season_id = d.id and d.status = 1
+		left join tab_data_grade e on
+		a.grade_id = e.id and e.status = 1
+		<!-- left join tab_data_dictionary f on a.subject_id = f.id and f.status 
+			= 1 -->
+		left join tp_subject f on a.subject_id = f.id and f.status = 1
+
+		left
+		join tab_teacher_info g on a.teacher_id = g.id and g.status = 1
+
+		left
+		join t_course_branch_ref h on a.id = h.course_id
+
+		left join
+		tab_organization_info i on h.branch_id = i.id and i.status = 1
+
+		left
+		join tab_course_type j on a.course_type = j.id and j.status = 1
+
+		where
+		a.status != 0
+		<if test="city_id != null and city_id != ''">
+			AND a.city_id = #{city_id}
+		</if>
+		<if test="id != null and id != ''">
+			and a.id = #{id}
+		</if>
+		<if test="ids != null and ids != ''">
+			<!-- 根据id字符串查询 -->
+			and a.id in (${ids})
+		</if>
+
+		<if
+				test="business_type != null and business_type != -1 and business_type != ''">
+			<!-- 业务模式类型 -->
+			and a.business_type = #{business_type}
+		</if>
+		<!-- 严格匹配 -->
+		<if test="strict_course_no != null and strict_course_no != ''">
+			and a.course_no = #{strict_course_no, jdbcType=VARCHAR}
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<!-- 根据参数查询，用于判断记录是否存在 -->
+	<select id="checkExist" parameterType="java.util.Map" resultMap="courseMap">
+		select id from t_course a
+		where a.status != 0
+		<if test="city_id != null and city_id != ''">
+			AND a.city_id = #{city_id}
+		</if>
+		<if
+				test="business_type != null and business_type != -1 and business_type != ''">
+			<!-- 业务模式类型 -->
+			and a.business_type = #{business_type}
+		</if>
+		<!-- 严格匹配 -->
+		<if test="course_no != null and course_no != ''">
+			and a.course_no = #{course_no, jdbcType=VARCHAR}
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<insert id="saveTCourse" parameterType="com.edu.erp.model.TCourse">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+				   order="AFTER">
+			SELECT seq_t_course.currval AS id from dual
+		</selectKey>
+		insert into t_course t
+		(
+		t.id,
+		t.course_no,
+		t.course_name,
+		t.business_type,
+		t.city_id,
+		t.branch_id,
+		t.season_id,
+		t.grade_id,
+		t.subject_id,
+		t.teacher_id,
+		t.assteacher_id,
+		t.unit_price,
+		t.sum_price,
+		t.hour_len,
+		t.course_count,
+		t.status,
+		t.product_type,
+		t.verify_status,
+		t.verify_no,
+		t.verify_time,
+		t.verify_user,
+		t.validaty_date,
+		t.invalidity_date,
+		t.start_date,
+		t.end_date,
+		t.start_time,
+		t.end_time,
+		t.course_surplus,
+		t.people_count,
+		t.actual_people_count,
+		t.attend_class_period,
+		t.course_type,
+		t.description,
+		t.product_line,
+		t.target,
+		t.proceed_status,
+		t.create_user,
+		t.create_time,
+		t.update_user,
+		t.update_time,
+		t.is_approve,
+		t.is_textbooks,
+		t.performance_belong_type,
+		t.is_all
+		)
+		values
+		(
+		seq_t_course.nextval,
+		#{course_no,jdbcType=VARCHAR},
+		#{course_name,jdbcType=VARCHAR},
+		#{business_type,jdbcType=NUMERIC},
+		#{city_id,jdbcType=NUMERIC},
+		#{branch_id,jdbcType=NUMERIC},
+		#{season_id,jdbcType=NUMERIC},
+		#{grade_id,jdbcType=NUMERIC},
+		#{subject_id,jdbcType=NUMERIC},
+		#{teacher_id,jdbcType=NUMERIC},
+		#{assteacher_id,jdbcType=NUMERIC},
+		#{unit_price,jdbcType=NUMERIC},
+		#{sum_price,jdbcType=NUMERIC},
+		#{hour_len,jdbcType=NUMERIC},
+		#{course_count,jdbcType=NUMERIC},
+		#{status,jdbcType=NUMERIC},
+		#{product_type,jdbcType=NUMERIC},
+		2,
+		#{verify_no,jdbcType=VARCHAR},
+		#{verify_time,jdbcType=DATE},
+		#{verify_user,jdbcType=NUMERIC},
+		#{validaty_date,jdbcType=VARCHAR},
+		#{invalidity_date,jdbcType=VARCHAR},
+		#{start_date,jdbcType=VARCHAR},
+		#{end_date,jdbcType=VARCHAR},
+		#{start_time,jdbcType=VARCHAR},
+		#{end_time,jdbcType=VARCHAR},
+		#{course_surplus,jdbcType=NUMERIC},
+		#{people_count,jdbcType=NUMERIC},
+		#{actual_people_count,jdbcType=NUMERIC},
+		#{attend_class_period,jdbcType=VARCHAR},
+		#{course_type,jdbcType=NUMERIC},
+		#{description,jdbcType=VARCHAR},
+		#{product_line,jdbcType=NUMERIC},
+		#{target,jdbcType=NUMERIC},
+		2,
+		#{create_user,jdbcType=NUMERIC},
+		sysdate,
+		#{update_user,jdbcType=NUMERIC},
+		sysdate,
+		0,
+		#{is_textbooks,jdbcType=NUMERIC},
+		#{performance_belong_type,jdbcType=NUMERIC},
+		#{is_all,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<select id="selectOneById" parameterType="com.edu.erp.model.TCourse"
+			resultType="com.edu.erp.model.TCourse">
+		select * from t_course where id = #{id,jdbcType=NUMERIC}
+	</select>
+
+	<!-- 查询可能存在当期冲突的课程 -->
+	<select id="selectConfictCourse" parameterType="com.edu.erp.model.TCourse"
+			resultType="com.edu.erp.model.TCourse">
+		select distinct tc.*
+		from t_order_course toc
+		left join
+		t_course tc on toc.COURSE_ID = tc.ID
+		left join t_order too on too.ID =
+		toc.ORDER_ID
+		where
+		(
+		(
+		tc.start_time &gt;= #{start_time,jdbcType=VARCHAR}
+		and tc.start_time &lt;= #{end_time,jdbcType=VARCHAR}
+		and tc.end_time
+		&gt;= #{end_time,jdbcType=VARCHAR}
+		)
+		or
+		(
+		tc.start_time &lt;=
+		#{start_time,jdbcType=VARCHAR}
+		and tc.end_time &lt;=
+		#{end_time,jdbcType=VARCHAR}
+		and tc.end_time &gt;=
+		#{start_time,jdbcType=VARCHAR}
+		)
+		or
+		(
+		tc.start_time &lt;=
+		#{start_time,jdbcType=VARCHAR}
+		and tc.end_time &gt;=
+		#{start_time,jdbcType=VARCHAR}
+		and tc.end_time &lt;=
+		#{end_time,jdbcType=VARCHAR}
+		)
+		or
+		(
+		tc.start_time &gt;=
+		#{start_time,jdbcType=VARCHAR}
+		and tc.end_time &lt;=
+		#{end_time,jdbcType=VARCHAR}
+		)
+		)
+		and too.STUDENT_ID =
+		#{studentId,jdbcType=NUMERIC}
+		and toc.course_surplus_count &gt; 0
+		and
+		too.order_status = 1
+	</select>
+
+	<update id="updateTCourse" parameterType="com.edu.erp.model.TCourse">
+		update t_course t
+		set
+		<if test="course_no != null and course_no != ''">
+			t.course_no = #{course_no,jdbcType=VARCHAR},
+		</if>
+		<if test="course_name != null and course_name != ''">
+			t.course_name = #{course_name,jdbcType=VARCHAR},
+		</if>
+		<if test="branch_id != null and branch_id != ''">
+			t.branch_id = #{branch_id,jdbcType=NUMERIC},
+		</if>
+		<if test="season_id != null and season_id != ''">
+			t.season_id = #{season_id,jdbcType=NUMERIC},
+		</if>
+		<if test="grade_id != null and grade_id != ''">
+			t.grade_id = #{grade_id,jdbcType=NUMERIC},
+		</if>
+		<if test="subject_id != null and subject_id != ''">
+			t.subject_id = #{subject_id,jdbcType=NUMERIC},
+		</if>
+		<if test="teacher_id != null and teacher_id != ''">
+			t.teacher_id = #{teacher_id,jdbcType=NUMERIC},
+		</if>
+			t.assteacher_id = #{assteacher_id,jdbcType=NUMERIC},
+		<if test="unit_price != null and unit_price != ''">
+			t.unit_price = #{unit_price,jdbcType=NUMERIC},
+		</if>
+		<if test="sum_price != null and sum_price != ''">
+			t.sum_price = #{sum_price,jdbcType=NUMERIC},
+		</if>
+		<if test="hour_len != null and hour_len != ''">
+			t.hour_len = #{hour_len,jdbcType=NUMERIC},
+		</if>
+		<if test="course_count != null and course_count != ''">
+			t.course_count = #{course_count,jdbcType=NUMERIC},
+		</if>
+		<if test="product_type != null and product_type != ''">
+			t.product_type = #{product_type,jdbcType=NUMERIC},
+		</if>
+		<if test="start_date != null and start_date != ''">
+			t.start_date = #{start_date,jdbcType=VARCHAR},
+		</if>
+		<if test="end_date != null and end_date != ''">
+			t.end_date = #{end_date,jdbcType=VARCHAR},
+		</if>
+		<if test="start_time != null and start_time != ''">
+			t.start_time = #{start_time,jdbcType=VARCHAR},
+		</if>
+		<if test="end_time != null and end_time != ''">
+			t.end_time = #{end_time,jdbcType=VARCHAR},
+		</if>
+		<if test="course_surplus != null and course_surplus != ''">
+			t.course_surplus = #{course_surplus,jdbcType=NUMERIC},
+		</if>
+		<if test="people_count != null and people_count != ''">
+			t.people_count = #{people_count,jdbcType=NUMERIC},
+		</if>
+		<if test="actual_people_count != null and actual_people_count != ''">
+			t.actual_people_count = #{actual_people_count,jdbcType=NUMERIC},
+		</if>
+		<if test="attend_class_period != null and attend_class_period != ''">
+			t.attend_class_period = #{attend_class_period,jdbcType=VARCHAR},
+		</if>
+		<if test="course_type != null and course_type != ''">
+			t.course_type = #{course_type,jdbcType=NUMERIC},
+		</if>
+		<if test="description != null and description != ''">
+			t.description = #{description,jdbcType=VARCHAR},
+		</if>
+		<if test="product_line != null and product_line != ''">
+			t.product_line = #{product_line,jdbcType=NUMERIC},
+		</if>
+		<if test="target != null and target != ''">
+			t.target = #{target,jdbcType=NUMERIC},
+		</if>
+		<if test="update_user != null and update_user != ''">
+			t.update_user = #{update_user,jdbcType=NUMERIC},
+		</if>
+		<if test="performance_belong_type != null and performance_belong_type != ''">
+			t.performance_belong_type = #{performance_belong_type,jdbcType=NUMERIC},
+		</if>
+		<if test="is_textbooks != null">
+			t.is_textbooks = #{is_textbooks,jdbcType=NUMERIC},
+		</if>
+		t.update_time = sysdate
+		where t.id = #{id}
+	</update>
+
+
+	<update id="changeStatus" parameterType="java.util.Map">
+
+
+		UPDATE t_course t
+		SET
+		t.status = #{status,jdbcType=NUMERIC} ,update_time=
+		sysdate,update_user= #{updateUser,jdbcType=NUMERIC}
+		WHERE t.id IN
+		(${ids})
+	</update>
+
+	<update id="chgIsApprove" parameterType="java.util.Map">
+
+		UPDATE t_course t
+		SET
+		t.is_approve = ${is_approve}
+		WHERE t.id IN (${ids})
+	</update>
+
+	<update id="changeActualPeople" parameterType="java.util.Map">
+		update t_course
+		set ACTUAL_PEOPLE_COUNT = (
+		SELECT
+		COUNT(*) AS COUNT_NUM
+		FROM
+		(
+		SELECT
+		DISTINCT TOD.STUDENT_ID ,
+		TOC.COURSE_ID
+		FROM
+		T_ORDER TOD INNER JOIN
+		T_ORDER_COURSE TOC
+		ON TOD.ID = TOC.ORDER_ID
+		WHERE
+		TOD.ORDER_STATUS = 1
+		AND TOC.COURSE_ID = #{course_id}
+		) TB
+		)
+		where id = #{course_id}
+	</update>
+
+	<update id="changePrice" parameterType="java.util.Map">
+
+		update t_course
+		set
+		unit_price = #{unit_price, jdbcType=NUMERIC},
+		sum_price =
+		#{total_price, jdbcType=NUMERIC},
+		update_time = sysdate
+		where id =
+		#{course_id}
+	</update>
+
+	<select id="queryTCourseByTUion" parameterType="com.edu.erp.model.TCourse"
+			resultType="com.edu.erp.model.TCourse">
+		SELECT
+		TC.* ,
+		TOOI.ORG_NAME AS SCHOOL_NAME ,
+		TOOI2.ORG_NAME AS CITY_NAME
+		,
+		TTI.TEACHER_NAME ,
+		TDG.GRADE_NAME ,
+		TDD.NAME AS SUBJECT_NAME ,
+		TU.TOTAL_PRICE AS TOTAL_PRICE_PACK ,
+		TUCT.IS_SEND,
+		TU.UNION_TYPE as
+		is_course_pack,
+		TU.UNION_NAME as course_pack_name,
+		TU.ID as
+		course_pack_type
+		FROM
+		T_UNION TU LEFT JOIN T_UNION_COURSE_TYPE TUCT
+		ON
+		TUCT.UNION_ID = TU.ID LEFT JOIN T_COURSE TC
+		ON TC.COURSE_TYPE =
+		TUCT.COURSE_TYPE_ID LEFT JOIN TAB_ORGANIZATION_INFO TOOI
+		ON TOOI.ID =
+		TC.BRANCH_ID
+		AND TOOI.ORG_TYPE = 4 LEFT JOIN TAB_ORGANIZATION_INFO
+		TOOI2
+		ON TOOI2.ID = TC.CITY_ID
+		AND TOOI.ORG_TYPE = 1 LEFT JOIN
+		TAB_TEACHER_INFO TTI
+		ON TTI.ID = TC.TEACHER_ID LEFT JOIN TAB_DATA_GRADE
+		TDG
+		ON TDG.ID = TC.GRADE_ID LEFT JOIN TP_SUBJECT TDD
+		ON TDD.ID =
+		TC.SUBJECT_ID
+		WHERE TU.id = #{unionId,jdbcType=NUMERIC}
+		AND TC.id is not
+		null
+		and TU.STATUS = 1
+		and tc.STATUS = 1
+		and tc.VERIFY_STATUS = 2
+		and
+		tc.people_count is not null
+		and tc.people_count > 0
+		<if test="branch_id != null">
+			and TU.BRANCH_ID = #{branch_id,jdbcType=NUMERIC}
+		</if>
+		<if test="grade_id != null">
+			and TU.grade_id = #{grade_id,jdbcType=NUMERIC}
+		</if>
+		and (tc.start_date > #{dateString,jdbcType=VARCHAR} or tc.end_date >
+		#{dateString,jdbcType=VARCHAR})
+		<if test="grade_id != null">
+			and tc.grade_id = #{grade_id,jdbcType=NUMERIC}
+		</if>
+		<if test="season_id != null">
+			and tc.season_id = #{season_id,jdbcType=NUMERIC}
+		</if>
+		<if test="subject_id != null">
+			and tc.subject_id = #{subject_id,jdbcType=NUMERIC}
+		</if>
+		<if test="city_id != null">
+			and tc.city_id = #{city_id,jdbcType=NUMERIC}
+		</if>
+		<if test="branch_id != null">
+			and tc.branch_id = #{branch_id,jdbcType=NUMERIC}
+		</if>
+		<if test="selectedCourses != null">
+			and tc.id not in
+			<foreach item="item" index="index" collection="selectedCourses"
+					 open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		and tc.id not in (
+		select toc.COURSE_ID from t_order too
+		left join
+		t_order_course toc on toc.ORDER_ID = too.ID
+		where too.STUDENT_ID
+		=#{studentId,jdbcType=NUMERIC}
+		and toc.course_surplus_count>0
+		and
+		too.order_status = 1
+		)
+		and tc.id in (
+		SELECT
+		distinct COURSE_ID
+		FROM
+		(
+		SELECT
+		temp_r.COURSE_TYPE_ID ,
+		temp_r.COURSE_ID ,
+		temp_r.ATTEND_RATE ,
+		row_number() over(
+		partition BY temp_r.TYPE_ID ,
+		temp_r.COURSE_TYPE_ID
+		ORDER BY
+		temp_r.ATTEND_RATE
+		) rn,
+		rmax_tb.rmax,
+		temp_r.UNION_TYPE
+		FROM
+		(
+		SELECT
+		TU.ID ,
+		TUCT.ID AS TYPE_ID ,
+		TC.ID AS COURSE_ID ,
+		TUCT.COURSE_TYPE_ID ,
+		CASE
+		WHEN ACTUAL_PEOPLE_COUNT IS NULL or
+		PEOPLE_COUNT IS NULL or PEOPLE_COUNT = 0
+		THEN 0
+		ELSE ACTUAL_PEOPLE_COUNT
+		/ PEOPLE_COUNT
+		END ATTEND_RATE,
+		TU.UNION_TYPE
+		FROM
+		T_UNION TU LEFT JOIN
+		T_UNION_COURSE_TYPE TUCT
+		ON TUCT.UNION_ID = TU.ID INNER JOIN T_COURSE
+		TC
+		ON TC.COURSE_TYPE = TUCT.COURSE_TYPE_ID
+		WHERE
+		TU.id =
+		#{unionId,jdbcType=NUMERIC}
+		<if test="selectedCourses != null">
+			and tc.id not in
+			<foreach item="item" index="index" collection="selectedCourses"
+					 open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		and (tc.start_date > #{dateString,jdbcType=VARCHAR} or tc.end_date >
+		#{dateString,jdbcType=VARCHAR})
+		) temp_r
+		left join (
+		SELECT
+		TU.ID ,
+		TUCT.COURSE_TYPE_ID ,
+		count(1) as rmax
+		FROM
+		T_UNION TU LEFT JOIN
+		T_UNION_COURSE_TYPE TUCT
+		ON TUCT.UNION_ID = TU.ID
+		WHERE
+		TU.id =
+		#{unionId,jdbcType=NUMERIC}
+		group by TU.ID,TUCT.COURSE_TYPE_ID
+		) rmax_tb
+		on temp_r.ID = rmax_tb.ID
+		and temp_r.COURSE_TYPE_ID =
+		rmax_tb.COURSE_TYPE_ID
+		)
+		WHERE
+		(rn &lt;= rmax and rmax &lt; UNION_TYPE)
+		or (rmax = 1 and rn &lt;= UNION_TYPE)
+		)
+		order by
+		tc.actual_people_count/tc.people_count desc
+	</select>
+
+	<select id="queryTCourseByTearcher" parameterType="com.edu.erp.model.TCourse"
+			resultType="com.edu.erp.model.TCourse">
+		SELECT TC.*,
+		TOOI.ORG_NAME AS SCHOOL_NAME,
+		TOOI2.ORG_NAME AS CITY_NAME,
+		TTI.TEACHER_NAME,
+		TDG.GRADE_NAME,
+		<!-- TDD.DATA_NAME AS SUBJECT_NAME -->
+		TDD.NAME AS SUBJECT_NAME
+		FROM T_COURSE TC
+		LEFT JOIN
+		TAB_ORGANIZATION_INFO TOOI
+		ON TOOI.ID = TC.BRANCH_ID
+		AND TOOI.ORG_TYPE =
+		4
+		LEFT JOIN TAB_ORGANIZATION_INFO TOOI2
+		ON TOOI2.ID = TC.CITY_ID
+		AND
+		TOOI.ORG_TYPE = 1
+		LEFT JOIN TAB_TEACHER_INFO TTI
+		ON TTI.ID =
+		TC.TEACHER_ID
+		LEFT JOIN TAB_DATA_GRADE TDG
+		ON TDG.ID = TC.GRADE_ID
+		<!-- LEFT JOIN TAB_DATA_DICTIONARY TDD -->
+		LEFT JOIN TP_SUBJECT TDD
+		ON TDD.ID = TC.SUBJECT_ID
+		<!-- AND TDD.DATA_TYPE = 'TYPE_KM' -->
+
+		inner join tab_student_info tsi on tsi.id =
+		#{studentId,jdbcType=NUMERIC} and TC.GRADE_ID = tsi.GRADE_ID
+		<!-- and tsi.GRADE_ID = TC.GRADE_ID -->
+		WHERE TC.TEACHER_ID = #{teacher_id,jdbcType=NUMERIC}
+		and
+		(#{start_date,jdbcType=NUMERIC} &lt;= TC.start_date or
+		#{start_date,jdbcType=NUMERIC} &lt;= TC.end_date)
+		ORDER BY
+		ACTUAL_PEOPLE_COUNT DESC
+
+	</select>
+
+	<select id="queryCourseByBusiness" parameterType="java.util.Map"
+			resultType="com.edu.erp.model.TCourse">
+		select tc.*,
+		grade.grade_name,
+		tti.teacher_name as teacher_name,
+		tti.encoding as teacher_code,
+		tti.photo as teacherPhoto,
+		course_count_num.count_num as student_num,
+		tdd.name as subject_name
+		<if test="business_type == 3 and id != null and id != ''">
+			,(select to_char(max(nvl(tocc.end_date,sysdate)),
+			'yyyy-mm-dd') yk_lastEndDate
+			from tab_order_info toi
+			left join
+			tab_order_info_detail toid
+			on toid.order_id = toi.id
+			left join
+			t_course_combo_wfd tccw
+			on toid.extend_column2 = tccw.id
+			left join
+			t_order_course toc
+			on toc.order_id = toi.id
+			left join
+			t_order_course_combo tocc
+			on tocc.order_course_id = toc.id
+			where
+			toi.student_id = #{studentId,jdbcType=NUMERIC}
+			and toi.business_type =
+			'3'
+			and toi.valid_status = 1
+			and toi.check_status != 4
+			and
+			tccw.combo_type = 1) yk_lastEndDate
+		</if>
+		from t_course tc
+		left join tab_teacher_info tti
+		on tti.id =
+		tc.teacher_id
+		left join tab_data_grade grade
+		on tc.grade_id = grade.id
+		<!-- left join tab_data_dictionary tdd -->
+		left join tp_subject tdd
+		on tdd.id = tc.subject_id
+		left join ( select
+		course_id, count(student_id) as count_num
+		from (select distinct
+		toc.course_id, tod.student_id
+		from t_order_course toc
+		left join t_order
+		tod
+		on toc.order_id = tod.id
+		where tod.order_status = 1
+		and tod.bu_id =
+		#{bu_id})
+		group by course_id) course_count_num
+		on
+		course_count_num.course_id = tc.id
+		<!-- and tdd.data_type = 'TYPE_KM' -->
+		where tc.business_type = #{business_type,jdbcType=NUMERIC}
+		<if test="status !=null and status > 0">
+			and tc.status = #{status,jdbcType=NUMERIC}
+		</if>
+		<if test="status ==null ">
+			and tc.status = 1
+		</if>
+		and tc.verify_status = 2
+		and tc.branch_id in (select id from
+		tab_organization_info where parent_id = #{bu_id})
+		<if test="grade_id != null and grade_id > 0">
+			and tc.grade_id = #{grade_id,jdbcType=NUMERIC}
+		</if>
+		<if test="course_id != null and course_id > 0">
+			and tc.id = #{course_id,jdbcType=NUMERIC}
+		</if>
+		<if test="season_id != null and season_id > 0">
+			and tc.season_id = #{season_id,jdbcType=NUMERIC}
+		</if>
+		<if test="subject_id != null and subject_id > 0">
+			and tc.subject_id = #{subject_id,jdbcType=NUMERIC}
+		</if>
+		<if test="city_id != null">
+			and tc.city_id = #{city_id,jdbcType=NUMERIC}
+		</if>
+		<if test="searchInfo != null">
+			and tc.course_name like '%'||#{searchInfo}||'%'
+		</if>
+		<if test="student_num != null and student_num == 'true'">
+			and course_count_num.count_num > 0
+		</if>
+		<if test="branch_id != null and branch_id > 0">
+			and tc.branch_id = #{branch_id,jdbcType=NUMERIC}
+		</if>
+		<if test="temporaryOrderId != null">
+			and tc.id in (select course_id from tab_order_info_detail
+			where order_id = #{temporaryOrderId,jdbcType=NUMERIC})
+		</if>
+		<if test="is_course_pack > 1">
+			and tc.id in (
+			SELECT
+			tc.ID
+			FROM
+			T_COURSE tc INNER JOIN T_COURSE tc2
+			ON
+			tc.COURSE_TYPE = tc2.COURSE_TYPE
+			WHERE
+			tc2.id = #{id,jdbcType=NUMERIC}
+			<if test="branch_id != null">
+				and tc.BRANCH_ID = #{branch_id,jdbcType=NUMERIC}
+			</if>
+			<if test="grade_id != null">
+				and tc.GRADE_ID = #{grade_id,jdbcType=NUMERIC}
+			</if>
+			)
+		</if>
+		<if test="business_type == 3 and id != null and id != ''">
+			and tc.id = #{id}
+		</if>
+
+		order by
+		nvl(tc.actual_people_count,0)/decode(nvl(tc.people_count,1),0,1,tc.people_count)
+		desc
+	</select>
+
+	<select id="queryCourseById" parameterType="com.edu.erp.model.TCourse"
+			resultType="com.edu.erp.model.TCourse">
+		select tc.*,
+		grade.grade_name,
+		tti.teacher_name as teacher_name,
+		tti.photo as teacherPhoto,
+		tdd.name as subject_name,
+		tts.season
+		<if test="business_type == 3 and id != null and id != ''">
+			,(select to_char(max(nvl(tocc.end_date,sysdate)),
+			'yyyy-mm-dd') yk_lastEndDate
+			from tab_order_info toi
+			left join
+			tab_order_info_detail toid
+			on toid.order_id = toi.id
+			left join
+			t_course_combo_wfd tccw
+			on toid.extend_column2 = tccw.id
+			left join
+			t_order_course toc
+			on toc.order_id = toi.id
+			left join
+			t_order_course_combo tocc
+			on tocc.order_course_id = toc.id
+			where
+			toi.student_id = #{studentId,jdbcType=NUMERIC}
+			and toi.business_type =
+			'3'
+			and toi.valid_status = 1
+			and toi.check_status != 4
+			and
+			tccw.combo_type = 1) yk_lastEndDate
+		</if>
+		from t_course tc
+		left join tab_teacher_info tti
+		on tti.id = tc.teacher_id
+		left join tab_data_grade grade
+		on tc.grade_id = grade.id
+		left join tp_subject tdd
+		on tdd.id = tc.subject_id
+		left join tab_time_season tts
+		on tts.id = tc.season_id
+		where tc.id = #{id,jdbcType=NUMERIC}
+		order by nvl(tc.actual_people_count,0)/decode(nvl(tc.people_count,1),0,1,tc.people_count) desc
+	</select>
+
+	<insert id="insertOrgRef" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+				 close="; end;" separator=";">
+			insert into t_course_branch_ref
+			(
+			id,
+			course_id,
+			branch_id
+			)
+			values
+			(
+			seq_t_course_branch_ref.nextval,
+			#{item.major_id},
+			#{item.foreign_id}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="removeOrgRef" parameterType="java.lang.String">
+
+		delete from
+		t_course_branch_ref
+		where course_id in (${_parameter})
+	</delete>
+
+	<!-- 排课 -->
+	<select id="schedulingCourse" statementType="CALLABLE"
+			parameterType="java.util.HashMap">
+	<![CDATA[
+		{call pkg_course_main.p_course_plan(#{course_id,mode=IN,jdbcType=NUMERIC},
+											#{error_code,mode=OUT,jdbcType=NUMERIC},
+											#{error_desc,mode=OUT,jdbcType=VARCHAR})}
+	]]>
+	</select>
+
+	<!-- 删除排课 -->
+	<select id="deleteSchedulingCourse" statementType="CALLABLE"
+			parameterType="java.util.HashMap">
+	<![CDATA[
+		{call pkg_course_main.p_delete_course_plan(#{course_id,mode=IN,jdbcType=NUMERIC},
+												   #{error_code,mode=OUT,jdbcType=NUMERIC},
+												   #{error_desc,mode=OUT,jdbcType=VARCHAR})}
+	]]>
+	</select>
+
+	<select id="queryTCourseByStudentYDY" parameterType="com.edu.erp.model.TCourse"
+			resultType="com.edu.erp.model.TCourse">
+		select tc.*,toi.org_name as branch_name
+		from t_course tc
+
+		left join
+		tab_student_info tsi
+		on tsi.GRADE_ID = tc.GRADE_ID
+
+		left join
+		tab_organization_info toi on toi.id = tc.branch_id
+
+		where
+		tc.BUSINESS_TYPE = 2
+		and tsi.id= #{studentId,jdbcType=NUMERIC}
+
+		and
+		tc.status = 1
+		and tc.verify_status = 2
+
+		and tc.unit_price =
+		#{unit_price,jdbcType=NUMERIC}
+		and tc.branch_id in
+		<foreach collection="branch_ids" item="item" index="index"
+				 open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+
+	</select>
+
+	<!-- 查询过期课程 -->
+	<select id="queryOutCourse" parameterType="Map" resultType="java.lang.Long">
+		select course.id
+		from t_course course
+		join tab_time_season season on
+		course.season_id = season.id and season.status = 1
+		where
+		course.start_date &lt; #{cur_date}
+		and course.end_date &lt; #{cur_date}
+		and course.status = 1
+		and course.is_textbooks != 1
+	</select>
+
+	<select id="getAsyn" parameterType="map" resultType="map">
+		select
+		a.*
+		from t_course a
+		where a.status != 0
+
+
+		and nvl(update_time,create_time)
+		>=to_date(#{last_update_time,jdbcType=VARCHAR},'yyyy-mm-dd
+		HH24:mi:ss')
+	</select>
+
+	<select id="getDoubleCourseId" parameterType="Long" resultType="Long">
+		select c.more_teacher_courseid from t_course c where c.id =
+		#{courseId,jdbcType=NUMERIC}
+	</select>
+
+	<select id="queryCourseTimesAttendance" parameterType="long"
+			resultType="map">
+		select t.id "schedulingId",
+		c.course_id "courseId",
+		c.grade_name "gradeName",
+		c.subject_name "subjectName",
+		c.teacher_name
+		"teacherName",
+		c.start_time || ' - ' || c.end_time "timeCalender",
+		c.product_line_name "classTypeName",
+		o.cnt "attendancePlan",
+		nvl(att.actual_cnt, 0) "actualAttendace",
+		nvl(att.hangup_cnt, 0) "hangUp",
+		(select count(1)
+		from t_course_listening l
+		where l.course_id =
+		t.course_id
+		and l.course_times = t.course_times) "listeningTraining",
+		case
+		when o.cnt = 0 then
+		'--'
+		when o.cnt > 0 then
+		round(nvl(att.actual_cnt, 0) / o.cnt, 3) * 100 || '%'
+		end
+		"attendanceRate",
+		to_char(t.update_time, 'yyyy-mm-dd') "updateDate",
+		to_char(t.update_time, 'hh:mi:ss') "updateTime",
+		t.COURSE_TIMES as
+		"courseTimes",
+		c.course_name "courseName",
+		to_char(to_date(t.COURSE_DATE, 'yyyy-mm-dd'), 'yyyy-mm-dd')
+		"courseDate",
+		locked_table.locked_count as "lockedCount",
+		(case when (nvl(att.actual_cnt, 0) + nvl(att.hangup_cnt, 0)) &lt; nvl(o.cnt, 0) and to_date(t.COURSE_DATE, 'yyyy-mm-dd') &lt; trunc(sysdate) then 'N' else 'Y' end) as "allAttended",
+		tcrl.video_no as "videoNo"
+		from (select
+		t.id course_id,
+		t.course_name course_name,
+		t.course_no course_encoding,
+		t.season_id season_id,
+		tts.end_date season_end_date,
+		tts.course_season_name season_name,
+		t.city_id city_id,
+		t.product_line,
+		tpl.name product_line_name,
+		t.branch_id,
+		tt.teacher_name,
+		t.grade_id,
+		g.grade_name,
+		t.subject_id,
+		sub.name subject_name,
+		t.start_date,
+		t.end_date,
+		t.start_time,
+		t.end_time,
+		t.business_type,
+		t.status
+		from
+		t_course t
+		left join tab_time_season tts
+		on t.season_id = tts.id
+		left
+		join tp_product_line tpl
+		on t.product_line = tpl.id
+		left join
+		tab_teacher_info tt
+		on t.teacher_id = tt.id
+		left join tab_data_grade g
+		on t.grade_id = g.id
+		left join tp_subject sub
+		on t.subject_id = sub.id)
+		c
+		left join t_course_scheduling t
+		on t.course_id = c.course_id
+		left join t_course_room_rel tcrl
+		on tcrl.course_id = t.course_id
+		and tcrl.seq = t.course_times
+		left join
+		(select toc.course_id course_id,
+		oct.times course_times,
+		count(1) cnt
+		from t_order_course toc
+		left join t_order torder
+		on toc.order_id =
+		torder.id
+		left join t_order_course_times oct
+		on toc.id = oct.ocid
+		where
+		oct.is_valid = 1
+		and (toc.status != 2 or toc.status is null)
+		and
+		torder.order_status = 1
+		and toc.course_id =
+		#{courseId,jdbcType=NUMERIC}
+		group by toc.course_id, oct.times) o
+		on
+		t.course_id = o.course_id
+		and t.course_times = o.course_times
+		left join
+		(select a.scheduling_id,
+		sum(decode(a.attend_type, 12, 1, 0))
+		actual_cnt,
+		sum(decode(a.attend_type, 11, 1, 0)) hangup_cnt
+		from
+		t_attendance a
+		left join T_COURSE_SCHEDULING tcs
+		on tcs.ID =
+		a.scheduling_id
+		left join T_ORDER_COURSE_TIMES toct
+		on toct.TIMES =
+		tcs.COURSE_TIMES
+		and a.ORDER_COURSE_ID = toct.OCID
+		where toct.IS_VALID =
+		1
+		and tcs.course_id = #{courseId,jdbcType=NUMERIC}
+		group by
+		a.scheduling_id) att
+		on t.id = att.scheduling_id
+		left join (select
+		toc.course_id,
+		toct.times,
+		sum(case
+		when ta.attend_type is null or
+		ta.attend_type = 10 then
+		1
+		else
+		0
+		end) locked_count
+		from t_order tod
+		left
+		join t_order_course toc
+		on toc.order_id = tod.id
+		left join
+		t_order_course_times toct
+		on toct.ocid = toc.id
+		left join T_ORDER_LOCK
+		tol
+		on tol.order_id = tod.id
+		left join T_COURSE_SCHEDULING tcs
+		on
+		tcs.course_id = toc.course_id
+		and tcs.course_times = toct.times
+		left
+		join t_attendance ta
+		on ta.order_course_id = toc.id
+		and ta.scheduling_id
+		= tcs.id
+		where tod.order_status = 1
+		and tol.status = 1
+		and toct.is_valid
+		= 1
+		group by toc.course_id, toct.times) locked_table
+		on
+		locked_table.course_id = c.course_id
+		and t.course_times =
+		locked_table.times
+		where c.course_id = #{courseId,jdbcType=NUMERIC}
+		order by t.COURSE_TIMES
+	</select>
+
+	<!-- 查询课程关联的学校 -->
+	<select id="selectBranchByCourseId" parameterType="map"
+			resultType="Map">
+		select cbr.course_id as course_id,
+		cbr.branch_id as id,
+		toi.org_name as org_name
+		from t_course_branch_ref cbr
+		left join
+		tab_organization_info toi
+		on toi.id =
+		cbr.branch_id where
+		cbr.course_id in (${courseIds})
+	</select>
+
+	<update id="updateYdyCourse" parameterType="com.edu.erp.model.TCourse">
+		update t_course
+		set
+		<if test="course_no !=null and course_no != ''">course_no = #{course_no},</if>
+		<if test="course_name !=null and course_name != ''">course_name = #{course_name},</if>
+		<if test="grade_id !=null and grade_id != ''">grade_id = #{grade_id},</if>
+		<if test="unit_price !=null and unit_price != ''">unit_price = #{unit_price},</if>
+		<if test="start_date !=null and start_date != ''">start_date = #{start_date},</if>
+		<if test="end_date !=null and end_date != ''">end_date = #{end_date},</if>
+		<if test="hour_len !=null and hour_len != ''">hour_len = #{hour_len},</if>
+		<if test="status !=null and status != ''">status = #{status},</if>
+		<if test="description !=null and description != ''">description = #{description},</if>
+		<if test="product_type !=null and product_type != ''">product_type = #{product_type},</if>
+		<if test="is_all !=null  ">is_all = #{is_all},</if>
+		update_user = #{update_user},
+		update_time = #{update_time}
+		where id=#{id}
+	</update>
+
+	<select id="queryListForExcel" parameterType="map" resultType="map">
+		select nvl(tc.update_time,tc.create_time) s_update_time,tc.course_no,
+		tc.course_name,
+		tc.create_time ,
+		oi1.org_name branch_name,
+		ti1.teacher_name ,
+		ti2.teacher_name assteacher_name,
+		tc.start_date ,
+		tc.end_date ,
+		tc.start_time ,
+		tc.end_time ,
+		tc.attend_class_period ,
+		tc.people_count ,
+		decode(mc.id,null,'否','是') make_up_class
+		from t_course tc
+		left join tab_organization_info oi1 on oi1.id = tc.branch_id and oi1.status = 1
+		left join tab_teacher_info ti1 on ti1.id = tc.teacher_id and ti1.status = 1
+		left join tab_teacher_info ti2 on ti2.id = tc.assteacher_id and ti2.status = 1
+		left join T_MORE_TEACHER_COURSE mc on mc.id=tc.more_teacher_courseid and mc.status = 1
+		where
+		(tc.status != 0 or tc.status is null)
+		AND tc.city_id = #{city_id}
+		<if test="course_name != null and course_name != ''">
+			<!-- 课程商品名称 -->
+			and (tc.course_name like '%${course_name}%' or tc.course_no like
+			'%${course_name}%' or tc.id like '%${course_name}%')
+		</if>
+		<if test="search_info!= null and search_info != ''">
+			<!-- 课程商品名称 -->
+			and (tc.course_name like '%${search_info}%' or tc.course_no like
+			'%${search_info}%' or tc.id like '%${search_info}%')
+		</if>
+		<if
+				test="business_type != null and business_type != -1 and business_type != ''">
+			<!-- 业务模式类型 -->
+			AND tc.business_type = #{business_type}
+		</if>
+		<if test="course_id != null and course_id > 0">
+			and tc.id = #{course_id,jdbcType=NUMERIC}
+		</if>
+		<if test="branch_id != null and branch_id != -1 and branch_id != ''">
+			<!-- 根据校区查询 课程联报使用 -->
+			AND tc.branch_id = #{branch_id}
+		</if>
+		<if test="per_branch_ids != null and per_branch_ids != ''">
+			AND tc.branch_id in (${per_branch_ids})
+		</if>
+		<if test="grade_id != null and grade_id != -1 and grade_id != ''">
+			<!-- 根据年级查询 课程联报使用 -->
+			AND tc.grade_id = #{grade_id}
+		</if>
+		<if test="status != null and status != '' and status > 0">
+			<!-- 选择课程商品的时候 过滤掉未上架的课程商品 联报和代销中使用 -->
+			AND tc.status = #{status}
+		</if>
+		<if test="status == -2">
+			<!-- 不为上架 下架的商品 -->
+			AND tc.status is null
+		</if>
+		<if test="season_id != null and season_id != '' and season_id != -1 ">
+			and tc.season_id = #{season_id}
+		</if>
+		<if test="course_type != null and course_type != '' and course_type != -1 ">
+			and tc.course_type = #{course_type}
+		</if>
+		<if test="teacher_id != null and teacher_id != ''">
+			and (ti1.id like '%${teacher_id}%' or ti1.encoding like
+			'%${teacher_id}%' or
+			ti1.teacher_name like '%${teacher_id}%')
+		</if>
+		<if test="assteacher_id != null and assteacher_id != ''">
+			and (ti2.id like '%${assteacher_id}%' or ti2.encoding like
+			'%${assteacher_id}%' or
+			ti2.teacher_name like '%${assteacher_id}%')
+		</if>
+		<if test="subject_id != null and subject_id != '' and subject_id != -1 ">
+			and tc.subject_id = #{subject_id}
+		</if>
+		<if
+				test="product_type != null and product_type != '' and product_type != -1 ">
+			and tc.product_type = #{product_type}
+		</if>
+		<if test="id_no_name != null and id_no_name != ''">
+			<!-- 课程商品名称 -->
+			and (tc.course_name like '%${id_no_name}%' or tc.course_no like
+			'%${id_no_name}%' or tc.id like '%${id_no_name}%')
+		</if>
+		<if test="unit_price != null and unit_price != '' and unit_price > 0 ">
+			and tc.unit_price = #{unit_price}
+		</if>
+		order by s_update_time desc, tc.id DESC
+	</select>
+
+	<select id="queryCourseSchedulingById" parameterType="long" resultType="com.edu.erp.model.CourseScheduling">
+		SELECT * FROM T_COURSE_SCHEDULING TCS WHERE TCS.ID = #{id}
+	</select>
+
+	<select id="queryByCourseId" resultType="com.edu.erp.model.TCourse">
+		<if test="isMtCourse == 'Y'.toString()">
+			select tmtc.id,
+			tc.id                     as course_id,
+			null                     as course_no,
+			tmtc.course_name,
+			tc.business_type,
+			tc.city_id,
+			tc.product_line,
+			tc.target,
+			tmtc.branch_id,
+			tc.season_id,
+			tc.grade_id,
+			tc.subject_id,
+			tmtc.teacher_id,
+			tmtc.teacher_id           as assteacher_id,
+			tmtc.unit_price,
+			(tc.unit_price * tc.course_count) as sum_price,
+			tmtc.course_count,
+			tmtc.status,
+			null                     as product_type,
+			null                     as verify_status,
+			null                     as verify_no,
+			null                     as verify_time,
+			null                     as verify_user,
+			to_char(tmtc.create_time, 'yyyy-MM-dd')   as validaty_date,
+			tmtc.end_date            as invalidity_date,
+			tmtc.start_date,
+			tmtc.end_date,
+			tmtc.start_time,
+			tmtc.end_time,
+			tmtc.hour_len,
+			null                     as course_surplus,
+			tc.people_count,
+			null                     as actual_people_count,
+			tmtc.attend_class_period,
+			decode(tc.business_type, 2, 2, decode(tmtc.type, 4, 1, 0)) as course_type,
+			tmtc.description,
+			null                     as proceed_status,
+			tmtc.create_user,
+			tmtc.create_time,
+			tmtc.update_user,
+			tmtc.update_time,
+			tmtc.id                     as more_teacher_courseid,
+			grade.grade_name,
+			tti.teacher_name         as teacher_name,
+			tti.photo                as teacherPhoto,
+			tdd.name                 as subject_name,
+			toi.org,
+			tts.season,
+			nvl(tcs.id, tcs1.id) as next_course_time_id,
+			-1 as next_class_room_id,
+			(select to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') || ' ' ||
+			tcs.start_time
+			from t_course_scheduling tcs
+			where tcs.course_times = 1
+			and tcs.course_id = tc.id) as first_start_time,
+			tcs2.last_end_time as last_end_time,
+			nvl(tmtc.operation_type, '0') as operation_type
+			from t_more_teacher_course tmtc
+			left join t_course tc
+			on tmtc.id = tc.more_teacher_courseid
+			left join (select min(tcs.id) as id,
+			tcou.id as course_id
+			from t_course tcou, t_course_scheduling tcs
+			where tcs.course_id = tcou.id
+			and tcou.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}
+			and to_date(tcs.course_date || tcs.end_time,
+			'yyyyMMdd hh24:mi') >= sysdate
+			group by tcou.id) tcs
+			on tcs.course_id = tc.id
+			left join (select max(tcs.id) as id,
+			tcou.id as course_id
+			from t_course tcou, t_course_scheduling tcs
+			where tcs.course_id = tcou.id
+			and tcou.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}
+			group by tcou.id) tcs1
+			on tcs1.course_id = tc.id
+			left join tab_teacher_info tti
+			on tti.id = tc.teacher_id
+			left join tab_data_grade grade
+			on tc.grade_id = grade.id
+			left join tp_subject tdd
+			on tdd.id = tc.subject_id
+			left join tab_time_season tts
+			on tts.id = tc.season_id
+			left join tab_organization_info toi
+			on toi.id = tc.branch_id
+			left join (select max(tc2.last_end_time) as last_end_time,
+			max(tc2.id) as id
+			from (select to_char(to_date(tcs.course_date, 'yyyyMMdd'),
+			'yyyy-MM-dd') || ' ' || tcs.end_time as last_end_time,
+			tc2.id
+			from t_course_scheduling tcs, t_course tc2
+			where tcs.course_id = tc2.id
+			and tc2.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}) tc2
+			group by tc2.id) tcs2
+			on tcs2.id = tc.id
+			where tc.teacher_id = tmtc.teacher_id
+			and tmtc.id = #{courseId,jdbcType=NUMERIC}
+			and rownum = 1
+			union all
+		</if>
+		select tc.id,
+		tc.id as course_id,
+		tc.course_no,
+		tc.course_name,
+		tc.business_type,
+		tc.city_id,
+		tc.product_line,
+		tc.target,
+		tc.branch_id,
+		tc.season_id,
+		tc.grade_id,
+		tc.subject_id,
+		(case
+		when tmtc.type = 4 THEN
+		tmtc.teacher_id
+		else
+		tc.teacher_id
+		end) as teacher_id,
+		(case
+		when tmtc.type = 4 THEN
+		tc.teacher_id
+		else
+		tc.assteacher_id
+		end) as assteacher_id,
+		tc.unit_price,
+		(tc.unit_price * tc.course_count) as sum_price,
+		tc.course_count,
+		tc.status,
+		tc.product_type,
+		tc.verify_status,
+		tc.verify_no,
+		tc.verify_time,
+		tc.verify_user,
+		nvl(tc.validaty_date, to_char(tc.create_time, 'yyyy-MM-dd')) as validaty_date,
+		nvl(tc.invalidity_date, tc.end_date) as invalidity_date,
+		tc.start_date,
+		tc.end_date,
+		tc.start_time,
+		tc.end_time,
+		tc.hour_len,
+		tc.course_surplus,
+		nvl(tc.people_count, 9999) as people_count,
+		tc.actual_people_count,
+		tc.attend_class_period,
+		decode(tc.business_type, 2, 2, decode(tmtc.type, 4, 1, 0)) as course_type,
+		tc.description,
+		tc.proceed_status,
+		tc.create_user,
+		tc.create_time,
+		tc.update_user,
+		tc.update_time,
+		tc.more_teacher_courseid,
+		grade.grade_name,
+		tti.teacher_name as teacher_name,
+		tti.photo as teacherPhoto,
+		tdd.name as subject_name,
+		toi.org,
+		tts.season,
+		nvl(tcs.id, tcs1.id) as next_course_time_id,
+		nvl(tcrr.room_id, nvl(tcrr1.room_id, -1)) as next_class_room_id,
+		(select to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') || ' ' ||
+		tcs.start_time
+		from t_course_scheduling tcs
+		where tcs.course_times = 1
+		and tcs.course_id = tc.id) as first_start_time,
+		tcs2.last_end_time as last_end_time,
+		nvl(tmtc.operation_type, '0') as operation_type
+		from t_course tc
+		left join t_more_teacher_course tmtc
+		on tmtc.id = tc.more_teacher_courseid
+		left join tab_teacher_info tti
+		on tti.id = tc.teacher_id
+		left join tab_data_grade grade
+		on tc.grade_id = grade.id
+		left join tp_subject tdd
+		on tdd.id = tc.subject_id
+		left join tab_time_season tts
+		on tts.id = tc.season_id
+		left join tab_organization_info toi
+		on toi.id = tc.branch_id
+		left join (select min(tcs.id) as id,
+		min(tcs.course_times) as course_times,
+		tcou.id as course_id
+		from t_course tcou, t_course_scheduling tcs
+		where tcs.course_id = tcou.id
+		<if test="isMtCourse == 'Y'.toString()">
+			and tcou.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}
+		</if>
+		<if test="isMtCourse == 'N'.toString()">
+			and tcou.id = #{courseId,jdbcType=NUMERIC}
+		</if>
+		and to_date(tcs.course_date || tcs.end_time,
+		'yyyyMMdd hh24:mi') >= sysdate
+		group by tcou.id) tcs
+		on tcs.course_id = tc.id
+		left join (select max(tcs.id) as id,
+		max(tcs.course_times) as course_times,
+		tcou.id as course_id
+		from t_course tcou, t_course_scheduling tcs
+		where tcs.course_id = tcou.id
+		<if test="isMtCourse == 'Y'.toString()">
+			and tcou.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}
+		</if>
+		<if test="isMtCourse == 'N'.toString()">
+			and tcou.id = #{courseId,jdbcType=NUMERIC}
+		</if>
+		group by tcou.id) tcs1
+		on tcs1.course_id = tc.id
+		left join (select tcrr.course_id, tcrr.seq, tcrr.room_id
+		from t_course_scheduling tcsc, t_course_room_rel tcrr
+		where tcsc.course_id = tcrr.course_id
+		and tcsc.course_times = tcrr.seq) tcrr
+		on tcrr.course_id = tcs.course_id
+		and tcrr.seq = tcs.course_times
+		left join (select tcrr.course_id, tcrr.seq, tcrr.room_id
+		from t_course_scheduling tcsc, t_course_room_rel tcrr
+		where tcsc.course_id = tcrr.course_id
+		and tcsc.course_times = tcrr.seq) tcrr1
+		on tcrr1.course_id = tcs1.course_id
+		and tcrr1.seq = tcs1.course_times
+		left join (select max(tc2.last_end_time) as last_end_time,
+		max(tc2.id) as id
+		from (select to_char(to_date(tcs.course_date, 'yyyyMMdd'),
+		'yyyy-MM-dd') || ' ' || tcs.end_time as last_end_time,
+		tc2.id
+		from t_course_scheduling tcs, t_course tc2
+		where tcs.course_id = tc2.id
+		<if test="isMtCourse == 'Y'.toString()">
+			and tc2.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}) tc2
+		</if>
+		<if test="isMtCourse == 'N'.toString()">
+			and tc2.id = #{courseId,jdbcType=NUMERIC}) tc2
+		</if>
+		group by tc2.id) tcs2
+		on tcs2.id = tc.id
+		where 1 = 1
+		<if test="isMtCourse == 'Y'.toString()">
+			and tc.teacher_id != tmtc.teacher_id
+			and tc.more_teacher_courseid = #{courseId,jdbcType=NUMERIC}
+		</if>
+		<if test="isMtCourse == 'N'.toString()">
+			and tc.id = #{courseId,jdbcType=NUMERIC}
+		</if>
+
+	</select>
+
+	<select id="isMtSubCourse" parameterType="long" resultType="integer">
+		select count(0)
+		from t_course tcou, t_more_teacher_course tmtc
+		where tcou.more_teacher_courseid = tmtc.id
+		and tcou.teacher_id != tmtc.teacher_id
+		and tmtc.type = 4
+		and tcou.id = #{id}
+	</select>
+
+	<select id="isMtMainCourse" parameterType="long" resultType="integer">
+		select count(0)
+		from t_course tcou, t_more_teacher_course tmtc
+		where tcou.more_teacher_courseid = tmtc.id
+		and tcou.teacher_id = tmtc.teacher_id
+		and tmtc.type = 4
+		and tcou.id = #{id}
+	</select>
+
+	<select id="queryProductLine" parameterType="long" resultType="long">
+       select product_line from tab_organization_info where id=#{branch_id}
+	</select>
+	<select id="queryRepeatedCourses" parameterType="com.edu.erp.model.TCourse" resultType="int" >
+		select count(0) from t_course
+		where status = 1
+		and course_name=#{course_name}
+		and branch_id=#{branch_id}
+		and start_date=#{start_date}
+		and grade_id=#{grade_id}
+		<if test="teacher_id != null and teacher_id != ''">
+			and teacher_id=#{teacher_id}
+		</if>
+		and subject_id=#{subject_id}
+		and unit_price=#{unit_price}
+		<if test="id != null and id != ''">
+			and id != #{id}
+		</if>
+	</select>
+
+	<select id="queryHourlenBycourseId" parameterType="long" resultType="com.edu.erp.model.TCourse">
+       select * from t_course where id=#{courseId}
+	</select>
+
+	<select id="queryRoomClass" parameterType="long" resultType="com.edu.erp.model.RoomClass">
+		select t.course_id  as courseId, t.start_time as startTime,t.end_time as endTime,
+        tcr.room_id as roomId,t.course_date as courseDate
+        from t_course_scheduling t
+        left join t_course_room_rel tcr
+       on t.course_times=tcr.seq and t.course_id = tcr.course_id
+       where t.course_id =#{courseId}
+	</select>
+
+	<select id="queryAllSubMtCourseId" parameterType="long" resultType="long">
+		select sc.id
+		 from t_course mc, t_course sc
+		where mc.more_teacher_courseid = sc.more_teacher_courseid
+			and sc.id != mc.id
+			and mc.id = #{mainCourseId}
+	</select>
+
+	<select id="existOrderCourse" parameterType="long" resultType="integer">
+		select 1 from tab_order_info_detail where course_id = #{courseId}
+		union
+		select 1 from t_order_course where course_id = #{courseId}
+		union
+		select 1 from t_course tc
+			join t_course tc2 on tc.more_teacher_courseid is not null and tc2.more_teacher_courseid = tc.more_teacher_courseid and tc.id = #{courseId}
+			where exists(
+			  select 1 from tab_order_info_detail where course_id = tc2.id
+			) or exists (
+			  select 1 from t_order_course where course_id = tc2.id
+			)
+	</select>
+
+	<select id="queryCourseIdForVerify" parameterType="map" resultType="map">
+		select distinct (case
+                  when #{mainCourseCdtn} is not null then
+										decode(tmtc.type, 4, tmtc.id, tcou.id)
+                end) as "courseId",
+                (case
+                  when #{subCourseCdtn} is not null then
+                   tcou.id
+                end) as "stuCourseId"
+  from t_course tcou
+  left join t_more_teacher_course tmtc
+    on tcou.more_teacher_courseid = tmtc.id
+ where 1 = 1
+ <if test="mainCourseCdtn != null and mainCourseCdtn != '' and (subCourseCdtn == null or subCourseCdtn == '')">
+   and (tcou.course_no = #{mainCourseCdtn} or tcou.course_name = #{mainCourseCdtn} or tmtc.course_name = #{mainCourseCdtn})
+ </if>
+	<if test="subCourseCdtn != null and subCourseCdtn != '' and (mainCourseCdtn == null or mainCourseCdtn == '')">
+		and (tcou.course_no = #{subCourseCdtn} or tcou.course_name = #{subCourseCdtn})
+	</if>
+		<if test="mainCourseCdtn != null and mainCourseCdtn != '' and subCourseCdtn != null and subCourseCdtn != ''">
+			and (tcou.course_no in (#{mainCourseCdtn}, #{subCourseCdtn}) or
+				tcou.course_name in (#{mainCourseCdtn}, #{subCourseCdtn}) or tmtc.course_name = #{mainCourseCdtn})
+			and (tcou.course_no = #{subCourseCdtn} or tcou.course_name = #{subCourseCdtn})
+		</if>
+	</select>
+
+	<select id="querySyncCourseInfoList" parameterType="map" resultType="map">
+		select distinct (case
+												when tmtc.type = 4 and tmtc.id is not null then
+												 tmtc.id
+												else
+												 tcou.id
+											end) as "courseId",
+											(case
+												when tmtc.type = 4 and tmtc.id is not null then
+												 'Y'
+												else
+												 'N'
+											end) as "isMtCourse"
+				from t_course tcou
+				left join t_more_teacher_course tmtc
+					on tmtc.id = tcou.more_teacher_courseid
+			 where tcou.business_type = 1
+			   and tcou.id in (${ids})
+	</select>
+
+	<select id="queryCourseRoomIds" resultType="long">
+    <if test="isMtCourse == 'Y'.toString()">
+			select tcrr.id
+				from t_more_teacher_course tmtc,
+						  t_course              tcou,
+						  t_course_room_rel     tcrr,
+						  t_course_scheduling   tcs
+			 where tmtc.id = tcou.more_teacher_courseid
+				 and tmtc.teacher_id = tcou.teacher_id
+				 and tcrr.course_id = tcou.id
+				 and tcs.course_id = tcou.id
+				 and tcs.course_times = tcrr.seq
+				 and tcs.course_date > #{curDate}
+				 and tcrr.video_no is not null
+				 and tmtc.id = #{courseId}
+		</if>
+		<if test="isMtCourse == 'N'.toString()">
+			select tcrr.id
+			  from t_course              tcou,
+						 t_course_room_rel     tcrr,
+						 t_course_scheduling   tcs
+			where tcrr.course_id = tcou.id
+			  and tcs.course_id = tcou.id
+			  and tcs.course_times = tcrr.seq
+			  and tcs.course_date > #{curDate}
+			  and tcrr.video_no is not null
+			  and tcou.id = #{courseId}
+		</if>
+	</select>
+</mapper>
