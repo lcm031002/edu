@@ -114,8 +114,7 @@ public class OrganizationUtils extends BaseModuleUtils{
 	 * 拼接JSON树形字符串
 	 * 
 	 * @param orgInfos
-	 * @param emptyIds 
-	 * @param perOrgs 权限组织
+	 * @param emptyIds
 	 * @return
 	 */
 	public static synchronized String jsonTreeByOrg(List<OrganizationInfo> orgInfos, String emptyIds){
@@ -143,7 +142,7 @@ public class OrganizationUtils extends BaseModuleUtils{
 			  .append("  \"attributes\":{")
 			  .append("  \"org_name\":\"" + org.getOrg_name() + "\",\n")
 			  .append("  \"product_line\":\"" + org.getProduct_line() + "\",\n")
-			  .append("  \"sort_number\":\"" + org.getSort_number() + "\",\n")
+			  .append("  \"sort_number\":\"" + org.getSort_num() + "\",\n")
 			  .append("  \"org_type\":\"" + org.getOrg_type() + "\"\n")
 			  .append("  \n}")
 			  .append("  \n}");

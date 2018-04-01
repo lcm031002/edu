@@ -42,9 +42,6 @@ public class OrganizationController extends BaseController {
 
     @Resource(name = "organizationService")
     private OrganizationService organizationService;
-
-    @Resource(name = "selectOptionService")
-    private SelectOptionService selectOptionService;
     
     @Resource(name = "dictionaryService")
     private DictionaryService dictionaryService;
@@ -63,7 +60,6 @@ public class OrganizationController extends BaseController {
     @RequestMapping(value = { "/list" }, method = RequestMethod.GET, headers = { "Accept=application/json" })
     public Map<String, Object> queryList(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> result = new HashMap<String, Object>();
-        List<OrganizationInfo> orgList = new ArrayList<OrganizationInfo>();
         try {
             Map<String, Object> param = new HashMap<String, Object>();
             String org_name = request.getParameter("org_name");
@@ -71,7 +67,7 @@ public class OrganizationController extends BaseController {
             param.put("org_name", org_name);
             param.put("org_type", org_type);
 
-            orgList = organizationService.list(param);
+            List<OrganizationInfo> orgList = organizationService.list(param);
 
             result.put("error", false);
             result.put("data", orgList);
@@ -325,10 +321,6 @@ public class OrganizationController extends BaseController {
         
         if (orgInfo.getOrg_type() == null) {
             throw new Exception("请选择组织级别！");
-        }
-        
-        if (orgInfo.getOrg() == null) {
-            throw new Exception("请选择所属机构！");
         }
     }
 

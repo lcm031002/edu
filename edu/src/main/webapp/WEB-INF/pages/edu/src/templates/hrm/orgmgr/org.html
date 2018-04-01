@@ -68,60 +68,16 @@
               <select type="text" class="form-control" ng-model="orgSelectType.type" ng-options="org.type as org.name for org in orgType"></select>
             </div>
           </div>
-          <!--<div ng-show="itemOperateType == 'update'" class="form-group">-->
-            <!--<label class="{{orgSelectType.type=='4' ? 'col-sm-2':'col-sm-3'}}  control-label">组织机构名称</label>-->
-            <!--<div class="col-sm-9">-->
-              <!--<input type="text" class="form-control" ng-model="selectedItem.org_name" />-->
-            <!--</div>-->
-          <!--</div>-->
-          <div></div>
           <div ng-show="itemOperateType == 'update'"   class="form-group" >
           	<label class="col-sm-3 control-label">logo</label>
             <div class="col-sm-8">
               <kl-image-upload img-urls="bgImgUrlList" on-image-add="uploadLogo(img)" on-image-delete="deleteLogo(img)"></kl-image-upload>
-            </div>
-		      </div>
-          <div class="form-group" ng-show="orgSelectType.type == '3'">
-            <label class="col-sm-3 control-label">域名</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" ng-model="selectedItem.domain" />
-            </div>
-          </div>
-          <div class="form-group" ng-show="orgSelectType.type == '4'">
-            <label class="col-sm-2 control-label">商户号(微信公众号)</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" ng-model="selectedItem.mchid" />
-            </div>
-          </div>
-          <div class="form-group" ng-show="orgSelectType.type == '4'">
-            <label class="col-sm-2 control-label">终端编号(微信公众号)</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" ng-model="selectedItem.terminalNo" />
-            </div>
-          </div>
-          <div class="form-group" ng-show="orgSelectType.type == '4'">
-            <label class="col-sm-2 control-label">商户号(WEB页面)</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" ng-model="selectedItem.mid" />
-            </div>
-          </div>
-          <div class="form-group" ng-show="orgSelectType.type == '4'">
-            <label class="col-sm-2 control-label">终端编号(WEB页面)</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" ng-model="selectedItem.tid" />
             </div>
           </div>
           <div class="form-group" ng-show="orgSelectType.type == '4'">
             <label class="col-sm-2 control-label">电话</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" ng-model="selectedItem.phone" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="{{orgSelectType.type=='4' ? 'col-sm-2':'col-sm-3'}}  control-label">所属机构</label>
-            <div class="col-sm-9">
-              <select class="form-control" ng-model="selectedItem.org"
-                      ng-options="org.code as org.name for org in dictOrgList"></select>
             </div>
           </div>
           <div class="form-group" ng-show="orgSelectType.type == '4'">
@@ -137,12 +93,6 @@
               <input type="text" class="form-control" ng-model="selectedItem.email" />
             </div>
           </div>
-          <div class="form-group" ng-show="orgSelectType.type == '3'">
-            <label class="col-sm-3 control-label">老学员积分</label>
-            <div class="col-sm-9">
-              <input type="number" class="form-control" ng-model="selectedItem.oldStuIntegral" />
-            </div>
-          </div>
           <div class="form-group" ng-show="orgSelectType.type == '4'">
             <label class="{{orgSelectType.type=='4' ? 'col-sm-2':'col-sm-3'}}  control-label">产品线</label>
             <div class="col-sm-9">
@@ -154,35 +104,6 @@
             <label class="{{orgSelectType.type=='4' ? 'col-sm-2':'col-sm-3'}} control-label">地址</label>
             <div class="col-sm-9">
               <input type="text" class="form-control" required ng-model="selectedItem.address" />
-            </div>
-          </div>
-          <div class="form-group" ng-show="orgSelectType.type == '4'">
-            <label class="{{orgSelectType.type=='4' ? 'col-sm-2':'col-sm-3'}} control-label">经度，经度</label>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" 
-              ng-disabled="true"
-              required ng-model="selectedItem.longitude" />
-            </div>
-            <div class="col-sm-1 text-center" style="width: 2em;">，</div>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" 
-              ng-disabled="true"
-              required ng-model="selectedItem.latitude" />
-            </div>
-          </div>
-          <div ng-show="orgSelectType.type == '4'" class="map-wrapper" style="width: 100%;height: 400px; position: relative;">
-            <div class="search-panel" style="position: absolute; top: 20px;left: 20px; width: 300px;">
-              <div class="input-group">
-                <input type="text" class="map-search form-control" 
-                  ng-model="mapOptions.searchInfo" 
-                  ng-change="orgMapSearch(mapOptions.searchInfo)">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary"><i class="iconfont icon-search"></i></button>
-                </span>
-              </div>
-              <div id="search-result-panel" style="position: absolute;height: 300px;overflow-y: auto;z-index: 999;"></div>
-            </div>
-            <div id="add-org-map" style="height: 400px; width: 866px; position: relative;">
             </div>
           </div>
         </div>

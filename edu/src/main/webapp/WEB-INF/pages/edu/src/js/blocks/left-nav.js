@@ -3,57 +3,12 @@
  */
 angular
     .module('ework-ui')
-    .service('frPaperBank', frPaperBankService)
-    .controller('LeftNavCtrl', ['$scope', '$rootScope','$location','$log','$state','$cookieStore', '$uibMsgbox', 'frPaperBank', 'erp_studentsService', LeftNavCtrl]);
+    .controller('LeftNavCtrl', ['$scope', '$rootScope','$location','$log','$state','$cookieStore', '$uibMsgbox', 'erp_studentsService', LeftNavCtrl]);
 
-function LeftNavCtrl($scope,$rootScope,$location,$log,$state,$cookieStore, $uibMsgbox, frPaperBank, erp_studentsService) {
+function LeftNavCtrl($scope,$rootScope,$location,$log,$state,$cookieStore, $uibMsgbox, erp_studentsService) {
     window.sss = $scope;
     $scope.curNavSystem = null;
-    $scope.subjectList = []
-    $scope.gradeList = []
     $scope.student = null
-    $scope.$watch('selectedSubject', function(newValue, oldValue) {
-        if (!newValue) { return }
-        $rootScope.selectedSubject = newValue;
-    })
-
-    $scope.$watch('selectedGrade', function(newValue, oldValue) {
-        if (!newValue) { return }
-        $rootScope.selectedGrade = newValue;
-    })
-
-    //var pattern = new RegExp("/tr/");
-    //pattern.test(location.hash)
-    if(true) {
-        //- 获取学科列表
-        frPaperBank.getSubjects()
-            .then(function(data) {
-                if (data.error) {
-                    console.log('请求学科失败');
-                    return ;
-                }
-                $scope.subjectList = data.data && data.data.subjectList;
-                if ($scope.subjectList.length) {
-                    $rootScope.selectedSubject = $scope.subjectList[0].id
-                }
-            }, function(error) {
-                console.log('frPaperBankError: ' + error);
-            })
-        //- 获取年级列表
-        frPaperBank.getGrades()
-            .then(function(data) {
-                if (data.error) {
-                    console.log('请求年段失败');
-                    return ;
-                }
-                $scope.gradeList = data.data && data.data.gradeList;
-                if ($scope.gradeList.length) {
-                    $rootScope.selectedGrade = $scope.gradeList[0].id
-                }
-            }, function(error) {
-                console.log('frPaperBankError: ' + error);
-            })
-    }
 
     $('.left_nav').mCustomScrollbar({
         theme: 'klxx'

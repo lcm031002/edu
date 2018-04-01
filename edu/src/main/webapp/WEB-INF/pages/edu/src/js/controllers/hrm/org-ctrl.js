@@ -261,9 +261,8 @@ function OrgCtrl($scope,
      */
     function queryOrg() {
         var param = {};
-        OrgService.get(param, function (resp) {
+        erp_organizationService.query(param, function (resp) {
             if (resp.error == false) {
-                $log.log(resp.data[0].items);
                 $scope.orgDatas = resp.data;
                 $scope.delayTree();
             }

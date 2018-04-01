@@ -52,7 +52,7 @@
 		select *  from tab_data_device device where device.id = #{id}
 	</select>
 	
-	<insert id="insert" parameterType="com.edu.erp.model.TabDataDevice" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="insert" parameterType="com.edu.erp.model.TabDataDevice" useGeneratedKeys="true" keyProperty="id">
 		insert into tab_data_device
 		(
 			pos_name,
