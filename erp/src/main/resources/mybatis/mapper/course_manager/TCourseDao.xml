@@ -194,11 +194,11 @@
 	</select>
 
 	<select id="selectYDYForPage" parameterType="Map" resultType="com.edu.erp.model.TCourse">
-		select nvl(a.update_time,a.create_time) s_update_time,
+		select ifnull(a.update_time,a.create_time) s_update_time,
 		a.*, b.org_name as city_name, c.org_name as branch_name,
 		d.course_season_name as season_name,
 		<!-- e.grade_name, f.data_name as subject_name, g.teacher_name, j.type_name, -->
-		e.grade_name, f.name as subject_name, g.teacher_name, tti.teacher_name assteacher_name,tti.encoding assteacher_code,g.encoding teacher_code, j.type_name,
+		e.grade_name, f.name as subject_name, g.teacher_name, tti.teacher_name assteacher_name,tti.encoding assteacher_code,g.encoding teacher_code,
 		c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
 		from t_course a
 		join tab_organization_info b on
@@ -218,9 +218,6 @@
 
 		left join
 		tab_teacher_info tti on a.assteacher_id = tti.id and tti.status = 1
-
-		left join
-		tab_course_type j on a.course_type = j.id and j.status = 1
 
 		<!-- 新增用户 -->
 		left join tab_user_info c_user on a.create_user = c_user.id
@@ -461,60 +458,46 @@
 	</select>
 
 	<insert id="saveTCourse" parameterType="com.edu.erp.model.TCourse">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-				   order="AFTER">
-			SELECT seq_t_course.currval AS id from dual
-		</selectKey>
-		insert into t_course t
+		insert into t_course
 		(
-		t.id,
-		t.course_no,
-		t.course_name,
-		t.business_type,
-		t.city_id,
-		t.branch_id,
-		t.season_id,
-		t.grade_id,
-		t.subject_id,
-		t.teacher_id,
-		t.assteacher_id,
-		t.unit_price,
-		t.sum_price,
-		t.hour_len,
-		t.course_count,
-		t.status,
-		t.product_type,
-		t.verify_status,
-		t.verify_no,
-		t.verify_time,
-		t.verify_user,
-		t.validaty_date,
-		t.invalidity_date,
-		t.start_date,
-		t.end_date,
-		t.start_time,
-		t.end_time,
-		t.course_surplus,
-		t.people_count,
-		t.actual_people_count,
-		t.attend_class_period,
-		t.course_type,
-		t.description,
-		t.product_line,
-		t.target,
-		t.proceed_status,
-		t.create_user,
-		t.create_time,
-		t.update_user,
-		t.update_time,
-		t.is_approve,
-		t.is_textbooks,
-		t.performance_belong_type,
-		t.is_all
+		course_no,
+		course_name,
+		business_type,
+		city_id,
+		branch_id,
+		season_id,
+		grade_id,
+		subject_id,
+		teacher_id,
+		assteacher_id,
+		unit_price,
+		sum_price,
+		hour_len,
+		course_count,
+		status,
+		product_type,
+		validaty_date,
+		invalidity_date,
+		start_date,
+		end_date,
+		start_time,
+		end_time,
+		course_surplus,
+		people_count,
+		actual_people_count,
+		attend_class_period,
+		description,
+		target,
+		proceed_status,
+		create_user,
+		create_time,
+		update_user,
+		update_time,
+		is_textbooks,
+		performance_belong_type
 		)
 		values
 		(
-		seq_t_course.nextval,
 		#{course_no,jdbcType=VARCHAR},
 		#{course_name,jdbcType=VARCHAR},
 		#{business_type,jdbcType=NUMERIC},
@@ -531,10 +514,6 @@
 		#{course_count,jdbcType=NUMERIC},
 		#{status,jdbcType=NUMERIC},
 		#{product_type,jdbcType=NUMERIC},
-		2,
-		#{verify_no,jdbcType=VARCHAR},
-		#{verify_time,jdbcType=DATE},
-		#{verify_user,jdbcType=NUMERIC},
 		#{validaty_date,jdbcType=VARCHAR},
 		#{invalidity_date,jdbcType=VARCHAR},
 		#{start_date,jdbcType=VARCHAR},
@@ -545,19 +524,15 @@
 		#{people_count,jdbcType=NUMERIC},
 		#{actual_people_count,jdbcType=NUMERIC},
 		#{attend_class_period,jdbcType=VARCHAR},
-		#{course_type,jdbcType=NUMERIC},
 		#{description,jdbcType=VARCHAR},
-		#{product_line,jdbcType=NUMERIC},
 		#{target,jdbcType=NUMERIC},
 		2,
 		#{create_user,jdbcType=NUMERIC},
-		sysdate,
+		sysdate(),
 		#{update_user,jdbcType=NUMERIC},
-		sysdate,
-		0,
+		sysdate(),
 		#{is_textbooks,jdbcType=NUMERIC},
-		#{performance_belong_type,jdbcType=NUMERIC},
-		#{is_all,jdbcType=NUMERIC}
+		#{performance_belong_type,jdbcType=NUMERIC}
 		)
 	</insert>
 
@@ -1837,14 +1812,6 @@
 		select 1 from tab_order_info_detail where course_id = #{courseId}
 		union
 		select 1 from t_order_course where course_id = #{courseId}
-		union
-		select 1 from t_course tc
-			join t_course tc2 on tc.more_teacher_courseid is not null and tc2.more_teacher_courseid = tc.more_teacher_courseid and tc.id = #{courseId}
-			where exists(
-			  select 1 from tab_order_info_detail where course_id = tc2.id
-			) or exists (
-			  select 1 from t_order_course where course_id = tc2.id
-			)
 	</select>
 
 	<select id="queryCourseIdForVerify" parameterType="map" resultType="map">

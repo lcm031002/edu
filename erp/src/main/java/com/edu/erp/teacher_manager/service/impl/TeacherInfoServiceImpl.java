@@ -410,4 +410,9 @@ public class TeacherInfoServiceImpl implements TeacherInfoService {
 		return teacherInfoDao.searchTeacherTeam(teacherId);
 	}
 
+	@Override
+	public void changeTeacherStatus(Map<String, Object> param) {
+		this.teacherInfoDao.changeTeacherStatus(param);
+	}
+
 }

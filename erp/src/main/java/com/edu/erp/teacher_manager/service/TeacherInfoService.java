@@ -166,5 +166,6 @@ public interface TeacherInfoService {
 	 */
 	List<TeacherTeamRel> searchTeacherTeam(Integer teacherId) throws Exception;
 
+	void changeTeacherStatus(Map<String,Object> param);
 
 }

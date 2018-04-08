@@ -666,27 +666,6 @@
 							]
 						},
 						{
-							"index": "A1400607",
-							"name": "排课专员",
-							"key": "systemDataArranger",
-							"icon": "fa fa-list-alt",
-							"type": "$state",
-							"value": "systemDataArranger",
-							"href": "templates/erp/common/arranger.html",
-							"path": "/orders/ordersMgr/Arranger",
-							"services" : [],
-							"menus": [{
-								"index": "A140060701",
-								"name": "排课专员编辑",
-								"key": "systemDataArrangerEdit",
-								"type": "$state",
-								"value": "systemDataArrangerEdit",
-								"showMenu": "false",
-								"href": "templates/erp/common/arranger_edit.html",
-								"path": "/orders/ordersMgr/Arranger/:optype?id"
-							}]
-						},
-						{
 							"index": "A1400605",
 							"name": "晚辅导课程",
 							"key": "ordersMgrCourseWFD",

@@ -291,7 +291,7 @@ public interface StudentAccountService {
 	/**
 	 * 分页
 	 * 
-	 * @param page
+	 * @param pageParam
 	 * @return
 	 * @throws Exception
 	 */

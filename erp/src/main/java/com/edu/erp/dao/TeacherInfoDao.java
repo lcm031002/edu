@@ -183,4 +183,6 @@ public interface TeacherInfoDao {
 	 * @return
 	 */
 	Integer toRemoveTeamRef(Long teacherId);
+
+	void changeTeacherStatus(Map<String,Object> param);
 }

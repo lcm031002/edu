@@ -137,11 +137,6 @@ public class CourseServiceImpl implements CourseService {
 		Long branch_id=course.getBranch_id();
 		OrganizationInfo organizationInfo = this.organizationService.selectById(branch_id);
 		Long productLine = organizationInfo.getProduct_line();
-		if(productLine!=11L){
-			if(course.getSeason_id()==null){
-				throw new Exception("课程季不能为空");
-			}
-		}
         course.setProduct_line(organizationInfo.getProduct_line());
 		// 新增班级课
 		Integer ret = tCourseDao.saveTCourse(course);
@@ -297,12 +292,7 @@ public class CourseServiceImpl implements CourseService {
 		map.put("course_id", courseId);
 		map.put("error_code", 0);
 		map.put("error_desc", "");
-		// 获取双师课程id
-		Long doubleCourseId = tCourseDao.getDoubleCourseId(courseId);
 
-		Map<String, Object> queryBeforeMap = new HashMap<String, Object>();
-		queryBeforeMap.put("courseId", courseId);
-		List<CourseScheduling> beforeSchedList = this.courseSchedulingDao.queryMultiTchCourseSched(queryBeforeMap);
 		TCourse tCourse =tCourseDao.getCourseById(courseId);
 		//tCourseDao.schedulingCourse(map);
 		//添加班级课才排课判断
@@ -312,24 +302,6 @@ public class CourseServiceImpl implements CourseService {
 		Map<String, Object> queryAfterMap = new HashMap<String, Object>();
 		queryAfterMap.put("courseId", courseId.toString());
 		List<CourseScheduling> afterSchedList = this.courseSchedulingDao.queryMultiTchCourseSched(queryAfterMap);
-
-		// 发起同步到双师课程的辅助教师和课次的最最新关系和信息
-		if (doubleCourseId != null&&beforeSchedList.size()>afterSchedList.size()) {
-
-			if (!CollectionUtils.isEmpty(beforeSchedList) && !CollectionUtils.isEmpty(afterSchedList)) {
-				  Iterator<CourseScheduling> it = beforeSchedList.iterator();
-			      while(it.hasNext()){
-			    	  CourseScheduling item = it.next();
-			    	  for(CourseScheduling courseSchedulingAfter:afterSchedList ){
-							if(item.getCourse_times()==courseSchedulingAfter.getCourse_times()){
-								it.remove();
-								break;
-							}
-						}
-			        }
-			}
-
-		}
 
 		String errorCode = map.get("error_code").toString();
 		if (!"0".equals(errorCode)) {
