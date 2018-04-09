@@ -501,8 +501,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 	public void addStudentInfo(StudentInfo studentInfo) throws Exception {
 		Assert.hasText(studentInfo.getStudent_name(), "请输入学生姓名");
 		studentInfoDao.addStudentInfo(studentInfo);
-		// 添加学员，默认设置学员为活跃学员
-		studentInfoDao.addStudentActive(studentInfo.getId());
 	}
 	
 	@Override
