@@ -1,414 +1,490 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.erp.dao.EmployeeInfoDao">
-
-	<resultMap type="com.edu.erp.model.EmployeeInfo" id="employeeInfoMap">
-		<id property="id" column="id" />
-		<result property="encoding" column="encoding" />
-		<result property="employee_name" column="employee_name" />
-		<result property="sex" column="sex" />
-		<result property="ID_ID" column="ID_ID" />
-		<result property="email" column="email" />
-		<result property="phone" column="phone" />
-		<result property="address" column="address" />
-		<result property="description" column="description" />
-		<result property="status" column="status" />
-		<result property="create_user" column="create_user" />
-		<result property="create_user_name" column="create_user_name" />
-		<result property="create_time" column="create_time" />
-		<result property="update_user" column="update_user" />
-		<result property="update_user_name" column="update_user_name" />
-		<result property="update_time" column="update_time" />
-		<collection property="edrList" column="employee_id"
-			javaType="ArrayList" ofType="com.edu.erp.model.EmployeeDepartmentRef">
-			<id property="id" column="b_id" />
-			<association property="organizationInfo" column="dep_org_id"
-				javaType="com.edu.erp.model.OrganizationInfo">
-				<id property="id" column="c_id" />
-				<result property="parent_id" column="c_parent_id" />
-				<result property="org_name" column="c_org_name" />
-				<result property="org_type" column="c_org_type" />
-				<result property="status" column="c_status" />
-				<result property="create_user" column="c_create_user" />
-				<result property="create_time" column="c_create_time" />
-				<result property="update_user" column="c_update_user" />
-				<result property="update_time" column="c_update_time" />
-			</association>
-		</collection>
+	<resultMap type="map" id="dataMap">
+		<id column="id" property="id"/>
+		<result column="buName" property="buName"/>
+		<result column="branchName" property="branchName"/>
+		<result column="post_name" property="post_name"/>
+		<result column="status" property="status"/>
+		<result column="emp_id" property="emp_id"/>
+		<result column="post_id" property="post_id"/>
 	</resultMap>
 
-	<select id="page" parameterType="page"
-		resultType="com.edu.erp.model.EmployeeInfo">
-		select a.*,
-		c_emp.employee_name as create_user_name,
-		u_emp.employee_name as update_user_name,
-		branch_post_info.branch_post_names
-		from tab_employee_info a
-
-		left join (
-		  	select teop.emp_id, wm_concat(org.org_name || '/' || post.post_name) branch_post_names
-		  	from tab_emp_org_post teop
-			left join tab_organization_info org on teop.branch_id = org.id and org.status = 1
-			left join tp_post post on post.id = teop.post_id
-			where teop.status = 1
-			group by teop.emp_id
-		  ) branch_post_info on branch_post_info.emp_id = a.id
-		
-		<!-- 新增用户 -->
-		left join tab_user_info c_user on a.create_user = c_user.id
-		left join
-		tab_employee_info c_emp on c_user.employee_id = c_emp.id
-		<!-- 修改用户 -->
-		left join tab_user_info u_user on a.update_user = u_user.id
-		left join
-		tab_employee_info u_emp on u_user.employee_id = u_emp.id
-
-		where a.status = 1
-		<if test="employee_name != null and employee_name != ''">
-			<!-- 分页表格模糊查询 -->
-			and (a.employee_name like '%${employee_name}%' or a.encoding like
-			'%${employee_name}%')
-		</if>
-		<if test="email != null and email !=''">
-			and a.email like '%${email}%'
-		</if>
-		<if test="phone != null and phone !=''">
-			and a.phone like '%${phone}%'
-		</if>
-		<if test="status != null and status != ''">
-			<!-- 用户选择员工场景 -->
-			and a.status = #{status}
-		</if>
-		<if test="counselor_type == 1">
-			and exists (select 1
-		          from tab_emp_org_post teop, tp_post tppo
-		         where teop.post_id = tppo.id
-		           and teop.emp_id = a.id
-				   and teop.status = 1
-		           and tppo.post_code in ('counselor','LearningManagementDivision','LearningManagementDivision_admin','counselor_admin') )
-		</if>
-		<if test="counselor_type == 2">
-			and exists (select 1
-		          from tab_emp_org_post teop, tp_post tppo
-		         where teop.post_id = tppo.id
-		           and teop.emp_id = a.id
-			       and teop.status = 1
-		           and tppo.post_code  in ('counselor','LearningManagementDivision','LearningManagementDivision_admin','counselor_admin'))
-		</if>
-		order by a.update_time DESC, a.id DESC
+	<!-- 查询员工档案信息列表 -->
+	<select id="queryEmployeeForPage" parameterType="java.util.Map"
+			resultType="com.edu.erp.model.EmployeeInfo">
+		select tef.id,
+            tef.encoding,
+            tef.employee_name,
+            tef.sex,
+            tef.phone,
+            tef.id_card,
+            tef.address,
+            tef.status,
+            tef.email,
+            tef.user_type,
+            tdd.name as user_type_name
+		from TAB_EMPLOYEE_INFO tef
+        left join tp_dict_data tdd
+          on tdd.code = tef.user_type
+        left join tp_dict_type tdt
+          on tdt.id = tdd.type_id
+        where tdt.code = 'employee_type'
+        <if test="employee_name!=null and employee_name!=''">
+           and (tef.employee_name like '%'||#{employee_name,jdbcType=VARCHAR}||'%'
+            or tef.encoding like '%'||#{employee_name,jdbcType=VARCHAR}||'%')
+        </if>
+        <if test="userType!=null and userType!=-1">
+            and tef.user_type=#{userType,jdbcType=NUMERIC}
+        </if>
+		order by tef.create_time desc
 	</select>
 
-	<select id="list" parameterType="java.util.Map" resultMap="employeeInfoMap">
-		SELECT a.*, b.id AS b_id, b.employee_id, b.dep_org_id,
-		c.id AS c_id,
-		c.parent_id AS c_parent_id, c.org_name AS c_org_name, c.org_type AS
-		c_org_type,
-		c.status AS c_status, c.create_user AS c_create_user,
-		c.create_time AS c_create_time,
-		c.update_user AS c_update_user,
-		c.update_time AS c_update_time
-		FROM tab_employee_info a
-		LEFT JOIN
-		tab_employee_department_ref b ON a.id = b.employee_id
-		LEFT JOIN
-		tab_organization_info c ON b.dep_org_id = c.id AND c.status = 1
-		WHERE
-		a.status != 0
-		<if test="dep_org_id != null">
-			<!-- 用户绑定员工的时候使用 -->
-			AND b.dep_org_id = #{dep_org_id}
+	<!-- 按照员工id查询该员工信息-->
+	<select id="queryEmployeeById" parameterType="java.lang.Long"
+			resultType="com.edu.erp.model.EmployeeInfo">
+		select  tef.id,
+		tef.encoding,
+		tef.employee_name,
+		tef.sex,
+		tef.phone,
+		tef.dept,
+		tef.post,
+		tep.post_name as postName,
+		tef.position,
+		tef.id_card,
+		tef.poslevel,
+		edts.name as levelName,
+		tef.email,
+		tef.business,
+		tef.enterType,
+		tedts.name as enterTypeName,
+		tef.staff_head,
+		to_char(tef.entry_date,'yyyy-mm-dd') as entryDate
+		from TAB_EMPLOYEE_INFO tef
+		left join TP_POST tep
+		on tef.post=tep.id
+		left join ebs_dict_type_sub edts
+		on tef.poslevel=edts.id
+		left join ebs_dict_type_sub tedts
+		on tef.enterType=tedts.id
+		where tef.id = #{employeeId}
+		order by tef.id desc
+	</select>
+
+	<select id="queryFieldKey" resultType="java.util.Map">
+		select fieldKey
+		from ebs_employeeext_reg
+		where fieldStatus=2 or fieldStatus=1
+	</select>
+
+	<!-- 根据id查询员工档案 -->
+	<select id="queryEmployee" parameterType="map" resultType="java.util.Map">
+		SELECT ${str}
+		FROM TAB_EMPLOYEE_INFO
+		WHERE id=#{id,jdbcType=NUMERIC}
+	</select>
+
+	<!-- 根据encoding查询员工档案 -->
+	<select id="queryEmployeeByEncoding" parameterType="map" resultType="com.edu.erp.model.EmployeeInfo">
+		SELECT *
+		FROM TAB_EMPLOYEE_INFO
+		WHERE encoding=#{encoding,jdbcType=VARCHAR}
+	</select>
+	<!-- 查询员工档案 -->
+	<select id="queryOtherEmployeeByParam" parameterType="com.edu.erp.model.EmployeeInfo"
+			resultType="com.edu.erp.model.EmployeeInfo">
+		SELECT *
+		FROM TAB_EMPLOYEE_INFO
+		WHERE status != 0
+		<if test="id !=null">
+			and id!= #{id,jdbcType=NUMERIC}
 		</if>
-		<if test="id != null">
-			AND a.id = #{id}
+		<if test="id_card != null">
+			and id_card=#{id_card,jdbcType=VARCHAR}
 		</if>
-		ORDER BY a.id DESC, a.create_time DESC, a.update_time DESC
-	</select>
-
-
-	<select id="selectListCounselor" parameterType="java.util.Map"
-		resultType="com.edu.erp.model.EmployeeInfo">
-		select * from (
-		select a.*,
-		c_emp.employee_name as create_user_name,
-		u_emp.employee_name as update_user_name
-		from tab_employee_info a
-
-		<!-- 新增用户 -->
-		left join tab_user_info c_user on a.create_user = c_user.id
-		left join
-		tab_employee_info c_emp on c_user.employee_id = c_emp.id
-		<!-- 修改用户 -->
-		left join tab_user_info u_user on a.update_user = u_user.id
-		left join
-		tab_employee_info u_emp on u_user.employee_id = u_emp.id
-
-		where
-		(a.status != 0 or a.status is null)
-		<if test="counselor_name != null and counselor_name != ''">
-			and a.employee_name like '%${counselor_name}%'
+		<if test="employee_name != null">
+			and employee_name=#{employee_name,jdbcType=VARCHAR}
 		</if>
-		ORDER BY a.id DESC, a.create_time DESC, a.update_time DESC
-		) where
-		rownum &lt; 15
+		<if test="phone != null">
+			and phone=#{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="encoding != null">
+			and encoding=#{encoding,jdbcType=VARCHAR}
+		</if>
 	</select>
 
-	<select id="queryEmployeeInfoByOrgAndRole" parameterType="java.util.Map"
-		resultMap="employeeInfoMap">
-		SELECT
-		distinct a.* ,
-		b.id AS b_id ,
-		b.employee_id ,
-		b.dep_org_id ,
-		c.id AS c_id ,
-		c.parent_id AS c_parent_id ,
-		c.org_name AS
-		c_org_name ,
-		c.org_type AS c_org_type ,
-		c.status AS c_status ,
-		c.create_user AS c_create_user ,
-		c.create_time AS c_create_time ,
-		c.update_user AS c_update_user ,
-		c.update_time AS c_update_time
-		FROM
-		tab_employee_info a LEFT JOIN tab_employee_department_ref b
-		ON a.id =
-		b.employee_id LEFT JOIN tab_organization_info c
-		ON b.dep_org_id = c.id
-		AND c.status = 1
-		inner join TAB_USER_INFO tui on tui.EMPLOYEE_ID = a.ID
-		inner join TAB_USER_ROLE_REF turr on turr.USER_ID = tui.ID
-		inner join
-		TAB_ROLE_INFO tri on tri.ID = turr.ROLE_ID
-		inner join TAB_ROLE_ORG_REF
-		tror on tror.ROLE_ID = tri.ID
-		inner join TAB_ORGANIZATION_INFO toi on
-		toi.ID = tror.ORG_ID
-		WHERE
-		a.status != 0
-		and toi.ID =
-		#{org_id,jdbcType=NUMERIC}
-		and toi.STATUS = 1
-		and tri.ID =
-		#{role_id,jdbcType=NUMERIC}
-		and tri.STATUS = 1
-		and tui.STATUS = 1
-		ORDER
-		BY
-		a.id DESC ,
-		a.create_time DESC ,
-		a.update_time DESC
-	</select>
 
-	<select id="queryEmpInfoById" resultType="com.edu.erp.model.EmployeeInfo">
-		select emp.*
-		from
-		tab_employee_info emp
-		left join tab_user_info u
-		on emp.id =
-		u.employee_id
-		where 1 = 1
-		and emp.id = #{id}
-	</select>
-	
-	<select id="queryEmpInfoByOrgIdAndId" parameterType="page" resultType="com.edu.erp.model.EmployeeInfo">
-		select distinct emp.*
-		from
-		tab_employee_info emp,tab_user_info u,ebs_accountorg_rel ear
-		where emp.id = u.employee_id
-    	and u.id = ear.accountid
-    	and u.status = 1
-    	and emp.id = #{id}
-    	and ear.orgid = #{branch_id}
-	</select>
-
-	<insert id="toAdd" parameterType="com.edu.erp.model.EmployeeInfo">
-		insert into tab_employee_info t
+	<!-- 添加员工 -->
+	<insert id="insertEmployee" parameterType="com.edu.erp.model.EmployeeInfo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TAB_EMPLOYEE_INFO
 		(
 		encoding,
+		id_card,
 		employee_name,
-		sex,
-		id_id,
-		email,
 		phone,
-		address,
-		description,
+		sex,
+		user_type,
 		status,
 		create_user,
-		create_time,
-		update_user,
-		update_time,
-		user_type
+		create_time
 		)
-		values
-		(
+		values (
 		#{encoding,jdbcType=VARCHAR},
+		#{id_card,jdbcType=VARCHAR},
 		#{employee_name,jdbcType=VARCHAR},
-		#{sex,jdbcType=NUMERIC},
-		#{ID_ID,jdbcType=VARCHAR},
-		#{email,jdbcType=VARCHAR},
 		#{phone,jdbcType=VARCHAR},
-		#{address,jdbcType=VARCHAR},
-		#{description,jdbcType=VARCHAR},
+		#{sex,jdbcType=NUMERIC},
+		#{user_type,jdbcType=NUMERIC},
 		#{status,jdbcType=NUMERIC},
 		#{create_user,jdbcType=NUMERIC},
-		#{create_time,jdbcType=VARCHAR},
-		#{update_user,jdbcType=NUMERIC},
-		#{update_time,jdbcType=VARCHAR},
-		#{user_type,jdbcType=NUMERIC}
+		#{create_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 
-	<update id="toUpdate" parameterType="com.edu.erp.model.EmployeeInfo">
-		update tab_employee_info t
-		set
-		encoding = #{encoding,jdbcType=VARCHAR},
-		employee_name =
-		#{employee_name,jdbcType=VARCHAR},
-		sex = #{sex,jdbcType=NUMERIC},
-		ID_ID
-		= #{ID_ID,jdbcType=VARCHAR},
-		email = #{email,jdbcType=VARCHAR},
-		phone =
-		#{phone,jdbcType=VARCHAR},
-		address = #{address,jdbcType=VARCHAR},
-		description = #{description,jdbcType=VARCHAR},
-		update_user =
-		#{update_user,jdbcType=NUMERIC},
-		update_time =
-		#{update_time,jdbcType=VARCHAR},
-		user_type =
-		#{user_type,jdbcType=NUMERIC}
-		where t.id = #{id}
-	</update>
-
-	<update id="toChangeStatus" parameterType="java.util.Map">
+	<!-- 更新员工档案 -->
+	<update id="updateEmployee" parameterType="java.util.Map">
 		UPDATE
-		tab_employee_info t
-		SET t.status = ${status}
-		WHERE t.id IN (${ids})
+		TAB_EMPLOYEE_INFO
+		SET
+		${str}
+		WHERE id=#{id}
 	</update>
 
-	<insert id="toAddDepRef" parameterType="java.util.List">
-		<foreach collection="list" item="item" index="index" open="begin"
-			close="; end;" separator=";">
-			INSERT INTO tab_employee_department_ref
-			(
-			id,
-			employee_id,
-			dep_org_id
-			)
-			VALUES
-			(
-			seq_employee_department_ref.nextval,
-			#{item.employee_id},
-			#{item.dep_org_id}
-			)
-		</foreach>
+	<!-- 根据条件查询符合条件的员工id和编码和姓名 -->
+	<select id="queryEmployeeInfo" parameterType="string" resultType="java.util.Map">
+		select
+		taf.encoding as encoding,
+		taf.id as id,
+		taf.employee_name as employee_name
+		FROM tab_employee_info taf
+		<where>
+			rownum&lt;=10
+			and taf.status=1
+			<if test="searchInfo!=null and searchInfo!=''">
+				AND( taf.encoding like '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
+				OR taf.employee_name like '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
+				)
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询员工教育经历 -->
+	<select id="queryEmployeeEdu" parameterType="long" resultType="com.edu.erp.model.EmployeeEdu">
+		select * from TAB_EMPLOYEE_EDU where employee_id=#{employee_id,jdbcType=NUMERIC} order by id
+	</select>
+
+	<!-- 添加员工教育经历 -->
+	<insert id="addEmployeeEdu" parameterType="com.edu.erp.model.EmployeeEdu">
+		insert into TAB_EMPLOYEE_EDU
+		(
+		employee_id,
+		begin_time,
+		end_time,
+		school,
+		profession,
+		degree,
+		certificate,
+		length_school,
+		enclosure,
+		remark
+		)
+		select
+		#{employee_id,jdbcType=NUMERIC},
+		#{begin_time,jdbcType=DATE},
+		#{end_time,jdbcType=DATE},
+		#{school,jdbcType=VARCHAR},
+		#{profession,jdbcType=VARCHAR},
+		#{degree,jdbcType=VARCHAR},
+		#{certificate,jdbcType=VARCHAR},
+		#{length_school,jdbcType=NUMERIC},
+		#{enclosure,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}
+		from dual
 	</insert>
 
+	<!-- 修改员工教育经历 -->
+	<update id="updateEmployeeEdu" parameterType="com.edu.erp.model.EmployeeEdu">
+		update TAB_EMPLOYEE_EDU
+		set
+		begin_time=#{begin_time,jdbcType=DATE},
+		end_time= #{end_time,jdbcType=DATE},
+		school= #{school,jdbcType=VARCHAR},
+		profession=#{profession,jdbcType=VARCHAR},
+		degree= #{degree,jdbcType=VARCHAR},
+		certificate= #{certificate,jdbcType=VARCHAR},
+		length_school=#{length_school,jdbcType=NUMERIC},
+		enclosure=#{enclosure,jdbcType=VARCHAR},
+		remark=#{remark,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
 
-
-	<delete id="toRemoveDepRef" parameterType="java.lang.String">
-		DELETE FROM
-		tab_employee_department_ref
-		WHERE employee_id in (${_parameter})
+	<!-- 删除员工教育经历 -->
+	<delete id="deleteEmployeeEdu" parameterType="long">
+		delete from TAB_EMPLOYEE_EDU where id=#{id,jdbcType=NUMERIC}
 	</delete>
 
-	<select id="queryEmployByConditions" resultType="map"
-		parameterType="map">
-		select a.*
-		from tab_employee_info a
-		where (a.status != 0 or a.status is
-		null)
-		<if test="employee_id != null">
-			and a.id = #{employee_id}
-		</if>
-		<if test="employee_name != null and employee_name != ''">
-			and a.employee_name like
-			'%'||#{employee_name,jdbcType=VARCHAR}||'%'
-		</if>
-		<if test="encoding != null and encoding != ''">
-			and a.encoding like '%'||#{encoding,jdbcType=VARCHAR}||'%'
-		</if>
-		<if test="status != null and status != ''">
-			and a.status = #{status}
-		</if>
-		<if test="counselor_type != null and counselor_type != ''">
-			and exists (select 1 from tab_student_counselor_info t where t.counselor_id = a.id and t.counselor_type = #{counselor_type})
-		</if>
-		<if test="size != null">
-			<![CDATA[and rownum <= #{size}]]>
-		</if>
-		<if test="size==null">
-		   <![CDATA[and rownum <= 5]]>
-		</if>
-		order by a.update_time DESC, a.id DESC
+	<!-- 查询员工工作经历 -->
+	<select id="queryEmployeeExp" parameterType="long" resultType="com.edu.erp.model.EmployeeExperience">
+		select * from TAB_EMPLOYEE_EXPERIENCE where employee_id=#{employee_id,jdbcType=NUMERIC} order by id
 	</select>
 
-	<select id="queryEmpSupervioer" resultType="java.lang.Integer"
-		parameterType="java.lang.String">
+	<!-- 添加员工工作经历 -->
+	<insert id="addEmployeeExp" parameterType="com.edu.erp.model.EmployeeExperience">
+		insert into TAB_EMPLOYEE_EXPERIENCE
+		(
+		employee_id,
+		begin_time,
+		end_time,
+		company_name,
+		company_type,
+		job_title,
+		responsibility,
+		subordinates,
+		reasons,
+		has_prove,
+		reterence,
+		enclosure
+		)
 		select
-		emp.supervisor
-		from tab_employee_info emp where
-		emp.id=#{employee_id}
+		#{employee_id,jdbcType=NUMERIC},
+		#{begin_time,jdbcType=DATE},
+		#{end_time,jdbcType=DATE},
+		#{company_name,jdbcType=VARCHAR},
+		#{company_type,jdbcType=VARCHAR},<!-- 公司性质 -->
+		#{job_title,jdbcType=VARCHAR},<!-- 职位名称 -->
+		#{responsibility,jdbcType=VARCHAR},<!-- 工作职责 -->
+		#{subordinates,jdbcType=NUMERIC},<!-- 下属人数 -->
+		#{reasons,jdbcType=VARCHAR},<!-- 离职原因 -->
+		#{has_prove,jdbcType=NUMERIC},<!-- 是否有证明 -->
+		#{reterence,jdbcType=VARCHAR}<!-- 证明信息 -->
+		#{enclosure,jdbcType=VARCHAR}<!-- 附件 -->
+		from dual
+	</insert>
+
+	<!-- 修改员工工作经历 -->
+	<update id="updateEmployeeExp" parameterType="com.edu.erp.model.EmployeeExperience">
+		update TAB_EMPLOYEE_EXPERIENCE
+		set
+		begin_time=#{begin_time,jdbcType=DATE},
+		end_time=#{end_time,jdbcType=DATE},
+		company_name=#{company_name,jdbcType=VARCHAR},
+		company_type=#{company_type,jdbcType=VARCHAR},
+		job_title=#{job_title,jdbcType=VARCHAR},
+		responsibility=#{responsibility,jdbcType=VARCHAR},
+		subordinates=#{subordinates,jdbcType=NUMERIC},
+		reasons=#{reasons,jdbcType=VARCHAR},
+		has_prove=#{has_prove,jdbcType=NUMERIC},
+		reterence=#{reterence,jdbcType=VARCHAR},
+		enclosure=#{enclosure,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+
+	<!-- 删除员工工作经历 -->
+	<delete id="deleteEmployeeExp" parameterType="long">
+		delete from TAB_EMPLOYEE_EXPERIENCE where id=#{id,jdbcType=NUMERIC}
+	</delete>
+
+	<!-- 查询员工工作总结 -->
+	<select id="queryEmployeeSum" parameterType="long" resultType="com.edu.erp.model.EmployeeSummarize">
+		select
+		tes.id,
+		tes.employee_id,
+		tes.start_time,
+		tes.end_time,
+		tes.title ,
+		tes.content,
+		tes.approver,
+		tef.employee_name as employeeName,
+		tes.approval_status,
+		tes.approval_opinion,
+		tes.enclosure
+		from TAB_EMPLOYEE_SUMMARIZE tes
+		left join tab_employee_info tef
+		on tes.approver=tef.id
+		where tes.employee_id=#{employee_id,jdbcType=NUMERIC} order by id
 	</select>
 
-	<select id="queryChangeId" resultType="java.lang.Integer"
-		parameterType="java.lang.String">
-		select thc.id
-		from tab_hrm_changeevent thc
-		left
-		join
-		jbpm4_task jt on jt.dbid_ = thc.task_id
-		left join
-		tab_employee_info emp
-		on emp.id = thc.employee_id
-		where
-		jt.execution_id_=#{execution_id}
-	</select>
-	<!--hrm 第二层人员分配 -->
-	<select id="queryBranchHander" parameterType="java.lang.Integer"
-		resultType="com.edu.erp.model.EmployeeInfo">
-		select a.id id,
-		a.encoding encoding,
-		a.employee_name employee_name,
-		a.sex sex,
-		a.description description
-		from tab_employee_info a
-		where a.id in
-		(select teops.emp_id
-		from (select emp.*, teop.branch_id
-		from tab_hrm_changeevent thc
-		left join tab_employee_info emp on emp.id = thc.employee_id
-		left join TAB_EMP_ORG_POST teop on teop.emp_id = emp.id
-		where thc.id=#{event_id}
-		) t
-		left join TAB_EMP_ORG_POST teops on t.branch_id = teops.branch_id
-		where teops.status = 1
-		and teops.post_id in (5, 62, 63, 23))
-	</select>
-	<!--hrm 第三层人员分配 -->
-	<select id="queryBranchHander3" parameterType="java.lang.Integer"
-		resultType="com.edu.erp.model.EmployeeInfo">
-		select a.id id,
-		a.encoding encoding,
-		a.employee_name employee_name,
-		a.sex sex,
-		a.description description
-		from tab_employee_info a
-		where a.id in
-		(select teops.emp_id
-		from (select emp.*, teop.branch_id
-		from tab_hrm_changeevent thc
-		left join tab_employee_info emp on emp.id = thc.employee_id
-		left join TAB_EMP_ORG_POST teop on teop.emp_id = emp.id
-		where thc.id=#{event_id}
-		) t
-		left join TAB_EMP_ORG_POST teops on t.branch_id = teops.branch_id
-		where teops.status = 1
-		and teops.post_id in ( 61, 64))
+	<!-- 添加员工工作总结 -->
+	<insert id="addEmployeeSum" parameterType="com.edu.erp.model.EmployeeSummarize">
+		insert into TAB_EMPLOYEE_SUMMARIZE
+		(
+		employee_id,
+		start_time,
+		end_time,
+		title ,
+		content,
+		approver,
+		approval_status,
+		approval_opinion,
+		enclosure
+		)
+		select
+		#{employee_id,jdbcType=NUMERIC},
+		#{start_time,jdbcType=DATE},
+		#{end_time,jdbcType=DATE},
+		#{title,jdbcType=VARCHAR},
+		#{content,jdbcType=VARCHAR},
+		#{approver,jdbcType=NUMERIC},
+		#{approval_status,jdbcType=NUMERIC},
+		#{approval_opinion,jdbcType=VARCHAR},
+		#{enclosure,jdbcType=VARCHAR}
+		from dual
+	</insert>
+
+	<!-- 修改员工工作总结 -->
+	<update id="updateEmployeeSum" parameterType="com.edu.erp.model.EmployeeSummarize">
+		update TAB_EMPLOYEE_SUMMARIZE
+		set
+		start_time=#{start_time,jdbcType=VARCHAR},
+		end_time=#{end_time,jdbcType=VARCHAR},
+		title=#{title,jdbcType=VARCHAR},
+		content=#{content,jdbcType=VARCHAR},
+		approver=#{approver,jdbcType=NUMERIC},
+		approval_status=#{approval_status,jdbcType=NUMERIC},
+		approval_opinion=#{approval_opinion,jdbcType=VARCHAR},
+		enclosure=#{enclosure,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+
+	<!-- 删除员工工作总结 -->
+	<delete id="deleteEmployeeSum" parameterType="long">
+		delete from TAB_EMPLOYEE_SUMMARIZE where id=#{id,jdbcType=NUMERIC}
+	</delete>
+
+	<!-- 查询员工奖惩信息 -->
+	<select id="queryEmployeeRew" parameterType="long" resultType="com.edu.erp.model.EmployeeReward">
+		select * from TAB_EMPLOYEE_REWARD where employee_id=#{employee_id,jdbcType=NUMERIC} order by id
 	</select>
 
+	<!-- 添加员工奖惩信息 -->
+	<insert id="addEmployeeRew" parameterType="com.edu.erp.model.EmployeeReward">
+		insert into TAB_EMPLOYEE_REWARD
+		(
+		employee_id,
+		date_time,
+		award_party,
+		award_name,
+		describe,
+		enclosure
+		)
+		select
+		#{employee_id,jdbcType=NUMERIC},
+		#{date_time,jdbcType=DATE},
+		#{award_party,jdbcType=VARCHAR},
+		#{award_name,jdbcType=VARCHAR},
+		#{describe,jdbcType=VARCHAR},
+		#{enclosure,jdbcType=VARCHAR}
+		from dual
+	</insert>
+
+	<!-- 修改员工奖惩信息-->
+	<update id="updateEmployeeRew" parameterType="com.edu.erp.model.EmployeeReward">
+		update TAB_EMPLOYEE_REWARD
+		set
+		date_time=#{date_time,jdbcType=DATE},
+		award_party=#{award_party,jdbcType=VARCHAR},
+		award_name=#{award_name,jdbcType=VARCHAR},
+		describe=#{describe,jdbcType=VARCHAR},
+		enclosure=#{enclosure,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+
+	<!-- 删除员工奖惩信息-->
+	<delete id="deleteEmployeeRew" parameterType="long">
+		delete from TAB_EMPLOYEE_REWARD where id=#{id,jdbcType=NUMERIC}
+	</delete>
+
+	<!-- 修改员工任职/固定信息-->
+	<update id="updateEmployeeStatic" parameterType="map">
+		update TAB_EMPLOYEE_INFO
+		set
+		employee_name=#{employee_name,jdbcType=VARCHAR},
+		encoding=#{encoding,jdbcType=VARCHAR},
+		phone=#{phone,jdbcType=VARCHAR},
+		dept=#{dept,jdbcType=VARCHAR},
+		post=#{post,jdbcType=NUMERIC},
+		position=#{position,jdbcType=VARCHAR},
+		poslevel=#{poslevel,jdbcType=NUMERIC},
+		email=#{email,jdbcType=VARCHAR},
+		enterType=#{enterType,jdbcType=NUMERIC},
+		id_card=#{id_card,jdbcType=NUMERIC},
+		business=#{business,jdbcType=VARCHAR}
+		<if test="entryDate!=null || entryDate!=''">
+			,entry_date=to_date(#{entryDate}, 'yyyy-mm-dd')
+		</if>
+		where id=#{id,jdbcType=NUMERIC}
+	</update>
+
+
+	<!-- 修改员工头像-->
+	<update id="updateEmployeeImage" parameterType="map">
+		update TAB_EMPLOYEE_INFO
+		set
+		staff_head=#{staff_head,jdbcType=VARCHAR}
+		where	id=#{id,jdbcType=NUMERIC}
+	</update>
+
+
+	<!-- 根据员工id查询该员工绑定的岗位信息-->
+	<select id="queryPostByEmpId" parameterType="long" resultMap="dataMap">
+		select a.id,a.status,a.post_id,a.emp_id,tof.org_name as buName,
+		case 　　
+		when a.branch_id = -1 then '全部校区' 　　
+		else tof2.org_name 　　end branchName,
+		tp.post_name
+		from (select id,bu_id, branch_id, post_id, status,emp_id
+		from TAB_EMP_ORG_POST teop
+		<where>1=1
+			<if test="employee_id!=null">
+				and teop.emp_id=#{employee_id,jdbcType=NUMERIC}
+			</if>
+		</where>
+		) a
+		left join tab_organization_info tof on tof.id = a.bu_id
+		left join tab_organization_info tof2 on tof2.id = a.branch_id
+		left join Tp_Post tp on tp.id = a.post_id
+
+	</select>
+
+	<!-- 添加员工岗位信息 -->
+	<insert id="addEmpPost" parameterType="java.util.Map">
+		insert into TAB_EMP_ORG_POST
+		(
+		emp_id,
+		bu_id,
+		branch_id,
+		post_id,
+		create_user,
+		status,
+		create_time
+		)
+		values(
+		#{emp_id,jdbcType=NUMERIC},
+		#{bu_Id,jdbcType=NUMERIC},
+		#{branch_Id,jdbcType=NUMERIC},
+		#{post_Id,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		1,
+		(select sysdate from dual)
+		)
+	</insert>
+
+	<!-- 禁用 启用员工岗位-->
+	<update id="removeEmpPost" parameterType="long">
+		UPDATE TAB_EMP_ORG_POST
+		SET    status=abs(nvl(status,0)-1)
+		WHERE  id=#{id,jdbcType=NUMERIC}
+	</update>
+
+
+	<!-- 禁用 启用员工状态-->
+	<update id="setStatus" parameterType="long">
+		UPDATE tab_employee_info
+		SET    status=abs(nvl(status,0)-1)
+		WHERE  id=#{id,jdbcType=NUMERIC}
+	</update>
 </mapper>

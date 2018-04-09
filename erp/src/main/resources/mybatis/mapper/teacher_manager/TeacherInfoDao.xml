@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TeacherInfoDao">
+
+	<resultMap type="com.edu.erp.model.Teacher" id="teacherMap">
+		<id property="id" column="id" />
+		<result property="encoding" column="encoding" />
+		<result property="teacher_name" column="teacher_name" />
+		<result property="photo" column="photo" />
+		<result property="description" column="description" />
+		<result property="phone" column="phone" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_user_name" column="update_user_name" />
+		<result property="update_time" column="update_time" />
+		<result property="employee_id" column="employee_id" />
+		<result property="employee_name" column="employee_name" />
+		<result property="sex" column="sex" />
+		<result property="teacher_type" column="teacher_type" />
+		<result property="subject" column="subject" />
+		<result property="email" column="email" />
+		<result property="subject_name" column="subject_name" />
+		<collection property="teacherSubjectList" column="teacher_id"
+			javaType="ArrayList" ofType="com.edu.erp.model.TeacherSubject">
+			<id property="id" column="c_id" />
+			<association property="subject" column="subject_id"
+				javaType="com.edu.erp.model.TPSubject">
+				<id property="id" column="d_id" />
+				<result property="encoding" column="d_encoding" />
+				<result property="name" column="d_name" />
+			</association>
+			<association property="bu" column="bu_id"
+				javaType="com.edu.erp.model.OrganizationInfo">
+				<id property="id" column="e_id" />
+				<result property="org_name" column="bu_name" />
+			</association>
+			<association property="grade" column="grade_id"
+				javaType="com.edu.erp.model.Grade">
+				<id property="id" column="f_id" />
+				<result property="grade_name" column="grade_name" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<select id="queryOrderTeacher" resultMap="teacherMap"
+		parameterType="java.lang.Long">
+		select a.id             id,
+		       a.encoding       encoding,
+		       a.teacher_name   teacher_name,
+		       a.status         status,
+		       a.photo          photo,
+		       a.sex            sex,
+		       a.create_time    create_time,
+		       a.update_time    update_time,
+		       a.description    description,
+		       a.phone          phone,
+		       b.id             employee_id,
+		       b.employee_name  employee_name
+		  from tab_teacher_info a
+		  left join tab_employee_info b
+		    on a.employee_id = b.id
+		 where a.id in (select distinct tc.teacher_id
+		                  from t_order_course toc
+		                  left join t_course tc
+		                    on tc.id = toc.course_id
+						 where toc.order_id = #{orderId,jdbcType=NUMERIC})
+	</select>
+	<select id="queryOne" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.Teacher">
+		select a.id,
+		a.encoding,
+		a.teacher_name,
+		a.status,
+		a.photo,
+		a.sex sex,
+		a.create_time,
+		a.update_time,
+		a.description,
+		a.phone phone,
+		b.id employee_id,
+		b.employee_name
+		from tab_teacher_info a
+		left join tab_employee_info b
+		on a.employee_id = b.id
+		where a.id = #{teacherId}
+	</select>
+
+	<!-- 查询教师信息列表 -->
+	<select id="page" resultMap="teacherMap" parameterType="java.util.Map">
+		select a.*,
+		c_emp.employee_name as create_user_name, u_emp.employee_name as
+		update_user_name,
+		(select wm_concat(distinct ts.name)
+			 from tp_subject ts, tab_teacher_subject_ref ttsr
+			where ttsr.teacher_id = a.id
+			  and ttsr.subject_id = ts.id) as subject_name
+		from tab_teacher_info a
+		left join tab_employee_info c on
+		a.employee_id = c.id
+		<!-- 新增用户 -->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户 -->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		where a.status != 0
+		<if test="teacher_name != null and teacher_name != ''">
+			and a.teacher_name like '%' || #{teacher_name} || '%'
+		</if>
+		<if test="encoding != null and encoding != ''">
+			and a.encoding like '%' || #{encoding} || '%'
+		</if>
+		<if test="employee_name != null and employee_name != ''">
+			and c.employee_name like '%' || #{employee_name} || '%'
+		</if>
+		<if test="employee_no != null and employee_no != ''">
+			and c.encoding like '%' || #{employee_no} || '%'
+		</if>
+		<if test="teacher_type != null and teacher_type  != ''">
+			and a.teacher_type =#{teacher_type}
+		</if>
+		<if test="search_info != null and search_info != ''">
+			and (
+				c.encoding like '%' || #{search_info} || '%' 
+				or
+				c.employee_name like '%' || #{search_info} || '%'
+				or
+				a.encoding like '%' || #{search_info} || '%'
+				or
+				a.teacher_name like '%' || #{search_info} || '%'
+			)
+		</if>
+		<if test="status != null and status != ''">
+			and a.status = #{status}
+		</if>
+		<if test="subjectId != null">
+			and exists (select 1
+				from tab_teacher_subject_ref ttsr
+			where ttsr.teacher_id = a.id
+				and ttsr.subject_id = #{subjectId})
+		</if>
+		<if test="onlyValidTeacher == 'Y'.toString()">
+			and a.status in (1,2,3)
+		</if>
+		<if test="teach_group_id != null">
+			and exists(select 1
+			from tab_teach_group ttg, tab_teach_group_ref ttgr
+			where ttg.id = ttgr.teach_group_id
+			and ttgr.teacher_id = a.id
+			and ttg.id = #{teach_group_id, jdbcType=NUMERIC})
+		</if>
+		order by a.id DESC
+	</select>
+
+	<select id="selectList" parameterType="java.util.Map" resultMap="teacherMap">
+		select a.*, c.id as c_id, c.teacher_id,
+		c.subject_id as subject,
+		d.id as d_id, d.encoding as d_encoding, d.name as d_name,
+		e.id as e_id, e.org_name as bu_name, f.id as f_id, f.grade_name
+		from tab_teacher_info a
+		left join tab_teacher_subject_ref c on a.id = c.teacher_id
+		left join tp_subject d on c.subject_id = d.id
+		left join tab_data_grade f on c.grade_id = f.id and f.status = 1
+		where a.status != 0
+		<if test="teacher_id != null and teacher_id != ''">
+			and a.id = #{teacher_id}
+		</if>
+		<if test="teacher_name != null and teacher_name != ''">
+			and a.teacher_name '%' || #{teacher_name} || '%'
+		</if>
+		<if test="grade_id != null and grade_id != ''">
+			and c.grade_id = #{grade_id}
+		</if>
+		<if test="subject_id != null and subject_id != ''">
+			and c.subject_id = #{subject_id}
+		</if>
+		<if test="valid_status == 'valid'">
+			<!-- 有效状态 -->
+			and a.status in (1,2,3)
+		</if>
+		<if test="ids != null">
+			and a.id in (${ids})
+		</if>
+		<!-- 严格匹配 -->
+	 	<if test="strict_teacher_code != null and strict_teacher_code != ''">
+			and  a.encoding = #{strict_teacher_code,jdbcType=VARCHAR}
+		 </if>
+		<if test="teach_group_id != null">
+			and exists(select 1
+				 from tab_teach_group ttg, tab_teach_group_ref ttgr
+				where ttg.id = ttgr.teach_group_id
+			    and ttgr.teacher_id = a.id
+			    and ttg.id = #{teach_group_id, jdbcType=NUMERIC})
+		</if>
+	</select>
+
+	<!-- 插入教师信息数据 -->
+	<insert id="toAdd" parameterType="com.edu.erp.model.Teacher" useGeneratedKeys="true" keyProperty="id">
+		insert into tab_teacher_info
+		(
+		encoding,
+		teacher_name,
+		photo,
+		description,
+		status,
+		employee_id,
+		phone,
+		sex,
+		create_user,
+		create_time,
+		teacher_type,
+		email
+		)
+		values
+		(
+		trim(#{encoding,jdbcType=VARCHAR}),
+		trim(#{teacher_name,jdbcType=VARCHAR}),
+		#{photo,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{status,jdbcType=NUMERIC},
+		#{employee_id,jdbcType=NUMERIC},
+		#{phone,jdbcType=VARCHAR},
+		#{sex,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		#{create_time,jdbcType=TIMESTAMP},
+		#{teacher_type,jdbcType=NUMERIC},
+		#{email,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="toUpdate" parameterType="com.edu.erp.model.Teacher">
+		update tab_teacher_info
+		<set>
+			<if test="employee_id != null ">
+				employee_id = #{employee_id,jdbcType=NUMERIC},
+			</if>
+			<if test="encoding != null and encoding != '' ">
+				encoding = #{encoding,jdbcType=VARCHAR},
+			</if>
+			<if test="teacher_name != null and teacher_name != '' ">
+				teacher_name = #{teacher_name,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=NUMERIC},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=NUMERIC},
+			</if>
+			<if test="teacher_type != null  ">
+				teacher_type = #{teacher_type,jdbcType=NUMERIC},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null and description != '' ">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="update_user != null">
+				update_user = #{update_user,jdbcType=NUMERIC},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email,jdbcType=NUMERIC},
+			</if>
+			update_time = #{update_time,jdbcType=TIMESTAMP}
+		</set>
+		where id = #{id,jdbcType=NUMERIC}
+	</update>
+
+	<update id="toChangeStatus" parameterType="java.util.Map"
+		statementType="STATEMENT">
+		update tab_teacher_info
+		set status = ${status},
+			update_user = #{update_user,jdbcType=NUMERIC},
+			update_time = #{update_time,jdbcType=TIMESTAMP}
+		where t.id in (${ids})
+	</update>
+
+	<insert id="insertSubjectRef" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="; end;" separator=";">
+			insert into tab_teacher_subject_ref
+			(
+			teacher_id,
+			subject_id,
+			bu_id,
+			status
+			)
+			values
+			(
+			#{item.teacher_id},
+			#{item.subject_id},
+			#{item.bu_id},
+			#{item.status}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="toRemoveSubjectRef" parameterType="java.lang.String">
+		delete from tab_teacher_subject_ref
+		where teacher_id in (${_parameter})
+	</delete>
+
+	<update id="setPhoto" parameterType="java.util.Map">
+		update tab_teacher_info
+		set photo = #{photo}
+		where t.id = #{teacher_id}
+	</update>
+
+	<select id="isEncodingExisted" parameterType="com.edu.erp.model.Teacher" resultType="java.lang.Integer">
+		select count(0) from tab_teacher_info
+		where status != 0
+		  <if test="id !=null and id!=''">
+		  	and id != #{id}
+		  </if>
+		  and encoding = #{encoding}
+	</select>
+	
+	<select id="isPhoneExisted" parameterType="com.edu.erp.model.Teacher" resultType="java.lang.Integer">
+		select count(0) from tab_teacher_info
+		where status != 0
+		  <if test="id !=null and id!=''">
+		  	and id != #{id}
+		  </if>
+		  and phone = #{phone}
+	</select>
+
+	<select id="searchTeacherSubjects" parameterType="int" resultType="map">
+		select distinct * from (select ts.id,t.teacher_id,t.grade_id,ts.name from tab_teacher_subject_ref t
+		left join tp_subject ts on ts.id = t.subject_id
+		 where t.status=1 and t.teacher_id=#{teacherId})
+	</select>
+
+	<insert id="insertTeamRef" parameterType="com.edu.erp.model.TeacherTeamRel">
+			insert into TAB_TEACHER_TEAM_REF
+			(
+			teacher_id,
+			bu_id
+			)
+			values
+			(
+			#{teacherTeamRel.teacherId},
+			#{teacherTeamRel.buId}
+			)
+	</insert>
+
+	<select id="searchTeacherTeam" parameterType="int" resultType="com.edu.erp.model.TeacherTeamRel">
+		select t.id as id,t.teacher_id as teacherId,t.bu_id as buId,toi.org_name as org_name from tab_teacher_team_ref t
+		left join tab_organization_info toi on t.bu_id = toi.id
+		where t.teacher_id=#{teacherId}
+	</select>
+
+	<delete id="toRemoveTeamRef" parameterType="long">
+		delete from TAB_TEACHER_TEAM_REF
+		where teacher_id =#{teacherId}
+	</delete>
+
+</mapper>

@@ -19,7 +19,7 @@ public class EmployeeInfo extends BaseObject {
     // 性别
     private Integer sex; 
     // 身份证
-    private String ID_ID; 
+    private String id_card;
     // 邮箱
     private String email; 
     // 手机
@@ -30,6 +30,8 @@ public class EmployeeInfo extends BaseObject {
     private String description; 
     // 员工类型
     private Long user_type;
+
+    private String user_type_name;
     
     private String branch_post_names; //所属校区/职位（多个以,分隔）
     
@@ -105,15 +107,15 @@ public class EmployeeInfo extends BaseObject {
 		this.edrList = edrList;
 	}
 
-	public String getID_ID() {
-		return ID_ID;
-	}
+    public String getId_card() {
+        return id_card;
+    }
 
-	public void setID_ID(String iD_ID) {
-		ID_ID = iD_ID;
-	}
+    public void setId_card(String id_card) {
+        this.id_card = id_card;
+    }
 
-	public Long getUser_type() {
+    public Long getUser_type() {
 		return user_type;
 	}
 
@@ -145,6 +147,14 @@ public class EmployeeInfo extends BaseObject {
         this.counselor_type = counselor_type;
     }
 
+    public String getUser_type_name() {
+        return user_type_name;
+    }
+
+    public void setUser_type_name(String user_type_name) {
+        this.user_type_name = user_type_name;
+    }
+
     public String toString(){
 		StringBuffer buff = new StringBuffer();
 		buff.append("ID：");
@@ -154,7 +164,7 @@ public class EmployeeInfo extends BaseObject {
 		buff.append("姓名：");
 		buff.append(getEmployee_name());
 		buff.append("身份证：");
-		buff.append(getID_ID());
+		buff.append(getId_card());
 		buff.append("性别：");
 		buff.append(getSex());
 		buff.append("手机：");

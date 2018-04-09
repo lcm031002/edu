@@ -165,6 +165,9 @@ angular.module('ework-ui').factory('erp_studentCounselorService',
 angular.module('ework-ui').factory('erp_employeeService',
 		[ '$resource', erp_employeeService ]);
 
+angular.module('ework-ui').factory('erp_employeeMgrService',
+    [ '$resource', erp_employeeMgrService ]);
+
 /**
  * 课程季服务
  */
@@ -1267,6 +1270,177 @@ function erp_employeeService($resource){
 			isArray : false
 		}
 	});
+}
+
+/**
+ * 员工档案管理
+ * @param $resource
+ * @returns {*}
+ * @constructor
+ */
+function erp_employeeMgrService($resource){
+    return $resource('/erp/employee/employeeservice', {}, {
+        query : {
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        queryEmployeeForPage :
+            {
+                url:'/erp/employee/employeeservice/page',
+                method : 'GET',
+                params : {},
+                isArray : false
+            },
+        queryEmployeeInfo:{
+            url:'/erp/employee/employeeservice/employeeInfo',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        add : {
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        update : {
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        queryEmployeeEdu:{
+            url:'/erp/employee/employeeservice/employeeInfo/edu',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        addEmployeeEdu : {
+            url:'/erp/employee/employeeservice/employeeInfo/edu',
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        updateEmployeeEdu : {
+            url:'/erp/employee/employeeservice/employeeInfo/edu',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        deleteEmployeeEdu : {
+            url:'/erp/employee/employeeservice/employeeInfo/edu',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        queryEmployeeExp:{
+            url:'/erp/employee/employeeservice/employeeInfo/exp',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        addEmployeeExp : {
+            url:'/erp/employee/employeeservice/employeeInfo/exp',
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        updateEmployeeExp : {
+            url:'/erp/employee/employeeservice/employeeInfo/exp',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        deleteEmployeeExp : {
+            url:'/erp/employee/employeeservice/employeeInfo/exp',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        queryEmployeeSum:{
+            url:'/erp/employee/employeeservice/employeeInfo/sum',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        addEmployeeSum : {
+            url:'/erp/employee/employeeservice/employeeInfo/sum',
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        updateEmployeeSum : {
+            url:'/erp/employee/employeeservice/employeeInfo/sum',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        deleteEmployeeSum : {
+            url:'/erp/employee/employeeservice/employeeInfo/sum',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        queryEmployeeRew:{
+            url:'/erp/employee/employeeservice/employeeInfo/rew',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        addEmployeeRew : {
+            url:'/erp/employee/employeeservice/employeeInfo/rew',
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        updateEmployeeRew : {
+            url:'/erp/employee/employeeservice/employeeInfo/rew',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        deleteEmployeeRew : {
+            url:'/erp/employee/employeeservice/employeeInfo/rew',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        updateEmployeeStatic : {
+            url:'/erp/employee/employeeservice/employeeInfo/static',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        queryPostByEmpId : {
+            url:'/erp/employee/employeeservice/employeeInfo/post',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        addPost : {
+            url:'/erp/employee/employeeservice/employeeInfo/post',
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        removePost : {
+            url:'/erp/employee/employeeservice/employeeInfo/post',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        setStatus : {
+            url:'/erp/employee/employeeservice/employeeInfo/status',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        modifyHeadImg:{
+            url:'/erp/employee/employeeservice/employeeInfo/img',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        }
+    });
 }
 
 function erp_timeSeasonService($resource){

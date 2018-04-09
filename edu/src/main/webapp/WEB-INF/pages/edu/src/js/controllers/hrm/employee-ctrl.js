@@ -11,7 +11,7 @@ angular.module('ework-ui')
         'PostService',
         'DictItemService',
         'EmployeeExtService',
-        'EmployeeManageService',
+        'erp_employeeMgrService',
         EmployeeCtrl]);
 
 function EmployeeCtrl($scope,
@@ -22,7 +22,7 @@ function EmployeeCtrl($scope,
                   PostService,
                   DictItemService,
                   EmployeeExtService,
-                  EmployeeManageService){
+                  erp_employeeMgrService){
 	//员工列表
 	$scope.employeeList = [];
 	$scope.itemOperateType = '';
@@ -45,6 +45,16 @@ function EmployeeCtrl($scope,
     $('title').text('员工管理 | 人力');
 
     $scope.test=1;
+
+    $scope.paginationConf = {
+        currentPage: 1, //当前页
+        totalItems: 0,
+        itemsPerPage: 10,
+        onChange: function(){
+            queryEmployee();
+        }
+    };
+
     /**
      * 查询员工列表
      */
@@ -77,27 +87,12 @@ function EmployeeCtrl($scope,
     		param.employee_name='';
     	}
     	$scope.isLoading = 'loading...';
-    	param.pageNum=$scope.pageNum;
-		param.pageSize=10;
-    	/*$scope.pageParam = {
-    			pageNum :$scope.pageNum,
-    			pageSize : 10
-    		};
-    	param.pageParam = $scope.pageParam;*/
 
-    	EmployeeManageService.queryEmployeeForPage(param,function(resp){
+    	erp_employeeMgrService.queryEmployeeForPage(param,function(resp){
     		$scope.isLoading = '';
-    		if(resp.nodata==true){
+    		if(!resp.error) {
     			$scope.employeeList = resp.data;
-    			$scope.pageParam = resp.pageParam;
-    	    	
-    	    	 if ($scope.pageParam.pageNum > 1 && $scope.pageParam.pageNum < $scope.pageParam.pages) {
-    	     	       $scope.paginationBars = [$scope.pageParam.pageNum - 1,$scope.pageParam.pageNum, $scope.pageParam.pageNum + 1];
-    	         } else if ($scope.pageParam.pageNum == 1 && $scope.pageParam.pages > 1) {
-    	     	       $scope.paginationBars = [ $scope.pageParam.pageNum, $scope.pageParam.pageNum + 1];
-    	         } else if ($scope.pageParam.pageNum == $scope.pageParam.pages && $scope.pageParam.pages > 1) {
-    	     	       $scope.paginationBars = [ $scope.pageParam.pageNum - 1,$scope.pageParam.pageNum];
-    	         }
+                $scope.paginationConf.totalItems = resp.total || 0; //设置总条数
     		}
     	})
     };
@@ -161,7 +156,7 @@ function EmployeeCtrl($scope,
 	function getEmployeeInfo(emp){
 		var param={};
     	param.id = emp.id;
-		EmployeeManageService.queryField(param,function(resp){
+		erp_employeeMgrService.queryField(param,function(resp){
             if(resp.error == false){
                 $scope.employee = resp.data;
             }
@@ -353,7 +348,7 @@ function EmployeeCtrl($scope,
 		}
 		//添加任职信息
 		param.work=$scope.selectedEmp;
-		EmployeeManageService.add(param,function(resp){
+		erp_employeeMgrService.add(param,function(resp){
 			 if(resp.error == false){
 //				$('#EmpPanel').modal('hide');
 				alert("添加成功");
@@ -391,12 +386,12 @@ function EmployeeCtrl($scope,
 		
 		$scope.employee[0].id=$scope.selectedEmp.id;
 		param=$scope.employee[0];
-		EmployeeManageService.updateEmployeeStatic($scope.selectedEmp,function(resp){
+		erp_employeeMgrService.updateEmployeeStatic($scope.selectedEmp,function(resp){
 			if(resp.error==false){
 			
 			}
 		})
-		EmployeeManageService.update(param,function(resp){
+		erp_employeeMgrService.update(param,function(resp){
 			 if(resp.error==false){
 //				$('#EmpPanel').modal('hide');
 				alert("修改成功");
@@ -428,7 +423,7 @@ function EmployeeCtrl($scope,
 		var param = {};
 		selectedEdu.employee_id=$scope.selectedEmp.id;
 		param=selectedEdu;
-		EmployeeManageService.addEmployeeEdu(param,function(resp){
+		erp_employeeMgrService.addEmployeeEdu(param,function(resp){
 			if(resp.error==false){
 				alert("添加员工教育经历成功");
 				$("#eduModal").modal("hide");
@@ -445,7 +440,7 @@ function EmployeeCtrl($scope,
 	$scope.updateEdu = function(selectedEdu){
 		var param = {};
 		param = selectedEdu;
-		EmployeeManageService.updateEmployeeEdu(param,function(resp){
+		erp_employeeMgrService.updateEmployeeEdu(param,function(resp){
 			if(resp.error==false){
 				alert("修改成功");
 				$("#eduModal").modal("hide");
@@ -462,7 +457,7 @@ function EmployeeCtrl($scope,
 	$scope.deleteEdu = function(){
 		var param = {};
 		param.id=$scope.selectedEdu.id;
-		EmployeeManageService.deleteEmployeeEdu(param,function(resp){
+		erp_employeeMgrService.deleteEmployeeEdu(param,function(resp){
 			if(resp.error==false){
 				alert("删除员工教育经历成功");
 				$("#DelModal").modal("hide");
@@ -480,7 +475,7 @@ function EmployeeCtrl($scope,
 	function queryEmployeeEdu(){
 		var param = {};
 		param.employee_id=$scope.selectedEmp.id;
-		EmployeeManageService.queryEmployeeEdu(param,function(resp){
+		erp_employeeMgrService.queryEmployeeEdu(param,function(resp){
 			if(resp.error==false){
 				$scope.employeeEdu=resp.data;
 			}
@@ -493,7 +488,7 @@ function EmployeeCtrl($scope,
 	function queryEmployeeExp(){
 		var param = {};
 		param.employee_id=$scope.selectedEmp.id;
-		EmployeeManageService.queryEmployeeExp(param,function(resp){
+		erp_employeeMgrService.queryEmployeeExp(param,function(resp){
 			if(resp.error==false){
 				$scope.employeeExp=resp.data;
 			}
@@ -507,7 +502,7 @@ function EmployeeCtrl($scope,
 		var param = {};
 		selectedExp.employee_id=$scope.selectedEmp.id;
 		param=selectedExp;
-		EmployeeManageService.addEmployeeExp(param,function(resp){
+		erp_employeeMgrService.addEmployeeExp(param,function(resp){
 			if(resp.error==false){
 				alert("添加员工工作经历成功");
 				$("#expModal").modal("hide");
@@ -524,7 +519,7 @@ function EmployeeCtrl($scope,
 	$scope.updateExp = function(selectedExp){
 		var param = {};
 		param = selectedExp;
-		EmployeeManageService.updateEmployeeExp(param,function(resp){
+		erp_employeeMgrService.updateEmployeeExp(param,function(resp){
 			if(resp.error==false){
 				alert("修改成功");
 				$("#expModal").modal("hide");
@@ -541,7 +536,7 @@ function EmployeeCtrl($scope,
 	$scope.deleteExp = function(){
 		var param = {};
 		param.id=$scope.selectedExp.id;
-		EmployeeManageService.deleteEmployeeExp(param,function(resp){
+		erp_employeeMgrService.deleteEmployeeExp(param,function(resp){
 			if(resp.error==false){
 				alert("删除员工工作经历成功");
 				$("#DelModal").modal("hide");
@@ -559,7 +554,7 @@ function EmployeeCtrl($scope,
 	function queryEmployeeSum(){
 		var param = {};
 		param.employee_id=$scope.selectedEmp.id;
-		EmployeeManageService.queryEmployeeSum(param,function(resp){
+		erp_employeeMgrService.queryEmployeeSum(param,function(resp){
 			if(resp.error==false){
 				$scope.employeeSum=resp.data;
 			}
@@ -573,7 +568,7 @@ function EmployeeCtrl($scope,
 		var param = {};
 		selectedSum.employee_id=$scope.selectedEmp.id;
 		param=selectedSum;
-		EmployeeManageService.addEmployeeSum(param,function(resp){
+		erp_employeeMgrService.addEmployeeSum(param,function(resp){
 			if(resp.error==false){
 				alert("添加员工工作总结成功");
 				$("#sumModal").modal("hide");
@@ -590,7 +585,7 @@ function EmployeeCtrl($scope,
 	$scope.updateSum = function(selectedSum){
 		var param = {};
 		param = selectedSum;
-		EmployeeManageService.updateEmployeeSum(param,function(resp){
+		erp_employeeMgrService.updateEmployeeSum(param,function(resp){
 			if(resp.error==false){
 				alert("修改成功");
 				$("#sumModal").modal("hide");
@@ -607,7 +602,7 @@ function EmployeeCtrl($scope,
 	$scope.deleteSum = function(){
 		var param = {};
 		param.id=$scope.selectedSum.id;
-		EmployeeManageService.deleteEmployeeSum(param,function(resp){
+		erp_employeeMgrService.deleteEmployeeSum(param,function(resp){
 			if(resp.error==false){
 				alert("删除员工工作总结成功");
 				$("#DelModal").modal("hide");
@@ -625,7 +620,7 @@ function EmployeeCtrl($scope,
 	function queryEmployeeRew(){
 		var param = {};
 		param.employee_id=$scope.selectedEmp.id;
-		EmployeeManageService.queryEmployeeRew(param,function(resp){
+		erp_employeeMgrService.queryEmployeeRew(param,function(resp){
 			if(resp.error==false){
 				$scope.employeeRew=resp.data;
 			}
@@ -639,7 +634,7 @@ function EmployeeCtrl($scope,
 		var param = {};
 		selectedRew.employee_id=$scope.selectedEmp.id;
 		param=selectedRew;
-		EmployeeManageService.addEmployeeRew(param,function(resp){
+		erp_employeeMgrService.addEmployeeRew(param,function(resp){
 			if(resp.error==false){
 				alert("添加员工奖惩信息成功");
 				$("#rewModal").modal("hide");
@@ -656,7 +651,7 @@ function EmployeeCtrl($scope,
 	$scope.updateRew = function(selectedRew){
 		var param = {};
 		param = selectedRew;
-		EmployeeManageService.updateEmployeeRew(param,function(resp){
+		erp_employeeMgrService.updateEmployeeRew(param,function(resp){
 			if(resp.error==false){
 				alert("修改成功");
 				$("#rewModal").modal("hide");
@@ -673,7 +668,7 @@ function EmployeeCtrl($scope,
 	$scope.deleteRew = function(){
 		var param = {};
 		param.id=$scope.selectedRew.id;
-		EmployeeManageService.deleteEmployeeRew(param,function(resp){
+		erp_employeeMgrService.deleteEmployeeRew(param,function(resp){
 			if(resp.error==false){
 				alert("删除员工奖惩信息成功");
 				$("#DelModal").modal("hide");
@@ -741,7 +736,7 @@ function EmployeeCtrl($scope,
     function queryPostByEmpId(emp_id){
     	var param={};
     	param.employee_id=emp_id;
-    	EmployeeManageService.queryPostByEmpId(param,function(resp){
+    	erp_employeeMgrService.queryPostByEmpId(param,function(resp){
     		if(resp.error==false){
     			$scope.postByEmpList=resp.data;
     		}
@@ -778,7 +773,7 @@ function EmployeeCtrl($scope,
     		return;
     	}
     
-    	EmployeeManageService.addPost(param,function(resp){
+    	erp_employeeMgrService.addPost(param,function(resp){
     		if(resp.error==false){
     			alert("添加成功");
     			queryPostByEmpId(param.emp_id);
@@ -797,7 +792,7 @@ function EmployeeCtrl($scope,
     	}else{
     		alert("请选择要删除的岗位");
     	}
-    	EmployeeManageService.removePost(param,function(resp){
+    	erp_employeeMgrService.removePost(param,function(resp){
     		if(resp.error==false){
     			alert("操作成功");
     			queryPostByEmpId(d.emp_id);
@@ -840,7 +835,7 @@ function EmployeeCtrl($scope,
     $scope.setStatus=function(emp){
     	var param={};
     	param.id=emp.id;
-    	EmployeeManageService.setStatus(param,function(resp){
+    	erp_employeeMgrService.setStatus(param,function(resp){
     		if(resp.error==false){
     			alert("操作成功");
     			$scope.queryInfo($scope.pageNum);

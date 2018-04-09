@@ -91,6 +91,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public void insert(OrganizationInfo orgInfo) throws Exception {
+        orgInfo.setSort_num(organizationDao.genSortNum(orgInfo.getParent_id()));
         this.organizationDao.insert(orgInfo);
     }
 

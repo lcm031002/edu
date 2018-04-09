@@ -5,10 +5,11 @@ import java.util.Map;
 
 import com.edu.erp.model.TpDictData;
 import com.github.pagehelper.Page;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 
-@Resource(name = "dictDataDao")
+@Repository(value = "dictDataDao")
 public interface DictDataDao {
 	
 	/**

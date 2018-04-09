@@ -74,4 +74,6 @@ public interface OrganizationDao {
      */
     void deleteLogo(Map<String, Object> paramMap);
 
+    Integer genSortNum(Long parentId);
+
 }

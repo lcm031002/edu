@@ -5,10 +5,11 @@ import java.util.Map;
 
 import com.edu.erp.model.TpDictType;
 import com.github.pagehelper.Page;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 
-@Resource(name = "dictTypeDao")
+@Repository(value = "dictTypeDao")
 public interface DictTypeDao {
 	
 	/**
@@ -19,10 +20,10 @@ public interface DictTypeDao {
 	 * @throws Exception
 	 */
 	Page<TpDictType> page(Page<TpDictType> page) throws Exception;
-	
+
 	/**
 	 * 根据条件查询List<T>
-	 * 
+	 *
 	 * @param param 动态参数
 	 * @return
 	 * @throws Exception
@@ -37,10 +38,10 @@ public interface DictTypeDao {
 	 * @return 影响行数
 	 */
 	Integer toAdd(TpDictType pojo) throws Exception;
-	
+
 	/**
 	 * 根据ID修改
-	 * 
+	 *
 	 * @param pojo
 	 * @throws Exception
 	 * @return 影响行数
@@ -50,8 +51,7 @@ public interface DictTypeDao {
 	/**
 	 * 根据ids字符串改变状态
 	 * 
-	 * @param ids
-	 * @param status
+	 * @param param
 	 * @throws Exception
 	 * @return 影响行数
 	 */

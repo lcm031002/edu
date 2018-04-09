@@ -1,69 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.erp.dao.DictTypeDao">
 
-	<select id="selectForPage" resultType="com.edu.erp.model.TpDictType" parameterType="page">
-		    select      ty.* 
-		      from      tp_dict_type ty 
-		    where     ty.status != 0
-		<if test="paramMap.id > 0">
-			and  		ty.id = '${paramMap.id}'
-		</if>	 
-		<if test="paramMap.name != null and paramMap.name != ''">
-			and  		ty.name like '%${paramMap.name}%'
-		</if>
-		<if test="paramMap.name_code_desc != null and paramMap.name_code_desc != ''">
-			and			(ty.name like '%${paramMap.name_code_desc}%' 
-					  or ty.code like '%${paramMap.name_code_desc}%'
-					  or ty.descdtl like '%${paramMap.name_code_desc}%'
-					  )
-		</if>	 
-	</select>
+    <select id="page" resultType="com.edu.erp.model.TpDictType" parameterType="page">
+        select ty.*
+        from tp_dict_type ty
+        where ty.status != 0
+        <if test="paramMap.id > 0">
+            and ty.id = '${paramMap.id}'
+        </if>
+        <if test="paramMap.name != null and paramMap.name != ''">
+            and ty.name like '%${paramMap.name}%'
+        </if>
+        <if test="paramMap.name_code_desc != null and paramMap.name_code_desc != ''">
+            and (ty.name like '%${paramMap.name_code_desc}%'
+            or ty.code like '%${paramMap.name_code_desc}%'
+            or ty.descdtl like '%${paramMap.name_code_desc}%'
+            )
+        </if>
+    </select>
 
-	<insert id="insert" parameterType="com.edu.erp.model.TpDictType">
-	  <selectKey keyProperty="id" order="BEFORE" resultType="long">
-	    select seq_tp_dict_type.nextval id from dual
-	  </selectKey>
+    <insert id="toAdd" parameterType="com.edu.erp.model.TpDictType" useGeneratedKeys="true" keyProperty="id">
 		insert into tp_dict_type t 
 		(
-		  id  ,
-		  name        ,
-		  code        ,
-		  status      ,
-		  descdtl     ,
-		  create_user ,
+		  name,
+		  code,
+		  status,
+		  descdtl,
+		  create_user,
 		  create_time 
         ) 
 		values 
-		(#{id},
+		(
 		 #{name,	jdbcType=VARCHAR},
 		 #{code,	jdbcType=VARCHAR},
 		 #{status,	jdbcType=NUMERIC},
 		 #{descdtl,	jdbcType=VARCHAR},
 		 #{create_user,jdbcType=NUMERIC},
-		 sysdate
+		 #{create_time,	jdbcType=TIMESTAMP}
 		 )
 	</insert>
 
-	<update id="update" parameterType="com.edu.erp.model.TpDictType">
+    <update id="toUpdate" parameterType="com.edu.erp.model.TpDictType">
 		update tp_dict_type t set 
 		t.name  = #{name,	jdbcType=VARCHAR}, 
 		t.code  = #{code,	jdbcType=VARCHAR}, 
 		t.status  = #{status,	jdbcType=VARCHAR}, 
 		t.descdtl  = #{descdtl,	jdbcType=VARCHAR}, 
 		t.update_user	= #{update_user,	jdbcType=NUMERIC}, 
-		t.update_time 	= #{update_time,	jdbcType=DATE}
+		t.update_time 	= #{update_time,	jdbcType=TIMESTAMP}
 		where t.id 		= #{id}
 	</update>
-	
-	<update id="changeStatus" parameterType="java.util.Map" >
+
+    <update id="toChangeStatus" parameterType="java.util.Map">
 		update tp_dict_type t
 		set t.status = ${status} 
 		where t.id in (${ids})
-	</update>	
-	<select id="selectList" parameterType="java.util.Map" resultType="com.edu.erp.model.TpDictType">
+	</update>
+
+    <select id="list" parameterType="java.util.Map" resultType="com.edu.erp.model.TpDictType">
 	    select c.* from tp_dict_type c where c.status != 0
 	</select>
 </mapper>

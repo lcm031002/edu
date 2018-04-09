@@ -85,7 +85,6 @@ public class TeacherInfoServiceImpl implements TeacherInfoService {
 	public void toAdd(Teacher teacher, List<TeacherSubject> teacherSubjectList,List<TeacherTeamRel> teacherTeamRelList)
 			throws Exception {
 		Assert.hasText(teacher.getPhone(),"电话号码必填");
-		Assert.notNull(teacher.getBu_id(),"所属团队必填");
 		int ret = teacherInfoDao.isEncodingExisted(teacher);
 		if (ret > 0) {
 			throw new Exception("所在地区已存在该教师编码，请重新输入");

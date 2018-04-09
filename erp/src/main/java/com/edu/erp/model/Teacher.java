@@ -17,28 +17,18 @@ public class Teacher extends BaseObject {
 
 	private String encoding; // 编码
 	private String teacher_name; // 教师姓名
-	private Integer is_pluralistic;// 是否兼职, 1.是 2.否
 	private String photo; // 教师照片
 	private String description;// 描述
 	private Long employee_id;// 员工ID
 	private String employee_name;// 描述
 	private String phone;
-	private String invation_code;
 	private Integer sex; // 性别
-	private String city_name;
-	private Integer teacher_age;
-	private Integer seniority;
 	private Integer teacher_type;
-	private String nickname;
 	private String subject;
-	private Long bu_id;
-	private String bu_name;
-	private String synchro_dingdang;
-	private String synchro_details;
 	private String email;
-	private String old_id;
+	private String wechat;
 	private String subject_name;
-	private String team;//团队
+	private String team; // 团队 多个用逗号分隔
     private List<TeacherTeamRel> teacherTeamReList;//教师团队关系表
 	private List<TeacherSubject> teacherSubjectList;
 
@@ -98,20 +88,12 @@ public class Teacher extends BaseObject {
 		}
 	}
 
-	public String getSynchro_dingdang() {
-		return synchro_dingdang;
+	public String getWechat() {
+		return wechat;
 	}
 
-	public void setSynchro_dingdang(String synchro_dingdang) {
-		this.synchro_dingdang = synchro_dingdang;
-	}
-
-	public String getSynchro_details() {
-		return synchro_details;
-	}
-
-	public void setSynchro_details(String synchro_details) {
-		this.synchro_details = synchro_details;
+	public void setWechat(String wechat) {
+		this.wechat = wechat;
 	}
 
 	/**
@@ -143,14 +125,6 @@ public class Teacher extends BaseObject {
 
 	public void setTeacher_name(String teacher_name) {
 		this.teacher_name = teacher_name;
-	}
-
-	public Integer getIs_pluralistic() {
-		return is_pluralistic;
-	}
-
-	public void setIs_pluralistic(Integer is_pluralistic) {
-		this.is_pluralistic = is_pluralistic;
 	}
 
 	public String getPhoto() {
@@ -204,40 +178,8 @@ public class Teacher extends BaseObject {
 		return phone;
 	}
 
-	public String getInvation_code() {
-		return invation_code;
-	}
-
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	public void setInvation_code(String invation_code) {
-		this.invation_code = invation_code;
-	}
-
-	public final String getCity_name() {
-		return city_name;
-	}
-
-	public final void setCity_name(String city_name) {
-		this.city_name = city_name;
-	}
-
-	public Integer getTeacher_age() {
-		return teacher_age;
-	}
-
-	public void setAge(Integer teacher_age) {
-		this.teacher_age = teacher_age;
-	}
-
-	public Integer getSeniority() {
-		return seniority;
-	}
-
-	public void setSeniority(Integer seniority) {
-		this.seniority = seniority;
 	}
 
 	public Integer getTeacher_type() {
@@ -248,14 +190,6 @@ public class Teacher extends BaseObject {
 		this.teacher_type = teacher_type;
 	}
 
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
 	public String getSubject() {
 		return subject;
 	}
@@ -264,28 +198,18 @@ public class Teacher extends BaseObject {
 		this.subject = subject;
 	}
 
-	public Long getBu_id() {
-		return bu_id;
+	public String getTeam() {
+		return team;
 	}
 
-	public void setBu_id(Long bu_id) {
-		this.bu_id = bu_id;
-	}
-
-	public String getBu_name() {
-		return bu_name;
-	}
-
-	public void setBu_name(String bu_name) {
-		this.bu_name = bu_name;
+	public void setTeam(String team) {
+		this.team = team;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((city_name == null) ? 0 : city_name.hashCode());
 		result = prime
 				* result
 				+ ((getCreate_user_name() == null) ? 0 : getCreate_user_name()
@@ -298,10 +222,6 @@ public class Teacher extends BaseObject {
 				+ ((employee_name == null) ? 0 : employee_name.hashCode());
 		result = prime * result
 				+ ((encoding == null) ? 0 : encoding.hashCode());
-		result = prime * result
-				+ ((invation_code == null) ? 0 : invation_code.hashCode());
-		result = prime * result
-				+ ((is_pluralistic == null) ? 0 : is_pluralistic.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((photo == null) ? 0 : photo.hashCode());
 		result = prime
@@ -326,11 +246,6 @@ public class Teacher extends BaseObject {
 		if (getClass() != obj.getClass())
 			return false;
 		Teacher other = (Teacher) obj;
-		if (city_name == null) {
-			if (other.city_name != null)
-				return false;
-		} else if (!city_name.equals(other.city_name))
-			return false;
 		if (getCreate_user_name() == null) {
 			if (other.getCreate_user_name() != null)
 				return false;
@@ -355,16 +270,6 @@ public class Teacher extends BaseObject {
 			if (other.encoding != null)
 				return false;
 		} else if (!encoding.equals(other.encoding))
-			return false;
-		if (invation_code == null) {
-			if (other.invation_code != null)
-				return false;
-		} else if (!invation_code.equals(other.invation_code))
-			return false;
-		if (is_pluralistic == null) {
-			if (other.is_pluralistic != null)
-				return false;
-		} else if (!is_pluralistic.equals(other.is_pluralistic))
 			return false;
 		if (phone == null) {
 			if (other.phone != null)
@@ -394,24 +299,12 @@ public class Teacher extends BaseObject {
 		return true;
 	}
 
-	public String getOld_id() {
-		return old_id;
-	}
-
-	public void setOld_id(String old_id) {
-		this.old_id = old_id;
-	}
-
 	public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setTeacher_age(Integer teacher_age) {
-        this.teacher_age = teacher_age;
     }
 
 	public String getSubject_name() {
@@ -428,13 +321,5 @@ public class Teacher extends BaseObject {
 
 	public void setTeacherTeamReList(List<TeacherTeamRel> teacherTeamReList) {
 		this.teacherTeamReList = teacherTeamReList;
-	}
-
-	public String getTeam() {
-		return team;
-	}
-
-	public void setTeam(String team) {
-		this.team = team;
 	}
 }

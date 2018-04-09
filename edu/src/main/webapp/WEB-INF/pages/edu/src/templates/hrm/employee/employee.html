@@ -56,13 +56,13 @@
             <td>{{emp.employee_name}}</td>
             <td>{{emp.sex==1?"男":emp.sex==0?"女":'未设置'}}</td>
             <td>{{emp.phone}}</td>
-            <td>{{emp.id_ID}}</td>
+            <td>{{emp.id_card}}</td>
             <td>{{emp.address}}</td>
             <td>
               <span >{{emp.status==1?'启用':(emp.status==0?'禁用':'undefined')}}</span>
             </td>
             <td>{{emp.email}}</td>
-            <td>{{emp.enterTypeName}}</td>
+            <td>{{emp.user_type_name}}</td>
             <td>
               <span ng-if="emp.status==2">undefined</span>
               <button ng-if="emp.status==1" class="btn btn-primary btn-danger btn-xs" ng-click="setStatus(emp)">禁用</button>
@@ -81,25 +81,7 @@
           </td>
         </tr>
       </table>
-      <div class="center" ng-if="pageParam.pages>=1">
-        <ul class="pagination">
-          <li ng-model="pageParam.pageNum" ng-if="pageParam.pages>=1" ng-click="queryInfo(1)">
-            <span>首页</span>
-          </li>
-          <li ng-if="pageParam.pageNum>1" ng-click="queryInfo(pageNum-1)">
-            <span>上一页</span>
-          </li>
-          <li ng-repeat="i in paginationBars track by $index" class="{{ i==pageParam.pageNum ? 'active':'' }}">
-            <span ng-click="queryInfo(i)">{{i}}</span>
-          </li>
-          <li ng-model="pageParam.pageNum" ng-if="pageParam.pageNum<pageParam.pages" ng-click="queryInfo(pageNum+1)">
-            <span>下一页</span>
-          </li>
-          <li ng-model="pageParam.pages" ng-click="queryInfo(pageParam.pages)">
-            <span>尾页</span>
-          </li>
-        </ul>
-      </div>
+      <ng-pagination conf="paginationConf"></ng-pagination>
     </div>
   </div>
   <!--  <div ng-if="addEmp">

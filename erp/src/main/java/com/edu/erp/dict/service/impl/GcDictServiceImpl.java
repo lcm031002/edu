@@ -26,10 +26,10 @@ public class GcDictServiceImpl implements GcDictService {
     private static Map<String, List<TpDictData>> dictDataMap = new HashMap<String, List<TpDictData>>();
 
     @Resource(name = "dictTypeDao")
-    private DictTypeDao TpDictTypeDao;
+    private DictTypeDao dictTypeDao;
 
     @Resource(name = "dictDataDao")
-    private DictDataDao TpDictDataDao;
+    private DictDataDao dictDataDao;
 
     /**
      * 字典类型分页查询
@@ -40,7 +40,7 @@ public class GcDictServiceImpl implements GcDictService {
      */
     @Override
     public Page<TpDictType> typePage(Page<TpDictType> page) throws Exception {
-        return TpDictTypeDao.page(page);
+        return dictTypeDao.page(page);
     }
 
     /**
@@ -52,7 +52,7 @@ public class GcDictServiceImpl implements GcDictService {
      */
     @Override
     public Page<TpDictData> dataPage(Page<TpDictData> page) throws Exception {
-        return TpDictDataDao.page(page);
+        return dictDataDao.page(page);
     }
 
     /**
@@ -65,7 +65,7 @@ public class GcDictServiceImpl implements GcDictService {
      */
     @Override
     public List<TpDictData> dataList(Map<String, Object> param) throws Exception {
-        return TpDictDataDao.selectList(param);
+        return dictDataDao.selectList(param);
     }
 
     /**
@@ -76,7 +76,7 @@ public class GcDictServiceImpl implements GcDictService {
      */
     @Override
     public void toAdd(TpDictData pojo) throws Exception {
-        Integer ret = TpDictDataDao.toAdd(pojo);
+        Integer ret = dictDataDao.toAdd(pojo);
         if (ret < 1)
             throw new RuntimeException("toAdd_error");
     }
@@ -90,7 +90,7 @@ public class GcDictServiceImpl implements GcDictService {
      */
     @Override
     public void toUpdate(TpDictData pojo) throws Exception {
-        Integer ret = TpDictDataDao.toUpdate(pojo);
+        Integer ret = dictDataDao.toUpdate(pojo);
         if (ret < 1)
             throw new RuntimeException("toUpdate_error");
     }
@@ -107,22 +107,22 @@ public class GcDictServiceImpl implements GcDictService {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("ids", ids);
         param.put("status", status);
-        TpDictDataDao.toChangeStatus(param);
+        dictDataDao.toChangeStatus(param);
     }
 
     @Override
     public List<Map> getBranchsByUser(Map<String, Object> param) throws Exception {
-        return TpDictDataDao.getBranchsByUser(param);
+        return dictDataDao.getBranchsByUser(param);
     }
 
     @Override
     public List<Map> getBusByUser(Map<String, Object> param) throws Exception {
-        return TpDictDataDao.getBusByUser(param);
+        return dictDataDao.getBusByUser(param);
     }
 
     @Override
     public List<Map<String, Object>> getPosts(Map<String, Object> params) throws Exception {
-        return TpDictDataDao.getPosts(params);
+        return dictDataDao.getPosts(params);
     }
 
     @Override

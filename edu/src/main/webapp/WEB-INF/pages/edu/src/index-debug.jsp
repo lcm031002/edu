@@ -14,7 +14,7 @@ pageEncoding="utf-8"%>
 <title>厝边素高|教育</title>
 <link rel="icon" href="/sso-server/favicon.ico" type="image/x-icon">
 <link rel="dns-prefetch" href="//cdn.bootcss.com" />
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2y0piaocOl3cXXmgKkj25EGjSLr6XLH6"></script>
+<%--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2y0piaocOl3cXXmgKkj25EGjSLr6XLH6"></script>--%>
 
 <!-- STYLES -->
 <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.min.css">
@@ -521,30 +521,30 @@ pageEncoding="utf-8"%>
 
 <!-- endbuild:js -->
 
-<script type="text/x-mathjax-config">
-    // var mathId = document.getElementById("tr-workMgt-view");
-    MathJax.Hub.Config({
-        showProcessingMessages: false,
-        messageStyle: "none",
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX", "output/HTML-CSS"],
-        tex2jax: {
-            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-            // skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],
-        },
-        "showMathMenu": false,
-        "HTML-CSS": {
-            availableFonts: ["STIX","TeX"],
-            showMathMenu: false
-        },
-        "fast-preview": {
-            "disabled": true
-        }
-    });
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-</script>
+<%--<script type="text/x-mathjax-config">--%>
+    <%--// var mathId = document.getElementById("tr-workMgt-view");--%>
+    <%--MathJax.Hub.Config({--%>
+        <%--showProcessingMessages: false,--%>
+        <%--messageStyle: "none",--%>
+        <%--extensions: ["tex2jax.js"],--%>
+        <%--jax: ["input/TeX", "output/HTML-CSS"],--%>
+        <%--tex2jax: {--%>
+            <%--inlineMath: [ ['$','$'], ["\\(","\\)"] ],--%>
+            <%--displayMath: [ ['$$','$$'], ["\\[","\\]"] ],--%>
+            <%--// skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code','a'],--%>
+        <%--},--%>
+        <%--"showMathMenu": false,--%>
+        <%--"HTML-CSS": {--%>
+            <%--availableFonts: ["STIX","TeX"],--%>
+            <%--showMathMenu: false--%>
+        <%--},--%>
+        <%--"fast-preview": {--%>
+            <%--"disabled": true--%>
+        <%--}--%>
+    <%--});--%>
+    <%--MathJax.Hub.Queue(["Typeset", MathJax.Hub]);--%>
+<%--</script>--%>
 <%-- <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> --%>
-<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>
+<%--<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full"></script>--%>
 </body>
 </html>
