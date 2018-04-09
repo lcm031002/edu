@@ -51,21 +51,21 @@ public class EmployeeMgrController extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = {"/employee/service"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/employee/employeeservice/queryById"}, method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, Object> queryEmployeeById(HttpServletRequest request) {
+    Map<String, Object> queryById(HttpServletRequest request) {
         if (log.isDebugEnabled()) {
             log.debug("begin to query Employeepage");
         }
         Map<String, Object> result = new HashMap<String, Object>();
 
         try {
-            String employeeIdString = request.getParameter("employeeId");
-            if (StringUtils.isEmpty(employeeIdString)) {
+            Long employeeId = genLongParameter("employeeId", request);
+            if (employeeId == null) {
                 log.error("非法查询,employeeId不能为空！");
                 throw new Exception("非法查询！");
             }
-            EmployeeInfo employee = employeeMgrService.queryEmployeeById(Long.parseLong(employeeIdString));
+            EmployeeInfo employee = employeeMgrService.queryEmployeeById(employeeId);
             result.put("error", false);
             result.put("data", employee);
         } catch (Exception e) {

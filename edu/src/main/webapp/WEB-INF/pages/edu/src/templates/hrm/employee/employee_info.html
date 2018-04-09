@@ -47,26 +47,16 @@
                   <input type="text" class="form-control" ng-model="selectedEmp.encoding" ng-readonly=" queryType == 'self'" />
                 </div>
               </div>
+              <div class="form-group col-lg-6">
+                <label class="col-sm-4 control-label">性别：</label>
+                <div class="col-sm-8 ">
+                  <kl-dict-select  dict-type="'gender'" bind-data="selectedEmp.sex"></kl-dict-select>
+                </div>
+              </div>
               <div class="form-group col-lg-6" >
                 <label class="col-sm-4 text-right" style="line-height: 34px;">身份证：</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" ng-model="selectedEmp.id_ID" ng-readonly=" queryType == 'self'" />
-                </div>
-              </div>
-              <div class="form-group col-lg-6">
-                <label class="col-sm-4 text-right" style="line-height: 34px;">业务线：</label>
-                <div class="col-sm-8">
-                  <select class="form-control"   ng-model="selectedEmp.business"  ng-options="p.id as p.name for p in productLineList"   ng-readonly=" queryType == 'self'">
-                    <option value="">-- 请选择 --</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group col-lg-6">
-                <label class="col-sm-4 text-right" style="line-height: 34px;">部门：</label>
-                <div class="col-sm-8">
-                  <select class="form-control"   ng-model="selectedEmp.dept"  ng-options="d.id as d.name for d in departmentList"   ng-readonly=" queryType == 'self'">
-                    <option value="">-- 请选择 --</option>
-                  </select>
+                  <input type="text" class="form-control" ng-model="selectedEmp.id_card" ng-readonly=" queryType == 'self'" />
                 </div>
               </div>
               <div class="form-group col-lg-6">
@@ -76,77 +66,15 @@
                 </div>
               </div>
               <div class="form-group col-lg-6">
-                <label class="col-sm-4 text-right" style="line-height: 34px;">岗位：</label>
-                <div class="col-sm-8">
-                  <!-- <select class="form-control" ng-options="m.id as m.post_name for m in postList"  ng-model="selectedEmp.post" ng-readonly=" queryType == 'self'">
-                                         <option  value="">-- 请选择 --</option>
-                                     </select> -->
-                  <input type="text" class="form-control" ng-disabled="true">{{postListToStr}}</input>
-                </div>
-              </div>
-              <div class="form-group col-lg-6">
-                <label class="col-sm-4 text-right" style="line-height: 34px;">等级：</label>
-                <div class="col-sm-8">
-                  <select class="form-control" ng-options="m.id as m.name for m in poslevelList" ng-model="selectedEmp.poslevel" ng-readonly=" queryType == 'self'">
-                    <option value="">-- 请选择 --</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group col-lg-6">
                 <label class="col-sm-4 text-right" style="line-height: 34px;">在职类型：</label>
                 <div class="col-sm-8">
-                  <select class="form-control" ng-options="m.id as m.name for m in enterTypeList" ng-model="selectedEmp.enterType" ng-readonly=" queryType == 'self'">
-                    <option value="">-- 请选择 --</option>
-                  </select>
+                  <div class="col-sm-8 ">
+                    <kl-dict-select  dict-type="'employee_type'" bind-data="selectedEmp.user_type"></kl-dict-select>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group col-lg-6">
-                  <label class="col-sm-4 text-right" style="line-height: 34px;">入职时间：</label>
-                  <div class="col-sm-8"> 
-                    <rd-date-picker-popup ng-model="selectedEmp.entryDate" ng-change="determineDate()"></rd-date-picker-popup>
-                  </div>
-              </div>
-              <div class="form-group col-lg-6" ng-repeat="empInfo in temp">
-                  <label class="col-sm-4 text-right" style="line-height: 34px;">{{empInfo.fieldName}}：</label>
-                  <div class="col-sm-8">
-                    <input class="form-control" ng-if="empInfo.fieldType=='字符串'" ng-model="empInfo.fieldKeys">
-                    <select class="form-control" ng-options="m.code as m.name for m in empInfo.selected" ng-if="empInfo.fieldType=='数据字典'" ng-model="empInfo.fieldKeys">
-                    </select>
-                  </div>
-                  <div class="col-sm-8" ng-controller="DatepickerDemoCtrl" ng-if="empInfo.fieldType=='日期'">
-                    <input type="text" class="form-control" ng-model="empInfo.fieldKeys" uib-datepicker-popup="{{format}}" current-text="今天" close-text="关闭" clear-text="清理" is-open="opened" ng-readonly="true" id="beginDate" />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="open($event)">
-                            <i class="glyphicon glyphicon-calendar"></i>
-                        </button>
-                    </span>
-                  </div>
               </div>
             </div>
           </div>
-          <!-- 动态字典内容展示（先屏蔽）By: baiqb@klxuexi.org  2017/5/16 15:39:31-->
-           <!--<div style=" height:auto;" class="col-lg-12">
-             <div class="col-lg-8 form-horizontal" style=" height:auto; display:inline" ng-repeat="empInfo in temp" class="">
-
-              <div class="form-group">
-                <label class="col-sm-2 text-right" style="line-height: 34px;">{{empInfo.fieldName}}：</label>
-                <div class="col-sm-4">
-                  <input class="form-control" ng-if="empInfo.fieldType=='字符串'" ng-model="empInfo.fieldKeys">
-                  <select class="form-control" ng-options="m.code as m.name for m in empInfo.selected" ng-if="empInfo.fieldType=='数据字典'" ng-model="empInfo.fieldKeys">
-                    <option value="">&#45;&#45; 请选择 &#45;&#45;</option>
-                  </select>
-                </div>
-                <div class="col-sm-4" ng-controller="DatepickerDemoCtrl" ng-if="empInfo.fieldType=='日期'">
-                  <input type="text" class="form-control" ng-model="empInfo.fieldKeys" uib-datepicker-popup="{{format}}" current-text="今天" close-text="关闭" clear-text="清理" is-open="opened" ng-readonly="true" id="beginDate" />
-                  <span class="input-group-btn">
-                      <button type="button" class="btn btn-default" ng-click="open($event)">
-                          <i class="glyphicon glyphicon-calendar"></i>
-                      </button>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>-->
 
           <div class="mt20" align="center" ng-if="queryType != 'self'">
             <button class="btn btn-primary" type="button" ng-show="addEmp" ng-click="addEmployee()">确定添加</button>

@@ -12,8 +12,7 @@ angular.module('ework-ui')
         'PostService',
         'DictItemService',
         'EmployeeExtService',
-        'EmployeeManageService',
-        'hrmEmployeeService',
+        'erp_employeeMgrService',
         '$uibModal',
         '$uibMsgbox',
         'erp_studentsService',
@@ -29,8 +28,7 @@ function hrmEmployeeInfoCtrl($scope,
     PostService,
     DictItemService,
     EmployeeExtService,
-    EmployeeManageService,
-    hrmEmployeeService,
+    erp_employeeMgrService,
     $uibModal,
     $uibMsgbox,
     erp_studentsService
@@ -64,7 +62,7 @@ function hrmEmployeeInfoCtrl($scope,
             resolve: {
                 onUploadImg: function() {
                     return function(base64Img, $uibModalInstance) {
-                        EmployeeManageService.modifyHeadImg({
+                        erp_employeeMgrService.modifyHeadImg({
                             id: $scope.selectedEmp.id.toString(),
                             staff_head: $scope.selectedEmp.staff_head,
                             photoBase64: base64Img
@@ -88,14 +86,9 @@ function hrmEmployeeInfoCtrl($scope,
     function queryEmployeeInfo() {
         var param = {};
         param.employeeId = $scope.employeeId;
-        hrmEmployeeService.query(param, function(resp) {
+        erp_employeeMgrService.queryById(param, function(resp) {
             if (!resp.error) {
                 $scope.selectedEmp = resp.data;
-                if ($scope.selectedEmp.business) {
-                    $scope.selectedEmp.business = parseInt($scope.selectedEmp.business);
-                    $scope.selectedEmp.dept = parseInt($scope.selectedEmp.dept);
-                }
-                $('title').text('' + $scope.selectedEmp.employee_name);
                 $scope.toQueryItem($scope.selectedEmp);
             } else {
                 $uibMsgbox.confirm(resp.message);
@@ -163,7 +156,7 @@ function hrmEmployeeInfoCtrl($scope,
     function getEmployeeInfo(emp) {
         var param = {};
         param.id = emp.id;
-        EmployeeManageService.query(param, function(resp) {
+        erp_employeeMgrService.query(param, function(resp) {
             if (resp.error == false) {
                 $scope.employee = resp.data;
             }
@@ -363,7 +356,7 @@ function hrmEmployeeInfoCtrl($scope,
         }
         //添加任职信息
         param.work = $scope.selectedEmp;
-        EmployeeManageService.add(param, function(resp) {
+        erp_employeeMgrService.add(param, function(resp) {
             if (resp.error == false) {
                 $('#EmpPanel').modal('hide');
                 $uibMsgbox.confirm("添加成功");
@@ -417,9 +410,9 @@ function hrmEmployeeInfoCtrl($scope,
 
         $scope.employee[0].id = $scope.selectedEmp.id;
         param = $scope.employee[0];
-        EmployeeManageService.updateEmployeeStatic($scope.selectedEmp, function(resp) {
+        erp_employeeMgrService.updateEmployeeStatic($scope.selectedEmp, function(resp) {
             if (resp.error == false) {
-                EmployeeManageService.update(param, function(resp) {
+                erp_employeeMgrService.update(param, function(resp) {
                     if (resp.error == false) {
                         $uibMsgbox.confirm("修改成功", function(res) {
                             if (res == 'yes') {
@@ -459,7 +452,7 @@ function hrmEmployeeInfoCtrl($scope,
         var param = {};
         selectedEdu.employee_id = $scope.selectedEmp.id;
         param = selectedEdu;
-        EmployeeManageService.addEmployeeEdu(param, function(resp) {
+        erp_employeeMgrService.addEmployeeEdu(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("添加员工教育经历成功");
                 $("#eduModal").modal("hide");
@@ -476,7 +469,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.updateEdu = function(selectedEdu) {
         var param = {};
         param = selectedEdu;
-        EmployeeManageService.updateEmployeeEdu(param, function(resp) {
+        erp_employeeMgrService.updateEmployeeEdu(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("修改成功");
                 $("#eduModal").modal("hide");
@@ -493,7 +486,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.deleteEdu = function() {
         var param = {};
         param.id = $scope.selectedEdu.id;
-        EmployeeManageService.deleteEmployeeEdu(param, function(resp) {
+        erp_employeeMgrService.deleteEmployeeEdu(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("删除员工教育经历成功");
                 $("#DelModal").modal("hide");
@@ -511,7 +504,7 @@ function hrmEmployeeInfoCtrl($scope,
     function queryEmployeeEdu() {
         var param = {};
         param.employee_id = $scope.selectedEmp.id;
-        EmployeeManageService.queryEmployeeEdu(param, function(resp) {
+        erp_employeeMgrService.queryEmployeeEdu(param, function(resp) {
             if (resp.error == false) {
                 $scope.employeeEdu = resp.data;
             }
@@ -524,7 +517,7 @@ function hrmEmployeeInfoCtrl($scope,
     function queryEmployeeExp() {
         var param = {};
         param.employee_id = $scope.selectedEmp.id;
-        EmployeeManageService.queryEmployeeExp(param, function(resp) {
+        erp_employeeMgrService.queryEmployeeExp(param, function(resp) {
             if (resp.error == false) {
                 $scope.employeeExp = resp.data;
             }
@@ -538,7 +531,7 @@ function hrmEmployeeInfoCtrl($scope,
         var param = {};
         selectedExp.employee_id = $scope.selectedEmp.id;
         param = selectedExp;
-        EmployeeManageService.addEmployeeExp(param, function(resp) {
+        erp_employeeMgrService.addEmployeeExp(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("添加员工工作经历成功");
                 $("#expModal").modal("hide");
@@ -555,7 +548,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.updateExp = function(selectedExp) {
         var param = {};
         param = selectedExp;
-        EmployeeManageService.updateEmployeeExp(param, function(resp) {
+        erp_employeeMgrService.updateEmployeeExp(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("修改成功");
                 $("#expModal").modal("hide");
@@ -572,7 +565,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.deleteExp = function() {
         var param = {};
         param.id = $scope.selectedExp.id;
-        EmployeeManageService.deleteEmployeeExp(param, function(resp) {
+        erp_employeeMgrService.deleteEmployeeExp(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("删除员工工作经历成功");
                 $("#DelModal").modal("hide");
@@ -590,7 +583,7 @@ function hrmEmployeeInfoCtrl($scope,
     function queryEmployeeSum() {
         var param = {};
         param.employee_id = $scope.selectedEmp.id;
-        EmployeeManageService.queryEmployeeSum(param, function(resp) {
+        erp_employeeMgrService.queryEmployeeSum(param, function(resp) {
             if (resp.error == false) {
                 $scope.employeeSum = resp.data;
             }
@@ -605,7 +598,7 @@ function hrmEmployeeInfoCtrl($scope,
         selectedSum.employee_id = $scope.selectedEmp.id;
         param = selectedSum;
         param.approval_status = parseInt(param.approval_status);
-        EmployeeManageService.addEmployeeSum(param, function(resp) {
+        erp_employeeMgrService.addEmployeeSum(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("添加员工工作总结成功");
                 $("#sumModal").modal("hide");
@@ -622,7 +615,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.updateSum = function(selectedSum) {
         var param = {};
         param = selectedSum;
-        EmployeeManageService.updateEmployeeSum(param, function(resp) {
+        erp_employeeMgrService.updateEmployeeSum(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("修改成功");
                 $("#sumModal").modal("hide");
@@ -639,7 +632,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.deleteSum = function() {
         var param = {};
         param.id = $scope.selectedSum.id;
-        EmployeeManageService.deleteEmployeeSum(param, function(resp) {
+        erp_employeeMgrService.deleteEmployeeSum(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("删除员工工作总结成功");
                 $("#DelModal").modal("hide");
@@ -659,7 +652,7 @@ function hrmEmployeeInfoCtrl($scope,
         $scope.onGoingQuery = true;
         var param = {};
         param.searchInfo = searchInfo;
-        EmployeeManageService.queryEmployeeInfo(param, function(resp) {
+        erp_employeeMgrService.queryEmployeeInfo(param, function(resp) {
             if (resp.error == false) {
                 $scope.employeeListSum = resp.data;
             }
@@ -703,7 +696,7 @@ function hrmEmployeeInfoCtrl($scope,
     function queryEmployeeRew() {
         var param = {};
         param.employee_id = $scope.selectedEmp.id;
-        EmployeeManageService.queryEmployeeRew(param, function(resp) {
+        erp_employeeMgrService.queryEmployeeRew(param, function(resp) {
             if (resp.error == false) {
                 $scope.employeeRew = resp.data;
             }
@@ -717,7 +710,7 @@ function hrmEmployeeInfoCtrl($scope,
         var param = {};
         selectedRew.employee_id = $scope.selectedEmp.id;
         param = selectedRew;
-        EmployeeManageService.addEmployeeRew(param, function(resp) {
+        erp_employeeMgrService.addEmployeeRew(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("添加员工奖惩信息成功");
                 $("#rewModal").modal("hide");
@@ -734,7 +727,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.updateRew = function(selectedRew) {
         var param = {};
         param = selectedRew;
-        EmployeeManageService.updateEmployeeRew(param, function(resp) {
+        erp_employeeMgrService.updateEmployeeRew(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("修改成功");
                 $("#rewModal").modal("hide");
@@ -751,7 +744,7 @@ function hrmEmployeeInfoCtrl($scope,
     $scope.deleteRew = function() {
         var param = {};
         param.id = $scope.selectedRew.id;
-        EmployeeManageService.deleteEmployeeRew(param, function(resp) {
+        erp_employeeMgrService.deleteEmployeeRew(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("删除员工奖惩信息成功");
                 $("#DelModal").modal("hide");
@@ -778,7 +771,7 @@ function hrmEmployeeInfoCtrl($scope,
         var param = {};
         $scope.postListToStr = '';
         param.employee_id = emp_id;
-        EmployeeManageService.queryPostByEmpId(param, function(resp) {
+        erp_employeeMgrService.queryPostByEmpId(param, function(resp) {
             if (resp.error == false) {
                 $scope.postByEmpList = resp.data;
 
