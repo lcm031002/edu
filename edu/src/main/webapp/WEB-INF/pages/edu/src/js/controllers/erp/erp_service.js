@@ -1439,6 +1439,12 @@ function erp_employeeMgrService($resource){
             method : 'PUT',
             params : {},
             isArray : false
+        },
+        queryById:{
+            url:'/erp/employee/employeeservice/queryById',
+            method : 'GET',
+            params : {},
+            isArray : false
         }
     });
 }

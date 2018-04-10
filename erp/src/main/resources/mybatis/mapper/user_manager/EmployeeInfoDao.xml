@@ -47,32 +47,23 @@
 	<select id="queryEmployeeById" parameterType="java.lang.Long"
 			resultType="com.edu.erp.model.EmployeeInfo">
 		select  tef.id,
-		tef.encoding,
-		tef.employee_name,
-		tef.sex,
-		tef.phone,
-		tef.dept,
-		tef.post,
-		tep.post_name as postName,
-		tef.position,
-		tef.id_card,
-		tef.poslevel,
-		edts.name as levelName,
-		tef.email,
-		tef.business,
-		tef.enterType,
-		tedts.name as enterTypeName,
-		tef.staff_head,
-		to_char(tef.entry_date,'yyyy-mm-dd') as entryDate
+				tef.encoding,
+				tef.employee_name,
+				tef.sex,
+				tef.phone,
+				tef.id_card,
+				tef.address,
+				tef.status,
+				tef.email,
+				tef.user_type,
+				tdd.name as user_type_name
 		from TAB_EMPLOYEE_INFO tef
-		left join TP_POST tep
-		on tef.post=tep.id
-		left join ebs_dict_type_sub edts
-		on tef.poslevel=edts.id
-		left join ebs_dict_type_sub tedts
-		on tef.enterType=tedts.id
-		where tef.id = #{employeeId}
-		order by tef.id desc
+		left join tp_dict_data tdd
+          on tdd.code = tef.user_type
+        left join tp_dict_type tdt
+          on tdt.id = tdd.type_id
+        where tdt.code = 'employee_type'
+          and tef.id = #{employeeId}
 	</select>
 
 	<select id="queryFieldKey" resultType="java.util.Map">
