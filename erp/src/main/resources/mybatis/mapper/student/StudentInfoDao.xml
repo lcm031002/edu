@@ -279,13 +279,11 @@
 	<!-- 查询学员首页的四个指标信息，需要分团队 -->
 	<select id="queryStudentIndexAccount" parameterType="java.util.Map"  resultType="java.util.Map">
 		select 	sti.id, 
-				nvl(LISTENING_INFO.LISTENING_COUNT, 0) as LISTENING_COUNT,
-				nvl(UNPAYMENT_INFO.UNPAYMENT, 0) as UNPAYMENT,
-				nvl(PAYMENT_INFO.PAYMENT, 0) as PAYMENT,
-				nvl(PAYMENT_INFO.courseScheduleCount, 0) as courseScheduleCount,
-				nvl(ACCOUNT01_INFO.STORE_ACCOUNT, 0) as STORE_ACCOUNT,
-				nvl(ACCOUNT01_INFO.FROZEN_ACCOUNT, 0) as FROZEN_ACCOUNT,
-				nvl(ACCOUNT01_INFO.REFUND_ACCOUNT, 0) as REFUND_ACCOUNT
+				ifnull(LISTENING_INFO.LISTENING_COUNT, 0) as LISTENING_COUNT,
+				ifnull(UNPAYMENT_INFO.UNPAYMENT, 0) as UNPAYMENT,
+				ifnull(PAYMENT_INFO.PAYMENT, 0) as PAYMENT,
+				ifnull(PAYMENT_INFO.courseScheduleCount, 0) as courseScheduleCount,
+				ifnull(ACCOUNT01_INFO.STORE_ACCOUNT, 0) as STORE_ACCOUNT
 		from tab_student_info sti
 		left join (
 			SELECT COUNT(1) LISTENING_COUNT, STUDENT_ID
@@ -326,11 +324,9 @@
 		
 		) PAYMENT_INFO on  PAYMENT_INFO.STUDENT_ID = sti.id
 		left join (
-			SELECT FEE_AMOUNT as STORE_ACCOUNT, FROZEN_ACCOUNT,REFUND_ACCOUNT, STUDENT_ID
+			SELECT FEE_AMOUNT as STORE_ACCOUNT, STUDENT_ID
 			  FROM T_ACCOUNT
 			 WHERE STUDENT_ID = #{studentId}
-			   AND BU_ID = #{buId}
-			   AND ACCOUNT_TYPE = 0
 		) ACCOUNT01_INFO on ACCOUNT01_INFO.STUDENT_ID = sti.id
 		where sti.id = #{studentId}
 	</select>
@@ -346,7 +342,7 @@
 		  LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
 		ON TSCI.STUDENT_ID = TSI.ID
 		AND TSCI.COUNSELOR_TYPE = 1
-		AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+		AND DATE_FORMAT(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
 		TSCI.END_DATE
 		AND TSCI.IS_VALID = 1
 		AND TSCI.BU_ID = #{buId}
@@ -357,7 +353,7 @@
 		LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
 		ON TSCI2.STUDENT_ID = TSI.ID
 		AND TSCI2.COUNSELOR_TYPE = 2
-		AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+		AND DATE_FORMAT(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
 		TSCI2.END_DATE
 		AND TSCI2.IS_VALID = 1
 		AND TSCI2.BU_ID = #{buId}
@@ -373,7 +369,7 @@
 		  SELECT TOI.*,
 		         PAYMENT_INFO.course_total_count,
 		         changecourse.premium_amount,
-		         decode(toi.check_status,3,4,2,3,1,2,4,1) orderNumber<!-- 审核状态1：未审核   2：审核中  3：已通过   4 ：未通过 -->
+				 case when toi.check_status = 	3 then 4 when toi.check_status = 2 then 3 when toi.check_status = 1 then 2 when toi.check_status = 4 then 1 end  orderNumber<!-- 审核状态1：未审核   2：审核中  3：已通过   4 ：未通过 -->
 		    FROM TAB_ORDER_INFO TOI
 		    LEFT JOIN (select toid.order_id,
 		                      sum(toid.course_total_count) as course_total_count
@@ -390,9 +386,9 @@
 		    left join tab_organization_info toooi
 		      on toooi.id = TOI.bu_id
 		   WHERE TOI.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
-		      AND to_char(TOI.CREATE_TIME,'yyyy-MM-dd') BETWEEN
-		      to_char(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
-		      to_char(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+		      AND date_format(TOI.CREATE_TIME,'yyyy-MM-dd') BETWEEN
+				   date_format(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
+				   date_format(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
 		     and TOI.bu_id = #{buId,jdbcType=NUMERIC}
 		   order by 
 		   toi.VALID_STATUS desc, <!-- 有效状态1：有效  0：无效,删除，作废 -->
@@ -414,9 +410,9 @@
 			       c.start_time ,
 			       c.end_time,
 			       oc.course_total_count,
-			       nvl(trans.in_times, 0) transfer_in_count,
-			       nvl(trans.out_times, 0) transfer_out_count,
-			       nvl(rm.times, 0) quit_lesson,
+			       ifnull(trans.in_times, 0) transfer_in_count,
+				   ifnull(trans.out_times, 0) transfer_out_count,
+				   ifnull(rm.times, 0) quit_lesson,
 			       att.att_times as attend_count,
 			       oc.course_surplus_count as course_surplus_count_ing,
 			       c.id as course_id
@@ -427,8 +423,8 @@
 			  left join tab_time_season    ts on c.season_id = ts.id
 			  left join tab_teacher_info   ti on c.teacher_id = ti.id
 			  left join (select  b.order_course_id,
-			                     sum(decode(b.transfer_flag, 0, 1, 0) * b.course_times) out_times,
-			                     sum(decode(b.transfer_flag, 1, 1, 0) * b.course_times) in_times
+			                     sum(case when b.transfer_flag = 0 then 1 else 0 end * b.course_times) out_times,
+			                     sum(case when b.transfer_flag = 1 then  1 else 0 end  * b.course_times) in_times
 			                from t_order_change a join tc_order_course b on a.id = b.change_id
 			               where a.change_type = 2 and a.change_status = 5
 			               group by b.order_course_id) trans on oc.id = trans.order_course_id
@@ -440,7 +436,7 @@
 			                 and a.change_type = 1
 			               group by b.order_course_id) rm on oc.id = rm.order_course_id
 			  left join (select order_course_id,
-			                    sum(decode(a.attend_type, 10, 0, 20, 0, 30, 0, -1, 0, 1)) att_times
+			                    sum(case when a.attend_type = 10 then 0 when a.attend_type = 20 then  0 when  a.attend_type = 30  then  0 when  a.attend_type = -1 then  0 else 1 end) att_times
 			               from t_attendance a
 			              group by a.order_course_id) att on att.order_course_id = oc.id
 			  left join tab_organization_info toooi on toooi.id = o.bu_id
@@ -488,9 +484,9 @@
 		  left join tab_organization_info toooi on toooi.id = toi.bu_id
 		 WHERE TOID.STUDENT_ID = #{studentId,jdbcType = NUMERIC} AND TOID.BUSINESS_TYPE = 3
 		 and toooi.id = #{buId,jdbcType=NUMERIC}
-		 AND to_char(TOID.CREATE_TIME,'yyyy-MM-dd') BETWEEN
-		      to_char(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
-		      to_char(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+		 AND date_format(TOID.CREATE_TIME,'yyyy-MM-dd') BETWEEN
+		      date_format(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
+		      date_format(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
 	</select>
 	
 	<!-- 查询学员订单详细信息 -->
