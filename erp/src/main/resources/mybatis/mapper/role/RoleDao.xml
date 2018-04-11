@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.RoleDao">
+
+	<!-- 查询角色信息列表 -->
+	<select id="queryRole" parameterType="java.util.Map"
+		resultType="com.edu.erp.model.Role">
+		SELECT
+		erf.id,
+		erf.role_name as roleName,
+		erf.status,
+		erf.create_time,
+		erf.update_time,
+		ctei.employee_name as create_user_name,
+		utei.employee_name as update_user_name
+		FROM tab_role_info erf
+		left join tab_user_info cuser
+		on erf.create_user=cuser.id
+		left join tab_employee_info ctei
+		on ctei.id = cuser.employee_id
+		left join tab_user_info uuser
+		on erf.update_user=uuser.id
+		left join tab_employee_info utei
+		on utei.id = uuser.employee_id
+		where 1=1
+		and erf.status != 0
+		<if test="roleName!=null and roleName!=''">
+			and erf.role_name like
+			'%'||#{roleName,jdbcType=VARCHAR}||'%'
+		</if>
+		<if test="status!=null and status != -1">
+			and erf.status=#{status}
+		</if>
+		order by erf.create_time desc
+	</select>
+
+	<!-- 添加角色 -->
+	<insert id="addRole" parameterType="com.edu.erp.model.Role" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tab_role_info
+		(
+		role_name,
+		status,
+		create_user,
+		create_time
+		)
+		values (
+		#{roleName,jdbcType=VARCHAR},
+		#{status,jdbcType=NUMERIC},
+		#{create_user,jdbcType=NUMERIC},
+		#{create_time,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 修改角色 -->
+	<update id="updateRole" parameterType="com.edu.erp.model.Role">
+		UPDATE tab_role_info
+		<set>
+			role_name=#{roleName,jdbcType=VARCHAR},
+			update_user=#{update_user,jdbcType=NUMERIC},
+			update_time=#{update_time,jdbcType=TIMESTAMP},
+		</set>
+		<where>
+			id=#{id,jdbcType=NUMERIC}
+		</where>
+	</update>
+
+	<!-- 修改 角色状态 -->
+	<update id="changeRoleStatus" parameterType="long">
+		UPDATE tab_role_info erf
+		SET erf.status=#{status,jdbcType=NUMERIC}
+		WHERE
+		erf.id=#{roleId,jdbcType=NUMERIC}
+	</update>
+
+	<!-- 查询已存在角色 -->
+	<select id="queryRoleId" parameterType="map" resultType="long">
+		select
+		erf.id from tab_role_info erf WHERE
+		erf.role_name=#{roleName, jdbcType=VARCHAR}
+		<if test="roleId!=null and roleId!=-1">
+			and erf.id != #{roleId, jdbcType =NUMERIC}
+		</if>
+	</select>
+
+</mapper>

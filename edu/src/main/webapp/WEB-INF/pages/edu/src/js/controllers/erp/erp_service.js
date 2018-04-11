@@ -533,6 +533,11 @@ angular.module('ework-ui').factory('erp_cameraService',
 angular.module('ework-ui').factory('erp_videoService',
     [ '$resource', erp_videoService ]);
 
+/**
+ * 角色管理服务
+ */
+angular.module('ework-ui').factory('erp_RoleService',
+    [ '$resource', erp_RoleService ]);
 
 
 function erp_orderChangeService($resource){
@@ -3547,6 +3552,46 @@ function erp_videoService($resource) {
             method: 'GET',
             params: {},
             isArray: false
+        }
+    });
+}
+
+function erp_RoleService($resource){
+    return $resource('/erp/hrmSystemSettings/hrmRoleMgr', {}, {
+        queryRoleForPage:{
+            url:'/erp/hrmSystemSettings/hrmRoleMgr/page',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        add : {
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        update:{
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        remove:{
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+
+        queryRoleMenu:{
+            url:'/erp/hrmSystemSettings/hrmRoleMgr/sub',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+
+        updateRoleMenu:{
+            url:'/erp/hrmSystemSettings/hrmRoleMgr/sub',
+            method : 'PUT',
+            params : {},
+            isArray : false
         }
     });
 }

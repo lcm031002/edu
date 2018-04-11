@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.RoleMenuRelDao">
+
+	<!-- 根据角色id查询角色菜单权限关系 -->
+	<select id="queryRoleMenu" parameterType="long"
+	resultType="java.lang.String">
+		SELECT
+			err.menu_id as menuIndex
+		FROM ebs_rolemenu_rel err
+		WHERE role_id=#{id,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 添加角色 菜单权限关系-->
+	<insert id="addRoleMenu">
+		<foreach collection="menuIndexList" item="item" index="index" open="begin" close="; end;" separator=";">
+			INSERT INTO ebs_rolemenu_rel
+			(
+				role_id,
+				menu_id
+			)
+			values (
+				#{roleId,jdbcType=NUMERIC},
+				#{item,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	
+	
+	<!-- 删除 角色-->
+	<delete id="deleteRoleMenu" parameterType="long">
+		DELETE from ebs_rolemenu_rel where role_id=#{roleId,jdbcType = NUMERIC}
+	</delete>
+</mapper>

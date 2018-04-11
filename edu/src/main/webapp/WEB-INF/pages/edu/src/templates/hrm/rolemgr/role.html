@@ -54,9 +54,9 @@
         </td>
         <td>{{role.id}}</td>
         <td>{{role.roleName}}</td>
-        <td>{{role.create_user}}</td>
+        <td>{{role.create_user_name}}</td>
         <td>{{role.create_time|date:'yyyy-MM-dd'}}</td>
-        <td>{{role.update_user}}</td>
+        <td>{{role.update_user_name}}</td>
         <td>{{role.update_time|date:'yyyy-MM-dd'}}</td>
         <td>{{role.status==1?'启用':'禁用'}}</td>
       </tr>
@@ -69,25 +69,7 @@
         </td>
       </tr>
     </table>
-    <div class="center" ng-if="pageParam.pages>=1">
-      <ul class="pagination">
-        <li ng-model="pageParam.pageNum" ng-if="pageParam.pages>=1" ng-click="queryInfo(1)">
-          <span>首页</span>
-        </li>
-        <li ng-if="pageParam.pageNum>1" ng-click="queryInfo(pageNum-1)">
-          <span>上一页</span>
-        </li>
-        <li ng-repeat="i in paginationBars track by $index" class="{{ i==pageNum ? 'active':'' }}">
-          <span ng-click="queryInfo(i)">{{i}}</span>
-        </li>
-        <li ng-model="pageParam.pageNum" ng-if="pageParam.pageNum<pageParam.pages" ng-click="queryInfo(pageNum+1)">
-          <span>下一页</span>
-        </li>
-        <li ng-model="pageParam.pages" ng-click="queryInfo(pageParam.pages)">
-          <span>尾页</span>
-        </li>
-      </ul>
-    </div>
+    <ng-pagination conf="paginationConf"></ng-pagination>
   </div>
   <div ng-include="'templates/hrm/rolemgr/role_info.html'"></div>
   <!-- 模态框（Modal） -->

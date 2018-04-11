@@ -8,7 +8,7 @@ angular.module('ework-ui')
 		'$state',
         '$uibMsgbox',
 		'MenusService',
-		'RoleService',
+		'erp_RoleService',
 	    RoleCtrl]);
 
 function RoleCtrl($scope,
@@ -16,18 +16,27 @@ function RoleCtrl($scope,
 					$state,
                     $uibMsgbox,
 					MenusService,
-					RoleService){
+					erp_RoleService){
 	$scope.RoleList = {};
 	
     //当前角色的权限列表
     $scope.privileges=[];
-    $scope.paginationBars=[];
 	$scope.operateType = '';
     $scope.dialog={
         title:"角色管理",
     	confirmMsg:"确认禁用当前选中的角色吗?",
     }
     $scope.confirmMsg="确认禁用当前选中的角色吗?";
+
+    $scope.paginationConf = {
+        currentPage: 1, //当前页
+        totalItems: 0,
+        itemsPerPage: 10,
+        onChange: function(){
+            $scope.queryRole();
+        }
+    };
+
 	/**
 	 * 查询角色列表
 	 */
@@ -44,27 +53,13 @@ function RoleCtrl($scope,
 		}
 		$scope.isLoading = 'loading...';
 		$scope.roleList = [];
-		param.pageNum=$scope.pageNum;
-		param.pageSize=10;
-		/*$scope.pageParam = {
-				pageNum:$scope.pageNum,
-				pageSize:10
-		};
-		param.pageParam = $scope.pageParam;*/
-		RoleService.queryRoleForPage(param,function(resp){
+        param.pageSize = $scope.paginationConf.itemsPerPage; // 每页显示条数
+        param.currentPage = $scope.paginationConf.currentPage; // 要获取的第几页的数据
+		erp_RoleService.queryRoleForPage(param,function(resp){
+            $scope.isLoading = '';
 			if(!resp.error){
 				$scope.roleList = resp.data;
-				$scope.pageParam = resp.pageParam;
-				$scope.isLoading = '';
-				if ($scope.pageParam.pageNum > 1 && $scope.pageParam.pageNum < $scope.pageParam.pages) {
- 	     	       $scope.paginationBars = [$scope.pageParam.pageNum - 1,$scope.pageParam.pageNum, $scope.pageParam.pageNum + 1];
- 	         } else if ($scope.pageParam.pageNum == 1 && $scope.pageParam.pages > 1) {
- 	     	       $scope.paginationBars = [ $scope.pageParam.pageNum, $scope.pageParam.pageNum + 1];
- 	         } else if ($scope.pageParam.pageNum == $scope.pageParam.pages && $scope.pageParam.pages == 1) {
- 	     	       $scope.paginationBars = [ $scope.pageParam.pageNum];
- 	         } else if ($scope.pageParam.pageNum == $scope.pageParam.pages && $scope.pageParam.pages > 1) {
- 	     	       $scope.paginationBars = [ $scope.pageParam.pageNum - 1,$scope.pageParam.pageNum];
- 	         }
+                $scope.paginationConf.totalItems = resp.total || 0; //设置总条数
 			}
 		});
 	};
@@ -134,7 +129,7 @@ function RoleCtrl($scope,
         	return;
         }
         var _waitingModal = $uibMsgbox.waiting('操作中，请稍候...');
-      RoleService.add($scope.selectedRole,function(resp){
+      erp_RoleService.add($scope.selectedRole,function(resp){
             _waitingModal.close();
     	  $scope.isSbumitting=false;
             if(!resp.error){
@@ -157,7 +152,7 @@ function RoleCtrl($scope,
     	param.roleId=$scope.selectedRole.id;
     	param.status=$scope.selectedRole.status==1?2:1;
         var _waitingModal = $uibMsgbox.waiting('操作中，请稍候...');
-        RoleService.remove(param,function(resp){
+        erp_RoleService.remove(param,function(resp){
             _waitingModal.close();
             if(!resp.error){
                 $uibMsgbox.alert("操作成功!");
@@ -172,7 +167,7 @@ function RoleCtrl($scope,
     function queryRoleMenu(){
     	var param = {};
         param.id = $scope.selectedRole.id;
-    	RoleService.queryRoleMenu(param,function(resp){
+    	erp_RoleService.queryRoleMenu(param,function(resp){
     		if(!resp.error){
     			initialRoleTree(resp.data);
     		}
@@ -184,7 +179,7 @@ function RoleCtrl($scope,
      */
     function updateRole(){
         var _waitingModal = $uibMsgbox.waiting('操作中，请稍候...');
-        RoleService.update($scope.selectedRole,function(resp){
+        erp_RoleService.update($scope.selectedRole,function(resp){
             _waitingModal.close();
             if(!resp.error){
                 $uibMsgbox.alert("修改成功!");
@@ -202,9 +197,9 @@ function RoleCtrl($scope,
      */
     function updateRoleMenu(){
     	var param={};
-    	param.roleId=$scope.selectedRole.id;
+    	param.id=$scope.selectedRole.id;
     	param.selectedPrivileges=genSelectedMenus();
-    	RoleService.updateRoleMenu(param,function(resp){
+    	erp_RoleService.updateRoleMenu(param,function(resp){
     		if(!resp.error){
     			//$uibMsgbox.alert("修改角色菜单成功");
     		}
@@ -279,7 +274,6 @@ function RoleCtrl($scope,
                        }
                    }
                });
-
         });
     }
 

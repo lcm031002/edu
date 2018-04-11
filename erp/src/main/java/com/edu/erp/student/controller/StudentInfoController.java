@@ -7,7 +7,6 @@
  */
 package com.edu.erp.student.controller;
 
-import com.edu.common.annotation.Monitor;
 import com.edu.common.constants.Constants.RespMapKey;
 import com.edu.erp.model.*;
 
@@ -46,7 +45,6 @@ import com.edu.erp.student.service.StudentInfoService;
 import com.edu.erp.util.GeneratorWechatPictrue;
 import com.edu.erp.util.ImageUploadController;
 import com.edu.common.util.PropertiesTools;
-import com.edu.erp.util.StringUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -73,7 +71,6 @@ public class StudentInfoController extends ImageUploadController {
 	 * 学生信息List
 	 * @return
 	 */
-	@Monitor(opType = "QRY_STUDENT")
 	@ResponseBody
 	@RequestMapping(value = { "/students" }, headers = { "Accept=application/json" }, method = RequestMethod.GET)
 	public Map<String, Object> students(HttpServletRequest request,
