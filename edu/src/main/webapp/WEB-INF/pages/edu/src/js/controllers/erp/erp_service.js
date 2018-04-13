@@ -539,6 +539,12 @@ angular.module('ework-ui').factory('erp_videoService',
 angular.module('ework-ui').factory('erp_RoleService',
     [ '$resource', erp_RoleService ]);
 
+/**
+ * 账户服务
+ */
+angular.module('ework-ui').factory('erp_AccountService',
+    [ '$resource', erp_AccountService ]);
+
 
 function erp_orderChangeService($resource){
     return $resource('/erp/ordermanager/service', {}, {
@@ -3590,6 +3596,68 @@ function erp_RoleService($resource){
         updateRoleMenu:{
             url:'/erp/hrmSystemSettings/hrmRoleMgr/sub',
             method : 'PUT',
+            params : {},
+            isArray : false
+        }
+    });
+}
+
+/**
+ * 账户服务
+ * @param $resource
+ * @returns {*}
+ * @constructor
+ */
+function erp_AccountService($resource){
+    return $resource('/erp/hrmSystemSettings/hrmAccountMgr', {}, {
+        addAccount : {
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        update:{
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        remove:{
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        queryAccountForPage:{
+            url:'/erp/hrmSystemSettings/hrmAccountMgr/page',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        queryRoleWithAccount:{
+            url:'/erp/hrmSystemSettings/hrmAccountMgr/queryRoleWithAccount',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        updateAccountRole : {
+            url:'/erp/hrmSystemSettings/hrmAccountMgr/updateAccountRole',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        removeRole:{
+            url:'/erphrmSystemSettings/hrmAccountMgr/removeAccountRole',
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        updateAccountOrg : {
+            url:'/erp/hrmSystemSettings/hrmAccountMgr/updateAccountOrg',
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        removeAccountRoleById : {
+            url : '/erp/hrmSystemSettings/hrmAccountMgr/removeAccountRoleById',
+            method : 'DELETE',
             params : {},
             isArray : false
         }

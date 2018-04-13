@@ -209,7 +209,7 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/date-ctrl.js"></script>
 <script type="text/javascript" src="js/controllers/toolTip-ctrl.js" desc="toolTip"></script>
 <script type="text/javascript" src="js/controllers/page-ctrl.js" desc="分页组件"></script>
-<script type="text/javascript" src="js/controllers/common/account-ctrl.js"  ></script>
+<%--<script type="text/javascript" src="js/controllers/common/account-ctrl.js"  ></script>--%>
 <script type="text/javascript" src="js/controllers/common/account-security.js" ></script>
 <script type="text/javascript" src="js/controllers/common/employee-info.js" ></script>
 

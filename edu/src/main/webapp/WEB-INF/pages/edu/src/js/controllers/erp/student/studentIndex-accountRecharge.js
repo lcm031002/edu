@@ -55,7 +55,7 @@ function erp_studentAccountRechargeController(
   }
   queryStudentInfo();
 
-  function strip(num,precision = 12){
+  function strip(num,precision){
     return +parseFloat(num.toPrecision(precision));
   }
 

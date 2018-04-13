@@ -1,4 +1,4 @@
-<div ng-controller="AccountCtrl">
+<div ng-controller="erp_AccountCtrl">
   <div>
     <div class="panel panel-primary">
       <div class="panel-heading"><span class="title">账户列表</span>
@@ -13,17 +13,17 @@
           <form class="ng-pristine ng-valid form-inline" role="form">
             <div class="form-group">
               员工名：
-              <input type="text" class="form-control" ng-model="employeeName" ng-enter="queryInfo(1)"/>
+              <input type="text" class="form-control" ng-model="employeeName" ng-enter="queryAccount()"/>
             </div>
             <div class="form-group">
               员工号：
-              <input type="number" class="form-control" ng-model="employeeId" ng-enter="queryInfo(1)"/>
+              <input type="number" class="form-control" ng-model="employeeId" ng-enter="queryAccount()"/>
             </div>
             <div class="form-group">
               账户名：
-              <input type="text" class="form-control" ng-model="accountName" ng-enter="queryInfo(1)"/>
+              <input type="text" class="form-control" ng-model="accountName" ng-enter="queryAccount()"/>
             </div>
-            <button type="submit" class="btn btn-primary" ng-click="queryInfo(1)"><i class="iconfont icon-search"></i> 查询</button>
+            <button type="submit" class="btn btn-primary" ng-click="queryAccount()"><i class="iconfont icon-search"></i> 查询</button>
           </form>
         </div>
       </div>
@@ -48,35 +48,13 @@
               <a href="javascript:void(0)" ng-click="setPostPanel(account)">设置职务</a>
             </td>
           </tr>
-          <tr ng-if="!accountList||!accountList.length">
-            <td colspan="5" align="center">暂无数据.</td>
-          </tr>
           <tr ng-if="isLoading == 'loading...'">
             <td colspan="5" align="center">
               <img src="img/icons/big_load.gif">
             </td>
           </tr>
         </table>
-        <div class="center" ng-if="pageParam.pages>=1">
-          <ul class="pagination">
-            <li ng-model="pageParam.pageNum" ng-if="pageParam.pages>=1" ng-click="queryInfo(1)">
-              <span>首页</span>
-            </li>
-            <li ng-if="pageParam.pageNum>1" ng-click="queryInfo(pageParam.pageNum-1)">
-              <span>上一页</span>
-            </li>
-            <li ng-repeat="i in paginationBars track by $index" class="{{ i==pageNum ? 'active':'' }}">
-              <span ng-click="queryInfo(i)">{{i}}</span>
-            </li>
-            <li ng-model="pageParam.pageNum" ng-if="pageParam.pageNum<pageParam.pages" ng-click="queryInfo(pageParam.pageNum+1)">
-              <span>下一页</span>
-            </li>
-            <li ng-model="pageParam.pages" ng-click="queryInfo(pageParam.pages)">
-              <span>尾页</span>
-            </li>
-          </ul>
-        </div>
-      </div>
+        <ng-pagination conf="paginationConf"></ng-pagination>
     </div>
   </div>
   <div>

@@ -1,8 +1,5 @@
-/**
- * 
- */
 angular.module('ework-ui')
-.controller('AccountCtrl',[
+.controller('erp_AccountCtrl',[
 	'$scope',
 	'$log',
 	'$state',
@@ -11,11 +8,11 @@ angular.module('ework-ui')
 	'RoleService',
 	'OrgService',
 	'PostService',
-	'EmployeeManageService',
-	'hrm_AccountService',
-    AccountCtrl]);
+	'erp_employeeMgrService',
+	'erp_AccountService',
+    erp_AccountCtrl]);
 
-function AccountCtrl($scope,
+function erp_AccountCtrl($scope,
 		$log,
 		$state,
 		$document,
@@ -23,8 +20,8 @@ function AccountCtrl($scope,
 		RoleService,
 		OrgService,
         PostService,
-		EmployeeManageService,
-		AccountService){
+		erp_employeeMgrService,
+		erp_AccountService){
 	$scope.AccountList = {};
 	$scope.employeeList = [];
 	$scope.operateType = '';
@@ -32,68 +29,50 @@ function AccountCtrl($scope,
 	$scope.curAccountRole = {};
 	//团队列表
 	$scope.buList = [];
-	$scope.paginationBars=[];
 	//校区列表
 	$scope.branchsList = [];
 	
 	  $scope.rolePage = {
 	            roleSearchInfo:''
 	        }
+
+    $scope.paginationConf = {
+        currentPage: 1, //当前页
+        totalItems: 0,
+        itemsPerPage: 10,
+        onChange: function(){
+            $scope.queryAccount();
+        }
+    };
 	/**
 	 * 查询账户列表
 	 */
-	function queryAccount(){
+	$scope.queryAccount = function(){
 		var param = {};
-		/*if($scope.selectedAreas){
-		param.orgId=$scope.selectedAreas;
-		}*/
-		if($scope.accountName!=null&&$scope.accountName!=''){
+		if($scope.accountName){
 		param.accountName=$scope.accountName;
-		}else{
-			param.accountName='';
 		}
 		if($scope.employeeId){
 			param.employeeId=$scope.employeeId;
-		}else{
-			param.employeeId=-1;
 		}
-		if($scope.employeeName!=null&&$scope.employeeName!=''){
+		if($scope.employeeName){
 			param.employeeName=$scope.employeeName;
-		}else{
-			param.employeeName='';
 		}
-		
+
+        param.pageSize=$scope.paginationConf.itemsPerPage; // 每页显示条数
+        param.currentPage=$scope.paginationConf.currentPage; // 要获取的第几页的数据
+
 		$scope.isLoading = 'loading...';
 		$scope.accountList = [];
-		param.pageNum=$scope.pageNum;
-		param.pageSize=10;
-		/*$scope.pageParam = {
-				pageNum:$scope.pageNum,
-				pageSize:10
-		};
-		param.pageParam = $scope.pageParam;*/
-		AccountService.queryAccountForPage(param,function(resp){
-			if(resp.error == false){
+		erp_AccountService.queryAccountForPage(param,function(resp){
+            $scope.isLoading = '';
+			if(!resp.error){
 				$scope.accountList = resp.data;
-				$scope.pageParam = resp.pageParam;
-				$scope.isLoading = '';
-				 if ($scope.pageParam.pageNum > 1 && $scope.pageParam.pageNum < $scope.pageParam.pages) {
-  	     	       $scope.paginationBars = [$scope.pageParam.pageNum - 1,$scope.pageParam.pageNum, $scope.pageParam.pageNum + 1];
-  	         } else if ($scope.pageParam.pageNum == 1 && $scope.pageParam.pages > 1) {
-  	     	       $scope.paginationBars = [ $scope.pageParam.pageNum, $scope.pageParam.pageNum + 1];
-  	         } else if ($scope.pageParam.pageNum == $scope.pageParam.pages && $scope.pageParam.pages > 1) {
-  	     	       $scope.paginationBars = [ $scope.pageParam.pageNum - 1,$scope.pageParam.pageNum];
-  	         }
+                $scope.paginationConf.totalItems = resp.total || 0; //设置总条数
 			}
 		})
 	};
-	
-	$scope.queryInfo=function(pageIndex){
-		$scope.pageNum=pageIndex;
-		queryAccount();
-	};
-	
-	
+
     /**
      * 去添加账户
      */
@@ -103,7 +82,7 @@ function AccountCtrl($scope,
         $("#accountMgrPanel").modal('show');
 //        querySch();
     }
-    
+
     /**
      * 去修改账户
      * @param account
@@ -116,7 +95,7 @@ function AccountCtrl($scope,
         $scope.operateType = 'updateAccount';
         $("#accountMgrPanel").modal('show');
     }
-    
+
     /**
      * 去禁用/启用账户
      * @param account
@@ -129,7 +108,7 @@ function AccountCtrl($scope,
     	$scope.modalBody="确认"+$scope.title+"当前【"+account.accountName+"】账户吗？";
     	$("#account_remove_confirm_dialog").modal("show");
     }
-    
+
     /**
      * 账户确认
      */
@@ -148,8 +127,8 @@ function AccountCtrl($scope,
             $scope.deleteAccount($scope.curAccount);
         }
     }
-    
-    
+
+
     function checkAccountIsPassed(account){
     	if(!account.accountName||account.accountName==''){
     		return false;
@@ -168,7 +147,7 @@ function AccountCtrl($scope,
     	}*/
     	return true;
     }
-    
+
     /**
      * 去添加角色
      */
@@ -183,7 +162,7 @@ function AccountCtrl($scope,
         $("#accountMgrRolePanel").modal('show');
         $scope.queryAllRole();
     }
-    
+
     /**
      * 移除角色
      * @param role
@@ -193,10 +172,10 @@ function AccountCtrl($scope,
         	$uibMsgbox.confirm("请选择账户！");
             return;
         }
-        
+
         $uibMsgbox.confirm("是否确认删除？", function (result) {
             if(result == 'yes') {
-            	AccountService.removeAccountRoleById({accountRoleId : role.accountRoleId}, function(resp) {
+            	erp_AccountService.removeAccountRoleById({accountRoleId : role.accountRoleId}, function(resp) {
         			if (!resp.error) {
         				$uibMsgbox.success("删除成功");
         				var tmpRoleList = [];
@@ -216,7 +195,7 @@ function AccountCtrl($scope,
         	}
         });
     }
-    
+
     /**
      * 选择行
      * @param row
@@ -235,7 +214,7 @@ function AccountCtrl($scope,
             queryBranchTree(row);
         }
     }
-    
+
     /**
      * 选择角色
      * @param role
@@ -279,10 +258,10 @@ function AccountCtrl($scope,
         saveData.roleList = $scope.roleListCopy;
         updateAccountRole(saveData);
     }
-    
+
     function updateAccountRole(account){
         var param = account;
-        AccountService.updateAccountRole(param,function(resp){
+        erp_AccountService.updateAccountRole(param,function(resp){
         	if(resp.error==false){
         		$uibMsgbox.success(account.accountName+"  账户角色关系修改成功！");
         		queryRole(account);
@@ -291,7 +270,7 @@ function AccountCtrl($scope,
         	}
         })
     }
-    
+
     /**
      * 更新账户组织关系
      */
@@ -301,14 +280,14 @@ function AccountCtrl($scope,
         }
         updateAccountOrg($scope.curAccount);
     }
-    
+
     function updateAccountOrg(account){
-    	
-    	var param = {}; 
+
+    	var param = {};
     	var selected = [];
     	param.selectedBranch = genSelectedMenus();
     	param.accountId=account.user_id;
-    	AccountService.updateAccountOrg(param,function(resp){
+    	erp_AccountService.updateAccountOrg(param,function(resp){
     		if(resp.error==false){
     			$uibMsgbox.success(account.accountName+"  账户组织关系修改成功！");
     			queryBranchTree(account);
@@ -317,7 +296,7 @@ function AccountCtrl($scope,
     		}
     	})
     }
-    
+
     /**
      * 修改账户
      */
@@ -335,7 +314,7 @@ function AccountCtrl($scope,
         	param.password='';
         }
        // account.origalAccountName=$scope.origalAccountName;//修改之前的账户名称
-        AccountService.update(param,function(resp){
+        erp_AccountService.update(param,function(resp){
             if(resp.error ==  false){
             	$uibMsgbox.success("修改成功！");
                 $("#accountMgrPanel").modal("hide");
@@ -345,28 +324,28 @@ function AccountCtrl($scope,
             }else{
             	$uibMsgbox.error("修改失败："+resp.message+",请截图反馈给ERP客服！");
             }
-            
-            
+
+
         })
     }
-    
+
     /**
      * 添加账户
      */
     function addAccount(account){
         var param = account;
-        AccountService.addAccount(param,function(resp){
+        erp_AccountService.addAccount(param,function(resp){
             if(resp.error==false){
             	$uibMsgbox.success("添加成功！");
                 $('#accountMgrPanel').modal('hide');
                 $scope.queryInfo(1);
             }else{
             	$uibMsgbox.error("添加失败："+resp.message+",请截图反馈给客服！");
-                
+
             }
         })
     }
-    
+
     /**
      * 禁用/启用账户
      */
@@ -376,7 +355,7 @@ function AccountCtrl($scope,
     	var param = {};
     	param.accountId=$scope.curAccount.user_id;
         param.status=$scope.curAccount.status==1?2:1;
-    	AccountService.remove(param,function(resp){
+    	erp_AccountService.remove(param,function(resp){
     		if(resp.error==false){
     			$uibMsgbox.success("操作成功");
     			$scope.queryInfo($scope.pageNum);
@@ -385,7 +364,7 @@ function AccountCtrl($scope,
             }
     	})
     }
-    
+
     /**
      *根据账户id查询角色信息
      */
@@ -393,14 +372,14 @@ function AccountCtrl($scope,
         var param = {};
         param.user_id = account.user_id;
         $scope.isLoadingRole = 'loading...';
-        AccountService.queryRoleWithAccount(param,function(resp){
+        erp_AccountService.queryRoleWithAccount(param,function(resp){
             $scope.isLoadingRole = '';
            if(resp.error ==  false){
                $scope.curAccount.roleList = resp.data;
            }
         });
     }
-    
+
     /**
      * 查询除已有角色外的所有角色，给账户添加角色时使用
      */
@@ -423,7 +402,7 @@ function AccountCtrl($scope,
             }
         });
     }
-    
+
     /**
      * 根据账户id查询账户校区列表树
      */
@@ -452,7 +431,7 @@ function AccountCtrl($scope,
                 });
         })
     }
-    
+
     function genSelectedMenus(){
         var instance = $('#branchTree').jstree(true);
         var selectedMenus = instance.get_selected(true);
@@ -464,7 +443,7 @@ function AccountCtrl($scope,
         }
         return selected;
     }
-    
+
     /**
      * 查询角色列表
      */
@@ -472,7 +451,7 @@ function AccountCtrl($scope,
 		$scope.pageNum=pageIndex;
 		$scope.queryAllRole();
 	};
-	
+
 	/**
      * 添加账户时绑定员工
      */
@@ -481,14 +460,14 @@ function AccountCtrl($scope,
     	 $scope.onGoingQuery=true;
     	   var param = {};
     	   param.searchInfo=searchInfo;
-    	EmployeeManageService.queryEmployeeInfo(param,function(resp){
+    	erp_employeeMgrService.queryEmployeeInfo(param,function(resp){
              if(resp.error == false){
                  $scope.employeeList = resp.data;
              }
          });
     }
-    
-    
+
+
     /**
      * 选择一个员工
      */
@@ -497,12 +476,12 @@ function AccountCtrl($scope,
     	$scope.curAccount.employeeName=employee.EMPLOYEE_NAME;
     	$scope.onGoingQuery=false;
     	$scope.showQuery=false;
-    }	
-	
+    }
+
 	$scope.showEmployeeQuery=function(){
     	$scope.showQuery=true;
     }
-	
+
    $document.on('click', function(event){
 	      var element=angular.element(event.target).attr("id");
 	    	  $scope.$apply(function() {
@@ -512,11 +491,11 @@ function AccountCtrl($scope,
 	    	       $scope.onGoingQuery = false;
 	    	       $scope.showQuery=false;
 	    		  }
-	    		  
+
 	    	 });
 	      return $document.off('click', event);
 	});
-   
+
    $scope.queryBranchsWithId= function (buId){
    	var param={};
    	if( buId)
@@ -530,7 +509,7 @@ function AccountCtrl($scope,
            }
        });
    }
-   
+
    /**
     * 查询归属团队
     */
@@ -565,7 +544,7 @@ function AccountCtrl($scope,
 
     //按照员工id查询岗位信息
     function queryPostByEmpId(emp_id) {
-        EmployeeManageService.queryPostByEmpId({
+        erp_employeeMgrService.queryPostByEmpId({
             employee_id : emp_id
         }, function(resp) {
             if(!resp.error) {
@@ -596,7 +575,7 @@ function AccountCtrl($scope,
             param.post_Id = $scope.selectedPost.post_Id;
         }
 
-        EmployeeManageService.addPost(param, function(resp){
+        erp_employeeMgrService.addPost(param, function(resp){
             if(resp.error==false){
                 $uibMsgbox.success("添加成功");
                 queryPostByEmpId(param.emp_id);
@@ -614,7 +593,7 @@ function AccountCtrl($scope,
         } else {
             $uibMsgbox.confirm("请选择要删除的岗位");
         }
-        EmployeeManageService.removePost(param, function(resp) {
+        erp_employeeMgrService.removePost(param, function(resp) {
             if(!resp.error) {
                 $uibMsgbox.success("操作成功");
                 queryPostByEmpId(post.emp_id);
@@ -626,7 +605,7 @@ function AccountCtrl($scope,
      * 启用/禁用员工
      */
     $scope.setStatus = function(emp){
-        EmployeeManageService.setStatus({
+        erp_employeeMgrService.setStatus({
             id : emp.id
         }, function(resp) {
             if(!resp.error){
@@ -636,7 +615,7 @@ function AccountCtrl($scope,
         });
     }
 
-    $scope.queryInfo(1);
+    $scope.queryAccount();
     queryPost();
     queryBu();
 }
