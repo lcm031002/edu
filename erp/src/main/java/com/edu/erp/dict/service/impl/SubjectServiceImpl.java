@@ -31,7 +31,6 @@ public class SubjectServiceImpl implements SubjectService {
 		HashMap<String,Object> param = new HashMap<>();
 		param.put("name", subject.getName());
 		param.put("encoding", subject.getEncoding());
-		param.put("bu_id", subject.getBuId());
 		TPSubject  tpSubject= subjectDao.querySubjectListByNameOrEncoding(param);
 		if(tpSubject == null ) {
 			subjectDao.saveData(subject);
@@ -41,7 +40,7 @@ public class SubjectServiceImpl implements SubjectService {
 
 		//2.保存 团队科目关系
 		Map<String, Object> buRel = new HashMap<String, Object>();
-		buRel.put("bu_id", subject.getBuId());
+		buRel.put("org_cityid", subject.getCity_id());
 		buRel.put("dict_type", "tp_subject");
 		buRel.put("dict_id", subject.getId());
 		subjectDao.deleteData(buRel);

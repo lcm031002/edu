@@ -265,19 +265,19 @@ public class TeacherExcelWraper {
             //List<String> subject_namesNew = new ArrayList<>();
             List<String> errorSubject = new ArrayList<>();
             List<Long> subject_ids = new ArrayList<>();
-            Long buId = null;
+            Long cityId = null;
             for (OrganizationInfo org : dataHelper.getBuList()) {
                 if (org.getOrg_name().equals(teacherExcel.getBu_name())) {
-                    buId = org.getId();
+                    cityId = org.getId();
                     break;
                 }
             }
-            if (buId != null) {
+            if (cityId != null) {
                 boolean checked = false;
                 for (String subject_name : split) {
                     checked = false;
                     for (TPSubject subject : dataHelper.getSubjectList()) {
-                        if (subject.getName().equals(subject_name) && subject.getBuId().equals(buId)) {
+                        if (subject.getName().equals(subject_name) && subject.getCity_id().equals(cityId)) {
                             //subject_namesNew.add(subject_name);
                             subject_ids.add(subject.getId());
                             checked = true;
