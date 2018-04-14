@@ -81,7 +81,7 @@ public class GradeController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {			
 			Map<String, Object> queryParam = initParamMap(request, true);
-			Page<Map<String, Object>> page = dataGradeService.queryPage(queryParam);
+			Page<Grade> page = dataGradeService.queryPage(queryParam);
 			setRespDataForPage(request, page, resultMap);
 		} catch (Exception e) {
 			log.error("error found ,see:", e);
@@ -108,7 +108,7 @@ public class GradeController extends BaseController {
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 			Grade grade = ModelDataUtils.getPojoMatch(Grade.class, param);
 			setDefaultValue(request, grade, false);
-			grade.setBu_id(orgModel.getBuId());
+			grade.setCity_id(orgModel.getCityId());
 			dataGradeService.toAdd(grade);
 			resultMap.put("error", false);
 			resultMap.put("message", "新增成功!");
