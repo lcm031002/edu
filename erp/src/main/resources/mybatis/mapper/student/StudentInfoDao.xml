@@ -156,10 +156,10 @@
 							<if test="searchType != '1' and searchType != 1">
 								and (tsi.student_name like '%'||#{searchInfo}||'%' or tsi.encoding like '%'||#{searchInfo}||'%' or tsi.id like '%'||#{searchInfo}||'%' or tsi.phone like '%'||#{searchInfo}||'%')
 							</if>
-							union all
+							union
 							select tsi.*
 							from tab_student_info tsi
-							left join tab_order_info toi
+							join tab_order_info toi
 							on tsi.id = toi.student_id
 							where 1 = 1
 							<if test="searchType == '1' or searchType == 1">

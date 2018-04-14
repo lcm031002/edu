@@ -695,21 +695,21 @@ public class CourseServiceImpl implements CourseService {
 		for(TCourse tCourse : tCoursePage){
 			//获取课程是否存在关联的订单
 			tCourse.setHasOrderCourse(existOrderCourse(tCourse.getCourse_id()));
-			Long courseId = tCourse.getCourse_id();
-			List<RoomClass> roomClassList = tCourseDao.queryRoomClass(courseId);
-			List<RoomClass> sameRoomClass = new ArrayList<RoomClass>();
-			for(RoomClass roomClass:roomClassList){
-				String strCourseDate = roomClass.getCourseDate().toString();
-				String strDate = strCourseDate.substring(0, 4) + "-" + strCourseDate.substring(4, 6) + "-" + strCourseDate.substring(6, 8);
-				Date courseDate = DateUtil.stringToDate(String.valueOf(strDate), "yyyy-MM-dd");
-				String weekday = DateUtil.getDayOfWeek(courseDate, 1);
-				int weekNumber = Integer.parseInt(DateUtil.getDayOfWeek(courseDate, 0));
-				roomClass.setWeekday(weekday);
-				roomClass.setWeekNumber(weekNumber);
-			}
-			Set<RoomClass> roomClassSet = new HashSet<RoomClass>();
-			roomClassSet.addAll(roomClassList);
-			tCourse.setRoomClassSet(roomClassSet);
+//			Long courseId = tCourse.getCourse_id();
+//			List<RoomClass> roomClassList = tCourseDao.queryRoomClass(courseId);
+//			List<RoomClass> sameRoomClass = new ArrayList<RoomClass>();
+//			for(RoomClass roomClass:roomClassList){
+//				String strCourseDate = roomClass.getCourseDate().toString();
+//				String strDate = strCourseDate.substring(0, 4) + "-" + strCourseDate.substring(4, 6) + "-" + strCourseDate.substring(6, 8);
+//				Date courseDate = DateUtil.stringToDate(String.valueOf(strDate), "yyyy-MM-dd");
+//				String weekday = DateUtil.getDayOfWeek(courseDate, 1);
+//				int weekNumber = Integer.parseInt(DateUtil.getDayOfWeek(courseDate, 0));
+//				roomClass.setWeekday(weekday);
+//				roomClass.setWeekNumber(weekNumber);
+//			}
+//			Set<RoomClass> roomClassSet = new HashSet<RoomClass>();
+//			roomClassSet.addAll(roomClassList);
+//			tCourse.setRoomClassSet(roomClassSet);
 		}
 		return tCoursePage;
 	}

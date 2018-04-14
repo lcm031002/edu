@@ -150,10 +150,8 @@
 		          0
 		       end is_ordered,
 		       ${student_id} student_id,
-		        tsi.num sort_num,
 		       </if>
-		       a.remark,
-		       tctt.title
+		       a.remark
 		  from t_course_scheduling a
 		  join t_course b
 		    on a.course_id = b.id
@@ -166,12 +164,7 @@
 		    on a.create_user = c_user.id
 		  left join tab_user_info u_user
 		    on a.update_user = u_user.id
-		  left join t_course_times_title tctt
-		  on tctt.course_id=a.course_id and tctt.course_times=a.course_times 
 		  <if test="student_id!=null">
-		  left join t_sortnum_info tsi 
-		  on tsi.course_id=a.course_id  and tsi.seq=a.course_times 
-		  and tsi.student_id= #{student_id} and tsi.status=1
 		  left join (SELECT distinct toc.course_id, toct.course_times times, 1 is_valid,tod.student_id
 	        FROM tab_order_info tod
 	        LEFT JOIN  tab_order_info_detail toc

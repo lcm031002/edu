@@ -38,9 +38,7 @@ function erp_StudentIndexAccountController(
     }
     $scope.changeAccountTypeList = [
         // {value : -1, label : '全部'},
-        {value : 1, label : '储值账户'},
-        {value : 2, label : '冻结账户'},
-        {value : 3, label : '退费账户'}
+        {value : 1, label : '账户流水'}
     ];
 
     function queryStudentInfo(){

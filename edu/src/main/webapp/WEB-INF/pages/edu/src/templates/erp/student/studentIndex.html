@@ -65,24 +65,10 @@
     <li class="account-info container-fluid" style="padding: 20px 40px;">
       <div class="row">
         <div class="col-sm-4 text-center">
-          <div class="cur account-type" ui-sref="studentAccountQuery"><div class="account-value">&yen;{{studentIndexAccount.STORE_ACCOUNT}}</div>储值账户</div>
+          <div class="cur account-type" ui-sref="studentAccountQuery"><div class="account-value">&yen;{{studentIndexAccount.STORE_ACCOUNT}}</div>账户余额</div>
         </div>
       </div>
     </li>
-    <!-- <li class="account" style="width: 360px;">
-      <div class="account-info">
-        <span class="num pull-left text-warning" style="font-size: 40px;">&yen;{{studentIndexAccount.STORE_ACCOUNT}} </span>
-        <button class="btn btn-primary pull-right" ui-sref="studentAccountQuery">帐户详情</button>
-
-        <div class="clearfix"></div>
-      </div>
-      <div class="account-op">
-        <span class="cur" ui-sref="studentAccountRecharge">充值</span>|
-        <span class="cur" ui-sref="studentAccountTransfer">转账</span>|
-        <span class="cur" ui-serf="studentAccountClaim">
-          <a style="color: #666;" href="#/studentMgr/studentMgrAccount/studentAccountClaim">理赔</a>
-        </span>
-      </div> -->
     </li>
     <li class="account-detail {{student.product_line == 2 ? 'cols-4':''}}">
       <div class="block" ui-sref="studentMgrListening">
