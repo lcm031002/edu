@@ -6,23 +6,22 @@
 
 	<!-- 查询年级信息列表 -->
 	<select id="selectForPage" resultType="com.edu.erp.model.Grade" parameterType="java.util.HashMap">
-		select 		a.id,
-						a.encoding,
-						a.grade_name,
-						a.last_id,
-						a.description ,
-                       	a.sort,
-						a.status,
-                       	a.create_user,
-                       	a.create_time,
-                       	a.update_user,
-                       	a.update_time,
-						b.encoding last_encoding,
-						b.grade_name last_name,
-						c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name 
-			from 		tab_data_grade a
-		left join 		tab_data_grade b on a.last_id = b.id and b.status = 1
-		
+		select a.id,
+				a.encoding,
+				a.grade_name,
+				a.last_id,
+				a.description ,
+				a.sort,
+				a.status,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time,
+				b.encoding last_encoding,
+				b.grade_name last_name,
+				c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		from tab_data_grade a
+		left join 	tab_data_grade b on a.last_id = b.id and b.status = 1
 		<!-- 新增用户-->
 		left join tab_user_info c_user on a.create_user = c_user.id
 		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
@@ -34,7 +33,7 @@
 			and bdr.dict_id = a.id
 			and bdr.dict_type = 'bu_grade_rel'
 		</if>
-		where 1 = 1
+		where a.org_city_id = #{city_id}
 		<if test="grade_name!= null and grade_name!= ''">
 			and	a.grade_name like '%${grade_name}%' 		
 		</if>
@@ -109,10 +108,19 @@
 	</insert>
 
 	<select id="queryGradeListByNameOrEncoding"  parameterType="java.util.Map" resultType="com.edu.erp.model.Grade">
-		SELECT
-		t.*
-		FROM tab_data_grade t
-		where t.grade_name = #{grade_name,jdbcType=VARCHAR}
+		SELECT a.id,
+				a.encoding,
+				a.grade_name,
+				a.last_id,
+				a.description ,
+				a.sort,
+				a.status,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time
+		FROM tab_data_grade a
+		where a.grade_name = #{grade_name,jdbcType=VARCHAR}
 	</select>
 
 	<insert id="insertGradeBuRel" parameterType="java.util.HashMap">
