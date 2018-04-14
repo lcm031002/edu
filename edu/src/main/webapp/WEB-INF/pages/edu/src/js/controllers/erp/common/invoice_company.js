@@ -106,7 +106,7 @@ function erp_invoiceCompanyController(
         function(resp){
             if(!resp.error) {
            	 	$scope.invoiceCompanyList = resp.data;
-           	 	$scope.paginationConf.totalItems = resp.total || 180;
+           	 	$scope.paginationConf.totalItems = resp.total || 0;
             } else {
             	$uibMsgbox.error(resp.message);
             }

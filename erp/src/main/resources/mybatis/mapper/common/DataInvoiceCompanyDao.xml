@@ -16,8 +16,10 @@
 				a.create_time,
 				a.update_user,
 				a.update_time,
-				c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+				c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,
+				toi.org_name as city_name
 		from tab_data_invoice_company a
+		left join on tab_organization_info toi on toi.id = a.org_city_id
 		<!-- 新增用户 -->
 		left join tab_user_info c_user on a.create_user = c_user.id
 		left join

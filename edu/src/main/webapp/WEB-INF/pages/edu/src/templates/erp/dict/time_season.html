@@ -128,18 +128,9 @@
 											<rd-date-picker-popup required name="end_date"
 												ng-model="timeSeason.end_date"
 											></rd-date-picker-popup>
-											<!-- <input class="form-control Wdate cursor_pointer"
-												onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_date"
-												ng-model="timeSeason.end_date" required type="text"> -->
 										</div>
 									</div>
 									<div class="klxx-erp-form-item-label form-group">
-										<label class="klxx-erp-form-item-required col-sm-2 control-label">产品线</label>
-										<div class="col-sm-4 klxx-erp-select">
-											<select class="form-control" ng-model="timeSeason.product_line" required name="product_line"
-												ng-options="procuctLine.id as procuctLine.name for procuctLine in productLineList"></select>
-											<div class="klxx-erp-form-explain" ng-show="dictTimeSeasonForm.product_line.$invalid && dictTimeSeasonForm.product_line.$dirty && dictTimeSeasonForm.product_line.$error.required">请选择产品线</div>
-										</div>
 										<label class="klxx-erp-form-item-required col-sm-2 control-label">业务模型</label>
 										<div class="col-sm-4 klxx-erp-select">
 											<select class="form-control" ng-model="timeSeason.business_type" required name="business_type"

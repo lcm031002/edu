@@ -5,7 +5,7 @@
 <mapper namespace="com.edu.erp.dao.DataSchoolDao">
 
 	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="map">
-		select a.id
+		select a.id,
 				a.school_name,
 				a.short_school_name,
 				a.school_type,
@@ -32,7 +32,7 @@
 	  		left join tab_region b on a.province_id = b.rid
 	  		left join tab_region c on a.city_id = c.rid
 	  		left join	tab_region d on a.area_id = d.rid
-	  		left join tab_organization_info e on a.org_id = e.id
+	  		left join tab_organization_info e on a.org_city_id = e.id
 	  		left join tp_school_type f on a.school_type = f.id
 	  		<!-- 新增用户-->
 			left join tab_user_info c_user on a.create_user = c_user.id
@@ -49,7 +49,7 @@
 	</select>
 
 	<select id="selectList" parameterType="map" resultType="com.edu.erp.model.DataSchool">
-		select a.id
+		select a.id,
 				a.school_name,
 				a.short_school_name,
 				a.school_type,

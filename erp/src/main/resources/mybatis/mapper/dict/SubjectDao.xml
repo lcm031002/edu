@@ -5,41 +5,49 @@
 <mapper namespace="com.edu.erp.dao.SubjectDao">
 
 	<select id="selectForPage" resultType="com.edu.erp.model.TPSubject" parameterType="java.util.HashMap">
-				select
-					   t1.ID as id,
-				       t1.ENCODING as encoding,
-				       t1.NAME as "name",
-				       t1.DESCRIPTION as description,
-				       t1.CREATE_TIME as create_time,
-				       t1.UPDATE_TIME as update_time,
-                       c_emp.employee_name as create_user_name, 
-                       u_emp.employee_name as update_user_name
-                  from tp_subject t1
-                 <!-- 新增用户-->
-				 left join tab_user_info c_user on t1.create_user = c_user.id
-				 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
-				 <!-- 修改用户-->
-				 left join tab_user_info u_user on t1.update_user = u_user.id
-				 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-                 <if test="bu_id!=null">
-                 	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id}
-                 	and bdr.DICT_ID = t1.id
-                 	and bdr.DICT_TYPE = 'tp_subject'
-                 </if>
-                  where 1 = 1
-                 <if test="subjectName != null and subjectName != ''">
-                 	 and t1.name like '%${subjectName}%'
-                 </if>
-                 ORDER BY t1.update_time DESC, t1.id DESC
+		select
+			   t1.ID as id,
+			   t1.ENCODING as encoding,
+			   t1.NAME as "name",
+			   t1.DESCRIPTION as description,
+			   t1.CREATE_TIME as create_time,
+			   t1.UPDATE_TIME as update_time,
+			   c_emp.employee_name as create_user_name,
+			   u_emp.employee_name as update_user_name
+		  from tp_subject t1
+		 <!-- 新增用户-->
+		 left join tab_user_info c_user on t1.create_user = c_user.id
+		 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		 <!-- 修改用户-->
+		 left join tab_user_info u_user on t1.update_user = u_user.id
+		 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		 <if test="city_id!=null">
+			inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{city_id}
+			and bdr.DICT_ID = t1.id
+			and bdr.DICT_TYPE = 'tp_subject'
+		 </if>
+		  where 1 = 1
+		 <if test="subjectName != null and subjectName != ''">
+			 and t1.name like '%${subjectName}%'
+		 </if>
+		 ORDER BY t1.update_time DESC, t1.id DESC
 	</select>
 	
 	<!-- 下拉菜单的科目列表 （跟进课程筛选科目）-->
 	<select id="queryList"  parameterType="java.util.Map" resultType="com.edu.erp.model.TPSubject">
-		SELECT 
-			distinct t.*
+		SELECT distinct t.id,
+				t.encoding,
+				t.name,
+				t.description,
+				t.status,
+				t.org_city_id as city_id,
+				t.create_user,
+				t.create_time,
+				t.update_user,
+				t.update_time
 	  	FROM tp_subject t
-	  	<if test="org_city_id!=null">
-         	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id}
+	  	<if test="city_id!=null">
+         	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{city_id}
          	and bdr.DICT_ID = t.id
          	and bdr.DICT_TYPE = 'tp_subject'
         </if>
@@ -68,15 +76,31 @@
 	</select>	
 	<!-- 下拉科目列表 -->
 	<select id="querySubjectListByNameOrEncoding"  parameterType="java.util.Map" resultType="com.edu.erp.model.TPSubject">
-		SELECT 
-			distinct t.*
+		SELECT distinct t.id,
+				t.encoding,
+				t.name,
+				t.description,
+				t.status,
+				t.org_city_id as city_id,
+				t.create_user,
+				t.create_time,
+				t.update_user,
+				t.update_time
 	  	FROM tp_subject t
 		where t.name = #{name,jdbcType=VARCHAR}
 	</select>
 	
 	<select id="selectById" resultType="com.edu.erp.model.TPSubject" parameterType="java.lang.String">
-		SELECT 
-		*
+		SELECT id,
+				encoding,
+				name,
+				description,
+				status,
+				org_city_id as city_id,
+				create_user,
+				create_time,
+				update_user,
+				update_time
 	  	FROM tp_subject
 	 	WHERE STATUS = 1 AND ID = #{id} 
 		ORDER BY ID ASC
@@ -89,6 +113,7 @@
 	       	name,
 	       	STATUS,
 	       	DESCRIPTION,
+	       	org_city_id,
 	       	CREATE_USER,
 	       	CREATE_TIME,
 	       	update_user,
@@ -100,6 +125,7 @@
 			#{name,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC},
 			#{description,jdbcType=VARCHAR},
+			#{city_id,jdbcType=NUMERIC},
 			#{create_user,jdbcType=NUMERIC},
 			#{create_time,jdbcType=TIMESTAMP},
 			#{create_user,jdbcType=NUMERIC},

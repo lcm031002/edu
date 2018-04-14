@@ -135,7 +135,7 @@ public class DataSchoolController extends BaseController{
 	
 	/**
 	 * 新增学校信息
-	 * @param param
+	 * @param school
 	 * @param request
 	 * @param response
 	 * @return
@@ -143,16 +143,13 @@ public class DataSchoolController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/service" }, method = RequestMethod.POST, headers = { "Accept=application/json" })
-	public Map<String, Object> addSchool(@RequestBody Map<String, Object> param,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Map<String, Object> addSchool(@RequestBody DataSchool school,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			Account account = WebContextUtils.genUser(request);
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
-			DataSchool school = ModelDataUtils.getPojoMatch(DataSchool.class, param);
-			school.setCreate_user(account.getId());
+			setDefaultValue(request, school, false);
 			school.setOrg_city_id(orgModel.getCityId());
-			school.setStatus(DataSchool.StatusEnum.VALID.getCode());
-			school.setCreate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
 			dataSchoolService.toAdd(school);
 			resultMap.put("error", false);
 			resultMap.put("message", "新增成功!");
@@ -164,7 +161,7 @@ public class DataSchoolController extends BaseController{
 	}
 	/**
 	 * 更新学校信息
-	 * @param School
+	 * @param school
 	 * @param request
 	 * @param response
 	 * @return
@@ -172,15 +169,14 @@ public class DataSchoolController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = { "/service" }, method = RequestMethod.PUT, headers = { "Accept=application/json" })
-	public Map<String, Object> updateSchool(@RequestBody DataSchool School,
+	public Map<String, Object> updateSchool(@RequestBody DataSchool school,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
 			Account account = WebContextUtils.genUser(request);
-			School.setUpdate_user(account.getId());
-			School.setUpdate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
-			dataSchoolService.toUpdate(School);
+			setDefaultValue(request, school, true);
+			dataSchoolService.toUpdate(school);
 			resultMap.put("error", false);
 			resultMap.put("message", "修改成功!");
 		} catch (Exception e) {

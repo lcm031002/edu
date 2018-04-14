@@ -41,13 +41,12 @@ function erp_schoolController(
         school_name: '',
         short_school_name: '',
         school_type: '',
-        linkman: '',
+        link_man: '',
         phone: '',
         description: '',
         province_id: 0,
         city_id: 0,
         area_id: 0,
-        org_id: 0,
         address: ''
     };
 
@@ -113,6 +112,10 @@ function erp_schoolController(
 
     // 处理学校表单【确认】按钮点击事件
     $scope.handleModalConfirm = function() {
+        if (!Validator.mobile.test($scope.schoolDetail.phone) && !Validator.tel.test($scope.schoolDetail.phone) ) {
+            $uibMsgbox.alert('电话格式不正确');
+            return false;
+        }
         if ($scope.optype == 'add') {
             $scope.add();
         } else {
