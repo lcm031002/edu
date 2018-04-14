@@ -37,7 +37,7 @@
             <th>操作 </th>
           </tr>
           <tr ng-repeat="account in accountList" ng-if="accountList && accountList.length" ng-click="checked(account)" class="{{account.checked?'success':''}}">
-            <td>{{account.user_id}}</td>
+            <td>{{account.id}}</td>
             <td>{{account.accountName}}</td>
             <td>{{account.employeeName}}</td>
             <td>{{account.status==1?'启用':'禁用'}}</td>

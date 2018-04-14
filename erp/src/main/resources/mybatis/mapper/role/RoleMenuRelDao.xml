@@ -15,17 +15,16 @@
 	
 	<!-- 添加角色 菜单权限关系-->
 	<insert id="addRoleMenu">
-		<foreach collection="menuIndexList" item="item" index="index" open="begin" close="; end;" separator=";">
 			INSERT INTO ebs_rolemenu_rel
 			(
 				role_id,
 				menu_id
 			)
-			values (
-				#{roleId,jdbcType=NUMERIC},
-				#{item,jdbcType=VARCHAR}
-			)
-		</foreach>
+			values
+			<foreach collection ="menuIndexList" item="menuIndex" index= "index" separator =",">
+				(#{roleId,jdbcType=NUMERIC},
+				#{menuIndex,jdbcType=VARCHAR})
+			</foreach>
 	</insert>
 	
 	

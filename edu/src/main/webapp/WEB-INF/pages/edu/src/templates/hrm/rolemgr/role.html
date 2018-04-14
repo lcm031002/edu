@@ -55,9 +55,9 @@
         <td>{{role.id}}</td>
         <td>{{role.roleName}}</td>
         <td>{{role.create_user_name}}</td>
-        <td>{{role.create_time|date:'yyyy-MM-dd'}}</td>
+        <td>{{role.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
         <td>{{role.update_user_name}}</td>
-        <td>{{role.update_time|date:'yyyy-MM-dd'}}</td>
+        <td>{{role.update_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
         <td>{{role.status==1?'启用':'禁用'}}</td>
       </tr>
       <tr ng-if="!roleList||!roleList.length">
