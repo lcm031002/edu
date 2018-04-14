@@ -118,8 +118,8 @@ public class TimeSeasonController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			check(timeSeason);
-			Long buId = setDefaultValue(request, timeSeason, false);
-			timeSeasonService.save(timeSeason, buId);
+			setDefaultValue(request, timeSeason, false);
+			timeSeasonService.save(timeSeason);
 			result.put("error", false);
 			result.put("data", timeSeason);
 		} catch (Exception e) {
@@ -177,9 +177,8 @@ public class TimeSeasonController extends BaseController {
 				|| timeSeason.getSeason() == null
 				|| StringUtils.isEmpty(timeSeason.getStart_date())
 				|| StringUtils.isEmpty(timeSeason.getEnd_date())
-				|| timeSeason.getProduct_line() == null
 				|| timeSeason.getBusiness_type() == null) {
-			throw new Exception("名称、季节、开始日期、结束日期、产品线和业务类型必输");
+			throw new Exception("名称、季节、开始日期、结束日期和业务类型必输");
 		}
 	}
 	

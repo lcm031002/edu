@@ -28,11 +28,11 @@ public class TimeSeasonServiceImpl implements TimeSeasonService {
 	private DataGradeService dataGradeService;
 
 	@Override
-	public void save(TimeSeason timeSeason, Long buId) throws Exception {
+	public void save(TimeSeason timeSeason) throws Exception {
 		timeSeasonDao.insert(timeSeason);
 		
 		Map<String, Object> data = new HashMap<String, Object>();
-        data.put("bu_id", buId);
+        data.put("org_city_id", timeSeason.getCity_id());
         data.put("dict_id", timeSeason.getId());
         data.put("dict_type", "tab_time_season");
         dataGradeService.toAddBuRel(data);
@@ -83,10 +83,8 @@ public class TimeSeasonServiceImpl implements TimeSeasonService {
 	 * @return List<DictionaryBusiness> 返回类型
 	 */
 	@Override
-	public List<DataDictionary> querySeasons(Long businessType, Long city_id,
-			Long product_line, Long student_id, Long bu_id) throws Exception {
-		return this.timeSeasonDao.selectSeasons(businessType, city_id,
-				product_line, student_id, bu_id);
+	public List<DataDictionary> querySeasons(Long businessType, Long city_id) throws Exception {
+		return this.timeSeasonDao.selectSeasons(businessType, city_id);
 	}
 	
 	@Override

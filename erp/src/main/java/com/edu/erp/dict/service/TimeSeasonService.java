@@ -32,7 +32,7 @@ public interface TimeSeasonService {
 	 * @param timeSeason 课程季对象
 	 * @return
 	 */
-	void save(TimeSeason timeSeason, Long buId) throws Exception;
+	void save(TimeSeason timeSeason) throws Exception;
 
 	/**
 	 * 修改
@@ -63,8 +63,7 @@ public interface TimeSeasonService {
 	 * 
 	 * @return List<DictionaryBusiness> 返回类型
 	 */
-	List<DataDictionary> querySeasons(Long businessType, Long city_id,
-			Long product_line, Long student_id, Long bu_id) throws Exception;
+	List<DataDictionary> querySeasons(Long businessType, Long city_id) throws Exception;
 	
 	/**
 	 * 根据ids字符串改变状态

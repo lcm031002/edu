@@ -20,7 +20,6 @@
 				t1.create_time,
 				t1.update_user,
 				t1.update_time,
-			    t4.name product_line_name,
 				(case t1.business_type when 1 then '班级课' when 2 then '一对一' when 3 then '晚辅导' end) business_type_name,
 				(case t1.season when 1 then '春季' when 2 then '夏季' when 3 then '秋季' when 4 then '冬季' end) season_name,
 			   t2.COURSE_SEASON_NAME  as last_course_season_name,
@@ -28,8 +27,7 @@
 			   c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
 		  from tab_time_season t1
 		  left join TAB_TIME_SEASON t2 on t1.LAST_SEASON_ID = t2.id
-		  left join	tab_organization_info t3 on t1.city_id = t3.id
-		  left join tp_product_line t4 on t1.product_line = t4.id
+		  left join	tab_organization_info t3 on t1.org_city_id = t3.id
 		 <!-- 新增用户-->
 		 left join tab_user_info c_user on t1.create_user = c_user.id
 		 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
@@ -41,7 +39,7 @@
 			 and t1.course_season_name like '%${course_season_name}%'
 		 </if>
 		<if test="city_id!=null">
-			and t1.org_city_id = #{org_city_id}
+			and t1.org_city_id = #{city_id}
 		</if>
 		 ORDER BY ifnull(t1.update_time, t1.create_time) DESC, t1.id DESC
 	</select>
@@ -51,7 +49,6 @@
 			  FROM TAB_TIME_SEASON
 			 WHERE BUSINESS_TYPE = #{businessType,jdbcType=NUMERIC}
 			   AND STATUS = 1
-			   AND PRODUCT_LINE = #{product_line,jdbcType=NUMERIC}
 			   AND org_city_id = #{city_id,jdbcType=NUMERIC}
 			 order by ID desc
 	</select>
@@ -80,9 +77,6 @@
 	 	<if test="season_id != null and season_id != '' and season_id != -1">
 	 	   and t.id = #{season_id}
 	 	</if>
-	 	<if test="product_line != null and product_line != '' and product_line != -1">
-	   		and t.product_line = #{product_line,jdbcType=NUMERIC}
-	   </if>
 	 	<!-- 严格匹配 -->
 	 	<if test="strict_season_name != null and strict_season_name != ''">
 			and  t.course_season_name = #{strict_season_name,jdbcType=VARCHAR}
@@ -121,7 +115,6 @@
 	       	START_DATE,
 	       	END_DATE,
 	       	BUSINESS_TYPE,
-	       	product_line,
 	       	STATUS,
 	       	ORG_CITY_ID,
 	       	DESCRIPTION,
@@ -137,7 +130,6 @@
 			#{start_date,jdbcType=VARCHAR},
 			#{end_date,jdbcType=VARCHAR},
 			#{business_type,jdbcType=NUMERIC},
-			#{product_line,jdbcType=NUMERIC},
 			#{status,jdbcType=NUMERIC},
 			#{city_id,jdbcType=VARCHAR},
 			#{description,jdbcType=VARCHAR},
@@ -154,7 +146,6 @@
 	       	START_DATE = #{start_date, jdbcType=VARCHAR},
 	       	END_DATE = #{end_date, jdbcType=VARCHAR},
 	       	BUSINESS_TYPE = #{business_type, jdbcType=NUMERIC},
-	       	PRODUCT_LINE = #{product_line, jdbcType=NUMERIC},
 	       	DESCRIPTION = #{description, jdbcType=VARCHAR},
 	       	UPDATE_USER = #{update_user, jdbcType=NUMERIC},
 	       	UPDATE_TIME = #{update_time, jdbcType=TIMESTAMP},

@@ -35,8 +35,6 @@ function erp_timeSeasonController(
 	$scope.businessTypeList = [{"key" : 1, "value" : "班级课"},
 	                   		   {"key" : 2, "value" : "一对一"},
 	                   		   {"key" : 3, "value" :"晚辅导"}];
-    // 产品线列表                               
-	$scope.productLineList = [];
 
     // 季节列表
 	$scope.seasonList = [{"key" : 1, "value" : "春季"},
@@ -59,8 +57,6 @@ function erp_timeSeasonController(
         id: 0,
         last_course_season_name: "",
         last_season_id: 0,
-        product_line: 0,
-        product_line_name: "",
         season: 0,
         season_name: "",
         start_date: "",
@@ -95,7 +91,6 @@ function erp_timeSeasonController(
         $scope.resetForm();
         $scope.timeSeason.season = null;
         $scope.timeSeason.last_season_id = null;
-        $scope.timeSeason.product_line = null;
         $scope.timeSeason.business_type = null;
         $scope.querySelectDatas();
         $('#erpSystemDictTimeSeasonPanel').modal('show');
@@ -205,7 +200,6 @@ function erp_timeSeasonController(
     	},function(resp) {
             if(!resp.error) {
                 $scope.lastTimeSeasonList = resp.timeSeasonList;
-                $scope.productLineList = resp.productLineList;
             }
         });
     };

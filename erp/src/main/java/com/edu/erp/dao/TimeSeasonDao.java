@@ -67,7 +67,7 @@ public interface TimeSeasonDao {
 	 *             
 	 * @return List<DataDictionary> 返回类型
 	 */
-	List<DataDictionary> selectSeasons(Long businessType, Long city_id, Long product_line, Long student_id, Long bu_id) throws Exception;
+	List<DataDictionary> selectSeasons(Long businessType, Long city_id) throws Exception;
 
 	/**
 	 * 根据ids字符串改变状态

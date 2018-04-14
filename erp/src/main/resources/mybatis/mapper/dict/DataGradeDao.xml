@@ -28,8 +28,8 @@
 		<!-- 修改用户-->
 		left join tab_user_info u_user on a.update_user = u_user.id
 		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-		<if test="bu_id!=null">
-			inner join BU_DICT_REL bdr on bdr.bu_id =#{bu_id,jdbcType=NUMERIC}
+		<if test="city_id!=null">
+			inner join BU_DICT_REL bdr on bdr.org_city_id =#{city_id,jdbcType=NUMERIC}
 			and bdr.dict_id = a.id
 			and bdr.dict_type = 'bu_grade_rel'
 		</if>
@@ -60,7 +60,7 @@
 		  left join tab_data_grade b
 		    on a.last_id = b.id
 		   and b.status = 1
-		 <if test="bu_id != null">  
+		 <if test="org_city_id != null">
 		 inner join BU_DICT_REL bdr
 		    on bdr.org_city_id = #{org_city_id,jdbcType=NUMERIC}
 		   and bdr.dict_id = a.id
@@ -86,6 +86,7 @@
        		last_id,
        		sort,
        		description,
+       		org_city_id,
       		create_user,
        		create_time,
        		update_user,
@@ -99,6 +100,7 @@
 			#{last_id,jdbcType=NUMERIC},
 			#{sort,jdbcType=NUMERIC},
 			#{description,jdbcType=VARCHAR},
+			#{city_id,jdbcType=NUMERIC},
 			#{create_user,jdbcType=NUMERIC},
 			#{create_time,jdbcType=TIMESTAMP},
 			#{create_user,jdbcType=NUMERIC},

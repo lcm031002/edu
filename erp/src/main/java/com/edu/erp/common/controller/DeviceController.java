@@ -62,6 +62,7 @@ public class DeviceController extends BaseController {
 				return resultMap;
 			}
 			Map<String, Object> queryParam = new HashMap<String, Object>();
+			queryParam.put("city_id", orgModel.getCityId());
 			List<DataCompanyAccount> accountList = selectOptionService.selectCompanyAccountList(queryParam);
 			resultMap.put("accountList", accountList);
 			

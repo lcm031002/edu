@@ -24,15 +24,11 @@ public class TimeSeason extends BaseObject
 	
 	private String description;//描述
 	
-	private Long product_line;
-	
 	private String last_course_season_name; // 上一课程季名称
 	
 	private String business_type_name; // 业务类型名称
 	
 	private String season_name; // 季节名称
-	
-	private String product_line_name; // 产品名称
 	
 	/**
 	 * @author lpe
@@ -130,14 +126,6 @@ public class TimeSeason extends BaseObject
 		this.description = description;
 	}
 
-	public Long getProduct_line() {
-		return product_line;
-	}
-
-	public void setProduct_line(Long product_line) {
-		this.product_line = product_line;
-	}
-
 	public String getLast_course_season_name() {
 		return last_course_season_name;
 	}
@@ -162,14 +150,6 @@ public class TimeSeason extends BaseObject
 		this.season_name = season_name;
 	}
 
-	public String getProduct_line_name() {
-		return product_line_name;
-	}
-
-	public void setProduct_line_name(String product_line_name) {
-		this.product_line_name = product_line_name;
-	}
-
 	public String toString(){
 		StringBuffer buff = new StringBuffer();
 		buff.append("ID：");
@@ -189,9 +169,6 @@ public class TimeSeason extends BaseObject
 		buff.append("，");
 		buff.append("结束时间：");
 		buff.append(getEnd_date());
-		buff.append("，");
-		buff.append("产品线：");
-		buff.append(getProduct_line());
 		buff.append("，");
 		buff.append("业务模型：");
 		buff.append(getBusiness_type());
