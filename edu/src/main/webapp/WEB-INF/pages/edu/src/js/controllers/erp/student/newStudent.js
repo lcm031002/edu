@@ -381,7 +381,6 @@ function erp_newStudentController(
                     +'<img style="width:60px;height:60px;border-radius:50%;float:left;margin-right:10px;" src="img/erp/student-default.png">'
                     +'<a href="#" class="col-sm-10"><div>姓名:'+ (stu.student_name || '')
                       +'</div><div>学员编号:'+ (stus.encoding || '')
-                      +'</div><div>APP登陆名:'+ (stus.login_no || '未同步到APP')
                       +',     校区:'+ (stus.branch_name || '')
                     +'</div></a>'
                   +'</div>'

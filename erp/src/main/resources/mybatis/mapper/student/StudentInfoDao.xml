@@ -102,12 +102,7 @@
 								a.STUDENT_NAME, 
 								a.SEX, 
 								a.BIRTHDAY,
-				             nvl((select student_status from
-				                  tab_student_status where
-				                  bu_id = #{buId}
-				                  and student_id = a.id
-				                 )
-				                  ,a.STUDENT_STATUS) as student_status,
+								a.STUDENT_STATUS as student_status,
 								a.ADDRESS, 
 								a.QQ,
 							<if test="studentId == null or studentId == ''">
@@ -132,19 +127,13 @@
 								a.CREATE_TIME, 
 								a.UPDATE_USER, 
 								a.UPDATE_TIME, 
-								a.OLD_ID, 
-								a.R_CITY, 
-								a.CODE, 
-								a.PHONE_VERIFY,
-								a.syn_exception,
-								b.org_name as city_name, 
+								b.org_name as city_name,
 								c.org_name as branch_name, 
 								f.org_name as bu_name, 
 								d.grade_name,
 								e.school_name as attend_school_name, 
 								b.org_name r_city_name,
 								c.product_line,
-							  a.is_sended,
 							<if test="studentId == null or studentId == ''">
 								(case when a.login_no is not null and length(a.login_no) >= 11 then substr(a.login_no, 1, 3) || '****' || substr(a.login_no, 8) else a.login_no end) as login_no,
 							</if>
@@ -157,14 +146,7 @@
 				                TEI.EMPLOYEE_NAME  as counselor_name,
 				                TSCI2.COUNSELOR_ID AS learningmgr_id,
 				                TEI2.EMPLOYEE_NAME AS learningmgr_name,
-								0 as course_schedule_count,
-							 nvl((select nvl(tsa.active, 0) from tab_student_active tsa where tsa.student_id = a.id), 0) as active,
-							(case
-								when a.bu_id = #{buId} then 0
-								when f.parent_id = bu.parent_id then
-									decode(c.product_line, 1, 1, 12, 2, 11, 3, 2, 4, 5)
-								else
-									decode(c.product_line, 1, 6, 12, 7, 11, 8, 2, 9, 10) end) as sort_field
+								0 as course_schedule_count
 					from 		(select tsi.*
 							from tab_student_info tsi
 							where 1 = 1
@@ -197,7 +179,7 @@
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
 				ON TSCI.STUDENT_ID = a.ID
 				AND TSCI.COUNSELOR_TYPE = 1
-				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+				AND date_format(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
 				TSCI.END_DATE
 				AND TSCI.IS_VALID = 1
 				AND TSCI.BU_ID = #{buId}
@@ -207,7 +189,7 @@
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
 				ON TSCI2.STUDENT_ID = a.ID
 				AND TSCI2.COUNSELOR_TYPE = 2
-				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+				AND date_format(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
 				TSCI2.END_DATE
 				AND TSCI2.IS_VALID = 1
 				AND TSCI2.BU_ID = #{buId}

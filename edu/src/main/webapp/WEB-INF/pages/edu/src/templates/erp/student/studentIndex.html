@@ -45,10 +45,6 @@
             <i class="iconfont icon-Student_code text-primary"></i>
               {{student.encoding || '学员编码为空'}}
             </span>
-          <span class="encoding">
-            <i class="iconfont icon-Student_code text-primary"></i>
-              {{student.login_no || '未同步到APP'}}
-            </span>
           <span class="teacher">
             咨询师：
             <span class="text-warning cur" ui-sref="studentMgrConsultingtube" title="单击去设置咨询师"> 
@@ -70,12 +66,6 @@
       <div class="row">
         <div class="col-sm-4 text-center">
           <div class="cur account-type" ui-sref="studentAccountQuery"><div class="account-value">&yen;{{studentIndexAccount.STORE_ACCOUNT}}</div>储值账户</div>
-        </div>
-        <div class="col-sm-4 text-center border-divider">
-          <div class="cur account-type" ui-sref="studentAccountQuery"> <div class="account-value">&yen;{{studentIndexAccount.FROZEN_ACCOUNT}}</div>冻结账户</div>
-        </div>
-        <div class="col-sm-4 text-center">
-          <div class="cur account-type" ui-sref="studentAccountQuery"><div class="account-value">&yen;{{studentIndexAccount.REFUND_ACCOUNT}}</div>退费账户</div>
         </div>
       </div>
     </li>
@@ -179,9 +169,6 @@
       </div>
       <div class="col-sm-2 text-center account-op">
         <span class="cur text-primary" ui-sref="studentAccountTransfer">转账</span>
-      </div>
-      <div class="col-sm-2 text-center account-op">
-        <span class="cur text-primary" ui-serf="studentAccountClaim"><a class="text-primary" href="#/studentMgr/studentMgrAccount/studentAccountClaim">理赔</a></span>
       </div>
     </div>
   </div>
