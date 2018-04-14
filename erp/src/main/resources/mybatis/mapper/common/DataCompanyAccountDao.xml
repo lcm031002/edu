@@ -6,20 +6,20 @@
 	<!--查询公司的账户号信息 -->
 	<select id="selectForPage" resultType="com.edu.erp.model.DataCompanyAccount"
 		parameterType="java.util.Map">
-		select tdca.account_name,
-		tdca.id,
-		tdca.account_num,
-		tdca.description,
-		tdca.status,
-		tdca.create_time crate_time,
-		tdca.update_time update_time,
-		(case tdca.status when 0 then '删除' when 1 then '有效' when 2 then '无效' end) statusstr,
-		tdca.id as company_card_id,
-		emp.employee_name create_user_name,
-		tdca.create_user,
-		tdca.update_user,
-		upemp.employee_name update_user_name,
-		concat(concat(tdca.account_name, '('), concat(tdca.account_num, ')')) as account_info
+		select tdca.id,
+				tdca.account_name,
+				tdca.account_num,
+				tdca.description,
+				tdca.status,
+				tdca.create_time crate_time,
+				tdca.update_time update_time,
+				(case tdca.status when 0 then '删除' when 1 then '有效' when 2 then '无效' end) statusstr,
+				tdca.id as company_card_id,
+				emp.employee_name create_user_name,
+				tdca.create_user,
+				tdca.update_user,
+				upemp.employee_name update_user_name,
+				concat(concat(tdca.account_name, '('), concat(tdca.account_num, ')')) as account_info
 		from tab_data_company_account tdca
 		left join tab_user_info us
 		on tdca.create_user = us.id
@@ -30,6 +30,7 @@
 		left join tab_employee_info upemp
 		on upus.employee_id = upemp.id
 		where tdca.STATUS != 0
+		  and tdca.org_city_id = #{city_id}
 		<if test="account_name != null and account_name != ''">
 			and tdca.account_name like '%' || #{account_name} || '%'
 		</if>
@@ -45,15 +46,24 @@
 	<!--下拉列表 -->
 	<select id="selectList" parameterType="map"
 		resultType="com.edu.erp.model.DataCompanyAccount">
-		select a.*,
-		concat(concat(a.account_name, '('), concat(a.account_num,
-		')')) account_info
-		from tab_data_company_account a
-		where a.status = 1
+		select tdca.id,
+				tdca.account_name,
+				tdca.account_num,
+				tdca.description,
+				tdca.org_city_id as city_id
+				tdca.create_time crate_time,
+				tdca.update_time update_time,
+				tdca.status,
+				(case tdca.status when 0 then '删除' when 1 then '有效' when 2 then '无效' end) statusstr,
+				tdca.create_user,
+				tdca.update_user,
+				concat(concat(tdca.account_name, '('), concat(tdca.account_num, ')')) as account_info
+		from tab_data_company_account tdca
+		where tdca.status = 1
 		<if test="city_id != null">
-			and a.city_id = #{city_id}
+			and tdca.org_city_id = #{city_id}
 		</if>
-		order by id DESC
+		order by tdca.id DESC
 	</select>
 
 	<insert id="insert" parameterType="com.edu.erp.model.DataCompanyAccount" useGeneratedKeys="true" keyProperty="id">
@@ -63,6 +73,7 @@
 		account_num,
 		status,
 		description,
+		org_city_id,
 		create_user,
 		create_time
 		)
@@ -72,6 +83,7 @@
 		#{account_num,jdbcType=VARCHAR},
 		#{status,jdbcType=NUMERIC},
 		#{description,jdbcType=VARCHAR},
+		#{city_id,jdbcType=NUMERIC},
 		#{create_user,jdbcType=NUMERIC},
 		#{create_time,jdbcType=TIMESTAMP}
 		)

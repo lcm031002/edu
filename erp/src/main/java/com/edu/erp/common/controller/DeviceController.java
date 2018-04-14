@@ -1,10 +1,3 @@
-/**
- * @Title: DeviceController.java
- * @Package: com.edu.erp.common.controller
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:07:17
- * @version KLXX ERPV5.0
- */
 package com.edu.erp.common.controller;
 
 import java.util.HashMap;
@@ -35,13 +28,6 @@ import com.edu.erp.model.TabDataDevice;
 import com.edu.erp.util.BaseController;
 import com.github.pagehelper.Page;
 
-/**
- * @ClassName: DeviceController
- * @Description:
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:07:17
- * 
- */
 @Controller
 @RequestMapping("/common/device")
 public class DeviceController extends BaseController {

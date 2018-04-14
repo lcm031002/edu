@@ -63,21 +63,11 @@ public class DataSchoolController extends BaseController{
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("school_name", request.getParameter("school_name"));
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
-			try {
-				/* 根据地区赛选 */
-				paramMap.put("org_id", orgModel.getCityId());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			paramMap.put("org_city_id", orgModel.getCityId());
 			schoolList = dataSchoolService.list(paramMap);
 			// 第一条为待定
 			paramMap.clear();
-			try {
-				/* 根据地区赛选 */
-				paramMap.put("org_id", orgModel.getCityId());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			paramMap.put("org_city_id", orgModel.getCityId());
 			paramMap.put("row_num", 1);
 			paramMap.put("_school_name", "待定");
 			for (DataSchool school : dataSchoolService.list(paramMap)) {
@@ -107,6 +97,8 @@ public class DataSchoolController extends BaseController{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {			
 			Map<String, Object> queryParam = initParamMap(request, true);
+			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
+			queryParam.put("org_city_id", orgModel.getCityId());
 			Page<Map<String, Object>> page = dataSchoolService.queryPage(queryParam);
 			setRespDataForPage(request, page, resultMap);
 			resultMap.put("error", false);
@@ -158,7 +150,7 @@ public class DataSchoolController extends BaseController{
 			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 			DataSchool school = ModelDataUtils.getPojoMatch(DataSchool.class, param);
 			school.setCreate_user(account.getId());
-			school.setOrg_id(orgModel.getCityId());
+			school.setOrg_city_id(orgModel.getCityId());
 			school.setStatus(DataSchool.StatusEnum.VALID.getCode());
 			school.setCreate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd HH:mm:ss"));
 			dataSchoolService.toAdd(school);
@@ -198,13 +190,7 @@ public class DataSchoolController extends BaseController{
 		}
 		return resultMap;
 	}
-	
-	/**
-	 * 删除学校信息
-	 * 
-	 * @param ids
-	 * @return
-	 */
+
 	@ResponseBody
 	@RequestMapping(value = { "/service" }, method = RequestMethod.DELETE, headers = { "Accept=application/json" })
 	public Map<String, Object> delSchool(@RequestParam String school_ids,HttpServletRequest request,
@@ -221,13 +207,7 @@ public class DataSchoolController extends BaseController{
 		}
 		return resultMap;
 	}
-	
-	/**
-	 * 修改学校状态
-	 * 
-	 * @param ids
-	 * @return
-	 */
+
 	@ResponseBody
 	@RequestMapping(value = { "/changeStatus" }, method = RequestMethod.GET, headers = { "Accept=application/json" })
 	public Map<String, Object> updateSchoolStatus(@RequestParam String id,@RequestParam Integer status,HttpServletRequest request,

@@ -90,7 +90,7 @@ public class DataInvoiceCompanyController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			check(dataInvoiceCompany);
-			Long buId = setDefaultValue(request, dataInvoiceCompany, false);
+			setDefaultValue(request, dataInvoiceCompany, false);
 			dataInvoiceCompanyService.save(dataInvoiceCompany);
 			result.put("error", false);
 			result.put("data", dataInvoiceCompany);

@@ -18,7 +18,7 @@ public interface DataGradeDao {
 	 * @return
 	 * @throws Exception
 	 */
-	Page<Map<String, Object>> selectForPage(Map<String, Object> paramMap) throws Exception;
+	Page<Grade> selectForPage(Map<String, Object> paramMap) throws Exception;
 	
 	/**
 	 * 根据条件查询List<T>

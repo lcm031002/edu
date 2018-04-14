@@ -14,11 +14,7 @@ public class DataCompanyAccount extends BaseObject
 	
 	private String description;//描述
 	
-	private Long city_id;//城市
-	
 	private String account_info;// account_name + account_num
-	
-	private String org_name;
 	
 	private String employee_name;
 	
@@ -31,14 +27,6 @@ public class DataCompanyAccount extends BaseObject
 
 	public void setStatusstr(String statusstr) {
 		this.statusstr = statusstr;
-	}
-
-	public String getOrg_name() {
-		return org_name;
-	}
-
-	public void setOrg_name(String org_name) {
-		this.org_name = org_name;
 	}
 
 	public String getEmployee_name() {
@@ -57,10 +45,6 @@ public class DataCompanyAccount extends BaseObject
 		return account_num;
 	}
 
-	public Long getCity_id() {
-		return city_id;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -71,10 +55,6 @@ public class DataCompanyAccount extends BaseObject
 
 	public void setAccount_num(String account_num) {
 		this.account_num = account_num;
-	}
-
-	public void setCity_id(Long city_id) {
-		this.city_id = city_id;
 	}
 
 	public void setDescription(String description) {

@@ -21,7 +21,7 @@ public class DataSchool extends BaseObject
 	
 	private Integer area_id;//地区
 	
-	private Long org_id;//所属地区
+	private Long org_city_id;//所属地区
 	
 	private String address;//学校地址
 	
@@ -89,12 +89,12 @@ public class DataSchool extends BaseObject
 		this.area_id = area_id;
 	}
 
-	public Long getOrg_id() {
-		return org_id;
+	public Long getOrg_city_id() {
+		return org_city_id;
 	}
 
-	public void setOrg_id(Long org_id) {
-		this.org_id = org_id;
+	public void setOrg_city_id(Long org_city_id) {
+		this.org_city_id = org_city_id;
 	}
 
 	public String getAddress() {

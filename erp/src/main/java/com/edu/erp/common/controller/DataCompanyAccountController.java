@@ -1,10 +1,3 @@
-/**  
- * @Title: DataCompanyAccountController.java
- * @Package com.edu.erp.common.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月20日 下午5:20:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.common.controller;
 
 import java.util.HashMap;
@@ -31,13 +24,6 @@ import com.edu.erp.model.DataCompanyAccount;
 import com.edu.erp.util.BaseController;
 import com.github.pagehelper.Page;
 
-/**
- * @ClassName: DataCompanyAccountController
- * @Description: 公司账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月20日 下午5:20:18
- * 
- */
 @Controller
 @RequestMapping(value = { "/common/companyaccount" })
 public class DataCompanyAccountController extends BaseController {
@@ -84,7 +70,7 @@ public class DataCompanyAccountController extends BaseController {
 
 		try {
 			this.check(companyAccount);
-			Long buId = setDefaultValue(request, companyAccount, false);
+			setDefaultValue(request, companyAccount, false);
 			log.debug(ToStringBuilder.reflectionToString(companyAccount, ToStringStyle.SHORT_PREFIX_STYLE));
 			dataCompanyAccountService.save(companyAccount);
 			result.put("error", false);
@@ -112,7 +98,7 @@ public class DataCompanyAccountController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			this.check(companyAccount);
-			Long buId = setDefaultValue(request, companyAccount, true);
+			setDefaultValue(request, companyAccount, true);
 			dataCompanyAccountService.update(companyAccount);
 			result.put("error", false);
 			result.put("data", companyAccount);
