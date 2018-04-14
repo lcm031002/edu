@@ -14,7 +14,7 @@ public interface DataGradeService {
 	 * @return
 	 * @throws Exception
 	 */
-	Page<Map<String, Object>> queryPage(Map<String, Object> param) throws Exception;
+	Page<Grade> queryPage(Map<String, Object> param) throws Exception;
 	/**
 	 * 根据条件查询List<T>
 	 * 

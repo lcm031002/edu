@@ -82,7 +82,10 @@ public class BaseController {
         OrgModel orgModel = getOrgModel(request);
 
         Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("city_id", orgModel.getCityId());
+        if (paramMap.get("city_id") == null) {
+            paramMap.put("city_id", orgModel.getCityId());
+        }
+
         paramMap.put("bu_id", orgModel.getBuId());
         paramMap.put("product_line", orgModel.getProductLine());
 

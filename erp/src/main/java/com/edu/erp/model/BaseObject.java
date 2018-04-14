@@ -25,8 +25,6 @@ public class BaseObject implements Serializable, Cloneable
 	private Long update_user;
 	// 更新时间
 	private Date update_time;
-	// 删除标识
-	private DelFlag delFlag;
 	// 地区名称
 	private String city_name;
 	// 新增用户名
@@ -76,14 +74,6 @@ public class BaseObject implements Serializable, Cloneable
             e.printStackTrace();  
        }  
         return bo;  
-	}  
-	
-	public DelFlag getDelFlag() {
-		return delFlag;
-	}
-
-	public void setDelFlag(DelFlag delFlag) {
-		this.delFlag = delFlag;
 	}
 
 	public Long getCreate_user() {

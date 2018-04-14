@@ -6,50 +6,81 @@
 
 	<!-- 分页查询设备列表 -->
 	<select id="selectForPage" resultType="com.edu.erp.model.TabDataDevice" parameterType="map">
-		select		a.*,
-					concat(concat(c.account_name, '('), concat(c.account_num, ')')) as account_info,
-					c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,
-					c.account_name,
-					c.id as company_card_id
+		select	a.id,
+				a.encoding,
+				a.pos_name,
+				a.short_post_name,
+				a.account_id,
+				a.status,
+				a.description,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time,
+				concat(concat(c.account_name, '('), concat(c.account_num, ')')) as account_info,
+				c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,
+				c.account_name,
+				c.id as company_card_id
   			from 	tab_data_device a
   		left join 	tab_data_company_account c on a.account_id = c.id and c.status = 1
-  		
   		<!-- 新增用户-->
 		left join tab_user_info c_user on a.create_user = c_user.id
 		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
 		<!-- 修改用户-->
 		left join tab_user_info u_user on a.update_user = u_user.id
 		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-    	
     	where a.status != 0
+		  and a.org_city_id = #{city_id}
     	<if test="status != null"> 
     		 and a.status = #{status}
     	</if>
     	<if test="encoding != null and encoding != ''">
-    		and 	(a.encoding like '%${encoding}%' or a.pos_name like '%${encoding}%')
+    		and (a.encoding like '%${encoding}%' or a.pos_name like '%${encoding}%')
     	</if>
     	<if test="account_num != null and account_num != ''">
-    		and 	c.account_num like '%${account_num}%'
+    		and c.account_num like '%${account_num}%'
     	</if>
-    	order by 	a.update_time DESC, a.id DESC
+    	order by a.update_time DESC, a.id DESC
 	</select>
 	
 	<!-- 查询设备列表 -->
 	<select id="selectForList" resultType="com.edu.erp.model.TabDataDevice" parameterType="map">
-		select		a.*
+		select	a.id,
+				a.encoding,
+				a.pos_name,
+				a.short_post_name,
+				a.account_id,
+				a.status,
+				a.description,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time
   			from 	tab_data_device a
-    	where 		a.status != 0 and a.city_id = #{city_id}
+    	where a.status != 0
+		  and a.org_city_id = #{city_id}
     	<if test="device_code != null and device_code != ''">
-    		and 	(a.device_code like '%${device_code}%' or a.simple_name like '%${device_code}%')
+    		and (a.device_code like '%${device_code}%' or a.simple_name like '%${device_code}%')
     	</if>
     	<if test="account_num != null and account_num != ''">
-    		and 	c.account_num like '%${account_num}%'
+    		and c.account_num like '%${account_num}%'
     	</if>
-    	order by 	a.update_time DESC, a.id DESC
+    	order by a.update_time DESC, a.id DESC
 	</select>
 	
 	<select id="selectById" resultType="com.edu.erp.model.TabDataDevice" parameterType="string">
-		select *  from tab_data_device device where device.id = #{id}
+		select a.id,
+				a.encoding,
+				a.pos_name,
+				a.short_post_name,
+				a.account_id,
+				a.status,
+				a.description,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time
+		  from tab_data_device device where device.id = #{id}
 	</select>
 	
 	<insert id="insert" parameterType="com.edu.erp.model.TabDataDevice" useGeneratedKeys="true" keyProperty="id">
@@ -61,6 +92,7 @@
        		account_id,
        		description,
        		status,
+       		org_city_id,
       		update_user, 
         	update_time,
         	create_user, 
@@ -74,6 +106,7 @@
 			#{account_id,jdbcType=NUMERIC},
 			#{description,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC},
+			#{city_id,jdbcType=NUMERIC},
 			#{update_user,jdbcType=NUMERIC},
 			#{update_time,jdbcType=TIMESTAMP},
 			#{create_user,jdbcType=NUMERIC},

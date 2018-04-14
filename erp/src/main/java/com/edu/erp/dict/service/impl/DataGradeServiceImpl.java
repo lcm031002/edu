@@ -21,7 +21,7 @@ public class DataGradeServiceImpl implements DataGradeService{
 	private DataGradeDao dataGradeDao;
 	
 	@Override
-	public Page<Map<String, Object>> queryPage(Map<String, Object> paramMap) throws Exception {
+	public Page<Grade> queryPage(Map<String, Object> paramMap) throws Exception {
 		return dataGradeDao.selectForPage(paramMap);
 	}
 	
@@ -49,7 +49,7 @@ public class DataGradeServiceImpl implements DataGradeService{
 		HashMap<String,Object> param = new HashMap<>();
 		param.put("grade_name", pojo.getGrade_name());
 		param.put("encoding", pojo.getEncoding());
-		param.put("bu_id", pojo.getBu_id());
+		param.put("city_id", pojo.getCity_id());
 		Grade grade = dataGradeDao.queryGradeListByNameOrEncoding(param);
 		if(grade == null ) {
 			Integer ret = dataGradeDao.insert(pojo);
@@ -60,7 +60,7 @@ public class DataGradeServiceImpl implements DataGradeService{
 		}
 
 		Map<String, Object> buRelMap = new HashMap<String, Object>();
-		buRelMap.put("bu_id", pojo.getBu_id());
+		buRelMap.put("city_id", pojo.getCity_id());
 		buRelMap.put("dict_id", pojo.getId());
 		buRelMap.put("dict_type", "bu_grade_rel");
 		toAddBuRel(buRelMap);

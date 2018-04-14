@@ -5,47 +5,72 @@
 <mapper namespace="com.edu.erp.dao.DataSchoolDao">
 
 	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="map">
-		select 
-						a.*,
-						b.rname province_name,
-						c.rname city_name,
-						d.rname area_name,
-						e.org_name,
-						f.name school_type_name,
-						c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name 
-	  	from 			tab_data_school a 
-	  		left join 	tab_region b on a.province_id = b.rid 
-	  		left join	tab_region c on a.city_id = c.rid 
-	  		left join 	tab_region d on a.area_id = d.rid 
-	  		left join   tab_organization_info e on a.org_id = e.id
-	  		left join   tp_school_type f on a.school_type = f.id
-	  		
+		select a.id
+				a.school_name,
+				a.short_school_name,
+				a.school_type,
+				a.org_city_id,
+				a.link_man,
+				a.phone,
+				a.description,
+				a.province_id,
+				a.city_id,
+				a.area_id,
+				a.address,
+				a.status,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time,
+				b.rname province_name,
+				c.rname city_name,
+				d.rname area_name,
+				e.org_name,
+				f.name school_type_name,
+				c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+	  		from tab_data_school a
+	  		left join tab_region b on a.province_id = b.rid
+	  		left join tab_region c on a.city_id = c.rid
+	  		left join	tab_region d on a.area_id = d.rid
+	  		left join tab_organization_info e on a.org_id = e.id
+	  		left join tp_school_type f on a.school_type = f.id
 	  		<!-- 新增用户-->
 			left join tab_user_info c_user on a.create_user = c_user.id
 			left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
 			<!-- 修改用户-->
 			left join tab_user_info u_user on a.update_user = u_user.id
 			left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-			
-	  	where 
-	  					a.status != 0 
-	  		and 		a.org_id = #{city_id}
+	  	where a.status != 0
+	  	  and a.org_city_id = #{city_id}
 	  	<if test="school_name != null and school_name != ''">
-	  		and			a.school_name like '%${school_name}%'
+	  		and a.school_name like '%${school_name}%'
 	  	</if>	
-	  	order by 		a.update_time DESC, a.id DESC	
+	  	order by a.update_time DESC, a.id DESC
 	</select>
 
 	<select id="selectList" parameterType="map" resultType="com.edu.erp.model.DataSchool">
-		select 
-			a.*
-	  	from 
-	  		tab_data_school a 
-	  		left join tab_region b on a.province_id = b.rid 
-	  		left join tab_region c on a.city_id = c.rid 
-	  		left join tab_region d on a.area_id = d.rid 
-	  	where 
-	  		a.status = 1
+		select a.id
+				a.school_name,
+				a.short_school_name,
+				a.school_type,
+				a.org_city_id,
+				a.link_man,
+				a.phone,
+				a.description,
+				a.province_id,
+				a.city_id,
+				a.area_id,
+				a.address,
+				a.status,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time
+	  	from tab_data_school a
+		left join tab_region b on a.province_id = b.rid
+		left join tab_region c on a.city_id = c.rid
+		left join tab_region d on a.area_id = d.rid
+	  	where a.status = 1
   		<if test="province_id != null and province_id != -1 and province_id != ''">
   			and a.province_id = #{province_id}
   		</if>
@@ -55,8 +80,8 @@
   		<if test="area_id != null and area_id != -1 and area_id != ''">
   			and a.area_id = #{area_id}
   		</if>
-  		<if test="org_id != null and org_id != ''">
-  			and a.org_id = #{org_id}
+  		<if test="org_city_id != null and org_city_id != ''">
+  			and a.org_city_id = #{org_city_id}
   		</if>
   		<if test="school_name != null and school_name != ''">
   			and a.school_name like '%${school_name}%'
@@ -79,7 +104,7 @@
 			province_id,
 			city_id,
 			area_id,
-			org_id,
+			org_city_id,
 			address,
 			status,
 			update_user, 
@@ -98,7 +123,7 @@
 			#{province_id,jdbcType=NUMERIC},
 			#{city_id,jdbcType=NUMERIC},
 			#{area_id,jdbcType=NUMERIC},
-			#{org_id,jdbcType=NUMERIC},
+			#{org_city_id,jdbcType=NUMERIC},
 			#{address,jdbcType=VARCHAR},
 			#{status,jdbcType=NUMERIC},
 			#{update_user,jdbcType=NUMERIC},
