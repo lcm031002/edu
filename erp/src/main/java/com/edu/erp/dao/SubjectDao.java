@@ -70,7 +70,7 @@ public interface SubjectDao {
 	 * @return
 	 * @throws Exception
 	 */
-	@Select("SELECT distinct t.* FROM tp_subject t inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id} and bdr.DICT_ID = t.id and bdr.DICT_TYPE = 'tp_subject' WHERE t.STATUS = 1")
+	@Select("SELECT distinct t.* FROM tp_subject t inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id} and bdr.DICT_ID = t.id and bdr.DICT_TYPE = 'tp_subject' WHERE t.STATUS = 1")
 	List<TPSubject> querySubjectListByBuID(Map<String, Object> param) throws Exception;
 	
 	

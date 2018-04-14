@@ -23,15 +23,13 @@
 				 <!-- 修改用户-->
 				 left join tab_user_info u_user on t1.update_user = u_user.id
 				 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-                 <if test="bu_id!=null">
-                 	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
-                 	and bdr.DICT_ID = t1.id
-                 	and bdr.DICT_TYPE = 'tab_time_season'
-                 </if>
                   where t1.status != 0
                  <if test="course_season_name != null and course_season_name != ''">
                  	 and t1.course_season_name like '%${course_season_name}%'
                  </if>
+				<if test="org_city_id!=null">
+					and t1.org_city_id = #{org_city_id}
+				</if>
                  ORDER BY ifnull(t1.update_time, t1.create_time) DESC, t1.id DESC
 	</select>
 	
@@ -41,11 +39,7 @@
 			 WHERE BUSINESS_TYPE = #{businessType,jdbcType=NUMERIC}
 			   AND STATUS = 1
 			   AND PRODUCT_LINE = #{product_line,jdbcType=NUMERIC}
-			   AND CITY_ID = #{city_id,jdbcType=NUMERIC}
-			   AND id in (select dict_id
-			                from BU_DICT_REL
-			               where bu_id = 11
-			                 and dict_type = 'tab_time_season')
+			   AND org_city_id = #{org_city_id,jdbcType=NUMERIC}
 			 order by ID desc
 	</select>
 	
@@ -53,15 +47,10 @@
 		SELECT 
 			t.*
 	  	FROM TAB_TIME_SEASON t
-	  	<if test="bu_id!=null">
-         	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
-         	and bdr.DICT_ID = t.id
-         	and bdr.DICT_TYPE = 'tab_time_season'
-         </if>
 	 	WHERE t.STATUS = 1
-	 	<if test="city_id != null">
-	 		and t.city_id = #{city_id}
-	 	</if>
+		<if test="org_city_id!=null">
+			and t.org_city_id = #{org_city_id}
+		</if>
 	 	<if test="season_id != null and season_id != '' and season_id != -1">
 	 	   and t.id = #{season_id}
 	 	</if>
@@ -95,7 +84,7 @@
 	       	BUSINESS_TYPE,
 	       	product_line,
 	       	STATUS,
-	       	CITY_ID,
+	       	ORG_CITY_ID,
 	       	DESCRIPTION,
 	       	CREATE_USER,
 	       	CREATE_TIME
@@ -111,7 +100,7 @@
 			#{business_type,jdbcType=NUMERIC},
 			#{product_line,jdbcType=NUMERIC},
 			#{status,jdbcType=NUMERIC},
-			#{city_id,jdbcType=VARCHAR},
+			#{org_city_id,jdbcType=VARCHAR},
 			#{description,jdbcType=VARCHAR},
 			#{create_user,jdbcType=NUMERIC},
 			#{create_time,jdbcType=TIMESTAMP}
@@ -127,7 +116,7 @@
 	       	END_DATE = #{end_date, jdbcType=VARCHAR},
 	       	BUSINESS_TYPE = #{business_type, jdbcType=NUMERIC},
 	       	PRODUCT_LINE = #{product_line, jdbcType=NUMERIC},
-	       	CITY_ID = #{city_id, jdbcType=VARCHAR},
+	       	ORG_CITY_ID = #{org_city_id, jdbcType=VARCHAR},
 	       	DESCRIPTION = #{description, jdbcType=VARCHAR},
 	       	UPDATE_USER = #{update_user, jdbcType=NUMERIC},
 	       	UPDATE_TIME = #{update_time, jdbcType=TIMESTAMP},

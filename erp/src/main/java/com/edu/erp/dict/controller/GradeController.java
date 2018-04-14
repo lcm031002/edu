@@ -57,7 +57,7 @@ public class GradeController extends BaseController {
 			resultMap.put("message", "请选择校区!");
 			return resultMap;
 		}
-		param.put("bu_id", orgModel.getBuId());
+		param.put("org_city_id", orgModel.getCityId());
 		param.put("branch_id", genLongParameter("branch_id", request));
 		param.put("season_id", genLongParameter("season_id", request));
 		param.put("grade_name", request.getParameter("grade_name"));

@@ -22,7 +22,7 @@
 				 left join tab_user_info u_user on t1.update_user = u_user.id
 				 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
                  <if test="bu_id!=null">
-                 	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
+                 	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id}
                  	and bdr.DICT_ID = t1.id
                  	and bdr.DICT_TYPE = 'tp_subject'
                  </if>
@@ -38,8 +38,8 @@
 		SELECT 
 			distinct t.*
 	  	FROM tp_subject t
-	  	<if test="bu_id!=null">
-         	inner join Bu_Dict_Rel bdr on bdr.bu_id = #{bu_id}
+	  	<if test="org_city_id!=null">
+         	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id}
          	and bdr.DICT_ID = t.id
          	and bdr.DICT_TYPE = 'tp_subject'
         </if>
@@ -119,7 +119,7 @@
 
 	<delete id="deleteData" parameterType="HashMap">
 		delete from BU_DICT_REL where DICT_ID = #{dict_id}
-		and bu_id =  #{bu_id}
+		and org_city_id =  #{org_city_id}
 		and dict_type = 'tp_subject'
 	</delete>
 

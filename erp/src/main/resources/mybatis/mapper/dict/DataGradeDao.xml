@@ -63,7 +63,7 @@
 		   and b.status = 1
 		 <if test="bu_id != null">  
 		 inner join BU_DICT_REL bdr
-		    on bdr.bu_id = #{bu_id,jdbcType=NUMERIC}
+		    on bdr.org_city_id = #{org_city_id,jdbcType=NUMERIC}
 		   and bdr.dict_id = a.id
 		   and bdr.dict_type = 'bu_grade_rel'
 		 </if>
@@ -118,13 +118,13 @@
 	<insert id="insertGradeBuRel" parameterType="java.util.HashMap">
 		insert into BU_DICT_REL
 		(
-			BU_ID,
+			ORG_CITY_ID,
        		DICT_ID,
        		DICT_TYPE
 		) 
 		values
 		(
-			#{bu_id,jdbcType=NUMERIC},
+			#{org_city_id,jdbcType=NUMERIC},
 			#{dict_id,jdbcType=NUMERIC},
 			#{dict_type,jdbcType=VARCHAR}
 		)
@@ -132,7 +132,7 @@
 	
 	<update id="updateGradeBuRel" parameterType="java.util.HashMap">
 		update BU_DICT_REL 
-		set BU_ID = #{bu_id,jdbcType=NUMERIC},
+		set org_city_id = #{org_city_id,jdbcType=NUMERIC},
 			DICT_ID = #{dict_id,jdbcType=NUMERIC},
 			DICT_TYPE = #{dict_type,jdbcType=VARCHAR}
 			where id = #{id}
@@ -154,7 +154,7 @@
 	
 	<delete id="deleteData" parameterType="HashMap">
 		delete from BU_DICT_REL where DICT_ID = #{dict_id}
-		and bu_id =  #{bu_id}
+		and org_city_id =  #{org_city_id}
 		and dict_type = 'bu_grade_rel'
 	</delete>
 

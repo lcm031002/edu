@@ -17,15 +17,6 @@ public class TPSubject extends BaseObject{
 	// 描述
 	private String description;
 
-	/**
-	 * 团队ID
-	 */
-	private Long buId;
-	/**
-	 * 团队名称
-	 */
-	private String buName;
-
 	public String getEncoding() {
 		return encoding;
 	}
@@ -45,19 +36,4 @@ public class TPSubject extends BaseObject{
 		this.description = description;
 	}
 
-	public Long getBuId() {
-		return buId;
-	}
-
-	public void setBuId(Long buId) {
-		this.buId = buId;
-	}
-
-	public String getBuName() {
-		return buName;
-	}
-
-	public void setBuName(String buName) {
-		this.buName = buName;
-	}
 }

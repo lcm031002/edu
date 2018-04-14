@@ -71,7 +71,7 @@ public class SubjectController extends BaseController {
 				throw new Exception("请选择校区！");
 			}
 			Map<String, Object> param = initParamMap(request, true, StringUtils.EMPTY);
-			param.put("bu_id", orgModel.getBuId());
+			param.put("org_city_id", orgModel.getCityId());
 
 			Page<TPSubject> result = subjectService.queryDataList(param);
 			setRespDataForPage(request, result.getResult(), resultMap);
@@ -131,7 +131,7 @@ public class SubjectController extends BaseController {
 				throw new Exception("请选择校区！");
 			}
 			Long bu_id = genLongParameter("bu_id",request);
-			param.put("bu_id", bu_id==null?orgModel.getBuId():bu_id);
+			param.put("org_city_id", orgModel.getCityId());
 			List<TPSubject> result = subjectService.querySubjectListByBuID(param);
 			resultMap.put("error", false);
 			resultMap.put("data", result.toArray());
@@ -213,7 +213,7 @@ public class SubjectController extends BaseController {
 		String subjectId = request.getParameter("subjectId");
 		OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 		try {
-			param.put("bu_id", orgModel.getBuId());
+			param.put("org_city_id", orgModel.getCityId());
 			param.put("dict_id", subjectId);
 			subjectService.deleteData(param);
 			resultMap.put("error", false);

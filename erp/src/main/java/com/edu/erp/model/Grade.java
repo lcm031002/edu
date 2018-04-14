@@ -18,7 +18,6 @@ public class Grade extends BaseObject{
 	private Integer sort; // 排序
 	private String description;//描述
 
-	private long bu_id;
 	private String grade_info;// grade_name + encoding
 	
 	public String getEncoding() {
@@ -92,11 +91,4 @@ public class Grade extends BaseObject{
 		return buff.toString();
 	}
 
-	public long getBu_id() {
-		return bu_id;
-	}
-
-	public void setBu_id(long bu_id) {
-		this.bu_id = bu_id;
-	}
 }

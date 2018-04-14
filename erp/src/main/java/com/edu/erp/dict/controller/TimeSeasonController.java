@@ -54,7 +54,7 @@ public class TimeSeasonController extends BaseController {
 		List<TimeSeason> timeSeasonList = new ArrayList<TimeSeason>();
 		OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("city_id", orgModel.getCityId());
+		param.put("org_city_Id", orgModel.getCityId());
 		timeSeasonList = timeSeasonService.queryList(param);
 		// 储存，用于选择上个课程季
 		// 有的课程季 没有上一个课程季
@@ -81,8 +81,7 @@ public class TimeSeasonController extends BaseController {
 				throw new Exception("请先选择校区或团队！");
 			}
 			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("bu_id", orgModel.getBuId());
-			param.put("city_id", orgModel.getCityId());
+			param.put("org_city_id", orgModel.getCityId());
 			param.put("product_line", genLongParameter("product_line", request)); 
 			List<TimeSeason> timeSeasonList = timeSeasonService.queryList(param);
 			resultMap.put("data", timeSeasonList);
