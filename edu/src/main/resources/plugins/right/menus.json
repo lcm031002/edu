@@ -18,7 +18,7 @@
 	"message": "",
 	"menus": [
 		{
-			"index": "A13001",
+			"index": "A10001",
 			"name": "学员管理",
 			"key": "index",
 			"icon": "fa fa-home",
@@ -29,7 +29,7 @@
 			"href": "templates/erp/student/students.html",
 			"menus": [
 				{
-					"index": "A13002",
+					"index": "A10002",
 					"name": "学员搜索",
 					"key": "studentsSearch",
 					"icon": "iconfont icon-stdudents_search",
@@ -39,7 +39,7 @@
 					"path": "/students/studentsSearch",
 					"menus": [
 						{
-							"index": "A1300201",
+							"index": "A1000201",
 							"name": "学员添加",
 							"key": "newStudent",
 							"icon": "fa fa-bars",
@@ -52,7 +52,7 @@
 					]
 				},
 				{
-					"index": "A13003",
+					"index": "A10003",
 					"name": "我的学员",
 					"key": "studentsMine",
 					"icon": "iconfont icon-stdudents_myStudents",
@@ -60,146 +60,11 @@
 					"value": "studentsMine",
 					"href": "templates/erp/student/studentsMine.html",
 					"path": "/students/studentsMine"
-				},
-				{
-					"index": "A13004",
-					"name": "学员分配",
-					"key": "studentsDistribution",
-					"icon": "iconfont icon-stdudents_distribute",
-					"type": "$state",
-					"value": "studentsDistribution",
-					"href": "templates/erp/student/studentsDistribution.html",
-					"path": "/students/studentsDistribution"
-				},
-				{
-					"index": "A13005",
-					"name": "学管师分析报表",
-					"key": "studentManagerReport",
-					"icon": "iconfont icon-financial_forms",
-					"type": "$state",
-					"value": "studentManagerReport",
-					"path": "/students/managerReport",
-					"menus": [
-						{
-							"index": "A1300501",
-							"name": "团队耗课报表",
-							"key": "studentManagerBu",
-							"icon": "iconfont icon-financial_forms",
-							"type": "$state",
-							"value": "studentManagerBu",
-							"showMenu": "true",
-							"href": "templates/erp/student/student-manager-bu.html",
-							"path": "/students/managerReport/Bu"
-						},
-						{
-							"index": "A1300502",
-							"name": "校区耗课报表",
-							"key": "studentManagerBranch",
-							"icon": "iconfont icon-financial_forms",
-							"type": "$state",
-							"value": "studentManagerBranch",
-							"showMenu": "true",
-							"href": "templates/erp/student/student-manager-branch.html",
-							"path": "/students/managerReport/Branch?buId&start&startDate&endDate&dateRange"
-						},
-						{
-							"index": "A1300503",
-							"name": "学管师耗课报表",
-							"key": "studentManagerTeacher",
-							"icon": "iconfont icon-financial_forms",
-							"type": "$state",
-							"value": "studentManagerTeacher",
-							"showMenu": "true",
-							"href": "templates/erp/student/student-manager.html",
-							"path": "/students/managerReport/Teacher?buId&branchId&start&startDate&endDate&dateRange"
-						},
-						{
-							"index": "A1300504",
-							"name": "学员耗课报表",
-							"key": "studentManagerStudent",
-							"icon": "iconfont icon-financial_forms",
-							"type": "$state",
-							"value": "studentManagerStudent",
-							"showMenu": "true",
-							"href": "templates/erp/student/student-manager-student.html",
-							"path": "/students/managerReport/student?buId&branchId&studentManagerId&employeeName&start&startDate&endDate&dateRange"
-						},
-						{
-							"index": "A1300505",
-							"name": "学生状态报表",
-							"key": "classesReportGxhStudentStatus",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportGxhStudentStatus",
-							"path": "/students/managerReport/classesReportGxhStudentStatus",
-							"href": "templates/report/common/gxh_student_status.html",
-							"services":
-							[
-								{
-									"name": "学生状态报表查询",
-									"key": "classesReportGxhStudentStatus.query",
-									"url": "/report/common/teacherworkload/attend",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A1300506",
-							"name": "学生状态报表(按校区)",
-							"key": "classesReportGxhStudentStatusBranch",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportGxhStudentStatusBranch",
-							"path": "/students/managerReport/classesReportGxhStudentStatusBranch",
-							"href": "templates/report/common/gxh_student_status_branch.html",
-							"showMenu": "false",
-							"services":
-							[
-								{
-									"name": "学生状态报表(按校区)查询",
-									"key": "classesReportGxhStudentStatusBranch.query",
-									"url": "/report/common/teacherworkload/attend",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A1300507",
-							"name": "学生状态报表学生明细",
-							"key": "classesReportGxhStudentStatusDetail",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportGxhStudentStatusDetail",
-							"path": "/students/managerReport/classesReportGxhStudentStatusDetail",
-							"href": "templates/report/common/gxh_student_status_detail.html",
-							"showMenu": "false",
-							"services":
-							[
-								{
-									"name": "学生状态报表学生明细查询",
-									"key": "classesReportGxhStudentStatusDetail.query",
-									"url": "/report/common/teacherworkload/attend",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A1300508",
-							"name": "艾伦学生状态报表",
-							"key": "alStudentStatus",
-							"icon": "iconfont icon-financial_forms",
-							"type": "$state",
-							"value": "alStudentStatus",
-							"showMenu": "true",
-							"href": "templates/erp/student/al_student_status.html",
-							"path": "/students/managerReport/alStudentStatus"
-						}
-					]
 				}
 			]
 		},
 		{
-			"index": "A15001",
+			"index": "A20001",
 			"name": "教师管理",
 			"key": "teachers",
 			"icon": "fa fa-bar-chart",
@@ -209,7 +74,7 @@
 			"href": "templates/erp/tearchers/teacherSearch.html",
 			"menus": [
 				{
-					"index": "A15002",
+					"index": "A20002",
 					"name": "教师搜索",
 					"key": "teacherSearch",
 					"icon": "iconfont icon-teachers_search",
@@ -239,7 +104,7 @@
 					]
 				},
 				{
-					"index": "A15003",
+					"index": "A20003",
 					"name": "教研组",
 					"key": "teacherGroup",
 					"icon": "iconfont icon-teachers_groups",
@@ -287,7 +152,37 @@
 					]
 				},
 				{
-					"index": "A15006",
+					"index": "A20004",
+					"name": "教师录入",
+					"key": "newTeacher",
+					"icon": "iconfont icon-teachers_typeIn",
+					"type": "$state",
+					"value": "newTeacher",
+					"path": "/teachers/newTeacher",
+					"href": "templates/erp/tearchers/newTeacher.html",
+					"services": [
+						{
+							"name": "老师添加",
+							"key": "newTeacher.post",
+							"url": "/erp/teacherservice/service",
+							"method": "POST"
+						},
+						{
+							"name": "员工查询",
+							"key": "newTeacher.queryEmployee",
+							"url": "/hrm/employee/employeeservice/page",
+							"method": "GET"
+						},
+						{
+							"name": "科目查询",
+							"key": "newTeacher.querySubject",
+							"url": "/erp/dictionary/subject/service",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A20005",
 					"name": "考勤教师组",
 					"key": "attendanceGroup",
 					"icon": "iconfont icon-teachers_checking-in",
@@ -333,87 +228,11 @@
 							"method": "GET"
 						}
 					]
-				},
-				{
-					"index": "A15004",
-					"name": "教师录入",
-					"key": "newTeacher",
-					"icon": "iconfont icon-teachers_typeIn",
-					"type": "$state",
-					"value": "newTeacher",
-					"path": "/teachers/newTeacher",
-					"href": "templates/erp/tearchers/newTeacher.html",
-					"services": [
-						{
-							"name": "老师添加",
-							"key": "newTeacher.post",
-							"url": "/erp/teacherservice/service",
-							"method": "POST"
-						},
-						{
-							"name": "员工查询",
-							"key": "newTeacher.queryEmployee",
-							"url": "/hrm/employee/employeeservice/page",
-							"method": "GET"
-						},
-						{
-							"name": "科目查询",
-							"key": "newTeacher.querySubject",
-							"url": "/erp/dictionary/subject/service",
-							"method": "GET"
-						}
-					]
-				},
-				{
-					"index": "A15005",
-					"name": "教师导入",
-					"key": "excelInput",
-					"icon": "iconfont icon-teachers_leadIn",
-					"type": "$state",
-					"value": "excelInput",
-					"path": "/teachers/excelInput",
-					"href": "templates/erp/tearchers/excelInput.html",
-					"services": [
-						{
-							"name": "老师添加",
-							"key": "excelInput.post",
-							"url": "/erp/teacherservice/service",
-							"method": "POST"
-						},
-						{
-							"name": "员工查询",
-							"key": "excelInput.queryEmployee",
-							"url": "/hrm/employee/employeeservice/page",
-							"method": "GET"
-						},
-						{
-							"name": "科目查询",
-							"key": "excelInput.querySubject",
-							"url": "/erp/dictionary/subject/service",
-							"method": "GET"
-						},
-						{
-							"name": "excel数据预览",
-							"key": "excelInput.postExcel",
-							"url": "/erp/teacherservice/inputExcel",
-							"method": "POST"
-						}
-					]
-				},
-				{
-					"index": "A15006",
-					"name": "教师日历",
-					"key": "courseSchedule",
-					"icon": "iconfont icon-teachers_leadIn",
-					"type": "$state",
-					"value": "courseSchedule",
-					"path": "/teachers/courseSchedule",
-					"href": "templates/erp/tearchers/course_schedule.html"
 				}
 			]
 		},
 		{
-			"index": "A14000",
+			"index": "A30001",
 			"name": "教务平台",
 			"key": "orders",
 			"icon": "fa fa-line-chart",
@@ -423,7 +242,7 @@
 			"href": "templates/erp/orders/ordersIndex.html",
 			"menus": [
 				{
-					"index": "A14001",
+					"index": "A30002",
 					"name": "教务首页",
 					"key": "ordersIndex",
 					"icon": "iconfont icon-orders_home",
@@ -433,7 +252,7 @@
 					"href": "templates/erp/orders/ordersIndex.html"
 				},
 				{
-					"index": "A14006",
+					"index": "A30003",
 					"name": "基础档案",
 					"key": "ordersArchives",
 					"icon": "iconfont icon-orders_record",
@@ -442,7 +261,7 @@
 					"path": "/orders/ordersArchives",
 					"menus": [
 						{
-							"index": "A1400602",
+							"index": "A3000301",
 							"name": "班级课课程",
 							"key": "ordersMgrCourse",
 							"icon": "fa fa-bars",
@@ -508,7 +327,7 @@
 							]
 						},
 						{
-							"index": "A140060201",
+							"index": "A3000302",
 							"name": "班级课课程导入",
 							"key": "ordersMgrCourseInput",
 							"icon": "fa fa-bars",
@@ -569,7 +388,7 @@
 							]
 						},
 						{
-							"index": "A1400603",
+							"index": "A3000303",
 							"name": "1对1课程",
 							"key": "ordersMgrCourseYDY",
 							"icon": "fa fa-bars",
@@ -623,7 +442,7 @@
 							]
 						},
 						{
-							"index": "A140060301",
+							"index": "A3000304",
 							"name": "1对1课程导入",
 							"key": "ordersMgrCourseYDYInput",
 							"icon": "fa fa-bars",
@@ -666,7 +485,7 @@
 							]
 						},
 						{
-							"index": "A1400605",
+							"index": "A3000305",
 							"name": "晚辅导课程",
 							"key": "ordersMgrCourseWFD",
 							"icon": "fa fa-bars",
@@ -720,7 +539,7 @@
 							]
 						},
 						{
-							"index": "A140060501",
+							"index": "A3000306",
 							"name": "晚辅导课程导入",
 							"key": "ordersMgrCourseWFDInput",
 							"icon": "fa fa-bars",
@@ -763,7 +582,7 @@
 							]
 						},
 						{
-							"index": "A1400606",
+							"index": "A3000307",
 							"name": "晚辅导套餐",
 							"key": "ordersMgrCourseWFDCombo",
 							"icon": "fa fa-bars",
@@ -817,7 +636,7 @@
 							]
 						},
 						{
-							"index": "A140060601",
+							"index": "A3000308",
 							"name": "晚辅导套餐导入",
 							"key": "ordersMgrCourseWFDComboInput",
 							"icon": "fa fa-bars",
@@ -848,7 +667,7 @@
 							]
 						},
 						{
-							"index": "A1400611",
+							"index": "A3000309",
 							"name": "课程导入",
 							"key": "ordersMgrCourseInput",
 							"icon": "fa fa-bars",
@@ -881,61 +700,7 @@
 					]
 				},
 				{
-					"index": "A14012",
-					"name": "延课管理",
-					"key": "delayCourseMgr",
-					"icon": "iconfont icon-orders_classroom",
-					"type": "$state",
-					"value": "delayCourseMgr",
-					"path": "/orders/delay",
-					"menus": [
-						{
-							"index": "A1401201",
-							"name": "延课申请",
-							"key": "delayApply",
-							"icon": "iconfont icon-orders_frozen",
-							"type": "$state",
-							"value": "delayApply",
-							"href": "templates/erp/delayCourse/delayCourse.html",
-							"path": "/orders/delay/apply"
-						},
-						{
-							"index": "A1401202",
-							"name": "双师延课申请",
-							"key": "mtDelayApply",
-							"icon": "iconfont icon-orders_frozen",
-							"type": "$state",
-							"value": "mtDelayApply",
-							"href": "templates/erp/delayCourse/mtDelayCourse.html",
-							"path": "/orders/delay/mtApply"
-						},
-						{
-							"index": "A1401203",
-							"name": "延课单",
-							"key": "delayApplyList",
-							"icon": "iconfont icon-orders_frozen",
-							"type": "$state",
-							"value": "delayApplyList",
-							"href": "templates/erp/delayCourse/delayRecord.html",
-							"path": "/orders/delay/record",
-							"menus": [
-								{
-									"index": "A140120301",
-									"name": "延课单详情",
-									"key": "delayApplyDetail",
-									"type": "$state",
-									"showMenu": false,
-									"value": "delayApplyDetail",
-									"href": "templates/erp/delayCourse/delayRecordDetail.html",
-									"path": "/orders/delayrecord/detail"
-								}
-							]
-						}
-
-					]
-				},
-				{
-					"index": "A14002",
+					"index": "A30004",
 					"name": "优惠管理",
 					"key": "privilegeMgr",
 					"icon": "iconfont icon-orders_favorable",
@@ -944,7 +709,7 @@
 					"path": "/orders/privilegeMgr",
 					"menus": [
 						{
-							"index": "A1400207",
+							"index": "A3000401",
 							"name": "优惠规则",
 							"key": "ordersMgrPrivilegeRules",
 							"icon": "fa fa-bars",
@@ -954,7 +719,7 @@
 							"href": "templates/erp/orders/ordersMgrPrivilegeRules.html"
 						},
 						{
-							"index": "A1400206",
+							"index": "A3000402",
 							"name": "优惠前置",
 							"key": "ordersMgrPrivilegeCriteria",
 							"icon": "fa fa-bars",
@@ -964,7 +729,7 @@
 							"href": "templates/erp/orders/ordersMgrPrivilegeCriteria.html"
 						},
 						{
-							"index": "A1400212",
+							"index": "A3000403",
 							"name": "活动图片",
 							"key": "ordersActivityBanner",
 							"icon": "fa fa-bars",
@@ -974,8 +739,8 @@
 							"href": "templates/erp/orders/ordersActivityBanner.html"
 						},
 						{
-							"index": "A1400208",
-							"name": "优惠券（线下）",
+							"index": "A3000404",
+							"name": "优惠券",
 							"key": "ordersMgrCoupon",
 							"icon": "fa fa-bars",
 							"type": "$state",
@@ -984,39 +749,19 @@
 							"href": "templates/erp/orders/ordersMgrCouponInfo.html"
 						},
 						{
-							"index": "A1400209",
-							"name": "优惠券（线上）",
-							"key": "ordersMgrCouponOnline",
-							"icon": "fa fa-bars",
-							"type": "$state",
-							"value": "ordersMgrCouponOnline",
-							"path": "/orders/ordersMgr/ordersMgrCouponOnline",
-							"href": "templates/erp/orders/ordersMgrCouponOnline.html"
-						},
-						{
-							"index": "A1400210",
-							"name": "优惠活动（线下）",
+							"index": "A3000405",
+							"name": "优惠活动",
 							"key": "ordersMgrActivityInfo",
 							"icon": "fa fa-bars",
 							"type": "$state",
 							"value": "ordersMgrActivityInfo",
 							"path": "/orders/ordersMgr/ordersMgrActivityInfo",
 							"href": "templates/erp/orders/ordersMgrActivityInfo.html"
-						},
-						{
-							"index": "A1400211",
-							"name": "优惠活动（线上）",
-							"key": "ordersMgrActivityOnline",
-							"icon": "fa fa-bars",
-							"type": "$state",
-							"value": "ordersMgrActivityOnline",
-							"path": "/orders/ordersMgr/ordersMgrActivityOnline",
-							"href": "templates/erp/orders/ordersMgrActivityOnline.html"
 						}
 					]
 				},
 				{
-					"index": "A14011",
+					"index": "A30005",
 					"name": "报班管理",
 					"key": "ordersMgr",
 					"icon": "iconfont icon-orders_apply",
@@ -1024,7 +769,7 @@
 					"value": "ordersMgr",
 					"path": "/orders/ordersMgr",
 					"menus": [{
-						"index": "A1401101",
+						"index": "A3000501",
 						"name": "报班业务",
 						"type": "$state",
 						"key": "ordersMgrOrders",
@@ -1120,7 +865,7 @@
 					}]
 				},
 				{
-					"index": "A14003",
+					"index": "A30006",
 					"name": "转班管理",
 					"key": "orderChangeTransfer",
 					"icon": "iconfont icon-orders_changeClass",
@@ -1162,7 +907,7 @@
 					]
 				},
 				{
-					"index": "A14004",
+					"index": "A30007",
 					"name": "排课管理",
 					"key": "classesSchedule",
 					"icon": "iconfont icon-orders_coursePlans",
@@ -1171,7 +916,7 @@
 					"path": "/orders/classesSchedule",
 					"menus":[
 						{
-							"index": "A1400401",
+							"index": "A3000701",
 							"name": "班级课排课管理",
 							"key": "classesScheduleBjk",
 							"icon": "iconfont icon-orders_coursePlans",
@@ -1213,156 +958,18 @@
 							]
 						},
 						{
-							"index": "A1400402",
-							"name": "1对1新增排课单",
-							"key": "classesScheduleYdyApply",
-							"type":"$state",
-							"value": "classesScheduleYdyApply",
-							"path": "/orders/classesSchedule/ydyApply",
-							"href": "templates/erp/course/course_scheduling_ydy_apply.html"
-						},
-						{
-							"index": "A1400403",
-							"name": "1对1师生匹配",
-							"key": "classesScheduleYdyMatch",
-							"type":"$state",
-							"value": "classesScheduleYdyMatch",
-							"path": "/orders/classesSchedule/ydyMatch",
-							"href": "templates/erp/course/course_scheduling_ydy_match.html"
-						},
-						{
-							"index": "A1400404",
+							"index": "A3000702",
 							"name": "1对1排课处理",
 							"key": "classesScheduleYdyProcess",
 							"type":"$state",
 							"value": "classesScheduleYdyProcess",
 							"path": "/orders/classesSchedule/ydyProcess?studentId&studentName",
 							"href": "templates/erp/course/course_scheduling_ydy_process.html"
-						},
-						{
-							"index": "A1400405",
-							"name": "1对1排课审批",
-							"key": "classesScheduleYdyApproval",
-							"type":"$state",
-							"value": "classesScheduleYdyApproval",
-							"path": "/orders/classesSchedule/ydyApproval",
-							"href": "templates/erp/course/course_scheduling_ydy_approval.html"
-						},
-						{
-							"index": "A1400406",
-							"name": "1对1排课记录",
-							"key": "classesScheduleYdyRecord",
-							"type":"$state",
-							"value": "classesScheduleYdyRecord",
-							"path": "/orders/classesSchedule/ydyRecord",
-							"href": "templates/erp/course/course_scheduling_ydy_record.html"
-						},
-						{
-							"index": "A1400407",
-							"name": "1对1讲义打印",
-							"key": "classesScheduleYdyPrint",
-							"type":"$state",
-							"value": "classesScheduleYdyPrint",
-							"path": "/orders/classesSchedule/ydyPrint",
-							"href": "templates/erp/course/course_scheduling_ydy_print.html"
-						},
-            {
-              "index": "A1400411",
-              "name": "1对1排课申请详情",
-              "key": "classesScheduleYdyApplyDetail",
-              "type":"$state",
-              "showMenu": false,
-              "value": "classesScheduleYdyApplyDetail",
-              "path": "/orders/classesSchedule/ydyApply/Detail/:id",
-              "href": "templates/erp/course/course_scheduling_ydy_apply_detail.html"
-            },
-            {
-              "index": "A1400412",
-              "name": "1对1排课申请添加",
-              "key": "classesScheduleYdyApplyAdd",
-              "type":"$state",
-              "showMenu": false,
-              "value": "classesScheduleYdyApplyAdd",
-              "path": "/orders/classesSchedule/ydyApply/Add?studentId",
-              "href": "templates/erp/course/course_scheduling_ydy_apply_add.html"
-            },
-            {
-              "index": "A1400413",
-              "name": "1对1排课申请编辑",
-              "key": "classesScheduleYdyApplyEdit",
-              "type":"$state",
-              "showMenu": false,
-              "value": "classesScheduleYdyApplyEdit",
-              "path": "/orders/classesSchedule/ydyApply/edit/:id",
-              "href": "templates/erp/course/course_scheduling_ydy_apply_add.html"
-            },
-            {
-              "index": "A1400414",
-              "name": "1对1师生匹配编辑",
-              "key": "classesScheduleYdyMatchEdit",
-              "type":"$state",
-              "showMenu": false,
-              "value": "classesScheduleYdyMatchEdit",
-              "path": "/orders/classesSchedule/ydyMatch/edit/:id/:schedulableSubjectId/:curCourseArrangerId",
-              "href": "templates/erp/course/course_scheduling_ydy_match_edit.html"
-            },
-            {
-              "index": "A1400415",
-              "name": "1对1师生匹配详情",
-              "key": "classesScheduleYdyMatchDetail",
-              "type":"$state",
-              "showMenu": false,
-              "value": "classesScheduleYdyMatchDetail",
-              "path": "/orders/classesSchedule/ydyMatch/detail/:id",
-              "href": "templates/erp/course/course_scheduling_ydy_match_edit.html"
-            }
-					]
-				},
-				{
-					"index": "A1400401",
-					"name": "课程排课界面",
-					"key": "classesScheduleCourse",
-					"icon": "fa fa-bars",
-					"type": "$state",
-					"value": "classesScheduleCourse",
-					"showMenu": "false",
-					"path": "/orders/classesScheduleCourse",
-					"href": "templates/erp/course/course_scheduling_change.html",
-					"services": [
-						{
-							"name": "查询课程信息",
-							"key": " classesSchedule.queryCourse",
-							"url": "/erp/coursemanagerment/service",
-							"method": "GET"
-						},
-						{
-							"name": "修改排课信息",
-							"key": " classesSchedule.updateCourse",
-							"url": "/erp/coursemanagerment/service ",
-							"method": "PUT"
-						},
-						{
-							"name": "修改课次信息",
-							"key": " classesSchedule.putCourseTimes",
-							"url": "/erp/coursemanagerment/coursetimes",
-							"method": "PUT"
-						},
-						{
-							"name": "查询辅助参数",
-							"key": " classesSchedule.queryParams",
-							"url": "/erp/coursemanagerment/schedulingAssist",
-							"method": "GET"
-						},
-						{
-							"name": "修改辅助参数",
-							"key": " classesSchedule.putParams",
-							"url": "/erp/coursemanagerment/schedulingAssist",
-							"method": "PUT"
 						}
 					]
 				},
 				{
-					"index": "A14005",
+					"index": "A30008",
 					"name": "考勤管理",
 					"key": "attendanceMgr",
 					"icon": "iconfont icon-orders_attendance",
@@ -1371,7 +978,7 @@
 					"path": "/orders/attendanceMgr",
 					"menus": [
 						{
-							"index": "A1400501",
+							"index": "A3000801",
 							"name": "班级课考勤",
 							"key": "attendanceMgrBJK",
 							"icon": "fa fa-bars",
@@ -1392,22 +999,10 @@
 									"url": "/erp/attendance/coursetimes",
 									"method": "GET"
 								}
-							],
-							"menus": [
-								{
-									"index": "A140050106",
-									"name": "课程视频",
-									"key": " attendanceMgrBJKDetail",
-									"type": "$state",
-									"showMenu": false,
-									"value": "attendanceMgrBJKDetail",
-									"path": "/orders/attendanceMgr/attendanceMgrBJKDetail",
-									"href": "templates/erp/attendance/attendance_bjk_details.html"
-								}
 							]
 						},
 						{
-							"index": "A140050101",
+							"index": "A3000802",
 							"name": "班级课考勤学生列表",
 							"key": "attendanceMgrBJKStudents",
 							"icon": "fa fa-bars",
@@ -1456,7 +1051,7 @@
 							]
 						},
 						{
-							"index": "A140050102",
+							"index": "A3000803",
 							"name": "班级课学生补课",
 							"key": "attendanceMgrBJKMakeup",
 							"icon": "fa fa-bars",
@@ -1469,7 +1064,7 @@
 							]
 						},
 						{
-							"index": "A1400502",
+							"index": "A3000804",
 							"name": "晚辅导考勤",
 							"key": "attendanceMgrWFD",
 							"icon": "fa fa-bars",
@@ -1493,7 +1088,7 @@
 							]
 						},
 						{
-							"index": "A140050201",
+							"index": "A3000805",
 							"name": "晚辅导考勤详细列表",
 							"key": "attendanceMgrWFDDetails",
 							"icon": "fa fa-bars",
@@ -1542,7 +1137,7 @@
 							]
 						},
 						{
-							"index": "A1400503",
+							"index": "A3000806",
 							"name": "1对1考勤",
 							"key": "attendanceMgrYDY",
 							"icon": "fa fa-bars",
@@ -1574,7 +1169,7 @@
 					]
 				},
 				{
-					"index": "A14009",
+					"index": "A30009",
 					"name": "退费管理",
 					"key": "classesRefund",
 					"icon": "iconfont icon-orders_returnPremium",
@@ -1610,7 +1205,7 @@
 					]
 				},
 				{
-					"index": "A14007",
+					"index": "A30010",
 					"name": "冻结管理",
 					"key": "classesFrozen",
 					"icon": "iconfont icon-orders_frozen",
@@ -1646,7 +1241,7 @@
 					]
 				},
 				{
-					"index": "A14010",
+					"index": "A30011",
 					"name": "业务报表",
 					"key": "classesReports",
 					"icon": "iconfont icon-orders_performance",
@@ -1655,7 +1250,7 @@
 					"path": "/orders/classesReports",
 					"menus": [
 						{
-							"index": "A140100101",
+							"index": "A3001101",
 							"name": "报表任务设置",
 							"key": "classesReportSettings",
 							"icon": "iconfont icon-orders_performance",
@@ -1679,7 +1274,7 @@
 							]
 						},
 						{
-							"index": "A140100102",
+							"index": "A3001102",
 							"name": "任务运行结果",
 							"key": "classesReportTaskResult",
 							"icon": "iconfont icon-orders_performance",
@@ -1697,7 +1292,7 @@
 							]
 						},
 						{
-							"index": "A140100203",
+							"index": "A3001103",
 							"name": "充值取现表",
 							"key": "classesReportAccountRechargeCash",
 							"icon": "iconfont icon-orders_performance",
@@ -1726,7 +1321,7 @@
 							]
 						},
 						{
-							"index": "A140100204",
+							"index": "A3001104",
 							"name": "出纳信息表",
 							"key": "classesReportAccountCashier",
 							"icon": "iconfont icon-orders_performance",
@@ -1761,7 +1356,7 @@
 							]
 						},
 						{
-							"index": "A140100207",
+							"index": "A3001105",
 							"name": "报冻退转报表",
 							"key": "classesReportOrderChange",
 							"icon": "iconfont icon-orders_performance",
@@ -1801,7 +1396,7 @@
 							]
 						},
 						{
-							"index": "A140100205",
+							"index": "A3001106",
 							"name": "业绩明细报表",
 							"key": "classesReportPerformanceDetails",
 							"icon": "iconfont icon-orders_performance",
@@ -1837,7 +1432,7 @@
 							]
 						},
 						{
-							"index": "A140100206",
+							"index": "A3001107",
 							"name": "业绩汇总表",
 							"key": "classesReportPerformanceSum",
 							"icon": "iconfont icon-orders_performance",
@@ -1871,7 +1466,7 @@
 							]
 						},
 						{
-							"index": "A1401002",
+							"index": "A3001108",
 							"name": "账户剩余表",
 							"key": "classesReportAccount",
 							"icon": "iconfont icon-orders_performance",
@@ -1895,7 +1490,7 @@
 							]
 						},
 						{
-							"index": "A140100202",
+							"index": "A3001109",
 							"name": "账户流水信息表",
 							"key": "classesReportAccountFlow",
 							"icon": "iconfont icon-orders_performance",
@@ -1925,7 +1520,7 @@
 							]
 						},
 						{
-							"index": "A140100208",
+							"index": "A3001110",
 							"name": "剩余课时费用表",
 							"key": "classesReportSurplusAmountFee",
 							"icon": "iconfont icon-orders_performance",
@@ -1965,7 +1560,7 @@
 							]
 						},
 						{
-							"index": "A140100209",
+							"index": "A3001111",
 							"name": "考勤消耗表",
 							"key": "classesReportAttendance",
 							"icon": "iconfont icon-orders_performance",
@@ -2005,7 +1600,7 @@
 							]
 						},
 						{
-							"index": "A140100301",
+							"index": "A3001112",
 							"name": "教师工作量表",
 							"key": "classesTeacherWorkloadReport",
 							"icon": "iconfont icon-orders_performance",
@@ -2045,7 +1640,7 @@
 							]
 						},
 						{
-							"index": "A140100401",
+							"index": "A3001113",
 							"name": "晚辅导教师考勤表",
 							"key": "classesWfdTeacherAttendReport",
 							"icon": "iconfont icon-orders_performance",
@@ -2089,7 +1684,7 @@
 			]
 		},
 		{
-			"index": "A17000",
+			"index": "A40001",
 			"name": "财务管理",
 			"key": "financial",
 			"icon": "fa fa-bar-chart",
@@ -2098,7 +1693,7 @@
 			"path": "/finance",
 			"menus": [
 				{
-					"index": "A17001",
+					"index": "A40002",
 					"name": "发票管理",
 					"key": "financialInvoice",
 					"icon": "iconfont icon-financial_invoice",
@@ -2134,31 +1729,7 @@
 					]
 				},
 				{
-					"index": "A17002",
-					"name": "在线支付",
-					"key": "financeEpayWap",
-					"icon": "iconfont icon-financial_payOnline",
-					"type": "$state",
-					"value": "financeEpayWap",
-					"path": "/finance/financeEpayWap",
-					"href": "templates/erp/finance/epay_wap.html",
-					"services": [
-						{
-							"name": "在线支付查询",
-							"key": "financeEpayWap.query",
-							"url": "/erp/epay_wap/service",
-							"method": "GET"
-						},
-						{
-							"name": "在线支付导出",
-							"key": " financeEpayWap.output",
-							"url": "/erp/epay_wap/output",
-							"method": "GET"
-						}
-					]
-				},
-				{
-					"index": "A17003",
+					"index": "A40003",
 					"name": "账户单据",
 					"key": "financeAccountChangeBills",
 					"icon": "iconfont icon-financial_bill",
@@ -2188,7 +1759,7 @@
 					]
 				},
 				{
-					"index": "A1700301",
+					"index": "A40004",
 					"name": "账户取款",
 					"key": "financeAccountWithDrawal",
 					"icon": "fa fa-circle-o",
@@ -2213,7 +1784,7 @@
 					]
 				},
 				{
-					"index": " A17004 ",
+					"index": " A40005 ",
 					"name": "订单单据",
 					"key": " financeOrders",
 					"icon": "iconfont icon-financial_order",
@@ -2243,7 +1814,7 @@
 					]
 				},
 				{
-					"index": "A17005",
+					"index": "A40006",
 					"name": "退费单据",
 					"key": "financeRefund",
 					"icon": "iconfont icon-financial_refund",
@@ -2267,7 +1838,7 @@
 					]
 				},
 				{
-					"index": "A17009",
+					"index": "A40007",
 					"name": "冻结单据",
 					"key": "financeFrozen",
 					"icon": "iconfont icon-financial_refund",
@@ -2281,7 +1852,7 @@
 					}]
 				},
 				{
-					"index": "A17007",
+					"index": "A40008",
 					"name": "欠费订单",
 					"key": "financeOrderUnpay",
 					"icon": "iconfont icon-financial_arrears",
@@ -2317,7 +1888,7 @@
 					]
 				},
 				{
-					"index": "A17008",
+					"index": "A40009",
 					"name": "试听详情",
 					"key": "financeCourseListening",
 					"icon": "iconfont icon-financial_audition",
@@ -2355,7 +1926,7 @@
 			]
 		},
 		{
-			"index": "A16000",
+			"index": "A50001",
 			"name": "系统设置",
 			"key": "systems",
 			"icon": "iconfont icon-nav_systems",
@@ -2365,7 +1936,7 @@
 			"href": "templates/erp/tobedevelop.html",
 			"menus": [
 				{
-					"index": "A16001",
+					"index": "A50002",
 					"name": "组织机构",
 					"key": "systemsOgr",
 					"icon": "iconfont icon-systems_organization",
@@ -2375,7 +1946,7 @@
 					"path": "/systems/systemsOgr"
 				},
 				{
-					"index": "A16002",
+					"index": "A50003",
 					"name": "基础数据",
 					"key": "systemsBaseDict",
 					"icon": "iconfont icon-systems_data",
@@ -2384,7 +1955,7 @@
 					"path": "/systems/systemsBaseDict",
 					"menus": [
 						{
-							"index": "A1600201",
+							"index": "A5000301",
 							"name": "年级",
 							"key": "systemsGrade",
 							"icon": "fa fa-list-alt",
@@ -2420,7 +1991,7 @@
 							]
 						},
 						{
-							"index": "A1600202",
+							"index": "A5000302",
 							"name": "科目",
 							"key": "systemsSubject",
 							"icon": "fa fa-list-alt",
@@ -2456,7 +2027,7 @@
 							]
 						},
 						{
-							"index": "A1600203",
+							"index": "A5000303",
 							"name": "课程季",
 							"key": "systemsTimeSeason",
 							"icon": "fa fa-list-alt",
@@ -2492,7 +2063,7 @@
 							]
 						},
 						{
-							"index": "A1600204",
+							"index": "A5000304",
 							"name": "公司账户",
 							"key": "systemsDataCompanyAccount",
 							"icon": "fa fa-list-alt",
@@ -2534,7 +2105,7 @@
 							]
 						},
 						{
-							"index": "A1600205",
+							"index": "A5000305",
 							"name": "公司设备",
 							"key": "systemsDataCompanyDevice",
 							"icon": "fa fa-list-alt",
@@ -2576,7 +2147,7 @@
 							]
 						},
 						{
-							"index": "A1600206",
+							"index": "A5000306",
 							"name": "开票单位",
 							"key": "systemsDataInvoiceCompany",
 							"icon": "fa fa-list-alt",
@@ -2617,7 +2188,7 @@
 								}
 							]
 						},{
-							"index": "A1600208",
+							"index": "A5000307",
 							"name": "全日制学校",
 							"key": "systemsDataSchoolCompany",
 							"icon": "fa fa-list-alt",
@@ -2661,7 +2232,7 @@
 					]
 				},
 				{
-					"index": "A16003",
+					"index": "A50004",
 					"name": "权限管理",
 					"key": "rightControl",
 					"icon": "iconfont icon-systems_rights",
@@ -2670,7 +2241,7 @@
 					"path": "/systems/rightControl",
 					"menus": [
 						{
-							"index": "A1600301",
+							"index": "A5000401",
 							"name": "角色管理",
 							"key": "rightControlRoleMgr",
 							"icon": "fa fa-users",
@@ -2680,7 +2251,7 @@
 							"path": "/systems/rightControl/rightControlRoleMgr"
 						},
 						{
-							"index": "A1600302",
+							"index": "A5000402",
 							"name": "账户管理",
 							"key": "rightControlAccountMgr",
 							"icon": "fa fa-user",
@@ -2692,7 +2263,7 @@
 					]
 				},
 				{
-					"index": "A16004",
+					"index": "A50005",
 					"name": "员工管理",
 					"key": "rightControl",
 					"icon": "iconfont icon-systems_rights",
@@ -2701,7 +2272,7 @@
 					"path": "/systems/rightControl",
 					"menus": [
 						{
-							"index": "A1600401",
+							"index": "A5000501",
 							"name": "员工信息",
                             "key": "hrmEmployee",
                             "icon": "iconfont icon-staff",
@@ -2713,7 +2284,7 @@
 					]
 				},
 				{
-					"index": "A16005",
+					"index": "A50006",
 					"name": "流程管理",
 					"key": "sysWorkflowMgr",
 					"icon": "iconfont icon-systems_flow",
@@ -2722,7 +2293,7 @@
 					"path": "/systems/sysWorkflowMgr",
 					"menus": [
 						{
-							"index": "A1600503",
+							"index": "A5000601",
 							"name": "流程节点",
 							"key": "sysWorkflowNodeList",
 							"icon": "fa fa-list-alt",
@@ -2732,7 +2303,7 @@
 							"path": "/systems/sysWorkflowMgr/sysWorkflowNodeList"
 						},
 						{
-							"index": "A1600504",
+							"index": "A5000602",
 							"name": "流程实例",
 							"key": "sysWorkflowDefineList",
 							"icon": "fa fa-list-alt",
@@ -2742,7 +2313,7 @@
 							"path": "/systems/sysWorkflowMgr/sysWorkflowDefineList"
 						},
 						{
-							"index": "A1600505",
+							"index": "A5000603",
 							"name": "流程管理",
 							"key": "sysWorkflowMgrment",
 							"icon": "fa fa-list-alt",
@@ -2752,7 +2323,7 @@
 							"path": "/systems/sysWorkflowMgr/sysWorkflowMgrment"
 						},
 						{
-							"index": "A1600506",
+							"index": "A5000604",
 							"name": "任务历史",
 							"key": "sysWorkflowTaskHistory",
 							"icon": "fa fa-list-alt",
@@ -2766,7 +2337,7 @@
 			]
 		},
 		{
-			"index": "A18001",
+			"index": "A60001",
 			"name": "个人设置",
 			"key": "userManagerment",
 			"icon": "fa fa-user",
@@ -2776,7 +2347,7 @@
 			"showMenu": "false",
 			"menus": [
 				{
-					"index": "C10001",
+					"index": "A60002",
 					"name": "账户安全",
 					"key": "UMAccountMgr",
 					"icon": "fa fa-user",
@@ -2786,7 +2357,7 @@
 					"href": "templates/segment/account_security.html"
 				},
 				{
-					"index": "C10002",
+					"index": "A60003",
 					"name": "个人信息",
 					"key": "UMEmployee",
 					"icon": "fa fa-pencil-square-o",
@@ -2796,7 +2367,7 @@
 					"href": "templates/segment/employee_info.html"
 				},
 				{
-					"index": "C10003",
+					"index": "A60004",
 					"name": "个人档案",
 					"key": "UMEmployeeInfo",
 					"icon": "fa fa-user",
@@ -2808,7 +2379,7 @@
 			]
 		},
 		{
-			"index": "A19000",
+			"index": "A70001",
 			"name": "学员详情",
 			"key": "studentMgr",
 			"icon": "fa fa-user",
@@ -2818,7 +2389,7 @@
 			"showMenu": "false",
 			"menus": [
 				{
-					"index": "A19001",
+					"index": "A70002",
 					"name": "学员主页",
 					"key": "studentMgrIndex",
 					"icon": "iconfont icon-stdudents_home",
@@ -2828,7 +2399,7 @@
 					"href": "templates/erp/student/studentIndex.html"
 				},
 				{
-					"index": "A19002",
+					"index": "A70003",
 					"name": "基本信息",
 					"key": "studentMgrBasicInfo",
 					"icon": "iconfont icon-stdudents_basic",
@@ -2838,7 +2409,7 @@
 					"href": "templates/erp/student/studentIndex-basicInfo.html"
 				},
 				{
-					"index": "A19015",
+					"index": "A70004",
 					"name": "成绩档案",
 					"key": "studentMgrScore",
 					"icon": "iconfont icon-recruit_dispose",
@@ -2848,7 +2419,7 @@
 					"href": "templates/erp/student/studentIndex-score.html"
 				},
 				{
-					"index": "A19003",
+					"index": "A70005",
 					"name": "联系方式",
 					"key": "studentMgrContact",
 					"icon": "iconfont icon-stdudents_contact",
@@ -2858,7 +2429,7 @@
 					"href": "templates/erp/student/studentIndex-contact.html"
 				},
 				{
-					"index": "A19004",
+					"index": "A70006",
 					"name": "咨询学管",
 					"key": "studentMgrConsultingtube",
 					"icon": "iconfont icon-stdudents_consult",
@@ -2868,7 +2439,7 @@
 					"href": "templates/erp/student/studentIndex-consultingtube.html"
 				},
 				{
-					"index": "A19009",
+					"index": "A70007",
 					"name": "学员账户",
 					"key": "studentMgrAccount",
 					"icon": "iconfont icon-stdudents_account",
@@ -2877,7 +2448,7 @@
 					"path": "/studentMgr/studentMgrAccount",
 					"menus": [
 						{
-							"index": "A1900901",
+							"index": "A7000701",
 							"name": "账户详情",
 							"key": "studentAccountQuery",
 							"icon": "fa fa-circle-o",
@@ -2887,7 +2458,7 @@
 							"href": "templates/erp/student/studentIndex-account.html"
 						},
 						{
-							"index": "A1900902",
+							"index": "A7000702",
 							"name": "账户充值",
 							"key": "studentAccountRecharge",
 							"icon": "fa fa-circle-o",
@@ -2897,7 +2468,7 @@
 							"href": "templates/erp/student/studentIndex-accountRecharge.html"
 						},
 						{
-							"index": "A1900903",
+							"index": "A7000703",
 							"name": "学员互转",
 							"key": "studentAccountTransfer",
 							"icon": "fa fa-circle-o",
@@ -3433,7 +3004,7 @@
 			]
 		},
 		{
-			"index": "A20001",
+			"index": "A80001",
 			"name": "教师详情",
 			"key": "teacherMgr",
 			"icon": "fa fa-bar-chart",
@@ -3443,7 +3014,7 @@
 			"showMenu": "false",
 			"menus": [
 				{
-					"index": "A20002",
+					"index": "A80002",
 					"name": "基本信息",
 					"key": "teacherMgrIndex",
 					"icon": "fa fa-reorder",
@@ -3453,7 +3024,7 @@
 					"href": "templates/erp/tearchers/teacherIndex.html"
 				},
 				{
-					"index": "A20003",
+					"index": "A80003",
 					"name": "课程",
 					"key": "teacherMgrCourse",
 					"icon": "fa fa-reorder",
@@ -3465,7 +3036,7 @@
 			]
 		},
 		{
-			"index": "A50000",
+			"index": "A90001",
 			"name": "员工服务",
 			"key": "employeeService",
 			"icon": "fa fa-user",
@@ -3475,7 +3046,7 @@
 			"showMenu": "false",
 			"menus": [
 				{
-					"index": "A50001",
+					"index": "A90002",
 					"name": "员工档案",
 					"key": "employeeService_employeeInfo",
 					"icon": "fa fa-reorder",
@@ -3485,7 +3056,7 @@
 					"href": "templates/hrm/employee/employee_info.html"
 				},
 				{
-					"index": "A50002",
+					"index": "A90003",
 					"name": "员工自己头像上传",
 					"key": "employeeService_headPic",
 					"icon": "fa fa-reorder",
