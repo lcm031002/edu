@@ -25,13 +25,6 @@ import com.edu.erp.util.BaseController;
 import com.edu.erp.util.ModelDataUtils;
 import com.github.pagehelper.Page;
 
-/**
- * @ClassName: GradeController
- * @Description: 年级服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月14日 下午5:05:13
- * 
- */
 @Controller
 @RequestMapping(value = { "/dictionary/grade" })
 public class GradeController extends BaseController {
@@ -161,7 +154,7 @@ public class GradeController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 		try {
-			param.put("bu_id", orgModel.getBuId());
+			param.put("org_city_id", orgModel.getCityId());
 			param.put("dict_id", grade_ids);
 			dataGradeService.deleteData(param);
 			resultMap.put("error", false);
@@ -187,7 +180,7 @@ public class GradeController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
 		try {
-			param.put("bu_id", orgModel.getBuId());
+			param.put("org_city_id", orgModel.getCityId());
 			param.put("dict_id", id);
 			dataGradeService.deleteData(param);
 			resultMap.put("error", false);

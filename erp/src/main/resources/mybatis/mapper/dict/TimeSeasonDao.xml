@@ -5,32 +5,45 @@
 <mapper namespace="com.edu.erp.dao.TimeSeasonDao">
 
 	<select id="selectForPage" resultType="com.edu.erp.model.TimeSeason" parameterType="java.util.Map">
-				select
-					   t1.*,
-					   t4.name product_line_name,
-						(case t1.business_type when 1 then '班级课' when 2 then '一对一' when 3 then '晚辅导' end) business_type_name,
-						(case t1.season when 1 then '春季' when 2 then '夏季' when 3 then '秋季' when 4 then '冬季' end) season_name,
-                       t2.COURSE_SEASON_NAME  as last_course_season_name,
-                       t3.org_name city_name,
-                       c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
-                  from tab_time_season t1
-                  left join TAB_TIME_SEASON t2 on t1.LAST_SEASON_ID = t2.id
-                  left join	tab_organization_info t3 on t1.city_id = t3.id
-                  left join tp_product_line t4 on t1.product_line = t4.id
-                 <!-- 新增用户-->
-				 left join tab_user_info c_user on t1.create_user = c_user.id
-				 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
-				 <!-- 修改用户-->
-				 left join tab_user_info u_user on t1.update_user = u_user.id
-				 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-                  where t1.status != 0
-                 <if test="course_season_name != null and course_season_name != ''">
-                 	 and t1.course_season_name like '%${course_season_name}%'
-                 </if>
-				<if test="org_city_id!=null">
-					and t1.org_city_id = #{org_city_id}
-				</if>
-                 ORDER BY ifnull(t1.update_time, t1.create_time) DESC, t1.id DESC
+		select t1.id,
+				t1.encoding,
+				t1.last_season_id,
+				t1.course_season_name,
+				t1.season,
+				t1.start_date,
+				t1.end_date,
+				t1.business_type,
+				t1.status,
+				t1.org_city_id as city_id,
+				t1.description,
+				t1.create_user,
+				t1.create_time,
+				t1.update_user,
+				t1.update_time,
+			    t4.name product_line_name,
+				(case t1.business_type when 1 then '班级课' when 2 then '一对一' when 3 then '晚辅导' end) business_type_name,
+				(case t1.season when 1 then '春季' when 2 then '夏季' when 3 then '秋季' when 4 then '冬季' end) season_name,
+			   t2.COURSE_SEASON_NAME  as last_course_season_name,
+			   t3.org_name city_name,
+			   c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name
+		  from tab_time_season t1
+		  left join TAB_TIME_SEASON t2 on t1.LAST_SEASON_ID = t2.id
+		  left join	tab_organization_info t3 on t1.city_id = t3.id
+		  left join tp_product_line t4 on t1.product_line = t4.id
+		 <!-- 新增用户-->
+		 left join tab_user_info c_user on t1.create_user = c_user.id
+		 left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		 <!-- 修改用户-->
+		 left join tab_user_info u_user on t1.update_user = u_user.id
+		 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		  where t1.status != 0
+		 <if test="course_season_name != null and course_season_name != ''">
+			 and t1.course_season_name like '%${course_season_name}%'
+		 </if>
+		<if test="city_id!=null">
+			and t1.org_city_id = #{org_city_id}
+		</if>
+		 ORDER BY ifnull(t1.update_time, t1.create_time) DESC, t1.id DESC
 	</select>
 	
 	<select id="selectSeasons" resultType="com.edu.erp.model.DataDictionary" parameterType="com.edu.erp.model.DataDictionary">
@@ -39,13 +52,26 @@
 			 WHERE BUSINESS_TYPE = #{businessType,jdbcType=NUMERIC}
 			   AND STATUS = 1
 			   AND PRODUCT_LINE = #{product_line,jdbcType=NUMERIC}
-			   AND org_city_id = #{org_city_id,jdbcType=NUMERIC}
+			   AND org_city_id = #{city_id,jdbcType=NUMERIC}
 			 order by ID desc
 	</select>
 	
 	<select id="selectList"  parameterType="java.util.Map" resultType="com.edu.erp.model.TimeSeason">
-		SELECT 
-			t.*
+		SELECT t.id,
+				t.encoding,
+				t.last_season_id,
+				t.course_season_name,
+				t.season,
+				t.start_date,
+				t.end_date,
+				t.business_type,
+				t.status,
+				t.org_city_id as city_id,
+				t.description,
+				t.create_user,
+				t.create_time,
+				t.update_user,
+				t.update_time
 	  	FROM TAB_TIME_SEASON t
 	 	WHERE t.STATUS = 1
 		<if test="org_city_id!=null">
@@ -65,11 +91,24 @@
 	</select>
 	
 	<select id="selectById" resultType="com.edu.erp.model.TimeSeason" parameterType="java.lang.String">
-		SELECT 
-		*
-	  	FROM TAB_TIME_SEASON
-	 	WHERE STATUS = 1 AND ID = #{id} 
-		ORDER BY ID ASC
+		SELECT t.id,
+				t.encoding,
+				t.last_season_id,
+				t.course_season_name,
+				t.season,
+				t.start_date,
+				t.end_date,
+				t.business_type,
+				t.status,
+				t.org_city_id as city_id,
+				t.description,
+				t.create_user,
+				t.create_time,
+				t.update_user,
+				t.update_time
+	  	FROM TAB_TIME_SEASON t
+	 	WHERE t.STATUS = 1 AND t.ID = #{id}
+		ORDER BY t.ID ASC
 	</select>
 	
 	<insert id="insert" parameterType="com.edu.erp.model.TimeSeason" useGeneratedKeys="true" keyProperty="id">
@@ -100,7 +139,7 @@
 			#{business_type,jdbcType=NUMERIC},
 			#{product_line,jdbcType=NUMERIC},
 			#{status,jdbcType=NUMERIC},
-			#{org_city_id,jdbcType=VARCHAR},
+			#{city_id,jdbcType=VARCHAR},
 			#{description,jdbcType=VARCHAR},
 			#{create_user,jdbcType=NUMERIC},
 			#{create_time,jdbcType=TIMESTAMP}
@@ -116,7 +155,6 @@
 	       	END_DATE = #{end_date, jdbcType=VARCHAR},
 	       	BUSINESS_TYPE = #{business_type, jdbcType=NUMERIC},
 	       	PRODUCT_LINE = #{product_line, jdbcType=NUMERIC},
-	       	ORG_CITY_ID = #{org_city_id, jdbcType=VARCHAR},
 	       	DESCRIPTION = #{description, jdbcType=VARCHAR},
 	       	UPDATE_USER = #{update_user, jdbcType=NUMERIC},
 	       	UPDATE_TIME = #{update_time, jdbcType=TIMESTAMP},

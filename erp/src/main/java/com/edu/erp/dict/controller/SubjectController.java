@@ -1,10 +1,3 @@
-/**
- * @Title: SubjectController.java
- * @Package: com.edu.erp.dict.controller
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月3日 下午8:00:45
- * @version KLXX ERPV5.0
- */
 package com.edu.erp.dict.controller;
 
 import java.util.HashMap;
@@ -34,13 +27,6 @@ import com.edu.erp.util.BaseController;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
-/**
- * @ClassName: SubjectController
- * @Description:
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月3日 下午8:00:45
- * 
- */
 @Controller
 @RequestMapping(value = { "/dictionary/subject" })
 public class SubjectController extends BaseController {
@@ -71,8 +57,6 @@ public class SubjectController extends BaseController {
 				throw new Exception("请选择校区！");
 			}
 			Map<String, Object> param = initParamMap(request, true, StringUtils.EMPTY);
-			param.put("org_city_id", orgModel.getCityId());
-
 			Page<TPSubject> result = subjectService.queryDataList(param);
 			setRespDataForPage(request, result.getResult(), resultMap);
 		} catch (Exception e) {
@@ -101,7 +85,6 @@ public class SubjectController extends BaseController {
 			}
 
 			Map<String, Object> param = initParamMap(request, false, StringUtils.EMPTY);
-			param.put("bu_id", orgModel.getBuId());
 			List<TPSubject> result = subjectService.queryList(param);
 			resultMap.put("error", false);
 			resultMap.put("data", result.toArray());
@@ -130,7 +113,6 @@ public class SubjectController extends BaseController {
 			if (orgModel == null || orgModel.getBuId() == null) {
 				throw new Exception("请选择校区！");
 			}
-			Long bu_id = genLongParameter("bu_id",request);
 			param.put("org_city_id", orgModel.getCityId());
 			List<TPSubject> result = subjectService.querySubjectListByBuID(param);
 			resultMap.put("error", false);
@@ -166,8 +148,6 @@ public class SubjectController extends BaseController {
 			
 			// 默认状态
 			setDefaultValue(request, subject, false);
-			subject.setBuId(orgModel.getBuId());
-			subject.setCity_id(orgModel.getCityId());
 			subjectService.save(subject);
 		} catch (Exception e) {
 			resultMap.put("error", true);
