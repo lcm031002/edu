@@ -1,5 +1,6 @@
 package com.edu.erp.dao;
 
+import com.edu.erp.model.RoleMenuRel;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -2280,6 +2280,17 @@
                             "path": "/hrm/hrmEmployeeArchives/hrmEmployee",
                             "href": "templates/hrm/employee/employee.html",
                             "value": "hrmEmployee"
+						},
+						{
+							"index": "A5000502",
+							"name": "员工添加",
+							"key": "hrmEmployeeAdd",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployeeAdd",
+							"href": "templates/hrm/employee/employee_info_add.html",
+							"value": "hrmEmployeeAdd",
+							"showMenu": "false"
 						}
 					]
 				},

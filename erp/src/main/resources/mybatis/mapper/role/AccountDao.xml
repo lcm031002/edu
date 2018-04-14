@@ -5,17 +5,13 @@
 <mapper namespace="com.edu.erp.dao.AccountDao">
 
 <resultMap type="com.edu.erp.model.Account" id="modelMap">    
-    <id column="id" property="user_id"/>    
+    <id column="id" property="id"/>
     <result column="userName" property="accountName"/>
     <result column="status" property="status"/>    
-    <result column="password" property="password"/>    
-    <result column="old_password" property="oldPassword"/>    
+    <result column="password" property="password"/>
     <result column="remark" property="remark"/>    
     <result column="employee_id" property="employeeId"/>    
-    <result column="employee_name" property="employeeName"/>    
-    <result column="org_id" property="orgId"/>    
-    <result column="bu_id" property="buId"/>    
-    <result column="sch_id" property="branchId"/>    
+    <result column="employee_name" property="employeeName"/>
     <result column="create_user" property="create_user"/>
     <result column="create_time" property="create_time"/>
     <result column="update_user" property="update_user"/>
