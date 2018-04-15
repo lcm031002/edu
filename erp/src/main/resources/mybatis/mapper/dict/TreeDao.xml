@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TreeDao">
+<resultMap type="com.edu.erp.jstree.TreeModel" id="cityMap">
+      <id property="id" column="city_id"/>
+      <result property="id" column="city_id"/>
+      <result property="text" column="city_name"/>
+      <collection property="children" column="city_id"  select="queryCompanyNodes"></collection>
+</resultMap>
+<resultMap type="com.edu.erp.jstree.TreeModel" id="companyMap">
+     <result property="id" column="tree_id"/>
+     <result property="parentId" column="parent_id" />
+     <result property="text" column="company_name"/>
+     <result property="cityId" column="city_id"/>
+     <collection property="children" column="{companyId=company_id,cityId=city_id}"  select="querySchNodes"></collection>
+</resultMap>
+<resultMap type="com.edu.erp.jstree.TreeModel" id="schMap">
+     <id property="id" column="sch_id"/>
+     <result property="parentId" column="parent_id" />
+     <result property="id" column="sch_id"/>
+     <result property="type" column="type"/>
+     <result property="text" column="sch_name"/>
+</resultMap>
+    <!--查询地区  -->
+	<sql id="queryOrgSQL">
+	    select tf.id as city_id, tf.org_name as city_name
+	     from TAB_ORGANIZATION_INFO tf
+	     where org_type=2
+	     and status=1
+	</sql>
+	
+	<select id="queryCityNodes" resultMap="cityMap" >
+	<include refid="queryOrgSQL"/>
+	</select>
+	<!-- 查询地区节点 -->
+	<select id="queryCompanyNodes" resultMap="companyMap" parameterType="long">
+	      select (case
+			         when tb.company_id is not null then
+			          tb.company_id
+			         else
+			          tb.city_id
+			       end) as tree_id,
+			       tb.city_id as parent_id,
+			       tb.company_id as company_id,
+			       tb.company_name as company_name,
+			       tb.city_id as city_id
+			  from (select tf.id        as company_id,
+			               tf.org_name  as company_name,
+			               tf.parent_id as city_id
+			          from TAB_ORGANIZATION_INFO tf
+			         where org_type = 3
+			           and exists (select 1
+			                  from tab_organization_info toi
+			                 where toi.parent_id = tf.id)) tb
+	      	where tb.city_id=#{cityId,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询校区节点 -->
+	<select id="querySchNodes" resultMap="schMap" parameterType="map">
+         select ts.sch_id as sch_id,
+         		ts.org_name as sch_name,
+         		tb.city_id as city_id,
+         		case when tb.company_id is not null then tb.company_id
+	      		 else tb.city_id end as parent_id,
+         		'leaf' as type
+         	from (select tf.id as company_id,tf.parent_id as city_id from TAB_ORGANIZATION_INFO tf where org_type=3) tb
+         	left join (select tf.id as sch_id,tf.org_name,tf.parent_id as company_id from TAB_ORGANIZATION_INFO tf where org_type=4) ts
+         	on ts.company_id=tb.company_id
+         	where tb.company_id=#{companyId, jdbcType = INTEGER}
+         	and tb.city_id=#{cityId,jdbcType=INTEGER}
+	</select>
+</mapper>
