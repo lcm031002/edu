@@ -1,11 +1,16 @@
 package com.edu.erp.dict.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.edu.erp.dao.AccountOrgRelDao;
+import com.edu.erp.dao.TreeDao;
+import com.edu.erp.jstree.State;
+import com.edu.erp.jstree.TreeModel;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -20,6 +25,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Resource(name = "organizationDao")
     private OrganizationDao organizationDao;
+
+    @Resource(name = "accountOrgRelDao")
+    private AccountOrgRelDao accountOrgRelDao;
+
+    @Resource(name = "treeDao")
+    private TreeDao treeDao;
 
     /*
      * (non-Javadoc)
@@ -126,6 +137,51 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (orgInfo != null && StringUtils.isNotEmpty(orgInfo.getLogo())) {
             jsonMap.put("logo", orgInfo.getLogo());
             this.organizationDao.deleteLogo(jsonMap);
+        }
+    }
+
+    //查询账户校区列表树
+    @Override
+    public List<TreeModel> queryOrgTreeModel(Long accountId) throws Exception{
+        List<TreeModel> treeList=new ArrayList<TreeModel>();
+        try {
+            treeList=treeDao.queryCityNodes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("查询校区列表失败:"+e.getMessage());
+        }
+
+        List<Integer> accountSchsList=accountOrgRelDao.queryAccountOrg(accountId);
+        initSelectedMenu(treeList, accountSchsList);
+
+        return treeList;
+    }
+
+    /**
+     * 设置选中的menu
+     * @param treeList
+     * @param schList
+     */
+    private void initSelectedMenu(List<TreeModel> treeList, List<Integer>schList) throws Exception{
+        try {
+            for(TreeModel tree:treeList){
+                List<TreeModel> childrens=tree.getChildren();
+                if(null!=childrens&&childrens.size()>0){
+                    initSelectedMenu(childrens,schList);
+                }
+                else{
+                    if(null!=tree.getId()&&schList.indexOf(tree.getId())!=-1){
+                        State state=new State();
+                        state.setOpen(true);
+                        state.setSelected(true);
+                        tree.setState(state);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 

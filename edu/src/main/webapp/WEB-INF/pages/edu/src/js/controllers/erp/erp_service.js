@@ -3102,59 +3102,65 @@ function erp_teacherGroupService($resource){
 
 function erp_organizationService($resource){
     return $resource('/erp/dictionary/organization/list', {}, {
-        query : {
-            method : 'GET',
-            params : {},
-            isArray : false
+        query: {
+            method: 'GET',
+            params: {},
+            isArray: false
         },
-        teamList : {
-        	url : '/erp/dictionary/organization/teamList',
-        	method : 'GET',
-            params : {},
-            isArray : false
+        teamList: {
+            url: '/erp/dictionary/organization/teamList',
+            method: 'GET',
+            params: {},
+            isArray: false
         },
-        branchList : {
-        	url : '/erp/dictionary/organization/branchs',
-        	method : 'GET',
-            params : {},
-            isArray : false
+        branchList: {
+            url: '/erp/dictionary/organization/branchs',
+            method: 'GET',
+            params: {},
+            isArray: false
         },
-        add : {
-        	url : '/erp/dictionary/organization/service',
-        	method : 'POST',
-            params : {},
-            isArray : false
+        add: {
+            url: '/erp/dictionary/organization/service',
+            method: 'POST',
+            params: {},
+            isArray: false
         },
-        update : {
-        	url : '/erp/dictionary/organization/service',
-        	method : 'PUT',
-            params : {},
-            isArray : false
+        update: {
+            url: '/erp/dictionary/organization/service',
+            method: 'PUT',
+            params: {},
+            isArray: false
         },
-        queryProductLine : {
-        	url : '/erp/dictionary/organization/productLine',
-        	method : 'GET',
-            params : {},
-            isArray : false
+        queryProductLine: {
+            url: '/erp/dictionary/organization/productLine',
+            method: 'GET',
+            params: {},
+            isArray: false
         },
-        queryDictOrgList : {
-        	url : '/erp/dictionary/organization/dictOrgList',
-        	method : 'GET',
-            params : {},
-            isArray : false
+        queryDictOrgList: {
+            url: '/erp/dictionary/organization/dictOrgList',
+            method: 'GET',
+            params: {},
+            isArray: false
         },
-        uploadLogo : {
-        	url : '/erp/dictionary/organization/uploadLogo',
-        	method : 'PUT',
-            params : {},
-            isArray : false
+        uploadLogo: {
+            url: '/erp/dictionary/organization/uploadLogo',
+            method: 'PUT',
+            params: {},
+            isArray: false
         },
-        deleteLogo : {
-        	url : '/erp/dictionary/organization/deleteLogo',
-        	method : 'PUT',
-            params : {},
-            isArray : false
-        }
+        deleteLogo: {
+            url: '/erp/dictionary/organization/deleteLogo',
+            method: 'PUT',
+            params: {},
+            isArray: false
+        },
+    	queryOrgWithAccount : {
+            url: '/erp/dictionary/organization/queryOrgWithAccount',
+            method: 'GET',
+            params: {},
+            isArray: false
+		}
     });
 }
 

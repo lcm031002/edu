@@ -30,23 +30,9 @@
 	
 	<!-- 添加账户组织列表 -->
 	<insert id="addAccountOrg" parameterType="map">
-	 INSERT INTO ebs_accountorg_rel ( id,accountId,orgId)
-	  <!-- 账户校区列表为空则录入空结果集 -->
-	  <if test="selectedBranch==null || selectedBranch.size==0">
-	   SELECT null,null,null from dual where 1=2
-	  </if>
-	    <if test="selectedBranch!=null and selectedBranch.size>0">
-   	  SELECT
-            seq_ebs_accountorg_rel.nextval,t.* from
-            (
-   	  <foreach collection="selectedBranch" item="element" index="index" separator="union" open="(" close=")">
-         SELECT
-             #{accountId, jdbcType = NUMERIC},
-            #{element, jdbcType = NUMERIC}
-              FROM dual 
+	 INSERT INTO ebs_accountorg_rel (accountId,orgId) values
+   	  <foreach collection="selectedBranch" item="element" index="index" separator=",">
+          (#{accountId, jdbcType = NUMERIC}, #{element, jdbcType = NUMERIC})
         </foreach>
-        ) t
-        </if>
 	</insert>
-	
 </mapper>

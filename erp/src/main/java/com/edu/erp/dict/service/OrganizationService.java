@@ -3,6 +3,7 @@ package com.edu.erp.dict.service;
 import java.util.List;
 import java.util.Map;
 
+import com.edu.erp.jstree.TreeModel;
 import com.edu.erp.model.OrganizationInfo;
 
 public interface OrganizationService {
@@ -83,5 +84,12 @@ public interface OrganizationService {
      * @throws Exception
      */
     void deleteLogo(Map<String, Object> jsonMap) throws Exception;
+
+	/**
+	 * 查询账户校区列表树
+	 * @param
+	 * @return List<TreeModel>
+	 */
+	List<TreeModel> queryOrgTreeModel(Long accountId) throws Exception;
 	
 }

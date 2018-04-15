@@ -5,8 +5,8 @@ angular.module('ework-ui')
 	'$state',
 	'$document',
 	'$uibMsgbox',
-	'RoleService',
-	'OrgService',
+	'erp_RoleService',
+	'erp_organizationService',
 	'PostService',
 	'erp_employeeMgrService',
 	'erp_AccountService',
@@ -17,8 +17,8 @@ function erp_AccountCtrl($scope,
 		$state,
 		$document,
 		$uibMsgbox,
-		RoleService,
-		OrgService,
+		erp_RoleService,
+		erp_organizationService,
         PostService,
 		erp_employeeMgrService,
 		erp_AccountService){
@@ -227,7 +227,7 @@ function erp_AccountCtrl($scope,
             $scope.roleListCopy = [];
         }
        if(!_.some($scope.roleListCopy,{id:role.id})) {
-           $scope.roleListCopy.push(role);
+           $scope.roleListCopy.push({id:role.id, roleName:role.roleName});
        }
         //查询角色
         //$scope.queryAllRole();
@@ -241,8 +241,6 @@ function erp_AccountCtrl($scope,
         	$uibMsgbox.confirm("请选择账户！");
         }
         _.remove($scope.roleListCopy,role);
-        //查询角色
-        //$scope.queryAllRole();
     }
 
     /**
@@ -286,7 +284,7 @@ function erp_AccountCtrl($scope,
     	var param = {};
     	var selected = [];
     	param.selectedBranch = genSelectedMenus();
-    	param.accountId=account.user_id;
+    	param.accountId=account.id;
     	erp_AccountService.updateAccountOrg(param,function(resp){
     		if(resp.error==false){
     			$uibMsgbox.success(account.accountName+"  账户组织关系修改成功！");
@@ -302,7 +300,7 @@ function erp_AccountCtrl($scope,
      */
     function updateAccount(account){
         var param = {};
-        param.user_id=account.user_id;
+        param.user_id=account.id;
         param.accountName=account.accountName;
         param.employeeId=account.employeeId;
         param.password=account.password;
@@ -353,7 +351,7 @@ function erp_AccountCtrl($scope,
         // debugger;
     	$("#account_remove_confirm_dialog").modal("hide");
     	var param = {};
-    	param.accountId=$scope.curAccount.user_id;
+    	param.accountId=$scope.curAccount.id;
         param.status=$scope.curAccount.status==1?2:1;
     	erp_AccountService.remove(param,function(resp){
     		if(resp.error==false){
@@ -370,7 +368,7 @@ function erp_AccountCtrl($scope,
      */
     function queryRole(account){
         var param = {};
-        param.user_id = account.user_id;
+        param.user_id = account.id;
         $scope.isLoadingRole = 'loading...';
         erp_AccountService.queryRoleWithAccount(param,function(resp){
             $scope.isLoadingRole = '';
@@ -392,7 +390,7 @@ function erp_AccountCtrl($scope,
         param.pageNum=$scope.pageNum;
         param.pageSize=10;
 
-        RoleService.queryRoleForPage(param,function(resp){
+        erp_RoleService.queryRoleForPage(param,function(resp){
             $scope.isLoadingRoleList = '';
             if(resp.error ==  false){
                 //不过滤角色
@@ -409,8 +407,8 @@ function erp_AccountCtrl($scope,
     function queryBranchTree(account){
     	$('#branchTree').jstree("destroy").empty();
         var param = {};
-        param.accountId = account.user_id;
-        OrgService.queryOrgWithAccount(param,function(resp){
+        param.accountId = account.id;
+        erp_organizationService.queryOrgWithAccount(param,function(resp){
                 account.branchTree = resp.data;
                 $('#branchTree').jstree({
                     "plugins" : ["types","checkbox"],
@@ -472,8 +470,8 @@ function erp_AccountCtrl($scope,
      * 选择一个员工
      */
     $scope.selectedEmployee=function(employee){
-    	$scope.curAccount.employeeId=employee.ID;
-    	$scope.curAccount.employeeName=employee.EMPLOYEE_NAME;
+    	$scope.curAccount.employeeId=employee.id;
+    	$scope.curAccount.employeeName=employee.employee_name;
     	$scope.onGoingQuery=false;
     	$scope.showQuery=false;
     }
@@ -503,7 +501,7 @@ function erp_AccountCtrl($scope,
    	else{
    		param.buId=bu;
    	}
-       OrgService.querySch(param,function(resp){
+       erp_organizationService.querySch(param,function(resp){
            if(resp.error == false){
                $scope.branchsList = resp.data;
            }
@@ -514,7 +512,7 @@ function erp_AccountCtrl($scope,
     * 查询归属团队
     */
    function queryBu() {
-       OrgService.queryBu({},function(resp){
+       erp_organizationService.queryBu({},function(resp){
            if(!resp.error){
                $scope.buList = resp.data;
            }
@@ -616,6 +614,6 @@ function erp_AccountCtrl($scope,
     }
 
     $scope.queryAccount();
-    queryPost();
-    queryBu();
+    //queryPost();
+    //queryBu();
 }

@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.edu.erp.jstree.TreeModel;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,6 @@ import com.edu.cas.client.common.util.WebContextUtils;
 import com.edu.erp.dict.service.DictionaryService;
 import com.edu.erp.dict.service.GcDictService;
 import com.edu.erp.dict.service.OrganizationService;
-import com.edu.erp.dict.service.SelectOptionService;
 import com.edu.erp.model.OrganizationInfo;
 import com.edu.erp.model.TPProductLine;
 import com.edu.erp.model.TpDictData;
@@ -322,6 +322,22 @@ public class OrganizationController extends BaseController {
         if (orgInfo.getOrg_type() == null) {
             throw new Exception("请选择组织级别！");
         }
+    }
+
+    //查询账户校区列表树
+    @RequestMapping(value={"/queryOrgWithAccount"},method=RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> queryOrgTreeModel(HttpServletRequest request,Long accountId){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try{
+            List<TreeModel> treeMap = organizationService.queryOrgTreeModel(accountId);
+            resultMap.put("data", treeMap);
+            resultMap.put("error", false);
+        }catch(Exception e){
+            resultMap.put("error", true);
+            resultMap.put("message", e.getMessage());
+        }
+        return resultMap;
     }
 
 }

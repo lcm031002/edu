@@ -15,23 +15,11 @@
 	</select>
 
     <!-- 添加账户角色列表 -->
-    <insert id="addAccountRole" parameterType="com.edu.erp.model.AccountRoleRel">
-        INSERT INTO tab_user_role_ref ( id,user_id,role_id)
-        <!-- 角色列表为录入空结果集 -->
-        <if test="roleList==null || roleList.size==0">
-            SELECT null,null,null from dual where 1=2
-        </if>
-        <if test="roleList!=null and roleList.size>0">
-            SELECT
-            seq_tab_user_role_ref.nextval,#{user_id, jdbcType = NUMERIC},t.* from
-            (
-            <foreach collection="roleList" item="element" index="index" separator="union" open="(" close=")">
-                SELECT
-                #{element.id, jdbcType = NUMERIC}
-                FROM dual
+    <insert id="addAccountRole" parameterType="map">
+        INSERT INTO tab_user_role_ref (user_id,role_id) values
+            <foreach collection="roleList" item="element" index="index" separator =",">
+                (#{id}, #{element.id})
             </foreach>
-            ) t
-        </if>
     </insert>
 
     <!-- 删除账户角色关系 -->

@@ -153,14 +153,14 @@
 		taf.employee_name as employee_name
 		FROM tab_employee_info taf
 		<where>
-			rownum&lt;=10
-			and taf.status=1
+			 taf.status=1
 			<if test="searchInfo!=null and searchInfo!=''">
 				AND( taf.encoding like '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
 				OR taf.employee_name like '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
 				)
 			</if>
 		</where>
+		limit 10
 	</select>
 
 	<!-- 查询员工教育经历 -->

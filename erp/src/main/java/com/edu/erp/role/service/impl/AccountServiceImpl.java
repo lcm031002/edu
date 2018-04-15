@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean updateAccountRole(Map<String, Object> param) throws Exception {
         boolean suc = true;
         try {
-            Long user_id = Long.valueOf(param.get("user_id").toString());
+            Long user_id = Long.valueOf(param.get("id").toString());
             accountRoleRelDao.deleteAccountRole(user_id);
             addAccountRole(param);
         } catch (Exception e) {

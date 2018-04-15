@@ -98,7 +98,7 @@
 		from tab_user_info tui
 		where tui.status != 0
 		and tui.employee_id = #{employeeId}
-		<if test="user_id != null and user_id != ''">
+		<if test="id != null and id != ''">
 		and tui.id != #{id}
 		</if>
 	</select>
