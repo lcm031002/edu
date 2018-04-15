@@ -114,7 +114,7 @@ public class SubjectController extends BaseController {
 				throw new Exception("请选择校区！");
 			}
 			param.put("org_city_id", orgModel.getCityId());
-			List<TPSubject> result = subjectService.querySubjectListByBuID(param);
+			List<TPSubject> result = subjectService.querySubjectListByCityID(param);
 			resultMap.put("error", false);
 			resultMap.put("data", result.toArray());
 		} catch (Exception e) {

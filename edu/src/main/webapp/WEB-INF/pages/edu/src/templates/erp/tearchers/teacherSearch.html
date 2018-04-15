@@ -7,10 +7,10 @@
       <div class="searchbar">
         <form class="form-inline">
           <div class="form-group">
-            <span class="input-label"style="min-width:unset;">团队：</span>
+            <span class="input-label"style="min-width:unset;">城市：</span>
             <select class="form-control"
-                    ng-options="bu.buId as bu.text for bu in buList"
-                    ng-model="searchParam.p_bu_id">
+                    ng-options="city.cityId as city.cityName for city in cityList"
+                    ng-model="searchParam.p_city_id">
             </select>
             <div class="input-group">
               <input type="text" autocomplete="off" id="teacher_name" placeholder="请输入教师姓名" ng-model="teacher_name" class="form-control" />
@@ -21,15 +21,6 @@
             </div>
           </div>
         </form>
-      </div>
-      <hr>
-      <div class="toolbar">
-        <button class="btn btn-primary btn-circle" ng-click="sendInvation()">
-          <i class=""></i>推送工作量平台邀请码
-        </button>
-        <button class="btn btn-primary btn-circle" ng-click="syncDingDang()">
-          <i class=""></i>同步到叮当
-        </button>
       </div>
     </div>
   </div>
@@ -44,12 +35,7 @@
           <th>头像</th>
           <th>教师编码</th>
           <th>教师姓名</th>
-          <th>old_id</th>
           <th>状态</th>
-          <!--<th>归属团队</th>-->
-          <th>邀请码</th>
-          <th>同步叮当</th>
-          <th>同步详细信息</th>
         </tr>
         <tr ng-repeat="teacher in teacherList" ng-if="teacherList && teacherList.length">
           <th>
@@ -68,14 +54,9 @@
           </td>
           <td>{{teacher.encoding}}</td>
           <td>{{teacher.teacher_name}}</td>
-          <td>{{teacher.old_id}}</td>
           <td>
             {{(teacher.status == 1 || teacher.status == 2 || teacher.status == 3)?'有效':'无效' }}
           </td>
-          <!--<td>{{teacher.bu_name}}</td>-->
-          <td>{{teacher.invation_code}}</td>
-          <td>{{teacher.synchro_dingdang}}</td>
-          <td>{{teacher.synchro_details}}</td>
         </tr>
         <tr ng-if="isLoading == 'loading...'">
           <td colspan="9" align="center"><img src="img/icons/big_load.gif"></td>
@@ -108,37 +89,14 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label">教师昵称：</label>
-                <div class="col-sm-2">
-                  <input type="text" class="form-control" ng-model="updateTeacher.nickname" />
-                </div>
-                <label class="col-sm-2 control-label">教师年龄：</label>
-                <div class="col-sm-2">
-                  <input type="number" class="form-control" ng-model="updateTeacher.teacher_age" />
-                </div>
-                <label class="col-sm-2 control-label">教师教龄：</label>
-                <div class="col-sm-2">
-                  <input type="number" class="form-control" ng-model="updateTeacher.seniority" />
-                </div>
-              </div>
-              <div class="form-group">
                 <label class="col-sm-2 control-label"><span class="text-danger">*</span>教师身份：</label>
                 <div class="col-sm-2">
-                  <select class="form-control" ng-model="updateTeacher.teacher_type" required ng-options="teacherType.code as teacherType.name for teacherType in teacherTypeList">
-                  </select>
-                </div>
-                <label class="col-sm-2 control-label"><span class="text-danger">*</span>教师状态：</label>
-                <div class="col-sm-2">
-                  <select class="form-control" ng-model="updateTeacher.status" required ng-options="status.code as status.name for status in statusList">
-                  </select>
+                  <kl-dict-select  dict-type="'teacher_type'" bind-data="updateTeacher.teacher_type"></kl-dict-select>
                 </div>
                 <label class="col-sm-2 control-label"><span class="text-danger">*</span>性别：</label>
                 <div class="col-sm-2">
-                  <select class="form-control" ng-model="updateTeacher.sex" required ng-options="gender.code as gender.name for gender in genderList">
-                  </select>
+                  <kl-dict-select  dict-type="'gender'" bind-data="updateTeacher.sex"></kl-dict-select>
                 </div>
-              </div>
-              <div class="form-group">
                 <label class="col-sm-2 control-label"><span class="text-danger">*</span>联系方式：</label>
                 <div class="col-sm-2">
                   <input type="text" class="form-control" name="teacher_phone"ng-model="updateTeacher.phone" ng-pattern="/^1(3|4|5|7|8)\d{9}$/" required/>
@@ -146,18 +104,19 @@
                     <p ng-message="pattern" style="color: red">请输入正确的电话/手机号码</p>
                   </div>
                 </div>
-                <label class="col-sm-2 control-label"><span class="text-danger">*</span>是否兼职：</label>
-                <div class="col-sm-2">
-                  <select class="form-control" ng-model="updateTeacher.is_pluralistic" ng-options="partTime.code as partTime.name for partTime in partTimeList">
-                  </select>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">邮箱：</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" ng-model="updateTeacher.email" required/>
                 </div>
-                <label class="col-sm-2 control-label">old_id：</label>
-                <div class="col-sm-2 pt-5">
-                  <span>{{updateTeacher.old_id}}</span>
+                <label class="col-sm-2 control-label">描述：</label>
+                <div class="col-sm-4">
+                  <textarea rows="2" class="form-control" ng-model="updateTeacher.description"></textarea>
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-2 control-label"><span class="text-danger">*</span>所属团队：</label>
+                <label class="col-sm-2 control-label"><span class="text-danger">*</span>所属城市：</label>
                 <div class="col-sm-4">
                   <div style="margin-bottom: 10px;min-height: 35px;border: 1px solid #ccc;    border-radius: 4px;">
                   <span ng-click="removeTeam(team)" class="btn btn-default btn-xs" ng-repeat="team in selTeamList" style="margin: 5px;">
@@ -166,18 +125,18 @@
                   </span>
                 </div>
                   <div class="form-horizontal  mt10 pos-r">
-                    <input type="text" class="form-control" placeholder="输入要查询的团队名称" ng-model="teamSearchInfo" style="border-radius: 0;">
+                    <input type="text" class="form-control" placeholder="输入要查询的城市名称" ng-model="teamSearchInfo" style="border-radius: 0;">
                     <i class="iconfont icon-search form-control-feedback"></i>
                   </div>
                   <table class="table table-bordered" style="margin: -1px 0;">
                     <tr>
                       <th width="10"></th>
-                      <th width="60">团队</th>
+                      <th width="60">城市</th>
                     </tr>
                   </table>
                   <div class="multi-sel-table" style="width: 100%; height: 200px; overflow-y: auto; overflow-x: hidden;">
                     <table class="table table-bordered" >
-                      <tr ng-repeat="team in buList | filter:{'org_name': teamSearchInfo}">
+                      <tr ng-repeat="team in cityList | filter:{'org_name': teamSearchInfo}">
                         <td width="10">
                           <input type="checkbox" ng-model="team.checked" ng-change="handleTeamChange(team)">
                         </td>
@@ -215,16 +174,6 @@
                       </tr>
                     </table>
                   </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">邮箱：</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" ng-model="updateTeacher.email" required/>
-                </div>
-                <label class="col-sm-2 control-label">描述：</label>
-                <div class="col-sm-4">
-                  <textarea rows="2" class="form-control" ng-model="updateTeacher.description"></textarea>
                 </div>
               </div>
             </form>

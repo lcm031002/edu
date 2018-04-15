@@ -9,6 +9,7 @@
 		<result property="buId" column="BUID" />
 		<result property="cityId" column="CITYID" />
         <result property="productLine" column="PRODUCTLINE" />
+        <result property="cityName" column="CITYNAME" />
 		<collection property="children" resultMap="pojoMap2" />
 	</resultMap>
 	
@@ -22,6 +23,7 @@
 		<result property="cityId" column="CITYID" />
 		<result property="productLine" column="PRODUCTLINE" />
 		<result property="orgKind" column="ORGKIND" />
+        <result property="cityName" column="CITYNAME" />
 	</resultMap>
 	
 	<resultMap type="com.edu.cas.client.common.model.OrgModel"
@@ -32,6 +34,7 @@
 		<result property="buId" column="BUID" />
 		<result property="cityId" column="CITYID" />
 		<result property="productLine" column="PRODUCTLINE" />
+        <result property="cityName" column="CITYNAME" />
 	</resultMap>
 	
 	<!-- 查询当前用户可见的团队 -->
@@ -44,12 +47,15 @@
 		       TOI2.ORG_NAME  AS TEXT,
 		       toi.org_type||'' as type,
 		       TOI2.ID        buId,
-		       TOI2.Parent_Id cityId
+		       TOI2.Parent_Id cityId,
+			   TOI3.ORG_NAME AS cityName
 		  FROM ebs_accountorg_rel PUS
 		  LEFT JOIN TAB_ORGANIZATION_INFO TOI
 		    ON TOI.ID = PUS.Orgid
 		  LEFT JOIN TAB_ORGANIZATION_INFO TOI2
 		    ON TOI2.ID = TOI.Parent_Id
+		  LEFT JOIN TAB_ORGANIZATION_INFO TOI3
+		    ON TOI3.ID = TOI2.PARENT_ID
 		 where 1=1
 		 <if test="userId!=0">
 		 	AND PUS.Accountid = #{userId}

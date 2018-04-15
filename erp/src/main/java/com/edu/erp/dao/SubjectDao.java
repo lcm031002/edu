@@ -65,13 +65,13 @@ public interface SubjectDao {
 	TPSubject querySubjectListByNameOrEncoding(Map<String, Object> param) throws Exception;
 	
 	/**
-	 * 查询bu_id下的科目
+	 * 查询city_id下的科目
 	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
 	@Select("SELECT distinct t.* FROM tp_subject t inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id} and bdr.DICT_ID = t.id and bdr.DICT_TYPE = 'tp_subject' WHERE t.STATUS = 1")
-	List<TPSubject> querySubjectListByBuID(Map<String, Object> param) throws Exception;
+	List<TPSubject> querySubjectListByCityID(Map<String, Object> param) throws Exception;
 	
 	
 }

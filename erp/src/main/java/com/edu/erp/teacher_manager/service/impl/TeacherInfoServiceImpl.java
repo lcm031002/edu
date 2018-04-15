@@ -10,13 +10,9 @@ import javax.annotation.Resource;
 
 import com.edu.erp.model.*;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import com.edu.common.qinniu.QiNiuCoreCall;
 import com.edu.erp.dao.TeacherInfoDao;

@@ -77,9 +77,9 @@ public class SubjectServiceImpl implements SubjectService {
 	}
 	
 	@Override
-	public List<TPSubject> querySubjectListByBuID(Map<String, Object> param) throws Exception 
+	public List<TPSubject> querySubjectListByCityID(Map<String, Object> param) throws Exception
 	{
-		return subjectDao.querySubjectListByBuID(param);
+		return subjectDao.querySubjectListByCityID(param);
 	}
 
 }

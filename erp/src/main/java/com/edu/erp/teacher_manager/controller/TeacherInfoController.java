@@ -177,9 +177,6 @@ public class TeacherInfoController extends BaseController {
         try {
             OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
             Map<String, Object> param = this.initParamMap(request, true, StringUtils.EMPTY);
-            if (param.get("org_id") != null) {
-                param.put("bu_id", param.get("org_id"));
-            }
             Page<Teacher> page = new Page<Teacher>();
             page = teacherInfoService.page(param);
             setRespDataForPage(request, page.getResult(), resultMap);
@@ -220,18 +217,11 @@ public class TeacherInfoController extends BaseController {
     public Map<String, Object> toManage(HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            String dictTypeCodes = Constants.DictTypeCode.TEACHER_PAGE_TYPE_CODES;
-            Map<String, List<TpDictData>> dictDataMap = gcDictService
-                    .selectByDictTypeCodes(dictTypeCodes);
-            if (!CollectionUtils.isEmpty(dictDataMap)) {
-                resultMap.putAll(dictDataMap);
-            }
-
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("org_type", Constants.OrgType.GROUP);
-            List<OrganizationInfo> buList = organizationService.list(paramMap);
-            if (!CollectionUtils.isEmpty(buList)) {
-                resultMap.put("buList", buList);
+            paramMap.put("org_type", Constants.OrgType.CITY);
+            List<OrganizationInfo> cityList = organizationService.list(paramMap);
+            if (!CollectionUtils.isEmpty(cityList)) {
+                resultMap.put("cityList", cityList);
             }
 
             OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
@@ -239,10 +229,6 @@ public class TeacherInfoController extends BaseController {
             List<TPSubject> subjectList = subjectService.queryDataList(paramMap2);
             if (!CollectionUtils.isEmpty(subjectList)) {
                 resultMap.put("subjectList", subjectList);
-            }
-
-            if (orgModel != null) {
-                resultMap.put("bu_id", orgModel.getBuId());
             }
 
             resultMap.put(Constants.RespMapKey.ERROR, false);
@@ -274,8 +260,8 @@ public class TeacherInfoController extends BaseController {
             Set subjectNames = new HashSet();
             for (String team : teacher.getTeam().split("[,，]")) {
                 param.clear();
-                param.put("bu_id", team);
-                List<TPSubject> tpSubjectList = subjectService.querySubjectListByBuID(param);
+                param.put("org_city_id", team);
+                List<TPSubject> tpSubjectList = subjectService.querySubjectListByCityID(param);
                 for (TPSubject tpSubject : tpSubjectList) {
                     subjectNames.add(tpSubject.getName());
                 }
@@ -283,7 +269,7 @@ public class TeacherInfoController extends BaseController {
             for (String subject : teacher.getSubject().split("[,，]")) {
                 String subjectName = subjectService.queryData(subject).getName();
                 if (!subjectNames.contains(subjectName)) {
-                    throw new Exception("所选团队没有" + subjectName + "科目，请重新选择！");
+                    throw new Exception("所选城市没有" + subjectName + "科目，请重新选择！");
                 }
             }
             List<TeacherSubject> teacherSubjectList = null;
@@ -294,7 +280,7 @@ public class TeacherInfoController extends BaseController {
                     for (String subject : teacher.getSubject().split("[,，]")) {
                         teacherSubject = new TeacherSubject();
                         teacherSubject.setSubject_id(Long.parseLong(subject));
-                        teacherSubject.setBu_id(Long.parseLong(team));
+                        teacherSubject.setCity_id(Long.parseLong(team));
                         teacherSubject.setStatus(BaseObject.StatusEnum.VALID.getCode());
                         teacherSubjectList.add(teacherSubject);
                     }
@@ -306,7 +292,7 @@ public class TeacherInfoController extends BaseController {
                 TeacherTeamRel teacherTeamRel = null;
                 for (String team : teacher.getTeam().split("[,，]")) {
                     teacherTeamRel = new TeacherTeamRel();
-                    teacherTeamRel.setBuId(Long.parseLong(team));
+                    teacherTeamRel.setCityId(Long.parseLong(team));
                     teacherTeamRelList.add(teacherTeamRel);
                 }
             }
@@ -346,8 +332,8 @@ public class TeacherInfoController extends BaseController {
             Set subjectNames = new HashSet();
             for (String team : teacher.getTeam().split("[,，]")) {
                 param.clear();
-                param.put("bu_id", team);
-                List<TPSubject> tpSubjectList = subjectService.querySubjectListByBuID(param);
+                param.put("org_city_id", team);
+                List<TPSubject> tpSubjectList = subjectService.querySubjectListByCityID(param);
                 for (TPSubject tpSubject : tpSubjectList) {
                     subjectNames.add(tpSubject.getName());
                 }
@@ -355,7 +341,7 @@ public class TeacherInfoController extends BaseController {
             for (String subject : teacher.getSubject().split("[,，]")) {
                 String subjectName = subjectService.queryData(subject).getName();
                 if (!subjectNames.contains(subjectName)) {
-                    throw new Exception("所选团队没有" + subjectName + "科目，请重新选择！");
+                    throw new Exception("所选城市没有" + subjectName + "科目，请重新选择！");
                 }
             }
             List<TeacherSubject> teacherSubjectList = null;
@@ -367,7 +353,7 @@ public class TeacherInfoController extends BaseController {
                         teacherSubject = new TeacherSubject();
                         teacherSubject.setTeacher_id(teacher.getId());
                         teacherSubject.setSubject_id(Long.parseLong(subject));
-                        teacherSubject.setBu_id(Long.parseLong(team));
+                        teacherSubject.setCity_id(Long.parseLong(team));
                         teacherSubject.setStatus(BaseObject.StatusEnum.VALID.getCode());
                         teacherSubjectList.add(teacherSubject);
                     }
@@ -379,7 +365,7 @@ public class TeacherInfoController extends BaseController {
                 TeacherTeamRel teacherTeamRel = null;
                 for (String team : teacher.getTeam().split("[,，]")) {
                     teacherTeamRel = new TeacherTeamRel();
-                    teacherTeamRel.setBuId(Long.parseLong(team));
+                    teacherTeamRel.setCityId(Long.parseLong(team));
                     teacherTeamRelList.add(teacherTeamRel);
                 }
             }

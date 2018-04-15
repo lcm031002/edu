@@ -15,7 +15,7 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
     // 批量选中标识
     $scope.selectAllFlag = false;
     $scope.searchParam={};
-    $scope.searchParam.p_bu_id = -1;
+    $scope.searchParam.p_city_id = -1;
     $scope.paginationConf = {
       currentPage: 1, // 当前页
       totalItems: 0,
@@ -24,7 +24,7 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
         $scope.queryTeacher();
       }
     };
-    $scope.buList = [];
+    $scope.cityList = [];
 
     $scope.queryTeacher = function() {
       var _uibModalInstance = $uibMsgbox.waiting('加载中，请稍候...');
@@ -34,7 +34,7 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
             pageSize: $scope.paginationConf.itemsPerPage, // 每页显示条数
             currentPage: $scope.paginationConf.currentPage, // 要获取的第几页的数据
             search_info: $scope.teacher_name,
-            org_id : $scope.searchParam.p_bu_id
+            org_id : $scope.searchParam.p_city_id
           },
           function(resp) {
             if (!resp.error) {
@@ -143,26 +143,7 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
         $uibMsgbox.warn("未选中教师");
       }
     };
-    // 改变上架下架状态
-    //$scope.changeStatus = function(teacher) {
-    //  var options = (teacher.status == 1 ? "enable" : "disable");
-    //  teacher.status = teacher.status == 1 ? 2 : 1;
-    //  $uibMsgbox.confirm('确认改变状态？', function(res) {
-    //    if (res == 'yes') {
-    //      erp_TeacherListService.changeStatus({
-    //        teacherIds: teacher.id,
-    //        status: options
-    //      }, function(resp) {
-    //        if (!resp.error) {
-    //          $uibMsgbox.success("操作成功");
-    //          $scope.queryTeacher();
-    //        } else {
-    //          $uibMsgbox.alert(resp.message);
-    //        }
-    //      });
-    //    }
-    //  });
-    //};
+
     // 弹出上传头像框
     $scope.showUploadModal = function(teacher) {
       teacher.photo = teacher.photo || '';
@@ -230,9 +211,9 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
     $scope.initPage = function() {
           PUBORGService.queryBu({}, function(resp) {
               if (!resp.error) {
-                  $scope.buList = resp.data;
-                  $scope.buList.unshift({
-                    buId: -1,
+                  $scope.cityList = resp.data;
+                  $scope.cityList.unshift({
+                    cityId: -1,
                     text: "-- 全部 --"
                   });
               }
@@ -247,23 +228,17 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
 // 修改教师信息
 angular.module('ework-ui').controller(
   'updateTeacherModalInstanceController', ['$rootScope', '$scope', '$state', '$uibMsgbox',
-    'erp_TeacherIndexService', 'erp_employeeService',
+    'erp_TeacherIndexService', 'erp_employeeMgrService',
     'erp_studentOrgService', 'erp_TeacherListService','erp_subjectService',
     '$uibModalInstance', 'params',
     updateTeacherModalInstanceController
   ]);
 
 function updateTeacherModalInstanceController($rootScope, $scope, $state,
-  $uibMsgbox, erp_TeacherIndexService, erp_employeeService,
+  $uibMsgbox, erp_TeacherIndexService, erp_employeeMgrService,
   erp_studentOrgService, erp_TeacherListService,erp_subjectService, $uibModalInstance,
   params) {
-
-  $scope.statusList = [];
-  $scope.genderList = [];
-  $scope.partTimeList = [];
-  $scope.teacherTypeList = [];
-  //$scope.cityList = [];
-  $scope.buList = [];
+  $scope.cityList = [];
   $scope.subjectList = [];
   $scope.selSubjectList = [];
   $scope.subjectSearchInfo = '';
@@ -274,18 +249,13 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
     employee_name: params.teacher.employee_name,
     encoding: params.teacher.encoding,
     teacher_name: params.teacher.teacher_name,
-    nickname: params.teacher.nickname,
-    teacher_age: params.teacher.teacher_age,
-    seniority: params.teacher.seniority,
     teacher_type: params.teacher.teacher_type,
     status: params.teacher.status,
     sex: params.teacher.sex,
     phone: params.teacher.phone,
-    is_pluralistic: params.teacher.is_pluralistic,
-    bu_id: params.teacher.bu_id,
+    city_id: params.teacher.city_id,
     description: params.teacher.description,
-    email: params.teacher.email,
-    old_id: params.teacher.old_id
+    email: params.teacher.email
   };
 
   // 选中关联员工输入框，清空输入框内容
@@ -308,7 +278,7 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
   $scope.onEmployeeNameChange = function() {
     $scope.isDown = 'loading';
     $scope.searchResult = [];
-    erp_employeeService.query({
+    erp_employeeMgrService.queryEmployeeForPage({
       row_num: 10,
       pageSize: 10,
       currentPage: 1,
@@ -351,15 +321,6 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
       return false;
     }
 
-    if (!$scope.updateTeacher.status && $scope.updateTeacher.status!=0) {
-      $uibMsgbox.error('教师状态必填');
-      return false;
-    }
-      if ($scope.updateTeacher.is_pluralistic  != 0 && $scope.updateTeacher.is_pluralistic  != 1) {
-          $uibMsgbox.error('是否兼职必填');
-          return false;
-      }
-
     if (!$scope.updateTeacher.sex) {
       $uibMsgbox.error('教师性别必填');
       return false;
@@ -380,7 +341,7 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
       return false;
     }
     if($scope.selTeamList<=0){
-          $uibMsgbox.error('团队必填');
+          $uibMsgbox.error('城市必填');
           return false;
       }
     return true;
@@ -397,7 +358,7 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
 
   $scope.removeTeam = function (team) {
         _.remove($scope.selTeamList, team);
-        _.forEach($scope.buList,  function(arr) {
+        _.forEach($scope.cityList,  function(arr) {
           if(arr.org_name == team.org_name){
             arr.checked = false;
           }
@@ -440,7 +401,7 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
         }
         var team = teacherForUpdate.team = [];
         _.forEach($scope.selTeamList, function(item) {
-            teacherForUpdate.team.push(item.buId)
+            teacherForUpdate.team.push(item.city_id)
         })
         if (team) {
             teacherForUpdate.team = team.join(",");
@@ -473,7 +434,7 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
         $uibMsgbox.error(resp.message);
       }
     });
-    //通过教师id查询教师关联的团队
+    //通过教师id查询教师关联的城市
     erp_TeacherListService.queryTeam({
       teacherId: $scope.updateTeacher.id
     }, function (resp) {
@@ -484,40 +445,12 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
       }
     });
 
-    // $scope.changeBu = function () {
-    //   $scope.selSubjectList = [];
-    //   erp_subjectService.querySelectDatas({
-    //     bu_id: $scope.updateTeacher.bu_id
-    //   }, function (resp) {
-    //     if (!resp.error) {
-    //       $scope.subjectList = resp.data;
-    //     } else {
-    //       $uibMsgbox.error(resp.message);
-    //     }
-    //   });
-    // };
     erp_TeacherIndexService.toManage({}, function(resp) {
       if (!resp.error) {
-        $.each(resp.teacherType, function(i, n) {
-          n.code = parseInt(n.code);
-        })
-        $scope.teacherTypeList = resp.teacherType;
-        $.each(resp.teacherStatus, function(i, n) {
-          n.code = parseInt(n.code);
-        })
-        $scope.statusList = resp.teacherStatus;
-        $.each(resp.gender, function(i, n) {
-          n.code = parseInt(n.code);
-        })
-        $scope.genderList = resp.gender;
-        $.each(resp.isPartTime, function(i, n) {
-          n.code = parseInt(n.code);
-        })
-        $scope.partTimeList = resp.isPartTime;
-        $scope.buList = resp.buList;
+        $scope.cityList = resp.cityList;
         $scope.subjectList = resp.subjectList;
 
-        _.forEach($scope.buList, function (item) {
+        _.forEach($scope.cityList, function (item) {
           _.forEach($scope.selTeamList, function (value) {
             if (item.org_name == value.org_name) {
               item.checked = true;
@@ -532,33 +465,9 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
             }
           });
         })
-        //$scope.cityList = resp.cityList;
-        // $scope.buList = $.map(resp.buList,function(n,i) {
-        //   if(n.parent_id == resp.city_id) return n;
-        // });
-        //$scope.subjectList = resp.subjectList;
-        //$scope.updateTeacher.city_id = resp.city_id;
-        //$scope.updateTeacher.bu_id = resp.bu_id;
       } else {
         $uibMsgbox.error(resp.message);
       }
-
-      // erp_subjectService.querySelectDatas({
-      //     bu_id:$scope.updateTeacher.bu_id
-      // },function(resp){
-      //     if(!resp.error){
-      //       $scope.subjectList = resp.data;
-      //       _.forEach($scope.subjectList, function (item) {
-      //         _.forEach($scope.selSubjectList, function (value) {
-      //           if (item.name == value.name) {
-      //             item.checked = true;
-      //           }
-      //         });
-      //       })
-      //     }else{
-      //         $uibMsgbox.error(resp.message);
-      //     }
-      // });
     });
   }
 

@@ -25,6 +25,7 @@
 		<result property="subject" column="subject" />
 		<result property="email" column="email" />
 		<result property="subject_name" column="subject_name" />
+		<result property="city_id" column="city_id" />
 		<collection property="teacherSubjectList" column="teacher_id"
 			javaType="ArrayList" ofType="com.edu.erp.model.TeacherSubject">
 			<id property="id" column="c_id" />
@@ -34,10 +35,10 @@
 				<result property="encoding" column="d_encoding" />
 				<result property="name" column="d_name" />
 			</association>
-			<association property="bu" column="bu_id"
+			<association property="city" column="city_id"
 				javaType="com.edu.erp.model.OrganizationInfo">
 				<id property="id" column="e_id" />
-				<result property="org_name" column="bu_name" />
+				<result property="org_name" column="city_name" />
 			</association>
 			<association property="grade" column="grade_id"
 				javaType="com.edu.erp.model.Grade">
@@ -49,17 +50,17 @@
 
 	<select id="queryOrderTeacher" resultMap="teacherMap"
 		parameterType="java.lang.Long">
-		select a.id             id,
-		       a.encoding       encoding,
-		       a.teacher_name   teacher_name,
-		       a.status         status,
-		       a.photo          photo,
-		       a.sex            sex,
-		       a.create_time    create_time,
-		       a.update_time    update_time,
-		       a.description    description,
-		       a.phone          phone,
-		       b.id             employee_id,
+		select a.id,
+		       a.encoding,
+		       a.teacher_name,
+		       a.status,
+		       a.photo,
+		       a.sex,
+		       a.create_time,
+		       a.update_time,
+		       a.description,
+		       a.phone,
+		       b.id employee_id,
 		       b.employee_name  employee_name
 		  from tab_teacher_info a
 		  left join tab_employee_info b
@@ -77,7 +78,7 @@
 		a.teacher_name,
 		a.status,
 		a.photo,
-		a.sex sex,
+		a.sex,
 		a.create_time,
 		a.update_time,
 		a.description,
@@ -92,13 +93,25 @@
 
 	<!-- 查询教师信息列表 -->
 	<select id="page" resultMap="teacherMap" parameterType="java.util.Map">
-		select a.*,
-		c_emp.employee_name as create_user_name, u_emp.employee_name as
-		update_user_name,
-		(select wm_concat(distinct ts.name)
-			 from tp_subject ts, tab_teacher_subject_ref ttsr
-			where ttsr.teacher_id = a.id
-			  and ttsr.subject_id = ts.id) as subject_name
+		select a.id,
+				a.encoding,
+				a.teacher_name,
+				a.status,
+				a.photo,
+				a.sex,
+				a.email,
+				a.create_time,
+				a.create_user,
+				a.update_time,
+				a.update_user,
+				a.description,
+				a.phone,
+				c_emp.employee_name as create_user_name,
+				u_emp.employee_name as update_user_name,
+				(select group_concat(distinct ts.name)
+					 from tp_subject ts, tab_teacher_subject_ref ttsr
+					where ttsr.teacher_id = a.id
+					  and ttsr.subject_id = ts.id) as subject_name
 		from tab_teacher_info a
 		left join tab_employee_info c on
 		a.employee_id = c.id
@@ -158,10 +171,29 @@
 	</select>
 
 	<select id="selectList" parameterType="java.util.Map" resultMap="teacherMap">
-		select a.*, c.id as c_id, c.teacher_id,
-		c.subject_id as subject,
-		d.id as d_id, d.encoding as d_encoding, d.name as d_name,
-		e.id as e_id, e.org_name as bu_name, f.id as f_id, f.grade_name
+		select a.id,
+				a.encoding,
+				a.teacher_name,
+				a.status,
+				a.photo,
+				a.sex,
+				a.email,
+				a.create_time,
+				a.create_user,
+				a.update_time,
+				a.update_user,
+				a.description,
+				a.phone,
+				c.id as c_id, c.teacher_id,
+				c.subject_id a
+				s subject,
+				d.id as d_id,
+				d.encoding as d_encoding,
+				d.name as d_name,
+				e.id as e_id,
+				e.org_name as city_name,
+				f.id as f_id,
+				f.grade_name
 		from tab_teacher_info a
 		left join tab_teacher_subject_ref c on a.id = c.teacher_id
 		left join tp_subject d on c.subject_id = d.id
@@ -214,7 +246,8 @@
 		create_user,
 		create_time,
 		teacher_type,
-		email
+		email,
+		city_id
 		)
 		values
 		(
@@ -229,7 +262,8 @@
 		#{create_user,jdbcType=NUMERIC},
 		#{create_time,jdbcType=TIMESTAMP},
 		#{teacher_type,jdbcType=NUMERIC},
-		#{email,jdbcType=VARCHAR}
+		#{email,jdbcType=VARCHAR},
+		#{city_id,jdbcType=NUMERIC}
 		)
 	</insert>
 
@@ -281,20 +315,19 @@
 	</update>
 
 	<insert id="insertSubjectRef" parameterType="java.util.List">
-		<foreach collection="list" item="item" index="index" open="begin"
-			close="; end;" separator=";">
 			insert into tab_teacher_subject_ref
 			(
 			teacher_id,
 			subject_id,
-			bu_id,
+			city_id,
 			status
 			)
 			values
+		<foreach collection="list" item="item" index="index" separator=",">
 			(
 			#{item.teacher_id},
 			#{item.subject_id},
-			#{item.bu_id},
+			#{item.city_id},
 			#{item.status}
 			)
 		</foreach>
@@ -330,27 +363,28 @@
 	</select>
 
 	<select id="searchTeacherSubjects" parameterType="int" resultType="map">
-		select distinct * from (select ts.id,t.teacher_id,t.grade_id,ts.name from tab_teacher_subject_ref t
+		select distinct t.id, t.teacher_id, t.grade_id, t.name
+		 from (select ts.id,t.teacher_id,t.grade_id,ts.name from tab_teacher_subject_ref t
 		left join tp_subject ts on ts.id = t.subject_id
-		 where t.status=1 and t.teacher_id=#{teacherId})
+		 where t.status=1 and t.teacher_id=#{teacherId}) t
 	</select>
 
 	<insert id="insertTeamRef" parameterType="com.edu.erp.model.TeacherTeamRel">
 			insert into TAB_TEACHER_TEAM_REF
 			(
 			teacher_id,
-			bu_id
+			city_id
 			)
 			values
 			(
 			#{teacherTeamRel.teacherId},
-			#{teacherTeamRel.buId}
+			#{teacherTeamRel.cityId}
 			)
 	</insert>
 
 	<select id="searchTeacherTeam" parameterType="int" resultType="com.edu.erp.model.TeacherTeamRel">
-		select t.id as id,t.teacher_id as teacherId,t.bu_id as buId,toi.org_name as org_name from tab_teacher_team_ref t
-		left join tab_organization_info toi on t.bu_id = toi.id
+		select t.id as id,t.teacher_id as teacherId,t.city_id as cityId,toi.org_name as org_name from tab_teacher_team_ref t
+		left join tab_organization_info toi on t.city_id = toi.id
 		where t.teacher_id=#{teacherId}
 	</select>
 

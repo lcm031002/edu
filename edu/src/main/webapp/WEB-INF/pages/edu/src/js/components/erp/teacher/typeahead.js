@@ -30,8 +30,8 @@
         encoding: '=?',
         onSelect: '&?'
       },
-      controller: ['$scope', 'erp_employeeService', 'erp_TeacherSearchService',
-        function ($scope, erp_employeeService, erp_TeacherSearchService) {
+      controller: ['$scope', 'erp_employeeMgrService', 'erp_TeacherSearchService',
+        function ($scope, erp_employeeMgrService, erp_TeacherSearchService) {
           var $ctrl = this;
           var _selected;
           
@@ -74,7 +74,7 @@
 
           // 查询咨询师或学管师
           function getCounselorOrManager (employee_name) {
-            return erp_employeeService.query({
+            return erp_employeeMgrService.queryEmployeeForPage({
               currentPage: 1,
               pageSize: 30,
               counselor_type: $scope.teacherType,
@@ -82,7 +82,7 @@
             }).$promise.then(function (resp) {
               if (!resp.error) {
                 _.forEach(resp.data, function (item) {
-                  item.fullName = item.employee_name + '【' +　item.branch_post_names + '】'
+                  item.fullName = item.employee_name
                 })
                 return resp.data
               }

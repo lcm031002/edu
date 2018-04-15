@@ -162,8 +162,6 @@ angular.module('ework-ui').factory('erp_studentCounselorService',
 /**
  * 员工服务
  */
-angular.module('ework-ui').factory('erp_employeeService',
-		[ '$resource', erp_employeeService ]);
 
 angular.module('ework-ui').factory('erp_employeeMgrService',
     [ '$resource', erp_employeeMgrService ]);
@@ -1265,21 +1263,6 @@ function erp_studentCounselorService($resource){
             params : {},
             isArray : false
         }
-	});
-}
-function erp_employeeService($resource){
-	return $resource('/erp/employee/service', {}, {
-		query : {
-			method : 'GET',
-			params : {},
-			isArray : false
-		},
-		queryList : {
-			url : '/erp/employee/service/list',
-			method : 'GET',
-			params : {},
-			isArray : false
-		}
 	});
 }
 

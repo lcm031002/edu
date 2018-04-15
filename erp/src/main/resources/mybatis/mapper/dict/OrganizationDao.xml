@@ -59,6 +59,7 @@
 				tof.parent_id,
 				tof.org_type ,
 				tof.status,
+				(case when tof.org_type = '2' then tof.id end) city_id,
 				(case
 				when tof.org_type= '2' then '地区'
 				when tof.org_type= '3' then '团队'

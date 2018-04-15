@@ -33,7 +33,7 @@
 			and bdr.dict_id = a.id
 			and bdr.dict_type = 'bu_grade_rel'
 		</if>
-		where a.org_city_id = #{city_id}
+		where a.status != 0
 		<if test="grade_name!= null and grade_name!= ''">
 			and	a.grade_name like '%${grade_name}%' 		
 		</if>
@@ -66,7 +66,7 @@
 		   and bdr.dict_id = a.id
 		   and bdr.dict_type = 'bu_grade_rel'
 		 </if>
-		 where 1 = 1
+		 where a.status != 0
 		 <if test="grade_name != null and grade_name != ''">
 			and  a.grade_name like '%'||#{grade_name}||'%'
 		 </if>

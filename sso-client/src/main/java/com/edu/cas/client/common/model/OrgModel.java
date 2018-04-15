@@ -36,6 +36,7 @@ public class OrgModel  implements Serializable{
 	private Long cityId;
 	private Long productLine;
 	private Integer orgKind;
+	private String cityName;
 	
 	private Map<String,String> state = new HashMap<String,String>();
 	
@@ -97,7 +98,13 @@ public class OrgModel  implements Serializable{
 		this.parentId = parentId;
 	}
 
-	
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
 
 	@Override
 	public int hashCode() {

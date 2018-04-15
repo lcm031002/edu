@@ -12,12 +12,12 @@ public class TeacherSubject extends BaseObject{
 	
 	private Long teacher_id;
 	private Long subject_id;
-	private Long bu_id;
+	private Long city_id;
 	private Long grade_id;
 	
 	private Teacher teacher;
 	private TPSubject subject;
-	private OrganizationInfo bu;
+	private OrganizationInfo city;
 	private Grade grade;
 	
 	public Teacher getTeacher() {
@@ -32,12 +32,15 @@ public class TeacherSubject extends BaseObject{
 	public void setSubject(TPSubject subject) {
 		this.subject = subject;
 	}
-	public OrganizationInfo getBu() {
-		return bu;
+
+	public OrganizationInfo getCity() {
+		return city;
 	}
-	public void setBu(OrganizationInfo bu) {
-		this.bu = bu;
+
+	public void setCity(OrganizationInfo city) {
+		this.city = city;
 	}
+
 	public Grade getGrade() {
 		return grade;
 	}
@@ -62,12 +65,14 @@ public class TeacherSubject extends BaseObject{
 	public void setSubject_id(Long subject_id) {
 		this.subject_id = subject_id;
 	}
-	public Long getBu_id() {
-		return bu_id;
-	}
-	public void setBu_id(Long bu_id) {
-		this.bu_id = bu_id;
-	}
- 	
 
+	@Override
+	public Long getCity_id() {
+		return city_id;
+	}
+
+	@Override
+	public void setCity_id(Long city_id) {
+		this.city_id = city_id;
+	}
 }

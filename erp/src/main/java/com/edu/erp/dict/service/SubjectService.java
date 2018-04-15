@@ -55,10 +55,10 @@ public interface SubjectService {
 			throws Exception;
 
 	/**
-	 * 查询bu_id下的科目
+	 * 查询city_id下的科目
 	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
-	List<TPSubject> querySubjectListByBuID(Map<String, Object> param) throws Exception;
+	List<TPSubject> querySubjectListByCityID(Map<String, Object> param) throws Exception;
 }
