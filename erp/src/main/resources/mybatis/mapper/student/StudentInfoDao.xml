@@ -66,7 +66,7 @@
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
 				ON TSCI.STUDENT_ID = a.ID
 				AND TSCI.COUNSELOR_TYPE = 1
-				AND date_format(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+				AND date_format(SYSDATE(), '%Y-%m-%d') BETWEEN TSCI.START_DATE AND
 				TSCI.END_DATE
 				AND TSCI.IS_VALID = 1
 				AND TSCI.BU_ID = #{buId}
@@ -76,7 +76,7 @@
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
 				ON TSCI2.STUDENT_ID = a.ID
 				AND TSCI2.COUNSELOR_TYPE = 2
-				AND date_format(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+				AND date_format(SYSDATE(), '%Y-%m-%d') BETWEEN TSCI2.START_DATE AND
 				TSCI2.END_DATE
 				AND TSCI2.IS_VALID = 1
 				AND TSCI2.BU_ID = #{buId}
@@ -84,8 +84,8 @@
 				ON TEI2.ID = TSCI2.COUNSELOR_ID
 				AND TEI2.STATUS = 1
 				where 1 = 1
-							<if test="studentId == null or studentId == ''">
-							   and a.bu_id = #{buId}
+				and a.city_id = #{city_id}
+				<if test="studentId == null or studentId == ''">
 								 and a.student_status != 2
 							</if>
 					<if test="(searchType == '1' or searchType == 1) and searchInfo != null and searchInfo != ''">
@@ -179,7 +179,7 @@
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
 				ON TSCI.STUDENT_ID = a.ID
 				AND TSCI.COUNSELOR_TYPE = 1
-				AND date_format(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+				AND date_format(SYSDATE(), '%Y-%m-%d') BETWEEN TSCI.START_DATE AND
 				TSCI.END_DATE
 				AND TSCI.IS_VALID = 1
 				AND TSCI.BU_ID = #{buId}
@@ -189,7 +189,7 @@
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
 				ON TSCI2.STUDENT_ID = a.ID
 				AND TSCI2.COUNSELOR_TYPE = 2
-				AND date_format(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+				AND date_format(SYSDATE(), '%Y-%m-%d') BETWEEN TSCI2.START_DATE AND
 				TSCI2.END_DATE
 				AND TSCI2.IS_VALID = 1
 				AND TSCI2.BU_ID = #{buId}
@@ -197,6 +197,7 @@
 				ON TEI2.ID = TSCI2.COUNSELOR_ID
 				AND TEI2.STATUS = 1
 				where 1 = 1
+				and a.city_id = #{city_id}
 					<if test="studentId == null or studentId == ''">
 						and a.student_status != 2
 					</if>
@@ -324,7 +325,7 @@
 		  LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
 		ON TSCI.STUDENT_ID = TSI.ID
 		AND TSCI.COUNSELOR_TYPE = 1
-		AND DATE_FORMAT(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+		AND DATE_FORMAT(SYSDATE(), '%Y-%m-%d') BETWEEN TSCI.START_DATE AND
 		TSCI.END_DATE
 		AND TSCI.IS_VALID = 1
 		AND TSCI.BU_ID = #{buId}
@@ -335,7 +336,7 @@
 		LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
 		ON TSCI2.STUDENT_ID = TSI.ID
 		AND TSCI2.COUNSELOR_TYPE = 2
-		AND DATE_FORMAT(SYSDATE(), 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+		AND DATE_FORMAT(SYSDATE(), '%Y-%m-%d') BETWEEN TSCI2.START_DATE AND
 		TSCI2.END_DATE
 		AND TSCI2.IS_VALID = 1
 		AND TSCI2.BU_ID = #{buId}

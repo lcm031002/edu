@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.PrivilegeCriteriaDao">
+
+	<resultMap type="com.edu.erp.model.PrivilegeCriteria" id="privilegeCriteriaMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="sum_price" column="sum_price" />
+		<result property="sum_hour" column="sum_hour" />
+		<result property="sum_integral" column="sum_integral" />
+		<result property="status" column="status" />
+		<result property="create_user" column="create_user" />
+		<result property="create_user_name" column="create_user_name" />
+		<result property="create_time" column="create_time" />
+		<result property="update_user" column="update_user" />
+		<result property="update_user_name" column="update_user_name" />
+		<result property="update_time" column="update_time" />
+		<result property="rule_id" column="rule_id" />
+		<result property="grade_id" column="grade_id" />
+		<association property="privilegeRule" column="rule_id" javaType="com.edu.erp.model.PrivilegeRule">
+			<id property="id" column="b_id" />
+			<result property="rule_name" column="b_rule_name" />
+			<result property="coupon_content" column="b_coupon_content" />
+			<result property="coupon_type" column="b_coupon_type" />
+			<result property="start_date" column="b_start_date" />
+			<result property="end_date" column="b_end_date" />
+			<result property="city_id" column="b_city_id" />
+			<result property="is_check" column="b_is_check" />
+			<result property="status" column="b_status" />
+			<result property="create_user" column="b_create_user" />
+			<result property="create_time" column="b_create_time" />
+			<result property="update_user" column="b_update_user" />
+			<result property="update_time" column="b_update_time" />
+		</association>
+	</resultMap>
+
+	<select id="queryPrivilegeCriteriaForPage" parameterType="java.util.Map" resultType="com.edu.erp.model.PrivilegeCriteria">
+		SELECT a.*, b.rule_name as rule_name, b.status as ruleStatus,
+		   c_emp.employee_name as create_user_name, u_emp.employee_name as update_user_name,tdg.GRADE_NAME as grade_name,
+		b.end_date as ruleEndDate
+		FROM tab_privilege_rule b,tab_privilege_criteria a
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		left join TAB_DATA_GRADE tdg on tdg.id = a.grade_id
+		WHERE a.rule_id = b.id and b.status != 0 and a.status != 0
+		 and b.bu_id = #{bu_id,jdbcType=NUMERIC}
+		 <if test="searchInfo != null and searchInfo != ''">
+			AND (a.NAME like '%'||#{searchInfo}||'%' or b.rule_name like '%'||#{searchInfo}||'%')
+		 </if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<select id="selectOne" parameterType="java.lang.Long"
+		resultType="com.edu.erp.model.PrivilegeCriteria">
+		SELECT *
+		FROM tab_privilege_criteria
+		WHERE id = #{id}
+		AND status != 0
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.PrivilegeCriteria">
+		insert into tab_privilege_criteria
+		(
+		    name,
+		    description,
+		    rule_id,
+		    bu_id,
+		    sum_price,
+		    sum_hour,
+		    sum_integral,
+		    status,
+		    create_user,
+		    create_time,
+		    update_user,
+		    update_time,
+		    grade_id
+		)	VALUES
+		(
+			#{name, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{rule_id, jdbcType=NUMERIC},
+			#{bu_id, jdbcType=NUMERIC},
+			#{sum_price, jdbcType=NUMERIC},
+			#{sum_hour, jdbcType=NUMERIC},
+			#{sum_integral, jdbcType=NUMERIC},
+			#{status, jdbcType=NUMERIC},
+			#{create_user, jdbcType=NUMERIC},
+			#{create_time, jdbcType=VARCHAR},
+			#{update_user, jdbcType=NUMERIC},
+			#{update_time, jdbcType=VARCHAR},
+			#{grade_id, jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.PrivilegeCriteria">
+		UPDATE tab_privilege_criteria
+		SET
+		   name = #{name, jdbcType=VARCHAR},
+		   sum_price = #{sum_price, jdbcType=NUMERIC},
+		   sum_hour = #{sum_hour, jdbcType=NUMERIC},
+		   sum_integral = #{sum_integral, jdbcType=NUMERIC},
+		   description = #{description, jdbcType=VARCHAR},
+		   rule_id = #{rule_id, jdbcType=NUMERIC},
+		   update_user = #{update_user, jdbcType=NUMERIC},
+		   grade_id = #{grade_id, jdbcType=NUMERIC},
+		   status = #{status, jdbcType=NUMERIC},
+		   update_time = #{update_time, jdbcType=VARCHAR}
+		WHERE id = #{id}
+	</update>
+
+	<update id="changePrivilegeCriteriaStatus" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin" close="; end;" separator=";">
+            UPDATE tab_privilege_criteria
+            <set>
+                status = #{item.status, jdbcType=NUMERIC},
+                update_user = #{item.update_user, jdbcType=NUMERIC},
+		  		update_time = #{item.update_time, jdbcType=VARCHAR}
+            </set>
+               WHERE id = #{item.id}
+       </foreach>
+	</update>
+
+	<update id="deleteByIds" parameterType="java.util.List">
+            UPDATE tab_privilege_criteria SET STATUS = '0' WHERE ID IN
+            <foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+			</foreach>
+	</update>
+
+	<select id="queryRuleIfBind" parameterType="long" resultType="int">
+		select count(*) from tab_privilege_criteria where rule_id=#{ruleId}
+	</select>
+
+    <select id="queryRuleIdById" parameterType="long" resultType="long">
+        select rule_id from tab_privilege_criteria where id = #{id}
+	</select>
+</mapper>

@@ -729,16 +729,6 @@
 							"href": "templates/erp/orders/ordersMgrPrivilegeCriteria.html"
 						},
 						{
-							"index": "A3000403",
-							"name": "活动图片",
-							"key": "ordersActivityBanner",
-							"icon": "fa fa-bars",
-							"type": "$state",
-							"value": "ordersActivityBanner",
-							"path": "/orders/ordersMgr/ordersActivityBanner",
-							"href": "templates/erp/orders/ordersActivityBanner.html"
-						},
-						{
 							"index": "A3000404",
 							"name": "优惠券",
 							"key": "ordersMgrCoupon",

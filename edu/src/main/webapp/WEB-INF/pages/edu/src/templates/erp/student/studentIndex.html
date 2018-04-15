@@ -25,10 +25,6 @@
           <span class="mr20">
             <i class="iconfont icon-Mobile_phone text-primary"></i>
               {{ student.phone ? student.relation_name +  '：' + student.phone : '手机号为空'}}
-              <span ng-if="student.phone">
-                 <a ng-if='!student.phone_verify || student.phone_verify != 1' href="javascript:void(0)" ng-click="showVerifyPhone()">短信验证</a>
-                 <span ng-if='student.phone_verify && student.phone_verify == 1' style="color:#1b8cf2">已验证</span>
-              </span>
           </span>
           <span class="mr20">{{'推荐人：' + (student.referrals?student.referrals:'无')}}</span>
           <span class="edit cur mr20" ui-sref="studentMgrBasicInfo">
