@@ -56,6 +56,7 @@
 		       a.status,
 		       a.photo,
 		       a.sex,
+		       a.teacher_type,
 		       a.create_time,
 		       a.update_time,
 		       a.description,
@@ -74,17 +75,18 @@
 	<select id="queryOne" parameterType="java.lang.Long"
 		resultType="com.edu.erp.model.Teacher">
 		select a.id,
-		a.encoding,
-		a.teacher_name,
-		a.status,
-		a.photo,
-		a.sex,
-		a.create_time,
-		a.update_time,
-		a.description,
-		a.phone phone,
-		b.id employee_id,
-		b.employee_name
+				a.encoding,
+				a.teacher_name,
+				a.status,
+				a.photo,
+				a.sex,
+				a.teacher_type,
+				a.create_time,
+				a.update_time,
+				a.description,
+				a.phone phone,
+				b.id employee_id,
+				b.employee_name
 		from tab_teacher_info a
 		left join tab_employee_info b
 		on a.employee_id = b.id
@@ -99,6 +101,7 @@
 				a.status,
 				a.photo,
 				a.sex,
+				a.teacher_type,
 				a.email,
 				a.create_time,
 				a.create_user,
@@ -139,13 +142,13 @@
 		</if>
 		<if test="search_info != null and search_info != ''">
 			and (
-				c.encoding like '%' || #{search_info} || '%' 
+				c.encoding like concat('%', #{search_info}, '%')
 				or
-				c.employee_name like '%' || #{search_info} || '%'
-				or
-				a.encoding like '%' || #{search_info} || '%'
-				or
-				a.teacher_name like '%' || #{search_info} || '%'
+				c.employee_name like concat('%', #{search_info}, '%')
+			or
+				a.encoding like concat('%', #{search_info}, '%')
+			or
+				a.teacher_name like concat('%', #{search_info}, '%')
 			)
 		</if>
 		<if test="status != null and status != ''">
@@ -177,6 +180,7 @@
 				a.status,
 				a.photo,
 				a.sex,
+				a.teacher_type,
 				a.email,
 				a.create_time,
 				a.create_user,

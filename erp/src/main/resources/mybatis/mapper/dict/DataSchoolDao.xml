@@ -152,8 +152,8 @@
 			id = #{id}
 	</update>
 	<update id="changeStatus" parameterType="java.util.Map" >
-		update tab_data_school t
-		set t.status = ${status} 
-		where t.id in (${ids})
+		update tab_data_school
+		set status = ${status}
+		where id in (${ids})
 	</update>	
 </mapper>

@@ -4,6 +4,10 @@
       <span class="title">教师列表</span>
     </div>
     <div class="panel-body">
+      <div class="toolbar">
+        <button type="button" class="btn btn-primary btn-circle" ng-click="showTeacherInputModal()"><i class="iconfont icon-add"></i> 添加</button>
+      </div>
+      <hr>
       <div class="searchbar">
         <form class="form-inline">
           <div class="form-group">
@@ -42,7 +46,7 @@
             <input type="checkbox" ng-model="teacher.selectFlag">
           </th>
           <td style="padding-right:0;padding-left:0;">
-            <a href="javascript:void(0)" ng-click="shopUpdateModal(teacher)">修改</a>
+            <a href="javascript:void(0)" ng-click="showTeacherInputModal(teacher)">修改</a>
             <span><a href="javascript:void(0)" ng-click="showUploadModal(teacher)">　上传头像　</a></span>
           </td>
           <td>
@@ -68,7 +72,7 @@
   <!--修改弹出框-->
   <script type="text/ng-template" id="updateTeacherModalInstance.html">
     <rd-modal>
-      <rd-modal-title>教师修改</rd-modal-title>
+      <rd-modal-title>{{opType=="add"? "添加":"修改"}}教师信息</rd-modal-title>
       <rd-modal-body>
         <div class="panel panel-primary" style="margin-bottom: 10px;">
           <div class="panel-body" style="margin-left:-8%;">

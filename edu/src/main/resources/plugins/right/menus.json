@@ -102,132 +102,6 @@
 							"method": "POST"
 						}
 					]
-				},
-				{
-					"index": "A20003",
-					"name": "教研组",
-					"key": "teacherGroup",
-					"icon": "iconfont icon-teachers_groups",
-					"type": "$state",
-					"value": "teacherGroup",
-					"path": "/teachers/teacherGroup",
-					"href": "templates/erp/tearchers/teacherGroup.html",
-					"services": [
-						{
-							"name": "教研组查询",
-							"key": "teacherGroup.query",
-							"url": "/erp/teachergroup/service",
-							"method": "GET"
-						},
-						{
-							"name": "教研组添加",
-							"key": "teacherGroup.post",
-							"url": "/erp/teachergroup/service",
-							"method": "POST"
-						},
-						{
-							"name": "教研组修改",
-							"key": "teacherGroup.put",
-							"url": "/erp/teachergroup/service",
-							"method": "PUT"
-						},
-						{
-							"name": "教研组删除",
-							"key": "teacherGroup.delete",
-							"url": "/erp/teachergroup/service",
-							"method": "DELETE"
-						},
-						{
-							"name": "教师查询",
-							"key": "teacherGroup.queryTeacher",
-							"url": "/erp/teacherservice/service",
-							"method": "GET"
-						},
-						{
-							"name": "员工查询",
-							"key": "teacherGroup.queryEmployee",
-							"url": "/erp/employee/service",
-							"method": "GET"
-						}
-					]
-				},
-				{
-					"index": "A20004",
-					"name": "教师录入",
-					"key": "newTeacher",
-					"icon": "iconfont icon-teachers_typeIn",
-					"type": "$state",
-					"value": "newTeacher",
-					"path": "/teachers/newTeacher",
-					"href": "templates/erp/tearchers/newTeacher.html",
-					"services": [
-						{
-							"name": "老师添加",
-							"key": "newTeacher.post",
-							"url": "/erp/teacherservice/service",
-							"method": "POST"
-						},
-						{
-							"name": "员工查询",
-							"key": "newTeacher.queryEmployee",
-							"url": "/hrm/employee/employeeservice/page",
-							"method": "GET"
-						},
-						{
-							"name": "科目查询",
-							"key": "newTeacher.querySubject",
-							"url": "/erp/dictionary/subject/service",
-							"method": "GET"
-						}
-					]
-				},
-				{
-					"index": "A20005",
-					"name": "考勤教师组",
-					"key": "attendanceGroup",
-					"icon": "iconfont icon-teachers_checking-in",
-					"type": "$state",
-					"value": "attendanceGroup",
-					"path": "/teachers/attendanceGroup",
-					"href": "templates/erp/tearchers/attendanceGroup.html",
-					"services": [
-						{
-							"name": "老师组查询",
-							"key": "attendanceGroup.query",
-							"url": "/erp/attendancegroup/service",
-							"method": "GET"
-						},
-						{
-							"name": "老师组添加",
-							"key": "attendanceGroup.post",
-							"url": "/erp/attendancegroup/service",
-							"method": "POST"
-						},
-						{
-							"name": "老师组修改",
-							"key": "attendanceGroup.put",
-							"url": "/erp/attendancegroup/service",
-							"method": "PUT"
-						},
-						{
-							"name": "老师组删除",
-							"key": "attendanceGroup.delete",
-							"url": "/erp/attendancegroup/service",
-							"method": "DELETE"
-						},
-						{
-							"name": "老师查询",
-							"key": "attendanceGroup.queryTeacher",
-							"url": "/erp/teacherservice/service",
-							"method": "DELETE"
-						},
-						{
-							"name": "校区查询",
-							"key": "attendanceGroup.queryBranchs",
-							"url": "/erp/dictionary/organization/branchs",
-							"method": "GET"
-						}
-					]
 				}
 			]
 		},
@@ -2215,6 +2089,47 @@
 									"name": "全日制学校变更",
 									"key": "systemsDataSchoolCompany.status",
 									"url": "/erp/common/dataschool/status",
+									"method": "GET"
+								}
+							]
+						},{
+							"index": "A5000308",
+							"name": "合作机构",
+							"key": "systemsCoopOrg",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsCoopOrg",
+							"href": "templates/erp/dict/coopOrg.html",
+							"path": "/systems/systemsBaseDict/systemsCoopOrg",
+							"services": [
+								{
+									"name": "查询合作机构",
+									"key": "systemsCoopOrg.query",
+									"url": "/erp/common/coopOrg/service",
+									"method": "GET"
+								},
+								{
+									"name": "新增合作机构",
+									"key": "systemsCoopOrg.add",
+									"url": "/erp/common/coopOrg/service",
+									"method": "POST"
+								},
+								{
+									"name": "修改合作机构",
+									"key": "systemsCoopOrg.put",
+									"url": "/erp/common/coopOrg/service",
+									"method": "PUT"
+								},
+								{
+									"name": "删除合作机构",
+									"key": "systemsCoopOrg.delete",
+									"url": "/erp/common/coopOrg/service",
+									"method": "DELETE"
+								},
+								{
+									"name": "合作机构变更",
+									"key": "systemsCoopOrg.changeStatus",
+									"url": "/erp/common/coopOrg/changeStatus",
 									"method": "GET"
 								}
 							]

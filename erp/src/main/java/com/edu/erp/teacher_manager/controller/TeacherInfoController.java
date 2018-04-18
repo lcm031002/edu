@@ -248,14 +248,10 @@ public class TeacherInfoController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = {"/service"}, method = RequestMethod.POST, headers = {"Accept=application/json"})
-    public Map<String, Object> toAdd(@RequestBody() Teacher teacher,
+    public Map<String, Object> toAdd(@RequestBody Teacher teacher,
                                      HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            Account account = WebContextUtils.genUser(request);
-            if (account != null) {
-                teacher.setCreate_user(account.getId());
-            }
             Map<String, Object> param = new HashMap<String, Object>();
             Set subjectNames = new HashSet();
             for (String team : teacher.getTeam().split("[,，]")) {
@@ -272,6 +268,8 @@ public class TeacherInfoController extends BaseController {
                     throw new Exception("所选城市没有" + subjectName + "科目，请重新选择！");
                 }
             }
+
+            this.setDefaultValue(request, teacher, false);
             List<TeacherSubject> teacherSubjectList = null;
             if (StringUtils.isNotEmpty(teacher.getSubject())) {
                 teacherSubjectList = new ArrayList<TeacherSubject>();
@@ -297,13 +295,12 @@ public class TeacherInfoController extends BaseController {
                 }
             }
             OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
-            Assert.notNull(orgModel.getCityId(), "city_id不能为空");
             teacher.setCity_id(orgModel.getCityId());
             this.teacherInfoService.toAdd(teacher, teacherSubjectList, teacherTeamRelList);
             resultMap.put("error", false);
             resultMap.put("data", teacher);
         } catch (Exception e) {
-            System.err.println(e);
+            log.error(e);
             resultMap.put("error", true);
             resultMap.put("message", "保存失败！see:" + e.getMessage());
         }
@@ -322,7 +319,6 @@ public class TeacherInfoController extends BaseController {
             @RequestBody() Teacher teacher, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-
             Assert.hasText(teacher.getEncoding(), "教师编码必填");
             Assert.hasText(teacher.getTeacher_name(), "教师姓名必填");
             Assert.notNull(teacher.getEmployee_id(), "关联员工必填");
@@ -344,6 +340,8 @@ public class TeacherInfoController extends BaseController {
                     throw new Exception("所选城市没有" + subjectName + "科目，请重新选择！");
                 }
             }
+
+            this.setDefaultValue(request, teacher, true);
             List<TeacherSubject> teacherSubjectList = null;
             if (StringUtils.isNotEmpty(teacher.getSubject())) {
                 teacherSubjectList = new ArrayList<TeacherSubject>();
@@ -369,14 +367,13 @@ public class TeacherInfoController extends BaseController {
                     teacherTeamRelList.add(teacherTeamRel);
                 }
             }
-            Account account = WebContextUtils.genUser(request);
-            teacher.setUpdate_user(account.getId());
+
             OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
             teacher.setCity_id(orgModel.getCityId());
             teacherInfoService.toUpdate(teacher, teacherSubjectList, teacherTeamRelList);
             resultMap.put("error", false);
         } catch (Exception e) {
-            System.err.println(e);
+            log.error(e);
             resultMap.put("error", true);
             resultMap.put("message", "修改失败！see:" + e.getMessage());
         }

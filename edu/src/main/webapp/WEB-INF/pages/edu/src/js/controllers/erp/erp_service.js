@@ -543,6 +543,12 @@ angular.module('ework-ui').factory('erp_RoleService',
 angular.module('ework-ui').factory('erp_AccountService',
     [ '$resource', erp_AccountService ]);
 
+/**
+ * 合作机构服务
+ */
+angular.module('ework-ui').factory('erp_CoopOrgService',
+    [ '$resource', erp_CoopOrgService ]);
+
 
 function erp_orderChangeService($resource){
     return $resource('/erp/ordermanager/service', {}, {
@@ -3647,6 +3653,49 @@ function erp_AccountService($resource){
         removeAccountRoleById : {
             url : '/erp/hrmSystemSettings/hrmAccountMgr/removeAccountRoleById',
             method : 'DELETE',
+            params : {},
+            isArray : false
+        }
+    });
+}
+
+/**
+ * 合作机构服务
+ * @param $resource
+ * @returns {*}
+ * @constructor
+ */
+function erp_CoopOrgService($resource){
+    return $resource('/erp/common/coopOrg/service', {}, {
+        queryPage : {
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        queryList : {
+        	url : '/erp/common/coopOrg/list',
+            method : 'GET',
+            params : {},
+            isArray : false
+        },
+        add : {
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        update:{
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        delete:{
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        changeStatus:{
+            url : '/erp/common/coopOrg/changeStatus',
+            method : 'PUT',
             params : {},
             isArray : false
         }

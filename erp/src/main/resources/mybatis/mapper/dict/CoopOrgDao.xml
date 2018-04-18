@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.CoopOrgDao">
+
+	<select id="selectForPage" resultType="com.edu.erp.model.CoopOrg" parameterType="map">
+		select a.id,
+				a.coop_org_name as coopOrgName,
+				a.org_city_id as city_id,
+				a.status,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time,
+				c_emp.employee_name as create_user_name,
+				u_emp.employee_name as update_user_name
+	  		from tab_coop_org a
+	  		<!-- 新增用户-->
+			left join tab_user_info c_user on a.create_user = c_user.id
+			left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+			<!-- 修改用户-->
+			left join tab_user_info u_user on a.update_user = u_user.id
+			left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+	  	where a.status != 0
+	  	  and a.org_city_id = #{city_id}
+	  	<if test="coopOrgName != null and coopOrgName != ''">
+	  		and a.coop_org_name like concat('%', #{coopOrgName}, '%')
+	  	</if>	
+	  	order by a.update_time DESC, a.id DESC
+	</select>
+
+	<select id="selectList" parameterType="map" resultType="com.edu.erp.model.CoopOrg">
+		select a.id,
+				a.coop_org_name as coopOrgName,
+				a.description,
+				a.org_city_id as city_id,
+				a.status,
+				a.create_user,
+				a.create_time,
+				a.update_user,
+				a.update_time,
+				c_emp.employee_name as create_user_name,
+				u_emp.employee_name as update_user_name
+		from tab_coop_org a
+		<!-- 新增用户-->
+		left join tab_user_info c_user on a.create_user = c_user.id
+		left join tab_employee_info c_emp on c_user.employee_id = c_emp.id
+		<!-- 修改用户-->
+		left join tab_user_info u_user on a.update_user = u_user.id
+		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
+		where a.status != 0
+		and a.org_city_id = #{city_id}
+		<if test="coopOrgName != null and coopOrgName != ''">
+			and a.coop_org_name like concat('%', #{coopOrgName}, '%')
+		</if>
+		order by a.update_time DESC, a.id DESC
+	</select>
+
+	<insert id="insert" parameterType="com.edu.erp.model.CoopOrg" useGeneratedKeys="true" keyProperty="id">
+		insert into tab_coop_org
+		(
+			coop_org_name,
+			description,
+			org_city_id,
+			status,
+        	create_user, 
+        	create_time
+		)
+		VALUES
+		(
+			#{coopOrgName,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{city_id,jdbcType=NUMERIC},
+			#{status,jdbcType=NUMERIC},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.edu.erp.model.CoopOrg">
+		update tab_coop_org
+		set
+			coop_org_name=#{coopOrgName,jdbcType=VARCHAR},
+			description=#{description,jdbcType=VARCHAR},
+			update_user=#{update_user,jdbcType=NUMERIC},
+			update_time=#{update_time,jdbcType=TIMESTAMP}
+		where 
+			id = #{id}
+	</update>
+	<update id="changeStatus" parameterType="java.util.Map" >
+		update tab_coop_org
+		set status = ${status}
+		where id in (${ids})
+	</update>	
+</mapper>

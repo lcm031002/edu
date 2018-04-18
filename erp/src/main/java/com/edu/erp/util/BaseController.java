@@ -152,7 +152,7 @@ public class BaseController {
             }
             po.setCreate_user(account.getId());
             po.setCreate_time(new Date());
-            if (orgModel.getCityId() == null) {
+            if (po.getCity_id() == null) {
                 po.setCity_id(orgModel.getCityId());
             }
         }

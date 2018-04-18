@@ -392,7 +392,8 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/erp/common/device.js"  ></script>
 <script type="text/javascript" src="js/controllers/erp/common/arranger.js"  ></script>
 <script type="text/javascript" src="js/controllers/erp/common/arranger_edit.js"  ></script>
- <script type="text/javascript" src="js/controllers/erp/common/data_company_account.js"></script>
+<script type="text/javascript" src="js/controllers/erp/common/data_company_account.js"></script>
+<script type="text/javascript" src="js/controllers/erp/dict/coopOrg.js"  ></script>
 
 <!-- 系统 -->
 <script type="text/javascript" src="js/controllers/erp/sysmgr/notice.js"     desc="通知管理"></script>

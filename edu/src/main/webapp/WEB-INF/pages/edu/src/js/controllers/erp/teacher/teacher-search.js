@@ -181,10 +181,16 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
       })
     };
 
+    $scope.opType = 'add';
     // 修改教师弹出框
-    $scope.shopUpdateModal = function(teacher) {
+    $scope.showTeacherInputModal = function(teacher) {
+      if (teacher) {
+        $scope.opType = 'modify';
+      }
       var updateTeacher = {};
-      angular.copy(teacher, updateTeacher);
+      if (teacher) {
+          angular.copy(teacher, updateTeacher);
+      }
       var modalInstance = $uibModal
         .open({
           size: 'xlg',
@@ -214,7 +220,7 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
                   $scope.cityList = resp.data;
                   $scope.cityList.unshift({
                     cityId: -1,
-                    text: "-- 全部 --"
+                    cityName: "-- 全部 --"
                   });
               }
           });
@@ -406,13 +412,24 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
         if (team) {
             teacherForUpdate.team = team.join(",");
         }
-      erp_TeacherIndexService.put(teacherForUpdate, function(resp) {
-        if (!resp.error) {
-          $uibModalInstance.close("success");
+
+        if (teacherForUpdate.id) {
+            erp_TeacherIndexService.put(teacherForUpdate, function(resp) {
+                if (!resp.error) {
+                    $uibModalInstance.close("success");
+                } else {
+                    $uibMsgbox.error(resp.message);
+                }
+            });
         } else {
-          $uibMsgbox.error(resp.message);
+            erp_TeacherIndexService.post(teacherForUpdate, function(resp) {
+                if (!resp.error) {
+                    $uibModalInstance.close("success");
+                } else {
+                    $uibMsgbox.error(resp.message);
+                }
+            });
         }
-      });
     }
   };
 
@@ -425,25 +442,30 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
 
   $scope.initialize = function() {
     // 通过教师id查询教师关联的科目
-    erp_TeacherListService.querySubject({
-      teacherId: $scope.updateTeacher.id
-    }, function(resp) {
-      if (!resp.error) {
-        $scope.selSubjectList = resp.data;
-      } else {
-        $uibMsgbox.error(resp.message);
-      }
-    });
+    if ($scope.updateTeacher && $scope.updateTeacher.id) {
+        erp_TeacherListService.querySubject({
+            teacherId: $scope.updateTeacher.id
+        }, function(resp) {
+            if (!resp.error) {
+                $scope.selSubjectList = resp.data;
+            } else {
+                $uibMsgbox.error(resp.message);
+            }
+        });
+    }
+
     //通过教师id查询教师关联的城市
-    erp_TeacherListService.queryTeam({
-      teacherId: $scope.updateTeacher.id
-    }, function (resp) {
-      if (!resp.error) {
-        $scope.selTeamList = resp.data;
-      } else {
-        $uibMsgbox.error(resp.message);
-      }
-    });
+    if ($scope.updateTeacher && $scope.updateTeacher.id) {
+        erp_TeacherListService.queryTeam({
+            teacherId: $scope.updateTeacher.id
+        }, function (resp) {
+            if (!resp.error) {
+                $scope.selTeamList = resp.data;
+            } else {
+                $uibMsgbox.error(resp.message);
+            }
+        });
+    }
 
     erp_TeacherIndexService.toManage({}, function(resp) {
       if (!resp.error) {
