@@ -66,7 +66,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 
 	@Resource(name = "studentRelService")
 	private StudentRelService studentRelService;
-	
+
 	@Resource(name = "studentContactService")
 	private StudentContactService studentContactService;
 

@@ -52,7 +52,7 @@
             <dt>姓名：</dt>
             <dd>
                 <div class="width-200 fl">{{student.student_name}}</div>
-                <span class="text-primary cur ml10" ng-click="showNameRecordModal(student.id)">姓名修改记录</span>
+                <!-- <span class="text-primary cur ml10" ng-click="showNameRecordModal(student.id)">姓名修改记录</span>-->
             </dd>
             <dt>性别：</dt>
             <dd>{{student.sex_name}}</dd>
@@ -67,7 +67,7 @@
             <dt>学习状态：</dt>
             <dd>
                 <select ng-disabled="true" ng-model="student.student_status" ng-options="student_status.code as student_status.name for student_status in StudentStatusList"></select>
-                <span class="text-primary cur ml10" style="padding-left: 113px" ng-click="showStatusRecordModal(student.id)">状态修改记录</span>
+                <!--<span class="text-primary cur ml10" style="padding-left: 113px" ng-click="showStatusRecordModal(student.id)">状态修改记录</span> -->
             </dd>
             <dt>推荐人：</dt>
             <dd>{{student.referrals?student.referrals:'无'}}</dd>
@@ -79,8 +79,8 @@
             <dd>{{student.email || '未填写'}}</dd>
             <dt>QQ：</dt>
             <dd>{{student.qq || '未填写'}}</dd>
-            <dt>同步双师状态：</dt>
-            <dd>{{student.syn_exception||'未同步'}}</dd>
+            <!--<dt>同步双师状态：</dt>
+            <dd>{{student.syn_exception||'未同步'}}</dd> -->
         </dl>
         <div class="form detail-info modify-detail" ng-show="disModifyDetail">
             <dl class="dl-horizontal">

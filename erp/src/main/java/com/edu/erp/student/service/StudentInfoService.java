@@ -116,7 +116,7 @@ public interface StudentInfoService {
 	Integer insertStudentRel(Map<String, Object> paramMap) throws Exception;
 
 	void delStudentRel(Long id) throws Exception;
-	
+
 	void toAdd(StudentInfo studentInfo, HttpServletRequest request) throws Exception;
 
 	/**

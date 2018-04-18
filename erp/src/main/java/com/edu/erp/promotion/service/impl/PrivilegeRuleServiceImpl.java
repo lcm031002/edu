@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.edu.common.util.ERPConstants;
+import com.edu.erp.model.*;
+import com.edu.erp.student.service.StudentRelService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -24,18 +26,9 @@ import org.springframework.util.CollectionUtils;
 
 import com.edu.common.util.DateUtil;
 import com.edu.erp.dao.PrivilegeRuleDao;
-import com.edu.erp.model.BaseObject;
-import com.edu.erp.model.PrivilegeCriteria;
-import com.edu.erp.model.PrivilegeRule;
-import com.edu.erp.model.StudentInfo;
-import com.edu.erp.model.StudentIntegral;
-import com.edu.erp.model.StudentRel;
-import com.edu.erp.model.TabOrderInfo;
-import com.edu.erp.model.TabOrderInfoDetail;
 import com.edu.erp.orders.service.OrderInfoService;
 import com.edu.erp.promotion.service.PrivilegeRuleService;
 import com.edu.erp.student.service.StudentInfoService;
-import com.edu.erp.student.service.StudentRelService;
 import com.edu.erp.util.PromotionUtils;
 import com.github.pagehelper.Page;
 

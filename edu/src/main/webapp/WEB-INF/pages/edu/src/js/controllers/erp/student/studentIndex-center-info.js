@@ -632,7 +632,7 @@ function erp_studentCenterInfoController(
     }
 
     $scope.queryStudentStatus = function() {
-        erp_dictService.getDictData({ "typeCode": "studentStatus", "needProductLineCdtn": "Y" }, function(resp) {
+        erp_dictService.getDictData({ "typeCode": "studentStatus", "needProductLineCdtn": "N" }, function(resp) {
             if (!resp.error) {
                 $scope.StudentStatusList = resp.data;
                 if ($scope.StudentStatusList && $scope.StudentStatusList.length > 0) {

@@ -154,7 +154,7 @@
 								AND (tsi.student_name = #{searchInfo} or tsi.encoding = #{searchInfo} or tsi.phone = #{searchInfo})
 							</if>
 							<if test="searchType != '1' and searchType != 1">
-								and (tsi.student_name like '%'||#{searchInfo}||'%' or tsi.encoding like '%'||#{searchInfo}||'%' or tsi.id like '%'||#{searchInfo}||'%' or tsi.phone like '%'||#{searchInfo}||'%')
+								and (tsi.student_name like  concat('%',#{searchInfo},'%') or tsi.encoding like concat('%',#{searchInfo},'%') or tsi.id like concat('%',#{searchInfo},'%') or tsi.phone like concat('%',#{searchInfo},'%') )
 							</if>
 							union
 							select tsi.*
@@ -166,7 +166,7 @@
 								and toi.encoding = #{searchInfo}
 							</if>
 							<if test="searchType != '1' and searchType != 1">
-								and toi.encoding like #{searchInfo}||'%'
+								and toi.encoding like concat(#{searchInfo},'%')
 							</if>) a
 				left join 	tab_organization_info b on a.city_id = b.id and b.status = 1
 				left join 	tab_organization_info c on a.branch_id = c.id and c.status = 1
@@ -175,7 +175,7 @@
 				left join 	tab_data_grade d on a.grade_id = d.id and d.status = 1
 				left join 	tab_data_school e on a.attend_school_id = e.id
 				left join STUDENT_REL srel on srel.student_id_new = a.id
-        left join tab_student_info a2 on srel.student_id_old = a2.id
+                left join tab_student_info a2 on srel.student_id_old = a2.id
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
 				ON TSCI.STUDENT_ID = a.ID
 				AND TSCI.COUNSELOR_TYPE = 1
@@ -552,8 +552,6 @@
 					grade_id 		= #{grade_id, 		jdbcType=NUMERIC},
 					attend_school_id= #{attend_school_id, jdbcType=NUMERIC},
 					city_id			= #{city_id, 		jdbcType=NUMERIC},
-					r_city			= #{r_city, 		jdbcType=NUMERIC},
-					code			= #{code, 			jdbcType=VARCHAR},
 					phone_verify	= #{phone_verify, 	jdbcType=NUMERIC},
 					update_user		= #{update_user, 	jdbcType=NUMERIC},
 					update_time 	= #{update_time, 	jdbcType=VARCHAR},
@@ -725,7 +723,7 @@
 		       tcou.end_date,
 		       toco.course_total_count,
 		       toco.course_surplus_count,
-		       nvl(toco.course_total_count, 0) - nvl(toco.course_surplus_count, 0) as course_used_count,
+		       ifnull(toco.course_total_count, 0) - ifnull(toco.course_surplus_count, 0) as course_used_count,
 		       tsci.id as counselor_id
 		  from t_order tord
 		  left join t_order_course toco on tord.id = toco.order_id
@@ -733,14 +731,14 @@
 		  left join tab_student_counselor_info tsci on tord.student_id = tsci.student_id 
            and tsci.counselor_type = 2
            and tsci.is_valid != 0
-           and to_date(tsci.start_date, 'yyyy-mm-dd') &lt;= trunc(sysdate)
-           and to_date(tsci.end_date, 'yyyy-mm-dd') &gt;= trunc(sysdate)
+		   AND date_format(tsci.start_date, '%Y-%m-%d') &lt;= date_format(sysdate(), '%Y-%m-%d')
+		   AND date_format(tsci.end_date, '%Y-%m-%d') >= date_format(sysdate(), '%Y-%m-%d')
 		 where tord.order_status = 1
 		   and (toco.status != 2 or toco.status is null)
 		   and tord.business_type = #{businessType}
 		   and tord.student_id = #{studentId}
 		<if test="searcherName != null and searcherName != ''">
-		   and (tord.order_no like '%${seacherName}%' or tcou.course_no like '%${seacherName}%' or tcou.course_name like '%${seacherName}%')
+		   and (tord.order_no like  concat('%',${seacherName},'%') or tcou.course_no like concat('%',${seacherName},'%') or tcou.course_name like concat('%',${seacherName},'%'))
 		</if>
 		order by tord.order_no desc
 	</select>
@@ -971,13 +969,8 @@
 	</insert>
 	
 	<insert id="insertStudentRel" parameterType="map">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-			order="AFTER">
-			SELECT SEQ_STUDENT_REL.currval AS id from dual
-		</selectKey>
 		INSERT INTO STUDENT_REL
 		(
-			ID,
 			STUDENT_ID_NEW,
 			STUDENT_ID_OLD,
 			NEW_USED,
@@ -985,7 +978,6 @@
 		)
 		VAlUES
 		(
-		SEQ_STUDENT_REL.nextval,
 		#{STUDENT_ID_NEW, jdbcType=NUMERIC},
 		#{STUDENT_ID_OLD, jdbcType=NUMERIC},
 		#{NEW_USED, jdbcType=NUMERIC},
@@ -995,7 +987,7 @@
 	<delete id="delStudentRel">
 		delete from STUDENT_REL where STUDENT_ID_NEW = #{id,jdbcType=NUMERIC}
 	</delete>
-	
+
 	<update id="modifyPhoto" parameterType="map">
 		update tab_student_info set head_pic=#{head_pic} where id=#{id}
 	</update>
@@ -1013,7 +1005,6 @@
 	<insert id="insertNewReferenceStudent" parameterType="com.edu.erp.model.ReferenceStudent">
 		INSERT INTO tab_reference_ht
 		(
-			ID,
 			STUDENT_ID,
 			REFERENCE_STUDENT_ID,
 			CREATE_TIME,
@@ -1021,7 +1012,6 @@
 		)
 		VAlUES
 		(
-		SEQ_tab_reference_ht.nextval,
 		#{student_id, jdbcType=NUMERIC},
 		#{reference_student_id, jdbcType=NUMERIC},
 		#{create_time, jdbcType=TIMESTAMP},
@@ -1131,18 +1121,18 @@
 	</select>
 
 	<insert id="saveStudentNameRecord" parameterType="com.edu.erp.model.StudentNameReviseNote">
-		insert into STUDENT_UPDATE_RECORD (id,changeid,originalname,changename,upuserid,updatetime,recordtype)
-		VALUES (SEQ_STUDENT_UPDATE_RECORD.nextval,#{studentId},#{originalStudentName},#{studentName},#{operatorId},#{updateTime},0)
+		insert into STUDENT_UPDATE_RECORD (changeid,originalname,changename,upuserid,updatetime,recordtype)
+		VALUES (#{studentId},#{originalStudentName},#{studentName},#{operatorId},#{updateTime},0)
 	</insert>
 
 	<insert id="saveStudentGradeRecord" parameterType="com.edu.erp.model.StudentGradeReviseNote">
-		insert into STUDENT_UPDATE_RECORD (id,changeid,originalname,changename,upuserid,updatetime,recordtype)
-		VALUES (SEQ_STUDENT_UPDATE_RECORD.nextval,#{studentId},#{originalStudentGrade},#{studentGrade},#{operatorId},#{updateTime},1)
+		insert into STUDENT_UPDATE_RECORD (changeid,originalname,changename,upuserid,updatetime,recordtype)
+		VALUES (#{studentId},#{originalStudentGrade},#{studentGrade},#{operatorId},#{updateTime},1)
 	</insert>
 
 	<insert id="saveStudentStatusInfo" parameterType="com.edu.erp.model.StudentStatusInfo">
-        insert into tab_student_status (id,student_id,student_status,bu_id,update_time,update_user)
-        VALUES (seq_student_status_info.nextval,#{studentId},#{status},#{buId},#{updateTime},#{updateUserId})
+        insert into tab_student_status (student_id,student_status,bu_id,update_time,update_user)
+        VALUES (#{studentId},#{status},#{buId},#{updateTime},#{updateUserId})
 	</insert>
 
 	<update id="updateStudentStatus" parameterType="com.edu.erp.model.StudentStatusInfo">
