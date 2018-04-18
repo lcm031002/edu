@@ -53,8 +53,7 @@ public class EncodingSequenceUtil {
                         .genSequenceByInvoicesType(invoicesType);
                 String sequenceNum = null;
 
-                sequenceNum = fromatSequence(String.valueOf(sequence
-                        .getSequence()));
+                sequenceNum = fromatSequence(String.valueOf(sequence.getSequence()));
 
                 String DATA_STR = DateUtil.getCurrDate("yyyyMMdd");
 
@@ -161,7 +160,6 @@ public class EncodingSequenceUtil {
                 /*invoicesSequenceService
                         .updateInvoicesSequenceByInvoicesType(invoicesType);*/
                 PREFIX += "_";
-                System.out.println(PREFIX + DATA_STR + sequenceNum);
                 return PREFIX + DATA_STR + sequenceNum;
             } catch (Exception e) {
                 e.printStackTrace();

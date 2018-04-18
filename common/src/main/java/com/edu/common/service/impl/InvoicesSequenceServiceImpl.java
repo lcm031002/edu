@@ -25,17 +25,15 @@ public class InvoicesSequenceServiceImpl implements InvoicesSequenceService {
     public InvoicesSequence genSequenceByInvoicesType(Long invoicesType)
             throws Exception {
         try {
-
-            InvoicesSequence invoicesSequence = new InvoicesSequence();
-            invoicesSequence.setInvoices_type(invoicesType);
-            invoicesSequenceDao.selectSeq(invoicesSequence);
-            if (invoicesSequence == null || "".equals(invoicesSequence) || "null".equals(invoicesSequence)) {
+            InvoicesSequence invoicesSequence = invoicesSequenceDao.selectSeq(invoicesType);
+            if (invoicesSequence == null) {
                 invoicesSequence = new InvoicesSequence();
                 invoicesSequence.setInvoices_type(invoicesType);
                 invoicesSequence.setSequence(1L);
                 int count = invoicesSequenceDao.insert(invoicesSequence);
                 return count > 0 ? invoicesSequence : null;
             } else {
+                invoicesSequenceDao.updateSeq(invoicesSequence);
                 return invoicesSequence;
             }
         } catch (Exception e) {

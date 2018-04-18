@@ -17,7 +17,9 @@ public interface InvoicesSequenceDao {
      */
     InvoicesSequence querySequenceByInvoicesType(Long invoicesType) throws Exception;
 
-    void selectSeq(InvoicesSequence seqParam) throws Exception;
+    InvoicesSequence selectSeq(Long invoiceType) throws Exception;
+
+    void updateSeq(InvoicesSequence invoicesSequence);
 
     int insert(InvoicesSequence invoicesSequence) throws Exception;
 

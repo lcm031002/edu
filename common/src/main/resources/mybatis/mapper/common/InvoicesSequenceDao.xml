@@ -9,17 +9,15 @@
 		SELECT * FROM tab_invoices_sequence t WHERE t.invoices_type = #{invoices_type}
 	</select>
 	
-	<parameterMap id="seqParam" type="com.edu.common.model.InvoicesSequence">
-		<parameter mode="IN" property="invoices_type"  javaType="long" jdbcType="NUMERIC"/>
-		<parameter mode="OUT" property="sequence" javaType="long" jdbcType="NUMERIC"/>
-	</parameterMap>
-	
-	<select id="selectSeq" statementType="CALLABLE" parameterMap="seqParam">
-		<![CDATA[
-			{call PKG_FOUND_SEQ.querySequenceByInvoicesType(?,?)}
-		]]>
+	<select id="selectSeq" parameterType="long" resultType="com.edu.common.model.InvoicesSequence">
+		SELECT t.sequence, t.id
+		FROM tab_invoices_sequence t
+		WHERE t.invoices_type = #{invoiceType,jdbcType=NUMERIC};
 	</select>
-	
+
+	<update id="updateSeq" parameterType="com.edu.common.model.InvoicesSequence">
+		update tab_invoices_sequence set sequence = #{sequence,jdbcType=NUMERIC} + 1 where id = #{id,jdbcType=NUMERIC}
+	</update>
 	
 	<!-- 如果未找到对应编号类型 则插入新编号类型 -->
 	<insert id="insert" parameterType="com.edu.common.model.InvoicesSequence">
@@ -36,8 +34,7 @@
 	<!-- 根据编号类型 修改 编号序列内容 -->
 	<update id="update" parameterType="com.edu.common.model.InvoicesSequence">
 		UPDATE 
-			tab_invoices_sequence 
-				
+			tab_invoices_sequence
 			<if test="invoices_type != null">
 				SET sequence = #{sequence} WHERE invoices_type = #{invoices_type} 
 			</if>

@@ -22,5 +22,5 @@
 	<import resource="spring-mybatis.xml"/>
 	<import resource="spring-transaction.xml"/>
 	<import resource="spring-rest.xml"/>
-	<!--<import resource="spring-task.xml"/>-->
+	<import resource="spring-task.xml"/>
 </beans>    
