@@ -6,7 +6,7 @@ angular.module('ework-ui').controller('erp_employeeListModalController', [
   '$uibModalInstance',
   'counselorType',
   'modalTitle',
-  'erp_employeeService',
+  'erp_employeeMgrService',
   erp_employeeListModalController
 ])
 
@@ -18,7 +18,7 @@ function erp_employeeListModalController(
   $uibModalInstance,
   counselorType,
   modalTitle,
-  erp_employeeService
+  erp_employeeMgrService
 ) {
   $scope.relationList = [];
   $scope.searchInfo = {
@@ -46,7 +46,7 @@ function erp_employeeListModalController(
   }
   $scope.getEmployeeList = function() {
     // var _modalInstance= $uibMsgbox.waiting('加载中，请稍候...');
-    erp_employeeService.query({
+      erp_employeeMgrService.query({
       currentPage: $scope.pageConf.currentPage,
       pageSize: $scope.pageConf.itemsPerPage,
       counselor_type: $scope.counselorType,

@@ -2325,16 +2325,6 @@
 					"href": "templates/erp/student/studentIndex-basicInfo.html"
 				},
 				{
-					"index": "A70004",
-					"name": "成绩档案",
-					"key": "studentMgrScore",
-					"icon": "iconfont icon-recruit_dispose",
-					"type": "$state",
-					"value": "studentMgrScore",
-					"path": "/studentMgr/studentMgrScore",
-					"href": "templates/erp/student/studentIndex-score.html"
-				},
-				{
 					"index": "A70005",
 					"name": "联系方式",
 					"key": "studentMgrContact",

@@ -320,8 +320,10 @@ public interface StudentAccountService {
 	/**
 	 * 新增修改历史
 	 */
-	
-	Integer addReChargeHis(Map<String, Object> His) throws Exception;
+
+	Integer addReChargeHis(Map<String, Object> accountRecharge) throws Exception;
+
+	Integer addAccountRecharge(Map<String, Object> accountRecharge) throws Exception;
 
 	/**
 	 * 修改POS机和转账卡号

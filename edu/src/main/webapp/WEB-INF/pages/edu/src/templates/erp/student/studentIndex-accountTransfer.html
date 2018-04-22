@@ -4,7 +4,7 @@
   <div class="form">
     <div class="panel panel-primary">
       <div class="panel-heading">
-        <span class="title">团队内互转</span>
+        <span class="title">学员互转</span>
       </div>
       <div class="panel-body ov-a">
         <div class="flex-box transfer-container">
@@ -30,11 +30,6 @@
                   <input class="form-control" type="text" ng-model="transfer_out_student.encoding" readonly="readonly"  />
                 </div>
                 <div class="divider"></div>
-                <div class="form-group">
-                  <span style="text-indent: 1em;display: inline-block;">账户类型：</span>
-                  <select class="form-control" ng-model="transfer_out_student.account_type"
-                  	ng-options="accountType.key as accountType.value for accountType in accountTypeOutList" ng-change="changeTransferType()"></select>
-                </div>
                 <div class="form-group">
                   转账前金额：<span>{{transfer_out_student.fee_amount}}.00元</span>
                 </div>
@@ -94,11 +89,6 @@
                   </div>
                 </div>
                 <div class="divider" style="height: 15px;"></div>
-                <div class="form-group">
-                  <span style="text-indent: 1em;display: inline-block;">账户类型：</span>
-                  <select class="form-control" ng-model="transfer_in_student.account_type"
-                  	ng-options="accountType.key as accountType.value for accountType in accountTypeInList" disabled></select>
-                </div>
                 <div class="form-group clearfix">
                   转账前金额：<span>{{transfer_in_student.fee_amount || 0}}.00元</span>
                 </div>

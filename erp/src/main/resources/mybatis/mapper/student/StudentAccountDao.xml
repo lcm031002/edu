@@ -666,7 +666,7 @@
 			left join 	t_account_recharge_info t6 		on t5.id = t6.dynamic_id
 			left join 	tp_pay_mode t7 					on t5.pay_mode = t7.id
 			left join	tab_organization_info t9		on t9.id = ifnull(t1.branch_id, t5.branch_id)
-			left join 	tab_user_info t_user			on t5.input_user = t_user.id 
+			left join 	tab_user_info t_user			on t5.create_user = t_user.id
 			left join 	tab_employee_info t_emp 		on t_user.employee_id = t_emp.id
 			left join 	t_encoder ten 					on ten.id = t1.encoder_id
             left join   t_order_change toc 				on toc.id = ten.busi_id and ten.busi_type = 5
@@ -840,7 +840,7 @@
 		1,
 		#{create_user,jdbcType=VARCHAR},
 		sysdate(),
-		1,
+		#{status,jdbcType=NUMERIC},
 		#{encoding,jdbcType=VARCHAR},
 		1
 		)

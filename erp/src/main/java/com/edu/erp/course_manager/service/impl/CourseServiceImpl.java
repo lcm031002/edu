@@ -465,7 +465,7 @@ public class CourseServiceImpl implements CourseService {
 		Assert.notNull(tCourse.getBusiness_type());
 		Assert.notNull(tCourse.getCity_id());
 		Assert.notNull(tCourse.getBranch_id());
-		Assert.notNull(tCourse.getSeason_id(),"课程季必填!");
+		//Assert.notNull(tCourse.getSeason_id(),"课程季必填!");
 		Assert.notNull(tCourse.getGrade_id(),"年级必填!");
 		Assert.notNull(tCourse.getSubject_id(),"科目必填!");
 		Assert.notNull(tCourse.getTeacher_id(),"教师必填!");

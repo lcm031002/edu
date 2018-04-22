@@ -78,7 +78,7 @@ function erp_studentAccountTransferController(
             		if (resp.data) {
                         $scope.accountOutputDetail = resp.data;
                         if ($scope.transfer_out_student.account_type && $scope.transfer_out_student.account_type == 1) {//储值账户
-                            $scope.transfer_out_student.fee_amount = resp.data.FEE_AMOUNT ? resp.data.FEE_AMOUNT : 0;
+                            $scope.transfer_out_student.fee_amount = resp.data.fee_amount ? resp.data.fee_amount : 0;
                         } else if ($scope.transfer_out_student.account_type && $scope.transfer_out_student.account_type == 2) {//冻结账户
                             $scope.transfer_out_student.fee_amount = resp.data.FROZEN_ACCOUNT ? resp.data.FROZEN_ACCOUNT : 0;
                         } else if ($scope.transfer_out_student.account_type && $scope.transfer_out_student.account_type == 3) {//冻结账户
@@ -92,7 +92,7 @@ function erp_studentAccountTransferController(
                         $scope.accountInputDetail = resp.data;
                         $scope.setTransInStuAccountType();
                         if ($scope.transfer_out_student.account_type && $scope.transfer_out_student.account_type == 1) {//储值账户
-                            $scope.transfer_in_student.fee_amount = resp.data.FEE_AMOUNT ? resp.data.FEE_AMOUNT : 0;
+                            $scope.transfer_in_student.fee_amount = resp.data.fee_amount ? resp.data.fee_amount : 0;
                         } else if ($scope.transfer_out_student.account_type && ($scope.transfer_out_student.account_type == 2
                         		|| $scope.transfer_out_student.account_type == 3)) {//冻结账户
                             $scope.transfer_in_student.fee_amount = resp.data.FROZEN_ACCOUNT ? resp.data.FROZEN_ACCOUNT : 0;

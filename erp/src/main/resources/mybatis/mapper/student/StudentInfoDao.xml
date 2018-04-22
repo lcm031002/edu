@@ -60,7 +60,7 @@
 				left join 	tab_organization_info b on a.city_id = b.id and b.status = 1
 				left join 	tab_organization_info c on a.branch_id = c.id and c.status = 1
 				left join 	tab_organization_info f on a.bu_id = f.id and c.status = 1
-				left join tab_organization_info bu on bu.id = #{bu_id}
+				left join tab_organization_info bu on bu.id = #{buId}
 				left join 	tab_data_grade d on a.grade_id = d.id and d.status = 1
 				left join 	tab_data_school e on a.attend_school_id = e.id
 				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
@@ -171,7 +171,7 @@
 				left join 	tab_organization_info b on a.city_id = b.id and b.status = 1
 				left join 	tab_organization_info c on a.branch_id = c.id and c.status = 1
 				left join 	tab_organization_info f on a.bu_id = f.id and c.status = 1
-				left join tab_organization_info bu on bu.id = #{bu_id}
+				left join tab_organization_info bu on bu.id = #{buId}
 				left join 	tab_data_grade d on a.grade_id = d.id and d.status = 1
 				left join 	tab_data_school e on a.attend_school_id = e.id
 				left join STUDENT_REL srel on srel.student_id_new = a.id

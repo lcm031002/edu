@@ -140,6 +140,11 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 	}
 
 	@Override
+	public Integer addAccountRecharge(Map<String, Object> accountRecharge) throws Exception {
+		return tAccountDynamicDao.addAccountCharge(accountRecharge);
+	}
+
+	@Override
 	public int updateReCharge(String accountId, String cardNum, String id)
 			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -186,10 +191,6 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			}
 
 			Long studentId = NumberUtils.object2Long(param.get("studentId"));
-//			Integer active = this.studentInfoDao.queryStuActiveValue(studentId);
-//			if (active == null || active.intValue() == 0) {
-//				throw new Exception("非活跃学员，不能充值！");
-//			}
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("p_student_id", param.get("studentId"));
 			paramMap.put("p_branch_id", branchId);
@@ -197,9 +198,6 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			paramMap.put("p_pay_mode", param.get("pay_mode"));
 			paramMap.put("p_money", param.get("money"));
 			// 获取上限值
-//			String limit = RechargeLimitCfg.getInstance().getConfigItem(
-//					StringUtil.nullToBlank(buId), "99999");
-			//直接规定上限值
 			String limit = "99999";
 			// 做比较
 			Double limitMoney = Double.parseDouble(limit);
@@ -234,6 +232,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			tAccountDynamic.setBranch_id(branchId);
 			tAccountDynamic.setBu_id(buId);
 			tAccountDynamic.setStudent_id(studentId);
+			tAccountDynamic.setStatus(3);
 			tAccountDynamic.setAccount_id(tAccount.getId());
 			tAccountDynamic.setMoney(Double.parseDouble(param.get("money") + ""));
 			tAccountDynamic.setCreate_user(userId);
@@ -251,6 +250,15 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			tAccountChange.setDynamic_id(tAccountDynamic.getId());
 			tAccountChange.setPay_mode(NumberUtils.object2Long(param.get("pay_mode")));
 			studentAccountDao.saveAccountChange(tAccountChange);
+
+			if(NumberUtils.object2Long(param.get("pay_mode")) != 1){
+				HashMap<String,Object> paramAccountRechargeMap=new HashMap<String,Object>();
+				paramAccountRechargeMap.put("cardNum",param.get("stu_card"));
+				paramAccountRechargeMap.put("companyAccount",param.get("company_card_id"));
+				paramAccountRechargeMap.put("dynamicId",tAccountDynamic.getId());
+
+				addAccountRecharge(paramAccountRechargeMap);
+			}
 
 			HashMap<String,Object> paramAccountMap=new HashMap<String,Object>();
 			paramAccountMap.put("accountId",tAccount.getId());

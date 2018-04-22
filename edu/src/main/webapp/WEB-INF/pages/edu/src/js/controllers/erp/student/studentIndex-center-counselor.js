@@ -5,7 +5,7 @@ angular.module('ework-ui').controller('erp_studentCenterCounselorController', [
   '$uibModal',
   '$uibMsgbox',
   'erp_studentCounselorService',
-  'erp_employeeService',
+  'erp_employeeMgrService',
   'erp_studentsService',
   erp_studentCenterCounselorController
 ]);
@@ -16,7 +16,7 @@ function erp_studentCenterCounselorController(
   $uibModal,
   $uibMsgbox,
   erp_studentCounselorService,
-  erp_employeeService,
+  erp_employeeMgrService,
   erp_studentsService
 ) {
   // 学员ID
@@ -362,9 +362,9 @@ function erp_studentCenterCounselorController(
       },
       controller: [
         '$scope',
-        'erp_employeeService',
+        'erp_employeeMgrService',
         'conf',
-        function (scope, erp_employeeService, conf) {
+        function (scope, erp_employeeMgrService, conf) {
           scope.pageConf = {
             itemsPerPage: 10,
             totalItems: 0,

@@ -46,12 +46,16 @@ public interface TAccountDynamicDao {
 	 * @throws Exception
 	 */
 	void accountDynamicCancel(Map<String, Object> param)throws Exception;
-	
-	
+
 	/**
 	 * 新增修改历史
 	 */
 	Integer addReChargeHis(Map<String, Object> His) throws Exception;
+
+	/**
+	 * 新增刷卡转账充值
+	 */
+	Integer addAccountCharge(Map<String, Object> rechangeInfo) throws Exception;
 
 	/**
 	 * 修改POS机和转账卡号
