@@ -171,7 +171,7 @@ public class CourseController extends BaseController {
 		try {
 			List<CourseScheduling> result = courseSchedulingService.queryConfirmCourseScheduling(queryCondition);
 			//查询对应的课次
-			courseSchedulingService.fillPeopleCountIntoCourseScheduling(result);
+//			courseSchedulingService.fillPeopleCountIntoCourseScheduling(result);
 			resultMap.put("error", false);
 			resultMap.put("data", result);
 		} catch (Exception e) {

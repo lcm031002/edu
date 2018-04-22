@@ -118,8 +118,6 @@
               <th>教师/编码</th>
               <th width="13%">上课期间</th>
               <th>上课时间</th>
-              <th width="12%">已报名人数</th>
-              <th width="10%">开班人数</th>
               <th width="7%">操作</th>
             </tr>
             <tr ng-repeat="course in selectedDXBCourseList " ng-if="selectedDXBCourseList && selectedDXBCourseList.length " ng-click="checked(course) ">
@@ -138,8 +136,6 @@
               <td>{{course.teacher_name}}</td>
               <td class="word_break">{{course.start_date}}~{{course.end_date}}</td>
               <td>{{course.start_time}}~{{course.end_time}}</td>
-              <td>{{course.actual_people_count}}</td>
-              <td>{{course.people_count}}</td>
               <td>
                 <a href="javascript:void(0); " ng-click="removeCourse(course) " ng-if="(!temporaryOrder||temporaryOrder.check_status==1) ">
                   <i class="fa fa-times "></i>
@@ -695,15 +691,6 @@
               <th>日期</th>
               <th>时间</th>
               <th>老师</th>
-              <th>状态</th>
-              <th>可报人数</th>
-              <th>排号人数</th>
-              <th>等待人数</th>
-              <th>计划人数</th>
-              <th>已报人数</th>
-              <th>待确定人数</th>
-              <th>取号数</th>
-              <th width="150">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -721,37 +708,6 @@
               <td>{{courseTime.course_date}}</td>
               <td>{{courseTime.start_time}}~{{courseTime.end_time}}</td>
               <td>{{courseTime.teacher_name}}</td>
-              <td ng-switch="courseTime.is_ordered">
-                <span class="text-primary" ng-switch-when="0">可报名</span>
-                <span class="text-success" ng-switch-when="1">已报名</span>
-                <span class="text-warning" ng-switch-when="2">排号中</span>
-                <span class="text-danger" ng-switch-when="3">满额，请排号</span>
-                <span class="text-primary" ng-switch-default>可报名</span>
-              </td>
-              <td>{{courseTime.people_count?courseTime.people_count-courseTime.people_checkCount-courseTime.people_unCheckCount>0?courseTime.people_count-courseTime.people_checkCount-courseTime.people_unCheckCount:0:'--'}}</td>
-              <td>
-                <a href="javascript:void(0);" ng-if="courseTime.totalSortNum > 0" ng-click="queryOrderQueueDetail(curCourse, courseTime)">
-                  {{courseTime.totalSortNum}}
-                </a>
-                <span ng-hide="courseTime.totalSortNum > 0">--</span>
-              </td>
-              <td>{{courseTime.waitPeople?courseTime.waitPeople:0}}</td>
-              <td>{{courseTime.people_count}}</td>
-              <td>
-                <a href="javascript:void(0);" ng-click="queryCheckPeopleList(curCourse, courseTime, 1)">{{courseTime.people_checkCount}}</a>
-              </td>
-              <td>
-                <a href="javascript:void(0);" ng-click="queryCheckPeopleList(curCourse, courseTime, 2)">{{courseTime.people_unCheckCount}}</a>
-              </td>
-              <td>{{courseTime.sort_num?courseTime.sort_num + '号':'--'}}</td>
-              <td>
-                <div ng-hide="(!courseTime.is_ordered && !courseTime.people_count )||(!courseTime.is_ordered && courseTime.people_count &&courseTime.people_count > courseTime.people_checkCount)">
-                  <button ng-show="courseTime.is_ordered && courseTime.is_ordered == 3" type=button class="btn btn-default btn-sm" ng-click=sortNum(courseTime)>排号</button>
-                  <button ng-show="courseTime.is_ordered && courseTime.is_ordered == 2" type=button class="btn btn-default btn-sm" ng-click=cancelSortNum(courseTime)>取消排号</button>
-                  <!-- <button type=button class="btn btn-default btn-sm" 
-                        ng-click=queryTotalSortNumInfo(courseTime)>排号人数点击查询</button> -->
-                </div>
-              </td>
             </tr>
             <tr>
               <td colspan="6" ng-if="isLoadingCourseTimesPanel=='isLoadingCourseTimesPanel'" align="center">

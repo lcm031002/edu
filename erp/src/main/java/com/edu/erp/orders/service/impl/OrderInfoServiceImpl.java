@@ -157,7 +157,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		orderInfo.setPay_status(0L);
 
 		// 续单处理
-		OrderRenewalService.processRenewal(orderInfo);
+//		OrderRenewalService.processRenewal(orderInfo);
 
 		//校验是否可以报班，是否已经满班
 		List<TabOrderInfoDetail> orderDeatils=orderInfo.getDetails();
@@ -169,7 +169,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			//查询排课信息
 			List<CourseScheduling> result = courseSchedulingService.queryConfirmCourseScheduling(queryCondition);
 			//查询对应的课次是否有满班的情况
-			courseSchedulingService.fillPeopleCountIntoCourseScheduling(result);
+//			courseSchedulingService.fillPeopleCountIntoCourseScheduling(result);
 			
 			for(CourseScheduling courseScheduling:result){
 				for(TabOrderCourseTimesInfo tabOrderCourseTimesInfo:courseTimeList){

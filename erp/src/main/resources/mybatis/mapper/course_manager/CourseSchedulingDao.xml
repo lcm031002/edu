@@ -92,7 +92,7 @@
 		       </if>
 		       a.remark,
 		       tctt.title,
-		       nvl(tcrr.room_id, -1) as class_room_id
+		       ifnull(tcrr.room_id, -1) as class_room_id
 		  from t_course_scheduling a
 		  join t_course b
 		    on a.course_id = b.id
@@ -323,13 +323,9 @@
         }
 	</select>
 	
-	<insert id="insert" parameterType="com.edu.erp.model.CourseScheduling">
-		<selectKey resultType="java.lang.Long" keyProperty="id"  order="BEFORE">
-			SELECT seq_t_course_scheduling.nextval AS id from dual
-		</selectKey>
+	<insert id="insert" parameterType="com.edu.erp.model.CourseScheduling" useGeneratedKeys="true" keyProperty="id">
 		insert into t_course_scheduling
-		(id,
-		 course_id,
+		(course_id,
 		 branch_id,
 		 grade_id,
 		 subject_id,
@@ -353,7 +349,6 @@
 		 )
 		 values
 		 (
-			#{id,		        jdbcType=NUMERIC},
 		 	#{course_id,		jdbcType=NUMERIC},
 		 	#{branch_id,		jdbcType=NUMERIC},
 		 	#{grade_id,			jdbcType=NUMERIC},
@@ -437,9 +432,9 @@
                 tei.activation_code as "activation_code",
                 tei.valid_start_date as "valid_start_date",
                 tei.valid_end_date as "valid_end_date",
-				nvl(ta.fee_amount,0) as "fee_amount",
-				nvl(ta.frozen_account, 0) as "frozen_account",
-				nvl(ta.REFUND_ACCOUNT,0) as "fefund_account"
+				ifnull(ta.fee_amount,0) as "fee_amount",
+				ifnull(ta.frozen_account, 0) as "frozen_account",
+				ifnull(ta.REFUND_ACCOUNT,0) as "fefund_account"
 		  from t_course_scheduling t
 		  join t_order_course oc
 		    on t.course_id = oc.course_id

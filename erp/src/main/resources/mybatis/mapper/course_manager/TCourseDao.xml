@@ -317,55 +317,39 @@
 		f.name as
 		subject_name,
 		g.teacher_name,
-		j.type_name,
 		c_emp.employee_name as
 		create_user_name,
 		u_emp.employee_name as update_user_name,
 		a.update_time
-		from t_course
-		a
+		from t_course a
 		join tab_organization_info b
 		on a.city_id = b.id
 		and b.status = 1
-		left
-		join tab_organization_info c
+		left join tab_organization_info c
 		on a.branch_id = c.id
 		and c.status = 1
-		left
-		join tab_time_season d
+		left join tab_time_season d
 		on a.season_id = d.id
 		and d.status = 1
-		left join
-		tab_data_grade e
+		left join tab_data_grade e
 		on a.grade_id = e.id
 		and e.status = 1
-		left join
-		tp_subject f
+		left join tp_subject f
 		on a.subject_id = f.id
 		left join tab_teacher_info g
-		on
-		a.teacher_id = g.id
+		on a.teacher_id = g.id
 		and g.status = 1
-		left join tab_course_type j
-		on
-		a.course_type = j.id
-		and j.status = 1
 		left join tab_user_info c_user
-		on
-		a.create_user = c_user.id
+		on a.create_user = c_user.id
 		left join tab_employee_info c_emp
-		on
-		c_user.employee_id = c_emp.id
+		on c_user.employee_id = c_emp.id
 		left join tab_user_info u_user
-		on
-		a.update_user = u_user.id
+		on a.update_user = u_user.id
 		left join tab_employee_info u_emp
-		on
-		u_user.employee_id = u_emp.id
+		on u_user.employee_id = u_emp.id
 		where a.id in (
 		select course_id
-		from
-		tab_order_info_detail
+		from tab_order_info_detail
 		where order_id = #{orderId,jdbcType=NUMERIC}
 		union
 		select course_id from t_order_course where order_id =
@@ -386,8 +370,7 @@
 		i_org_name,
 		i.create_user as i_create_user, i.create_time as
 		i_create_time, i.update_user as i_update_user, i.update_time as
-		i_update_time,
-		j.type_name
+		i_update_time
 		from t_course a
 		join tab_organization_info b
 		on a.city_id = b.id and b.status = 1
@@ -397,24 +380,11 @@
 		a.season_id = d.id and d.status = 1
 		left join tab_data_grade e on
 		a.grade_id = e.id and e.status = 1
-		<!-- left join tab_data_dictionary f on a.subject_id = f.id and f.status 
-			= 1 -->
 		left join tp_subject f on a.subject_id = f.id and f.status = 1
-
-		left
-		join tab_teacher_info g on a.teacher_id = g.id and g.status = 1
-
-		left
-		join t_course_branch_ref h on a.id = h.course_id
-
-		left join
-		tab_organization_info i on h.branch_id = i.id and i.status = 1
-
-		left
-		join tab_course_type j on a.course_type = j.id and j.status = 1
-
-		where
-		a.status != 0
+		left join tab_teacher_info g on a.teacher_id = g.id and g.status = 1
+		left join t_course_branch_ref h on a.id = h.course_id
+		left join tab_organization_info i on h.branch_id = i.id and i.status = 1
+		where a.status != 0
 		<if test="city_id != null and city_id != ''">
 			AND a.city_id = #{city_id}
 		</if>
@@ -426,8 +396,7 @@
 			and a.id in (${ids})
 		</if>
 
-		<if
-				test="business_type != null and business_type != -1 and business_type != ''">
+		<if test="business_type != null and business_type != -1 and business_type != ''">
 			<!-- 业务模式类型 -->
 			and a.business_type = #{business_type}
 		</if>
@@ -592,108 +561,101 @@
 	</select>
 
 	<update id="updateTCourse" parameterType="com.edu.erp.model.TCourse">
-		update t_course t
+		update t_course
 		set
 		<if test="course_no != null and course_no != ''">
-			t.course_no = #{course_no,jdbcType=VARCHAR},
+			course_no = #{course_no,jdbcType=VARCHAR},
 		</if>
 		<if test="course_name != null and course_name != ''">
-			t.course_name = #{course_name,jdbcType=VARCHAR},
+			course_name = #{course_name,jdbcType=VARCHAR},
 		</if>
 		<if test="branch_id != null and branch_id != ''">
-			t.branch_id = #{branch_id,jdbcType=NUMERIC},
+			branch_id = #{branch_id,jdbcType=NUMERIC},
 		</if>
 		<if test="season_id != null and season_id != ''">
-			t.season_id = #{season_id,jdbcType=NUMERIC},
+			season_id = #{season_id,jdbcType=NUMERIC},
 		</if>
 		<if test="grade_id != null and grade_id != ''">
-			t.grade_id = #{grade_id,jdbcType=NUMERIC},
+			grade_id = #{grade_id,jdbcType=NUMERIC},
 		</if>
 		<if test="subject_id != null and subject_id != ''">
-			t.subject_id = #{subject_id,jdbcType=NUMERIC},
+			subject_id = #{subject_id,jdbcType=NUMERIC},
 		</if>
 		<if test="teacher_id != null and teacher_id != ''">
-			t.teacher_id = #{teacher_id,jdbcType=NUMERIC},
+			teacher_id = #{teacher_id,jdbcType=NUMERIC},
 		</if>
-			t.assteacher_id = #{assteacher_id,jdbcType=NUMERIC},
+			assteacher_id = #{assteacher_id,jdbcType=NUMERIC},
 		<if test="unit_price != null and unit_price != ''">
-			t.unit_price = #{unit_price,jdbcType=NUMERIC},
+			unit_price = #{unit_price,jdbcType=NUMERIC},
 		</if>
 		<if test="sum_price != null and sum_price != ''">
-			t.sum_price = #{sum_price,jdbcType=NUMERIC},
+			sum_price = #{sum_price,jdbcType=NUMERIC},
 		</if>
 		<if test="hour_len != null and hour_len != ''">
-			t.hour_len = #{hour_len,jdbcType=NUMERIC},
+			hour_len = #{hour_len,jdbcType=NUMERIC},
 		</if>
 		<if test="course_count != null and course_count != ''">
-			t.course_count = #{course_count,jdbcType=NUMERIC},
+			course_count = #{course_count,jdbcType=NUMERIC},
 		</if>
 		<if test="product_type != null and product_type != ''">
-			t.product_type = #{product_type,jdbcType=NUMERIC},
+			product_type = #{product_type,jdbcType=NUMERIC},
 		</if>
 		<if test="start_date != null and start_date != ''">
-			t.start_date = #{start_date,jdbcType=VARCHAR},
+			start_date = #{start_date,jdbcType=VARCHAR},
 		</if>
 		<if test="end_date != null and end_date != ''">
-			t.end_date = #{end_date,jdbcType=VARCHAR},
+			end_date = #{end_date,jdbcType=VARCHAR},
 		</if>
 		<if test="start_time != null and start_time != ''">
-			t.start_time = #{start_time,jdbcType=VARCHAR},
+			start_time = #{start_time,jdbcType=VARCHAR},
 		</if>
 		<if test="end_time != null and end_time != ''">
-			t.end_time = #{end_time,jdbcType=VARCHAR},
+			end_time = #{end_time,jdbcType=VARCHAR},
 		</if>
 		<if test="course_surplus != null and course_surplus != ''">
-			t.course_surplus = #{course_surplus,jdbcType=NUMERIC},
+			course_surplus = #{course_surplus,jdbcType=NUMERIC},
 		</if>
 		<if test="people_count != null and people_count != ''">
-			t.people_count = #{people_count,jdbcType=NUMERIC},
+			people_count = #{people_count,jdbcType=NUMERIC},
 		</if>
 		<if test="actual_people_count != null and actual_people_count != ''">
-			t.actual_people_count = #{actual_people_count,jdbcType=NUMERIC},
+			actual_people_count = #{actual_people_count,jdbcType=NUMERIC},
 		</if>
 		<if test="attend_class_period != null and attend_class_period != ''">
-			t.attend_class_period = #{attend_class_period,jdbcType=VARCHAR},
-		</if>
-		<if test="course_type != null and course_type != ''">
-			t.course_type = #{course_type,jdbcType=NUMERIC},
+			attend_class_period = #{attend_class_period,jdbcType=VARCHAR},
 		</if>
 		<if test="description != null and description != ''">
-			t.description = #{description,jdbcType=VARCHAR},
+			description = #{description,jdbcType=VARCHAR},
 		</if>
 		<if test="product_line != null and product_line != ''">
-			t.product_line = #{product_line,jdbcType=NUMERIC},
+			product_line = #{product_line,jdbcType=NUMERIC},
 		</if>
 		<if test="target != null and target != ''">
-			t.target = #{target,jdbcType=NUMERIC},
+			target = #{target,jdbcType=NUMERIC},
 		</if>
 		<if test="update_user != null and update_user != ''">
-			t.update_user = #{update_user,jdbcType=NUMERIC},
+			update_user = #{update_user,jdbcType=NUMERIC},
 		</if>
 		<if test="performance_belong_type != null and performance_belong_type != ''">
-			t.performance_belong_type = #{performance_belong_type,jdbcType=NUMERIC},
+			performance_belong_type = #{performance_belong_type,jdbcType=NUMERIC},
 		</if>
 		<if test="is_textbooks != null">
-			t.is_textbooks = #{is_textbooks,jdbcType=NUMERIC},
+			is_textbooks = #{is_textbooks,jdbcType=NUMERIC},
 		</if>
-		t.update_time = sysdate
-		where t.id = #{id}
+		update_time = sysdate
+		where id = #{id}
 	</update>
 
 
 	<update id="changeStatus" parameterType="java.util.Map">
-
-
-		UPDATE t_course t
-		SET
-		t.status = #{status,jdbcType=NUMERIC} ,update_time=
-		sysdate,update_user= #{updateUser,jdbcType=NUMERIC}
-		WHERE t.id IN
-		(${ids})
+		UPDATE t_course
+		SET status = #{status,jdbcType=NUMERIC} ,
+		update_time= sysdate,
+		update_user= #{updateUser,jdbcType=NUMERIC}
+		WHERE id IN (${ids})
 	</update>
 
 	<update id="chgIsApprove" parameterType="java.util.Map">
-
 		UPDATE t_course t
 		SET
 		t.is_approve = ${is_approve}
@@ -723,15 +685,12 @@
 	</update>
 
 	<update id="changePrice" parameterType="java.util.Map">
-
 		update t_course
 		set
 		unit_price = #{unit_price, jdbcType=NUMERIC},
-		sum_price =
-		#{total_price, jdbcType=NUMERIC},
+		sum_price = #{total_price, jdbcType=NUMERIC},
 		update_time = sysdate
-		where id =
-		#{course_id}
+		where id = #{course_id}
 	</update>
 
 	<select id="queryTCourseByTUion" parameterType="com.edu.erp.model.TCourse"

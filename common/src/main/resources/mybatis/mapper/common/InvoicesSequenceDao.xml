@@ -20,9 +20,8 @@
 	</update>
 	
 	<!-- 如果未找到对应编号类型 则插入新编号类型 -->
-	<insert id="insert" parameterType="com.edu.common.model.InvoicesSequence">
-		INSERT INTO 
-			tab_invoices_sequence (invoices_type, sequence)
+	<insert id="insert" parameterType="com.edu.common.model.InvoicesSequence" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tab_invoices_sequence (invoices_type, sequence)
 		VALUES 
 		(	
 			#{invoices_type,jdbcType=NUMERIC},

@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TOrderChangeDao">
+	<!-- 查询课程批改信息 -->
+	<select id="queryOrderChange" resultType="com.edu.erp.model.TOrderChange"
+		parameterType="java.lang.Long">
+				with tcoc as
+				 ( select t.change_id as change_id,
+				         t.order_course_id as order_course_id,
+				         t.course_times as course_times,
+				         max(t.courseTimeString)  as courseTimeString,
+				         (t.total_amount) as total_amount,
+                                         (t.transfer_flag) as transfer_flag
+				 from
+				 (
+				 select tcoc.change_id as change_id,
+				         tcoc.order_course_id as order_course_id,
+				         tcoc.course_times as course_times,
+				         wm_concat(toct.course_times)  over (partition by  toct.change_id, toct.order_id, toct.order_course_id order by toct.course_times)   as courseTimeString,
+				         tcoc.total_amount as total_amount,
+				         tcoc.transfer_flag as transfer_flag
+				    from t_order_change toc
+				    left join tc_order_course tcoc
+				      on tcoc.change_id = toc.id
+				    left join tc_order_course_times toct
+				      on toct.change_id = tcoc.change_id
+				     and toct.order_id = tcoc.order_id
+				     and toct.order_course_id = tcoc.order_course_id
+				   where toc.order_id = #{orderId,jdbcType=NUMERIC} ) t
+				   
+				   group by t.change_id, t.order_course_id,t.course_times,t.total_amount,t.transfer_flag)
+				   
+				  select distinct toc.*,
+				                 tei.employee_name as createUserName,
+				                 tct.name as changeTypeName,
+				                 tcs.name as changeStatusName,
+				                 tc.course_name as courseName,
+				                 tc.course_no as courseNo,
+				                 tcoc.order_course_id as orderCourseId,
+				                 tcoc.course_times as courseTimes,
+				                 tcoc.courseTimeString,
+				                 toi.org_name as branch_name,
+				                 tod.order_no as order_no,
+				                 to_char(apply_time, 'yyyy-mm-dd') as apply_time_string,
+				                 tcoc.total_amount as total_amount,
+				                 tcoc.transfer_flag,
+				                 tsi.encoding as student_encoding,
+				                 tsi.student_name as student_name
+				   from T_ORDER_CHANGE toc
+				   left join tab_user_info tui
+				     on tui.id = toc.create_User
+				   left join tab_employee_info tei
+				     on tei.id = tui.employee_id
+				   left join tp_change_type tct
+				     on tct.id = toc.change_type
+				   left join tp_change_status tcs
+				     on tcs.id = toc.change_status
+				   left join tcoc
+				     on tcoc.change_id = toc.id
+				   left join t_order_course todc
+				     on todc.id = tcoc.order_course_id
+				   left join t_order tod
+				     on tod.id = todc.order_id
+				   left join t_course tc
+				     on tc.id = todc.course_id
+				   left join tab_organization_info toi
+				     on toi.id = todc.branch_id
+				   left join tab_student_info tsi
+				     on tsi.id = tod.student_id
+				 where toc.order_id = #{orderId,jdbcType=NUMERIC}
+				 order by toc.apply_time desc
+	</select>
+	
+	<select id="queryOrderChangeByChangId" resultType="com.edu.erp.model.TOrderChange" parameterType="java.lang.Long">
+		select c.*,o.student_id  from t_order_change c, t_order o where c.order_id = o.id and  c.id = #{change_id}
+	</select>
+	
+	<!-- 查询课程批改课次信息 -->
+	<select id="queryOrderChangeTimes" resultType="com.edu.erp.model.TCOrderCourse"
+		parameterType="java.lang.Long">
+		 select distinct tcoc.*,
+		                 toc.change_type,
+		                 toc.change_status,
+		                 tei.employee_name as createUserName
+			   from T_ORDER_CHANGE toc
+			   left join TC_ORDER_COURSE tcoc
+			     on tcoc.change_id = toc.id
+			   left join tab_user_info tui
+			     on tui.id = toc.create_User
+			   left join tab_employee_info tei
+			     on tei.id = tui.employee_id
+			  where toc.order_id = #{orderId,jdbcType=NUMERIC}
+			    and toc.change_type in (1, 2, 5)
+			    and toc.change_status = 5
+	</select>
+	
+	<!-- 查询报班单详单信息 -->
+	<select id="queryOrderCourseChange" resultType="com.edu.erp.model.TCOrderCourse"
+		parameterType="java.lang.Long">
+		 	  select distinct tcoc.*,
+			                 toc.change_type,
+			                 toc.change_status,
+			                 tei.employee_name as createUserName
+			   from T_ORDER_CHANGE toc
+			   left join TC_ORDER_COURSE tcoc
+			     on tcoc.change_id = toc.id
+			   left join tab_user_info tui
+			     on tui.id = toc.create_User
+			   left join tab_employee_info tei
+			     on tei.id = tui.employee_id
+			  where tcoc.order_course_id = #{orderDetailId,jdbcType=NUMERIC}
+			    and toc.change_type in (1, 2, 5)
+			    and toc.change_status = 5
+	</select>
+	
+	<!-- 退费流程 -->
+	<select id="queryPremiumAudit" resultType="HashMap" parameterType="java.lang.Long">
+		SELECT distinct TCOC.*,
+		       TOC.APPLY_TIME AS D_APPLY_TIME,
+		       to_char(TOC.APPLY_TIME,'yyyy-MM-dd') as APPLY_TIME,
+		       TC.COURSE_NO,
+		       TC.COURSE_NAME,
+		       TOC.CHANGE_STATUS,
+		       tpcs.name as CHANGE_STATUS_NAME,
+		       TOC_DETAIL.DISCOUNT_UNIT_PRICE,
+		       TEI.EMPLOYEE_NAME              AS APPLY_USER_NAME,
+		       TOC.REMARK,
+		       COURSE_TIMES.COURSE_TIMES      AS COURSE_TIMES_DETAILS,
+		       TOC.ENCODING,
+		       TOI.ORG_NAME                   AS BRANCH_NAME,
+		       TOC.FEE_AMOUNT                 as ACTUAL_FEE_AMOUNT,
+		       TOC.FEE_DEDUCTION_AMOUNT,
+		       t.CURRENT_MAN CURRENT_MAN
+		  FROM T_ORDER_CHANGE TOC
+		  left join tp_change_status tpcs on TOC.CHANGE_STATUS = tpcs.id
+		  LEFT JOIN TC_ORDER_COURSE TCOC
+		    ON TOC.ID = TCOC.CHANGE_ID
+		  LEFT JOIN T_ORDER_COURSE TOC_DETAIL
+		    ON TOC_DETAIL.ID = TCOC.ORDER_COURSE_ID
+		  LEFT JOIN T_COURSE TC
+		    ON TC.ID = TOC_DETAIL.COURSE_ID
+		  LEFT JOIN TAB_USER_INFO TUI
+		    ON TUI.ID = TOC.APPLY_USER
+		  LEFT JOIN TAB_EMPLOYEE_INFO TEI
+		    ON TUI.EMPLOYEE_ID = TEI.ID
+		  LEFT JOIN (SELECT A.CHANGE_ID, WM_CONCAT(A.COURSE_TIMES) COURSE_TIMES
+		               FROM (SELECT DISTINCT CHANGE_ID, COURSE_TIMES
+		                       FROM TC_ORDER_COURSE_TIMES
+		                      ORDER BY COURSE_TIMES) A
+		              GROUP BY A.CHANGE_ID) COURSE_TIMES
+		    ON COURSE_TIMES.CHANGE_ID = TCOC.CHANGE_ID
+		  LEFT JOIN TAB_ORGANIZATION_INFO TOI
+		    ON TOI.ID = TOC.BRANCH_ID
+		  left join user_application_task t
+		    on t.application like '退费审批%' || TCOC.order_course_id || '%' and (t.current_state not in ('审批通过，退费单生效','审批不通过，退费单作废') or t.current_state is null)
+		 WHERE TOC.CHANGE_TYPE = 1
+		   AND TOC.ORDER_ID = #{orderId,jdbcType=NUMERIC}
+		   and TOC.CHANGE_STATUS in (3, 4)
+		 ORDER BY TOC.APPLY_TIME DESC
+	</select>
+	
+	<select id="queryOrderChangeCourseTimes" parameterType="java.lang.Long" resultMap="orderCourseTimesLogPojoMap">
+		select distinct toctl.*,
+                toc.create_user,
+                toc.create_time,
+                toc.fin_confirm_user,
+                toc.fin_confirm_time,
+                tcs.teacher_id,
+                to_date(tcs.course_date || '', 'yyyymmdd') as course_date,
+                tti.teacher_name,
+                tei.employee_name as createrName,
+                tei2.employee_name as confirmerName,
+                toc.change_type,
+                toc.change_status,
+                tcoc.transfer_flag
+		  from T_ORDER_CHANGE toc
+		  left join TC_ORDER_COURSE tcoc
+		    on tcoc.change_id = toc.id
+		  left join T_ORDER_COURSE_TIMES_LOG toctl
+		    on toctl.change_id = toc.id
+		  left join t_order_course tocourse
+		    on tcoc.order_course_id = tocourse.id
+		  left join T_COURSE_SCHEDULING tcs
+		    on tocourse.course_id = tcs.course_id
+		   and tcs.course_times = toctl.times
+		  left join tab_teacher_info tti
+		    on tti.id = tcs.teacher_id
+		  left join tab_user_info tui
+		    on tui.id = toc.create_User
+		  left join tab_employee_info tei
+		    on tei.id = tui.employee_id
+		  left join tab_user_info tui2
+		    on tui2.id = toc.fin_confirm_user
+		  left join tab_employee_info tei2
+		    on tei2.id = tui2.employee_id
+		 where toc.change_type in (1, 2,5)
+		   and toc.change_status = 5
+		   and tcoc.order_course_id = #{orderDetailId,jdbcType=NUMERIC}
+		   order by toctl.times
+	</select>
+	
+	<!-- 补结转明细 -->
+	<select id="queryOrderUnForward" resultType="HashMap" parameterType="java.lang.Long">
+        select  to_char(TOC.VALIDATE_TIME,'YYYY-MM-DD HH24:MM:SS') as VALIDATE_TIME,
+		        tf.FEE_AMOUNT,
+		        to_char(tf.INSERT_TIME,'YYYY-MM-DD HH24:MM:SS') as INSERT_TIME,
+		        TEI.EMPLOYEE_NAME,
+		        tooc.ORDER_COURSE_ID,
+		        '课程名称：' || tood.COURSE_NAME || '，' || '总价：' ||
+		        tood.FORMER_SUM_PRICE || '.00元' || '，' || '折扣价：' ||
+		        tood.DISCOUNT_SUM_PRICE || '.00元' as REMARK
+		   from t_fee tf
+		   left join T_ORDER_CHANGE TOC
+		     on TOC.ID = tf.operate_no
+		   left JOIN TAB_USER_INFO TUI
+		     ON TUI.ID = TOC.UPDATE_USER
+		   LEFT JOIN TAB_EMPLOYEE_INFO TEI
+		     ON TEI.ID = TUI.EMPLOYEE_ID
+		  inner JOIN TAB_ORDER_INFO TOI
+		     ON TOI.ID = TOC.ORDER_ID
+		  inner join TC_ORDER_COURSE tooc
+		     on tooc.CHANGE_ID = TOC.ID
+		  inner join VIEW_ORDER_DETAIL tood
+		     on tood.ID = tooc.ORDER_COURSE_ID
+		  where tf.OPERATE_TYPE = 5
+		    and tf.FEE_TYPE = 62
+		    and TOC.CHANGE_TYPE in (1, 4)
+		    and TOC.ORDER_ID = #{orderId,jdbcType=NUMERIC}
+		  ORDER BY tooc.ORDER_COURSE_ID,TOC.VALIDATE_TIME DESC
+	</select>
+	
+	<!-- 预结转明细 -->
+	<select id="queryOrderForward" resultType="HashMap" parameterType="java.lang.Long">
+        select to_char(tf.finish_time, 'YYYY-MM-DD HH24:MM:SS') as VALIDATE_TIME,
+             tfd.FEE_AMOUNT,
+             to_char(tf.INSERT_TIME, 'YYYY-MM-DD HH24:MM:SS') as INSERT_TIME,
+             TEI.EMPLOYEE_NAME,
+             tfd.order_detail_id as ORDER_COURSE_ID,
+             '课程名称：' || tood.COURSE_NAME || '，' || '总价：' ||
+             tood.FORMER_SUM_PRICE || '.00元' || '，' || '折扣价：' ||
+             tood.DISCOUNT_SUM_PRICE || '.00元' as REMARK
+        from t_fee_detail tfd
+        left join t_fee tf
+          on tf.id = tfd.fee_id
+        left join t_order tod
+          on tod.id = tf.order_id
+       inner join VIEW_ORDER_DETAIL tood
+          on tood.ID = tfd.order_detail_id
+        left JOIN TAB_USER_INFO TUI
+          ON TUI.ID = tod.fin_confirm_user
+        LEFT JOIN TAB_EMPLOYEE_INFO TEI
+          ON TEI.ID = TUI.EMPLOYEE_ID
+       where tfd.fee_type = 42
+         and tfd.order_id = #{orderId,jdbcType=NUMERIC}
+       order by tf.finish_time desc
+	</select>
+	
+	<!-- 学员转班 -->
+	<select id="orderChangeTransfer" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_02(#{p_order_detail_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_output_count,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_output_times,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_input_course_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_input_branch_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_count,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_input_times,mode=IN,jdbcType=VARCHAR},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR},
+											    #{o_change_id,mode=OUT,jdbcType=NUMERIC})}
+		]]>
+	</select>
+	
+	<resultMap type="com.edu.erp.model.TOrderCourseTimesLog" id="orderCourseTimesLogPojoMap">
+		<id property="id" column="id"/>
+		<result property="changeId" column="CHANGE_ID"/>
+		<result property="ocid" column="OCID"/>
+		<result property="times" column="TIMES"/>
+		<result property="isValid" column="IS_VALID"/>
+		<result property="createUser" column="CREATE_USER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="finConfirmUser" column="FIN_CONFIRM_USER"/>
+		<result property="finConfirmTime" column="FIN_CONFIRM_TIME"/>
+		<result property="teacherId" column="TEACHER_ID"/>
+		<result property="courseDate" column="COURSE_DATE"/>
+		<result property="teacherName" column="TEACHER_NAME"/>
+		<result property="createrName" column="CREATER_NAME"/>
+		<result property="confirmerName" column="CONFIRMER_NAME"/>
+		<result property="changeType" column="CHANGE_TYPE"/>
+		<result property="changeStatus" column="CHANGE_STATUS"/>
+		<result property="transferFlag" column="TRANSFER_FLAG" />
+	</resultMap>
+	
+	<!-- 准备退费数据 -->
+	<select id="readyPremium" statementType="CALLABLE" parameterType="java.util.HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_input_01(#{order_detail_id,mode=IN,jdbcType=NUMERIC},
+										    #{change_no,mode=IN,jdbcType=VARCHAR},
+										    #{course_cnt,mode=IN,jdbcType=NUMERIC},
+										    #{course_times,mode=IN,jdbcType=VARCHAR},
+										    #{error_code,mode=OUT,jdbcType=NUMERIC},
+										    #{error_desc,mode=OUT,jdbcType=VARCHAR},
+										    #{total_amount,mode=OUT,jdbcType=DOUBLE},
+										    #{attend_amount,mode=OUT,jdbcType=DOUBLE},
+										    #{surplus_count,mode=OUT,jdbcType=DOUBLE},
+										    #{pre_amount,mode=OUT,jdbcType=DOUBLE})}
+		]]>
+	</select>
+	
+	<!-- 准备VIP退费准备信息 -->
+	<select id="readyVIPPremium" statementType="CALLABLE" parameterType="java.util.HashMap">
+		<![CDATA[
+		    {call pkg_change_vip_web.p_input_01(#{order_detail_id,mode=IN,jdbcType=NUMERIC},
+										    #{change_no,mode=IN,jdbcType=VARCHAR},
+										    #{course_cnt,mode=IN,jdbcType=NUMERIC},
+										    #{course_times,mode=IN,jdbcType=VARCHAR},
+										    #{error_code,mode=OUT,jdbcType=NUMERIC},
+										    #{error_desc,mode=OUT,jdbcType=VARCHAR},
+										    #{total_amount,mode=OUT,jdbcType=DOUBLE},
+										    #{attend_amount,mode=OUT,jdbcType=DOUBLE},
+										    #{surplus_count,mode=OUT,jdbcType=DOUBLE},
+										    #{pre_amount,mode=OUT,jdbcType=DOUBLE})}
+		]]>
+	</select>
+
+	<!-- 删除退费准备数据 -->
+	<select id="deleteReadyPremium" statementType="CALLABLE" parameterType="java.util.HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_delete_01(#{change_no,mode=IN,jdbcType=VARCHAR},
+		    	                             #{error_code,mode=OUT,jdbcType=NUMERIC},
+											 #{error_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 退费审批提交 -->
+	<select id="premium" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_01(#{change_no,mode=IN,jdbcType=VARCHAR},
+		    	                                #{user_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{branch_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		                            			#{p_premium_deduction_amount,mode=IN,jdbcType=NUMERIC},
+		    	                                #{v_change_id,mode=OUT,jdbcType=NUMERIC},
+		    	                                #{error_code,mode=OUT,jdbcType=NUMERIC},
+											    #{error_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 退费审批提交 -->
+	<select id="premiumFrozen" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call PKG_CHANGE_WEB_FROZEN.p_do_change_01(#{change_no,mode=IN,jdbcType=VARCHAR},
+		    	                                #{user_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{branch_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		                            			#{p_premium_deduction_amount,mode=IN,jdbcType=NUMERIC},
+		    	                                #{v_change_id,mode=OUT,jdbcType=NUMERIC},
+		    	                                #{error_code,mode=OUT,jdbcType=NUMERIC},
+											    #{error_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 退费审批通过 -->
+	<select id="premiumAudit" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_audit(#{p_change_id,mode=IN,jdbcType=NUMERIC},
+		    									#{p_change_status,mode=IN,jdbcType=NUMERIC},
+		    									#{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 订单取消 -->
+	<select id="orderCancel" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_03(#{p_order_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 退费取消 -->
+	<select id="premiumCancel" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_04(#{p_change_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 获取课程剩余课次 -->
+	<select id="getRemainCourseTimesCount" parameterType="long" resultType="integer">
+	    select c.course_surplus_count 
+	     from t_order_course c 
+	    where c.id = #{orderCourseId,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 查询剩余未考勤课次 -->
+	<select id="getRemainUnAttendanceInfo" parameterType="long" resultType="map">
+		select o.student_id "studentId", l.id "schedulingId"
+		  from t_order o, t_order_course c, t_course_scheduling l,t_order_course_times t
+		 where o.id = c.order_id
+		   and c.course_id = l.course_id
+		   and c.id = t.ocid 
+		   and l.course_times = t.times
+		   and t.is_valid = 1
+		   and nvl(c.status,1) = 1
+		   and not exists (select 1
+		          from t_attendance a
+		         where a.order_course_id = c.id
+		           and a.scheduling_id = l.id
+		           and a.attend_type not in (10, 20, 30))
+		   and c.id = #{orderCourseId,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="orderChangeCheck" statementType="CALLABLE" parameterType="HashMap"> 
+	    <![CDATA[
+	    {call pkg_order_change_v5.p_apply_check(#{change_no,mode=IN,jdbcType=VARCHAR},
+	                                            #{order_id,mode=IN,jdbcType=NUMERIC},
+	    								     	#{change_id,mode=IN,jdbcType=NUMERIC},
+	    								     	#{change_type,mode=IN,jdbcType=NUMERIC},
+	    	                                    #{err_code,mode=OUT,jdbcType=NUMERIC},
+										        #{err_desc,mode=OUT,jdbcType=VARCHAR})}
+	    ]]>
+	</select>
+	
+	<!-- 作废订单 -->
+	<select id="cancelOrder" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_03(#{p_order_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<!-- 退费单据-分页查询 -->
+	<select id="queryRefundForPage" parameterType="map" resultType="com.edu.erp.model.TOrderChange">
+		select 			a.*,
+						b.order_no,
+						g.invoice_status,
+						c.org_name as branch_name,
+						h.org_name as city_name,
+						i.org_name as bu_name,
+						b.bu_id,
+						e.employee_name as input_user_name,
+						concat(concat(concat(concat(f.student_name,'('), concat(f.id, ')')), '('), 
+                 				 concat(f.encoding, ')')) 
+                		student_name_id_encoding,
+                		b.student_id as student_id,
+                		f.student_name as student_name,
+                		f.encoding as student_encoding
+			from		t_order_change a
+			left join	t_order b on a.order_id = b.id
+			left join	tab_order_info g on b.id = g.id
+			left join	tab_organization_info c on a.branch_id = c.id
+			left join	tab_organization_info h on b.city_id = h.id
+			left join	tab_organization_info i on b.bu_id = i.id
+			left join	tab_user_info d on a.input_user = d.id
+			left join	tab_employee_info e on d.employee_id = e.id
+			left join	tab_student_info f on b.student_id = f.id
+		where 			b.city_id = #{city_id}
+		<if test="change_type != null and change_type != -1">
+			and			a.change_type = #{change_type}		
+		</if>
+		<if test="order_no != null and order_no != ''">
+			and			(b.order_no like '%${order_no}%' or b.id like '%${order_no}%')		
+		</if>
+		<if test="encoding != null and encoding != ''">
+			and			a.encoding like '%${encoding}%'		
+		</if>
+		<if test="studentInfo != null and studentInfo != ''">
+			and (f.student_name like '%${studentInfo}%' or f.encoding like '%${studentInfo}%')
+		</if>
+		
+		order by a.create_time DESC, a.id DESC	
+	</select>
+	
+	<!-- 退费单据-详细的分页查询 -->
+	<select id="queryRefundDetailForPage" parameterType="map" resultType="com.edu.erp.model.TCOrderCourse">
+		select 			a.*,
+						b.encoding,
+						c.order_no,
+						e.course_name,
+						f.org_name as branch_name
+			from		tc_order_course a
+			left join	t_order_change b on a.change_id = b.id
+			left join	t_order c on a.order_id = c.id
+			left join	t_order_course d on a.order_course_id = d.id
+			left join	t_course e on d.course_id = e.id
+			left join	tab_organization_info f on a.branch_id = f.id
+		where 			1 = 1
+		<if test="change_id != null and change_id != ''">
+			and			a.change_id = #{change_id}		
+		</if>
+		order by a.id DESC	
+	</select>
+	
+	<!-- 退费单据-作废 -->
+	<select id="cancelRefund" statementType="CALLABLE" parameterType="map">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_04(#{p_change_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	<!-- 冻结退费-作废 -->
+	<select id="cancelFrozen" statementType="CALLABLE" parameterType="map">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_04(#{p_change_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	
+	
+	<!-- 退费单据-标记已取款 -->
+	<update id="drawRefund" parameterType="map">
+		update t_order_change 
+		set is_draw = 1,
+			update_time=sysdate,
+		    update_user =#{update_user,jdbcType=NUMERIC}
+	    where id = #{change_id}
+	</update>
+	<!-- 查询当前变更课程的主课程、当前课程、当前课程的子课程 变更记录数量-->
+	<select id="queryChangeCourseNum"  resultType="java.lang.Integer" parameterType="HashMap">
+		select count(1) 
+	       from tab_change_course tc,
+	            t_order_course  oc,
+	            t_order_course  ooc,
+	            tc_order_course otc,
+	            t_order_change  chg
+	      where
+	        tc.change_no = #{change_no}
+	        and tc.order_course_id = oc.id
+	        and (oc.id = ooc.id or oc.id = ooc.root_course_id or
+	            oc.root_course_id = ooc.id)
+	        and ooc.id = otc.order_course_id
+	        and otc.change_id = chg.id
+	        and chg.change_type = 1
+	        and chg.change_status in (1, 2, 3, 4)
+	</select>
+	
+	<!-- 保存订单批改总信息 -->
+	<insert id="saveOrderChange" parameterType="com.edu.erp.model.TOrderChange" useGeneratedKeys="true" keyProperty="id">
+		insert into t_order_change
+	      (
+	       order_id, 
+	       change_type, 
+	       change_status, 
+	       apply_time, 
+	       apply_user, 
+	       input_user,
+	       input_time, 
+	       audit_time, 
+	       audit_user, 
+	       fin_confirm_time, 
+	       fin_confirm_user, 
+	       validate_time, 
+	       fee_amount, 
+	       create_user, 
+	       create_time, 
+	       update_user, 
+	       update_time, 
+	       encoding, 
+	       branch_id, 
+	       invalid_id,
+	    <if test="fee_deduction_amount != null">
+	       fee_deduction_amount,
+	    </if>
+	       remark 
+	       )
+	    values
+	      (
+		  #{order_id,jdbcType=NUMERIC},
+		  #{change_type,jdbcType=NUMERIC},
+		  #{change_status,jdbcType=NUMERIC},
+		  #{apply_time,jdbcType=DATE},
+		  #{apply_user,jdbcType=NUMERIC},
+		  #{input_user,jdbcType=NUMERIC},
+		  #{input_time,jdbcType=DATE},
+		  #{audit_time,jdbcType=DATE},
+		  #{audit_user,jdbcType=NUMERIC},
+		  #{fin_confirm_time,jdbcType=DATE},
+		  #{fin_confirm_user,jdbcType=NUMERIC},
+		  #{validate_time,jdbcType=DATE},
+		  #{fee_amount,jdbcType=NUMERIC},
+		  #{create_user,jdbcType=NUMERIC},
+		  #{create_time,jdbcType=TIMESTAMP},
+		  #{update_user,jdbcType=NUMERIC},
+		  #{update_time,jdbcType=DATE},
+		  #{encoding,jdbcType=VARCHAR},
+		  #{branch_id,jdbcType=NUMERIC},
+		  #{invalid_id,jdbcType=NUMERIC},
+	   <if test="fee_deduction_amount != null">
+		  #{fee_deduction_amount,jdbcType=NUMERIC},
+	   </if>
+		  #{remark,jdbcType=VARCHAR}
+		  )
+	</insert>
+	
+	<!-- 更新订单变动信息，只用于更新某些特定字段 -->
+	<update id="updateOrderChange" parameterType="com.edu.erp.model.TOrderChange">
+		update t_order_change 
+		set 
+		    <if test="input_user != null and input_user != ''">
+		    	input_user = #{input_user,jdbcType=NUMERIC},
+		    </if>
+		    <if test="input_time != null and input_time != ''">
+	       		input_time = #{input_time,jdbcType=DATE},
+	       	</if>
+	       	<if test="change_status != null and change_status != ''">
+	       		change_status = #{change_status,jdbcType=NUMERIC},
+	       	</if>
+	       	<if test="validate_time != null and validate_time != ''">
+	       		validate_time = #{validate_time,jdbcType=DATE},
+	       	</if>
+	       	update_time = sysdate,
+		    update_user = #{update_user,jdbcType=NUMERIC}
+	    where id = #{id}
+	</update>
+	
+	<update id="updateChangeIdOnChangeCourse"  parameterType="map">
+		update tab_change_course t set t.change_id = #{change_id} , t.order_id = #{order_id}  where t.change_no =   #{change_no}
+	</update>
+	
+	<update id="updateOrderChangeStatus"  parameterType="map">
+		update t_order_change t set t.change_status = #{change_stuatus} , t.validate_time=sysdate  where t.id =   #{change_id}
+	</update>
+	
+	<update id="updateAmountByChangeId"  parameterType="map">
+		 Update T_Order_Change T Set T.Fee_Deduction_Amount = #{premium_deduction_amount,jdbcType=NUMERIC}, T.FEE_RETURNS_AMOUNT =#{fee_return_amount,jdbcType=NUMERIC} ,
+         T.FEE_AMOUNT = T.FEE_AMOUNT - #{premium_deduction_amount,jdbcType=NUMERIC}   Where T.Id = #{change_id}
+	</update>
+
+	<update id="updateAmountsByChangeId"  parameterType="map">
+		Update T_Order_Change T Set T.Fee_Deduction_Amount = #{premium_deduction_amount,jdbcType=NUMERIC}, T.FEE_RETURNS_AMOUNT =#{fee_return_amount,jdbcType=NUMERIC} ,
+		T.FEE_AMOUNT = #{fee_amount,jdbcType=NUMERIC}   Where T.Id = #{change_id}
+	</update>
+	
+	<update id="updateFeeAmountByChangeId"  parameterType="map">
+		 Update T_Order_Change T Set T.FEE_AMOUNT = #{fee_amount,jdbcType=NUMERIC}   Where T.Id = #{change_id}
+	</update>
+	
+	<update id="updateInvalidIdByOrderChangeId" parameterType="map">
+		update t_order_change t set t.invalid_id = #{invalid_id}  where t.id =   #{change_id}
+	</update>
+	
+	<update id="updateInputUserByOrderChangeId" parameterType="map">
+		update t_order_change t set t.input_time = sysdate, t.input_user =  #{input_user}  where t.id =   #{change_id}
+	</update>
+	
+	<!-- 退费作废前验证 退费后订单时候有批改操作 -->
+	<select id="queryPGOrderChangeNums"  resultType="java.lang.Integer" parameterType="map">
+		select count(1) 
+	      from t_order_change t2, tc_order_course t1, t_order_course t3
+	     where t2.id = t1.change_id
+	       and t1.order_course_id = t3.id
+	       and exists(select 1                             
+	               from tc_order_course l,t_order_course c
+	              where l.order_course_id = c.id
+	                and  l.change_id =#{changeId}
+	                and (t1.order_course_id = l.order_course_id or
+	                    t3.root_course_id = l.order_course_id or  
+	                    t1.order_course_id = c.root_course_id or 
+	                    t3.root_course_id = c.root_course_id  
+	                    ))
+	       and t2.change_status = 5
+	       and t2.change_type = 5
+	       and t2.id not in (${changeId},${pchangeId}) 
+	       and t2.order_id = #{orderId}
+	</select>
+	
+	<select id="doOrderChange_3" statementType="CALLABLE" parameterType="HashMap">
+		<![CDATA[
+		    {call pkg_change_web_v5.p_do_change_03(#{p_order_id,mode=IN,jdbcType=NUMERIC},
+		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
+		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
+		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+
+	<select id="queryExpiredChangeCourseTimesCount" parameterType="long" resultType="integer">
+		select count(0)
+			from tc_order_course       toc,
+						tc_order_course_times toct,
+						t_order_change        toch,
+						t_order               tord,
+						t_order_course        toco,
+						t_order_course_times  oct,
+						t_course_scheduling   tcs
+			where toc.id = toct.change_course_id
+				and toc.change_id = toct.change_id
+				and toc.order_id = tord.id
+				and toc.change_id = toch.id
+				and toco.id = toc.order_course_id
+				and oct.ocid = toco.id
+				and oct.times = toct.course_times
+				and tcs.course_id = toco.course_id
+				and tcs.course_times = oct.times
+				and to_date(to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') || ' ' || tcs.start_time, 'yyyy-MM-dd hh24:mi') &lt; sysdate
+				and toc.change_id = #{changeId}
+	</select>
+	
+</mapper>

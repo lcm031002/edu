@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.OrderInfoDao">
+	
+	<!-- 查询报班单信息 -->
+	<select id="queryTemporaryOrderInfo" resultType="com.edu.erp.model.TabOrderInfo"
+		parameterType="com.edu.erp.model.TabOrderInfo">
+		 SELECT TOI.*, 
+		 		TSI.STUDENT_NAME, 
+		 		TSI.ENCODING as student_encoding,
+		 		TOOI.ORG_NAME as branch_name, 
+		 		payinfo.payprice as payment,
+		 		tpr.rule_name,
+		 		tol.STATUS as lock_status,
+		 		tei.EMPLOYEE_NAME as employee_name,
+		 		TOOI_BU.ORG_NAME as bu_name,
+		 		tei2.EMPLOYEE_NAME as approver_name,
+		 		(case
+			         when toi.check_status = 1 and toi.valid_status != 0 then
+			          2  /* 暂存 */
+			         when toi.check_status = 3 and toi.valid_status = 1 and
+			              toi.pay_status != 1 then
+			          3  /* 待缴费 */
+			         when toi.check_status = 2 and toi.valid_status = 1 then
+			          4  /* 审核通过 */
+			         when toi.check_status = 3 and toi.valid_status = 1 and
+			              toi.pay_status = 1 then
+			          1  /* 正常 */
+			         when toi.check_status = 4 and toi.valid_status = 1 and
+			              toi.pay_status != 1 then
+			          5  /* 审核不通过 */
+			         else
+			          0  /* 作废 */
+			       end) as order_status,
+			       toi.on_line
+		   FROM TAB_ORDER_INFO TOI
+		   LEFT JOIN TAB_STUDENT_INFO TSI
+		     ON TSI.ID = TOI.STUDENT_ID
+		   LEFT JOIN TAB_ORGANIZATION_INFO TOOI
+		     ON TOOI.ID = TOI.BRANCH_ID
+		   LEFT JOIN TAB_ORGANIZATION_INFO TOOI_BU
+		     ON TOOI_BU.ID = TOI.BU_ID
+		   left join (select sum(topc.actual_price) as payprice, topc.order_id
+		                from tab_order_pay_cost topc
+		               group by topc.order_id) payinfo
+		     on payinfo.order_id = TOI.Id
+		   left join tab_privilege_rule tpr on tpr.id = TOI.rule_id
+		   left join T_ORDER_LOCK tol on tol.order_id = TOI.id
+		   left join tab_user_info tui on tui.id = TOI.CREATE_USER
+		   left join TAB_EMPLOYEE_INFO tei on tei.id = tui.employee_id
+		   left join tab_user_info tui2 on tui2.id = TOI.last_approver
+		   left join TAB_EMPLOYEE_INFO tei2 on tei2.id = tui2.employee_id
+		   <trim prefix="where" prefixOverrides="and">
+		   		<if test="id !=null and id != ''">
+		   			TOI.ID = #{id,jdbcType=NUMERIC}
+		   		</if>
+		   		<if test="encoding !=null and encoding != ''">
+		   			and TOI.encoding = #{encoding,jdbcType=VARCHAR}
+		   		</if>
+		   </trim>
+	</select>
+	
+	<!-- 学生首页订单信息查询 -->
+	<select id="queryStudentOrderInfo" resultType="com.edu.erp.model.TabOrderInfo"
+		parameterType="com.edu.erp.model.TabOrderInfo">
+		SELECT TOI.*, PAYMENT_INFO.course_total_count,changecourse.premium_amount
+		  FROM TAB_ORDER_INFO TOI
+		  LEFT JOIN (select toid.order_id, sum(toid.course_total_count) as course_total_count
+		               from tab_order_info_detail toid
+		              where toid.student_id = #{student_id,jdbcType=NUMERIC}
+		              group by toid.order_id) PAYMENT_INFO
+		    ON PAYMENT_INFO.ORDER_ID = TOI.ID
+		  left join (
+		  	 select t.order_id, sum(t.fee_amount) as premium_amount
+			   from t_order_change t
+			  where t.change_type = 1
+			    and t.change_status = 5
+			  group by t.ORDER_ID
+		  ) changecourse on changecourse.order_id = TOI.id
+		  left join tab_organization_info toooi on toooi.id = TOI.bu_id
+		 WHERE TOI.STUDENT_ID = #{student_id,jdbcType=NUMERIC}
+		 AND to_char(TOI.CREATE_TIME,'yyyy-MM-dd') BETWEEN
+		to_char(#{beginDate,jdbcType=DATE},'yyyy-MM-dd') AND
+		to_char(#{endDate,jdbcType=DATE},'yyyy-MM-dd')
+		<if test="product_line!=null">
+			and toooi.product_line = #{product_line,jdbcType=NUMERIC}
+		</if>
+		<if test="branchs!=null">
+			and TOI.BRANCH_ID in 
+			<foreach item="item" index="index" collection="branchs" open="(" separator="," close=")">  
+		  		#{item}
+		 	</foreach>
+	 	</if>
+		<!-- and TOI.valid_status = 1 -->
+		order by TOI.encoding desc
+	</select>
+	
+	<!-- 保存报班单 -->
+	<insert id="saveOrderInfo" parameterType="com.edu.erp.model.TabOrderInfo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO TAB_ORDER_INFO
+		(
+		ENCODING,
+		STUDENT_ID,
+		IS_COURSE_PACK,
+		BUSINESS_TYPE,
+		START_STATUS,
+		SUM_PRICE,
+		ACTUAL_PRICE,
+		ORDER_TYPE,
+		SOURCE_ORDER,
+		RETURN_PREMIUM_STATUS,
+		IS_EXTEND_ORDER,
+		BRANCH_ID,
+		BU_ID,
+		CITY_ID,
+		RULE_ID,
+		INVOICE_HEAD,
+		INVOICE_CODE,
+		INVOICE_DESCRIPTION,
+		VALID_STATUS,
+		CHECK_STATUS,
+		LAST_APPROVER,
+		APPROVE_TIME,
+		REMARK,
+		CREATE_USER,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		EXTEND_COLUMN,
+		EXTEND_COLUMN2,
+		EXTEND_COLUMN3,
+		EXTEND_COLUMN4,
+		IMMEDIATE_REDUCE,
+		PAY_STATUS,
+		invoice_type,
+		invoice_money,
+		invoice_date
+		)
+		VALUES
+		(
+		#{encoding,jdbcType=VARCHAR},
+		#{student_id,jdbcType=NUMERIC},
+		#{is_course_pack,jdbcType=NUMERIC},
+		#{business_type,jdbcType=NUMERIC},
+		#{start_status,jdbcType=NUMERIC},
+		#{sum_price,jdbcType=NUMERIC},
+		#{actual_price,jdbcType=NUMERIC},
+		#{order_type,jdbcType=NUMERIC},
+		#{source_order,jdbcType=NUMERIC},
+		#{return_premium_status,jdbcType=NUMERIC},
+		#{is_extend_order,jdbcType=NUMERIC},
+		#{branch_id,jdbcType=NUMERIC},
+		#{bu_id,jdbcType=NUMERIC},
+		#{city_id,jdbcType=NUMERIC},
+		#{rule_id,jdbcType=NUMERIC},
+		#{invoice_head,jdbcType=VARCHAR},
+		#{invoice_code,jdbcType=VARCHAR},
+		#{invoice_description,jdbcType=VARCHAR},
+		#{valid_status,jdbcType=NUMERIC},
+		#{check_status,jdbcType=NUMERIC},
+		#{last_approver,jdbcType=NUMERIC},
+		#{approve_time,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{create_user,jdbcType=NUMERIC},
+		#{create_time,jdbcType=TIMESTAMP},
+		#{update_user,jdbcType=NUMERIC},
+		#{update_time,jdbcType=TIMESTAMP},
+		#{extend_column,jdbcType=VARCHAR},
+		#{extend_column2,jdbcType=VARCHAR},
+		#{extend_column3,jdbcType=NUMERIC},
+		#{extend_column4,jdbcType=NUMERIC},
+		#{immediate_reduce,jdbcType=NUMERIC},
+		#{pay_status,jdbcType=NUMERIC},
+		#{invoice_type ,jdbcType=NUMERIC},
+		#{invoice_money ,jdbcType=NUMERIC},
+		#{invoice_date ,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 修改报班单 -->
+	<update id="updateOrderInfo" parameterType="com.edu.erp.model.TabOrderInfo">
+		update TAB_ORDER_INFO set
+		start_status = #{start_status,jdbcType=NUMERIC},
+		sum_price = #{sum_price,jdbcType=NUMERIC},
+		actual_price = #{actual_price,jdbcType=NUMERIC},
+		return_premium_status = #{return_premium_status,jdbcType=NUMERIC},
+		rule_id=#{rule_id,jdbcType=NUMERIC},
+		invoice_head=#{invoice_head,jdbcType=VARCHAR},
+		invoice_description=#{invoice_description,jdbcType=NUMERIC},
+		check_status=#{check_status,jdbcType=NUMERIC},
+		valid_status=#{valid_status,jdbcType=NUMERIC},
+		last_approver=#{last_approver,jdbcType=NUMERIC},
+		approve_time = #{approve_time,jdbcType=NUMERIC},
+		remark=#{remark,jdbcType=VARCHAR},
+		update_user=#{update_user,jdbcType=NUMERIC},
+		update_time=#{update_time,jdbcType=TIMESTAMP},
+		immediate_reduce=#{immediate_reduce,jdbcType=NUMERIC},
+		pay_status=#{pay_status,jdbcType=NUMERIC},
+		invoice_code=#{invoice_code,jdbcType=VARCHAR},
+		invoice_type=#{invoice_type ,jdbcType=NUMERIC},
+		invoice_money=#{invoice_money ,jdbcType=NUMERIC},
+		invoice_date=#{invoice_date ,jdbcType=VARCHAR},
+		invoice_status=#{invoice_status ,jdbcType=NUMERIC},
+		extend_column=#{extend_column ,jdbcType=VARCHAR},
+		order_type=#{order_type,jdbcType=NUMERIC},
+		billno=#{billNo,jdbcType=VARCHAR},
+		qrcodeid=#{qrCodeId,jdbcType=VARCHAR},
+		onlinepay_date=#{onlinepay_date,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<update id="updateOrderApproved" parameterType="com.edu.erp.model.TabOrderInfo">
+		update TAB_ORDER_INFO set 
+		<if test="approved != null">
+			approved = #{approved,jdbcType=NUMERIC},
+		</if>
+		<if test="approve_time != null">
+			approve_time = #{approve_time,jdbcType=VARCHAR},
+		</if>
+		<if test="check_status != null">
+			check_status = #{check_status,jdbcType=NUMERIC},
+		</if>
+		<if test="valid_status != null">
+			valid_status = #{valid_status,jdbcType=NUMERIC}
+		</if>
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 删除报班单 -->
+	<delete id="deleteOrderInfo" parameterType="com.edu.erp.model.TabOrderInfo">
+		delete from TAB_ORDER_INFO where id = #{id,jdbcType=NUMERIC}
+	</delete>
+	
+	<!-- 创建正式的报班单 -->
+	<select id="createOrder" statementType="CALLABLE" parameterType="HashMap" resultType="HashMap">
+		<![CDATA[
+		    {call pkg_order_main_v5.p_main(#{order_id,mode=IN,jdbcType=VARCHAR},
+		    	                        #{user_id,mode=IN,jdbcType=VARCHAR},
+		    	                        #{error_code,mode=OUT,jdbcType=NUMERIC},
+										#{error_desc,mode=OUT,jdbcType=VARCHAR})}
+		]]>
+	</select>
+	
+	<select id="queryTuiFeiByStudentId" parameterType="map" resultType="java.lang.String">
+		select sum(nvl(oc.course_times,0)) course_times
+		  from t_order_change t
+		  left join t_order o
+		    on o.id = t.order_id
+		  left join tc_order_course oc
+		    on oc.change_id = t.id
+		  left join t_course tc 
+		  	on tc.id = oc.order_course_id
+		 where t.change_type = 1
+		   and t.change_status = 5
+		   and o.order_status = 1
+		   and tc.business_type = 3
+		   and o.student_id = #{studentId,jdbcType=NUMERIC} 
+	</select>
+	
+	<!-- 设置业绩归属 -->
+	<update id="updatePerformanceAttribution" parameterType="java.util.Map">
+		update t_order set agent_id = #{user_id} where id = #{order_id}
+	</update>
+	
+	
+	<select id="queryUserOrderList" resultType="HashMap" parameterType="java.util.Map">
+		select org.org_name org_name,
+				toi.id orderId,
+				toi.bu_id buId,
+		       stu.id stuId,
+		       toi.encoding orderEncoding,
+		       stu.encoding StuEncoding,
+		       stu.student_name student_name,
+		       toi.actual_price actual_price,
+		       case toi.pay_status
+		         when 0 then
+		          '未缴费'
+		         when 1 then
+		          '已缴费'
+		       end pay_status,
+		       case toi.check_status
+		         when 1 then
+		          '未审核'
+		         when 2 then
+		          '审核中'
+		         when 3 then
+		          '已通过'
+		         when 4 then
+		          '未通过'
+		       end check_status,
+		       case
+		         when toi.check_status = 3 and toi.pay_status = 1 then
+		          '已完成'
+		         when toi.check_status = 1 and toi.pay_status = 0 then
+		          '暂存'
+		         when toi.check_status = 2 and toi.pay_status = 0 then
+		          '审核中'
+		         when toi.check_status = 2 and toi.pay_status = 1 then
+		          '状态异常'
+		         when toi.check_status = 3 and toi.pay_status = 0 then
+		          '待缴费'
+		         when toi.check_status = 4 and toi.pay_status = 0 then
+		          '审批未通过'
+		       end type
+		  from tab_order_info toi
+		  left join tab_user_info usr
+		    on toi.create_user = usr.id
+		  left join tab_employee_info emp
+		    on usr.employee_id = emp.id
+		  left join tab_student_info stu
+		    on toi.student_id = stu.id
+		  left join tab_organization_info org
+		    on toi.branch_id = org.id   
+		 where 1 = 1
+		 and toi.create_user = #{userId}
+		 and toi.valid_status = 1
+		 <if test="check_status != null and pay_status != null">
+			and toi.check_status = #{check_status} 
+			and toi.pay_status = #{pay_status} 
+		 </if>
+		 <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			and to_char(toi.create_time,'yyyy-MM-dd') between #{startDate} and #{endDate}
+		 </if>
+		 <if test="app_info != null">
+			and stu.student_name like '%'||#{app_info}||'%'
+		 </if>
+	</select>
+	
+	<!-- 更新订单发票状态 -->
+	<update id="updateInvoiceStatus" parameterType="com.edu.erp.model.TabOrderInfo">
+		update TAB_ORDER_INFO set
+		invoice_status = #{invoice_status,jdbcType=NUMERIC}
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<!-- 判断学生结课（学生报班排课最后一次课的上课日期）三个月以内的报班是续单其他是新单 -->
+    <!-- 返回数值 1 表示续单，0 表示新单 -->
+	<select id="getJyRenewalFlag" parameterType="java.util.Map" resultType="integer">
+		select case
+		         when add_months(to_date(max(sch.course_date), 'yyyymmdd'), 3) &gt;
+		              sysdate then
+		          1
+		         else
+		          0
+		       end
+		  from t_order ord
+		  left join t_order_course cou
+		    on cou.order_id = ord.id
+		  left join t_course course
+		    on course.id = cou.course_id
+		  left join t_order_course_times coutim
+		    on coutim.ocid = cou.id
+		  left join t_course_scheduling sch
+		    on sch.course_id = course.id
+		   and sch.course_times = coutim.times
+		 where ord.order_status = 1
+		   and ord.bu_id = #{bu_id,jdbcType=NUMERIC}
+		   and ord.student_id = #{student_id,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 个性化续单判断  1.系统仍有剩余1对1课时，算续单；2.已结课无剩余课时，但是续报时距离结课日期在30天之内算续单 -->
+	<!-- 返回数值 1 表示续单，0 表示新单 -->
+	<select id="getGxhRenewalFlag" parameterType="java.util.Map" resultType="integer">
+		select case
+		         when course_surplus_count > 0 then
+		          1
+		         when course_surplus_count = 0 and attend_date is not null and
+		              (attend_date + 30) > trunc(sysdate) then
+		          1
+		         else
+		          0
+		       end
+		  from (select nvl(sum(nvl(toco.course_surplus_count, 0)), 0) course_surplus_count,
+		               max(tatt.attend_date) attend_date
+		          from t_order_course toco
+		          left join t_order tord
+		            on tord.id = toco.order_id
+		          left join t_attendance tatt
+		            on tatt.order_course_id = toco.id
+		           and tatt.attend_type in (21, 29)
+		         where nvl(toco.status, 1) = 1
+		           and nvl(tord.order_status, 1) = 1
+		           <if test="businessType != null and businessType != ''">
+					   and tord.business_type = #{businessType,jdbcType=NUMERIC}
+				   </if>
+		           and tord.student_id = #{student_id,jdbcType=NUMERIC})
+	</select>
+	<select id="selectUnpay" parameterType="map" resultType="com.edu.erp.model.TabOrderInfo">
+		select toi.id,tsi.id student_id,tsi.student_name,tsi.encoding student_encoding,toi.encoding,togi.org_name branch_name,toi.actual_Price actual_price,toi.create_time,tei.employee_name employee_name, toi.check_status
+		from TAB_ORDER_INFO toi
+		left join tab_student_info tsi on 
+		toi.student_id = tsi.id
+		left join tab_organization_info togi on
+		toi.branch_id = togi.id
+		left join tab_employee_info tei on
+		toi.create_user = tei.id
+		where 
+		toi.valid_status=1 and toi.check_status in (2,3) and toi.pay_status=0 and toi.city_id = #{city_id}
+		<trim>
+			<if test="bu_id!=null">
+				and toi.bu_id=#{bu_id}
+			</if>
+			<if test="branch_id!=null and branch_id != -1">
+				and toi.branch_id=#{branch_id}
+			</if>
+			<if test="check_status!=null and check_status!=-1">
+				and toi.check_status=#{check_status}
+			</if>
+			<choose>
+				<when test="start_date !=null and end_date !=null and start_date !='' and end_date !='' ">
+					and to_char(toi.CREATE_TIME,'yyyy-MM-dd') BETWEEN #{start_date} AND #{end_date}
+				</when>
+				<when test="start_date !=null and start_date !=''">
+					<![CDATA[
+						and to_char(toi.CREATE_TIME,'yyyy-MM-dd')>=#{start_date} 
+					]]>
+				</when>
+				<when test="end_date !=null and end_date !=''">
+					<![CDATA[
+						and to_char(toi.CREATE_TIME,'yyyy-MM-dd')<=#{end_date} 
+					]]>
+				</when>
+			</choose>
+		</trim>
+		order by toi.branch_id,toi.create_time
+	</select>
+	
+	 <select id="needSynToDouble" resultType="long" parameterType="long">
+		 select o.student_id
+		  from tab_order_info o
+		 where o.id = #{orderId,jdbcType=NUMERIC} 
+		   and exists
+		 (select 1
+		          from tab_order_info_Detail s, t_course c, t_more_teacher_course t
+		         where s.course_id = c.id
+		           and s.order_id = o.id
+		           and c.more_teacher_courseid = t.id
+		           and t.type = 4)
+    </select>
+
+	<!-- 更新订单备注字段-->
+	<update id="updateOrderRemark" parameterType="com.edu.erp.model.TabOrderInfo">
+		update TAB_ORDER_INFO set
+		remark = #{remark,jdbcType=NUMERIC}
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+
+	<!-- 更新二维码的信息字段-->
+	<update id="updateOrderQrInfo" parameterType="com.edu.erp.model.TabOrderInfo">
+		update TAB_ORDER_INFO set
+		billno=#{billNo,jdbcType=VARCHAR},
+		qrcodeid=#{qrCodeId,jdbcType=VARCHAR},
+		onlinepay_date=#{onlinepay_date,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=NUMERIC}
+	</update>
+
+	<update id="updateOrderLockStatus" parameterType="com.edu.erp.model.TOrderLock">
+		update T_ORDER_LOCK set
+		status = #{status,jdbcType=NUMERIC},
+		remark = #{remark,jdbcType=VARCHAR},
+		updater = #{updater,jdbcType=NUMERIC},
+		updatetime = sysdate,
+		unlocktime = sysdate
+		where order_id = #{order_id,jdbcType=NUMERIC}
+	</update>
+</mapper>
