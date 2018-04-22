@@ -482,7 +482,7 @@ function erp_newStudentController(
       }) ;
     }
 
-    erp_dictService.getDictData({"typeCode" : "studentStatus", "needProductLineCdtn" : "Y"}, function(resp) {
+    erp_dictService.getDictData({"typeCode" : "studentStatus", "needProductLineCdtn" : "N"}, function(resp) {
       if (!resp.error) {
         $scope.studentStatus = resp.data;
       }

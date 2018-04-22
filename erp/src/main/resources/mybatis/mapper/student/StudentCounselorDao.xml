@@ -96,32 +96,36 @@
 		select *
 		from (select distinct tei.id as counselor_id,
 									max(tei.encoding) as encoding,
-									decode(tsci.counselor_type,
-									2,
-									max(tei.employee_name),
+									case when tsci.counselor_type = 2
+									then max(tei.employee_name)
+									else
 									(select t2.employee_name
 									from tab_student_counselor_info t1,
 									tab_employee_info          t2
 									where t1.counselor_id = t2.id
 									and t1.student_id = tsi.id
 									and t1.is_valid = 1
-									and to_char(sysdate, 'yyyy-MM-dd') between
+									and date_format (sysdate(), '%Y-%m-%d') between
 									t1.start_date and t1.end_date
 									and t1.counselor_type = 2
-									and rownum = 1)) as name,
-									decode(tsci.counselor_type,
-									1,
-									max(tei.employee_name),
+									limit 1
+									)
+									end NAME,
+									case when tsci.counselor_type = 1 then
+									max(tei.employee_name)
+									else
 									(select t2.employee_name
 									from tab_student_counselor_info t1,
 									tab_employee_info          t2
 									where t1.counselor_id = t2.id
 									and t1.student_id = tsi.id
 									and t1.is_valid = 1
-									and to_char(sysdate, 'yyyy-MM-dd') between
+									and date_format (sysdate(), '%Y-%m-%d') between
 									t1.start_date and t1.end_date
 									and t1.counselor_type = 1
-									and rownum = 1)) as counselor_name,
+									limit 1
+									)
+									end counselor_name,
 									tsi.id as student_id,
 									max(tsi.encoding) as student_encoding,
 									max(tsi.student_name) as student_name,
@@ -133,7 +137,7 @@
 									max(tsi.bu_id) as bu_id
 		from (select distinct tsci.counselor_id, tsci.student_id, tsci.counselor_type
 			from tab_student_counselor_info tsci
-		  where tsci.bu_id = #{bu_id,jdbcType=NUMERIC} and to_char(sysdate, 'yyyy-MM-dd') between tsci.start_date and tsci.end_date
+		  where tsci.bu_id = #{bu_id,jdbcType=NUMERIC} and date_format (sysdate(), '%Y-%m-%d') between tsci.start_date and tsci.end_date
 			and tsci.is_valid = 1
 		<if test="counselor_id != null">
 			and tsci.counselor_id = #{counselor_id}

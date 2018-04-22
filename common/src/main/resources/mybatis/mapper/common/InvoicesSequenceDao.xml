@@ -22,10 +22,9 @@
 	<!-- 如果未找到对应编号类型 则插入新编号类型 -->
 	<insert id="insert" parameterType="com.edu.common.model.InvoicesSequence">
 		INSERT INTO 
-			tab_invoices_sequence (id,invoices_type, sequence)
+			tab_invoices_sequence (invoices_type, sequence)
 		VALUES 
 		(	
-			SEQ_TAB_INVOICES_SEQUENCE.nextval,
 			#{invoices_type,jdbcType=NUMERIC},
 			#{sequence,jdbcType=NUMERIC}
 		)

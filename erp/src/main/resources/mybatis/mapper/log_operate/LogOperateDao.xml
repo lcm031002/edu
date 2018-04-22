@@ -4,13 +4,13 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.erp.dao.LogOperateDao">
 	<insert id="insertBySQLID"  parameterType="java.util.HashMap">
-		insert into business_operate_log t 
+		insert into business_operate_log
 		(
-			t.CREATETIME,
-			t.BUSINESSNAME,
-			t.DETAILINFO,
-			t.OPERATER,
-			t.STATUS
+			CREATETIME,
+			BUSINESSNAME,
+			DETAILINFO,
+			OPERATER,
+			STATUS
 		)   
 		values 
 		(

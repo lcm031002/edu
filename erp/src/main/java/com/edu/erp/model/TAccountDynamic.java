@@ -15,6 +15,7 @@ public class TAccountDynamic extends BaseObject {
 	private String student_encoding;// 学生编码
 	private Long bu_id;// 团队id
 	private String bu_name;// 所属团队
+	private Long branch_id; //校区
 	private String branch_name;// 所属校区
 	private String operator;// 操作人
 	private Long dynamic_type;// 账户变动类型
@@ -211,6 +212,10 @@ public class TAccountDynamic extends BaseObject {
 	public void setIn_bu_name(String in_bu_name) {
 		this.in_bu_name = in_bu_name;
 	}
+
+	public Long getBranch_id() { return branch_id;	}
+
+	public void setBranch_id(Long branch_id) { this.branch_id = branch_id;	}
 
 	@Override
 	public String toString() {

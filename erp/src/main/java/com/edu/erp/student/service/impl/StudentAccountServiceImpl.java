@@ -215,27 +215,48 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			queryAccountMap.put("accountType", 0);
 			Map<String, Object> queryAccount = studentAccountDao
 					.queryAccount(queryAccountMap);
+			TAccount tAccount = new TAccount();
+
 			if (CollectionUtils.isEmpty(queryAccount)) {
-				queryAccountMap.put("p_student_id", param.get("studentId"));
-				queryAccountMap.put("p_bu_id", param.get("buId"));
-				queryAccountMap.put("p_input_user", userId);
-				studentAccountDao.createAccount(paramMap);
+				tAccount.setStudent_id(NumberUtils.object2Long(paramMap.get("studentId")));
+				tAccount.setBu_id(NumberUtils.object2Long(paramMap.get("buId")));
+				tAccount.setCreater_id(userId);
+				studentAccountDao.createAccount(tAccount);
+			}else{
+				tAccount.setId(NumberUtils.object2Long(queryAccount.get("id")));
+				tAccount.setFee_amount( Double.parseDouble(queryAccount.get("fee_amount") + ""));
 			}
 
-			paramMap.put("p_student_card", param.get("stu_card"));
-			paramMap.put("p_company_card", param.get("company_card_id"));
-			paramMap.put("p_input_user", userId);
-			paramMap.put("p_approve_user", userId);
-			paramMap.put("p_confirm_user", userId);
-			paramMap.put("p_remark", param.get("remark"));
-			paramMap.put("o_dynamic_id", null);
-			paramMap.put("p_encoding",
-					EncodingSequenceUtil.getSequenceNum((long) 1));
-			studentAccountDao.accountRecharge(paramMap);
+			TAccountDynamic tAccountDynamic  = new TAccountDynamic();
+			tAccountDynamic.setAccount_id(tAccount.getId());
+			tAccountDynamic.setDynamic_type(1L);//充值
+			tAccountDynamic.setCity_id(cityId);
+			tAccountDynamic.setBranch_id(branchId);
+			tAccountDynamic.setBu_id(buId);
+			tAccountDynamic.setStudent_id(studentId);
+			tAccountDynamic.setAccount_id(tAccount.getId());
+			tAccountDynamic.setMoney(Double.parseDouble(param.get("money") + ""));
+			tAccountDynamic.setCreate_user(userId);
+			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 1));
 
-			if (!paramMap.get("o_err_code").toString().equals("0")) {
-				throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
-			}
+			studentAccountDao.saveAccountDynamic(tAccountDynamic);
+
+    		TAccountChange tAccountChange = new TAccountChange();
+			tAccountChange.setAccount_id(tAccount.getId());
+			tAccountChange.setChange_flag(0L);
+			tAccountChange.setChange_type(0L);
+			tAccountChange.setChange_amount(Double.parseDouble(param.get("money") + ""));
+			tAccountChange.setPre_amount(tAccount.getFee_amount());
+			tAccountChange.setNext_amount(Double.parseDouble(param.get("money") + "") + tAccount.getFee_amount());
+			tAccountChange.setDynamic_id(tAccountDynamic.getId());
+			tAccountChange.setPay_mode(NumberUtils.object2Long(param.get("pay_mode")));
+			studentAccountDao.saveAccountChange(tAccountChange);
+
+			HashMap<String,Object> paramAccountMap=new HashMap<String,Object>();
+			paramAccountMap.put("accountId",tAccount.getId());
+			paramAccountMap.put("amount",Double.parseDouble(param.get("money") + "") + tAccount.getFee_amount());
+			studentAccountDao.updateFeeAccount(paramAccountMap);
+
 			// 返回充值记录Id
 			map.put("dynamic_id", paramMap.get("o_dynamic_id"));
 			return map;
@@ -274,15 +295,14 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 				map.put("message", "参数不能为空！");
 				return map;
 			}
+			TAccount tAccount = new TAccount();
 			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("p_student_id", studentId);
-			paramMap.put("p_bu_id", buId);
-			paramMap.put("p_input_user", userId);
-			studentAccountDao.createAccount(paramMap);
+			tAccount.setStudent_id(studentId);
+			tAccount.setBu_id(buId);
+			tAccount.setCreater_id(userId);
+			paramMap.put("creater_id", userId);
+			studentAccountDao.createAccount(tAccount);
 
-			if (!paramMap.get("o_err_code").toString().equals("0")) {
-				throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
-			}
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();

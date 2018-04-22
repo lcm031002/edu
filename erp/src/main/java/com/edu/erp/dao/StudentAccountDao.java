@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.edu.erp.model.TAccountDynamic;
 import org.springframework.stereotype.Repository;
 
 import com.edu.erp.model.TAccount;
@@ -49,7 +50,7 @@ public interface StudentAccountDao{
 	
 	/**
 	 * 创建学生账户
-	 * @param  param
+	 * @param  tAccount
 	 * 入参:p_student_id              :学生ID
 	 *     :p_bu_id                   :团队Id                        
 	 *     :p_input_user              :创建人
@@ -57,7 +58,7 @@ public interface StudentAccountDao{
 	 *     :o_err_desc                :错误描述
 	 * @throws Exception
 	 */
-	void createAccount(Map<String, Object> param)throws Exception;
+	void createAccount(TAccount tAccount)throws Exception;
 	
 	Map<String, Object> queryAccount(Map<String, Object> param)throws Exception;
 	
@@ -240,10 +241,18 @@ public interface StudentAccountDao{
 	 * @throws Exception
 	 */
 	int saveAccountChange(TAccountChange tAccountChange) throws Exception;
+
+	/**
+	 * 保存账户流水信息
+	 * @param tAccountDynamic
+	 * @return
+	 * @throws Exception
+	 */
+	int saveAccountDynamic(TAccountDynamic tAccountDynamic) throws Exception;
+
 	/**
 	 * 更新储蓄账户金额
-	 * @param accountId
-	 * @param amount
+	 * @param param
 	 * @return
 	 * @throws Exception
 	 */
@@ -274,4 +283,5 @@ public interface StudentAccountDao{
 	void transStuAccount(Map<String, Object> paramMap) throws Exception;
 
 	Map<String, Object> queryStuAccountInfo(Long dynamicId);
+
 }

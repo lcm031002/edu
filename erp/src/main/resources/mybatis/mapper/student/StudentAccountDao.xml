@@ -34,40 +34,14 @@
 	</select>
 	
 	<!-- 学生账户充值  张军利 2014-11-10 -->
-	<select id="createAccount" statementType="CALLABLE" parameterType="java.util.HashMap">
-<![CDATA[
-    {call pkg_account_dynamic.pro_create_account(
-    								#{p_student_id,mode=IN,jdbcType=NUMERIC},
-								    #{p_bu_id,mode=IN,jdbcType=NUMERIC},
-								    #{p_input_user,mode=IN,jdbcType=NUMERIC},
-								    #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-								    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-								    
-]]>
-	</select>
-	
-	<!-- 学生账户充值  张军利 2014-11-10 -->
 	<select id="queryAccount" parameterType="java.util.HashMap" resultType="HashMap">
 		SELECT
-		    sum(TA.FEE_AMOUNT) as FEE_AMOUNT,
-		    sum(TA.refund_account)  as refund_account,
-		     sum(TA.frozen_account)  as frozen_account,
-		    STUDENT_ID
+		    sum(TA.FEE_AMOUNT) as fee_amount,
+		    student_id,id
 		FROM
 		    T_ACCOUNT TA
 		WHERE
-		    TA.STUDENT_ID = #{studentId,jdbcType=NUMERIC} 
-		    <if test="buId!=null">
-		    AND TA.BU_ID = #{buId,jdbcType=NUMERIC}
-		    </if>
-		    <if test="cityId!=null">
-		    AND TA.CITY_ID = #{cityId,jdbcType=NUMERIC}
-		    </if>
-		     <if test="accountType!=null">
-		    AND TA.ACCOUNT_TYPE =  #{accountType,jdbcType=NUMERIC}
-		    </if>
-		    
-		group by STUDENT_ID
+		    TA.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
 	</select>
 	
 	<!-- 学生账户转账 张军利 2014-11-11 -->
@@ -713,7 +687,7 @@
 			<![CDATA[
 			and	 date_format(t1.change_time, '%Y-%m-%d') between #{start_date} and #{end_date}
 			]]>	
-		</if>	
+		</if>
 		<if test="change_account_type != null and change_account_type > -1">
 			and			ifnull(t1.account_type, 1) = #{change_account_type}
 		</if>
@@ -772,7 +746,7 @@
 	</select>
 	
 	<select id="addReChargeHis" parameterType="java.util.HashMap">
-		insert into 
+		insert into
 			T_ACCOUNT_RECHARGE_INFO_HIS 
 		values(
 			seq_his.nextval,
@@ -801,12 +775,9 @@
 	
 	
 	<!-- 保存账户变动信息 -->
-	<insert id="saveAccountChange" parameterType="com.edu.erp.model.TAccountChange">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
-			select SEQ_T_ACCOUNT_CHANGE.nextval as id from dual
-		</selectKey>
+	<insert id="saveAccountChange" parameterType="com.edu.erp.model.TAccountChange" useGeneratedKeys="true" keyProperty="id">
 		insert into t_account_change
-	      (id, 
+	      (
 	       account_id, 
 	       order_id, 
 	       encoder_id, 
@@ -815,15 +786,13 @@
 	       change_amount,
 	       pre_amount,
 	       next_amount, 
-	       pay_mode, 
-	       old_id, 
+	       pay_mode,
 	       dynamic_id, 
 	       account_type, 
 	       change_time 
 	       )
 	    values
 	      (
-	      #{id,jdbcType=NUMERIC},
 		  #{account_id,jdbcType=NUMERIC},
 		  #{order_id,jdbcType=NUMERIC},
 		  #{encoder_id,jdbcType=NUMERIC},
@@ -833,12 +802,50 @@
 		  #{pre_amount,jdbcType=NUMERIC},
 		  #{next_amount,jdbcType=NUMERIC},
 		  #{pay_mode,jdbcType=NUMERIC},
-		  #{old_id,jdbcType=VARCHAR},
 		  #{dynamic_id,jdbcType=NUMERIC},
 		  #{account_type,jdbcType=NUMERIC},
-	       sysdate
+	       sysdate()
 	       )
 	</insert>
+
+	<!-- 保存账户变动信息 -->
+	<insert id="saveAccountDynamic" parameterType="com.edu.erp.model.TAccountDynamic" useGeneratedKeys="true" keyProperty="id">
+		insert into t_account_dynamic
+		(
+		dynamic_type,
+		city_id,
+		branch_id,
+		bu_id,
+		student_id,
+		account_id,
+		money,
+		pay_flag,
+		pay_mode,
+		create_user,
+		create_time,
+		status,
+		encoding,
+		account_type
+		)
+		values
+		(
+		#{dynamic_type,jdbcType=NUMERIC},
+		#{city_id,jdbcType=NUMERIC},
+		#{branch_id,jdbcType=NUMERIC},
+		#{bu_id,jdbcType=NUMERIC},
+		#{student_id,jdbcType=NUMERIC},
+		#{account_id,jdbcType=NUMERIC},
+		#{money,jdbcType=NUMERIC},
+		1,
+		1,
+		#{create_user,jdbcType=VARCHAR},
+		sysdate(),
+		1,
+		#{encoding,jdbcType=VARCHAR},
+		1
+		)
+	</insert>
+
 	<!--更新储蓄账户  -->
 	<update id="updateFeeAccount"  parameterType="java.util.HashMap" >
 		update t_account t set  t.fee_amount = #{amount} where t.id = #{accountId}
@@ -868,40 +875,22 @@
 	</select>
 	
 	<!--新建账户信息 -->
-	<insert id="saveAccount" parameterType="com.edu.erp.model.TAccount">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE">
-			select seq_t_account.nextval as id from dual
-		</selectKey>
+	<insert id="createAccount" parameterType="com.edu.erp.model.TAccount">
 		 insert into t_account
-	      (id, 
-	       student_id, 
-	       city_id, 
-	       branch_id,
-	       account_type, 
-	       fee_amount, 
-	       create_date, 
-	       creater_id, 
-	       old_id,
-	       product_line, 
+	      (
+		   student_id,
 	       bu_id,
-	       refund_account,
-	       frozen_account
+	       fee_amount,
+	       create_time,
+	       create_user
 	       )
 	    values
 	      (
-	      #{id,jdbcType=NUMERIC},
 		  #{student_id,jdbcType=NUMERIC},
-		  #{city_id,jdbcType=NUMERIC},
-		  #{branch_id,jdbcType=NUMERIC},
-		  #{account_type,jdbcType=NUMERIC},
-		  #{fee_amount,jdbcType=NUMERIC},
-		  #{create_date,jdbcType=DATE},
-		  #{creater_id,jdbcType=NUMERIC},
-		  #{old_id,jdbcType=VARCHAR},
-		  #{product_line,jdbcType=NUMERIC},
-		  #{bu_id,jdbcType=VARCHAR},
+		  #{bu_id,jdbcType=NUMERIC},
 		  0,
-		  0
+		  #{sysdate(),jdbcType=DATE},
+		  #{creater_id,jdbcType=NUMERIC}
 	       )
 	</insert>
 	
@@ -965,4 +954,5 @@
 			 and tain.bu_id = toiin.id
 			 and tad.id = #{dynamicId}
 	</select>
+
 </mapper>

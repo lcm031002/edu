@@ -20,12 +20,12 @@
 		{
 			"index": "A10001",
 			"name": "学员管理",
-			"key": "index",
+			"key": "students",
 			"icon": "fa fa-home",
 			"type": "$state",
 			"active": "true",
-			"value": "index",
-			"path": "/index",
+			"value": "students",
+			"path": "/students",
 			"href": "templates/erp/student/students.html",
 			"menus": [
 				{

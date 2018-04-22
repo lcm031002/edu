@@ -908,7 +908,7 @@
 		 </if>
 		</where>
 	</select>
-	<insert id="addStudentInfo" parameterType="com.edu.erp.model.StudentInfo">
+	<insert id="addStudentInfo" parameterType="com.edu.erp.model.StudentInfo" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tab_student_info
 		(
 		encoding,
@@ -1151,8 +1151,8 @@
 	</select>
 
 	<insert id="saveStudentStatusReviseNote" parameterType="com.edu.erp.model.StudentStatusReviseNote">
-		insert into student_status_record (id,student_id,before_status,after_status,bu_id,update_user,update_time,if_Show)
-		VALUES (seq_student_status_record.nextval,#{studentId},#{beforeStatus},#{afterStatus},#{buId},#{updateUser},#{updateTime},#{ifShow})
+		insert into student_status_record (student_id,before_status,after_status,bu_id,update_user,update_time,if_Show)
+		VALUES (#{studentId},#{beforeStatus},#{afterStatus},#{buId},#{updateUser},#{updateTime},#{ifShow})
 	</insert>
 
 	<update id="updateStudentLoginNo" parameterType="com.edu.erp.model.StudentInfo">
