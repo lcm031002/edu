@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.edu.common.util.DateUtil;
 import com.edu.erp.dao.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -287,6 +288,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 			encoderDao.updateEncoderById(encoder);
 			//8.7 确认费用
 			param.put("fee_status", 1);
+			param.put("finish_time", DateUtil.getCurrDateTime());
 			tFeeDao.updateFeeStatusByEncoderId((HashMap<String, Object>) param);
 			tOrderChangeDao.updateOrderChangeStatus(param);
 			//9 生效接口---订单批改正式生效后的处理逻辑
@@ -986,6 +988,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 		//8.7 确认费用
 		param.put("fee_status", 1);
 		param.put("encoder_id", encoder.getId());
+		param.put("finish_time", DateUtil.getCurrDateTime());
 		tFeeDao.updateFeeStatusByEncoderId((HashMap<String, Object>) param);
 		
     }

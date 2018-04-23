@@ -192,41 +192,41 @@
 	</delete>
 	
 	<delete id="deleteDetailByOrderId" parameterType="java.lang.Long">
-		delete from tab_order_pay_cost_detail t
+		delete from tab_order_pay_cost_detail
 		 where exists (select 1
-		          from tab_order_pay_cost t1
-		         where t1.id = t.order_buy_id
-		           and t1.order_id = #{orderId,jdbcType=NUMERIC})
+		          from tab_order_pay_cost
+		         where id = order_buy_id
+		           and order_id = #{orderId,jdbcType=NUMERIC})
 	</delete>
 	
 	<select id="queryTabOrderPayCostDetail"
 		resultType="com.edu.erp.model.TabOrderPayCostDetail"
 		parameterType="java.lang.Long">
 		 select distinct topcd.*,
-		       decode(topcd.payment_way,
-		              1,
-		              '现金',
-		              2,
-		              '刷卡',
-		              3,
-		              '转账',
-		              4,
-		              '储值账户',
-		              5,
-		              '一元课程',
-		              6,
-		              '支付宝',
-		              7,
-		              '微信',
-		              8,
-		              '网银',
-		              9,
-		              '冻结账户',
-		              10,
-		              '在线支付(微信公众号)',
-		              11,
-		              '在线支付(WEB页面)') payment_way_str,
-		       to_char(topcd.create_time, 'yyyy-MM-dd') create_time_string,
+		       (case topcd.payment_way
+		              when 1 then
+		              '现金'
+		              when 2 then
+		              '刷卡'
+		              when 3 then
+		              '转账'
+		              when 4 then
+		              '储值账户'
+		              when 5 then
+		              '一元课程'
+		              when 6 then
+		              '支付宝'
+		              when 7 then
+		              '微信'
+		              when 8 then
+		              '网银'
+		              when 9 then
+		              '冻结账户'
+		              when 10 then
+		              '在线支付(微信公众号)'
+		              when 11 then
+		              '在线支付(WEB页面)' end) payment_way_str,
+		       date_format(topcd.create_time, '%Y-%m-%d') create_time_string,
 		       (select tei.employee_name
 		          from tab_employee_info tei, tab_user_info tui
 		         where tei.id = tui.employee_id
@@ -235,8 +235,8 @@
 		          from tab_organization_info toi
 		         where toi.id = topc.branch_id) org_name,
 		       '' descrption,
-		       dd.simple_name,
-		       dd.device_code,
+		       dd.short_post_name as simple_name,
+		       dd.encoding as device_code,
 		       topcd.eb_no
 		  from tab_order_pay_cost topc, tab_order_pay_cost_detail topcd
 		  left join tab_data_device dd

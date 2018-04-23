@@ -356,7 +356,7 @@ public class OrderYDYImpl implements IOrderYDY {
 			//3.5 如果是大小班，新增order_course_times,如果是晚辅导，个性化 TODO 目前个性化省略 
 			
 			//3.6 状态更新成有效
-			HashMap<String,String> hashMap=new HashMap<String,String>();
+			HashMap<String,Object> hashMap=new HashMap<String,Object>();
 			hashMap.put("order_id", orderInfo.getId().toString());
 			hashMap.put("fee_type", "41,42");
 			hashMap.put("fee_status", "1");

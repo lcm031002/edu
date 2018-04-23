@@ -46,7 +46,7 @@ public interface FeeService {
      * @param hashMap
      * @throws Exception
      */
-    void updateFeeStatusByOrderId(HashMap<String, String> hashMap) throws Exception;
+    void updateFeeStatusByOrderId(HashMap<String, Object> hashMap) throws Exception;
 
     /**
      * 通过订单据ID->费用状态，完成时间

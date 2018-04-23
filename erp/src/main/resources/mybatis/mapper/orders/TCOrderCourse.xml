@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TCOrderCourseDao">
+	
+	<!-- 查询报班单信息 -->
+	<select id="queryOrderCourseChangeTimes" resultType="com.edu.erp.model.TCOrderCourse"
+		parameterType="java.lang.Long">
+		select * 
+		  from TC_ORDER_COURSE
+		 where ORDER_COURSE_ID = #{orderCourseId,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 查询报班单详单信息 -->
+	<select id="queryAllChangeTimes" resultType="com.edu.erp.model.TCOrderCourse"
+		parameterType="java.lang.Long">
+		     select * 
+			  from TC_ORDER_COURSE
+			 where CHANGE_ID = #{changeId,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="queryTcOrderCourseTimesByChangeId" resultType="com.edu.erp.model.TCCourseTimes"
+		parameterType="java.lang.Long">
+		     select  a.id
+			  from tc_order_course_times t
+    		  join t_order_course_times a on t.order_course_id = a.ocid and t.course_times = a.times
+			 where t.change_id = #{changeId,jdbcType=NUMERIC}
+	</select>
+
+	<select id="queryOrderCourseTimesByChangeId" resultType="com.edu.erp.model.TOrderCourseTimes"
+			parameterType="java.lang.Long">
+		select toct.* from t_order_course_times toct left join tc_order_course_times tcoct
+		on toct.ocid=tcoct.order_course_id and toct.times=tcoct.course_times
+		where tcoct.change_id=#{changeId,jdbcType=NUMERIC} and is_valid=1
+	</select>
+	
+	<select id="queryAllOrderChangeTimes" resultType="com.edu.erp.model.TCOrderCourse"
+		parameterType="java.lang.Long">
+		     select * 
+			  from TC_ORDER_COURSE
+			 where ORDER_ID = #{orderId,jdbcType=NUMERIC}
+	</select>
+	
+	<select id="queryTcOrderCourseByChangeId" resultType="com.edu.erp.model.TCOrderCourse" parameterType="java.lang.Long">
+		    select t.*,o.course_surplus_count, o.surplus_cost,c.course_name,o.root_course_id,o.branch_id 
+             from tc_order_course t, t_order_course o, t_course c where t.change_id =  #{changeId,jdbcType=NUMERIC}  and t.order_course_id = o.id  and o.course_id = c.id
+	</select>
+
+	<insert id="saveTcOrderCourse" parameterType="com.edu.erp.model.TCOrderCourse" useGeneratedKeys="true" keyProperty="id">
+		insert into tc_order_course
+	      (
+	       change_id, 
+	       order_id, 
+	       order_course_id, 
+	       course_times, 
+	       total_amount, 
+	       attend_amount, 
+	       pre_amount, 
+	       transfer_flag, 
+	       course_id, 
+	       branch_id 
+	       )
+	    values (
+	    	#{change_id,jdbcType=NUMERIC},
+	    	#{order_id,jdbcType=NUMERIC},
+	    	#{order_course_id,jdbcType=NUMERIC},
+	    	#{course_times,jdbcType=NUMERIC},
+	    	#{total_amount,jdbcType=NUMERIC},
+	    	#{attend_amount,jdbcType=NUMERIC},
+	    	#{pre_amount,jdbcType=NUMERIC},
+	    	#{transfer_flag,jdbcType=NUMERIC},
+	    	#{course_id,jdbcType=NUMERIC},
+	    	#{branch_id,jdbcType=NUMERIC}
+	       )
+	</insert>
+	
+	<insert id="saveTcOrderCourseTimesByChangeNo" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+		insert into tc_order_course_times
+          (
+           change_id,
+           change_course_id,
+           order_id,
+           order_course_id,
+           course_times)
+        select
+           #{changeId},
+           #{tcOrderCourseId},
+           #{orderId},
+           #{orderCourseId},
+           t.course_times
+         from tab_change_course_times t
+        where t.change_no = #{changeNo}
+          and t.change_course_id = #{changeCourseId}
+	</insert>
+	
+	<select id="queryCourseLockCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		with orderCourse as
+			(select t.id
+				from t_order_course t
+			   where t.id = #{orderCourseId}
+				   or t.root_course_id = #{orderCourseId}
+			union all
+			select t.id
+				from t_order_course t
+			  where t.id = (select t1.root_course_id
+					from t_order_course t1
+				   where t1.id = #{orderCourseId})
+			union all
+			select t.id
+				from t_order_course t
+			   where t.root_course_id = (select t1.root_course_id
+					from t_order_course t1
+				   where t1.id = #{orderCourseId})
+			     and t.id != #{orderCourseId})
+			select count(1)
+				from tc_order_course t
+				join orderCourse oc
+					on oc.id = t.order_course_id
+				join t_lock l
+					on oc.id = l.resource_id
+				   and l.type = 2
+	</select>
+	
+	<select id="queryCourseTimesLockCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		with orderCourse as
+			(select t.id
+				from t_order_course t
+			   where t.id = #{orderCourseId}
+				   or t.root_course_id = #{orderCourseId}
+			union all
+			select t.id
+				from t_order_course t
+			  where t.id = (select t1.root_course_id
+					from t_order_course t1
+				   where t1.id = #{orderCourseId})
+			union all
+			select t.id
+				from t_order_course t
+			   where t.root_course_id = (select t1.root_course_id
+					from t_order_course t1
+				   where t1.id = #{orderCourseId})
+			     and t.id != #{orderCourseId})
+		select count(1)
+	      from tc_order_course_times t
+	      join orderCourse oc on oc.id = t.order_course_id
+	      join t_order_course_times a on oc.id = a.ocid and t.course_times = a.times
+	      join t_lock l on l.resource_id = a.id and l.type = 3
+	</select>
+	
+</mapper>

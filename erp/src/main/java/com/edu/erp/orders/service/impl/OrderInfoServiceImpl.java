@@ -1007,13 +1007,12 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		updateOrderInfo(temporaryOrderInfo);
 
 		// TODO 生成正式订单(目前仅有个性化做了存储过程改造，其他的暂时保留不变)
-		if(orderInfo.getBusiness_type()==2){
-//			IOrderYDY iOrderYDY=new OrderYDYImpl();
+//		if(orderInfo.getBusiness_type()==2){
 			TabOrderInfo temporaryTabOrderInfo = queryTemporaryOrderInfo(orderInfo.getId());
 			iOrderYDY.createOrder(temporaryTabOrderInfo);
-		}else{
-			createOrder(temporaryOrderInfo.getId(), userId);
-		}
+//		}else{
+//			createOrder(temporaryOrderInfo.getId(), userId);
+//		}
 
 		// 业绩归属
 		updatePerformanceAttribution(

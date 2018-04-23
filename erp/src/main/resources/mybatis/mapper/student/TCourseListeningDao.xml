@@ -170,7 +170,7 @@
 			    VCI.* ,
 			    TCS.ID AS SCHEDULING_ID ,
 			    TCS.COURSE_TIMES ,
-			    TO_CHAR(TO_DATE(TCS.COURSE_DATE||'','YYYYMMDD'),'YYYY-MM-DD') AS COURSE_DATE,
+			    date_format(TCS.COURSE_DATE,'%Y-%m-%d') AS COURSE_DATE,
 			    TCL.PAY_STATUS ,
 			    TCL.RECORD_TIME,
 			    TCL.REMARK,

@@ -92,13 +92,15 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public void updateFeeStatusByOrderId(HashMap<String, String> hashMap) throws Exception {
+    public void updateFeeStatusByOrderId(HashMap<String, Object> hashMap) throws Exception {
+        hashMap.put("finish_time", DateUtil.getCurrDateTime());
         tFeeDao.updateFeeStatusByOrderId(hashMap);
 
     }
 
     @Override
     public void updateFeeStatusByEncoderId(HashMap<String, Object> hashMap) throws Exception {
+        hashMap.put("finish_time", DateUtil.getCurrDateTime());
         tFeeDao.updateFeeStatusByEncoderId(hashMap);
     }
 

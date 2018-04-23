@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TFeeDetailDao">
+	
+	<!-- 保存费用明细表 -->
+	<insert id="saveFeeDetail" parameterType="com.edu.erp.model.TFeeDetail" useGeneratedKeys="true" keyProperty="id">
+		insert into t_fee_detail
+	      (
+	       fee_id, 
+	       order_id, 
+	       order_detail_id, 
+	       fee_type, 
+	       fee_flag, 
+	       fee_amount, 
+	       course_sum, 
+	       old_id, 
+	       operate_type,
+	       operate_no 
+	       )
+    	values
+	      (
+		  #{fee_id,jdbcType=NUMERIC},
+		  #{order_id,jdbcType=NUMERIC},
+		  #{order_detail_id,jdbcType=NUMERIC},
+		  #{fee_type,jdbcType=NUMERIC},
+		  #{fee_flag,jdbcType=NUMERIC},
+		  #{fee_amount,jdbcType=NUMERIC},
+		  #{course_sum,jdbcType=NUMERIC},
+		  #{old_id,jdbcType=VARCHAR},
+		  #{operate_type,jdbcType=NUMERIC},
+		  #{operate_no,jdbcType=NUMERIC}
+	       )
+	</insert>
+	
+	<!-- 删除费用总表-->
+	<delete id="deleteFeeDetail" parameterType="HashMap">
+		  delete from t_fee_detail where order_id =#{order_id}
+		  <if test="fee_type!=null">
+		 	 and fee_type in (${fee_type})
+		  </if>
+	</delete>
+	
+	<select id="queryTabOrderDetailByOrderId" resultType="com.edu.erp.model.TabOrderInfoDetail" parameterType="com.edu.erp.model.TabOrderInfo">
+		select 	* from tab_order_info_detail where order_id = #{order_id,jdbcType=NUMERIC} 
+	</select>
+	
+	<select id="queryFeeDetailByOrderId" resultType="com.edu.erp.model.TFeeDetail" parameterType="com.edu.erp.model.TFeeDetail">
+		select t.fee_type,t.fee_flag,sum(ifnull(t.fee_amount, 0)) fee_amount from t_fee_detail t where t.order_id = #{order_id,jdbcType=NUMERIC}
+	               group by t.fee_type, t.fee_flag
+	</select>
+	
+	<select id="queryFeeDetailByChangeId" resultType="com.edu.erp.model.TFeeDetail" parameterType="com.edu.erp.model.TFeeDetail">
+		select t.fee_type,t.order_id,t.fee_flag,sum(ifnull(t.fee_amount, 0)) fee_amount from t_fee_detail t where  t.operate_no = #{operate_no,jdbcType=NUMERIC}
+		 <if test="operate_type!=null and operate_type!=''">
+		 	 and t.operate_type =#{operate_type}
+		  </if>
+          group by t.fee_type,t.order_id,t.fee_flag
+	</select>
+	
+	<select id="queryCancelFeeDetailByChangeId" resultType="com.edu.erp.model.TFeeDetail" parameterType="map">
+		select t.*  from t_fee_detail t where  t.operate_no = #{changeId,jdbcType=NUMERIC} 
+		and t.fee_type!=32 
+		 <if test="operateType!=null and operateType!=''">
+		 	 and t.operate_type =#{operateType}
+		  </if>
+	</select>
+	
+	<update id="updateFeeIdByFee" parameterType="com.edu.erp.model.TFeeDetail">
+		 update t_fee_detail set fee_id =${fee_id} where order_id = #{order_id} and fee_type = #{fee_type}
+	</update>
+	
+	<update id="updateFeeIdByFeeChangeId" parameterType="com.edu.erp.model.TFeeDetail">
+		 update t_fee_detail set fee_id =${fee_id} where operate_type = 5 and operate_no = #{operate_no} and fee_type = #{fee_type}
+	</update>
+	
+	
+</mapper>

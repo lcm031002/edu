@@ -45,4 +45,6 @@ public interface EncoderDao {
 	 * @throws Exception
 	 */
 	void updateEncoderById(TEncoder tEncoder) throws Exception;
+
+	void updateEncoderNo(TEncoder tEncoder) throws Exception;
 }

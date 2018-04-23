@@ -47,7 +47,7 @@ public interface TFeeDao {
 	 * @param hashMap
 	 * @throws Exception
 	 */
-	void updateFeeStatusByOrderId(HashMap<String, String> hashMap) throws Exception;
+	void updateFeeStatusByOrderId(HashMap<String, Object> hashMap) throws Exception;
 	/**
 	 * 通过订单ID和订单类型查询费用的总额
 	 * @param hashMap

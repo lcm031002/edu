@@ -127,7 +127,7 @@
 	</update>
 	
 	<!-- 保存订单信息 -->
-	<insert id="saveOrderInfo" parameterType="com.edu.erp.model.TOrder" useGeneratedKeys="true" keyProperty="id">
+	<insert id="saveOrderInfo" parameterType="com.edu.erp.model.TOrder">
 		insert into t_order
 	      (id,
 	       order_no,
@@ -149,10 +149,8 @@
 	       remark, 
 	       immediate_reduce, 
 	       order_status, 
-	       source_order, 
-	       old_id, 
-	       invoice_code,
-	       resource_rec_id
+	       source_order,
+	       invoice_code
 	       )
 	    values
 	      (
@@ -177,9 +175,7 @@
 		  #{immediate_reduce,jdbcType=NUMERIC},
 		  #{order_status,jdbcType=NUMERIC},
 		  #{source_order,jdbcType=NUMERIC},
-		  #{old_id,jdbcType=VARCHAR},
-		  #{invoice_code,jdbcType=VARCHAR},
-		  #{resource_rec_id,jdbcType=NUMERIC}
+		  #{invoice_code,jdbcType=VARCHAR}
 	       )
 	</insert>
 	
@@ -204,7 +200,6 @@
 	       create_time, 
 	       update_user, 
 	       update_time,
-	       old_id, 
 	       root_course_id,
 	       surplus_cost, 
 	       quit_flag, 
@@ -231,7 +226,6 @@
 		  #{create_time,jdbcType=TIMESTAMP},
 		  #{update_user,jdbcType=NUMERIC},
 		  #{update_time,jdbcType=TIMESTAMP},
-		  #{old_id,jdbcType=VARCHAR},
 		  #{root_course_id,jdbcType=NUMERIC},
 		  #{surplus_cost,jdbcType=NUMERIC},
 		  #{quit_flag,jdbcType=NUMERIC},

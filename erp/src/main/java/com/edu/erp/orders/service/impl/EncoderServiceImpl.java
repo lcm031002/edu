@@ -16,6 +16,8 @@ import com.edu.erp.dao.EncoderDao;
 import com.edu.erp.model.TEncoder;
 import com.edu.erp.orders.service.EncoderService;
 
+import java.util.UUID;
+
 /**
  * 业务单据服务
  * @author yecb
@@ -30,13 +32,14 @@ public class EncoderServiceImpl implements EncoderService {
 
 	@Override
 	public int saveTEncoder(TEncoder tEncoder) throws Exception {
-		// TODO Auto-generated method stub
-		return encoderDao.saveEncoder(tEncoder);
+		int result = encoderDao.saveEncoder(tEncoder);
+		tEncoder.setEncoder_no("ENCODER" + tEncoder.getId());
+		encoderDao.updateEncoderNo(tEncoder);
+		return result;
 	}
 
 	@Override
 	public TEncoder queryEncoderInfo(TEncoder tEncoder) throws Exception {
-		// TODO Auto-generated method stub
 		return encoderDao.queryEncoderInfo(tEncoder);
 	}
 

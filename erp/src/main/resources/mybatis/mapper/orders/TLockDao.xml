@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TLockDao">
+
+	<select  id="queryTLockOrderInfo"  parameterType="java.util.HashMap" resultType="HashMap">
+		SELECT
+		    TOCTI.* ,
+		    TCS.ID AS SCHEDULING_ID,
+		    TOD.STUDENT_ID
+		FROM
+		    T_LOCK TL LEFT JOIN TC_ORDER_COURSE_TIMES TOCTI
+		        ON TOCTI.CHANGE_ID = TL.BUSI_ID
+		    AND TL.RESOURCE_ID = TOCTI.ORDER_COURSE_ID LEFT JOIN T_ORDER_COURSE TOC
+		        ON TOC.ID = TOCTI.ORDER_COURSE_ID LEFT JOIN T_COURSE_SCHEDULING TCS
+		        ON TCS.COURSE_ID = TOC.COURSE_ID
+		    AND TCS.COURSE_TIMES = TOCTI.COURSE_TIMES LEFT JOIN T_ORDER TOD
+		        ON TOD.ID = TOC.ORDER_ID
+		WHERE
+		    TL.BUSI_TYPE = 5
+	</select>
+	
+	
+	<select id="queryLockOrderId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select id  from t_order where id = #{order_id,jdbcType=NUMERIC} for update nowait
+	</select>
+	
+	<select id="queryLockOrderFlag" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select count(1)  from t_lock t  where t.type = #{lock_type,jdbcType=NUMERIC}  and t.resource_id = #{order_id,jdbcType=NUMERIC}
+    </select>
+    
+    <!-- 锁校验,是否有课程被锁定 -->
+    <select id="checkCourseLock" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select count(1)  from tc_order_course t join t_lock l on t.order_course_id = l.resource_id and l.type = 2 where t.change_id = #{change_id}
+    </select>
+    <!-- 锁校验,是否有有课次被锁定-->
+    <select id="checkCourseTimesLock" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		select count(1) from tc_order_course_times t join t_order_course_times a on t.order_course_id = a.ocid and t.course_times = a.times
+      	join t_lock l on l.resource_id = a.id and l.type = 3 where t.change_id =  #{change_id}
+    </select>
+    
+    <insert id="saveLock" parameterType="com.edu.erp.model.TLock">
+		insert into t_lock
+	      (
+	       type, 
+	       resource_id, 
+	       busi_type, 
+	       busi_id
+	       )
+    	values
+	      (
+		  2,
+		  #{resourceId,jdbcType=NUMERIC},
+		  5,
+		  #{busiId,jdbcType=NUMERIC}
+	       )
+	</insert>
+	
+	<delete id="releaseLock" parameterType="com.edu.erp.model.TLock">
+	 	delete from t_lock t 
+	 	where t.busi_type = #{busiType,jdbcType=NUMERIC} 
+	 	and t.busi_id = #{busiId,jdbcType=NUMERIC}
+	</delete>
+
+
+	<!-- 锁校验,是否有课程被锁定 -->
+	<select id="queryCourseLock" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		with orderCourse as
+			(select t.id, t.course_id, t.order_id
+				from t_order_course t
+			   where t.id = #{orderCourseId}
+				  or t.root_course_id = #{orderCourseId}
+			union all
+			select t.id, t.course_id, t.order_id
+				from t_order_course t
+			   where t.id = (select t1.root_course_id
+					from t_order_course t1
+				   where t1.id = #{orderCourseId})
+			union all
+			select t.id, t.course_id, t.order_id
+				from t_order_course t
+			   where t.root_course_id = (select t1.root_course_id
+					from t_order_course t1
+				   where t1.id = #{orderCourseId})
+				 and t.id != #{orderCourseId})
+		SELECT
+		tor.order_no as orderNo,
+		tochange.change_type as changeType,
+		(case tochange.change_type when 1 then '退费'
+		 	when 2 then '转班'
+		 	when 3 then '报班作废'
+		 	when 4 then  '退费作废'
+		 	when 5 then '冻结'
+		 	when 6 then '冻结作废' else '其他' end) as changeName,
+		tc.course_name courseName
+		FROM tc_order_course t
+		JOIN t_lock l
+		ON t.order_course_id = l.resource_id AND l.type = 2
+		JOIN orderCourse toc
+		ON toc.id=t.order_course_id
+		LEFT JOIN t_course tc
+		ON tc.id=toc.course_id
+		LEFT JOIN t_order tor
+		ON tor.id=toc.order_id
+		LEFT JOIN t_order_change tochange
+		ON tochange.id=l.busi_id
+		where rownum = 1
+	</select>
+</mapper>
