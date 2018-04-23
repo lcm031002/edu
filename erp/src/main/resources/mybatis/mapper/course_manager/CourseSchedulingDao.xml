@@ -525,27 +525,25 @@
 	</select>
 	
 	<insert id="addCourseTimeTitleInfo" parameterType="com.edu.erp.model.TCourseTimesTitle">
-		insert into t_course_times_title t 
+		insert into t_course_times_title
 		(
-			t.id,
-			t.course_id,
-			t.course_times,
-			t.title,
-			t.CREATE_USER,
-			t.CREATE_TIME,
-			t.UPDATE_USER,
-			t.UPDATE_TIME
+			course_id,
+			course_times,
+			title,
+			CREATE_USER,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME
 		)   
 		values 
 		(
-			#{id,jdbcType=NUMERIC},
 			#{course_id,jdbcType=NUMERIC},
 			#{course_times,jdbcType=NUMERIC},
 			#{title,jdbcType=VARCHAR},
 			#{create_user,jdbcType=NUMERIC},
-			sysdate,
+			sysdate(),
 			#{update_user,jdbcType=NUMERIC},
-			sysdate
+			sysdate()
 		)
 	</insert>
 	

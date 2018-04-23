@@ -426,7 +426,7 @@
 		order by a.update_time DESC, a.id DESC
 	</select>
 
-	<insert id="saveTCourse" parameterType="com.edu.erp.model.TCourse">
+	<insert id="saveTCourse" parameterType="com.edu.erp.model.TCourse" useGeneratedKeys="true" keyProperty="id">
 		insert into t_course
 		(
 		course_no,
@@ -1061,7 +1061,7 @@
 		left join tab_time_season tts
 		on tts.id = tc.season_id
 		where tc.id = #{id,jdbcType=NUMERIC}
-		order by nvl(tc.actual_people_count,0)/decode(nvl(tc.people_count,1),0,1,tc.people_count) desc
+		order by tc.actual_people_count desc
 	</select>
 
 	<insert id="insertOrgRef" parameterType="java.util.List">

@@ -768,15 +768,6 @@ public class CourseSchedulingServiceImpl implements CourseSchedulingService {
 				courseSchedulingDao.insert(newScheduling);
 				scheduledCourseTime++;
 
-				courseTimesTitle = new TCourseTimesTitle();
-				courseTimesTitle.setId(newScheduling.getId());
-				courseTimesTitle.setCourse_id(newScheduling.getCourse_id());
-				courseTimesTitle.setCourse_times(newScheduling.getCourse_times());
-				courseTimesTitle.setTitle("第" + newScheduling.getCourse_times() + "次课");
-				courseTimesTitle.setCreate_user(newScheduling.getCreate_user());
-				courseTimesTitle.setUpdate_user(newScheduling.getUpdate_user() == null ? newScheduling.getCreate_user() : newScheduling.getUpdate_user());
-				courseSchedulingDao.addCourseTimeTitleInfo(courseTimesTitle);
-
 			}
 		}
 	}

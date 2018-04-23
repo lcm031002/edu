@@ -440,7 +440,7 @@ function erp_courseController(
         }
         $scope.isLoadingTeacherList = 'isLoadingTeacherList';
         $scope.queryParam.teacherList = [];
-        erp_teacherService.page(param, function(resp) {
+        erp_teacherService.query(param, function(resp) {
             $scope.isLoadingTeacherList = '';
             if (!resp.error) {
                 $scope.queryParam.teacherList = resp.data;

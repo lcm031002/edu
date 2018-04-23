@@ -194,7 +194,7 @@
 			listening_date=
 			(
 				SELECT
-					TO_CHAR(TO_DATE(tcs.course_date||'','YYYYMMDD'),'YYYY-MM-DD')
+					date_format(str_to_date(tcs.course_date,'%Y%m%d'),'%Y-%m-%d')
 				FROM
 					t_course_scheduling tcs
 				WHERE

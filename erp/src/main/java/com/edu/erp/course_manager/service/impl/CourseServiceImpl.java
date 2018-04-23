@@ -301,7 +301,6 @@ public class CourseServiceImpl implements CourseService {
 		}
 		Map<String, Object> queryAfterMap = new HashMap<String, Object>();
 		queryAfterMap.put("courseId", courseId.toString());
-		List<CourseScheduling> afterSchedList = this.courseSchedulingDao.queryMultiTchCourseSched(queryAfterMap);
 
 		String errorCode = map.get("error_code").toString();
 		if (!"0".equals(errorCode)) {
