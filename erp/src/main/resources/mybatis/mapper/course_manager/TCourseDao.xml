@@ -642,7 +642,7 @@
 		<if test="is_textbooks != null">
 			is_textbooks = #{is_textbooks,jdbcType=NUMERIC},
 		</if>
-		update_time = sysdate
+		update_time = sysdate()
 		where id = #{id}
 	</update>
 

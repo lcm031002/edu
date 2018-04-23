@@ -248,7 +248,7 @@ public interface CourseSchedulingDao {
 	 * @param courseId 班级课课程ID
 	 * @return
 	 */
-	@Select("select distinct cs.* from t_course_scheduling cs join t_attendance ta on cs.id = ta.scheduling_id and ta.attend_type in(11,12) and nvl(ta.for_quit,0) != 1 where course_id = #{courseId}")
+	@Select("select distinct cs.* from t_course_scheduling cs join t_attendance ta on cs.id = ta.scheduling_id and ta.attend_type in(11,12) and ifnull(ta.for_quit,0) != 1 where course_id = #{courseId}")
 	List<CourseScheduling> queryCourseSchedulingAttended(@Param("courseId") Long courseId);
 
 	/**
