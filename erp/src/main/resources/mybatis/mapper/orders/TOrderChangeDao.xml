@@ -18,7 +18,7 @@
 				 select tcoc.change_id as change_id,
 				         tcoc.order_course_id as order_course_id,
 				         tcoc.course_times as course_times,
-				         wm_concat(toct.course_times)  over (partition by  toct.change_id, toct.order_id, toct.order_course_id order by toct.course_times)   as courseTimeString,
+				         group_concat(toct.course_times)  over (partition by  toct.change_id, toct.order_id, toct.order_course_id order by toct.course_times)   as courseTimeString,
 				         tcoc.total_amount as total_amount,
 				         tcoc.transfer_flag as transfer_flag
 				    from t_order_change toc
@@ -119,7 +119,7 @@
 	<select id="queryPremiumAudit" resultType="HashMap" parameterType="java.lang.Long">
 		SELECT distinct TCOC.*,
 		       TOC.APPLY_TIME AS D_APPLY_TIME,
-		       to_char(TOC.APPLY_TIME,'yyyy-MM-dd') as APPLY_TIME,
+		       date_format(TOC.APPLY_TIME,'%Y-%m-%d') as APPLY_TIME,
 		       TC.COURSE_NO,
 		       TC.COURSE_NAME,
 		       TOC.CHANGE_STATUS,
@@ -145,7 +145,7 @@
 		    ON TUI.ID = TOC.APPLY_USER
 		  LEFT JOIN TAB_EMPLOYEE_INFO TEI
 		    ON TUI.EMPLOYEE_ID = TEI.ID
-		  LEFT JOIN (SELECT A.CHANGE_ID, WM_CONCAT(A.COURSE_TIMES) COURSE_TIMES
+		  LEFT JOIN (SELECT A.CHANGE_ID, group_concat(A.COURSE_TIMES) COURSE_TIMES
 		               FROM (SELECT DISTINCT CHANGE_ID, COURSE_TIMES
 		                       FROM TC_ORDER_COURSE_TIMES
 		                      ORDER BY COURSE_TIMES) A
@@ -203,9 +203,9 @@
 	
 	<!-- 补结转明细 -->
 	<select id="queryOrderUnForward" resultType="HashMap" parameterType="java.lang.Long">
-        select  to_char(TOC.VALIDATE_TIME,'YYYY-MM-DD HH24:MM:SS') as VALIDATE_TIME,
+        select  date_format(TOC.VALIDATE_TIME,'%Y-%m-%d %H:%m:%s') as VALIDATE_TIME,
 		        tf.FEE_AMOUNT,
-		        to_char(tf.INSERT_TIME,'YYYY-MM-DD HH24:MM:SS') as INSERT_TIME,
+		        date_format(tf.INSERT_TIME,'%Y-%m-%d %H:%m:%s') as INSERT_TIME,
 		        TEI.EMPLOYEE_NAME,
 		        tooc.ORDER_COURSE_ID,
 		        '课程名称：' || tood.COURSE_NAME || '，' || '总价：' ||
@@ -233,9 +233,9 @@
 	
 	<!-- 预结转明细 -->
 	<select id="queryOrderForward" resultType="HashMap" parameterType="java.lang.Long">
-        select to_char(tf.finish_time, 'YYYY-MM-DD HH24:MM:SS') as VALIDATE_TIME,
+        select date_format(tf.finish_time, '%Y-%m-%d %H:%m:%s') as VALIDATE_TIME,
              tfd.FEE_AMOUNT,
-             to_char(tf.INSERT_TIME, 'YYYY-MM-DD HH24:MM:SS') as INSERT_TIME,
+             date_format(tf.INSERT_TIME, '%Y-%m-%d %H:%m:%s') as INSERT_TIME,
              TEI.EMPLOYEE_NAME,
              tfd.order_detail_id as ORDER_COURSE_ID,
              '课程名称：' || tood.COURSE_NAME || '，' || '总价：' ||
@@ -542,7 +542,7 @@
 	<update id="drawRefund" parameterType="map">
 		update t_order_change 
 		set is_draw = 1,
-			update_time=sysdate,
+			update_time=sysdate(),
 		    update_user =#{update_user,jdbcType=NUMERIC}
 	    where id = #{change_id}
 	</update>
@@ -639,7 +639,7 @@
 	       	<if test="validate_time != null and validate_time != ''">
 	       		validate_time = #{validate_time,jdbcType=DATE},
 	       	</if>
-	       	update_time = sysdate,
+	       	update_time = sysdate(),
 		    update_user = #{update_user,jdbcType=NUMERIC}
 	    where id = #{id}
 	</update>
@@ -649,7 +649,7 @@
 	</update>
 	
 	<update id="updateOrderChangeStatus"  parameterType="map">
-		update t_order_change t set t.change_status = #{change_stuatus} , t.validate_time=sysdate  where t.id =   #{change_id}
+		update t_order_change t set t.change_status = #{change_stuatus} , t.validate_time=sysdate()  where t.id =   #{change_id}
 	</update>
 	
 	<update id="updateAmountByChangeId"  parameterType="map">
@@ -671,7 +671,7 @@
 	</update>
 	
 	<update id="updateInputUserByOrderChangeId" parameterType="map">
-		update t_order_change t set t.input_time = sysdate, t.input_user =  #{input_user}  where t.id =   #{change_id}
+		update t_order_change t set t.input_time = sysdate(), t.input_user =  #{input_user}  where t.id =   #{change_id}
 	</update>
 	
 	<!-- 退费作废前验证 退费后订单时候有批改操作 -->
@@ -724,7 +724,7 @@
 				and oct.times = toct.course_times
 				and tcs.course_id = toco.course_id
 				and tcs.course_times = oct.times
-				and to_date(to_char(to_date(tcs.course_date, 'yyyyMMdd'), 'yyyy-MM-dd') || ' ' || tcs.start_time, 'yyyy-MM-dd hh24:mi') &lt; sysdate
+				and date_format(concat(date_format(tcs.course_date, '%Y-%m-%d'), ' ', tcs.start_time), '%Y-%m-%d %H:%m') &lt; sysdate()
 				and toc.change_id = #{changeId}
 	</select>
 	

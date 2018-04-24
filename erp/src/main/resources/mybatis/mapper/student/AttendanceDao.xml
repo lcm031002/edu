@@ -1,0 +1,1481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.AttendanceDao">
+
+	<!-- 获取序列号 -->
+	<select id="getId" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT seq_t_course.nextval seq FROM dual
+	</select>
+
+	<parameterMap id="attandanceSubmitParam" type="java.util.HashMap">
+		<parameter mode="INOUT" property="attendanceId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		<parameter mode="IN" property="schedulingId" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		<parameter mode="IN" property="studentId" javaType="java.lang.Long" />
+		<parameter mode="IN" property="teacherId" javaType="java.lang.Long"  jdbcType="NUMERIC"/>
+		<parameter mode="IN" property="courseDate" javaType="java.util.Date" jdbcType="DATE"/>
+		<parameter mode="IN" property="attendType" javaType="java.lang.Long" />
+		<parameter mode="IN" property="userId" javaType="java.lang.Long" />
+		<parameter mode="IN" property="branchId" javaType="java.lang.Long" />
+		<parameter mode="IN" property="forQuit" javaType="java.lang.Integer" />
+		<parameter mode="OUT" property="errorCode" javaType="java.lang.Long" jdbcType="NUMERIC"/>
+		<parameter mode="OUT" property="errorDesc" javaType="string" jdbcType="VARCHAR"/>
+	</parameterMap>
+	
+	<select id="attandanceSubmit" statementType="CALLABLE" parameterMap="attandanceSubmitParam">
+		<![CDATA[
+			{call pkg_attend_main.p_attendance(?,?,?,?,?,?,?,?,?,?,?)}
+		]]>
+	</select>
+	
+	<insert id="saveAttandance"   parameterType="com.edu.erp.model.TAttendance" useGeneratedKeys="true" keyProperty="id">
+		 insert into t_attendance
+	      (
+	       scheduling_id, 
+	       student_id, 
+	       order_course_id, 
+	       attend_user, 
+	       attend_date, 
+	       attend_branch_id, 
+	       attend_amount, 
+	       attend_type,
+	       attend_type_teacher,
+	       ts_flag, 
+	       carried, 
+	       create_user, 
+	       create_time, 
+	       update_user, 
+	       update_time,
+	       course_date, 
+	       remark,
+	       counselor_id,
+	       teacher_id,
+	       subject_id,
+	       for_quit,
+	       start_time,
+	       end_time,
+	       course_times,
+		   encoding,
+		   apply_id
+	       )
+    	values
+	      (
+		  #{scheduling_id,jdbcType=NUMERIC},
+		  #{student_id,jdbcType=NUMERIC},
+		  #{order_course_id,jdbcType=NUMERIC},
+		  #{attend_user,jdbcType=NUMERIC},
+		  #{attend_date,jdbcType=TIMESTAMP},
+		  #{attend_branch_id,jdbcType=NUMERIC},
+		  #{attend_amount,jdbcType=NUMERIC},
+		  #{attend_type,jdbcType=NUMERIC},
+		  #{attend_type_teacher,jdbcType=NUMERIC},
+		  #{ts_flag,jdbcType=VARCHAR},
+		  #{carried,jdbcType=VARCHAR},
+		  #{create_user,jdbcType=NUMERIC},
+		  #{create_time,jdbcType=TIMESTAMP},
+		  #{update_user,jdbcType=NUMERIC},
+		  #{update_time,jdbcType=TIMESTAMP},
+		  #{course_date,jdbcType=NUMERIC},
+		  #{remark,jdbcType=VARCHAR},
+		  #{counselor_id,jdbcType=NUMERIC},
+		  #{teacher_id,jdbcType=NUMERIC},
+		  #{subject_id,jdbcType=NUMERIC},
+		  #{for_quit,jdbcType=NUMERIC},
+		  #{start_time,jdbcType=VARCHAR},
+		  #{end_time,jdbcType=VARCHAR},
+		   #{courseTimes,jdbcType=VARCHAR},
+		  #{encoding,jdbcType=VARCHAR},
+		  #{apply_id,jdbcType=NUMERIC}
+	       )
+	</insert>
+	
+	<insert id="saveAttandanceHt"   parameterType="com.edu.erp.model.TAttendance" useGeneratedKeys="true" keyProperty="id">
+		 insert into t_attendance_ht
+	      (
+	       scheduling_id, 
+	       student_id, 
+	       order_course_id, 
+	       attend_user, 
+	       attend_date, 
+	       attend_branch_id, 
+	       attend_amount, 
+	       attend_type,
+	       attend_type_teacher,
+	       ts_flag, 
+	       carried, 
+	       create_user, 
+	       create_time, 
+	       update_user, 
+	       update_time,
+	       course_date, 
+	       remark,
+	       counselor_id,
+	       teacher_id,
+	       subject_id,
+	       for_quit,
+	       start_time,
+	       end_time,
+	       course_times,
+		   encoding
+	       )
+    	values
+	      (
+		  #{scheduling_id,jdbcType=NUMERIC},
+		  #{student_id,jdbcType=NUMERIC},
+		  #{order_course_id,jdbcType=NUMERIC},
+		  #{attend_user,jdbcType=NUMERIC},
+		  #{attend_date,jdbcType=DATE},
+		  #{attend_branch_id,jdbcType=NUMERIC},
+		  #{attend_amount,jdbcType=NUMERIC},
+		  #{attend_type,jdbcType=NUMERIC},
+		  #{attend_type_teacher,jdbcType=NUMERIC},
+		  #{ts_flag,jdbcType=VARCHAR},
+		  #{carried,jdbcType=VARCHAR},
+		  #{create_user,jdbcType=NUMERIC},
+		  #{create_time,jdbcType=TIMESTAMP},
+		  #{update_user,jdbcType=NUMERIC},
+		  #{update_time,jdbcType=TIMESTAMP},
+		  #{course_date,jdbcType=NUMERIC},
+		  #{remark,jdbcType=VARCHAR},
+		  #{counselor_id,jdbcType=NUMERIC},
+		  #{teacher_id,jdbcType=NUMERIC},
+		   #{subject_id,jdbcType=NUMERIC},
+		  #{for_quit,jdbcType=NUMERIC},
+		  #{start_time,jdbcType=VARCHAR},
+		  #{end_time,jdbcType=VARCHAR},
+		  #{courseTimes,jdbcType=VARCHAR},
+		  #{encoding,jdbcType=VARCHAR}
+	       )
+	</insert>
+	
+	<insert id="addHtByAttendanceId" parameterType="java.lang.Long">
+		insert into t_attendance_ht
+	      (
+	       scheduling_id,
+	       student_id,
+	       teacher_id,
+	       counselor_id,
+	       order_course_id,
+	       attend_user,
+	       attend_date,
+	       attend_branch_id,
+	       attend_amount,
+	       attend_type,
+	       ts_flag,
+	       carried,
+	       create_user,
+	       create_time,
+	       update_user,
+	       update_time,
+	       course_date,
+	       attendance_id,
+	       for_quit,
+	       sub_attend_type,
+	       start_time,
+	       end_time,
+	       course_times,
+	       subject_id,
+	       attend_type_teacher,
+	       encoding,
+	       remark,
+	       last_attend_type
+	       )
+		select scheduling_id,
+		       student_id,
+		       teacher_id,
+		       counselor_id,
+		       order_course_id,
+		       attend_user,
+		       attend_date,
+		       attend_branch_id,
+		       attend_amount,
+		       attend_type,
+		       ts_flag,
+		       carried,
+		       create_user,
+		       sysdate,
+		       update_user,
+		       sysdate,
+		       course_date,
+		       id,
+		       for_quit,
+		       sub_attend_type,
+	           start_time,
+	           end_time,
+	           course_times,
+	           subject_id,
+	           attend_type_teacher,
+	           encoding,
+	           remark,
+		       #{lastAttendType}
+		 from t_attendance
+		where id = #{attendId}
+	</insert>
+	
+	<select id="checkVideoUploadStatus" parameterType="map" resultType="map">
+		select *  from t_el_video v where v.scheduling_id = #{scheduling_id,jdbcType=NUMERIC} and v.status = 1
+	</select>
+	<select id="checkSaveExtralesson" parameterType="map" resultType="map">
+		select *
+          from (select date_format(t.VALID_END_DATE,'%Y-%m-%d') as VALID_END_DATE
+            from T_EL_INFO t
+            where t.scheduling_id = #{scheduling_id,jdbcType=NUMERIC}
+             and t.student_id = #{student_id,jdbcType=NUMERIC}
+             and date_format(#{valid_start_date,jdbcType=VARCHAR},'%Y-%m-%d')&lt;= t.valid_end_date
+           order by t.valid_end_date desc)
+         where rownum = 1
+	</select>
+	
+	<insert id="saveExtralesson" parameterType="map">
+		insert into T_EL_INFO
+      (
+       SCHEDULING_ID,
+       ORDER_COURSE_ID,
+       STATUS,
+       ACTIVATION_CODE,
+       CREATE_USER,
+       CREATE_TIME,
+       STUDENT_ID,
+       VALID_START_DATE,
+       VALID_END_DATE)
+    values
+      (
+      #{scheduling_id,jdbcType=NUMERIC},
+      #{order_course_id,jdbcType=NUMERIC},
+      #{status,jdbcType=NUMERIC},
+      #{activation_code,jdbcType=VARCHAR},
+      #{create_user,jdbcType=NUMERIC},
+      sysdate,
+      #{student_id,jdbcType=NUMERIC},
+      date_format(#{valid_start_date,jdbcType=VARCHAR},'%Y-%m-%d'),
+      date_format(#{valid_end_date,jdbcType=VARCHAR},'%Y-%m-%d')
+      )
+	</insert>
+	
+	<select id="wfdAttend" statementType="CALLABLE" parameterType="HashMap">
+	<![CDATA[
+	    {call pkg_attend_main.p_wfd_attendance(
+	    									#{p_order_course_id,mode=IN,jdbcType=NUMERIC},
+	    									#{p_scheduling_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_attend_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_student_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_teacher_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_counselor_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_attend_type,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_course_date,mode=IN,jdbcType=DATE},
+	    	                                #{p_branch_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_input_user,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+	    	                                #{p_for_quit,mode=IN,jdbcType=NUMERIC},
+	    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+										    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+	]]>
+	</select>
+	
+	<select id="teacherAttend" statementType="CALLABLE" parameterType="HashMap">
+	<![CDATA[
+	    {call pkg_attend_main.p_teacher_attendance(
+	    									#{p_attend_id,mode=IN,jdbcType=NUMERIC},
+	    									#{p_teacher_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_attend_type,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_attend_date,mode=IN,jdbcType=DATE},
+	    	                                #{p_branch_id,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_input_user,mode=IN,jdbcType=NUMERIC},
+	    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
+	    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+										    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+	]]>
+
+	</select>
+	
+	<select id="querySchedulingById" parameterType="string" resultType="HashMap">
+		select *
+		  from t_course_scheduling t
+		  left join t_course c
+		    on t.course_id = c.id
+		 where t.id = #{schId}
+	</select>
+	
+	<select id="queryAttendCourseTimesDetails" parameterType="map" resultType="map">
+		select 		att_ht.*,
+					to_char(att_ht.attend_date, 'yyyy-MM-dd HH24:mi') attend_date2,
+					(case att_ht.attend_type when 10 then '置空' when 11 then '挂起' when 12 then '正常上课' end) attend_type_name,
+					emp.employee_name attend_user_name,
+					ti.teacher_name teacher_name
+		from 		t_attendance_ht att_ht
+		left join	tab_user_info use on att_ht.attend_user = use.id
+		left join	tab_employee_info emp on use.employee_id = emp.id 
+		left join tab_teacher_info ti on att_ht.teacher_id = ti.id
+		where		att_ht.student_id = #{student_id}
+			and		att_ht.scheduling_id = #{scheduling_id}
+		order by 	att_ht.attend_date DESC			
+	</select>
+
+	<!-- 前单据已考勤次数 -->
+	<select id="countAttend1ByOrderCourseId" parameterType="map" resultType="integer">
+	   select count(1)
+      from t_attendance c
+     where c.order_course_id = #{order_course_id,jdbcType=NUMERIC}
+     and c.attend_type in (11, 12, 21,22, 31)
+	</select>
+	<!--  当前单据作为主单转班而来的子丹的已考勤次数 和 此单作为子单再转班数据-->
+	<select id="countAttend2ByOrderCourseId" parameterType="map" resultType="integer">
+		 select count(1)
+	     from t_attendance t,t_order_course oc
+       	 where t.order_course_id = oc.id
+         and (oc.root_course_id = #{order_course_id} or
+                     (#{root_course_id} is not null and
+                      oc.root_course_id = #{root_course_id} ))
+         and oc.branch_id = #{branch_id}                   
+         <![CDATA[and t.order_course_id <> ${order_course_id}  ]]>
+         and t.attend_type in (11, 12, 21, 22, 31)
+	</select>
+	<!--  当前单子作为子单已考勤的次数-->
+	<select id="countAttend3ByOrderCourseId" parameterType="map" resultType="integer">
+		select count(1) 
+        from t_attendance t,t_order_course oc,t_order_course ro
+        where t.order_course_id = oc.root_course_id
+         and oc.root_course_id = ro.id
+         and oc.id= #{order_course_id}
+         and t.attend_type in (11, 12, 21, 22, 31)
+        <![CDATA[ and t.order_course_id <> ${order_course_id}  ]]>
+         and ro.branch_id =#{branch_id}
+	</select>
+	
+	<select id="countYdyAttendByOrderCourseId" parameterType="map" resultType="integer">
+     	select count(1) from t_course_scheduling tcs
+     		left join t_attendance a on tcs.id = a.scheduling_id
+     	where tcs.order_course_id = #{order_course_id,jdbcType=NUMERIC}
+     	and tcs.valid_status = 1
+     	and (a.id is null or a.carried = 'N')
+	</select>
+	
+	<select id="countAttendByStudent" parameterType="map" resultType="integer">
+      select count(1) 
+          from t_attendance ta, t_order_course tc, t_order t
+      where ta.order_course_id = tc.id
+	    and tc.order_id = t.id
+	    <if test="business_type!=null">
+	       and t.business_type = #{business_type,jdbcType=NUMERIC}
+	    </if>
+        and ta.attend_date &gt; add_months(trunc(sysdate), -3) and ta.attend_date &lt;= sysdate
+        and ta.attend_type in (11, 12)
+        and ta.student_id = #{student_id,jdbcType=NUMERIC}
+	</select>
+	
+	<update id="updateAttandRemark"  parameterType="java.util.HashMap">
+		update T_ATTENDANCE set
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{attendanceId,jdbcType=NUMERIC}
+	</update>
+	<update id="updateAttendHTRemark"  parameterType="java.util.HashMap">
+		update T_ATTENDANCE_HT set
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = 
+		(select max(id) from T_ATTENDANCE_HT where attendance_id=#{attendanceId,jdbcType=NUMERIC})
+	</update>
+	
+	<update id="updateAttendance"  parameterType="com.edu.erp.model.TAttendance">
+		update T_ATTENDANCE set
+		<if test="attend_type != null">
+			attend_type = #{attend_type},
+		</if>
+		<if test="attend_type_teacher != null">
+			attend_type_teacher = #{attend_type_teacher},
+		</if>
+		<if test="course_date != null">
+			course_date=#{course_date},
+		</if>
+		<if test="start_time != null and start_time != ''">
+			start_time=#{start_time},
+		</if>
+		<if test="end_time != null and end_time != ''">
+			end_time=#{end_time},
+		</if>
+		<if test="teacher_id != null">
+			teacher_id=#{teacher_id},
+		</if>
+		<if test="subject_id != null">
+			subject_id=#{subject_id},
+		</if>
+		<if test="attend_branch_id != null">
+			attend_branch_id=#{attend_branch_id},
+		</if>
+		<if test="attend_date != null">
+			attend_date=#{attend_date},
+		</if>
+		<if test="carried != null and carried != ''">
+			carried=#{carried},
+		</if>
+		<if test="attend_amount != null">
+			attend_amount=#{attend_amount},
+		</if>
+		<if test="counselor_id != null">
+			counselor_id=#{counselor_id},
+		</if>
+		<if test="for_quit != null">
+			for_quit=#{for_quit},
+		</if>
+		<if test="update_user != null">
+			update_user = #{update_user},
+		</if>
+		<if test="remark != null and remark != ''">
+			remark = #{remark},
+		</if>
+		<if test="sub_attend_type != null">
+			sub_attend_type = #{sub_attend_type},
+		</if>
+		<if test="audit_status != null">
+			audit_status = #{audit_status},
+		</if>
+		<if test="attend_user != null">
+			attend_user = #{attend_user},
+		</if>
+			update_time = sysdate
+		where t.id = #{id,jdbcType=NUMERIC}
+	</update>
+	
+	<update id="updateAttendanceHt"  parameterType="com.edu.erp.model.TAttendance">
+		update T_ATTENDANCE_HT set
+		<if test="attend_type != null">
+			attend_type = #{attend_type},
+		</if>
+		<if test="attend_type_teacher != null">
+			attend_type_teacher = #{attend_type_teacher},
+		</if>
+		<if test="course_date != null">
+			course_date=#{course_date},
+		</if>
+		<if test="start_time != null and start_time != ''">
+			start_time=#{start_time},
+		</if>
+		<if test="end_time != null and end_time != ''">
+			end_time=#{end_time},
+		</if>
+		<if test="teacher_id != null">
+			teacher_id=#{teacher_id},
+		</if>
+		<if test="subject_id != null">
+			subject_id=#{subject_id},
+		</if>
+		<if test="attend_branch_id != null">
+			attend_branch_id=#{attend_branch_id},
+		</if>
+		<if test="attend_date != null">
+			attend_date=#{attend_date},
+		</if>
+		<if test="carried != null and carried != ''">
+			carried=#{carried},
+		</if>
+		<if test="attend_amount != null">
+			attend_amount=#{attend_amount},
+		</if>
+		<if test="counselor_id != null">
+			counselor_id=#{counselor_id},
+		</if>
+		<if test="for_quit != null">
+			for_quit=#{for_quit},
+		</if>
+		<if test="update_user != null">
+			update_user = #{update_user},
+		</if>
+		<if test="remark != null and remark != ''">
+			remark = #{remark},
+		</if>
+		<if test="sub_attend_type != null">
+			sub_attend_type = #{sub_attend_type},
+		</if>
+			update_time = sysdate
+		where id = (select max(id) from T_ATTENDANCE_HT where attendance_id=#{id,jdbcType=NUMERIC})
+	</update>
+	
+	<select id="queryStudentAttendanceById" parameterType="map" resultType="map">
+		select tat.*
+		  from T_ATTENDANCE tat
+		 where tat.id = #{id}
+	</select>
+	
+	<select id="queryAttendanceInfoById" parameterType="long" resultType="com.edu.erp.model.TAttendance">
+		select tat.*  from T_ATTENDANCE tat
+		 where tat.id = #{id}
+	</select>
+	
+	<parameterMap id="attandancePojo" type="java.util.HashMap">
+		<parameter property="attendanceId" resultMap="" javaType="long" jdbcType="NUMERIC"/>
+	</parameterMap>
+	
+	<select id="queryAttendance" parameterType="java.lang.Long" resultType="com.edu.erp.model.TAttendance">
+		 select tat.*,
+		         date_format(tcs.course_date || '', '%Y%m%d') as course_time,
+		         tatype.name as attendTypeName,
+		         tti.teacher_name as schedulingTeacherName,
+		         tti2.teacher_name as attTeacherName,
+         		 tcs.course_times
+		    from T_ATTENDANCE tat
+		    left join T_COURSE_SCHEDULING tcs
+		      on tat.scheduling_id = tcs.id
+		    left join tp_ATTEND_TYPE tatype
+		      on tatype.id = tat.attend_type
+		    left join tab_teacher_info tti
+		      on tti.id = tcs.teacher_id
+		    left join tab_teacher_info tti2
+		      on tti2.id = tat.teacher_id
+		 where tat.ORDER_COURSE_ID = #{orderDetailId,jdbcType=NUMERIC}
+		 order by tat.id
+	</select>
+	
+	<select id="queryOrderAttendance" parameterType="java.lang.Long" resultType="com.edu.erp.model.TAttendance">
+		      select tat.*,
+		            date_format(tcs.course_date || '', '%Y%m%d') as course_time,
+		            tatype.name as attendTypeName,
+		            tti.teacher_name as schedulingTeacherName,
+		            tti2.teacher_name as attTeacherName,
+		            tcs.course_times as courseTimes
+		       from T_ATTENDANCE tat
+		       left join T_COURSE_SCHEDULING tcs
+		         on tat.scheduling_id = tcs.id
+		       left join tp_ATTEND_TYPE tatype
+		         on tatype.id = tat.attend_type
+		       left join tab_teacher_info tti
+		         on tti.id = tcs.teacher_id
+		       left join tab_teacher_info tti2
+		         on tti2.id = tat.teacher_id
+		       left join t_order_course toc
+		         on toc.id = tat.order_course_id
+		      where toc.order_id = #{orderId,jdbcType=NUMERIC}
+		      order by tat.id
+	</select>
+
+	<select id="queryYDYOrderAttendance" parameterType="java.lang.Long" resultType="com.edu.erp.model.TAttendance">
+		select
+		tat.id,
+		tat.scheduling_id,
+		tat.student_id,
+		ss.order_course_id,
+		tat.attend_user,
+		tat.attend_date,
+		tat.attend_branch_id,
+		tat.attend_amount,
+		tat.attend_type,
+		tat.ts_flag,
+		tat.carried,
+		tat.remark,
+		tat.counselor_id,
+		tat.teacher_id,
+		tat.for_quit,
+		tat.start_time,
+		tat.end_time,
+		tat.subject_id,
+		tat.attend_type_teacher,
+		tat.encoding,
+		tat.audit_status,
+		tat.apply_id,
+		date_format(tat.course_date || '', '%Y%m%d') as course_time,
+		ss.times as course_times,
+		tatype.name as attendTypeName,
+		tti.teacher_name as schedulingTeacherName,
+		tti2.teacher_name as attTeacherName
+		from T_ATTENDANCE tat
+		left join T_SCHEDULE_SPLITTIME ss
+		on ss.attend_id = tat.id
+		left join tp_ATTEND_TYPE tatype
+		on tatype.id = tat.attend_type
+		left join tab_teacher_info tti
+		on tti.id = tat.teacher_id
+		left join tab_teacher_info tti2
+		on tti2.id = tat.teacher_id
+		left join t_order_course toc
+		on toc.id = ss.order_course_id
+		where toc.order_id = #{orderId,jdbcType=NUMERIC} and tat.attend_type=21
+		order by tat.id
+	</select>
+	
+	<select id="queryAttendanceHistory" parameterType="java.lang.Long" resultType="com.edu.erp.model.TAttendanceHt">
+		select tat.*,
+		         date_format(tcs.course_date || '', '%Y%m%d') as course_time,
+		         tatype.name as attendTypeName,
+		         tti.teacher_name as schedulingTeacherName,
+		         tti2.teacher_name as attTeacherName,
+         		 tcs.course_times
+		    from T_ATTENDANCE_HT tat
+		    left join T_COURSE_SCHEDULING tcs
+		      on tat.scheduling_id = tcs.id
+		    left join tp_ATTEND_TYPE tatype
+		      on tatype.id = tat.attend_type
+		    left join tab_teacher_info tti
+		      on tti.id = tcs.teacher_id
+		    left join tab_teacher_info tti2
+		      on tti2.id = tat.teacher_id
+		 where tat.ORDER_COURSE_ID = #{orderDetailId,jdbcType=NUMERIC}
+		 order by tat.id
+	</select>
+	
+	<select id="queryOrderAttendanceHistory" parameterType="java.lang.Long" resultType="com.edu.erp.model.TAttendanceHt">
+		select tat.*,
+		         date_format(tcs.course_date || '', '%Y%m%d') as course_time,
+		         tatype.name as attendTypeName,
+		         tti.teacher_name as schedulingTeacherName,
+		         tti2.teacher_name as attTeacherName,
+         		 tcs.course_times
+		    from T_ATTENDANCE_HT tat
+		    left join T_COURSE_SCHEDULING tcs
+		      on tat.scheduling_id = tcs.id
+		    left join tp_ATTEND_TYPE tatype
+		      on tatype.id = tat.attend_type
+		    left join tab_teacher_info tti
+		      on tti.id = tcs.teacher_id
+		    left join tab_teacher_info tti2
+		      on tti2.id = tat.teacher_id
+		    left join t_order_course toc
+		         on toc.id = tat.order_course_id
+		    where toc.order_id = #{orderId,jdbcType=NUMERIC}
+		 order by tat.id
+	</select>
+	
+	<!-- 晚辅导批量考勤每天考勤情况统计查询 -->
+	<select id="queryPageForWfj" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT DT_TIME.DATE_TIME,
+		                (CASE WHEN ST_ATTD.STUDENT_COUNT IS NULL THEN
+		                   0
+		                  ELSE
+		                   ST_ATTD.STUDENT_COUNT
+		                END) AS STUDENT_COUNT,
+		                (CASE
+		                  WHEN TCH_ATTD.TEACHER_COUNT IS NULL THEN
+		                   0
+		                  ELSE
+		                   TCH_ATTD.TEACHER_COUNT
+		                END) TEACHER_COUNT,
+		                PCWR.REMARK,
+		                PCWR.ID
+		  FROM (SELECT date_format(#{end_date, jdbcType=VARCHAR},
+		                       '%Y-%m-%d') - ROWNUM + 1 AS DATE_TIME,
+		               ROWNUM
+		          FROM DUAL
+		        CONNECT BY ROWNUM &lt;
+		        = (SELECT date_format(#{end_date, jdbcType=VARCHAR}, '%Y-%m-%d') -
+		                  date_format(#{start_date, jdbcType=VARCHAR}, '%Y-%m-%d') + 1
+		            FROM DUAL)
+		           ORDER BY ROWNUM) DT_TIME 
+		 LEFT JOIN(SELECT date_format(TA.COURSE_DATE || '', '%Y%m%d') AS ATTEND_DATE,
+		                  COUNT(TA.STUDENT_ID) AS STUDENT_COUNT
+		            FROM T_ORDER TOD
+		            JOIN T_ORDER_COURSE TOC
+		              ON TOC.ORDER_ID = TOD.ID
+		            JOIN T_COURSE TC
+		              ON TC.ID = TOC.COURSE_ID
+		            JOIN T_ATTENDANCE TA
+		              ON TA.ORDER_COURSE_ID = TOC.ID
+		           WHERE TOD.BUSINESS_TYPE = 3 AND TA.TS_FLAG = 'S'
+		             and tod.order_status = 1
+		             and (toc.status != 2 or toc.status is null)
+		             and ta.attend_type = 31
+		             and ta.attend_branch_id = #{branch_id,jdbcType=NUMERIC}
+		             AND date_format(TA.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
+		                 AND #{end_date,jdbcType=VARCHAR}
+		           GROUP BY TA.COURSE_DATE) ST_ATTD ON TO_CHAR(ST_ATTD.ATTEND_DATE, 'YYYY-MM-DD') = DT_TIME.DATE_TIME
+		 LEFT JOIN(SELECT COUNT(TAT.STUDENT_ID) AS TEACHER_COUNT,
+		                 date_format(TAT.COURSE_DATE || '', '%Y%m%d') AS ATTEND_DATE
+		            FROM T_ATTENDANCE TAT
+		           WHERE TAT.ATTEND_BRANCH_ID = #{branch_id, jdbcType=NUMERIC}
+		             AND TS_FLAG = 'T'
+		             AND TAT.ATTEND_TYPE = 31
+		             AND date_format(TAT.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
+		                 AND #{end_date, jdbcType=VARCHAR}
+		           GROUP BY TAT.COURSE_DATE) TCH_ATTD ON date_format(TCH_ATTD.ATTEND_DATE, '%Y-%m-%d') = DT_TIME.DATE_TIME
+		 LEFT JOIN P_COURSE_WFD_REMARK PCWR ON PCWR.BRANCH_ID = #{branch_id, jdbcType=NUMERIC}
+		          AND date_format(PCWR.ATTEND_DATE, '%Y-%m-%d') = DT_TIME.DATE_TIME
+	</select>
+	
+	<select id="queryStudentsForWfdAttn"  parameterType="java.util.Map" resultType="java.util.Map">
+		select
+	          lab.id as label_id ,
+	          torder.student_id,
+	          student.student_name ,
+	          student.encoding student_no,
+	          course.end_date,
+	          case
+	              when user_att.count_att is null
+	              then 0
+	              else user_att.count_att
+	          end as count_att ,
+	          ordercourse.course_surplus_count ,
+	          case
+	              when attend.course_date is null
+	              then 0
+	              else 1
+	          end as attend_ ,
+	          student.head_pic ,
+	          ordercourse.id order_detail_id ,
+	          attend.id attend_id,
+	          student.encoding || '-' || course.course_name || '-' || combo.combo_name course_info,
+		       case when (select count(1)
+		                 from user_application_task t
+		                where t.busi_id = attend.id
+		                  and t.busi_type = 11
+		                  and t.current_state is null) > 0 then
+		              1 else
+		              0 end att_shenpi_status,
+		       ei.id "counselor_id",
+		       ei.employee_name "counselor_name"
+	      from t_order torder
+	      join t_order_course ordercourse on torder.id = ordercourse.order_id 
+	         and torder.order_status = 1 and torder.business_type = 3
+	         and (ordercourse.status != 2 or ordercourse.status is null)
+	      join t_course course on ordercourse.course_id = course.id    
+	      join tab_student_info student on  torder.student_id = student.id
+	       left join tab_student_counselor_info ci
+		    on student.id = ci.student_id 
+		    and ci.counselor_type = 2
+		    and ci.is_valid != 0
+            and date_format(ci.start_date, '%Y-%m-%d') &lt;= trunc(sysdate)
+            and date_format(ci.end_date, '%Y-%m-%d') &gt;= trunc(sysdate)
+		  left join tab_employee_info ei
+		    on ci.counselor_id = ei.id
+	      left join (select sl.id, slr.student_id 
+	                 from tab_student_label sl 
+	                 join tab_student_label_ref slr on sl.id = slr.label_id
+	                 ) lab on student.id = lab.student_id
+	      left join (
+	                  select tocc.*,
+	                         tccw.combo_type,
+	                         tccw.course_count combo_count,
+	                         tccw.combo_name
+	                  from t_order_course_combo tocc 
+	                  join t_course_combo_wfd tccw on tocc.course_combo_id = tccw.id
+	               ) combo on ordercourse.id = combo.order_course_id
+	     left join (
+	          select att.student_id, att.order_course_id, count(att.order_course_id) count_att
+	          from t_attendance att 
+	          where att.attend_type = 31 group by att.student_id, att.order_course_id
+	     ) user_att on torder.student_id = user_att.student_id and ordercourse.id = user_att.order_course_id 
+	     left join t_attendance attend on attend.student_id = torder.student_id 
+		        and attend.order_course_id = ordercourse.id
+		        and attend.attend_type = 31 
+		        and attend.course_date = to_number(replace(#{attendance_date,jdbcType=VARCHAR},'-','')) 
+		 where  course.branch_id = #{branch_id}
+		 		and (
+		 				(combo.id is null 
+		 					and #{attendance_date} between course.start_date and course.end_date
+		 					and ordercourse.course_surplus_count > 0) <!-- 无套餐 --> 
+		 		 	 or (combo.id is not null 
+		 		 	 		and combo.combo_type=1 
+		 		 	 		and #{attendance_date} between to_char(combo.start_date, 'yyyy-mm-dd') and to_char(combo.end_date, 'yyyy-mm-dd')
+		 		 	 		and ordercourse.course_surplus_count > 0) <!-- 套餐  月卡 -->
+		 		 	 or (combo.id is not null 
+		 		 	 		and combo.combo_type=2
+		 		 	 		and #{attendance_date} between course.start_date and course.end_date
+		 		 			and ordercourse.course_surplus_count > 0) <!-- 套餐 次卡-->
+		 		 	 or 	attend.id is not null  		
+		 			)
+		 <if test="label_id != null">
+		 		and lab.type = 0
+			    and lab.branch_id = #{branch_id}
+			    and lab.id = #{label_id}
+		 </if>	
+		 <if test="label_id == null || label_id == ''">
+		 		and lab.id is null	
+		 </if>
+		 <if test="search_info != null and search_info != ''">
+		 		and (student.encoding like '%${search_info}%' or student.student_name like '%${search_info}%')
+		 </if>
+		 order by student.student_name ASC    
+	</select>
+
+	<select id="queryTeachersForWfdAttn"  parameterType="page" resultType="HashMap">
+		    <if test="label_id != null">
+		    SELECT
+			    DISTINCT TATGR.* ,
+			    TTI.TEACHER_NAME ,
+			    TTI.ENCODING,
+			    TTI.DESCRIPTION ,
+			    TTI.PHOTO ,
+			    TTI.PHONE ,
+			    TTI.SEX ,
+			    CASE
+			        WHEN TA.ATTEND_TYPE = 31
+			        THEN 1
+			        ELSE 0
+			    END AS ATTEND_TYPE ,
+			    TATG.BRANCH_ID ,
+			    TA.ID AS ATTEND_ID
+			FROM
+			    T_ATTEND_TEACHER_GROUP TATG INNER JOIN T_ATTEND_TEACHER_GROUP_REF TATGR
+			        ON TATGR.GROUP_ID = TATG.ID INNER JOIN TAB_TEACHER_INFO TTI
+			        ON TTI.ID = TATGR.TEACHER_ID LEFT JOIN T_ATTENDANCE TA
+			        ON TA.STUDENT_ID = TATGR.TEACHER_ID and TA.attend_branch_id = TATG.BRANCH_ID
+			    AND TA.TS_FLAG = 'T'
+			    AND TA.COURSE_DATE = to_number(replace(#{attendance_date, jdbcType=VARCHAR},'-', ''))
+			WHERE
+				TATG.BRANCH_ID = #{branch_id, jdbcType=NUMERIC}
+			    AND TATG.STATUS = 1
+			    AND TATG.ID = #{label_id, jdbcType=NUMERIC}
+				 <if test="search_info != null and search_info != ''">
+			 			and (TTI.ENCODING like '%${search_info}%' or TTI.TEACHER_NAME like '%${search_info}%')
+				 </if>
+				 order by TTI.TEACHER_NAME ASC			    
+			</if>
+			<if test="label_id == null">
+			    SELECT
+				    tod.STUDENT_ID ,
+				    toc.COURSE_ID ,
+				    tc.COURSE_NAME ,
+				    TTI.TEACHER_NAME ,
+				    TTI.DESCRIPTION ,
+				    TTI.PHOTO ,
+				    TTI.PHONE ,
+				    TTI.SEX ,
+				    CASE
+				        WHEN TA.ATTEND_TYPE = 31
+				        THEN 1
+				        ELSE 0
+				    END AS ATTEND_TYPE ,
+				    tod.BRANCH_ID ,
+				    TA.ID AS ATTEND_ID
+				FROM
+				    t_order tod JOIN t_order_course toc
+				        ON toc.ORDER_ID = tod.ID LEFT JOIN t_course tc
+				        ON tc.ID = toc.COURSE_ID inner JOIN TAB_TEACHER_INFO tti
+				        ON tti.ID = tc.TEACHER_ID LEFT JOIN T_ATTENDANCE ta
+				        ON TA.STUDENT_ID = tc.TEACHER_ID and ta.attend_branch_id = tod.BRANCH_ID
+				    AND TA.TS_FLAG = 'T'
+				    AND TA.COURSE_DATE = to_number(replace(#{attendance_date,jdbcType=VARCHAR}, '-', ''))
+				WHERE
+				    tod.BRANCH_ID = #{branch_id,jdbcType=NUMERIC}
+				    AND tc.BUSINESS_TYPE = 3
+				    AND toc.COURSE_SURPLUS_COUNT > 0
+				order by tti.TEACHER_NAME ASC    
+			</if>
+	</select>
+	
+	<!-- 学员主页-学员考勤-晚辅导 学员考勤明细查询 -->
+	<select id="queryWfdDetails" parameterType="java.util.Map" resultType="java.util.Map">
+		select tatt.id,
+		       tatt.attend_date,
+		       date_format(tatt.course_date, '%Y-%m-%d') as course_date,
+		       tein.employee_name as counselor_name,
+		       tatt.attend_user,
+		       tein1.employee_name as attend_user_name,
+		       tatt.attend_type,
+		       (case tatt.attend_type when 31 then '正常上课' when 30 then '置空' end) as attend_type_name,
+		       tatt.remark
+		  from t_attendance tatt
+		  left join t_order_course toco
+		    on toco.id = tatt.order_course_id
+		  left join t_order tord
+		    on tord.id = toco.order_id
+		   and tatt.student_id = tord.student_id
+		  left join tab_student_counselor_info tsci
+		    on tord.student_id = tsci.student_id
+		   and tsci.counselor_type = 2
+		   and tsci.is_valid = 1
+		  left join tab_employee_info tein
+		    on tsci.counselor_id = tein.id
+		  left join tab_user_info tuin
+		    on tatt.attend_user = tuin.id
+		  left join tab_employee_info
+		    on tuin.employee_id = tein1.id
+		   and date_format(tsci.start_date, '%Y-%m-%d') &lt;= trunc(sysdate)
+		   and date_format(tsci.end_date, '%Y-%m-%d') &gt;= trunc(sysdate)
+		 where tord.id = #{order_id}
+		   and tord.student_id = #{student_id}
+		 order by tatt.course_date desc
+	</select>
+	
+	<!-- 统计已考勤次数，统计本单、主单及所有具有相同主单的子单考勤次数 -->
+	<select id="countAttendByOrderCourseId" parameterType="map" resultType="java.lang.Long">
+	   select sum(attendCount)
+	   from (select count(1) as attendCount
+			  from t_attendance t
+			 where t.order_course_id = #{orderCourseId}
+			   and t.attend_type in (11, 12, 21, 22, 31)
+			union all
+			select count(1) as attendCount2
+			  from t_attendance t
+			 where t.order_course_id in
+			       (select id
+			          from t_order_course
+			         where root_course_id = #{orderCourseId}  
+			           or (#{rootCourseId} is not null and root_course_id = #{rootCourseId}))
+			   and t.order_course_id != #{orderCourseId}
+			   and t.attend_type in (11, 12, 21, 22, 31)
+			union all
+			select count(1) as attendCount3
+			  from t_attendance t
+			 where t.order_course_id in
+			       (select root_course_id
+			          from t_order_course
+			         where id = #{orderCourseId})
+			   and t.attend_type in (11, 12, 21, 22, 31))
+	</select>
+	
+	<resultMap type="com.edu.erp.model.TAttendance" id="attendancePojoMap">
+		<id property="id" column="id"/>
+		<result property="schedulingId" column="SCHEDULING_ID"/>
+		<result property="studentId" column="STUDENT_ID"/>
+		<result property="orderCourseId" column="ORDER_COURSE_ID"/>
+		<result property="attendUser" column="ATTEND_USER"/>
+		<result property="attendDate" column="ATTEND_DATE"/>
+		<result property="attendBranchId" column="ATTEND_BRANCH_ID"/>
+		<result property="attendAmount" column="ATTEND_AMOUNT"/>
+		<result property="attendType" column="ATTEND_TYPE"/>
+		<result property="tsFlag" column="TS_FLAG"/>
+		<result property="carried" column="CARRIED"/>
+		<result property="remark" column="REMARK"/>
+		<result property="courseDate" column="COURSE_DATE"/>
+		<result property="counselorId" column="COUNSELOR_ID"/>
+		<result property="teacherId" column="TEACHER_ID"/>
+		<result property="erpAttendanceId" column="ERP_ATTENDANCE_ID"/>
+		<result property="courseTime" column="COURSE_TIME"/>
+		<result property="schedulingTeacherName" column="schedulingTeacherName"/>
+		<result property="attendTypeName" column="attendTypeName"/>
+		<result property="courseTime" column="courseTime"/>
+		<result property="attTeacherName" column="attTeacherName"/>
+		<result property="courseTimes" column="course_times"/>
+	</resultMap>
+	<resultMap type="com.edu.erp.model.TAttendanceHt" id="attendanceHistPojoMap">
+		<id property="id" column="id"/>
+		<result property="schedulingId" column="SCHEDULING_ID"/>
+		<result property="studentId" column="STUDENT_ID"/>
+		<result property="orderCourseId" column="ORDER_COURSE_ID"/>
+		<result property="attendUser" column="ATTEND_USER"/>
+		<result property="attendDate" column="ATTEND_DATE"/>
+		<result property="attendBranchId" column="ATTEND_BRANCH_ID"/>
+		<result property="attendAmount" column="ATTEND_AMOUNT"/>
+		<result property="attendType" column="ATTEND_TYPE"/>
+		<result property="tsFlag" column="TS_FLAG"/>
+		<result property="carried" column="CARRIED"/>
+		<result property="remark" column="REMARK"/>
+		<result property="courseDate" column="COURSE_DATE"/>
+		<result property="counselorId" column="COUNSELOR_ID"/>
+		<result property="teacherId" column="TEACHER_ID"/>
+		<result property="erpAttendanceId" column="ERP_ATTENDANCE_ID"/>
+		<result property="attendanceId" column="ATTENDANCE_ID"/>
+		<result property="schedulingTeacherName" column="schedulingTeacherName"/>
+		<result property="attendTypeName" column="attendTypeName"/>
+		<result property="courseTime" column="courseTime"/>
+		<result property="attTeacherName" column="attTeacherName"/>
+		<result property="courseTimes" column="course_times"/>
+	</resultMap>
+	<select id="queryTeacherLabelsPage"  parameterType="map" resultType="HashMap">
+		SELECT
+		        DISTINCT tatg.ID ,
+			    case when tatg.NAME is null then '未分组' else tatg.NAME end NAME,
+			    tatg.CITY_ID ,
+			    tatg.BU_ID ,
+			    tatg.BRANCH_ID ,
+			    tatg.STATUS
+		FROM
+		    t_course tc left JOIN t_attend_teacher_group tatg
+		        ON tatg.BRANCH_ID = tc.BRANCH_ID
+		    AND tatg.STATUS = 1
+		WHERE
+		    tc.BRANCH_ID = #{branch_id,jdbcType=NUMERIC}
+		    and tc.business_type = 3
+	</select>
+	
+	<select id="selectOneStudent" parameterType="com.edu.erp.model.StudentBusiness"
+		resultType="com.edu.erp.model.StudentBusiness">
+		SELECT
+		    DISTINCT tsi.* ,
+		    tdg.grade_name ,
+		    toi.org_name AS branch_name ,
+		    tei1.EMPLOYEE_NAME AS counselorName ,
+		    tei2.EMPLOYEE_NAME AS customerRelName ,
+		    ta001.FEE_AMOUNT AS balance1 ,
+		    ta002.FEE_AMOUNT AS balance2 ,
+		    ta003.FEE_AMOUNT AS balance3 ,
+		    sysdate,
+		    tds.SCHOOL_NAME as school_name
+		    <if test="branch_id!=null">
+   			  ,(select sum(ifnull(irl.crrent_integral, 0))
+                        from TAB_STUDENT_INTEGRAL  irl,
+                             tab_organization_info irl_org
+                       where irl.branch_id = irl_org.id
+                         and irl_org.parent_id =
+                             (select tmp.parent_id
+                                from tab_organization_info tmp
+                               where tmp.id = #{branch_id})
+                         and irl.STUDENT_ID = tsi.ID)
+                         as INTEGRAL
+		    </if>
+		FROM
+		    tab_student_info tsi LEFT JOIN tab_data_grade tdg
+		        ON tsi.GRADE_ID = tdg.id LEFT JOIN tab_organization_info toi
+		        ON toi.id = tsi.BRANCH_ID
+		    AND toi.org_type = 4 LEFT JOIN tab_student_counselor_info tsci1
+		        ON tsci1.STUDENT_ID = tsi.ID
+		    AND TO_CHAR(
+		        sysdate ,
+		        'YYYY-MM-DD'
+		    ) BETWEEN tsci1.START_DATE AND tsci1.END_DATE
+		    AND tsci1.IS_VALID = 1
+		    and tsci1.bu_id = #{bu_id,jdbcType=NUMERIC}
+		    AND tsci1.COUNSELOR_TYPE = 1 LEFT JOIN tab_student_counselor_info tsci2
+		        ON tsci2.STUDENT_ID = tsi.ID
+		    AND TO_CHAR(
+		        sysdate ,
+		        'YYYY-MM-DD'
+		    ) BETWEEN tsci2.START_DATE AND tsci2.END_DATE
+		    AND tsci2.IS_VALID = 1
+		    and tsci2.bu_id = #{bu_id,jdbcType=NUMERIC}
+		    AND tsci2.COUNSELOR_TYPE = 2 LEFT JOIN tab_employee_info tei1
+		        ON tei1.ID = tsci1.COUNSELOR_ID LEFT JOIN tab_employee_info tei2
+		        ON tei2.ID = tsci2.COUNSELOR_ID LEFT JOIN (
+		        select sum(FEE_AMOUNT) as FEE_AMOUNT, student_id 
+		        from t_account 
+		        where 1=1
+		        <if test="bu_id!=null">
+				 	and bu_id = #{bu_id,jdbcType=NUMERIC}
+				</if>
+				AND PRODUCT_LINE = 1
+		    	AND ACCOUNT_TYPE = 0
+		        group by student_id
+		        ) ta001
+		        ON ta001.student_id = tsi.id
+		     LEFT JOIN (
+		    select sum(FEE_AMOUNT) as FEE_AMOUNT, student_id 
+		        from t_account 
+		        where 1=1
+		        <if test="bu_id!=null">
+				 	and bu_id = #{bu_id,jdbcType=NUMERIC}
+				</if>
+				AND PRODUCT_LINE = 2
+		    	AND ACCOUNT_TYPE = 0
+		        group by student_id
+		    ) ta002
+		        ON ta002.student_id = tsi.id
+		     LEFT JOIN (
+		    select sum(FEE_AMOUNT) as FEE_AMOUNT, student_id 
+		        from t_account 
+		        where 1=1
+		        <if test="bu_id!=null">
+				 	and bu_id = #{bu_id,jdbcType=NUMERIC}
+				</if>
+				AND PRODUCT_LINE = 3
+		    	AND ACCOUNT_TYPE = 0
+		        group by student_id
+		    ) ta003
+		        ON ta003.student_id = tsi.id
+		    left join TAB_DATA_SCHOOL tds 
+		    	on tds.id = tsi.ATTEND_SCHOOL_ID
+		<where>
+		 <if test="id!=null">
+		 	and tsi.id = #{id,jdbcType=NUMERIC}
+		 </if>
+		 <if test="encoding!=null">
+		 	and tsi.encoding = #{encoding,jdbcType=NUMERIC}
+		 </if>
+		</where>
+	</select>
+	
+	<select id="queryYDYScheduleCoursePage" resultType="com.edu.erp.model.TAttendance" parameterType="java.util.HashMap">
+	    select a.id,
+		       c.course_name,
+		       c.course_no,
+		       d.org_name         as branch_name,
+		       a.attend_branch_id,
+		       a.remark,
+		       a.attend_type,
+				(case a.attend_type
+					 when 21 then
+					  '正常上课'
+					 when 23 then
+					  '排课取消'
+		              when 29 then
+		              '考勤作废'
+					  else null end) as attend_type_name,
+		       a.attend_type_teacher,
+				(case a.attend_type_teacher
+					  when 21 then
+					  '正常上课'
+					  when 23 then
+		              '排课取消'
+					  when 29 then
+		              '考勤作废'
+		              else null end) as attend_type_teacher_name,
+		       a.course_date,
+		       a.start_time,
+		       a.end_time,
+		       a.subject_id,subject.name subject_name,
+		       tea.teacher_name   as attTeacherName,
+		       tea.encoding       as teacher_no,
+			     tea.id as teacher_id,
+		       a.counselor_id,
+           ifnull(tei.employee_name, tei1.employee_name) as counselor_name,
+		       a.student_id,
+		       stu.student_name,
+		       a.order_course_id,
+		       a.encoding,
+		       a.sub_attend_type,
+			   a.course_times
+		  from t_attendance a
+		  left join t_order_course b
+		    on a.order_course_id = b.id
+		  left join t_order tord
+    		on b.order_id = tord.id
+		  left join t_course c
+		    on c.id = b.course_id
+		  left join tab_organization_info d
+		    on a.attend_branch_id = d.id
+		  left join tab_student_info stu
+		    on a.student_id = stu.id
+      left join tab_student_counselor_info tsci
+        on tsci.student_id = stu.id
+           and tsci.is_valid = 1
+           and tsci.counselor_type = 2
+		       and to_char(sysdate, 'yyyy-MM-dd') between tsci.start_date and tsci.end_date
+      left join tab_employee_info tei1
+        on tei1.id = tsci.counselor_id
+		  left join tab_teacher_info tea
+		    on a.teacher_id = tea.id
+		  left join tab_employee_info tei
+		    on a.counselor_id = tei.id
+		 left join tp_subject subject on subject.id=a.subject_id 
+        where (b.status != 2 or b.status is null)
+          and tord.business_type = 2
+        <if test="student_id != null">
+        	and a.student_id = #{student_id}
+        </if>
+        <if test="attend_type != null and attend_type != ''">
+			    and a.attend_type = #{attend_type}
+				</if>
+				<if test="attend_type_teacher != null and attend_type_teacher != ''">
+					and a.attend_type_teacher = #{attend_type_teacher}
+				</if>
+				<if test="counselor_id != null and counselor_id != ''">
+					and (a.counselor_id, a.student_id) in
+						(select oldCounselor.counselor_id, oldCounselor.student_id
+						   from tab_student_counselor_info oldCounselor, tab_student_counselor_info newCounselor
+						 where oldCounselor.student_id = newCounselor.student_id
+						    and newCounselor.counselor_type = 2
+						    and newCounselor.is_valid = 1
+						    and newCounselor.counselor_id = #{counselor_id}
+						    and oldCounselor.counselor_type = 2
+						    and oldCounselor.is_valid = 2
+						union all
+						select tsci.counselor_id, tsci.student_id
+						  from tab_student_counselor_info tsci
+						 where tsci.counselor_type = 2
+						   and tsci.is_valid = 1
+						   and tsci.counselor_id = #{counselor_id})
+				</if>
+				<if test="start_time != null and start_time != ''">
+					and a.start_time &gt;= #{start_time}
+				</if>
+				<if test="end_time != null and end_time != ''">
+					and a.end_time &lt;= #{end_time}
+				</if>
+				<if test="subject_id != null and subject_id != ''">
+					and a.subject_id = #{subject_id}
+				</if>
+				<if test="id != null and id != ''">
+					and a.id = #{id}
+				</if>
+				<if test="apply_id != null and apply_id != ''">
+					and a.apply_id = #{apply_id}
+				</if>
+				<if test="student_info != null and student_info != ''">
+					and (stu.encoding like '%${student_info}%' or stu.student_name like '%${student_info}%')
+				</if>
+				<if test="start_date != null and start_date != '' and (end_date != null and end_date != '')">
+				<![CDATA[
+					and date_format(a.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date}
+												 AND #{end_date}
+				 ]]>
+				</if>
+		order by a.course_date, a.start_time
+	</select>
+	
+	<!-- 查询晚辅导课程考勤记录 -->
+	<select id="queryWfdCourseAttendRecord" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from t_attendance 
+		where order_course_id = #{order_course_id} and course_date = #{cur_date} and student_id = #{student_id}
+	</select>
+	
+	<select id="countAttendBySchedulingId" parameterType="map" resultType="integer">
+	     select count(1)
+	      from t_attendance c
+	     where c.scheduling_id = #{scheduling_id,jdbcType=NUMERIC}
+	     and c.attend_type in (11, 12, 21, 31)
+	     and ifnull(c.for_quit,0) != 1
+	</select>
+	
+	<select id="queryYDYConflictScheduleTimes" parameterType="com.edu.erp.model.TAttendance" resultType="integer">
+	    select count(1) from t_attendance where date_format(COURSE_DATE, '%Y-%m-%d')=date_format(${course_date}, '%Y-%m-%d')
+	    <![CDATA[
+		and   not ( start_time >=#{end_time} or end_time <=#{start_time} )
+		]]>
+		and attend_type in (21,28) and (teacher_id=#{teacher_id} or student_id=#{student_id} )
+	</select>
+
+	<select id="queryYDYConflictScheduleList" parameterType="com.edu.erp.model.TAttendance" resultType="com.edu.erp.model.TAttendance">
+		 select ta.*,TEI2.EMPLOYEE_NAME AS counselor_name,tti.teacher_name as schedulingTeacherName,tsi.student_name as student_name from t_attendance ta
+		 left join tab_teacher_info tti
+			on ta.teacher_id=tti.id
+		 left join tab_student_info tsi
+			on ta.student_id=tsi.id
+		 LEFT JOIN TAB_EMPLOYEE_INFO TEI2
+		    ON TEI2.ID = ta.COUNSELOR_ID AND TEI2.STATUS = 1
+		 where date_format(ta.COURSE_DATE, '%Y-%m-%d')=date_format(${course_date}, '%Y-%m-%d')
+		<![CDATA[
+		and   not ( ta.start_time >=#{end_time} or ta.end_time <=#{start_time} )
+		]]>
+		and ta.attend_type in (21,28) and (ta.teacher_id=#{teacher_id} or ta.student_id=#{student_id} )
+	</select>
+
+	<select id="countAudit" parameterType="java.lang.Long" resultType="java.lang.Integer">
+		select count(0) from t_attendance where audit_status = 2 and id = #{id, jdbcType=NUMERIC}
+	</select>
+
+	<select id="queryResvCodePrefix" parameterType="map" resultType="java.lang.String">
+		select vdd.name
+		  from t_order_course toc
+		  left join t_course tc
+			on toc.course_id = tc.id
+		  left join t_more_teacher_course ttc
+			on tc.more_teacher_courseid = ttc.id
+		  left join vt_dict_data vdd
+			on vdd.typeCode = 'resvCodePrefix'
+		   and vdd.code = ifnull(ttc.type, 3)
+		 where toc.id = #{order_course_id, jdbcType=NUMERIC}
+	</select>
+
+
+	<select id="queryPrintAttendanceInfo" resultType="com.edu.erp.model.TAttendance" parameterType="java.util.HashMap">
+        select a.id,
+       c.course_name,
+       c.course_no,
+       d.org_name as branch_name,
+       a.attend_branch_id,
+       a.remark,
+       a.attend_type,
+       (case a.attend_type
+              when 21 then
+              '正常上课'
+              when 23 then
+              '排课取消'
+              when 29 then
+              '考勤作废'
+              else null end) as attend_type_name,
+       a.attend_type_teacher,
+       (case a.attend_type_teacher
+              when 21 then
+              '正常上课'
+              when 23 then
+              '排课取消'
+              when 29 then
+              '考勤作废'
+              else null end) as attend_type_teacher_name,
+       a.course_date,
+       a.start_time,
+       a.end_time,
+       a.subject_id,
+       subject.name subject_name,
+       tea.teacher_name as attTeacherName,
+       tea.encoding as teacher_no,
+       a.counselor_id,
+       ifnull(tei.employee_name, tei1.employee_name) as counselor_name,
+       a.student_id,
+       stu.student_name,
+       a.order_course_id,
+       a.encoding,
+       a.sub_attend_type,
+       tdg.grade_name
+  from t_attendance a
+  left join t_order_course b
+    on a.order_course_id = b.id
+  left join t_order tord
+    on b.order_id = tord.id
+  left join t_course c
+    on c.id = b.course_id
+  left join tab_organization_info d
+    on a.attend_branch_id = d.id
+  left join tab_student_info stu
+    on a.student_id = stu.id
+  left join tab_data_grade tdg
+    on stu.grade_id=tdg.id
+  left join tab_student_counselor_info tsci
+    on tsci.student_id = stu.id
+   and tsci.is_valid = 1
+   and tsci.counselor_type = 2
+   and to_char(sysdate, 'yyyy-MM-dd') between tsci.start_date and
+       tsci.end_date
+  left join tab_employee_info tei1
+    on tei1.id = tsci.counselor_id
+  left join tab_teacher_info tea
+    on a.teacher_id = tea.id
+  left join tab_employee_info tei
+    on a.counselor_id = tei.id
+  left join tp_subject subject
+    on subject.id = a.subject_id
+ where a.id in (${ids})
+	</select>
+
+	<select id="queryValidAttendanceId" resultType="com.edu.erp.model.TAttendance">
+		select t.*
+        from t_attendance t
+        join t_course_scheduling cs
+          on t.scheduling_id = cs.id
+        join t_order_course toc
+          on t.order_course_id = toc.id
+         and (toc.status != 2 or toc.status is null)
+        join t_order_course_times tim
+          on tim.ocid = toc.id
+         and cs.course_times = tim.times
+        join t_order o
+          on toc.order_id = o.id
+         and o.order_status = 1
+       where t.student_id = #{studentId,jdbcType=NUMERIC}
+         and t.scheduling_id = #{schedualingId,jdbcType=NUMERIC}
+         and tim.is_valid = 1
+	</select>
+
+	<insert id="insertAttendanceBjk" parameterType="com.edu.erp.model.TAttendance"  useGeneratedKeys="true" keyProperty="id">
+		insert into t_attendance
+		  (
+		   scheduling_id, <!-- 排课表ID -->
+		   student_id, <!-- 学生ID -->
+		   order_course_id, <!-- 订单课程ID -->
+		   attend_user, <!-- 考勤人 -->
+		   attend_date, <!-- 考勤日期 -->
+		   attend_branch_id, <!-- 考勤校区ID -->
+		   attend_amount, <!-- 考勤金额 -->
+		   attend_type, <!-- 考勤状态类型 -->
+		   ts_flag, <!-- 学生教师分类标识:T教师,S学生 -->
+		   carried, <!-- 是否结转:Y已结转,N未结转 -->
+		   create_user,
+		   create_time,
+		   update_user,
+		   update_time,
+		   course_date, <!-- 上课日期 -->
+		   for_quit, <!-- 退费挂起标示 -->
+		   course_tearcher_cn_remark,
+		   course_tearcher_en_remark
+		   )
+		values (
+		   #{scheduling_id,jdbcType=NUMERIC},
+		   #{student_id,jdbcType=NUMERIC},
+		   #{order_course_id,jdbcType=NUMERIC},
+		   #{attend_user,jdbcType=NUMERIC},
+			sysdate,
+		   #{attend_branch_id,jdbcType=NUMERIC},
+		   #{attend_amount,jdbcType=NUMERIC},
+		   #{attend_type,jdbcType=NUMERIC},
+		   #{ts_flag,jdbcType=VARCHAR},
+		   #{carried,jdbcType=VARCHAR},
+		   #{create_user,jdbcType=NUMERIC},
+			sysdate,
+		   #{update_user,jdbcType=NUMERIC},
+			sysdate,
+		   #{course_date,jdbcType=NUMERIC},
+		   #{for_quit,jdbcType=NUMERIC},
+		   #{chineseTeacherAdvanceParamRemark,jdbcType=VARCHAR},
+		   #{foreignTeacherAdvanceParamRemark,jdbcType=VARCHAR}
+        )
+	</insert>
+
+    <update id="updateAttendanceBjk" parameterType="com.edu.erp.model.TAttendance">
+        update t_attendance SET
+        attend_type = #{attend_type,jdbcType=NUMERIC},
+        attend_date = sysdate,
+        carried = #{carried,jdbcType=VARCHAR},
+        update_user =  #{update_user,jdbcType=NUMERIC},
+        teacher_id = #{teacher_id,jdbcType=NUMERIC},
+        remark = #{remark,jdbcType=VARCHAR},
+        <if test="(attend_type == 12 or attend_type == 11) and productLine == 11">
+            course_manager = #{courseManagerAdvancedParam,jdbcType=NUMERIC},
+			course_tearcher_cn = #{chineseTeacherAdvanceParam,jdbcType=NUMERIC},
+			course_tearcher_en = #{foreignTeacherAdvanceParam,jdbcType=NUMERIC},
+			course_tearcher_cn_hour = #{chineseTeacherAdvanceParamHourLength,jdbcType=NUMERIC},
+			course_tearcher_en_hour = #{foreignTeacherAdvanceParamHourLength,jdbcType=NUMERIC},
+			spoken_language_hour = #{spokenLanguageHourLength,jdbcType=NUMERIC},
+			course_tearcher_cn_remark=#{chineseTeacherAdvanceParamRemark,jdbcType=VARCHAR},
+			course_tearcher_en_remark=#{foreignTeacherAdvanceParamRemark,jdbcType=VARCHAR},
+        </if>
+        update_time = sysdate
+        where id =  #{id,jdbcType=NUMERIC}
+    </update>
+
+    <insert id="saveAttendanceHtForBjk" >
+        insert into t_attendance_ht
+        (
+        scheduling_id,
+        student_id,
+        teacher_id,
+        counselor_id,
+        order_course_id,
+        attend_user,
+        attend_date,
+        attend_branch_id,
+        attend_amount,
+        attend_type,
+        ts_flag,
+        carried,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        course_date,
+        attendance_id,
+        for_quit,
+        sub_attend_type,
+        start_time,
+        end_time,
+        course_times,
+        subject_id,
+        attend_type_teacher,
+        encoding,
+        remark,
+        last_attend_type,
+        course_manager ,
+        course_tearcher_cn ,
+        course_tearcher_en ,
+        course_tearcher_cn_hour ,
+        course_tearcher_en_hour,
+        spoken_language_hour,
+        course_tearcher_cn_remark,
+        course_tearcher_en_remark
+        )
+        select
+        scheduling_id,
+        student_id,
+        teacher_id,
+        counselor_id,
+        order_course_id,
+        attend_user,
+        attend_date,
+        attend_branch_id,
+        attend_amount,
+        attend_type,
+        ts_flag,
+        carried,
+        create_user,
+        create_time,
+        update_user,
+        update_time,
+        course_date,
+        id,
+        for_quit,
+        sub_attend_type,
+        start_time,
+        end_time,
+        course_times,
+        subject_id,
+        attend_type_teacher,
+        encoding,
+        remark,
+        #{lastAttendType,jdbcType=NUMERIC},
+        course_manager ,
+        course_tearcher_cn ,
+        course_tearcher_en ,
+        course_tearcher_cn_hour ,
+        course_tearcher_en_hour,
+        spoken_language_hour,
+        course_tearcher_cn_remark,
+        course_tearcher_en_remark
+        from t_attendance
+        where id = #{attendanceId,jdbcType=NUMERIC}
+    </insert>
+</mapper>
