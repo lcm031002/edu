@@ -191,9 +191,6 @@
                     下架课程
                 </button>
  -->
-                <button class="btn btn-default" type="button" style="width:200px;" ng-click="batchModifySchedullingModalShow()" ng-disabled ="isMtCourse && !isMainMtCourse">
-                    批量修改课次标题
-                </button>
                 <button class="btn btn-default" type="button" style="width:200px;" ng-click="printCallNameTable()">
                     打印点名表
                 </button>
@@ -210,7 +207,6 @@
                     <col width="130">
                     <col width="130">
                     <col width="120">
-                    <col width="120">
                     <col width="100">
     
                     <thead>
@@ -225,7 +221,6 @@
                             <th>辅导老师</th>
                             <th>辅导老师编码</th>
                             <th>第几周</th>
-                            <th>课次标题</th>
                             <th>备注</th>
                         </tr>
                     </thead>
@@ -251,7 +246,6 @@
                             <td ng-if="!courseTime.isEdit">{{courseTime.assteacher_name}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.assteacher_code}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.week_number}}</td>
-                            <td ng-if="!courseTime.isEdit">{{courseTime.title}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.remark}}</td>
                     
                             <td ng-if="courseTime.isEdit">

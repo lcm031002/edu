@@ -31,6 +31,8 @@
 
 .icon-nav_students:before { content: "\e60c"; }
 
+.icon-nav_orders_performance:before { content: "\e615"; }
+
 .icon-orders_apply:before { content: "\e60d"; }
 
 .icon-orders_attendance:before { content: "\e60e"; }

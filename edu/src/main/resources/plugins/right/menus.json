@@ -570,6 +570,49 @@
 									"method": "POST"
 								}
 							]
+						},
+						{
+							"index": "A3000310",
+							"name": "课程排课界面",
+							"key": "classesScheduleCourse",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "classesScheduleCourse",
+							"showMenu": "false",
+							"path": "/orders/classesScheduleCourse",
+							"href": "templates/erp/course/course_scheduling_change.html",
+							"services": [
+								{
+									"name": "查询课程信息",
+									"key": " classesSchedule.queryCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+								{
+									"name": "修改排课信息",
+									"key": " classesSchedule.updateCourse",
+									"url": "/erp/coursemanagerment/service ",
+									"method": "PUT"
+								},
+								{
+									"name": "修改课次信息",
+									"key": " classesSchedule.putCourseTimes",
+									"url": "/erp/coursemanagerment/coursetimes",
+									"method": "PUT"
+								},
+								{
+									"name": "查询辅助参数",
+									"key": " classesSchedule.queryParams",
+									"url": "/erp/coursemanagerment/schedulingAssist",
+									"method": "GET"
+								},
+								{
+									"name": "修改辅助参数",
+									"key": " classesSchedule.putParams",
+									"url": "/erp/coursemanagerment/schedulingAssist",
+									"method": "PUT"
+								}
+							]
 						}
 					]
 				},
@@ -1101,447 +1144,6 @@
 							"key": " classesFrozen.post",
 							"url": "/erp/ordermanager/frozen",
 							"method": "POST"
-						}
-					]
-				},
-				{
-					"index": "A30011",
-					"name": "业务报表",
-					"key": "classesReports",
-					"icon": "iconfont icon-orders_performance",
-					"type": "$state",
-					"value": "classesReports",
-					"path": "/orders/classesReports",
-					"menus": [
-						{
-							"index": "A3001101",
-							"name": "报表任务设置",
-							"key": "classesReportSettings",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportSettings",
-							"path": "/orders/classesReports/classesReportSettings",
-							"href": "templates/report/settings.html",
-							"services": [
-								{
-									"name": "查询报表配置信息",
-									"key": " classesReportSettings.query",
-									"url": "/report/settings/service",
-									"method": "GET"
-								},
-								{
-									"name": "修改报表配置信息",
-									"key": " classesReportSettings.post",
-									"url": "/report/settings/service",
-									"method": "POST"
-								}
-							]
-						},
-						{
-							"index": "A3001102",
-							"name": "任务运行结果",
-							"key": "classesReportTaskResult",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportTaskResult",
-							"path": "/orders/classesReports/classesReportTaskResult",
-							"href": "templates/report/result.html",
-							"services": [
-								{
-									"name": "查询报表运行结果",
-									"key": " classesReportTaskResult.query",
-									"url": "/report/taskrun/service",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001103",
-							"name": "充值取现表",
-							"key": "classesReportAccountRechargeCash",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportAccountRechargeCash",
-							"path": "/orders/classesReports/classesReportAccountRechargeCash",
-							"href": "templates/report/common/account_recharge_cash.html",
-							"services":
-							[
-								{
-									"name": "充值取现查询",
-									"key": "classesReportAccountRechargeCash.query",
-									"url": "/report/common/accountFlow/recharge",
-									"method": "GET"
-								},{
-								"name": "充值取现导出",
-								"key": "classesReportAccountRechargeCash.excelOutput",
-								"url": "/report/common/accountFlow/recharge/output",
-								"method": "GET"
-							},{
-								"name": "校区查询",
-								"key": "classesReportAccountRechargeCash.queryBranch",
-								"url": "/erp/dictionary/organization/branchs",
-								"method": "GET"
-							}
-							]
-						},
-						{
-							"index": "A3001104",
-							"name": "出纳信息表",
-							"key": "classesReportAccountCashier",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportAccountCashier",
-							"path": "/orders/classesReports/classesReportAccountCashier",
-							"href": "templates/report/common/account_cashier.html",
-							"services":
-							[
-								{
-									"name": "出纳信息查询",
-									"key": "classesReportAccountCashier.query",
-									"url": "/report/common/accountFlow/cashier",
-									"method": "GET"
-								},{
-								"name": "出纳信息导出",
-								"key": "classesReportAccountCashier.excelOutput",
-								"url": "/report/common/accountFlow/cashier/output",
-								"method": "GET"
-							},{
-								"name": "校区查询",
-								"key": "classesReportAccountCashier.queryBranch",
-								"url": "/erp/dictionary/organization/branchs",
-								"method": "GET"
-							},{
-								"name": "团队查询",
-								"key": "classesReportAccountCashier.queryBu",
-								"url": "/erp/dictionary/organization/bus",
-								"method": "GET"
-							}
-
-							]
-						},
-						{
-							"index": "A3001105",
-							"name": "报冻退转报表",
-							"key": "classesReportOrderChange",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportOrderChange",
-							"path": "/orders/classesReports/classesReportOrderChange",
-							"href": "templates/report/common/order_change_report.html",
-							"services": 
-							[
-								{
-									"name": "报冻退转报表查询",
-									"key": "classesReportOrderChange.query",
-									"url": "/report/common/orderchange",
-									"method": "GET"
-								},
-
-								{
-									"name": "报冻退转报表导出",
-									"key": "classesReportOrderChange.output",
-									"url": "/report/common/orderchange/output",
-									"method": "GET"
-								},
-
-								{
-									"name": "校区查询",
-									"key": "classesReportOrderChange.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-
-								{
-									"name": "团队查询",
-									"key": "classesReportOrderChange.queryBu",
-									"url": "/erp/dictionary/organization/bus",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001106",
-							"name": "业绩明细报表",
-							"key": "classesReportPerformanceDetails",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportPerformanceDetails",
-							"path": "/orders/classesReports/classesReportPerformanceDetails",
-							"href": "templates/report/common/performance_details.html",
-							"services": [
-								{
-									"name": "业绩明细查询",
-									"key": "classesReportPerformanceDetails.query",
-									"url": "/report/common/performancedetails",
-									"method": "GET"
-								},
-								{
-									"name": "业绩明细导出",
-									"key": "classesReportPerformanceDetails.output",
-									"url": "/report/common/performancedetails/output",
-									"method": "GET"
-								},
-								{
-									"name": "校区查询",
-									"key": "classesReportPerformanceDetails.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-								{
-									"name": "团队查询",
-									"key": "classesReportPerformanceDetails.queryBu",
-									"url": "/erp/dictionary/organization/bus",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001107",
-							"name": "业绩汇总表",
-							"key": "classesReportPerformanceSum",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportPerformanceSum",
-							"path": "/orders/classesReports/classesReportPerformanceSum",
-							"href": "templates/report/common/performance_sum.html",
-							"services":
-							[
-								{
-									"name": "汇总业绩查询",
-									"key": "classesReportPerformanceSum.query",
-									"url": "/report/common/performancesum",
-									"method": "GET"
-								},{
-								"name": "汇总业绩导出",
-								"key": "classesReportPerformanceSum.output",
-								"url": "/report/common/performancesum/output",
-								"method": "GET"
-							},{
-								"name": "校区查询",
-								"key": "classesReportPerformanceSum.queryBranch",
-								"url": "/erp/dictionary/organization/branchs",
-								"method": "GET"
-							},{
-								"name": "团队查询",
-								"key": "classesReportPerformanceSum.queryBu",
-								"url": "/erp/dictionary/organization/bus",
-								"method": "GET"
-							}
-							]
-						},
-						{
-							"index": "A3001108",
-							"name": "账户剩余表",
-							"key": "classesReportAccount",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportAccount",
-							"path": "/orders/classesReports/classesReportAccount",
-							"href": "templates/report/common/account.html",
-							"services": [
-								{
-									"name": "账户剩余查询",
-									"key": "classesReportAccount.query",
-									"url": "/report/common/account",
-									"method": "GET"
-								},
-								{
-									"name": "账户剩余导出",
-									"key": "classesReportAccount.excelOutput",
-									"url": "/report/common/account/output",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001109",
-							"name": "账户流水信息表",
-							"key": "classesReportAccountFlow",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportAccountFlow",
-							"path": "/orders/classesReports/classesReportAccountFlow",
-							"href": "templates/report/common/account_flow.html",
-							"services": [
-								{
-									"name": "账户流水查询",
-									"key": "classesReportAccountFlow.query",
-									"url": "/report/common/accountflow",
-									"method": "GET"
-								},
-								{
-									"name": "账户流水导出",
-									"key": "classesReportAccountFlow.excelOutput",
-									"url": "/report/common/accountflow/output",
-									"method": "GET"
-								},
-								{
-									"name": "校区查询",
-									"key": "classesReportAccountFlow.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001110",
-							"name": "剩余课时费用表",
-							"key": "classesReportSurplusAmountFee",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportSurplusAmountFee",
-							"path": "/orders/classesReports/classesReportSurplusAmountFee",
-							"href": "templates/report/common/surplus_amount_fee.html",
-							"services":
-							[
-								{
-									"name": "学员剩余课时费用查询",
-									"key": "classesReportSurplusAmountFee.query",
-									"url": "/report/common/surplusamountfee",
-									"method": "GET"
-								},
-
-								{
-									"name": "学员剩余课时费用导出",
-									"key": "classesReportSurplusAmountFee.output",
-									"url": "/report/common/surplusamountfee_output",
-									"method": "GET"
-								},
-
-								{
-									"name": "校区查询",
-									"key": "classesReportSurplusAmountFee.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-
-								{
-									"name": "团队查询",
-									"key": "classesReportSurplusAmountFee.queryBu",
-									"url": "/erp/dictionary/organization/bus",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001111",
-							"name": "考勤消耗表",
-							"key": "classesReportAttendance",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesReportAttendance",
-							"path": "/orders/classesReports/classesReportAttendance",
-							"href": "templates/report/common/attendance_report.html",
-							"services":
-							[
-								{
-									"name": "考勤消耗查询",
-									"key": "classesReportAttendance.query",
-									"url": "/report/common/attendance",
-									"method": "GET"
-								},
-
-								{
-									"name": "考勤消耗导出",
-									"key": "classesReportAttendance.output",
-									"url": "/report/common/attendance_output",
-									"method": "GET"
-								},
-
-								{
-									"name": "校区查询",
-									"key": "classesReportAttendance.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-
-								{
-									"name": "团队查询",
-									"key": "classesReportAttendance.queryBu",
-									"url": "/erp/dictionary/organization/bus",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001112",
-							"name": "教师工作量表",
-							"key": "classesTeacherWorkloadReport",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesTeacherWorkloadReport",
-							"path": "/orders/classesReports/classesTeacherWorkloadReport",
-							"href": "templates/report/bjk/teacher_workload_report.html",
-							"services":
-							[
-								{
-									"name": "教师工作量查询",
-									"key": "classesTeacherWorkloadReport.query",
-									"url": "/report/bjk/teacherworkload",
-									"method": "GET"
-								},
-
-								{
-									"name": "教师工作量导出",
-									"key": "classesTeacherWorkloadReport.output",
-									"url": "/report/bjk/teacherworkload_output",
-									"method": "GET"
-								},
-
-								{
-									"name": "校区查询",
-									"key": "classesTeacherWorkloadReport.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-
-								{
-									"name": "团队查询",
-									"key": "classesTeacherWorkloadReport.queryBu",
-									"url": "/erp/dictionary/organization/bus",
-									"method": "GET"
-								}
-							]
-						},
-						{
-							"index": "A3001113",
-							"name": "晚辅导教师考勤表",
-							"key": "classesWfdTeacherAttendReport",
-							"icon": "iconfont icon-orders_performance",
-							"type": "$state",
-							"value": "classesWfdTeacherAttendReport",
-							"path": "/orders/classes/classesReports/classesWfdTeacherAttendReport",
-							"href": "templates/report/wfd/teacher_attend_report.html",
-							"services": 
-							[
-								{
-									"name": "晚辅导教师考勤查询",
-									"key": "classesWfdTeacherAttendReport.query",
-									"url": "/report/wfd/teacher_attendance",
-									"method": "GET"
-								},
-
-								{
-									"name": "晚辅导教师考勤导出",
-									"key": "classesWfdTeacherAttendReport.output",
-									"url": "/report/wfd/teacher_attendance_output",
-									"method": "GET"
-								},
-
-								{
-									"name": "校区查询",
-									"key": "classesWfdTeacherAttendReport.queryBranch",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-
-								{
-									"name": "团队查询",
-									"key": "classesWfdTeacherAttendReport.queryBu",
-									"url": "/erp/dictionary/organization/bus",
-									"method": "GET"
-								}
-							]
 						}
 					]
 				}
@@ -2971,6 +2573,447 @@
 					"path": "/employeeService/headPic",
 					"showMenu": "false",
 					"href": "templates/hrm/uploadImage/uploadImage.html"
+				}
+			]
+		},
+		{
+			"index": "A110001",
+			"name": "报表",
+			"key": "orders_performance",
+			"icon": "iconfont icon-orders_performance",
+			"type": "$state",
+			"value": "orders_performance",
+			"path": "/orders/classesReports",
+			"menus": [
+				{
+					"index": "A11000101",
+					"name": "报表任务设置",
+					"key": "classesReportSettings",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportSettings",
+					"path": "/orders/classesReports/classesReportSettings",
+					"href": "templates/report/settings.html",
+					"services": [
+						{
+							"name": "查询报表配置信息",
+							"key": " classesReportSettings.query",
+							"url": "/report/settings/service",
+							"method": "GET"
+						},
+						{
+							"name": "修改报表配置信息",
+							"key": " classesReportSettings.post",
+							"url": "/report/settings/service",
+							"method": "POST"
+						}
+					]
+				},
+				{
+					"index": "A11000102",
+					"name": "任务运行结果",
+					"key": "classesReportTaskResult",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportTaskResult",
+					"path": "/orders/classesReports/classesReportTaskResult",
+					"href": "templates/report/result.html",
+					"services": [
+						{
+							"name": "查询报表运行结果",
+							"key": " classesReportTaskResult.query",
+							"url": "/report/taskrun/service",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000103",
+					"name": "充值取现表",
+					"key": "classesReportAccountRechargeCash",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportAccountRechargeCash",
+					"path": "/orders/classesReports/classesReportAccountRechargeCash",
+					"href": "templates/report/common/account_recharge_cash.html",
+					"services":
+					[
+						{
+							"name": "充值取现查询",
+							"key": "classesReportAccountRechargeCash.query",
+							"url": "/report/common/accountFlow/recharge",
+							"method": "GET"
+						},{
+						"name": "充值取现导出",
+						"key": "classesReportAccountRechargeCash.excelOutput",
+						"url": "/report/common/accountFlow/recharge/output",
+						"method": "GET"
+					},{
+						"name": "校区查询",
+						"key": "classesReportAccountRechargeCash.queryBranch",
+						"url": "/erp/dictionary/organization/branchs",
+						"method": "GET"
+					}
+					]
+				},
+				{
+					"index": "A11000104",
+					"name": "出纳信息表",
+					"key": "classesReportAccountCashier",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportAccountCashier",
+					"path": "/orders/classesReports/classesReportAccountCashier",
+					"href": "templates/report/common/account_cashier.html",
+					"services":
+					[
+						{
+							"name": "出纳信息查询",
+							"key": "classesReportAccountCashier.query",
+							"url": "/report/common/accountFlow/cashier",
+							"method": "GET"
+						},{
+						"name": "出纳信息导出",
+						"key": "classesReportAccountCashier.excelOutput",
+						"url": "/report/common/accountFlow/cashier/output",
+						"method": "GET"
+					},{
+						"name": "校区查询",
+						"key": "classesReportAccountCashier.queryBranch",
+						"url": "/erp/dictionary/organization/branchs",
+						"method": "GET"
+					},{
+						"name": "团队查询",
+						"key": "classesReportAccountCashier.queryBu",
+						"url": "/erp/dictionary/organization/bus",
+						"method": "GET"
+					}
+
+					]
+				},
+				{
+					"index": "A11000105",
+					"name": "报冻退转报表",
+					"key": "classesReportOrderChange",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportOrderChange",
+					"path": "/orders/classesReports/classesReportOrderChange",
+					"href": "templates/report/common/order_change_report.html",
+					"services":
+					[
+						{
+							"name": "报冻退转报表查询",
+							"key": "classesReportOrderChange.query",
+							"url": "/report/common/orderchange",
+							"method": "GET"
+						},
+
+						{
+							"name": "报冻退转报表导出",
+							"key": "classesReportOrderChange.output",
+							"url": "/report/common/orderchange/output",
+							"method": "GET"
+						},
+
+						{
+							"name": "校区查询",
+							"key": "classesReportOrderChange.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesReportOrderChange.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000106",
+					"name": "业绩明细报表",
+					"key": "classesReportPerformanceDetails",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportPerformanceDetails",
+					"path": "/orders/classesReports/classesReportPerformanceDetails",
+					"href": "templates/report/common/performance_details.html",
+					"services": [
+						{
+							"name": "业绩明细查询",
+							"key": "classesReportPerformanceDetails.query",
+							"url": "/report/common/performancedetails",
+							"method": "GET"
+						},
+						{
+							"name": "业绩明细导出",
+							"key": "classesReportPerformanceDetails.output",
+							"url": "/report/common/performancedetails/output",
+							"method": "GET"
+						},
+						{
+							"name": "校区查询",
+							"key": "classesReportPerformanceDetails.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+						{
+							"name": "团队查询",
+							"key": "classesReportPerformanceDetails.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000107",
+					"name": "业绩汇总表",
+					"key": "classesReportPerformanceSum",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportPerformanceSum",
+					"path": "/orders/classesReports/classesReportPerformanceSum",
+					"href": "templates/report/common/performance_sum.html",
+					"services":
+					[
+						{
+							"name": "汇总业绩查询",
+							"key": "classesReportPerformanceSum.query",
+							"url": "/report/common/performancesum",
+							"method": "GET"
+						},{
+						"name": "汇总业绩导出",
+						"key": "classesReportPerformanceSum.output",
+						"url": "/report/common/performancesum/output",
+						"method": "GET"
+					},{
+						"name": "校区查询",
+						"key": "classesReportPerformanceSum.queryBranch",
+						"url": "/erp/dictionary/organization/branchs",
+						"method": "GET"
+					},{
+						"name": "团队查询",
+						"key": "classesReportPerformanceSum.queryBu",
+						"url": "/erp/dictionary/organization/bus",
+						"method": "GET"
+					}
+					]
+				},
+				{
+					"index": "A11000108",
+					"name": "账户剩余表",
+					"key": "classesReportAccount",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportAccount",
+					"path": "/orders/classesReports/classesReportAccount",
+					"href": "templates/report/common/account.html",
+					"services": [
+						{
+							"name": "账户剩余查询",
+							"key": "classesReportAccount.query",
+							"url": "/report/common/account",
+							"method": "GET"
+						},
+						{
+							"name": "账户剩余导出",
+							"key": "classesReportAccount.excelOutput",
+							"url": "/report/common/account/output",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000109",
+					"name": "账户流水信息表",
+					"key": "classesReportAccountFlow",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportAccountFlow",
+					"path": "/orders/classesReports/classesReportAccountFlow",
+					"href": "templates/report/common/account_flow.html",
+					"services": [
+						{
+							"name": "账户流水查询",
+							"key": "classesReportAccountFlow.query",
+							"url": "/report/common/accountflow",
+							"method": "GET"
+						},
+						{
+							"name": "账户流水导出",
+							"key": "classesReportAccountFlow.excelOutput",
+							"url": "/report/common/accountflow/output",
+							"method": "GET"
+						},
+						{
+							"name": "校区查询",
+							"key": "classesReportAccountFlow.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000110",
+					"name": "剩余课时费用表",
+					"key": "classesReportSurplusAmountFee",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportSurplusAmountFee",
+					"path": "/orders/classesReports/classesReportSurplusAmountFee",
+					"href": "templates/report/common/surplus_amount_fee.html",
+					"services":
+					[
+						{
+							"name": "学员剩余课时费用查询",
+							"key": "classesReportSurplusAmountFee.query",
+							"url": "/report/common/surplusamountfee",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员剩余课时费用导出",
+							"key": "classesReportSurplusAmountFee.output",
+							"url": "/report/common/surplusamountfee_output",
+							"method": "GET"
+						},
+
+						{
+							"name": "校区查询",
+							"key": "classesReportSurplusAmountFee.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesReportSurplusAmountFee.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000111",
+					"name": "考勤消耗表",
+					"key": "classesReportAttendance",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportAttendance",
+					"path": "/orders/classesReports/classesReportAttendance",
+					"href": "templates/report/common/attendance_report.html",
+					"services":
+					[
+						{
+							"name": "考勤消耗查询",
+							"key": "classesReportAttendance.query",
+							"url": "/report/common/attendance",
+							"method": "GET"
+						},
+
+						{
+							"name": "考勤消耗导出",
+							"key": "classesReportAttendance.output",
+							"url": "/report/common/attendance_output",
+							"method": "GET"
+						},
+
+						{
+							"name": "校区查询",
+							"key": "classesReportAttendance.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesReportAttendance.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000112",
+					"name": "教师工作量表",
+					"key": "classesTeacherWorkloadReport",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesTeacherWorkloadReport",
+					"path": "/orders/classesReports/classesTeacherWorkloadReport",
+					"href": "templates/report/bjk/teacher_workload_report.html",
+					"services":
+					[
+						{
+							"name": "教师工作量查询",
+							"key": "classesTeacherWorkloadReport.query",
+							"url": "/report/bjk/teacherworkload",
+							"method": "GET"
+						},
+
+						{
+							"name": "教师工作量导出",
+							"key": "classesTeacherWorkloadReport.output",
+							"url": "/report/bjk/teacherworkload_output",
+							"method": "GET"
+						},
+
+						{
+							"name": "校区查询",
+							"key": "classesTeacherWorkloadReport.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesTeacherWorkloadReport.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000113",
+					"name": "晚辅导教师考勤表",
+					"key": "classesWfdTeacherAttendReport",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesWfdTeacherAttendReport",
+					"path": "/orders/classes/classesReports/classesWfdTeacherAttendReport",
+					"href": "templates/report/wfd/teacher_attend_report.html",
+					"services":
+					[
+						{
+							"name": "晚辅导教师考勤查询",
+							"key": "classesWfdTeacherAttendReport.query",
+							"url": "/report/wfd/teacher_attendance",
+							"method": "GET"
+						},
+
+						{
+							"name": "晚辅导教师考勤导出",
+							"key": "classesWfdTeacherAttendReport.output",
+							"url": "/report/wfd/teacher_attendance_output",
+							"method": "GET"
+						},
+
+						{
+							"name": "校区查询",
+							"key": "classesWfdTeacherAttendReport.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesWfdTeacherAttendReport.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
 				}
 			]
 		}
