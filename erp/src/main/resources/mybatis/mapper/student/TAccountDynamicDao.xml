@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TAccountDynamicDao">
+	<select id="pageQueryStudentAccountDynamic" parameterType="map"
+		resultType="com.edu.erp.model.TAccountDynamic">
+		select concat(concat(concat(concat(b.student_name, '('), concat(b.id, ')')),
+                     '('),
+              concat(b.encoding, ')')) as student_info,
+       concat(concat(concat(concat(tsi.student_name, '('), concat(tsi.id, ')')),
+                     '('),
+              concat(tsi.encoding, ')')) as student_info_entry,       
+       a.id as id,
+       a.status as status,
+       a.remark as remark,
+	   case when a.status = 1 then '审核中' when a.status = 2 then '审批拒绝' when a.status = 3 then '正常' when a.status = 4 then '作废' end status_name,
+       a.money as money,
+       a.bu_id as bu_id,
+       a.encoding as encoding,
+       a.create_time as input_time,
+       b.encoding as student_encoding,
+       b.id as student_id,
+       b.student_name as student_name,
+       a.dynamic_type as dynamic_type,
+       case
+         when a.dynamic_type = 1 then
+          '充值'
+         when a.dynamic_type = 2 then
+          '转账'
+         when a.dynamic_type = 3 then
+          '理赔'
+         when a.dynamic_type = 4 then
+          '取款'
+         when a.dynamic_type = 5 then
+          '充值作废'
+         when a.dynamic_type = 6 then
+          '理赔作废'
+         when a.dynamic_type = 7 then
+          '取款作废'
+         when a.dynamic_type = 8 then
+          '一元转校'
+				 when a.dynamic_type = 9 then
+					'跨团队转账'
+         when a.dynamic_type = -1 then
+          '期初导入'
+       end as dynamic_type_name,
+       d.name as pay_mode,
+       d.id as pay_mode_id,
+       h.employee_name as operator,
+       i.org_name as branch_name,
+       j.org_name as bu_name,
+       k.org_name as city_name,
+	   toi.org_name as in_bu_name
+	  from t_account_dynamic a
+	  left join tab_student_info b
+	    on a.student_id = b.id
+	  left join tp_pay_mode d
+	    on a.pay_mode = d.id
+	  left join t_account e
+	    on a.account_id = e.id
+	  left join tab_user_info g
+	    on a.create_user = g.id
+	   and g.status = 1
+	  left join tab_employee_info h
+	    on g.employee_id = h.id
+	   and h.status = 1
+	  left join tab_organization_info i
+	    on a.branch_id = i.id
+	   and i.status = 1
+	  left join tab_organization_info j
+	    on a.bu_id = j.id
+	   and j.status = 1
+	  left join tab_organization_info k
+	    on a.city_id = k.id
+	  left join t_account_transfer_input tati
+	    on a.id = tati.dynamic_id
+	  left join tab_student_info tsi
+	    on tati.student_id = tsi.id
+	   and k.status = 1
+		left join t_account ta
+		on ta.id = tati.account_id
+		left join tab_organization_info toi
+		on toi.id = ta.bu_id
+		where
+		a.city_id = #{city_id}
+		<if test="dynamic_type == null or dynamic_type == '' or dynamic_type != 2">
+			and a.status = 3
+		</if>
+		<if test="dynamic_type != null and dynamic_type != '' and dynamic_type != -1 and dynamic_type != 2">
+			and a.dynamic_type = #{dynamic_type}
+		</if>
+		<if test="dynamic_type != null and dynamic_type != '' and dynamic_type == 2">
+			and a.dynamic_type in (2, 9)
+		</if>
+		<if test="dynamic_type == -1">
+			and a.dynamic_type in (1,3,4)
+		</if>
+		<if test="student_name != null and student_name != ''">
+			and (b.student_name like '%${student_name}%' or
+			b.encoding
+			like '%${student_name}%' or b.id like
+			'%${student_name}%')
+		</if>
+		<if test="encoding != null and encoding != ''">
+			and a.encoding like '%${encoding}%'
+		</if>
+		order by a.id DESC
+
+	</select>
+
+	<select id="queryInfoByDynamicId" parameterType="long"
+		resultType="map">
+		select id,a.status as status,case
+		when a.status = 4 then
+		'作废'
+		else
+		'正常'
+		end as
+		status_name,
+		a.money as money,
+		a.bu_id as bu_id,
+		a.encoding as encoding,
+		a.input_time as
+		input_time,a.dynamic_type as dynamic_type,
+		case
+		when
+		a.dynamic_type = 1 then
+		'充值'
+		when a.dynamic_type = 2 then
+		'转账'
+		when
+		a.dynamic_type = 3 then
+		'理赔'
+		when a.dynamic_type = 4 then
+		'取款'
+		when
+		a.dynamic_type = 5 then
+		'充值作废'
+		when a.dynamic_type = 6 then
+		'理赔作废'
+		when
+		a.dynamic_type = 7 then
+		'取款作废'
+		when a.dynamic_type = 8 then
+		'一元转校'
+		when
+		a.dynamic_type = -1 then
+		'期初导入'
+		end as dynamic_type_name, a.pay_mode
+		from t_account_dynamic a where
+		id=#{dynamicId,jdbcType=NUMERIC}
+	</select>
+
+	<!-- 学生充值 理赔 取款作废 张军利 2014-11-27 -->
+	<select id="accountDynamicCancel" statementType="CALLABLE"
+		parameterType="java.util.HashMap">
+<![CDATA[
+    {call pkg_account_dynamic_v5.pro_recharge_cancel_v5(
+    								#{p_dynamic_id,mode=IN,jdbcType=NUMERIC},
+								    #{p_encoding,mode=IN,jdbcType=NUMERIC},
+								    #{p_input_user,mode=IN,jdbcType=NUMERIC},
+								    #{p_remark,mode=IN,jdbcType=VARCHAR},
+								    #{o_err_code,mode=OUT,jdbcType=NUMERIC},
+								    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
+						    
+]]>
+	</select>
+
+	<insert id="addReChargeHis" parameterType="java.util.HashMap">
+		insert into
+		T_ACCOUNT_RECHARGE_INFO_HIS
+		(id,card_no,company_account,dynamic_id,create_user,create_time)
+		values(
+		#{id,jdbcType=NUMERIC},
+		#{cardNum,jdbcType=VARCHAR},
+		#{companyAccount,jdbcType=NUMERIC},
+		#{dynamicId,jdbcType=NUMERIC},
+		#{creatUser,jdbcType=NUMERIC},
+		sysdate
+		)
+	</insert>
+
+	<insert id="addAccountCharge" parameterType="java.util.HashMap">
+		insert into
+		t_account_recharge_info
+		(card_no,company_account,dynamic_id)
+		values(
+		#{cardNum,jdbcType=VARCHAR},
+		#{companyAccount,jdbcType=NUMERIC},
+		#{dynamicId,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<update id="updateReCharge" parameterType="map">
+		update
+		T_ACCOUNT_RECHARGE_INFO t
+		set
+		<if test="cardNum!=null and cardNum != ''">
+			t.card_no = #{cardNum,jdbcType=VARCHAR}
+		</if>
+		<if test="accountId!=null and accountId != ''">
+			,t.company_account=#{accountId,jdbcType=VARCHAR}
+		</if>
+		where
+		t.dynamic_id = #{id}
+	</update>
+</mapper>
