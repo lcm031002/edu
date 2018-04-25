@@ -64,48 +64,6 @@
 			]
 		},
 		{
-			"index": "A20001",
-			"name": "教师管理",
-			"key": "teachers",
-			"icon": "fa fa-bar-chart",
-			"type": "$state",
-			"value": "teachers",
-			"path": "/teachers",
-			"href": "templates/erp/tearchers/teacherSearch.html",
-			"menus": [
-				{
-					"index": "A20002",
-					"name": "教师搜索",
-					"key": "teacherSearch",
-					"icon": "iconfont icon-teachers_search",
-					"type": "$state",
-					"value": "teacherSearch",
-					"path": "/teachers/teacherSearch",
-					"href": "templates/erp/tearchers/teacherSearch.html",
-					"services": [
-						{
-							"name": "老师查询",
-							"key": "newTeacher.query",
-							"url": "/erp/teacherservice/service",
-							"method": "GET"
-						},
-						{
-							"name": "头像上传",
-							"key": "newTeacher.postPhoto",
-							"url": "/erp/teacherservice/photo",
-							"method": "POST"
-						},
-						{
-							"name": "推送验证码",
-							"key": "newTeacher.sendInvation",
-							"url": "/erp/teacherservice/sendInvation",
-							"method": "POST"
-						}
-					]
-				}
-			]
-		},
-		{
 			"index": "A30001",
 			"name": "教务平台",
 			"key": "orders",
@@ -1772,11 +1730,11 @@
 				{
 					"index": "A50005",
 					"name": "员工管理",
-					"key": "rightControl",
+					"key": "employeeMgr",
 					"icon": "iconfont icon-systems_rights",
 					"type": "$state",
-					"value": "rightControl",
-					"path": "/systems/rightControl",
+					"value": "employeeMgr",
+					"path": "/systems/employeeMgr",
 					"menus": [
 						{
 							"index": "A5000501",
@@ -1803,6 +1761,27 @@
 				},
 				{
 					"index": "A50006",
+					"name": "教师管理",
+					"key": "teacherMgr",
+					"icon": "iconfont icon-systems_rights",
+					"type": "$state",
+					"value": "teacherMgr",
+					"path": "/systems/teacherMgr",
+					"menus": [
+						{
+							"index": "A5000601",
+							"name": "教师信息",
+							"key": "teachers",
+							"icon": "iconfont icon-staff",
+							"type": "$state",
+							"path": "/teachers",
+							"href": "templates/erp/tearchers/teacherSearch.html",
+							"value": "teachers"
+						}
+					]
+				},
+				{
+					"index": "A50007",
 					"name": "流程管理",
 					"key": "sysWorkflowMgr",
 					"icon": "iconfont icon-systems_flow",
@@ -1811,7 +1790,7 @@
 					"path": "/systems/sysWorkflowMgr",
 					"menus": [
 						{
-							"index": "A5000601",
+							"index": "A5000701",
 							"name": "流程节点",
 							"key": "sysWorkflowNodeList",
 							"icon": "fa fa-list-alt",
@@ -1821,7 +1800,7 @@
 							"path": "/systems/sysWorkflowMgr/sysWorkflowNodeList"
 						},
 						{
-							"index": "A5000602",
+							"index": "A5000702",
 							"name": "流程实例",
 							"key": "sysWorkflowDefineList",
 							"icon": "fa fa-list-alt",
@@ -1831,7 +1810,7 @@
 							"path": "/systems/sysWorkflowMgr/sysWorkflowDefineList"
 						},
 						{
-							"index": "A5000603",
+							"index": "A5000703",
 							"name": "流程管理",
 							"key": "sysWorkflowMgrment",
 							"icon": "fa fa-list-alt",
@@ -1841,7 +1820,7 @@
 							"path": "/systems/sysWorkflowMgr/sysWorkflowMgrment"
 						},
 						{
-							"index": "A5000604",
+							"index": "A5000704",
 							"name": "任务历史",
 							"key": "sysWorkflowTaskHistory",
 							"icon": "fa fa-list-alt",
@@ -2580,7 +2559,7 @@
 			"index": "A110001",
 			"name": "报表",
 			"key": "orders_performance",
-			"icon": "iconfont icon-orders_performance",
+			"icon": "iconfont icon-Monthly_report",
 			"type": "$state",
 			"value": "orders_performance",
 			"path": "/orders/classesReports",
