@@ -214,8 +214,7 @@
 	       t1.encoding r_encoding,
 	       t3.org_name,
 	       t5.employee_name,
-	       to_char(t1.input_time, 'yyyy-MM-dd') input_time,
-	       t7.name,
+	       date_format(t1.create_time, '%Y-%m-%d') input_time,
 	       t1.money,
 	       t8.name pay_name,
 	       t1.city_id,
@@ -226,14 +225,12 @@
 	  left join tab_organization_info t3
 	    on t1.branch_id = t3.id
 	  left join tab_user_info t4
-	    on t1.input_user = t4.id
+	    on t1.create_user = t4.id
 	  left join tab_employee_info t5
 	    on t4.employee_id = t5.id
 	  left join t_account t6
 	    on t1.account_id = t6.id
-	    left join tp_product_line t7
-	    on t6.product_line = t7.id
-	 left join tp_pay_mode t8 
+	 left join tp_pay_mode t8
 	 	on t1.pay_mode = t8.id  
 	 where t1.id = #{dynamicId,jdbcType=NUMERIC}
   </select>
