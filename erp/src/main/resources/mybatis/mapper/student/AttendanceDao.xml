@@ -1125,7 +1125,7 @@
         on tsci.student_id = stu.id
            and tsci.is_valid = 1
            and tsci.counselor_type = 2
-		       and to_char(sysdate, 'yyyy-MM-dd') between tsci.start_date and tsci.end_date
+		       and date_format(sysdate(), '%Y-%m-%d') between tsci.start_date and tsci.end_date
       left join tab_employee_info tei1
         on tei1.id = tsci.counselor_id
 		  left join tab_teacher_info tea
