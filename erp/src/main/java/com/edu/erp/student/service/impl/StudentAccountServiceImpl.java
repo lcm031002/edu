@@ -216,8 +216,9 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			TAccount tAccount = new TAccount();
 
 			if (CollectionUtils.isEmpty(queryAccount)) {
-				tAccount.setStudent_id(NumberUtils.object2Long(paramMap.get("studentId")));
-				tAccount.setBu_id(NumberUtils.object2Long(paramMap.get("buId")));
+				tAccount.setStudent_id(NumberUtils.object2Long(paramMap.get("p_student_id")));
+				tAccount.setBu_id(NumberUtils.object2Long(paramMap.get("p_bu_id")));
+				tAccount.setFee_amount(Double.parseDouble( "0"));
 				tAccount.setCreater_id(userId);
 				studentAccountDao.createAccount(tAccount);
 			}else{

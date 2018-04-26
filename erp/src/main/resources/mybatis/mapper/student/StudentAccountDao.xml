@@ -886,7 +886,7 @@
 		  #{student_id,jdbcType=NUMERIC},
 		  #{bu_id,jdbcType=NUMERIC},
 		  0,
-		  #{sysdate(),jdbcType=DATE},
+		  sysdate(),
 		  #{creater_id,jdbcType=NUMERIC}
 	       )
 	</insert>

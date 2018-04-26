@@ -32,7 +32,7 @@
 	<update id="updateEmployee" 
 		parameterType="com.edu.cas.client.common.model.Employee">
 		update TAB_EMPLOYEE_INFO set
-		UPDATE_TIME = sysdate
+		UPDATE_TIME = sysdate()
 		,ENCODING = #{encoding,jdbcType = VARCHAR}
 		,EMPLOYEE_NAME = #{employeeName,jdbcType = VARCHAR}
 		,SEX = #{sex,jdbcType = NUMERIC}
