@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.PostDao">
+	
+	<!-- 添加岗位 -->
+	<insert id="addPost" parameterType="com.edu.erp.model.Post">
+		INSERT INTO TP_POST
+		(
+			id,
+			post_name,
+			post_code,
+			post_type_id,
+			rank_id
+		)
+		VALUES
+		(
+			seq_TP_POST.nextval,
+			#{post_name,jdbcType=VARCHAR},
+			#{post_code,jdbcType=VARCHAR},
+			#{post_type_id,jdbcType=VARCHAR},
+			#{rank_id,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 修改岗位 -->
+	<update id="updatePost" parameterType="com.edu.erp.model.Post">
+		UPDATE TP_POST
+		SET
+			post_name=#{post_name,jdbcType=VARCHAR},
+			post_type_id=#{post_type_id,jdbcType=VARCHAR},
+			rank_id=#{rank_id,jdbcType=VARCHAR}
+		WHERE id=#{id, jdbcType = NUMERIC}
+	</update>
+	
+	<!-- 查询已存在岗位 -->
+	<select id="queryPostId" parameterType="string" resultType="long">
+		select ep.id from TP_POST ep WHERE ep.post_name=#{name, jdbcType =VARCHAR} and rownum=1 
+	</select>
+	
+	<!-- 查询所有岗位id，名称信息 -->
+	<select id="queryPost" resultType="com.edu.erp.model.Post" parameterType="map">
+		select 
+			ep.id,
+			ep.post_code,
+			ep.post_name,
+			ep.rank_id,
+			ep.post_type_id
+		from TP_POST ep
+		where 1=1
+		<if test="searchInfo != null and searchInfo != ''">
+			and (ep.post_code like '%${searchInfo}%' or ep.post_name like '%${searchInfo}%')
+		</if> 
+		order by ep.post_code
+	</select>
+</mapper>

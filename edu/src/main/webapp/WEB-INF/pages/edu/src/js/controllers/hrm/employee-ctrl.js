@@ -7,8 +7,8 @@ angular.module('ework-ui')
         '$log',
         '$state',
         '$cookieStore',
-        'OrgService',
-        'PostService',
+        'erp_organizationService',
+        'erp_PostService',
         'DictItemService',
         'EmployeeExtService',
         'erp_employeeMgrService',
@@ -18,8 +18,8 @@ function EmployeeCtrl($scope,
                   $log,
                   $state,
                   $cookieStore,
-                  OrgService,
-                  PostService,
+                  erp_organizationService,
+                  erp_PostService,
                   DictItemService,
                   EmployeeExtService,
                   erp_employeeMgrService){
@@ -33,12 +33,12 @@ function EmployeeCtrl($scope,
     $scope.enterTypeList=[];
     //选中的查询条件
     $scope.selected={};
-    
+
     //选中的员工岗位信息
     $scope.selectedPost={};
-    
+
     $scope.setPostPanel=false;
-    
+
     //岗位查询列表
     $scope.postList=[];
     $scope.detailPage = 'templates/hrm/employee/employee_info.html?_='+(new Date()).getTime();
@@ -65,7 +65,7 @@ function EmployeeCtrl($scope,
     	/*if($scope.selectedOrgId){
     		param.org_id=$scope.selectedOrgId;
     		}*/
-    	
+
     	if($scope.selected.Dept!=null && $scope.selected.Dept!=''){
     		param.dept=$scope.selected.Dept;
     		}else{
@@ -96,12 +96,12 @@ function EmployeeCtrl($scope,
     		}
     	})
     };
-    
+
     $scope.queryInfo=function(pageIndex){
     	$scope.pageNum=pageIndex;
     	queryEmployee();
     };
-    
+
     /**
 	 * 查询数据字典子典所有数据
 	 */
@@ -115,28 +115,15 @@ function EmployeeCtrl($scope,
     		}
     	})
     }
-    
-    
+
+
     /**
 	 * 打开员工档案管理的面板
-	 */    
+	 */
     $scope.toQueryItem = function(emp){
-    	/*$scope.addEmp=false;
-    	$('#EmpPanel').modal({"show":true,"backdrop":'static'});
-    	$scope.selectedEmp=emp;		//提取选中的员工id方便查询教育经历 ，工作经历等信息
-    	//param.id = emp.id;
-    	
-    	getRet(emp);
-    	
-        $scope.itemOperateType = 'query';
-	    queryEmployeeEdu();
-	    queryEmployeeExp();
-	    queryEmployeeSum();
-	    queryEmployeeRew();*/
-    	
         return true;
 	};
-	
+
 	/**
 	 * 查询选中的员工定义表中的动态字段
 	 */
@@ -149,7 +136,7 @@ function EmployeeCtrl($scope,
     		getEmployeeInfo(emp);
     	});
 	}
-	
+
 	/**
 	 * 查询员工信息表中的基础信息
 	 */
@@ -163,7 +150,7 @@ function EmployeeCtrl($scope,
             getSelectedEmp($scope.ret,$scope.employee);
         })
 	}
-	
+
 	/**
 	 * 查询动态的员工基础信息
 	 */
@@ -185,7 +172,7 @@ function EmployeeCtrl($scope,
 
 
 	}
-	
+
 	/**
 	 * 准备添加员工基本信息
 	 */
@@ -210,12 +197,12 @@ function EmployeeCtrl($scope,
     		$scope.temp=$scope.extField;
     	});
 	};
-	
 
-	
-	
 
-	
+
+
+
+
 	/**
 	 * 去添加教育经历
 	 */
@@ -224,7 +211,7 @@ function EmployeeCtrl($scope,
 		$scope.selectedEdu={};
 		$("#eduModal").modal({"show":true,"backdrop":'static'});
 	}
-	
+
 	/**
 	 * 去修改教育经历
 	 */
@@ -233,7 +220,7 @@ function EmployeeCtrl($scope,
 		$("#eduModal").modal({"show":true,"backdrop":'static'});
 		$scope.selectedEdu=edu;
 	}
-	
+
 	/**
 	 * 去删除教育经历
 	 */
@@ -241,8 +228,8 @@ function EmployeeCtrl($scope,
 		$scope.eduDelete=true;
 		$scope.selectedEdu=edu;
 	}
-	
-	
+
+
 	/**
 	 * 去添加工作经历
 	 */
@@ -251,7 +238,7 @@ function EmployeeCtrl($scope,
 		$scope.selectedExp={};
 		$("#expModal").modal({"show":true,"backdrop":'static'});
 	}
-	
+
 	/**
 	 * 去修改工作经历
 	 */
@@ -260,7 +247,7 @@ function EmployeeCtrl($scope,
 		$("#expModal").modal({"show":true,"backdrop":'static'});
 		$scope.selectedExp=exp;
 	}
-	
+
 	/**
 	 * 去删除工作经历
 	 */
@@ -268,8 +255,8 @@ function EmployeeCtrl($scope,
 		$scope.expDelete=true;
 		$scope.selectedExp=exp;
 	}
-	
-	
+
+
 	/**
 	 * 去添加工作总结
 	 */
@@ -278,7 +265,7 @@ function EmployeeCtrl($scope,
 		$scope.selectedSum={};
 		$("#sumModal").modal({"show":true,"backdrop":'static'});
 	}
-	
+
 	/**
 	 * 去修改工作总结
 	 */
@@ -287,7 +274,7 @@ function EmployeeCtrl($scope,
 		$("#sumModal").modal({"show":true,"backdrop":'static'});
 		$scope.selectedSum=sum;
 	}
-	
+
 	/**
 	 * 去删除工作总结
 	 */
@@ -295,8 +282,8 @@ function EmployeeCtrl($scope,
 		$scope.sumDelete=true;
 		$scope.selectedSum=sum;
 	}
-	
-	
+
+
 	/**
 	 * 去添加奖惩信息
 	 */
@@ -305,7 +292,7 @@ function EmployeeCtrl($scope,
 		$scope.selectedRew={};
 		$("#rewModal").modal({"show":true,"backdrop":'static'});
 	}
-	
+
 	/**
 	 * 去修改奖惩信息
 	 */
@@ -314,7 +301,7 @@ function EmployeeCtrl($scope,
 		$("#rewModal").modal({"show":true,"backdrop":'static'});
 		$scope.selectedRew=rew;
 	}
-	
+
 	/**
 	 * 去删除奖惩信息
 	 */
@@ -322,13 +309,13 @@ function EmployeeCtrl($scope,
 		$scope.rewDelete=true;
 		$scope.selectedRew=rew;
 	}
-	
-	
+
+
 	/**
 	 * 添加员工基础信息
 	 */
 	$scope.addEmployee = function(){
-		var param={};		
+		var param={};
 		/*if($scope.selectedItem.EMPLOYEE_NAME==""||$scope.selectedItem.EMPLOYEE_NAME==null){
 				alert("姓名不能为空");
 				return;
@@ -360,7 +347,7 @@ function EmployeeCtrl($scope,
 			}
 		})
 	};
-	
+
 	/**
 	 * 修改员工档案
 	 */
@@ -383,12 +370,12 @@ function EmployeeCtrl($scope,
 				$scope.employee[0][str]=$scope.temp[i].fieldKey;
 			}
 		}
-		
+
 		$scope.employee[0].id=$scope.selectedEmp.id;
 		param=$scope.employee[0];
 		erp_employeeMgrService.updateEmployeeStatic($scope.selectedEmp,function(resp){
 			if(resp.error==false){
-			
+
 			}
 		})
 		erp_employeeMgrService.update(param,function(resp){
@@ -401,9 +388,9 @@ function EmployeeCtrl($scope,
 			}
 		});
 	};
-	
-	
-	
+
+
+
 	/**
 	 * 再次查询员工定义表中启用的字段信息，获取员工信息的key
 	 */
@@ -415,7 +402,7 @@ function EmployeeCtrl($scope,
     		}
     	});
 	}
-	
+
 	/**
 	 * 添加员工教育经历
 	 */
@@ -433,7 +420,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 修改员工教育经历
 	 */
@@ -450,7 +437,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 删除员工教育经历
 	 */
@@ -468,7 +455,7 @@ function EmployeeCtrl($scope,
 			$scope.eduDelete=false;
 		});
 	}
-	
+
 	/**
 	 * 查询员工教育经历
 	 */
@@ -481,7 +468,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 查询员工工作经历
 	 */
@@ -494,7 +481,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 添加员工工作经历
 	 */
@@ -512,7 +499,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 修改员工工作经历
 	 */
@@ -529,7 +516,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 删除员工工作经历
 	 */
@@ -547,7 +534,7 @@ function EmployeeCtrl($scope,
 			$scope.expDelete=false;
 		});
 	}
-	
+
 	/**
 	 * 查询员工工作总结
 	 */
@@ -560,7 +547,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 添加员工工作总结
 	 */
@@ -578,7 +565,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 修改员工工作总结
 	 */
@@ -595,7 +582,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 删除员工工作总结
 	 */
@@ -613,7 +600,7 @@ function EmployeeCtrl($scope,
 			$scope.sumDelete=false;
 		});
 	}
-	
+
 	/**
 	 * 查询员工奖惩信息
 	 */
@@ -626,7 +613,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 添加员工奖惩信息
 	 */
@@ -644,7 +631,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 修改员工奖惩信息
 	 */
@@ -661,7 +648,7 @@ function EmployeeCtrl($scope,
 			}
 		});
 	}
-	
+
 	/**
 	 * 删除员工奖惩信息
 	 */
@@ -679,36 +666,36 @@ function EmployeeCtrl($scope,
 			$scope.rewDelete=false;
 		});
 	}
-	
+
 	/**
      * 上传头像
      */
 	$scope.headPic=function(){
 		//var selectedEmpId=$scope.selectedEmp.id;
 		window.location.href='templates/hrm/uploadImage/headPic?selectedEmpId='+$scope.selectedEmp.id;
-		
+
 	}
-	
-	
+
+
 	 /**
      * 查询归属组织
      */
    function queryOrg(){
     	var param={};
-        OrgService.get(param,function(resp){
+        erp_organizationService.get(param,function(resp){
             if(resp.error == false){
                 $scope.orgs = resp.data;
             }
         });
     };
-   
-   
+
+
    /**
     * 查询岗位
     */
    function queryPost(){
 	   var param={};
-	   PostService.queryPost(param,function(resp){
+	   erp_PostService.queryPost(param,function(resp){
 		   if(resp.error == false){
 			   $scope.postList = resp.data;
 		   }
@@ -724,14 +711,14 @@ function EmployeeCtrl($scope,
     	$scope.empId='';
     	$scope.queryInfo(1);
     }
-    
+
     $scope.setPostPanel=function(emp){
     	$scope.addEmp = true;
     	$scope.empId=emp.id;
     	queryPostByEmpId(emp.id);
     }
-    
-    
+
+
     //按照员工id查询岗位信息
     function queryPostByEmpId(emp_id){
     	var param={};
@@ -742,8 +729,8 @@ function EmployeeCtrl($scope,
     		}
     	});
     }
-   
-    
+
+
     //点击保存，提交
     $scope.savePost=function(){
     	console.log($scope.selectedPost);
@@ -772,7 +759,7 @@ function EmployeeCtrl($scope,
     		alert("请选择岗位");
     		return;
     	}
-    
+
     	erp_employeeMgrService.addPost(param,function(resp){
     		if(resp.error==false){
     			alert("添加成功");
@@ -783,7 +770,7 @@ function EmployeeCtrl($scope,
     		}
     	});
     }
-   
+
     //删除员工岗位
     $scope.removePost=function(d){
     	var param={};
@@ -799,24 +786,24 @@ function EmployeeCtrl($scope,
     		}
     	});
     }
-   
-    
+
+
     /**
      * 查询归属团队
      */
     function queryBu(){
-        OrgService.queryBu({},function(resp){
+        erp_organizationService.teamList({},function(resp){
             if(resp.error == false){
                 $scope.buList = resp.data;
             }
         });
     }
-    
+
     //根据团队id查询校区
     $scope.changeBuId=function(buId){
     	var param={};
     	param.buId=buId;
-    	OrgService.querySch(param,function(resp){
+    	erp_organizationService.branchList(param,function(resp){
                if(resp.error == false){
                    $scope.branchsList = resp.data;
                    $scope.branchsList.unshift(

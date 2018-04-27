@@ -423,13 +423,10 @@
 	<!-- 根据员工id查询该员工绑定的岗位信息-->
 	<select id="queryPostByEmpId" parameterType="long" resultMap="dataMap">
 		select a.id,a.status,a.post_id,a.emp_id,tof.org_name as buName,
-		case 　　
-		when a.branch_id = -1 then '全部校区' 　　
-		else tof2.org_name 　　end branchName,
 		tp.post_name
 		from (select id,bu_id, branch_id, post_id, status,emp_id
 		from TAB_EMP_ORG_POST teop
-		<where>1=1
+		<where> 1=1
 			<if test="employee_id!=null">
 				and teop.emp_id=#{employee_id,jdbcType=NUMERIC}
 			</if>
@@ -438,7 +435,6 @@
 		left join tab_organization_info tof on tof.id = a.bu_id
 		left join tab_organization_info tof2 on tof2.id = a.branch_id
 		left join Tp_Post tp on tp.id = a.post_id
-
 	</select>
 
 	<!-- 添加员工岗位信息 -->
@@ -460,7 +456,7 @@
 		#{post_Id,jdbcType=NUMERIC},
 		#{create_user,jdbcType=NUMERIC},
 		1,
-		(select sysdate from dual)
+		sysdate()
 		)
 	</insert>
 

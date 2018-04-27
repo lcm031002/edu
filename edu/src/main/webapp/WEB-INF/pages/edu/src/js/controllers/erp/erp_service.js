@@ -549,6 +549,11 @@ angular.module('ework-ui').factory('erp_AccountService',
 angular.module('ework-ui').factory('erp_CoopOrgService',
     [ '$resource', erp_CoopOrgService ]);
 
+/**
+ * 岗位服务
+ */
+angular.module('ework-ui').factory('erp_PostService',
+    [ '$resource', erp_PostService ]);
 
 function erp_orderChangeService($resource){
     return $resource('/erp/ordermanager/service', {}, {
@@ -3699,5 +3704,36 @@ function erp_CoopOrgService($resource){
             params : {},
             isArray : false
         }
+    });
+}
+
+function erp_PostService($resource){
+    return $resource('/erp/common/postservice', {}, {
+        queryPost: {
+			method : 'GET',
+			params : {},
+			isArray : false
+		},
+        add : {
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        update : {
+            method : 'PUT',
+            params : {},
+            isArray : false
+        },
+        remove : {
+            method : 'DELETE',
+            params : {},
+            isArray : false
+        },
+        queryPostTypeName: {
+			url:'/erp/common/dict_type_sub/postservice',
+			method : 'GET',
+			params : {},
+			isArray : false
+		}
     });
 }
