@@ -142,7 +142,7 @@ function erp_withDrawalController(
 	                } else if($scope.withDrawalInfo.accountType==2){ //冻结账户
                         $scope.studentAccount.money=($scope.studentAccount.FROZEN_ACCOUNT==null?0:$scope.studentAccount.FROZEN_ACCOUNT);
                     } else { // 储值账户
-	                	$scope.studentAccount.money=$scope.studentAccount.FEE_AMOUNT;
+	                	$scope.studentAccount.money=$scope.studentAccount.fee_amount;
 	                }
                 }
             }else{

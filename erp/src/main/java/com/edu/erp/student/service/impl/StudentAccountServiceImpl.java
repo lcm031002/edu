@@ -236,6 +236,8 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			tAccountDynamic.setStatus(3);
 			tAccountDynamic.setAccount_id(tAccount.getId());
 			tAccountDynamic.setMoney(Double.parseDouble(param.get("money") + ""));
+			tAccountDynamic.setPay_flag(1L);
+			tAccountDynamic.setPay_mode(param.get("pay_mode") + "");
 			tAccountDynamic.setCreate_user(userId);
 			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 1));
 
@@ -342,7 +344,8 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			if (CollectionUtils.isEmpty(paramMap)
 					|| paramMap.get("p_input_student_id") == null
 					|| StringUtil.isEmpty(branchId)
-					|| StringUtil.isEmpty(userId)) {
+					|| StringUtil.isEmpty(userId)
+					|| paramMap.get("p_transfer_money") == null)	{
 				throw new Exception("参数不能为空！");
 			}
 
@@ -350,6 +353,9 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			Long outputBuId = NumberUtils.object2Long(paramMap.get("p_output_bu_id"));
 			Long inputBranchId = NumberUtils.object2Long(paramMap.get("p_input_branch_id"));
 			Long outputBranchId = NumberUtils.object2Long(paramMap.get("p_output_branch_id"));
+			Long inStudentId = NumberUtils.object2Long(paramMap.get("p_input_student_id"));
+			Long outStudentId = NumberUtils.object2Long(paramMap.get("p_output_student_id"));
+
 			// 团队内互转
 			if ((inputBuId == null && outputBuId == null) || (outputBuId.longValue() == inputBuId.longValue())) {
 				inputBuId = outputBuId = buId;
@@ -360,38 +366,91 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 				paramMap.put("p_output_branch_id", branchId);
 			}
 
-			// 跨团队转账，必须要有转入和转出校区参数
-			if (inputBuId != null && outputBuId != null && inputBuId.longValue() != outputBuId.longValue()) {
-				if (inputBranchId == null || outputBranchId == null) {
-					throw new Exception("学员跨团队转账，必须选择转出和转入校区！");
-				}
-				paramMap.put("p_input_branch_id", inputBranchId);
-				paramMap.put("p_output_branch_id", outputBranchId);
-			}
-
 			paramMap.put("p_input_user", userId);
 			paramMap.put("p_approve_user", userId);
 			paramMap.put("p_confirm_user", userId);
 			paramMap.put("p_encoding", EncodingSequenceUtil
 					.getSequenceNum(Constants.EncodingPrefixSeq.ZZDJ_PREFIX));
-			studentAccountDao.accountTransfer(paramMap);
+			//studentAccountDao.accountTransfer(paramMap);
 
-			if (!"0".equals(paramMap.get("o_err_code").toString())) {
-				throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
-			}
+			// 查询是否存在账户，如果没有的话，先创建账户
+			Map<String, Object> queryAccountMap = new HashMap<String, Object>();
+			queryAccountMap.put("studentId", outStudentId);
+			queryAccountMap.put("buId", inputBuId);
+			queryAccountMap.put("accountType", 0);
+			Map<String, Object> queryOutAccount = studentAccountDao
+					.queryAccount(queryAccountMap);
+
+			TAccountDynamic outTAccountDynamic  = new TAccountDynamic();
+			outTAccountDynamic.setAccount_id(NumberUtils.object2Long(queryOutAccount.get("id")));
+			outTAccountDynamic.setDynamic_type(2L);//转账
+			outTAccountDynamic.setBranch_id(inputBranchId);
+			outTAccountDynamic.setBu_id(inputBuId);
+			outTAccountDynamic.setStudent_id(outStudentId);
+			outTAccountDynamic.setStatus(3);
+			outTAccountDynamic.setPay_flag(0L);
+			outTAccountDynamic.setPay_mode("4");
+			outTAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			outTAccountDynamic.setCreate_user(userId);
+			outTAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 7));
+
+			studentAccountDao.saveAccountDynamic(outTAccountDynamic);
+
+			TAccountChange outTAccountChange = new TAccountChange();
+			outTAccountChange.setAccount_id(NumberUtils.object2Long(queryOutAccount.get("id")));
+			outTAccountChange.setChange_flag(1L);
+			outTAccountChange.setChange_type(5L);
+			outTAccountChange.setChange_amount(Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			outTAccountChange.setPre_amount(Double.parseDouble(queryOutAccount.get("fee_amount") + ""));
+			outTAccountChange.setNext_amount(Double.parseDouble(queryOutAccount.get("fee_amount") + "") - Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			outTAccountChange.setDynamic_id(outTAccountDynamic.getId());
+			outTAccountChange.setPay_mode(1L);//内部转账
+			outTAccountChange.setAccount_type(1L);
+
+			studentAccountDao.saveAccountChange(outTAccountChange);
+
+			Map<String, Object> queryInAccountMap = new HashMap<String, Object>();
+			queryInAccountMap.put("studentId", inStudentId);
+			queryInAccountMap.put("buId", inputBuId);
+			queryInAccountMap.put("accountType", 0);
+			Map<String, Object> queryInAccount = studentAccountDao
+					.queryAccount(queryInAccountMap);
+
+			Map<String, Object> transferMap = new HashMap<String, Object>();
+			transferMap.put("student_id", inStudentId);
+			transferMap.put("account_id", NumberUtils.object2Long(queryInAccount.get("id")));
+			transferMap.put("money", Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			transferMap.put("dynamic_id", outTAccountDynamic.getId());
+
+			studentAccountDao.saveTransferInput(transferMap);
+
+			TAccountChange inTAccountChange = new TAccountChange();
+			inTAccountChange.setAccount_id(NumberUtils.object2Long(queryInAccount.get("id")));
+			inTAccountChange.setChange_flag(0L);
+			inTAccountChange.setChange_type(5L);
+			inTAccountChange.setChange_amount(Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			inTAccountChange.setPre_amount(Double.parseDouble(queryInAccount.get("fee_amount") + ""));
+			inTAccountChange.setNext_amount(Double.parseDouble(queryInAccount.get("fee_amount") + "") + Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			inTAccountChange.setDynamic_id(outTAccountDynamic.getId());
+			inTAccountChange.setPay_mode(1L);//内部转账
+			inTAccountChange.setAccount_type(1L);
+
+			studentAccountDao.saveAccountChange(inTAccountChange);
+
+			HashMap<String,Object> paramOutAccountMap=new HashMap<String,Object>();
+			paramOutAccountMap.put("accountId",NumberUtils.object2Long(queryOutAccount.get("id")));
+			paramOutAccountMap.put("amount",Double.parseDouble(queryOutAccount.get("fee_amount") + "") + Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			studentAccountDao.updateFeeAccount(paramOutAccountMap);
+
+			HashMap<String,Object> paramInAccountMap=new HashMap<String,Object>();
+			paramInAccountMap.put("accountId",NumberUtils.object2Long(queryInAccount.get("id")));
+			paramInAccountMap.put("amount",Double.parseDouble(queryInAccount.get("fee_amount") + "") + Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			studentAccountDao.updateFeeAccount(paramInAccountMap);
+
 			// 返回转账记录Id
 			Long dynamicId = NumberUtils.object2Long(paramMap.get("o_dynamic_id"));
 			resultMap.put("dynamic_id", dynamicId);
 
-			// 跨团队学员转账，需要走审批流
-			if (inputBuId.longValue() != outputBuId.longValue()) {
-				OrganizationInfo orgInfo = this.organizationService.selectById(inputBuId);
-				paramMap.put("in_bu_name", orgInfo.getOrg_name());
-				orgInfo = this.organizationService.selectById(outputBranchId);
-				paramMap.put("output_branch_name", orgInfo.getOrg_name());
-				// 调用审批流程
-				invokeAccountTransferWorkflow(paramMap, dynamicId, userId, employeeName, processEngine);
-			}
 		} catch (Exception e) {
 			throw new Exception("转账失败:" + e.getMessage());
 		}
@@ -519,11 +578,67 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 					: jsonObj.get("remark"));
 			paramMap.put("p_encoding",
 					EncodingSequenceUtil.getSequenceNum((long) 5));
-			studentAccountDao.accountDrawing(paramMap);
+			//studentAccountDao.accountDrawing(paramMap); 取现存储过程
 
-			if (!paramMap.get("o_err_code").toString().equals("0")) {
-				throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
+			// 查询是否存在账户，如果没有的话，先创建账户
+			Map<String, Object> queryAccountMap = new HashMap<String, Object>();
+			queryAccountMap.put("studentId", paramMap.get("p_student_id"));
+			queryAccountMap.put("buId", paramMap.get("p_bu_id"));
+			queryAccountMap.put("accountType", 0);
+			Map<String, Object> queryAccount = studentAccountDao
+					.queryAccount(queryAccountMap);
+
+			if (CollectionUtils.isEmpty(queryAccount)) {
+				throw new Exception("学生未开账户！" );
 			}
+
+			if (Double.parseDouble(queryAccount.get("fee_amount") + "") - Double.parseDouble(paramMap.get("p_money") + "") < 0 ) {
+				throw new Exception("储值账户余额不足！" );
+			}
+
+			TAccountDynamic tAccountDynamic  = new TAccountDynamic();
+			tAccountDynamic.setAccount_id(Long.parseLong(queryAccount.get("id") + ""));
+			tAccountDynamic.setDynamic_type(4L);//取现
+			tAccountDynamic.setBranch_id(branchId);
+			tAccountDynamic.setBu_id(buId);
+			tAccountDynamic.setStudent_id(Long.parseLong(paramMap.get("p_student_id") + ""));
+			tAccountDynamic.setStatus(3);
+			tAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_money") + ""));
+			tAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_money_fee") + ""));
+			tAccountDynamic.setPay_flag(2L);//付费
+			tAccountDynamic.setPay_mode(paramMap.get("p_pay_mode")+"");
+			tAccountDynamic.setCreate_user(userId);
+			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 1));
+
+			studentAccountDao.saveAccountDynamic(tAccountDynamic);
+
+			//更新退费单据为已取款
+
+			//转账
+			if(Long.parseLong(paramMap.get("p_pay_mode") +"") != 1){
+				HashMap<String,Object> paramAccountRechargeMap=new HashMap<String,Object>();
+				paramAccountRechargeMap.put("cardNum",paramMap.get("p_student_card"));
+				paramAccountRechargeMap.put("companyAccount",paramMap.get("p_company_card"));
+				paramAccountRechargeMap.put("dynamicId",tAccountDynamic.getId());
+
+				addAccountRecharge(paramAccountRechargeMap);
+			}
+
+			TAccountChange tAccountChange = new TAccountChange();
+			tAccountChange.setAccount_id(Long.parseLong(queryAccount.get("id") + ""));
+			tAccountChange.setChange_flag(1L);//0:存入  1:取出
+			tAccountChange.setChange_type(3L);//变更类型:0客户充值,1订单收费取出,2订单退费存入,3客户取出
+			tAccountChange.setChange_amount(Double.parseDouble(paramMap.get("p_money") + ""));
+			tAccountChange.setPre_amount(Double.parseDouble(queryAccount.get("fee_amount") + ""));
+			tAccountChange.setNext_amount(Double.parseDouble(queryAccount.get("fee_amount") + "") - Double.parseDouble(paramMap.get("p_money") + ""));
+			tAccountChange.setDynamic_id(tAccountDynamic.getId());
+			tAccountChange.setPay_mode(NumberUtils.object2Long(paramMap.get("p_pay_mode")));
+			studentAccountDao.saveAccountChange(tAccountChange);
+
+			HashMap<String,Object> paramAccountMap=new HashMap<String,Object>();
+			paramAccountMap.put("accountId",queryAccount.get("id"));
+			paramAccountMap.put("amount",Double.parseDouble(queryAccount.get("fee_amount") + "") - Double.parseDouble(paramMap.get("p_money") + ""));
+			studentAccountDao.updateFeeAccount(paramAccountMap);
 
 			// 返回转账记录Id
 			map.put("dynamic_id", paramMap.get("o_dynamic_id"));

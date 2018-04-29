@@ -225,7 +225,7 @@
 			and d.employee_name like '%${counselor_name}%'
 		</if>
 		<if test="cur_date != null">
-			and to_char(sysDate,'yyyy-MM-dd') between a.start_date and
+			and date_format(sysdate(),'%Y-%m-%d') between a.start_date and
 			a.end_date
 		</if>
 		order by a.start_date DESC, a.end_date DESC

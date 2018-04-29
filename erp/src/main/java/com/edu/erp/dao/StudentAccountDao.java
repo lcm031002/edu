@@ -284,4 +284,6 @@ public interface StudentAccountDao{
 
 	Map<String, Object> queryStuAccountInfo(Long dynamicId);
 
+	void saveTransferInput(Map<String, Object> paramMap);
+
 }

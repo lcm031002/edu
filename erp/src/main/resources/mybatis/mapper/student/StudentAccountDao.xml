@@ -243,12 +243,10 @@
 	       t1.city_id,
 	       t3.org_name,
 	       t5.employee_name,
-	       to_char(t1.input_time, 'yyyy-MM-dd') input_time,
-	       t7.name output_product_line,
+	       date_format (t1.create_time, '%Y-%m-%d') input_time,
 	       t9.student_name input_stu_name,
-	       t11.name input_product_line,
 	       t1.money,
-	       decode(t1.account_type, 1, '储值账户', 2, '冻结账户', 3, '退费账户') as account_type
+	       case when	t1.account_type = 1 then '储值账户' when t1.account_type =2 then '冻结账户' when t1.account_type = 3 then  '退费账户' end  account_type
 	  from t_account_dynamic t1
 	  left join tab_student_info t2
 	    on t1.student_id = t2.id
@@ -260,16 +258,12 @@
 	    on t4.employee_id = t5.id
 	  left join t_account t6
 	    on t1.account_id = t6.id
-	  left join tp_product_line t7
-	    on t6.product_line = t7.id
 	  left join t_account_transfer_input t8
 	    on t1.id = t8.dynamic_id
 	  left join tab_student_info t9
 	    on t8.student_id = t9.id
 	  left join t_account t10
 	    on t8.account_id = t10.id
-	  left join tp_product_line t11
-	    on t10.product_line = t11.id
      where t1.id = #{dynamicId,jdbcType=NUMERIC}
   </select>
   
@@ -833,8 +827,8 @@
 		#{student_id,jdbcType=NUMERIC},
 		#{account_id,jdbcType=NUMERIC},
 		#{money,jdbcType=NUMERIC},
-		1,
-		1,
+		#{pay_flag,jdbcType=NUMERIC},
+		#{pay_mode,jdbcType=NUMERIC},
 		#{create_user,jdbcType=VARCHAR},
 		sysdate(),
 		#{status,jdbcType=NUMERIC},
@@ -951,5 +945,20 @@
 			 and tain.bu_id = toiin.id
 			 and tad.id = #{dynamicId}
 	</select>
+
+	<!-- 转入信息 -->
+	<insert id="saveTransferInput" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="id">
+		insert into t_account_transfer_input
+		(
+			student_id, account_id, money, dynamic_id
+		)
+		values
+		(
+			#{student_id,jdbcType=NUMERIC},
+			#{account_id,jdbcType=NUMERIC},
+			#{money,jdbcType=NUMERIC},
+			#{dynamic_id,jdbcType=NUMERIC}
+		)
+	</insert>
 
 </mapper>

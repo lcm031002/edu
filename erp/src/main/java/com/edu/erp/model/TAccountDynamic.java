@@ -25,6 +25,7 @@ public class TAccountDynamic extends BaseObject {
 	private String status_name;// 动户单据状态（4表示作废）
 
 	private Long pay_mode_id;// 收付费方式主键
+	private Long pay_flag;// 收付费
 	private String pay_mode;// 收付费方式
 	private String remark;// 备注
 	
@@ -216,6 +217,10 @@ public class TAccountDynamic extends BaseObject {
 	public Long getBranch_id() { return branch_id;	}
 
 	public void setBranch_id(Long branch_id) { this.branch_id = branch_id;	}
+
+	public Long getPay_flag() { return pay_flag;	}
+
+	public void setPay_flag(Long pay_flag) { this.pay_flag = pay_flag; }
 
 	@Override
 	public String toString() {
