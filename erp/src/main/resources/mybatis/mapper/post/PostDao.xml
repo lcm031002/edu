@@ -12,7 +12,8 @@
 			post_name,
 			post_code,
 			post_type_id,
-			rank_id
+			rank_id,
+			status
 		)
 		VALUES
 		(
@@ -20,7 +21,8 @@
 			#{post_name,jdbcType=VARCHAR},
 			#{post_code,jdbcType=VARCHAR},
 			#{post_type_id,jdbcType=VARCHAR},
-			#{rank_id,jdbcType=VARCHAR}
+			#{rank_id,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -34,9 +36,15 @@
 		WHERE id=#{id, jdbcType = NUMERIC}
 	</update>
 	
-	<!-- 查询已存在岗位 -->
-	<select id="queryPostId" parameterType="string" resultType="long">
-		select ep.id from TP_POST ep WHERE ep.post_name=#{name, jdbcType =VARCHAR} and rownum=1 
+	<update id="changeStatus" parameterType="com.edu.erp.model.Post">
+		update tp_post set status = #{status} where id = #{id}
+	</update>
+
+	<select id="queryByName" parameterType="string">
+		SELECT id, post_code, post_name
+		from tp_post
+		where status = 1
+		and post_name = #{name}
 	</select>
 	
 	<!-- 查询所有岗位id，名称信息 -->
@@ -48,7 +56,7 @@
 			ep.rank_id,
 			ep.post_type_id
 		from TP_POST ep
-		where 1=1
+		where status != 0
 		<if test="searchInfo != null and searchInfo != ''">
 			and (ep.post_code like '%${searchInfo}%' or ep.post_name like '%${searchInfo}%')
 		</if> 

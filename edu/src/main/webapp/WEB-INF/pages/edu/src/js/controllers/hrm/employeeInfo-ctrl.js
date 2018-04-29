@@ -597,7 +597,6 @@ function hrmEmployeeInfoCtrl($scope,
         var param = {};
         selectedSum.employee_id = $scope.selectedEmp.id;
         param = selectedSum;
-        param.approval_status = parseInt(param.approval_status);
         erp_employeeMgrService.addEmployeeSum(param, function(resp) {
             if (resp.error == false) {
                 $uibMsgbox.confirm("添加员工工作总结成功");

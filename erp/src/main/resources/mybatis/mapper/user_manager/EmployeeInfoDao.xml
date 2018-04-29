@@ -183,7 +183,7 @@
 		enclosure,
 		remark
 		)
-		select
+		values (
 		#{employee_id,jdbcType=NUMERIC},
 		#{begin_time,jdbcType=DATE},
 		#{end_time,jdbcType=DATE},
@@ -194,7 +194,7 @@
 		#{length_school,jdbcType=NUMERIC},
 		#{enclosure,jdbcType=VARCHAR},
 		#{remark,jdbcType=VARCHAR}
-		from dual
+		)
 	</insert>
 
 	<!-- 修改员工教育经历 -->
@@ -240,7 +240,7 @@
 		reterence,
 		enclosure
 		)
-		select
+		values (
 		#{employee_id,jdbcType=NUMERIC},
 		#{begin_time,jdbcType=DATE},
 		#{end_time,jdbcType=DATE},
@@ -251,9 +251,9 @@
 		#{subordinates,jdbcType=NUMERIC},<!-- 下属人数 -->
 		#{reasons,jdbcType=VARCHAR},<!-- 离职原因 -->
 		#{has_prove,jdbcType=NUMERIC},<!-- 是否有证明 -->
-		#{reterence,jdbcType=VARCHAR}<!-- 证明信息 -->
+		#{reterence,jdbcType=VARCHAR},<!-- 证明信息 -->
 		#{enclosure,jdbcType=VARCHAR}<!-- 附件 -->
-		from dual
+		)
 	</insert>
 
 	<!-- 修改员工工作经历 -->
@@ -284,18 +284,11 @@
 		select
 		tes.id,
 		tes.employee_id,
-		tes.start_time,
+		tes.begin_time,
 		tes.end_time,
 		tes.title ,
-		tes.content,
-		tes.approver,
-		tef.employee_name as employeeName,
-		tes.approval_status,
-		tes.approval_opinion,
-		tes.enclosure
+		tes.content
 		from TAB_EMPLOYEE_SUMMARIZE tes
-		left join tab_employee_info tef
-		on tes.approver=tef.id
 		where tes.employee_id=#{employee_id,jdbcType=NUMERIC} order by id
 	</select>
 
@@ -304,40 +297,28 @@
 		insert into TAB_EMPLOYEE_SUMMARIZE
 		(
 		employee_id,
-		start_time,
+		begin_time,
 		end_time,
 		title ,
-		content,
-		approver,
-		approval_status,
-		approval_opinion,
-		enclosure
+		content
 		)
-		select
+		values (
 		#{employee_id,jdbcType=NUMERIC},
-		#{start_time,jdbcType=DATE},
+		#{begin_time,jdbcType=DATE},
 		#{end_time,jdbcType=DATE},
 		#{title,jdbcType=VARCHAR},
-		#{content,jdbcType=VARCHAR},
-		#{approver,jdbcType=NUMERIC},
-		#{approval_status,jdbcType=NUMERIC},
-		#{approval_opinion,jdbcType=VARCHAR},
-		#{enclosure,jdbcType=VARCHAR}
-		from dual
+		#{content,jdbcType=VARCHAR}
+		)
 	</insert>
 
 	<!-- 修改员工工作总结 -->
 	<update id="updateEmployeeSum" parameterType="com.edu.erp.model.EmployeeSummarize">
 		update TAB_EMPLOYEE_SUMMARIZE
 		set
-		start_time=#{start_time,jdbcType=VARCHAR},
+		begin_time=#{begin_time,jdbcType=VARCHAR},
 		end_time=#{end_time,jdbcType=VARCHAR},
 		title=#{title,jdbcType=VARCHAR},
-		content=#{content,jdbcType=VARCHAR},
-		approver=#{approver,jdbcType=NUMERIC},
-		approval_status=#{approval_status,jdbcType=NUMERIC},
-		approval_opinion=#{approval_opinion,jdbcType=VARCHAR},
-		enclosure=#{enclosure,jdbcType=VARCHAR}
+		content=#{content,jdbcType=VARCHAR}
 		where	id=#{id,jdbcType=NUMERIC}
 	</update>
 
@@ -359,17 +340,17 @@
 		date_time,
 		award_party,
 		award_name,
-		describe,
+		remark,
 		enclosure
 		)
-		select
+		values (
 		#{employee_id,jdbcType=NUMERIC},
 		#{date_time,jdbcType=DATE},
 		#{award_party,jdbcType=VARCHAR},
 		#{award_name,jdbcType=VARCHAR},
-		#{describe,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
 		#{enclosure,jdbcType=VARCHAR}
-		from dual
+		)
 	</insert>
 
 	<!-- 修改员工奖惩信息-->
@@ -379,7 +360,7 @@
 		date_time=#{date_time,jdbcType=DATE},
 		award_party=#{award_party,jdbcType=VARCHAR},
 		award_name=#{award_name,jdbcType=VARCHAR},
-		describe=#{describe,jdbcType=VARCHAR},
+		remark=#{remark,jdbcType=VARCHAR},
 		enclosure=#{enclosure,jdbcType=VARCHAR}
 		where	id=#{id,jdbcType=NUMERIC}
 	</update>
@@ -463,7 +444,7 @@
 	<!-- 禁用 启用员工岗位-->
 	<update id="removeEmpPost" parameterType="long">
 		UPDATE TAB_EMP_ORG_POST
-		SET    status=abs(nvl(status,0)-1)
+		SET    status=abs(ifnull(status,0)-1)
 		WHERE  id=#{id,jdbcType=NUMERIC}
 	</update>
 
@@ -471,7 +452,7 @@
 	<!-- 禁用 启用员工状态-->
 	<update id="setStatus" parameterType="long">
 		UPDATE tab_employee_info
-		SET    status=abs(nvl(status,0)-1)
+		SET    status=abs(ifnull(status,0)-1)
 		WHERE  id=#{id,jdbcType=NUMERIC}
 	</update>
 </mapper>

@@ -495,10 +495,6 @@
 			                            <th>截止时间</th>
 			                            <th>标题</th>
 			                            <th>内容</th>
-			                            <th>审批人</th>
-			                            <th>审批状态</th>
-			                            <th>审批意见</th>
-			                            <th>附件</th>
 			                            <th>操作</th>
 			                        </tr>
 			                        <tr ng-repeat="sum in employeeSum" ng-if="employeeSum&&employeeSum.length" class="{{sum.checked?'success':''}}">
@@ -506,10 +502,6 @@
 			                            <td>{{sum.end_time|date:'yyyy-MM-dd'}}</td>
 			                            <td>{{sum.title}}</td>
 			                            <td>{{sum.content}}</td>
-			                            <td>{{sum.approver}}</td>
-			                            <td>{{sum.approval_status==1?"审批完成":"审批中"}}</td>
-			                            <td>{{sum.approval_opinion}}</td>
-			                            <td>{{sum.enclosure}}</td>
 			                            <td>
 			                                <a  ng-click="toUpdateSum(sum)" href="javascript:void(0)">修改</a>
 			                                <a  data-toggle="modal" data-target="#DelModal" ng-click="toDeleteSum(sum)" href="javascript:void(0)">删除</a>
@@ -593,37 +585,6 @@
 									<div class="col-sm-6 input-group">
 										<input type="text" 
 										class="form-control" ng-model="selectedSum.content" />
-									</div>
-							   </div>
-							   <div class="form-group">
-							      <label class="col-sm-4 fl" style="line-height: 34px;">审批人：</label>
-									<div class="col-sm-6 input-group">
-										<input type="text" 
-										class="form-control" ng-model="selectedSum.approver"/>
-									</div>
-							   </div>
-							   <div class="form-group">
-							      <label class="col-sm-4 fl" style="line-height: 34px;">审批状态：</label>
-									<div class="col-sm-6 input-group">
-										<select class="form-control" ng-model="selectedSum.approval_status">
-											<option value="1">状态1</option>
-											<option value="2">状态2</option>
-											<option value="3">状态3</option>
-										</select>		
-									</div>
-							   </div>
-							   <div class="form-group">
-							      <label class="col-sm-4 fl" style="line-height: 34px;">审批意见：</label>
-									<div class="col-sm-6 input-group">
-										<input type="text" 
-										class="form-control" ng-model="selectedSum.approval_opinion"/>
-									</div>
-							   </div>
-							   <div class="form-group">
-							      <label class="col-sm-4 fl" style="line-height: 34px;">附件：</label>
-									<div class="col-sm-6 input-group">
-										<input type="text" 
-										class="form-control" ng-model="selectedSum.enclosure"/>
 									</div>
 							   </div>
 							</form>

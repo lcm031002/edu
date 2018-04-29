@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.edu.common.constants.Constants;
+import com.edu.erp.model.BaseObject;
 import com.edu.erp.post.service.PostService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -69,10 +70,13 @@ public class PostController {
      */
     @RequestMapping(value = {"/common/postservice"}, method = RequestMethod.DELETE)
     @ResponseBody
-    public Map<String, Object> deletePost(Integer id, HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> deletePost(Long id, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            boolean suc = postService.deletePost(id);
+            Post post = new Post();
+            post.setId(id);
+            post.setStatus(BaseObject.StatusEnum.DELETE.getCode());
+            boolean suc = postService.changeStatus(post);
             resultMap.put(Constants.RespMapKey.ERROR, suc ? false : true);
         } catch (Exception e) {
             log.error("error found,see:", e);
@@ -93,30 +97,8 @@ public class PostController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
             Map<String, Object> param = WebUtils.getParametersStartingWith(request, "p_");
-            List<Map<String, Object>> result = postService.queryPost(param);
-            resultMap.put(Constants.RespMapKey.DATA, result);
-            resultMap.put(Constants.RespMapKey.ERROR, false);
-        } catch (Exception e) {
-            log.error("error found,see:", e);
-            resultMap.put(Constants.RespMapKey.MESSAGE, e.getMessage());
-            resultMap.put(Constants.RespMapKey.ERROR, false);
-        }
-        return resultMap;
-    }
-
-
-    /**
-     * @throws
-     * @Title: queryPostTypeName
-     * @Description: 查询数据字典获取岗位类型
-     */
-    @RequestMapping(value = {"/common/dict_type_sub/postservice"}, method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> queryPostTypeName(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        try {
-            List<Map<String, Object>> result = postService.queryPostType();
-            resultMap.put(Constants.RespMapKey.DATA, result);
+            List<Post> postList = postService.queryPost(param);
+            resultMap.put(Constants.RespMapKey.DATA, postList);
             resultMap.put(Constants.RespMapKey.ERROR, false);
         } catch (Exception e) {
             log.error("error found,see:", e);

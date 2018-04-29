@@ -30,7 +30,6 @@ function EmployeeCtrl($scope,
     $scope.employee = [];
     $scope.edu={};
     $scope.paginationBars = [];
-    $scope.enterTypeList=[];
     //选中的查询条件
     $scope.selected={};
 
@@ -101,21 +100,6 @@ function EmployeeCtrl($scope,
     	$scope.pageNum=pageIndex;
     	queryEmployee();
     };
-
-    /**
-	 * 查询数据字典子典所有数据
-	 */
-    function queryDictSub(){
-    	var param={};
-    	DictItemService.queryDictSubAll(param,function(resp){
-    		if(resp.error==false){
-    			$scope.cache=resp.data;
-    			$scope.enterTypeList=$scope.cache.ENTERTYPE;
-    			$scope.poslevelList=$scope.cache.POSLEVEL;
-    		}
-    	})
-    }
-
 
     /**
 	 * 打开员工档案管理的面板
@@ -316,14 +300,6 @@ function EmployeeCtrl($scope,
 	 */
 	$scope.addEmployee = function(){
 		var param={};
-		/*if($scope.selectedItem.EMPLOYEE_NAME==""||$scope.selectedItem.EMPLOYEE_NAME==null){
-				alert("姓名不能为空");
-				return;
-			}
-		if($scope.selectedItem.ENCODING==""||$scope.selectedItem.ENCODING==null){
-			alert("工号不能为空");
-			return;
-		}*/
 		queryExtInfo();
 		var retEmp=$scope.retEmp;
 		for(var i=0;i<retEmp.length;i++){
@@ -352,14 +328,6 @@ function EmployeeCtrl($scope,
 	 * 修改员工档案
 	 */
 	$scope.updateEmployee = function(){
-		/*if($scope.selectedEmp.EMPLOYEE_NAME==""||$scope.selectedEmp.EMPLOYEE_NAME==null){
-				alert("姓名不能为空");
-				return;
-			}
-		if($scope.selectedEmp.ENCODING==""||$scope.selectedEmp.ENCODING==null){
-			alert("员工号不能为空");
-			return;
-		}*/
 		var param={};
 		$scope.addEmp=false;
 		queryExtInfo();
@@ -380,7 +348,6 @@ function EmployeeCtrl($scope,
 		})
 		erp_employeeMgrService.update(param,function(resp){
 			 if(resp.error==false){
-//				$('#EmpPanel').modal('hide');
 				alert("修改成功");
 				queryEmployee();
 			}else{
@@ -833,8 +800,6 @@ function EmployeeCtrl($scope,
    
     $scope.queryInfo(1);
     queryPost();
-  //查询数据字典所有子项
-	queryDictSub();
 	queryBu();
 
 }

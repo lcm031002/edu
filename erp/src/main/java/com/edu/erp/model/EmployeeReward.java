@@ -14,7 +14,7 @@ public class EmployeeReward implements Serializable {
     private String award_party;
     //奖项名称
     private String award_name;
-    private String describe;
+    private String remark;
     private String enclosure;
 
 
@@ -58,12 +58,12 @@ public class EmployeeReward implements Serializable {
         this.award_party = award_party;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getEnclosure() {

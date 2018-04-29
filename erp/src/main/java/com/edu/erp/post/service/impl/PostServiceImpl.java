@@ -29,8 +29,8 @@ public class PostServiceImpl implements PostService {
     public boolean addPost(Post param) throws Exception {
         Assert.assertNotNull(param.getPost_name());
         String name = param.getPost_name() == null ? "" : param.getPost_name();
-        Long queryPostId = postDao.queryPostId(name);
-        if (null != queryPostId) {
+        Post post = postDao.queryByName(name);
+        if (null != post) {
             throw new Exception("该岗位已存在，请重新命名");
         }
         Integer ret = postDao.addPost(param);
@@ -46,8 +46,8 @@ public class PostServiceImpl implements PostService {
     public boolean updatePost(Post param) throws Exception {
         Assert.assertNotNull(param.getPost_name());
         String name = param.getPost_name() == null ? "" : param.getPost_name();
-        Long queryPostId = postDao.queryPostId(name);
-        if (null != queryPostId && param.getId() != queryPostId) {
+        Post post = postDao.queryByName(name);
+        if (null != post && param.getId().intValue() != post.getId()) {
             throw new Exception("该岗位已存在，请重新命名");
         }
         Integer ret = postDao.updatePost(param);
@@ -59,8 +59,8 @@ public class PostServiceImpl implements PostService {
 
     //作废岗位
     @Override
-    public boolean deletePost(Integer id) throws Exception {
-        Integer ret = postDao.deletePost(id);
+    public boolean changeStatus(Post post) throws Exception {
+        Integer ret = postDao.changeStatus(post);
         if (ret < 1) {
             throw new Exception("删除失败");
         }
@@ -69,13 +69,8 @@ public class PostServiceImpl implements PostService {
 
     //查询岗位名称信息
     @Override
-    public List<Map<String, Object>> queryPost(Map<String, Object> param) throws Exception {
+    public List<Post> queryPost(Map<String, Object> param) throws Exception {
         return postDao.queryPost(param);
     }
 
-    //查询数据字典获取岗位类型
-    @Override
-    public List<Map<String, Object>> queryPostType() throws Exception {
-        return postDao.queryPostType();
-    }
 }

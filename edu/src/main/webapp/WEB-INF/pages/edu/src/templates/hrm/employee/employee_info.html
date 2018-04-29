@@ -408,21 +408,13 @@
                     <th>截止时间</th>
                     <th>标题</th>
                     <th>内容</th>
-                    <th>审批人</th>
-                    <th>审批状态</th>
-                    <th>审批意见</th>
-                    <th>附件</th>
                     <th>操作</th>
                   </tr>
                   <tr ng-repeat="sum in employeeSum" ng-if="employeeSum&&employeeSum.length" class="{{sum.checked?'success':''}}">
-                    <td>{{sum.start_time|date:'yyyy-MM-dd'}}</td>
+                    <td>{{sum.begin_time|date:'yyyy-MM-dd'}}</td>
                     <td>{{sum.end_time|date:'yyyy-MM-dd'}}</td>
                     <td>{{sum.title}}</td>
                     <td>{{sum.content}}</td>
-                    <td>{{sum.employeeName}}</td>
-                    <td>{{sum.approval_status==1?"已读":"未读"}}</td>
-                    <td>{{sum.approval_opinion}}</td>
-                    <td>{{sum.enclosure}}</td>
                     <td>
                       <a ng-if="queryType != 'self'" ng-click="toUpdateSum(sum)" href="javascript:void(0)">修改</a>
                       <a ng-if="queryType != 'self'" data-toggle="modal" data-target="#DelModal" ng-click="toDeleteSum(sum)" href="javascript:void(0)">删除</a>
@@ -457,7 +449,7 @@
                         <div class="form-group">
                           <label class="col-sm-3 fl" style="line-height: 34px;">开始时间：</label>
                           <div class="col-sm-9 input-group" ng-controller="DatepickerDemoCtrl">
-                            <input type="text" class="form-control" ng-model="selectedSum.start_time" placeholder="请输入开始时间" required uib-datepicker-popup="{{format}}" current-text="今天" close-text="关闭" clear-text="清理" is-open="opened" ng-readonly="true" id="beginDate" />
+                            <input type="text" class="form-control" ng-model="selectedSum.begin_time" placeholder="请输入开始时间" required uib-datepicker-popup="{{format}}" current-text="今天" close-text="关闭" clear-text="清理" is-open="opened" ng-readonly="true" id="beginTime" />
                             <span class="input-group-btn">
 				                            <button type="button" class="btn btn-default" ng-click="open($event)">
 				                                <i class="glyphicon glyphicon-calendar"></i>
@@ -468,7 +460,7 @@
                         <div class="form-group">
                           <label class="col-sm-3 fl" style="line-height: 34px;">截止时间：</label>
                           <div class="col-sm-9 input-group" ng-controller="DatepickerDemoCtrl">
-                            <input type="text" class="form-control" ng-model="selectedSum.end_time" placeholder="请输入截止时间" required uib-datepicker-popup="{{format}}" current-text="今天" close-text="关闭" clear-text="清理" is-open="opened" ng-readonly="true" id="beginDate" />
+                            <input type="text" class="form-control" ng-model="selectedSum.end_time" placeholder="请输入截止时间" required uib-datepicker-popup="{{format}}" current-text="今天" close-text="关闭" clear-text="清理" is-open="opened" ng-readonly="true" id="endTime" />
                             <span class="input-group-btn">
 				                            <button type="button" class="btn btn-default" ng-click="open($event)">
 				                                <i class="glyphicon glyphicon-calendar"></i>
@@ -486,57 +478,6 @@
                           <label class="col-sm-3 fl" style="line-height: 34px;">内容：</label>
                           <div class="col-sm-9 input-group">
                             <input type="text" class="form-control" ng-model="selectedSum.content" />
-                          </div>
-                        </div>
-                        <!-- <div class="form-group">
-							      <label class="col-sm-4 fl" style="line-height: 34px;">审批人：</label>
-									<div class="col-sm-6 input-group">
-										<input type="text" 
-										class="form-control" ng-model="selectedSum.approver"/>
-									</div>
-							   </div> -->
-                        <div class="form-group">
-                          <label class="col-sm-3 fl" style="line-height: 34px;">审批人:</label>
-                          <div class="input-group col-sm-9">
-                            <input type="text" class="form-control" ng-model="selectedSum.employeeName" />
-                            <p ng-show="(!selectedSum.approver||selectedSum.approver=='')&&isSbumitting==true" class="help-block" style="color:#a94442" desc="员工不能为空">员工不能为空........</p>
-                            <span class="input-group-addon cur" id="showSpan" ng-click="showEmployeeQuery()">
-					                 <i class="fa fa-edit"></i></span>
-                            <!-- 隐藏账户所属员工Id -->
-                            <input type="hidden" ng-model="selectedSum.approver" na-value="selectedSum.approver">
-                            <div class="associatebox" ng-if="showQuery==true">
-                              <ul>
-                                <div class="input-group col-sm-12 drop-field" ng-controller="TooltipDemoCtrl">
-                                  <input type="text" class="form-control ng-pristine ng-valid ng-touched" ng-model="searchInfo" ng-class="{'has-error' : !selectedSum.approver}" id="employee_search_info" ng-change="queryEmployeeInfo()" tooltip-placement="top" tooltip-placement="{dynamicTooltip}}" uib-tooltip="{{dynamicTooltip}}" tooltip-enable="!selectedSum.approver" placeholder="请输入员工姓名或编码....">
-                                  <span id="selectSpan" class="input-group-addon cur" ng-click="queryEmployeeInfo()">
-					                 <i class="fa fa-search"></i></span>
-                                </div>
-                                <!-- 迭代员工 -->
-                                <li ng-if="onGoingQuery==true" ng-repeat="employee in employeeListSum" ng-click="selectedEmployee(employee)">
-                                  {{employee.ENCODING}}-{{employee.EMPLOYEE_NAME}}</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-3 fl" style="line-height: 34px;">审批状态：</label>
-                          <div class="col-sm-9 input-group">
-                            <select class="form-control" ng-model="selectedSum.approval_status">
-                              <option value='1'>已读</option>
-                              <option value='0'>未读</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-3 fl" style="line-height: 34px;">审批意见：</label>
-                          <div class="col-sm-9 input-group">
-                            <input type="text" class="form-control" ng-model="selectedSum.approval_opinion" />
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-3 fl" style="line-height: 34px;">附件：</label>
-                          <div class="col-sm-9 input-group">
-                            <input type="text" class="form-control" ng-model="selectedSum.enclosure" />
                           </div>
                         </div>
                       </form>
@@ -581,7 +522,7 @@
                     <td>{{rew.date_time|date:'yyyy-MM-dd'}}</td>
                     <td>{{rew.award_party}}</td>
                     <td>{{rew.award_name}}</td>
-                    <td>{{rew.describe}}</td>
+                    <td>{{rew.remark}}</td>
                     <td>{{rew.enclosure}}</td>
                     <td>
                       <a ng-if="queryType != 'self'" ng-click="toUpdateRew(rew)" href="javascript:void(0)">修改</a>
@@ -640,7 +581,7 @@
                         <div class="form-group">
                           <label class="col-sm-4 fl" style="line-height: 34px;">备注：</label>
                           <div class="col-sm-6 input-group">
-                            <input type="text" class="form-control" ng-model="selectedRew.describe" />
+                            <input type="text" class="form-control" ng-model="selectedRew.remark" />
                           </div>
                         </div>
                         <div class="form-group">
@@ -678,16 +619,16 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   &times;
                 </button>
-                <h4 ng-show="eduDelete" class="modal-title" id="myModalLabel">
+                <h4 ng-show="eduDelete" class="modal-title" id="delEmployeeEdu">
 					               删除教育经历
 					            </h4>
-                <h4 ng-show="expDelete" class="modal-title" id="myModalLabel">
+                <h4 ng-show="expDelete" class="modal-title" id="delEmployeeWork">
 					               删除工作经历
 					            </h4>
-                <h4 ng-show="sumDelete" class="modal-title" id="myModalLabel">
+                <h4 ng-show="sumDelete" class="modal-title" id="delEmployeeSum">
 					               删除工作总结
 					            </h4>
-                <h4 ng-show="rewDelete" class="modal-title" id="myModalLabel">
+                <h4 ng-show="rewDelete" class="modal-title" id="delEmployeeRew">
 					               删除奖惩信息
 					            </h4>
               </div>

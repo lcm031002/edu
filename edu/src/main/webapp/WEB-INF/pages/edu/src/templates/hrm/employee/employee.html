@@ -18,9 +18,7 @@
         <div class="toolbar form-inline">
           <hr>
           <div class="form-group">        
-            在职类型：<select class="form-control" ng-options="e.id as e.name for e in enterTypeList" ng-model="selected.EnterType">
-              <option value="">-- 请选择 --</option>
-            </select>
+            在职类型：<kl-dict-select  dict-type="'employee_type'" bind-data="selectedEmp.user_type"></kl-dict-select>
           </div>
           <div class="form-group">
             员工号/姓名：<input type="text" class="form-control" ng-model="selected.Name" />
@@ -84,18 +82,7 @@
       <ng-pagination conf="paginationConf"></ng-pagination>
     </div>
   </div>
-  <!--  <div ng-if="addEmp">
-                <div class="panel panel-default " style="margin-bottom: 10px;">
-                    <div class="panel-heading font-bold" >
-                        添加学员
-                        <button type="button" class="close pull-right" ng-click="cancelPanel()">×</button>
-                    </div>
 
-                    <div class="panel-body" style="padding: 15px;">
-                        <div ng-include="detailPage"></div>
-                    </div>
-                </div>
-            </div> -->
   <div ng-if="addEmp">
     <div class="panel panel-default " style="margin-bottom: 10px;">
       <div class="panel-heading font-bold">

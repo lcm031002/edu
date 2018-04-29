@@ -20,6 +20,8 @@ public class Post implements Serializable {
 
     private String rank_id;    //职级Id， 现在的Post改成职务档案
 
+    private  Integer status;
+
 
     public Integer getPost_type() {
         return post_type;
@@ -77,4 +79,11 @@ public class Post implements Serializable {
         this.rank_id = rank_id;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

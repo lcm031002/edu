@@ -27,28 +27,18 @@ public interface PostDao {
      */
     Integer updatePost(Post param) throws Exception;
 
+    Post queryByName(String name) throws Exception;
+
     /**
      * @Title: deletePost
      * @Description: 作废岗位
      */
-    Integer deletePost(Integer id) throws Exception;
-
-    /**
-     * @Title: queryPostId
-     * @Description: 查询已存在岗位
-     */
-    Long queryPostId(String name) throws Exception;
+    Integer changeStatus(Post post) throws Exception;
 
     /**
      * @Title: queryPost
      * @Description: 查询岗位名称信息
      */
-    List<Map<String, Object>> queryPost(Map<String, Object> param) throws Exception;
+    List<Post> queryPost(Map<String, Object> param) throws Exception;
 
-
-    /**
-     * @Title: queryPostType
-     * @Description: 查询数据字典获取岗位类型
-     */
-    List<Map<String, Object>> queryPostType() throws Exception;
 }

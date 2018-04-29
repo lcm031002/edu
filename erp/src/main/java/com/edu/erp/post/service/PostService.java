@@ -32,19 +32,13 @@ public interface PostService {
      * @Title: deletePost
      * @Description: 作废岗位
      */
-    boolean deletePost(Integer id) throws Exception;
+    boolean changeStatus(Post post) throws Exception;
 
     /**
      * @return List<Map   <   String   ,       Object>> 返回类型
      * @Title: queryPost
      * @Description: 查询岗位名称信息
      */
-    List<Map<String, Object>> queryPost(Map<String, Object> param) throws Exception;
+    List<Post> queryPost(Map<String, Object> param) throws Exception;
 
-    /**
-     * @return List<Map   <   String   ,       Object>> 返回类型
-     * @Title: queryPostType
-     * @Description: 查询数据字典获取岗位类型
-     */
-    List<Map<String, Object>> queryPostType() throws Exception;
 }
