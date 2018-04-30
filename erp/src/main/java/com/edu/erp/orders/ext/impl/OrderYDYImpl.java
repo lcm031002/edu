@@ -9,43 +9,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.edu.common.constants.Constants;
+import com.edu.erp.dao.*;
+import com.edu.erp.model.*;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.edu.common.util.DateUtil;
 import com.edu.erp.attendance.service.AttendanceService;
-import com.edu.erp.dao.AttendanceDao;
-import com.edu.erp.dao.TCOrderCourseDao;
-import com.edu.erp.dao.TLockDao;
-import com.edu.erp.dao.TOrderChangeDao;
-import com.edu.erp.dao.TOrderCourseDao;
-import com.edu.erp.dao.TOrderCourseLogDao;
-import com.edu.erp.dao.TabChangeCourseDao;
-import com.edu.erp.model.TAccount;
-import com.edu.erp.model.TAccountChange;
-import com.edu.erp.model.TAttendance;
-import com.edu.erp.model.TBankAccount;
-import com.edu.erp.model.TCChangeCourse;
-import com.edu.erp.model.TCChangeCourseTimes;
-import com.edu.erp.model.TCCourseTimes;
-import com.edu.erp.model.TCOrderCourse;
-import com.edu.erp.model.TEncoder;
-import com.edu.erp.model.TFee;
-import com.edu.erp.model.TFeeDetail;
-import com.edu.erp.model.TFinFee;
-import com.edu.erp.model.TFinFeeUse;
-import com.edu.erp.model.TLock;
-import com.edu.erp.model.TOrder;
-import com.edu.erp.model.TOrderChange;
-import com.edu.erp.model.TOrderCourse;
-import com.edu.erp.model.TOrderCourseLog;
-import com.edu.erp.model.TabChangeCourse;
-import com.edu.erp.model.TabChangeCourseTimes;
-import com.edu.erp.model.TabOrderInfo;
-import com.edu.erp.model.TabOrderInfoDetail;
-import com.edu.erp.model.TabOrderPayCost;
-import com.edu.erp.model.TabOrderPayCostDetail;
 import com.edu.erp.orders.ext.IOrderFrozen;
 import com.edu.erp.orders.ext.IOrderYDY;
 import com.edu.erp.orders.service.ChangeCourseService;
@@ -91,10 +62,8 @@ public class OrderYDYImpl implements IOrderYDY {
 	private StudentAccountService studentAccountService; //账户信息查询
 	@Resource(name = "orderChangeService")
 	private OrderChangeService orderChangeService; //订单变动服务
-	
 	@Resource(name = "changeCourseService")
 	private ChangeCourseService changeCourseService;
-	
 	@Resource(name = "changeCourseTimesService")
 	private ChangeCourseTimesService changeCourseTimesService;
 	
@@ -121,6 +90,9 @@ public class OrderYDYImpl implements IOrderYDY {
 	private TOrderCourseLogDao tOrderCourseLogDao;
 	@Resource(name = "orderFrozen")
 	private IOrderFrozen orderFrozen;
+
+	@Resource(name = "tOrderCourseTimesDao")
+	TOrderCourseTimesDao tOrderCourseTimesDao;
 	
 	@Override
 	public void createOrder(TabOrderInfo orderInfo) throws Exception {
@@ -353,8 +325,11 @@ public class OrderYDYImpl implements IOrderYDY {
 			for(TabOrderInfoDetail tabOrderInfoDetail:tabOrderInfoDetailList){
 				orderService.saveOrderCourse(tabOrderInfoDetail,orderInfo);
 			}
-			//3.5 如果是大小班，新增order_course_times,如果是晚辅导，个性化 TODO 目前个性化省略 
-			
+			//3.5 如果是大小班，新增order_course_times,如果是晚辅导，个性化 TODO 目前个性化省略
+			if (Constants.BusinessType.BJK.longValue() == orderInfo.getBusiness_type()) {
+				tOrderCourseTimesDao.addByTabOrderId(orderInfo.getId());
+			}
+
 			//3.6 状态更新成有效
 			HashMap<String,Object> hashMap=new HashMap<String,Object>();
 			hashMap.put("order_id", orderInfo.getId().toString());

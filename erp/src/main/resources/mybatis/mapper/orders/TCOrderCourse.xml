@@ -95,8 +95,9 @@
 	</insert>
 	
 	<select id="queryCourseLockCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
-		with orderCourse as
-			(select t.id
+			select count(1)
+				from tc_order_course t
+				join (select t.id
 				from t_order_course t
 			   where t.id = #{orderCourseId}
 				   or t.root_course_id = #{orderCourseId}
@@ -112,10 +113,7 @@
 			   where t.root_course_id = (select t1.root_course_id
 					from t_order_course t1
 				   where t1.id = #{orderCourseId})
-			     and t.id != #{orderCourseId})
-			select count(1)
-				from tc_order_course t
-				join orderCourse oc
+			     and t.id != #{orderCourseId}) oc
 					on oc.id = t.order_course_id
 				join t_lock l
 					on oc.id = l.resource_id
@@ -123,8 +121,9 @@
 	</select>
 	
 	<select id="queryCourseTimesLockCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
-		with orderCourse as
-			(select t.id
+		select count(1)
+	      from tc_order_course_times t
+	      join (select t.id
 				from t_order_course t
 			   where t.id = #{orderCourseId}
 				   or t.root_course_id = #{orderCourseId}
@@ -140,10 +139,7 @@
 			   where t.root_course_id = (select t1.root_course_id
 					from t_order_course t1
 				   where t1.id = #{orderCourseId})
-			     and t.id != #{orderCourseId})
-		select count(1)
-	      from tc_order_course_times t
-	      join orderCourse oc on oc.id = t.order_course_id
+			     and t.id != #{orderCourseId}) oc on oc.id = t.order_course_id
 	      join t_order_course_times a on oc.id = a.ocid and t.course_times = a.times
 	      join t_lock l on l.resource_id = a.id and l.type = 3
 	</select>

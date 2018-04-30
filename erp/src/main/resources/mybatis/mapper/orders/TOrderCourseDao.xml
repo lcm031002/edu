@@ -73,23 +73,20 @@
 				toc.discount_sum_price,
 				toc.discount_rate,
 				toc.discount_amount,
-				nvl(toc.manage_fee, 0) as manage_fee,
-				nvl(toc.course_total_count, 0) as course_total_count,
-				nvl(toc.course_surplus_count, 0) as course_surplus_count,
+				ifnull(toc.manage_fee, 0) as manage_fee,
+				ifnull(toc.course_total_count, 0) as course_total_count,
+				ifnull(toc.course_surplus_count, 0) as course_surplus_count,
 				toc.create_user,
 				toc.create_time,
 				toc.update_user,
 				toc.update_time,
-				toc.old_id,
 				toc.surplus_cost,
 				toc.quit_flag,
 				toc.order_type,
 				toc.status,
 				toc.root_course_id,
-				toc.is_sended,
-				toc.syn_exception,
-				nvl(toc.course_schedule_count, 0) as course_schedule_count,
-				nvl(toc.course_attend_count, 0) as course_attend_count,
+				ifnull(toc.course_schedule_count, 0) as course_schedule_count,
+				ifnull(toc.course_attend_count, 0) as course_attend_count,
 		       tc.course_name,
 		       tc.course_no,
 		       tc.start_date,
@@ -104,10 +101,10 @@
 		       toi.org_name     as branch_name,
 		       tod.order_no     as order_no,
 		       tdg.grade_name,
-		       nvl(toc.course_total_count, 0) - nvl(toc.course_surplus_count, 0) as course_used_count,
+		       ifnull(toc.course_total_count, 0) - ifnull(toc.course_surplus_count, 0) as course_used_count,
 		       tod.create_date as order_create_date,
 		       torderi.invoice_status,
-		       (select nvl(tcc.premium_type, 1)
+		       (select ifnull(tcc.premium_type, 1)
 	          		from tab_change_course tcc, t_order_change oc,T_ORDER_COURSE tdd
 	         		where oc.id = tcc.change_id
 	           		and tcc.order_course_id = tdd.id 
@@ -116,7 +113,7 @@
 	           		 )
 	           		and oc.change_status not in (7, 8)
 	           		and oc.order_id is not null
-	           		and rownum = 1) premium_type,
+	           		limit 1) premium_type,
                 toc1.discount_sum_price as root_discount_sum_price,
             	toc1.course_total_count as root_course_total_count
 		  from T_ORDER_COURSE toc
@@ -192,19 +189,19 @@
 	</select>
 	
 	<select id="queryManageFee" resultType="com.edu.erp.model.TOrderCourse" parameterType="map">
-		  select c.id,nvl(c.manage_fee, 0) manage_fee from t_order_course c
+		  select c.id,ifnull(c.manage_fee, 0) manage_fee from t_order_course c
 	      where (
 	           c.id = #{order_course_id}
 	           or c.root_course_id = #{order_course_id}
 	           or (${root_course_id} is not null and c.id =${root_course_id}) 
 	           or (${root_course_id} is not null and c.root_course_id = ${root_course_id}) 
 	      )
-	      and nvl(c.status, 1) = 1 
+	      and ifnull(c.status, 1) = 1 
 	      and c.manage_fee > 0
 	</select>
 	
 	<select id="queryCourseSurplusCount" resultType="com.edu.erp.model.TOrderCourse" parameterType="map">
-		  select sum(nvl(c.course_surplus_count, 0)) course_surplus_count
+		  select sum(ifnull(c.course_surplus_count, 0)) course_surplus_count
       	  from t_order_course c
        	  where (
            c.id = #{order_course_id}
@@ -256,7 +253,7 @@
 		   	<if test="quit_flag != null">
 				quit_flag= #{quit_flag,jdbcType=NUMERIC},
 		   	</if>
-	       	update_time = sysdate,
+	       	update_time = sysdate(),
 		    update_user = #{update_user,jdbcType=NUMERIC}
 	    where  1=1 
 	     <if test="id != null and id != ''">
@@ -269,7 +266,7 @@
 	
 	<!-- 获取一个订单课程Id -->
 	<select id="getOrderCourseId" resultType="java.lang.Long">
-		select to_number(to_char(sysdate,'mmdd')||to_number(seq_tab_order_info_detail.nextval,'999999'),'999999000000') as id from dual
+		select to_number(to_char(sysdate(),'mmdd')||to_number(seq_tab_order_info_detail.nextval,'999999'),'999999000000') as id from dual
 	</select>
 	
 	<!-- 插入带Id -->
@@ -293,7 +290,6 @@
 		     create_time,
 		     update_user,
 		     update_time,
-		     old_id,
 		     surplus_cost,
 		     quit_flag,
 		     order_type,
@@ -315,10 +311,9 @@
 	    	#{course_surplus_count,jdbcType=NUMERIC},
 	    	#{course_schedule_count,jdbcType=NUMERIC},
 	    	#{create_user,jdbcType=NUMERIC},
-	    	sysdate,
+	    	sysdate(),
 	    	#{update_user,jdbcType=NUMERIC},
-	    	sysdate,
-	    	#{old_id,jdbcType=VARCHAR},
+	    	sysdate(),
 	    	#{surplus_cost,jdbcType=NUMERIC},
 	    	#{quit_flag,jdbcType=NUMERIC},
 	    	#{order_type,jdbcType=NUMERIC},
@@ -328,8 +323,8 @@
 	</insert>
 	
 	<select id="queryTotalManageFee" parameterType="java.util.Map" resultType="java.util.Map">
-		select sum(nvl(c.manage_fee, 0)) as manage_fee,
-			   sum(nvl(c.course_surplus_count, 0)) as course_surplus_count
+		select sum(ifnull(c.manage_fee, 0)) as manage_fee,
+			   sum(ifnull(c.course_surplus_count, 0)) as course_surplus_count
           from t_order_course c
          where (c.id = #{orderCourseId}
                or c.root_course_id = #{orderCourseId}
@@ -343,7 +338,7 @@
 	<update id="updateOrderCourseByOrderCourseLog" parameterType="java.util.Map">
 		update t_order_course
            set discount_unit_price = #{discount_unit_price},
-               quit_flag           = decode(${v_return_count}, 0, 0, 1),
+               quit_flag           = (case ${v_return_count} when 0 then 0 else 1 end),
                manage_fee         =
                (select c.manage_fee
                   from t_order_course_log c
@@ -361,7 +356,7 @@
 	<!-- 校验订单批改课时是否可以批改 -->
 	<select id="checkOrderChangeTimes" parameterType="map" resultType="java.lang.String">
 		select case
-				 when nvl(toc.course_schedule_count, 0) >= #{changeTimes} then
+				 when ifnull(toc.course_schedule_count, 0) >= #{changeTimes} then
 				  'Y'
 				 else
 				  'N'
@@ -375,7 +370,7 @@
         update t_order_course SET
         course_surplus_count = #{course_surplus_count,jdbcType=NUMERIC},
         surplus_cost = #{surplus_cost,jdbcType=NUMERIC},
-        update_time = sysdate,
+        update_time = sysdate(),
         update_user = #{update_user,jdbcType=NUMERIC}
         where id = #{id,jdbcType=NUMERIC}
     </update>

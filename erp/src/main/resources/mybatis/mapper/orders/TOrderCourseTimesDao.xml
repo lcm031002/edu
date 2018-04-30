@@ -42,7 +42,7 @@
                 tc.course_name,
                 tc.course_no,
                 tat.name,
-                to_char(ta.attend_date,'yyyy-mm-dd') as attend_date,
+                date_format(ta.attend_date,'%Y-%m-%d') as attend_date,
                 ta.attend_branch_id,
                 ta.attend_amount,
                 ta.attend_user,
@@ -50,7 +50,7 @@
                 tei.employee_name as attend_user_name,
                 ta.teacher_id,
                 ta.student_id,
-                to_char(to_date(tcs.course_date||'','yyyymmdd'),'yyyy-mm-dd') as course_date
+                date_format(tcs.course_date, '%Y-%m-%d') as course_date
 		  from t_order_course_times toct
 		  left join t_order_course toc
 		    on toc.id = toct.ocid
@@ -83,5 +83,18 @@
           </if>
          where id =#{id}
 	</update>
+
+	<insert id="addByTabOrderId" parameterType="long">
+		INSERT INTO t_order_course_times (ocid, times, is_valid) SELECT
+			toc.id,
+			tocti.COURSE_TIMES,
+			1
+		FROM
+			t_order_course toc,
+			tab_order_course_times_info tocti
+		WHERE
+			toc.id = tocti.ORDER_DETAIL_ID
+		AND tocti.order_id = #{orderId}
+	</insert>
 	
 </mapper>

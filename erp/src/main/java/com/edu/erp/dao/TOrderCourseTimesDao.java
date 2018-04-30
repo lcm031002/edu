@@ -71,4 +71,6 @@ public interface TOrderCourseTimesDao {
 	 * @param param
 	 */
 	void updateTOrderCourseTimes(Map<String, Object> param) throws Exception;
+
+	void addByTabOrderId(Long orderId) throws Exception;
 }

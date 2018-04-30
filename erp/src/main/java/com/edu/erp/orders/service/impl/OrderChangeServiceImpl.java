@@ -421,11 +421,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			throw new Exception("补扣金额不允许为负值！");
 		}
 
-//		if (orderInfo.getInvoice_status() != null
-//				&& orderInfo.getInvoice_status().intValue() == 1) {
-//			throw new Exception("订单已经开出发票，请回收发票后再退费！");
-//		}
-
 		if ("2".equals(refundObj.get("premiumType"))) {
 			tOrderChangeDao.readyVIPPremium(refundObj);
 		} else {
