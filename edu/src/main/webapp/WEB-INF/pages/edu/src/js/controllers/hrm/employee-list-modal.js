@@ -46,7 +46,7 @@ function erp_employeeListModalController(
   }
   $scope.getEmployeeList = function() {
     // var _modalInstance= $uibMsgbox.waiting('加载中，请稍候...');
-      erp_employeeMgrService.query({
+      erp_employeeMgrService.queryEmployeeForPage({
       currentPage: $scope.pageConf.currentPage,
       pageSize: $scope.pageConf.itemsPerPage,
       counselor_type: $scope.counselorType,

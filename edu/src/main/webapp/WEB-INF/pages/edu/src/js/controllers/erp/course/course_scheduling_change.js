@@ -502,7 +502,7 @@ function erp_courseSchduleChangeController(
                 if(location.href.indexOf('klxuexi.org')>0){
             window.open("/printhtml/print_callname.html?courseId=" + $scope.course_id)
                 }else{
-            window.open("/klxxedu/printhtml/print_callname.html?courseId=" + $scope.course_id)
+            window.open("/edu/printhtml/print_callname.html?courseId=" + $scope.course_id)
                 }
     }
     $scope.batchUpdateCourseTimeTitlePlaceholder = '走进化学\n反比例函数的基本性质\n空气、氧气\n阅读理解训练营之填空题\nn分子和原\nn原子的结构';

@@ -34,7 +34,7 @@
 		  left join t_report_run_result trrr
 		    on tttr.task_flow = trrr.task_flow
 		    and tttr.task_id = trrr.task_id
-		 where to_number(to_char(sysdate, 'yyyymmdd')) between
+		 where date_format(sysdate(), '%Y%m%d') between
 		       tttr.task_table_lastval and tttr.task_table_currentval
 		       and trrr.task_id = #{taskId,jdbcType=VARCHAR}
 	</select>
@@ -57,14 +57,9 @@
 		)
 		order by task_flow desc
 	</select>
-	<insert id="saveTaskTableResult" parameterType="com.edu.report.model.TTaskTableResult">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-			order="BEFORE">
-			select SEQ_T_TASK_TABLE_RESULT.nextval as id from dual
-		</selectKey>
-		insert into T_Task_Table_Result g
+	<insert id="saveTaskTableResult" parameterType="com.edu.report.model.TTaskTableResult"  useGeneratedKeys="true" keyProperty="id">
+		insert into T_Task_Table_Result
 		(
-		id,
 		task_table,
 		task_table_id,
 		task_table_lastval,
@@ -76,13 +71,11 @@
 		)
 		values
 		(
-
-		#{id,jdbcType=NUMERIC},
 		#{taskTable,jdbcType=VARCHAR},
 		#{taskTableId,jdbcType=VARCHAR},
 		#{taskTableLastVal,jdbcType=NUMERIC},
 		#{taskTableCurrentVal,jdbcType=NUMERIC},
-		sysdate,
+		sysdate(),
 		#{taskTableType,jdbcType=VARCHAR},
 		#{taskId,jdbcType=VARCHAR},
 		#{taskFlow,jdbcType=VARCHAR}

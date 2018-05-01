@@ -650,7 +650,7 @@
 	<update id="changeStatus" parameterType="java.util.Map">
 		UPDATE t_course
 		SET status = #{status,jdbcType=NUMERIC} ,
-		update_time= sysdate,
+		update_time= sysdate(),
 		update_user= #{updateUser,jdbcType=NUMERIC}
 		WHERE id IN (${ids})
 	</update>
@@ -1177,11 +1177,11 @@
 		c.subject_name "subjectName",
 		c.teacher_name
 		"teacherName",
-		c.start_time || ' - ' || c.end_time "timeCalender",
-		c.product_line_name "classTypeName",
+		concat(c.start_time,' - ',c.end_time) "timeCalender",
+		'' "classTypeName",
 		o.cnt "attendancePlan",
-		nvl(att.actual_cnt, 0) "actualAttendace",
-		nvl(att.hangup_cnt, 0) "hangUp",
+		ifnull (att.actual_cnt, 0) "actualAttendace",
+		ifnull (att.hangup_cnt, 0) "hangUp",
 		(select count(1)
 		from t_course_listening l
 		where l.course_id =
@@ -1191,18 +1191,19 @@
 		when o.cnt = 0 then
 		'--'
 		when o.cnt > 0 then
-		round(nvl(att.actual_cnt, 0) / o.cnt, 3) * 100 || '%'
+		round(ifnull(att.actual_cnt, 0) / o.cnt, 3) * 100 || '%'
 		end
 		"attendanceRate",
-		to_char(t.update_time, 'yyyy-mm-dd') "updateDate",
-		to_char(t.update_time, 'hh:mi:ss') "updateTime",
+ 		date_format (t.update_time, '%Y-%m-%d') "updateDate",
 		t.COURSE_TIMES as
 		"courseTimes",
 		c.course_name "courseName",
-		to_char(to_date(t.COURSE_DATE, 'yyyy-mm-dd'), 'yyyy-mm-dd')
-		"courseDate",
+		date_format (
+			date_format (t.COURSE_DATE, '%Y-%m-%d'),
+			'%Y-%m-%d'
+		) "courseDate",
 		locked_table.locked_count as "lockedCount",
-		(case when (nvl(att.actual_cnt, 0) + nvl(att.hangup_cnt, 0)) &lt; nvl(o.cnt, 0) and to_date(t.COURSE_DATE, 'yyyy-mm-dd') &lt; trunc(sysdate) then 'N' else 'Y' end) as "allAttended",
+		(case when (ifnull(att.actual_cnt, 0) + ifnull(att.hangup_cnt, 0)) &lt; ifnull(o.cnt, 0) and date_format (t.COURSE_DATE, '%Y-%m-%d') &lt; date_format (sysdate(), '%Y-%m-%d') then 'N' else 'Y' end) as "allAttended",
 		tcrl.video_no as "videoNo"
 		from (select
 		t.id course_id,
@@ -1212,8 +1213,6 @@
 		tts.end_date season_end_date,
 		tts.course_season_name season_name,
 		t.city_id city_id,
-		t.product_line,
-		tpl.name product_line_name,
 		t.branch_id,
 		tt.teacher_name,
 		t.grade_id,
@@ -1230,9 +1229,6 @@
 		t_course t
 		left join tab_time_season tts
 		on t.season_id = tts.id
-		left
-		join tp_product_line tpl
-		on t.product_line = tpl.id
 		left join
 		tab_teacher_info tt
 		on t.teacher_id = tt.id
@@ -1269,9 +1265,9 @@
 		and t.course_times = o.course_times
 		left join
 		(select a.scheduling_id,
-		sum(decode(a.attend_type, 12, 1, 0))
+		sum(case when a.attend_type = 12 then 1 else 0 end )
 		actual_cnt,
-		sum(decode(a.attend_type, 11, 1, 0)) hangup_cnt
+		sum(case when a.attend_type = 11 then 1 else 0 end) hangup_cnt
 		from
 		t_attendance a
 		left join T_COURSE_SCHEDULING tcs

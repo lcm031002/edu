@@ -353,7 +353,7 @@ public interface AttendanceDao {
     @Select(" select id from tp_attend_type b  where b.business_type=#{businessType,jdbcType=NUMERIC} and b.id = #{attendTypeId,jdbcType=NUMERIC}")
     Long queryAttendType(@Param("businessType") Long businessType, @Param("attendTypeId") Long attendTypeId);
 
-    @Select("select id from t_order t where t.id = #{id,jdbcType=NUMERIC} for update nowait")
+    @Select("select id from t_order t where t.id = #{id,jdbcType=NUMERIC}")
     Long lockOrderById(Long id);
 
     @Select("select count(1) from t_lock where type=#{type,jdbcType=NUMERIC} and resource_id=#{orderId,jdbcType=NUMERIC}")

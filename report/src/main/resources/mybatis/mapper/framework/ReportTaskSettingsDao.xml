@@ -12,21 +12,20 @@
 		end_date as endDate,
 		run_time as runTime,
 		unit,
-		decode(unit, 1, '天', 2, '时', 3, '分', 4, '秒', 5, '毫秒') as unitName,
+		case when unit = 1 then '天' when unit = 2 then '时' when unit = 3 then '分' when unit = 4 then '秒' when unit = 5 then '毫秒' end  AS unitName,
 		pagesize as pageSize,
 		period,
 		status,
-		decode(status, 1, '启用', '停用') as statusName,
+		case when STATUS = 1 then '启用' else '停用' end AS statusName,
 		tables,
 		classimpl as classImpl,
 		type,
-		decode(type, 'common', '通用', 'bjk', '班级课', 'ydy', '一对一', 'wfd', '晚辅导') as
-		typeName,
+		case when type = 'common' then '通用' when type = 'bjk' then '班级课'  when type = 'ydy' then '一对一' when type = 'wfd' then '晚辅导' end AS typeName,
 		start_id as startId,
 		remark
 		from t_report_task_settings a
 		where 1=1
-		and to_char(sysdate,'yyyy-mm-dd') between a.start_date and a.end_date
+		AND date_format (sysdate(), '%Y-%m-%d') BETWEEN a.start_date
 		<if test="type != null and type != ''">
 			and a.type = #{type}
 		</if>
@@ -70,10 +69,9 @@
 		 where t.task_id = #{taskId}
 	</select>
 
-	<insert id="add" parameterType="com.edu.report.model.TReportTaskSettings">
+	<insert id="add" parameterType="com.edu.report.model.TReportTaskSettings"  useGeneratedKeys="true" keyProperty="id">
 		insert into
 		t_report_task_settings (
-		id,
 		task_name,
 		task_id,
 		start_date,
@@ -89,7 +87,6 @@
 		start_id,
 		remark)
 		values (
-		seq_t_report_task_settings.nextval,
 		#{taskName, jdbcType=VARCHAR},
 		#{taskId, jdbcType=VARCHAR},
 		#{startDate, jdbcType=VARCHAR},
@@ -107,10 +104,7 @@
 	</insert>
 
 	<insert id="addByReportCfg" parameterType="java.util.List">
-		<foreach collection="list" item="item" index="index" open="begin"
-			close="; end;" separator=";">
 			insert into t_report_task_settings (
-			id,
 			task_name,
 			task_id,
 			start_date,
@@ -124,8 +118,9 @@
 			classimpl,
 			type,
 			start_id)
-			values (
-			seq_t_report_task_settings.nextval,
+			values
+			<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+			(
 			#{item.taskName, jdbcType=VARCHAR},
 			#{item.taskId, jdbcType=VARCHAR},
 			#{item.startDate, jdbcType=VARCHAR},

@@ -163,10 +163,6 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         }
         //6.校验考勤状态是否正确
 
-        attendTypeId = attendanceDao.queryAttendType(courseScheduling.getBusiness_type(), attendTypeId);
-        if (null == attendTypeId) {
-            throw new RuntimeException("考勤校验:考勤状态类型与当前考勤课程业务线不匹配");
-        }
         //7.校验该学生是否有包含当前考勤课程的订单
         AttendanceAuxiliaryData attendanceAuxiliaryData = courseSchedulingDao.queryAttendanceSchedualingInfo(studentId, schedulingId);
         Long orderId = attendanceAuxiliaryData.getOrderId();

@@ -71,14 +71,9 @@
 		 order by t1.run_time desc
 	</select>
 	
-	<insert id="saveReportRunResult" parameterType="com.edu.report.model.TReportRunResult">
-		<selectKey resultType="java.lang.Long" keyProperty="id"
-			order="BEFORE">
-			select  SEQ_t_report_run_result.nextval as id from dual
-		</selectKey>
-		insert into t_report_run_result g
+	<insert id="saveReportRunResult" parameterType="com.edu.report.model.TReportRunResult" useGeneratedKeys="true" keyProperty="id">
+		insert into t_report_run_result
 		(
-			id,
 			task_id,
        		task_name,
        		run_time,
@@ -90,8 +85,6 @@
 		) 
 		values
 		(
-			
-			#{id,jdbcType=NUMERIC},
 			#{taskId,jdbcType=VARCHAR},
 			#{taskName,jdbcType=VARCHAR},
 			#{runTime,jdbcType=TIMESTAMP},

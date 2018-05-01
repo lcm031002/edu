@@ -2,9 +2,11 @@
     <div class="panel panel-primary" style="margin-bottom: 10px;" >
         <div class="panel-heading">
             <span class="title"><a ng-click="goBack()" class="cur"> &lt; 返回 </a> | 课程排课</span>
+            <!--
             <button class="pull-right btn btn-primary mt5" type="button" ng-click="openParamSettingsPanel()">
                 高级参数 <i class="fa fa-gear"></i>
             </button>
+            -->
         </div>
         <div class=panel-body style="padding: 15px;" ng-if="!isLoadingCourse">
             <div class="col-lg-12" style="margin-top: 15px;">
@@ -197,17 +199,15 @@
             </div>
             <div class="table-panel ov-a" style="min-height: 400px;">
                 <table class="table table-bordered table-hover" style="width:1600px;">
+                    <col width="50">
+                    <col width="50">
+                    <col width="50">
+                    <col width="50">
                     <col width="80">
-                    <col width="130">
-                    <col width="100">
-                    <col width="100">
-                    <col width="150">
-                    <col width="130">
-                    <col width="200">
-                    <col width="130">
-                    <col width="130">
-                    <col width="120">
-                    <col width="100">
+                    <col width="80">
+                    <col width="80">
+                    <col width="50">
+                    <col width="50">
     
                     <thead>
                         <tr>
@@ -218,8 +218,6 @@
                             <th>下课</th>
                             <th>教师</th>
                             <th>编码</th>
-                            <th>辅导老师</th>
-                            <th>辅导老师编码</th>
                             <th>第几周</th>
                             <th>备注</th>
                         </tr>
@@ -243,8 +241,6 @@
                             <td ng-if="!courseTime.isEdit">{{courseTime.end_time}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.teacher_name}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.teacher_code}}</td>
-                            <td ng-if="!courseTime.isEdit">{{courseTime.assteacher_name}}</td>
-                            <td ng-if="!courseTime.isEdit">{{courseTime.assteacher_code}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.week_number}}</td>
                             <td ng-if="!courseTime.isEdit">{{courseTime.remark}}</td>
                     

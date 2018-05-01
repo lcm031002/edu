@@ -303,7 +303,7 @@ function CreatePrintPage04(data) {
 
     strHtml += '<table border="0" width="640px" align="center">';
     strHtml += '<tr align="left" style="font-weight:900;">';
-    strHtml += '<td colspan="5">业务校区:' + data[0].rechargeInfo.ORG_NAME + '	经办人:' + data[0].rechargeInfo.EMPLOYEE_NAME + '</td>';
+    strHtml += '<td colspan="5">业务校区:' + data[0].rechargeInfo.org_name + '	经办人:' + data[0].rechargeInfo.employee_name + '</td>';
     strHtml += '</tr>';
     strHtml += '<tr align="center" style="font-weight:900;">';
     strHtml += '<td width="150">学员编号</td>';
@@ -315,13 +315,13 @@ function CreatePrintPage04(data) {
     strHtml += '<td width="76">业务日期</td>';
     strHtml += '</tr>';
     strHtml += '<tr align="center">';
-    strHtml += '<td>'+data[0].rechargeInfo.S_ENCODING+'</td>';
-    strHtml += '<td>'+data[0].rechargeInfo.STUDENT_NAME+'</td>';
-    strHtml += '<td>'+data[0].rechargeInfo.R_ENCODING+'</td>';
+    strHtml += '<td>'+data[0].rechargeInfo.s_encoding+'</td>';
+    strHtml += '<td>'+data[0].rechargeInfo.student_name+'</td>';
+    strHtml += '<td>'+data[0].rechargeInfo.r_encoding+'</td>';
     strHtml += '<td>充值</td>';
 //	strHtml += '<td>'+data.rechargeInfo.ORG_NAME+'</td>';
 //	strHtml += '<td>'+data.rechargeInfo.EMPLOYEE_NAME+'</td>';
-    strHtml += '<td>'+data[0].rechargeInfo.INPUT_TIME+'</td>';
+    strHtml += '<td>'+data[0].rechargeInfo.input_time+'</td>';
     strHtml += '</tr>';
     strHtml += '<tr align="left">';
     strHtml += '<td colspan="7">充值信息：</td>';
@@ -340,9 +340,9 @@ function CreatePrintPage04(data) {
         strHtml += '<tr align="center">';
         strHtml += '<td>' + (i + 1) + '</td>';
         // strHtml += '<td>'+data[i].rechargeInfo.NAME+'</td>';
-        strHtml += '<td>'+data[i].rechargeInfo.PAY_NAME+'</td>';//缴费方式
-        strHtml += '<td>￥'+data[i].rechargeInfo.MONEY+'</td>';
-        strHtml += '<td>'+ fitlerEmptyReturn(data[i].rechargeInfo.REMARK, '')+'</td>';
+        strHtml += '<td>'+data[i].rechargeInfo.pay_name+'</td>';//缴费方式
+        strHtml += '<td>￥'+data[i].rechargeInfo.money+'</td>';
+        strHtml += '<td>'+ fitlerEmptyReturn(data[i].rechargeInfo.remark, '')+'</td>';
         strHtml += '</tr>';
     }
     strHtml += '</table></td></tr>';

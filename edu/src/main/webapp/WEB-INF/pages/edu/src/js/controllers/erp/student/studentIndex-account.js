@@ -166,11 +166,7 @@ function erp_StudentIndexAccountController(
                 if(!resp.error){
                     var printDate = [];
                     printDate.push(resp.data);
-                    if(resp.data.rechargeInfo.CITY_ID == 3) {
-                        CreatePrintPage04Xiamen(printDate);
-                    } else {
-                        CreatePrintPage04(printDate);
-                    }
+                    CreatePrintPage04(printDate);
                 }else{
                     alert(resp.message);
                 }

@@ -38,8 +38,6 @@
           <th>就读学校</th>
           <th>考勤状态</th>
           <th>上课老师</th>
-          <th>辅导老师</th>
-          <th>补课预约码</th>
           <th>开始时间</th>
           <th>截止时间</th>
           <th>备注</th>
@@ -67,7 +65,7 @@
             <div ng-if="student.attShenpiStatus==1">
               审批中
             </div>
-            <div class="btn-group" ng-if="!student.attShenpiStatus && student.ISVALID">
+            <div class="btn-group" ng-if="!student.attShenpiStatus && student.isValid">
               <button type="button" class="btn {{attendType.id==student.attendType?'btn-info':'btn-default'}}" ng-repeat="attendType in attendTypeList" ng-click="student.attendType = attendType.id" ng-if="student.attendType != 11||(student.attendType == 11 && attendType.id!=12)">{{attendType.name}}</button>
               <button type="button" ng-if="student.attendType == 11" class="btn btn-default" ng-click="extralesson(student)">补课预约</button>
             </div>
@@ -100,10 +98,6 @@
               </div>
             </div> -->
           </td>
-          <td>{{student.assteacherName}}</td>
-          <td>
-            {{student.activation_code}}
-          </td>
           <td>
             {{student.valid_start_date | date:'yyyy-MM-dd'}}
           </td>
@@ -133,9 +127,11 @@
         <div class="input-group col-sm-10 col-md-10 col-lg-10" style="line-height: 34px;">
           <a class="condition_item {{queryParam.selectedAllAttendType.id== attendType.id?'condition_item_checked':''}}" ng-click="selectAttendType(attendType)" ng-repeat="attendType in attendTypeList">{{attendType.name}}</a>
           <div class="btn btn-default" ng-click="submitAttendance()">保存</div>
+          <!--
           <button class="btn btn-default" type="button" ng-click="openParamSettingsPanel()">
             高级参数
           </button>
+          -->
           <button class="btn btn-default" type="button" ng-click="toOutputExcel()">
             导出点名表
           </button>
@@ -190,7 +186,7 @@
                 </td>
                 <td>{{student.schoolName}}</td>
                 <td>
-                  {{student.STATUSTYPENAME}}
+                  {{student.statusTypeName}}
                 </td>
                 <td>
                   {{student.teacherName}}

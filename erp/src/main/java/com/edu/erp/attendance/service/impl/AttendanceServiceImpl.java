@@ -150,12 +150,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (!CollectionUtils.isEmpty(listMap)) {
             Map<String, Map<String, Object>> lockInfos = queryLock();
             for (Map<String, Object> attandanceObj : listMap) {
-                if(ProductLine.JIA_YIN.getId().equals((Long)attandanceObj.get("productLine"))) {//佳音的培英班考勤
-                    checkLockInfo(lockInfos, attandanceObj);
-                    studentAttendanceService.attendanceBjk(attandanceObj);
-                } else {
-                    attandanceSubmit(attandanceObj, processEngine, lockInfos);
-                }
+                studentAttendanceService.attendanceBjk(attandanceObj);
             }
         }
     }

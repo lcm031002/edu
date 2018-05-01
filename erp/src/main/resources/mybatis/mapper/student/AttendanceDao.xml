@@ -1359,16 +1359,16 @@
 		   #{student_id,jdbcType=NUMERIC},
 		   #{order_course_id,jdbcType=NUMERIC},
 		   #{attend_user,jdbcType=NUMERIC},
-			sysdate,
+			sysdate(),
 		   #{attend_branch_id,jdbcType=NUMERIC},
 		   #{attend_amount,jdbcType=NUMERIC},
 		   #{attend_type,jdbcType=NUMERIC},
 		   #{ts_flag,jdbcType=VARCHAR},
 		   #{carried,jdbcType=VARCHAR},
 		   #{create_user,jdbcType=NUMERIC},
-			sysdate,
+			sysdate(),
 		   #{update_user,jdbcType=NUMERIC},
-			sysdate,
+			sysdate(),
 		   #{course_date,jdbcType=NUMERIC},
 		   #{for_quit,jdbcType=NUMERIC},
 		   #{chineseTeacherAdvanceParamRemark,jdbcType=VARCHAR},
@@ -1379,7 +1379,7 @@
     <update id="updateAttendanceBjk" parameterType="com.edu.erp.model.TAttendance">
         update t_attendance SET
         attend_type = #{attend_type,jdbcType=NUMERIC},
-        attend_date = sysdate,
+        attend_date = sysdate(),
         carried = #{carried,jdbcType=VARCHAR},
         update_user =  #{update_user,jdbcType=NUMERIC},
         teacher_id = #{teacher_id,jdbcType=NUMERIC},
@@ -1394,7 +1394,7 @@
 			course_tearcher_cn_remark=#{chineseTeacherAdvanceParamRemark,jdbcType=VARCHAR},
 			course_tearcher_en_remark=#{foreignTeacherAdvanceParamRemark,jdbcType=VARCHAR},
         </if>
-        update_time = sysdate
+        update_time = sysdate()
         where id =  #{id,jdbcType=NUMERIC}
     </update>
 

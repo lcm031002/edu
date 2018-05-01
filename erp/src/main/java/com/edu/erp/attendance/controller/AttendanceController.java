@@ -215,9 +215,6 @@ public class AttendanceController extends BaseController {
 				log.error("没有选择校区！");
 				throw new Exception("请选择校区!");
 			}
-			if(null == orgModel.getProductLine()) {
-                throw new Exception("请初始化组织产品线!");
-            }
 
 			if (requestParam == null || CollectionUtils.isEmpty(requestParam.getSubmitAttendanceList())) {
 				log.error("没有要考勤的学员！");

@@ -404,7 +404,7 @@
                 when a.attend_type is not null then a.attend_type end as "attendType",
                 vocti.IS_VALID as isValid,
                 vocti.IS_VALID_NAME as isValidName,
-                vocti.STATUS_TYPE_NAME as statusTypeName,
+                vocti.STATUS_TYPE_NAME as "statusTypeName",
                 oc.id as "orderCourseId",
                 o.order_no "orderEncoding",
                 stu.id,
@@ -414,7 +414,6 @@
                 t.id as "schedulingId",
                 teacher.id "teacherId",
                 teacher.teacher_name "teacherName",
-                pkg_utils.check_order_return(oc.id) "isReturn",
                 case
                   when (select count(1)
                           from user_application_task t
@@ -427,14 +426,7 @@
                 end "attShenpiStatus",
                 t.course_date as "courseDate",
                 a.remark as "remark",
-                t.assteacher_id as "assteacherId",
-                ass.teacher_name as "assteacherName",
-                tei.activation_code as "activation_code",
-                tei.valid_start_date as "valid_start_date",
-                tei.valid_end_date as "valid_end_date",
-				ifnull(ta.fee_amount,0) as "fee_amount",
-				ifnull(ta.frozen_account, 0) as "frozen_account",
-				ifnull(ta.REFUND_ACCOUNT,0) as "fefund_account"
+				ifnull(ta.fee_amount,0) as "fee_amount"
 		  from t_course_scheduling t
 		  join t_order_course oc
 		    on t.course_id = oc.course_id
@@ -463,22 +455,14 @@
 		    on t.course_id = tcou.id
 		  left join tab_teacher_info ass
 		    on t.assteacher_id = ass.id
-		  left join T_EL_INFO tei
-		    on a.scheduling_id = tei.scheduling_id and a.student_id = tei.student_id and tei.order_course_id = oc.id
 		  left join t_account  ta
-		  on  ta.student_id = stu.id and ta.bu_id = stu.bu_id and ta.account_type= 0
+		  on  ta.student_id = stu.id and ta.bu_id = stu.bu_id
 		 where t.course_id 		= #{courseId,		jdbcType=NUMERIC}
 		   and t.COURSE_TIMES 	= #{courseTime,	jdbcType=NUMERIC}
 		   and (oc.status != 2 or oc.status is null)
 		   and o.order_status = 1
 		   and (tolock.STATUS is null or tolock.STATUS = 3)
-		   and 
-		        (tei.id in (
-                  select max(id) from T_EL_INFO where student_id = o.STUDENT_ID 
-                  and order_course_id = oc.id
-                  and scheduling_id = t.id
-             )or tei.id is null )
-		 order by nlssort(stu.student_name,'NLS_SORT=SCHINESE_PINYIN_M')
+		 order by stu.student_name
 	</select>
 	
 	<select id="querySchedulingAttendanceMakeup" resultType="HashMap" parameterType="HashMap">
