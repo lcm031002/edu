@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TReportRenewalRateDao">
+
+	<select id="queryForSum" parameterType="map"
+		resultType="com.edu.report.model.TReportRenewalRateSum">
+	  select  last_students.teacher_name,
+			   last_students.teacher_type,
+		 	   last_students.grade_id,
+		       last_students.grade_name,
+           	   last_students.subject_name,
+               tg.group_name,
+		       last_students.last_season_id,
+		       last_students.last_season_name,
+		       last_students.season_id curr_season_id,		       
+		       last_students.season_name curr_season_name,
+		       last_students.students last_students,
+		       nvl(curr_order.students,0) order_students,
+		       nvl(curr_students.students,0) curr_students,
+           	   nvl(round(curr_order.students/last_students.students,3),0)*100||'%' estimate_rate, 
+		       nvl(round(curr_students.students/last_students.students,3),0)*100||'%' actual_rate
+	      from MV_DXBLASTSEASON_students last_students
+	      left join  (select curr_season.season_id,
+	                   curr_season.course_season_name,
+	                   curr_season.subject_name,
+	                   curr_season.grade_id,
+	                   last_season.grade_name,
+	                   last_season.teacher_name,
+	                   count(curr_season.student_no) students
+	              from MV_DXBLASTSEASON_CLASS_DETAIL last_season,
+	                   MV_DXBCURRSEASON_DETAIL curr_season
+	             where curr_season.season_id = last_season.season_id
+	               and curr_season.subject_name = last_season.subject_name
+	               <choose>
+		            	<when test="season_name == '春季班'">
+		            		and curr_season.grade_id = last_season.next_grade_id
+		           		</when>
+		           		<when test="season_name == '暑假班'">
+		           			and curr_season.grade_id = last_season.next_grade_id
+		           		</when>
+		           		<otherwise>
+		           			and curr_season.grade_id = last_season.grade_id
+		           		</otherwise>
+           		   </choose>
+	               and curr_season.student_no = last_season.student_no
+	               and last_season.last_season_id = #{season_id, jdbcType=NUMERIC}
+				   and last_season.teacher_type = #{teacher_type, jdbcType=NUMERIC}
+				   <if test="grade_id != null and grade_id != -1">
+						and last_season.grade_id = #{grade_id, jdbcType=NUMERIC}
+				   </if>
+	             group by curr_season.season_id,
+	                      curr_season.course_season_name,
+	                      curr_season.subject_name,
+	                      curr_season.grade_id,
+	                      last_season.grade_name,
+	                      last_season.teacher_name) curr_students on last_students.season_id = curr_students.season_id
+	       and last_students.subject_name = curr_students.subject_name
+	       <choose>
+            	<when test="season_name == '春季班'">
+            		and curr_students.grade_id = last_students.next_grade_id
+           		</when>
+           		<when test="season_name == '暑假班'">
+           			and curr_students.grade_id = last_students.next_grade_id
+           		</when>
+           		<otherwise>
+           			and curr_students.grade_id = last_students.grade_id
+           		</otherwise>
+           </choose>
+	       and last_students.teacher_name = curr_students.teacher_name
+	       left join  (select curr_season.season_id,
+	                   curr_season.course_season_name,
+	                   curr_season.subject_name,
+	                   curr_season.grade_id,
+	                   last_season.grade_name,
+	                   last_season.teacher_name,
+	                   count(curr_season.student_no) students
+	              from MV_DXBLASTSEASON_CLASS_DETAIL last_season,
+	                   MV_DXBCURRSEASON_ORDER curr_season
+	             where curr_season.season_id = last_season.season_id
+	               and curr_season.subject_name = last_season.subject_name
+			       <choose>
+		            	<when test="season_name == '春季班'">
+		            		and curr_season.grade_id = last_season.next_grade_id
+		           		</when>
+		           		<when test="season_name == '暑假班'">
+		           			and curr_season.grade_id = last_season.next_grade_id
+		           		</when>
+		           		<otherwise>
+		           			and curr_season.grade_id = last_season.grade_id
+		           		</otherwise>
+		           </choose>
+	               and curr_season.student_no = last_season.student_no
+	               and last_season.last_season_id = #{season_id, jdbcType=NUMERIC}
+				   and last_season.teacher_type = #{teacher_type, jdbcType=NUMERIC}
+				   <if test="grade_id != null and grade_id != -1">
+						and last_season.grade_id = #{grade_id, jdbcType=NUMERIC}
+				   </if>
+	             group by curr_season.season_id,
+	                      curr_season.course_season_name,
+	                      curr_season.subject_name,
+	                      curr_season.grade_id,
+	                      last_season.grade_name,
+	                      last_season.teacher_name)  curr_order  on last_students.season_id = curr_order.season_id
+	       and last_students.subject_name = curr_order.subject_name
+	       <choose>
+            	<when test="season_name == '春季班'">
+            		and curr_order.grade_id = last_students.next_grade_id
+           		</when>
+           		<when test="season_name == '暑假班'">
+           			and curr_order.grade_id = last_students.next_grade_id
+           		</when>
+           		<otherwise>
+           			and curr_order.grade_id = last_students.grade_id
+           		</otherwise>
+           </choose>
+	       and last_students.teacher_name = curr_order.teacher_name                    
+      	 left join mv_teacher_group tg on last_students.bu_id = tg.bu_id and last_students.grade_id = tg.grade_id and last_students.subject_code = tg.subject_code                
+	     where 
+	       last_students.last_season_id = #{season_id, jdbcType=NUMERIC}
+			and last_students.teacher_type = #{teacher_type, jdbcType=NUMERIC}
+			<if test="grade_id != null and grade_id != -1">
+			   and last_students.grade_id = #{grade_id, jdbcType=NUMERIC}
+		   </if>
+	       order by tg.group_name,nvl(round(curr_order.students/last_students.students,3),0) desc 
+	</select>
+	
+	<select id="queryForLastBase" parameterType="map"
+		resultType="com.edu.report.model.TReportRenewalRateDetail" >
+		select t.teacher_name, t.grade_name,t.course_no,t.course_name,t.last_season_name,t.student_no, t.student_name
+		  from MV_DXBLASTSEASON_CLASS_DETAIL t,mv_dxblastseason_detail mdd
+		 where t.last_season_id = #{season_id, jdbcType=NUMERIC}
+		   and t.teacher_type = #{teacher_type, jdbcType=NUMERIC}
+		   <if test="grade_id != null and grade_id != -1">
+	           and t.grade_id = #{grade_id, jdbcType=NUMERIC}
+		   </if>
+		   <if test="teacher_name != null">
+	           and t.teacher_name like '%${teacher_name}%'
+		   </if>
+			and t.season_id = mdd.season_id
+			and t.last_season_id = mdd.last_season_id
+			and t.subject_code = mdd.subject_code
+			and t.grade_id = mdd.grade_id
+			and t.student_no = mdd.student_no
+			and t.teacher_name = mdd.teacher_name
+		   order by t.last_season_name,t.grade_name,t.teacher_name,t.student_name
+	</select>
+	
+	<select id="queryForEstimate" parameterType="map"
+		resultType="com.edu.report.model.TReportRenewalRateDetail">
+		select last_season.grade_name,
+		        last_season.teacher_name,
+				last_season.course_no,
+				last_season.course_name,
+		        curr_season.course_season_name,
+		        curr_season.student_no,
+		        curr_season.student_name
+		from MV_DXBLASTSEASON_CLASS_DETAIL last_season,
+			  mv_dxblastseason_detail mdd,
+			  MV_DXBCURRSEASON_ORDER curr_season
+		 where curr_season.season_id = last_season.season_id
+		   and curr_season.subject_name = last_season.subject_name
+		   and (curr_season.grade_id = last_season.grade_id or curr_season.grade_id = last_season.next_grade_id)
+		   and curr_season.student_no = last_season.student_no
+		   and curr_season.season_id = #{season_id, jdbcType=NUMERIC}
+		   and last_season.teacher_type = #{teacher_type, jdbcType=NUMERIC}
+		   <if test="grade_id != null and grade_id != -1">
+	           and last_season.grade_id = #{grade_id, jdbcType=VARCHAR}
+		   </if>
+		   <if test="teacher_name != null">
+	           and last_season.teacher_name like '%${teacher_name}%'
+		   </if>
+			and last_season.season_id = mdd.season_id
+			and last_season.last_season_id = mdd.last_season_id
+			and last_season.subject_code = mdd.subject_code
+			and last_season.grade_id = mdd.grade_id
+			and last_season.student_no = mdd.student_no
+			and last_season.teacher_name = mdd.teacher_name
+		order by curr_season.course_season_name,last_season.grade_name,last_season.teacher_name,curr_season.student_name
+	</select>
+	
+	<select id="queryForActual" parameterType="map"
+		resultType="com.edu.report.model.TReportRenewalRateDetail">
+		select last_season.grade_name,
+		        last_season.teacher_name,
+				last_season.course_no,
+				last_season.course_name,
+		        curr_season.course_season_name,
+		        curr_season.student_no,
+		        curr_season.student_name
+		from MV_DXBLASTSEASON_CLASS_DETAIL last_season,
+			  mv_dxblastseason_detail mdd,
+			  MV_DXBCURRSEASON_DETAIL curr_season
+		 where curr_season.season_id = last_season.season_id
+		   and curr_season.subject_name = last_season.subject_name
+		   and (curr_season.grade_id = last_season.grade_id or curr_season.grade_id = last_season.next_grade_id)
+		   and curr_season.student_no = last_season.student_no
+		   and curr_season.season_id = #{season_id, jdbcType=NUMERIC}
+		   and last_season.teacher_type = #{teacher_type, jdbcType=NUMERIC}
+		   <if test="grade_id != null and grade_id != -1">
+	           and last_season.grade_id = #{grade_id, jdbcType=VARCHAR}
+		   </if>
+		   <if test="teacher_name != null">
+	           and last_season.teacher_name like '%${teacher_name}%'
+		   </if>
+			and last_season.season_id = mdd.season_id
+			and last_season.last_season_id = mdd.last_season_id
+			and last_season.subject_code = mdd.subject_code
+			and last_season.grade_id = mdd.grade_id
+			and last_season.student_no = mdd.student_no
+			and last_season.teacher_name = mdd.teacher_name
+		   order by curr_season.course_season_name,last_season.grade_name,last_season.teacher_name,curr_season.student_name
+	</select>
+	
+</mapper>

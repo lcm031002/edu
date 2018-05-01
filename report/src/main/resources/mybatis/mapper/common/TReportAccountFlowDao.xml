@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TReportAccountFlowDao">
+	<select id="selectForPage" parameterType="map"
+		resultType="com.edu.report.model.TReportAccountFlow">
+		select t.*
+		 from t_account_flow t
+		where 1 = 1
+		  and t.bu_id = #{bu_id}
+		<if test="branch_id != null">
+			and t.branch_id = #{branch_id}
+		</if>
+		<if test="student_code != null and student_code != ''">
+			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
+		</if>
+		<if test="start_date != null and start_date != ''">
+			<![CDATA[ and t.operate_time >= to_date(#{start_date}, 'yyyy-MM-dd hh24:mi:ss') ]]>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<![CDATA[ and t.operate_time < to_date(#{end_date}, 'yyyy-MM-dd hh24:mi:ss') + 1 ]]>
+		</if>
+	</select>
+
+	<select id="selectForList" parameterType="map"
+		resultType="com.edu.report.model.TReportAccountFlow">
+		select t.*
+		 from t_account_flow t
+		where 1 = 1
+		  and t.bu_id = #{bu_id}
+		<if test="branch_id != null and branch_id != -1">
+			and t.branch_id = #{branch_id}
+		</if>
+		<if test="validBranchIds != null and validBranchIds != ''">
+			and t.branch_id in (${validBranchIds})
+		</if>
+		<if test="student_code != null and student_code != ''">
+			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
+		</if>
+		<if test="start_date != null and start_date != ''">
+			<![CDATA[ and t.operate_time >= to_date(#{start_date}, 'yyyy-MM-dd hh24:mi:ss') ]]>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<![CDATA[ and t.operate_time < to_date(#{end_date}, 'yyyy-MM-dd hh24:mi:ss') + 1 ]]>
+		</if>
+	</select>
+	
+	<delete id="removeByTaskFlow" parameterType="map">
+		delete from t_account_flow where task_flow = #{taskFlow}
+	</delete>
+	
+	<insert id="addAccountFlow" parameterType="map">
+		insert into t_account_flow
+		  (id,
+		   student_code,
+		   student_name,
+		   branch_id,
+		   branch_name,
+		   bu_id,
+		   bu_name,
+		   operate_type,
+		   operate_type_name,
+		   change_account_amount,
+		   change_frozen_amount,
+		   change_refund_amount,
+		   before_account_amount,
+		   before_frozen_amount,
+		   before_refund_amount,
+		   after_account_amount,
+		   after_frozen_amount,
+		   after_refund_amount,
+		   charge_mode,
+		   charge_mode_name,
+		   operate_time,
+		   operate_id,
+		   operate_name,
+		   account_change_id,
+		   task_flow)
+		  select seq_t_account_flow.nextval,
+		         t3.encoding,
+		         t3.student_name,
+		         nvl(t4.id, t12.id) as branch_id,
+		         nvl(t4.org_name, t12.org_name) as branch_name,
+		         t2.bu_id,
+		         t13.org_name as bu_name,
+		         t1.change_type,
+		         (case
+		           when t1.change_type = 0 then
+		            '客户充值'
+		           when t1.change_type = 1 then
+		            '订单收费取出'
+		           when t1.change_type = 2 then
+		            '订单退费存入'
+		           when t1.change_type = 3 then
+		            '客户取出'
+		           when t1.change_type = 4 then
+		            '一元转校'
+		           when t1.change_type = 5 then
+		            '转账'
+		           when t1.change_type = 6 then
+		            '理赔'
+		           when t1.change_type = 7 then
+		            '转班转入'
+		           when t1.change_type = 8 then
+		            '充值作废'
+		           when t1.change_type = 9 then
+		            '理赔作废'
+		           when t1.change_type = 10 then
+		            '取款作废'
+		           when t1.change_type = 11 then
+		            '报班作废'
+		           when t1.change_type = 12 then
+		            '退费作废'
+		         end) change_type_name,
+		         
+		         (case
+		           when t1.account_type is null or t1.account_type = 1 then
+		            (case
+		              when t1.change_flag = 0 and t1.change_amount > 0 then
+		               t1.change_amount
+		              when t1.change_flag = 1 and t1.change_amount > 0 then
+		               t1.change_amount
+		              else
+		               t1.change_amount * -1
+		            end)
+		           else
+		            0
+		         end) as change_account_amount,
+		         (case
+		           when t1.account_type = 2 then
+		            (case
+		              when t1.change_flag = 0 and t1.change_amount > 0 then
+		               t1.change_amount
+		              when t1.change_flag = 1 and t1.change_amount > 0 then
+		               t1.change_amount
+		              else
+		               t1.change_amount * -1
+		            end)
+		           else
+		            0
+		         end) as change_frozen_amount,
+		         (case
+		           when t1.account_type = 3 then
+		            (case
+		              when t1.change_flag = 0 and t1.change_amount > 0 then
+		               t1.change_amount
+		              when t1.change_flag = 1 and t1.change_amount > 0 then
+		               t1.change_amount
+		              else
+		               t1.change_amount * -1
+		            end)
+		           else
+		            0
+		         end) as change_refund_amount,
+		         
+		         (case
+		           when t1.account_type is null or t1.account_type = 1 then
+		            t1.pre_amount
+		           else
+		            0
+		         end) as before_account_amount,
+		         (case
+		           when t1.account_type = 2 then
+		            t1.pre_amount
+		           else
+		            0
+		         end) as before_frozen_amount,
+		         (case
+		           when t1.account_type = 3 then
+		            t1.pre_amount
+		           else
+		            0
+		         end) as before_refund_amount,
+		         
+		         (case
+		           when t1.account_type is null or t1.account_type = 1 then
+		            t1.next_amount
+		           else
+		            0
+		         end) as after_account_amount,
+		         (case
+		           when t1.account_type = 2 then
+		            t1.next_amount
+		           else
+		            0
+		         end) as after_frozen_amount,
+		         (case
+		           when t1.account_type = 3 then
+		            t1.next_amount
+		           else
+		            0
+		         end) as after_refund_amount,
+		         t1.pay_mode as charge_mode,
+		         (case
+		           when t6.name is null then
+		            (case
+		              when t1.pay_mode = 0 then
+		               '现金'
+		              when t1.pay_mode = 1 then
+		               '内部转账'
+		              when t1.pay_mode = 2 then
+		               '银行转账'
+		            end)
+		           else
+		            t6.name
+		         end) as charge_mode_name,
+		         t1.change_time as operate_time,
+		         nvl(t7.create_user, t5.input_user) as operate_id,
+		         nvl(t9.employee_name, t11.employee_name) as operate_name,
+		         t1.id,
+		         #{taskFlow}
+		    from t_account_change t1
+		    join t_account t2
+		      on t1.account_id = t2.id
+		    left join tab_student_info t3
+		      on t2.student_id = t3.id
+		    left join t_account_dynamic t5
+		      on t1.dynamic_id = t5.id
+		    left join tab_organization_info t4
+		      on t5.branch_id = t4.id
+		    left join tp_pay_mode t6
+		      on t5.pay_mode = t6.id
+		    left join t_order t7
+		      on t1.order_id = t7.id
+		    left join tab_user_info t8
+		      on t7.create_user = t8.id
+		    left join tab_employee_info t9
+		      on t8.employee_id = t9.id
+		    left join tab_user_info t10
+		      on t5.input_user = t10.id
+		    left join tab_employee_info t11
+		      on t10.employee_id = t11.id
+		    left join tab_organization_info t12
+		      on t12.id = t7.branch_id
+		    left join tab_organization_info t13
+		      on t13.id = t2.bu_id
+		   where t1.change_type != -1
+		   <if test="minOperateNo != null">
+		     <![CDATA[ and t1.change_time >= to_date(#{minOperateNo}, 'yyyyMMdd') ]]>
+		   </if>
+		   <if test="maxOperateNo != null">
+		     <![CDATA[ and t1.change_time < to_date(#{maxOperateNo}, 'yyyyMMdd') + 1 ]]>
+		   </if>
+	</insert>
+</mapper>

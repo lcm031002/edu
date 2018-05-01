@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.ReportRunResultDao">
+	<resultMap type="com.edu.report.model.TReportRunResult" id="ReportRunResultMap">
+		<id property="id" column="id"/>
+		<result property="taskId" column="task_id"/>
+		<result property="taskName" column="task_name"/>
+		<result property="runTime" column="run_time"/>
+		<result property="runResult" column="run_result"/>
+		<result property="runResultName" column="run_result_name"/>
+		<result property="taskFlow" column="task_flow"/>
+		<result property="startTime" column="start_time"/>
+		<result property="endTime" column="end_time"/>
+		<result property="remark" column="remark"/>
+		<result property="type" column="type"/>
+		<result property="typeName" column="type_name"/>
+		<result property="taskTableLastVal" column="task_table_lastval"/>
+		<result property="taskTableCurrentVal" column="task_table_currentval"/>
+		<result property="taskTableType" column="task_table_type"/>
+		<result property="taskTableTypeName" column="task_table_type_name"/>
+	</resultMap>
+	
+	<select id="selectForPage" parameterType="map" resultMap="ReportRunResultMap">
+		select t1.task_id,
+		       t1.task_flow,
+		       t1.task_name,
+		       t1.run_time,
+		       t1.run_result,
+		       decode(t1.run_result, 1, '成功', '失败') as run_result_name,
+		       t1.remark,
+		       t2.type,
+		       decode(t2.type,
+		              'common',
+		              '通用',
+		              'bjk',
+		              '班级课',
+		              'ydy',
+		              '一对一',
+		              'wfd',
+		              '晚辅导') as type_name,
+		       t3.task_table_lastval,
+		       t3.task_table_currentval,
+		       t3.task_table_type,
+		       decode(t3.task_table_type, 'INCREMENT', '增量', 'FULL', '全量') as task_table_type_name
+		  from t_report_run_result    t1,
+		       t_report_task_settings t2,
+		       t_task_table_result    t3
+		 where t1.task_id = t2.task_id
+		   and t1.task_flow = t3.task_flow
+		   and t1.task_id = t3.task_id
+		 <if test="run_time != null and run_time != ''">
+		   and to_char(t1.run_time, 'yyyy-MM-dd') = #{run_time}
+		 </if>
+		 <if test="type != null">
+		   and t2.type = #{type}
+		 </if>
+		 <if test="task_flow != null and task_flow != ''">
+		   and t1.task_flow like '${task_flow}%'
+		 </if>
+		 <if test="run_result != null and run_result != ''">
+		   and t1.run_result = #{run_result}
+		 </if>
+		 <if test="task_table_val != null and task_table_val != ''">
+		   and (#{task_table_val} between t3.task_table_lastval and t3.task_table_currentval)
+		 </if>
+		 <if test="task_id != null and task_id != ''">
+		   and t1.task_id = #{task_id}
+		 </if>
+		 order by t1.run_time desc
+	</select>
+	
+	<insert id="saveReportRunResult" parameterType="com.edu.report.model.TReportRunResult">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select  SEQ_t_report_run_result.nextval as id from dual
+		</selectKey>
+		insert into t_report_run_result g
+		(
+			id,
+			task_id,
+       		task_name,
+       		run_time,
+       		run_result,
+       		task_flow,
+       		start_time,
+       		end_time,
+      		remark
+		) 
+		values
+		(
+			
+			#{id,jdbcType=NUMERIC},
+			#{taskId,jdbcType=VARCHAR},
+			#{taskName,jdbcType=VARCHAR},
+			#{runTime,jdbcType=TIMESTAMP},
+			#{runResult,jdbcType=NUMERIC},
+			#{taskFlow,jdbcType=VARCHAR},
+			#{startTime,jdbcType=NUMERIC},
+			#{endTime,jdbcType=NUMERIC},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateReportRunResult" parameterType="com.edu.report.model.TReportRunResult">
+		update t_report_run_result set
+		<if test="remark != null and remark != ''">
+		   	remark = #{remark,jdbcType=VARCHAR},
+		</if>
+       		run_time = #{runTime,jdbcType=TIMESTAMP},
+       		run_result = #{runResult,jdbcType=NUMERIC},
+       		start_time = #{startTime,jdbcType=NUMERIC},
+       		end_time = #{endTime,jdbcType=NUMERIC}
+      	 where id = #{id}
+	</update>
+	
+	<select id="queryReportRunResult" parameterType="com.edu.report.model.TReportRunResult"
+		resultMap="ReportRunResultMap">
+		SELECT trrr.id,
+		       trrr.task_id as taskId,
+		       trrr.task_name as taskName,
+		       trrr.run_time as runTime,
+		       trrr.run_result as runResult,
+		       trrr.task_flow as taskFlow,
+		       trrr.remark,
+		       trrr.start_time as startTime,
+		       trrr.end_time as endTime
+		FROM t_report_run_result trrr
+		WHERE
+		    trrr.task_id = #{taskId,jdbcType=VARCHAR}
+		    <if test="taskFlow != null">
+		    	and trrr.task_flow = #{taskFlow,jdbcType=VARCHAR}
+		    </if>
+		ORDER BY
+		    trrr.task_flow DESC
+	</select>
+	
+	<select id="queryMaxTaskFlowResult" parameterType="com.edu.report.model.TReportRunResult"
+		resultMap="ReportRunResultMap">
+		SELECT
+		    trrr.*
+		FROM
+		    t_report_run_result trrr
+		WHERE
+		    trrr.task_id = #{taskId,jdbcType=VARCHAR}
+		    and trrr.task_flow = (
+		    	SELECT
+				    max(trrr.task_flow) as task_flow
+				FROM
+				    t_report_run_result trrr
+				WHERE
+				    trrr.task_id = #{taskId,jdbcType=VARCHAR}
+		    )
+	</select>
+</mapper>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.AttendanceMonthReportDao">
+
+	<select id="queryReport" parameterType="Map" resultType="com.edu.report.model.TAttendanceMonthReport">
+		select * from (
+			select  student_code, student_name, bu_name, branch_name,
+					sum(month_order_amount) month_order_amount, 
+					sum(month_order_course_length) month_order_course_length,
+					sum(month_attend_amount) month_attend_amount, 
+					sum(month_attend_course_length) month_attend_course_length, 
+					sum(month_lipei) month_lipei
+			from t_month_attend_report a
+			where
+				a.bu_id = #{bu_id}
+			<if test="branch_id != null and branch_id != '' and branch_id > -1">
+				and a.branch_id = #{branch_id}
+			</if>
+			<if test="validBranchIds != null and validBranchIds !='' ">
+			   and a.branch_id  in (${validBranchIds})
+			 </if>
+			<if test="start_date != null and start_date != ''">
+				and a.busi_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="end_date != null and end_date != ''">
+				and a.busi_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>
+			group by student_code, student_name, bu_name, branch_name
+		
+		union all
+		
+			select  '合计'	student_code, 
+					null	student_name, 
+					null	bu_name, 
+					null	branch_name,
+					sum(month_order_amount) month_order_amount, 
+					sum(month_order_course_length) month_order_course_length,
+					sum(month_attend_amount) month_attend_amount, 
+					sum(month_attend_course_length) month_attend_course_length, 
+					sum(month_lipei) month_lipei
+			from t_month_attend_report a
+			where
+				a.bu_id = #{bu_id}
+			<if test="branch_id != null and branch_id != '' and branch_id > -1">
+				and a.branch_id = #{branch_id}
+			</if>
+			<if test="validBranchIds != null and validBranchIds !='' ">
+			   and a.branch_id  in (${validBranchIds})
+			</if>
+			<if test="start_date != null and start_date != ''">
+				and a.busi_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="end_date != null and end_date != ''">
+				and a.busi_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>
+		)
+		order by nlssort(student_name,'NLS_SORT=SCHINESE_PINYIN_M'), branch_name
+	</select>
+	
+	<delete id="deleteByTaskFlow"  parameterType="Map">
+		delete from t_month_attend_report where task_flow = #{task_flow, jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 41报班实收,42预结转费用 -->
+	<sql id="selectFeeDetail41and42">
+		select
+			tod.bu_id								bu_id,
+			decode(tod.business_type, 2, 
+				tod.branch_id, toc.branch_id)		branch_id,
+			to_char(tf.finish_time ,'yyyy-mm-dd')  	busi_date ,
+			tod.student_id							student_id,
+			nvl(tfd.fee_amount, 0)					month_order_amount,
+			decode(tf.fee_type, 
+				41, nvl(tfd.course_sum, 0), 0)		month_order_course_length,
+			0										month_attend_amount,
+			0										month_attend_course_length,
+			0										month_lipei
+		from
+			t_fee tf
+		left join t_fee_detail tfd
+			on tfd.fee_id = tf.id and tfd.operate_no = tf.operate_no
+		left join t_order tod
+			ON tod.id = tfd.order_id 
+		left join t_order_course toc
+			on toc.id = tfd.order_detail_id
+		where
+			tf.finish_time >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tf.finish_time &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tf.operate_type = 4
+		and (tf.fee_type = 41 or tf.fee_type = 42)
+	</sql>
+	
+	<!-- 53	订单作废 -->
+	<sql id="selectFeeDetail53">
+		select
+			tod.bu_id								bu_id,
+			decode(tod.business_type, 2, 
+				tod.branch_id, toc.branch_id)		branch_id,
+			to_char(tf.finish_time ,'yyyy-mm-dd')  	busi_date ,
+			tod.student_id							student_id,
+			nvl(tfd.fee_amount, 0) * - 1			month_order_amount,
+			nvl(tfd.course_sum, 0) * - 1			month_order_course_length,
+			0										month_attend_amount,
+			0										month_attend_course_length,
+			0										month_lipei
+		from
+			t_fee tf
+		left join t_fee_detail tfd
+			on tfd.fee_id = tf.id and tfd.operate_no = tf.operate_no
+		left join t_order tod
+			ON tod.id = tfd.order_id
+		left join t_order_course toc
+			on toc.id = tfd.order_detail_id 
+		where
+			tf.finish_time >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tf.finish_time &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tf.operate_type = 5
+		and (tf.fee_type = 53)
+	</sql>
+	
+	<!-- 51 订单退费,54 冻结补扣 -->
+	<sql id="selectFeeDetail51and54">
+		select
+			tod.bu_id														bu_id,
+			decode(tod.business_type, 2, tod.branch_id, toc.branch_id)		branch_id,
+			to_char(tf.finish_time ,'yyyy-mm-dd')  							busi_date ,
+			tod.student_id													student_id,
+			nvl(tfd.fee_amount, 0) * decode(todc.change_type,4,1,1,-1)		month_order_amount,
+			decode(tf.fee_type,
+				51, nvl(tfd.course_sum, 0) * decode(todc.change_type,4,1,1,-1),
+				0)									month_order_course_length,
+			0										month_attend_amount,
+			0										month_attend_course_length,
+			0										month_lipei
+		from
+			t_fee tf
+		left join t_fee_detail tfd
+			on tfd.fee_id = tf.id and tfd.operate_no = tf.operate_no
+		left join t_order tod
+			ON tod.id = tfd.order_id
+		left join t_order_course toc
+			on toc.id = tfd.order_detail_id
+		left join t_order_change todc
+			on todc.id = tf.operate_no
+		where
+			tf.finish_time >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tf.finish_time &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tf.operate_type = 5
+		and (tf.fee_type = 51 or tf.fee_type = 54)
+		and (todc.change_type = 1 or todc.change_type = 4)
+		and (todc.change_status = 7 or todc.change_status = 5)
+	</sql>
+	
+	<!-- 55 订单冻结,54 冻结补扣 -->
+	<sql id="selectFeeDetail55and54">
+		select
+			tod.bu_id														bu_id,
+			decode(tod.business_type, 2, tod.branch_id, toc.branch_id)		branch_id,
+			to_char(tf.finish_time ,'yyyy-mm-dd')  							busi_date ,
+			tod.student_id													student_id,
+			nvl(tfd.fee_amount, 0) * decode(todc.change_type,6,1,5,-1)		month_order_amount,
+			decode(tf.fee_type,
+				55, nvl(tfd.course_sum, 0) * decode(todc.change_type,6,1,5,-1),
+				0)															month_order_course_length,
+			0																month_attend_amount,
+			0																month_attend_course_length,
+			0																month_lipei
+		from
+			t_fee tf
+		left join t_fee_detail tfd
+			on tfd.fee_id = tf.id and tfd.operate_no = tf.operate_no
+		left join t_order tod
+			ON tod.id = tfd.order_id
+		left join t_order_course toc
+			on toc.id = tfd.order_detail_id
+		left join t_order_change todc
+			on todc.id = tf.operate_no
+		where
+			tf.finish_time >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tf.finish_time &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tf.operate_type = 5
+		and (tf.fee_type = 55 or tf.fee_type = 54)
+		and (todc.change_type = 5 or todc.change_type = 6)
+		and (todc.change_status = 7 or todc.change_status = 5)
+	</sql>
+	
+	<!-- 52	转班 -->
+	<sql id="selectFeeDetail52">
+		select
+			tod.bu_id														bu_id,
+			decode(tod.business_type, 2, tod.branch_id, toc.branch_id)		branch_id,
+			to_char(tf.finish_time ,'yyyy-mm-dd')  							busi_date ,
+			tod.student_id													student_id,
+			nvl(tfd.fee_amount, 0) * decode(tfd.fee_flag,1,1,2,-1)			month_order_amount,
+			nvl(tfd.course_sum, 0) * decode(tfd.fee_flag,1,1,2,-1)			month_order_course_length,
+			0																month_attend_amount,
+			0																month_attend_course_length,
+			0																month_lipei
+		from
+			t_fee tf
+		left join t_fee_detail tfd
+			on tfd.fee_id = tf.id and tfd.operate_no = tf.operate_no
+		left join t_order tod
+			ON tod.id = tfd.order_id
+		left join t_order_course toc
+			on toc.id = tfd.order_detail_id
+		left join t_order_change todc
+			on todc.id = tf.operate_no
+		where
+			tf.finish_time >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tf.finish_time &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tf.operate_type = 5
+		and (tf.fee_type = 52)
+		and (todc.change_type = 2)
+		and (todc.change_status = 5)
+	</sql>
+	
+	<!-- 理赔 -->
+	<sql id="selectLipei">
+		select
+			tad.bu_id														bu_id,
+			tad.branch_id													branch_id,
+			to_char(tad.confirm_time ,'yyyy-mm-dd')  						busi_date ,
+			tad.student_id													student_id,
+			0																month_order_amount,
+			0																month_order_course_length,
+			0																month_attend_amount,
+			0																month_attend_course_length,
+			nvl(tad.money, 0) * decode(tad.dynamic_type,3,1,6,-1)			month_lipei
+		from
+			t_account_dynamic tad 
+		where
+			tad.confirm_time >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tad.confirm_time &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and	(tad.status = 3 or tad.status = 4)
+		and (tad.dynamic_type = 3 or tad.dynamic_type = 6)
+	</sql>
+	
+	<!-- 考勤消耗 -->
+	<sql id="selectAttendance">
+		select
+			attend_branch.parent_id											bu_id,
+			tah.attend_branch_id											branch_id,
+			to_char(tah.attend_date ,'yyyy-mm-dd')  						busi_date ,
+			tah.student_id													student_id,
+			0																month_order_amount,
+			0																month_order_course_length,
+			decode(tc.business_type, 
+				1, decode(tah.attend_type, 10, -1, 1),
+				2, decode(tah.attend_type, 20, -1, 21, 1, 0),
+				3, decode(tah.attend_type, 30, -1, 1),
+				0) * nvl(tah.attend_amount, 0)								month_attend_amount,
+			decode(tc.business_type, 
+				1, decode(tah.attend_type, 10, -1, 1),
+				2, decode(tah.attend_type, 20, -1, 21, 1, 0),
+				3, decode(tah.attend_type, 30, -1, 1),
+				0) * nvl(tah.course_times, 1)								month_attend_course_length,
+			0																month_lipei
+		from
+			t_attendance_ht tah 
+		left join tab_organization_info attend_branch
+		    on tah.attend_branch_id = attend_branch.id
+		left join t_order_course toc
+			on tah.order_course_id = toc.id
+		left join t_course tc
+			on toc.course_id = tc.id
+		where
+			tah.attend_date >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tah.attend_date &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tah.ts_flag = 'S'
+	</sql>
+	
+	<sql id="contact_rpt">
+		select * from (
+		   	<include refid="selectFeeDetail41and42"/>
+			union all
+			<include refid="selectFeeDetail53"/>
+			union all
+			<include refid="selectFeeDetail51and54"/>
+			union all
+			<include refid="selectFeeDetail55and54"/>
+			union all
+			<include refid="selectFeeDetail52"/>
+			union all
+			<include refid="selectLipei"/>
+			union all
+			<include refid="selectAttendance"/>
+		)
+	</sql>
+	
+	<insert id="insertByTaskFlow" parameterType="Map">
+		insert into t_month_attend_report
+	      ( id,
+	      	task_flow,
+			bu_id,
+			bu_name,
+			branch_id,
+			branch_name,
+			student_id,
+			student_code,
+			student_name,
+			month_order_amount,
+			month_order_course_length,
+		    month_attend_amount,
+			month_attend_course_length,
+		    month_lipei,
+		    busi_date
+	       )
+	      (select 
+	      		seq_t_month_attend_report.nextval		id,
+	      		#{task_flow} 							task_flow,
+	      		t.bu_id									bu_id,
+	      		org_bu.org_name							bu_name,
+	      		t.branch_id								branch_id, 
+	      		org_branch.org_name						branch_name,
+	      		t.student_id							student_id, 
+	      		stu.encoding							student_code,
+	      		stu.student_name						student_name,
+	      		month_order_amount						month_order_amount,
+				t.month_order_course_length				month_order_course_length,
+			    t.month_attend_amount					month_attend_amount,
+				t.month_attend_course_length			month_attend_course_length,
+			    t.month_lipei							month_lipei,
+	      		t.busi_date								busi_date
+	      from 
+	      	(select
+	      		bu_id, 
+	      		branch_id, 
+	      		student_id, 
+	      		busi_date,
+	      		sum(month_order_amount)				month_order_amount,
+				sum(month_order_course_length)		month_order_course_length,
+			    sum(month_attend_amount)			month_attend_amount,
+				sum(month_attend_course_length)		month_attend_course_length,
+			    sum(month_lipei)					month_lipei
+	      	from 
+				(<include refid="contact_rpt"/>) temp
+	      	group by bu_id, branch_id, student_id, busi_date 
+	      	)	t
+	      	left join tab_student_info stu
+				on t.student_id = stu.id
+			left join tab_organization_info org_bu
+				on t.bu_id = org_bu.id 
+	      	left join tab_organization_info org_branch
+				on t.branch_id = org_branch.id 
+	   )
+	</insert>
+	
+</mapper>

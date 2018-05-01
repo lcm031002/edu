@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.AutoAttendanceReportDao">
+
+	<select id="queryReport" parameterType="map" resultType="com.edu.report.model.TAutoAttendanceReport">
+		select a.*
+		from T_AUTO_ATTENDANCE_REPORT a
+		where
+			a.bu_id = #{bu_id}
+		<if test="branch_id != null and branch_id != '' and branch_id > -1">
+			and a.branch_id = #{branch_id}
+		</if>
+		<if test="start_date != null and start_date != ''">
+			<if test="isCourseTime == 'true'">
+				and a.class_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="isCourseTime != 'true'">
+				and a.attend_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<if test="isCourseTime == 'true'">
+				and a.class_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+			<if test="isCourseTime != 'true'">
+			   and a.attend_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+		</if>
+		order by attend_code
+	</select>
+
+	<delete id="deleteByTaskFlow"  parameterType="HashMap">
+		delete from T_AUTO_ATTENDANCE_REPORT where task_flow = #{taskFlow, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertByTaskFlow" parameterType="HashMap">
+		insert into T_AUTO_ATTENDANCE_REPORT
+	      ( id,
+	      	task_flow,
+			attend_code,
+			teacher_code,
+			teacher_name,
+			subject_name,
+			course_name,
+			manager_name,
+			student_code,
+			student_name,
+			class_date,
+			grade_name,
+			start_time,
+			end_time,
+			class_times,
+			course_times,
+			attend_date,
+			teacher_sign_time,
+			teacher_sign_type,
+			student_sign_time,
+			student_sign_type,
+			order_no,
+			bu_id,
+			bu_name,
+			branch_id,
+			branch_name
+	       )
+	   select seq_t_auto_performance_details.nextval,'${taskFlow}' task_flow,t.* from (
+			select
+			gxh.encoding attend_code /*考勤单据*/,
+			tti.encoding teacher_code /*教师编码*/,
+			tti.teacher_name teacher_name /*教师姓名*/,
+			ts.name subject_name /*科目*/,
+			tc.course_name course_name /*课程名称*/,
+			att.manager_name manager_name /*学管师*/,
+			att.student_number student_code /*学生编码*/,
+			att.student_name student_name /*学生姓名*/,
+			to_char(att.course_date, 'yyyy-mm-dd') class_date /*上课日期*/,
+			att.grade grade_name /*年级*/,
+			to_char(att.start_time, 'hh24:mi:ss') start_time /*上课时间*/,
+			to_char(att.end_time, 'hh24:mi:ss') end_time /*下课时间*/,
+			ROUND((to_date(to_char(att.end_time, 'hh24:mi:ss'), 'hh24:mi:ss') -
+			to_date(to_char(att.start_time, 'hh24:mi:ss'), 'hh24:mi:ss')) * 24 * 60,
+			0) class_times /*上课分钟数*/,
+			gxh.course_times course_times /*消耗课时*/,
+			to_char(gxh.update_time, 'yyyy-mm-dd') attend_date /*学管V3考勤日期*/,
+			to_char(sr.sign_time, 'hh24:mi:ss') teacher_sign_time /*老师签到时间*/,
+			case
+			when sr.sign_type = 1 then
+			'刷卡签到'
+			when sr.sign_type = 2 then
+			'手工补签'
+			else
+			(case
+			when att.tea_sign_flag = 'C' then
+			'学生旷课'
+			else
+			''
+			end)
+			end teacher_sign_type /*老师签到方式*/,
+			to_char(sr2.sign_time, 'hh24:mi:ss') student_sign_time /*学生签到时间*/,
+			case
+			when sr2.sign_type = 1 then
+			'刷卡签到'
+			when sr2.sign_type = 2 then
+			'手工补签'
+			else
+			(case
+			when att.stu_sign_flag = 'C' then
+			'学生旷课'
+			else
+			''
+			end)
+			end student_sign_type /*学生签到方式*/,
+			tod.order_no order_no /*报班单号*/,
+			org_bu.id bu_id,
+			org_bu.org_name bu_name,
+			org.id branch_id,
+			org.org_name branch_name /*业务校区*/
+			from t_attendance gxh
+			join tab_gxh_attendence_info att
+			on att.fnumber = gxh.encoding
+			left join tab_teacher_info tti on gxh.teacher_id = tti.id
+			left join tp_subject ts on gxh.subject_id = ts.id
+			left join t_order_course toc on gxh.order_course_id = toc.id
+			left join t_order tod on toc.order_id = tod.id
+			left join t_course tc on toc.course_id = tc.id
+			left join tab_sign_record sr
+			on sr.id = att.tea_sign_id
+			left join tab_sign_record sr2
+			on sr2.id = att.stu_sign_id
+			left join tab_organization_info org
+			on org.id = gxh.attend_branch_id
+			left join tab_organization_info org_bu
+			on org.parent_id = org_bu.id
+			where
+			gxh.attend_type = 21
+			and att.tea_sign_flag &lt;> 'P' /*排课取消标记*/
+			and att.tea_sign_flag &lt;> 'D' /*考勤单据作废:学生请假*/
+			and to_number(to_char(gxh.update_time,'yyyymmdd'))  BETWEEN #{minOperateNo}  AND #{maxOperateNo}
+	 ) t
+	</insert>
+	
+</mapper>

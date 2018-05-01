@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.TOrderPerformanceDao">
+	<select id="selectForList" parameterType="map"
+		resultType="com.edu.report.model.TOrderPerformance">
+			select id,
+					task_flow,
+					order_number,
+					order_no,
+					bu_id,
+					branch_id,
+					branch_name,
+					performance_branch_id,
+					performance_branch_name,
+					business_date,
+					operate_type_name,
+					student_code,
+					student_name,
+					course_time,
+					course_name,
+					season_id,
+					season_name,
+					grade_name,
+					subject_name,
+					teacher_encoding,
+					teacher_name,
+					agent_id,
+					agent_name,
+					original_create_user,
+					original_create_user_name,
+					recorder,
+					total_course_times,
+					total_return_times,
+					order_type,
+					student_status,
+					performancer
+			from (
+				select id,
+				task_flow,
+				order_number,
+				order_no,
+				bu_id,
+				branch_id,
+				branch_name,
+				performance_branch_id,
+				performance_branch_name,
+				business_date,
+				operate_type_name,
+				student_code,
+				student_name,
+				course_time,
+				course_name,
+				season_id,
+				season_name,
+				grade_name,
+				subject_name,
+				teacher_encoding,
+				teacher_name,
+				agent_id,
+				agent_name,
+				original_create_user,
+				original_create_user_name,
+				recorder,
+				(select nvl(sum(toc.course_total_count),0)
+				from t_order tod, t_order_course toc, tab_student_info tsi
+				where t.student_code = tsi.encoding
+				and tsi.id = tod.student_id
+				and toc.order_id = tod.id
+				and to_char(tod.create_date,'yyyy-MM-dd') &lt;= #{end_date}
+				and toc.course_id in
+				(select id
+				from t_course tc
+				where t.season_id = tc.season_id
+				and t.subject_id = tc.subject_id)) total_course_times,
+				(select nvl(sum(tcc.course_times),0)
+				from t_order           tod,
+				t_order_course    toc,
+				tab_student_info  tsi,
+				t_order_change  tochange,
+				tab_change_course tcc
+				where t.student_code = tsi.encoding
+				and tsi.id = tod.student_id
+				and tod.id = tcc.order_id
+				and tod.id = tochange.order_id
+				and tochange.id = tcc.change_id
+				and tcc.order_course_id = toc.id
+				and tod.order_status = 1
+				and to_char(tochange.input_time,'yyyy-MM-dd') &lt;= #{end_date}
+				and toc.course_id in
+				(select id
+				from t_course tc
+				where t.season_id = tc.season_id
+				and t.subject_id = tc.subject_id)) total_return_times,
+				CASE
+				WHEN newalrate_subject + curr_season_order > 0 then
+				'续单'
+				else
+				'新单'
+				END order_type,
+				case
+				when newalrate > 0 then
+				'续报'
+				when new_student = 0 then
+				'新生'
+				ELSE
+				'沉睡'
+				END student_status,
+				case
+				when newalrate > 0 and newalrate_subject + curr_season_order > 0 then
+				'无'
+				else
+				decode(recorder,
+				null,
+				decode(original_create_user_name,
+				null,
+				agent_name,
+				original_create_user_name),
+				recorder)
+				end performancer,
+				curr_season_times
+				from t_order_performance t
+				where t.bu_id = #{bu_id}
+				<if test="branch_id != null">
+					and t.performance_branch_id = #{ branch_id}
+				</if>
+				<if test="validBranchIds != null and validBranchIds !='' ">
+					and t.performance_branch_id in (${validBranchIds})
+				</if>
+				and t.course_time != 0
+				and t.operate_type_name != '转班'
+				and not exists (
+					select 1
+					from t_order_performance top where t.order_no = top.order_no and top.operate_type_name = '报班作废'
+				    and substr(top.order_no,5,6) = replace(substr(top.business_date,0,7),'-','')
+				)
+				<if test="start_date != null and start_date != ''">
+					<![CDATA[ and t.business_date >= (#{start_date} || ' 00:00:00') ]]>
+				</if>
+				<if test="end_date != null and end_date != ''">
+					<![CDATA[ and t.business_date <= (#{end_date} || ' 23:59:59') ]]>
+				</if>
+				) t_order_performance
+			where case when operate_type_name = '报班' and total_course_times >= 5 and curr_season_times &lt;= 5 then  1
+						when operate_type_name = '报班作废' then 1
+                        when total_return_times > 0 and total_course_times &lt; total_return_times + 5 then 1
+                        else 0
+                        end = 1
+	</select>
+
+	<select id="selectForStatisticsList" parameterType="map"
+			resultType="com.edu.report.model.TBusinessStatistics">
+		select
+		performance_branch_id,
+		performance_branch_name,
+		season_id,
+		season_name,
+		grade_id,
+		grade_name,
+		performance,
+		people,
+		subject,
+		xb_performance,
+		xb_people,
+		xb_subject,
+		xs_performance,
+		xs_people,
+		xs_subject,
+		cs_performance,
+		cs_people,
+		cs_subject
+		from (
+			select performance_branch_id,
+			performance_branch_name,
+			season_id,
+			season_name,
+			grade_id,
+			grade_name,
+			SUM(performance) performance,
+			SUM(students) people,
+			SUM(subjects) subject,
+			SUM(DECODE(student_status,'续报',performance,0)) xb_performance,
+			SUM(DECODE(student_status,'续报',students,0)) xb_people,
+			SUM(DECODE(student_status,'续报',subjects,0)) xb_subject,
+			SUM(DECODE(student_status,'新生',performance,0)) xs_performance,
+			SUM(DECODE(student_status,'新生',students,0)) xs_people,
+			SUM(DECODE(student_status,'新生',subjects,0)) xs_subject,
+			SUM(DECODE(student_status,'沉睡',performance,0)) cs_performance,
+			SUM(DECODE(student_status,'沉睡',students,0)) cs_people,
+			SUM(DECODE(student_status,'沉睡',subjects,0)) cs_subject
+			from (
+			select performance_branch_id,
+			performance_branch_name,
+			season_id,
+			season_name,
+			grade_id,
+			grade_name,
+			student_status,
+			sum(performance) performance,
+			count(student_code) students,
+			sum(subjects) subjects
+
+			from (
+			select performance_branch_id,
+			performance_branch_name,
+			season_id,
+			season_name,
+			grade_id,
+			grade_name,
+			student_code,
+			student_name,
+			student_status,
+			sum(performance) performance,
+			count(subject_name) subjects
+			from (select performance_branch_id,
+			performance_branch_name,
+			season_id,
+			season_name,
+			grade_id,
+			grade_name,
+			student_code,
+			student_name,
+			case when newalrate > 0 then '续报' when new_student = 0 then '新生' ELSE '沉睡' END student_status,
+			subject_id,
+			subject_name,
+			sum(performance) performance,
+			sum(course_time) course_time
+			from t_order_performance
+			where bu_id = #{bu_id}
+			and season_id = #{season_id}
+			<if test="grade_id != null">
+				and grade_id = #{ grade_id}
+			</if>
+			<if test="branch_id != null">
+				and performance_branch_id = #{ branch_id}
+			</if>
+		    <if test="validBranchIds != null and validBranchIds !='' ">
+				and performance_branch_id in (${validBranchIds})
+			</if>
+				group by performance_branch_id,
+				performance_branch_name,
+				grade_id,
+				grade_name,
+				subject_id,
+				subject_name,
+				season_id,
+				season_name,
+				case when newalrate > 0 then '续报' when new_student = 0 then '新生' ELSE '沉睡'	END,
+				student_code,
+				student_name
+				having sum(course_time) > 0)
+				group by performance_branch_id,
+				performance_branch_name,
+				season_id,
+				season_name,
+				grade_id,
+				grade_name,
+				student_code,
+				student_name,
+				student_status )
+				group by    performance_branch_id,
+				performance_branch_name,
+				season_id,
+				season_name,
+				grade_id,
+				grade_name,
+				student_status)
+				group by performance_branch_id,
+				performance_branch_name,
+				season_id,
+				season_name,
+				grade_id,
+				grade_name
+				order by performance_branch_name,grade_name
+		)
+		union all
+		<include refid="sum_op1"/>
+
+	</select>
+
+	<sql id="sum_op1">
+		 select
+			 null performance_branch_id,
+			 '合计:' performance_branch_name,
+			 null,null,null,null,
+				   SUM(performance) performance,
+				   SUM(people) people,
+				   SUM(subject) subject,
+				   SUM(xb_performance) xb_performance,
+				   SUM(xs_people) xb_people,
+				   SUM(xb_subject) xb_subject,
+				   SUM(xs_performance) xs_performance,
+				   SUM(xs_people) xs_people,
+				   SUM(xs_subject) xs_subject,
+				   SUM(cs_performance) cs_performance,
+				   SUM(cs_people) cs_people,
+				   SUM(cs_subject) cs_subject
+			 from (
+
+			 select performance_branch_id,
+				   performance_branch_name,
+				   season_id,
+				   season_name,
+				   grade_id,
+				   grade_name,
+				   SUM(performance) performance,
+				   SUM(students) people,
+				   SUM(subjects) subject,
+				   SUM(DECODE(student_status, '续报', performance, 0)) xb_performance,
+				   SUM(DECODE(student_status, '续报', students, 0)) xb_people,
+				   SUM(DECODE(student_status, '续报', subjects, 0)) xb_subject,
+				   SUM(DECODE(student_status, '新生', performance, 0)) xs_performance,
+				   SUM(DECODE(student_status, '新生', students, 0)) xs_people,
+				   SUM(DECODE(student_status, '新生', subjects, 0)) xs_subject,
+				   SUM(DECODE(student_status, '沉睡', performance, 0)) cs_performance,
+				   SUM(DECODE(student_status, '沉睡', students, 0)) cs_people,
+				   SUM(DECODE(student_status, '沉睡', subjects, 0)) cs_subject
+			  from (select performance_branch_id,
+						   performance_branch_name,
+						   season_id,
+						   season_name,
+						   grade_id,
+						   grade_name,
+						   student_status,
+						   sum(performance) performance,
+						   count(student_code) students,
+						   sum(subjects) subjects
+
+					  from (select performance_branch_id,
+								   performance_branch_name,
+								   season_id,
+								   season_name,
+								   grade_id,
+								   grade_name,
+								   student_code,
+								   student_name,
+								   student_status,
+								   sum(performance) performance,
+								   count(subject_name) subjects
+							  from (select performance_branch_id,
+										   performance_branch_name,
+										   season_id,
+										   season_name,
+										   grade_id,
+										   grade_name,
+										   student_code,
+										   student_name,
+											(case when newalrate > 0 then
+											  '续报'
+											 when new_student = 0 then
+											  '新生'
+											 ELSE
+											  '沉睡'
+										   END) student_status,
+										   subject_id,
+										   subject_name,
+										   sum(performance) performance,
+										   sum(course_time) course_time
+									  from t_order_performance
+										where bu_id = #{bu_id}
+										and season_id = #{season_id}
+										<if test="grade_id != null">
+											and grade_id = #{ grade_id}
+										</if>
+										<if test="branch_id != null">
+											and performance_branch_id = #{ branch_id}
+										</if>
+										<if test="validBranchIds != null and validBranchIds !='' ">
+											and performance_branch_id in (${validBranchIds})
+										</if>
+									 group by performance_branch_id,
+											  performance_branch_name,
+											  grade_id,
+											  grade_name,
+											  subject_id,
+											  subject_name,
+											  season_id,
+											  season_name,
+											  case
+												when newalrate > 0 then
+												 '续报'
+												when new_student = 0 then
+												 '新生'
+												ELSE
+												 '沉睡'
+											  END,
+											  student_code,
+											  student_name
+									having sum(course_time) > 0)
+							 group by performance_branch_id,
+									  performance_branch_name,
+									  season_id,
+									  season_name,
+									  grade_id,
+									  grade_name,
+									  student_code,
+									  student_name,
+									  student_status)
+					 group by performance_branch_id,
+							  performance_branch_name,
+							  season_id,
+							  season_name,
+							  grade_id,
+							  grade_name,
+							  student_status)
+			 group by performance_branch_id,
+					  performance_branch_name,
+					  season_id,
+					  season_name,
+					  grade_id,
+					  grade_name
+
+			 )
+
+ 	</sql>
+	
+	<delete id="deleteTaskFlow" parameterType="HashMap">
+		delete from
+		t_order_performance where task_flow = #{taskFlow}
+	</delete>
+
+	<insert id="saveTaskFlow" parameterType="HashMap">
+		insert into t_order_performance
+		(
+		  id,
+		  task_flow,
+		  order_number,
+		  order_no,
+		  bu_id,
+		  branch_id,
+		  branch_name,
+		  performance_branch_id,
+  		  performance_branch_name,
+		  business_date,
+		  operate_type_name,
+		  student_code,
+		  student_name,
+		  course_time,  
+		  course_name,  
+		  season_id,
+		  season_name,  
+		  grade_name,
+		  subject_name,
+		  teacher_encoding,
+		  teacher_name, 
+		  agent_id,
+		  agent_name, 
+		  original_create_user,
+		  original_create_user_name,
+		  curr_season_order,
+		  curr_season_times,
+		  newalrate_subject,
+      	  newalrate,
+      	  new_student,
+		  recorder,
+      	  performance,
+          performance_id,
+          course_id,
+          grade_id,
+          subject_id
+		)
+		select seq_t_order_performance.nextval,
+	       '${taskFlow}' as task_flow,
+	       tpd.order_number,
+	       tpd.order_no,
+	       tpd.bu_id,
+	       tpd.branch_id,
+	       tpd.branch_name,
+	       tpd.performance_branch_id,
+  		   tpd.performance_branch_name,
+	       tpd.business_date,
+	       tpd.operate_type_name,
+	       tpd.student_code,
+	       tpd.student_name,
+	       tpd.course_time,
+	       tpd.course_name,
+	       tpd.season_id,
+	       tpd.season_name,
+	       tpd.grade_name,
+	       tpd.subject_name,
+	       tpd.teacher_encoding,
+	       tpd.teacher_name,
+	       tpd.agent_id,
+	       tpd.agent_name,
+	       tpd.original_create_user,
+	       tpd.original_create_user_name,
+	       (select count(0)
+                from t_attendance ta, t_order tod,t_order_course toc, t_course_scheduling tcs,t_course tc,tab_student_info tsi
+                 where  tpd.student_code = tsi.encoding
+              and tpd.order_no = tod.order_no
+                  and tod.id != toc.order_id
+                and tpd.season_id = tc.season_id
+                and tsi.id = ta.student_id
+                and ta.scheduling_id = tcs.id
+                and tcs.order_course_id = toc.id
+                and tcs.course_id = tc.id
+                and tpd.subject_id = tc.subject_id
+                and tpd.business_date > to_char(ta.attend_date,'yyyy-MM-dd hh24:mm:ss')
+                and ta.attend_type = 12
+           ) curr_season_order,
+           (select nvl(sum(toc.course_total_count),0)
+                from t_order tod,t_order_course toc,t_course tc,tab_student_info tsi
+                 where  tpd.student_code = tsi.encoding
+                  and tsi.id = tod.student_id
+                  and tpd.order_no != tod.order_no
+                  and tod.id = toc.order_id
+                  and tpd.season_id = tc.season_id
+                and toc.course_id = tc.id
+                and tpd.subject_id = tc.subject_id
+                and toc.root_course_id is null
+                and tod.order_status = 1
+                and substr(tpd.business_date,0,7) > to_char(tod.create_date,'yyyy-MM')
+           ) curr_season_times,
+           (select count(0)
+	              from t_attendance ta, t_course_scheduling tcs,t_course tc,tab_student_info tsi,tab_time_season tts
+	               where  tpd.student_code = tsi.encoding
+	              and tpd.season_id = tts.id
+	              and tts.last_season_id = tc.season_id
+	              and tsi.id = ta.student_id
+	              and ta.scheduling_id = tcs.id
+	              and tcs.course_id = tc.id
+	              and tpd.subject_id = tc.subject_id
+	              and ta.attend_type = 12
+	       ) newalrate_subject,
+           (select count(0)
+                from t_attendance ta, t_course_scheduling tcs,t_course tc,tab_student_info tsi,tab_time_season tts
+                 where  tpd.student_code = tsi.encoding
+                and tpd.season_id = tts.id
+                and tts.last_season_id = tc.season_id
+                and tsi.id = ta.student_id
+                and ta.scheduling_id = tcs.id
+                and tcs.course_id = tc.id
+                and ta.attend_type = 12
+           ) newalrate,
+           (select count(0)
+                from t_attendance ta, t_course_scheduling tcs,t_course tc,tab_student_info tsi
+                 where  tpd.student_code = tsi.encoding
+                and tpd.season_id > tc.season_id
+                and tsi.id = ta.student_id
+                and ta.scheduling_id = tcs.id
+                and tcs.course_id = tc.id
+                and ta.attend_type = 12
+           ) new_student,
+          (
+             select
+             tei.employee_name
+             from tab_student_recorder tsr,tab_student_info tsi,tab_user_info tui, tab_employee_info tei
+             where tsr.student_id = tsi.id
+             and tpd.student_code = tsi.encoding
+             and tsr.user_id = tui.id
+             and tui.employee_id = tei.id
+             and to_date(substr(tpd.business_date,0,10),'yyyy-MM-dd') between tsr.start_date and tsr.end_date
+          ) recorder,
+          tpd.performance,
+          tpd.id performance_id,
+          tpd.course_id,
+          tpd.grade_id,
+          tpd.subject_id
+		  from t_performance_details tpd
+		  where
+		   date_long_value BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	</insert>
+
+</mapper>

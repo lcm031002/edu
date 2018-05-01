@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.AttendanceReportDao">
+
+	<select id="queryReport" parameterType="Map" resultType="com.edu.report.model.TAttendanceReport" fetchSize="1000">
+		select a.id,
+		       a.order_no,
+		       a.bu_id,
+		       a.bu_name,
+		       a.branch_id,
+		       a.branch_name, /*业务校区*/
+		       a.performance_bu_id,
+		       a.performance_bu_name,
+		       a.performance_branch_id,
+		       a.performance_branch_name,
+		       a.student_code,
+		       a.student_name,
+		       a.amount, /*金额*/
+		       a.course_hour, /*消耗课时*/
+		       a.course_id,
+		       a.course_name,
+               case  a.is_textbooks
+               when 0 then
+               '否'
+               when 1 then
+               '是'
+               else
+               '未设置'
+               end is_textbookstag,
+		       a.course_no,
+		       a.course_count,
+		       a.course_time,
+		       a.teacher_id,
+		       a.teacher_name,
+		       a.grade_id,
+		       a.grade_name,
+		       a.subject_id,
+		       a.subject_name,
+		       a.length,
+		       a.course_date,
+		       a.start_time,
+		       a.end_time,
+		       a.attend_date,
+		       a.attend_type,
+		       a.attend_type_name,
+		       a.attend_type_last,
+		       a.attend_type_last_name,
+		       a.is_next_month,
+		       a.is_next_month_name,
+               a.order_discount,
+		       a.counselor_id,
+		       nvl(a.counselor_name,a.chinese_teacher_name) counselor_name,
+		       a.chinese_teacher_id,
+		       a.chinese_teacher_name,
+		       a.chinese_teacher_length,
+		       a.foreign_teacher_id,
+		       a.foreign_teacher_name,
+		       a.foreign_teacher_length,
+               a.spoken_language_hour,
+		       a.business_type,
+		       a.task_flow,
+		       a.assteacher_id,
+		       a.assteacher_name,
+		       a.attend_encoding,
+		       c.grade_name as now_grade,
+               a.room_name,
+               a.order_remark,
+               a.attendance_remark,
+               a.chinese_teacher_remark,
+               a.foreign_teacher_remark,
+               toi.org_name course_branch_name
+        from t_attendance_report a
+		left join t_attendance_ht ht on a.attendance_ht_id = ht.id
+		left join tab_student_info b
+		on ht.student_id=b.id
+		left join tab_data_grade c
+		on b.grade_id=c.id
+        left join  t_course tc on  a.course_id = tc.id
+        left join tab_organization_info toi on tc.branch_id = toi.id
+        where
+			a.performance_bu_id = #{bu_id}
+		<if test="branch_id != null and branch_id != '' and branch_id > -1">
+            <if test="branch_name == '个性化'">
+                and a.branch_id = #{branch_id}
+            </if>
+            <if test="branch_name != '个性化'">
+                <if test="business_type == 2">
+                    and a.branch_id = #{branch_id}
+                </if>
+                <if test="business_type != 2">
+                    and a.performance_branch_id = #{branch_id}
+                </if>
+            </if>
+		</if>
+        <if test="validBranchIds != null and validBranchIds !='' ">
+            <if test="business_type == 2">
+                and a.branch_id in (${validBranchIds})
+            </if>
+            <if test="business_type != 2">
+                and a.performance_branch_id in (${validBranchIds})
+            </if>
+        </if>
+		<if test="start_date != null and start_date != ''">
+			<if test="isCourseTime == 'true'">
+				and a.course_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="isCourseTime != 'true'">
+				and a.attend_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<if test="isCourseTime == 'true'">
+				and a.course_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+			<if test="isCourseTime != 'true'">
+			   and a.attend_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+		</if>
+		<if test="business_type != null and business_type != '' and business_type > -1">
+			and a.business_type = #{business_type}
+		</if>
+	union all
+		select
+			null id,
+			null order_no, 
+			null bu_id,
+			null bu_name,
+			null branch_id,
+			'合计' branch_name,  /*业务校区*/
+			null performance_bu_id,
+			null performance_bu_name,
+			null performance_branch_id,
+			null performance_branch_name,
+			null student_code,
+			null student_name,
+			sum(nvl(amount,0)) amount, /*金额*/
+			sum(nvl(course_hour,0)) course_hour, /*消耗课时*/
+	        null course_id,
+	        null course_name,
+            null is_textbookstag,
+	        null course_no,
+	        null course_count,
+	        null course_time,
+	        null teacher_id,
+	        null teacher_name,
+	        null grade_id,
+	        null grade_name,
+	        null subject_id,
+	        null subject_name,
+	        null length,
+	        null course_date,
+	        null start_time,
+	        null end_time,
+	        null attend_date,
+	        null attend_type,
+	        null attend_type_name,
+	        null attend_type_last,
+	        null attend_type_last_name,
+	        null is_next_month,
+	        null is_next_month_name,
+            null order_discount,
+	        null counselor_id,
+	        null counselor_name,
+	        null chinese_teacher_id,
+	        null chinese_teacher_name,
+	        null chinese_teacher_length,
+	        null foreign_teacher_id,
+	        null foreign_teacher_name,
+	        null foreign_teacher_length,
+            null spoken_language_hour,
+	        null business_type,
+			null task_flow,
+			null assteacher_id,
+			null assteacher_name,
+		    null attend_encoding,
+		    null now_grade,
+            null room_name,
+            null order_remark,
+            null attendance_remark,
+            null chinese_teacher_remark,
+            null foreign_teacher_remark,
+            null course_branch_name
+        from t_attendance_report t
+		where
+			t.performance_bu_id = #{bu_id}
+		<if test="branch_id != null and branch_id != '' and branch_id > -1">
+            <if test="branch_name == '个性化'">
+                and t.branch_id = #{branch_id}
+            </if>
+            <if test="branch_name != '个性化'">
+                <if test="business_type == 2">
+                    and t.branch_id = #{branch_id}
+                </if>
+                <if test="business_type != 2">
+                    and t.performance_branch_id = #{branch_id}
+                </if>
+            </if>
+		</if>
+        <if test="validBranchIds != null and validBranchIds !='' ">
+            <if test="business_type == 2">
+                and t.branch_id in (${validBranchIds})
+            </if>
+            <if test="business_type != 2">
+                and t.performance_branch_id in (${validBranchIds})
+            </if>
+        </if>
+		<if test="start_date != null and start_date != ''">
+			<if test="isCourseTime == 'true'">
+				and t.course_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="isCourseTime != 'true'">
+				and t.attend_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<if test="isCourseTime == 'true'">
+				and t.course_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+			<if test="isCourseTime != 'true'">
+			   and t.attend_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+		</if>
+		<if test="business_type != null and business_type != '' and business_type > -1">
+			and t.business_type = #{business_type}
+		</if>
+	</select>
+
+	<delete id="deleteByTaskFlow"  parameterType="Map">
+		delete from t_attendance_report where task_flow = #{task_flow, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertByTaskFlow" parameterType="Map">
+    insert into t_attendance_report
+      (id,
+       attendance_ht_id,
+       order_no,
+       bu_id,
+       bu_name,
+       branch_id,
+       branch_name, /*业务校区*/
+       performance_bu_id,
+       performance_bu_name,
+       performance_branch_id,
+       performance_branch_name,
+       student_code,
+       student_name,
+       amount, /*金额*/
+       course_hour, /*消耗课时*/
+       course_id,
+       course_name,
+       course_no,
+       is_textbooks,
+       course_count,
+       course_time,
+       teacher_id,
+       teacher_name,
+       grade_id,
+       grade_name,
+       subject_id,
+       subject_name,
+       length,
+       course_date,
+       start_time,
+       end_time,
+       attend_date,
+       attend_type,
+       attend_type_name,
+       attend_type_last,
+       attend_type_last_name,
+       is_next_month,
+       is_next_month_name,
+       order_discount,
+       counselor_id,
+       counselor_name,
+       chinese_teacher_id,
+       chinese_teacher_name,
+       chinese_teacher_length,
+       foreign_teacher_id,
+       foreign_teacher_name,
+       foreign_teacher_length,
+       spoken_language_hour,
+       business_type,
+       assteacher_id,
+       assteacher_name,
+       attend_encoding,
+       room_name,
+       order_remark,
+       attendance_remark,
+       CHINESE_TEACHER_REMARK,
+       FOREIGN_TEACHER_REMARK,
+       task_flow)
+      select seq_t_attendance_report.nextval id, tmp.*
+        from ((select distinct t.id attendance_ht_id,
+                               toi.encoding order_no,
+                               nvl(attend_branch_bu.id, org_bu.id) bu_id,
+                               nvl(attend_branch_bu.org_name, org_bu.org_name) bu_name,
+                               nvl(attend_branch.id, org.id) branch_id,
+                               nvl(attend_branch.org_name, org.org_name) branch_name,
+                               case
+                                 when cou.performance_belong_type = 1 then
+                                  branch_bu.id
+                                 else
+                                  cou.bu_id
+                               end performance_bu_id, /* 业绩团队 */
+                               case
+                                 when cou.performance_belong_type = 1 then
+                                  branch_bu.org_name
+                                 else
+                                  cou.bu_name
+                               end performance_bu_name, /* 业绩团队 */
+                               case
+                                 when cou.performance_belong_type = 1 then
+                                  branch.id
+                                 else
+                                  couBranch.id
+                               end performance_branch_id, /* 业绩校区 */
+                               case
+                                 when cou.performance_belong_type = 1 then
+                                  branch.org_name
+                                 else
+                                  couBranch.org_name
+                               end performance_branch_name, /* 业绩校区 */
+                               stu.encoding student_code, /*学生编码*/
+                               stu.student_name student_name, /*学生*/
+                               case
+                                 when t.attend_type = 10 or t.attend_type = 29 or
+                                      t.attend_type = 30 then
+                                  abs(nvl(t.att_amount, t.attend_amount)) * -1
+                                 else
+                                  abs(nvl(t.att_amount, t.attend_amount))
+                               end amount, /*金额*/
+                               case
+                                 when t.attend_type = 10 or t.attend_type = 29 or
+                                      t.attend_type = 30 then
+                                  abs(nvl(sch.course_cnt,
+                                      nvl(nvl(t.times, t.course_times), 1))) * -1
+                                 else
+                                  abs(nvl(sch.course_cnt,
+                                      nvl(nvl(t.times, t.course_times), 1)))
+                               end course_hour, /*消耗课时*/
+                               cou.course_id course_id,
+                               cou.course_name  course_name, /*课程*/
+                               cou.course_encoding course_no,
+                               cou.is_textbooks as is_textbook,
+                               toc.course_total_count course_count, /*报班总次数*/
+                               sch.course_times course_time, /*课次*/
+                               case when tea2.teacher_name is not null then tea2.id else tea.id end teacher_id, /*老师*/
+                               case when tea2.teacher_name is not null then tea2.teacher_name else tea.teacher_name end teacher_name, /*老师*/
+                               cou.grade_id grade_id,
+                               cou.grade_name grade_name,
+                               case
+                                 when cou.subject_id is not null then
+                                  cou.subject_id
+                                 else
+                                  t.subject_id
+                               end subject_id, /*科目*/
+                               case
+                                 when cou.subject_name is not null then
+                                  cou.subject_name
+                                 else
+                                  subject.name
+                               end subject_name, /*科目*/
+                               cou.hour_len length, /*课时长度*/
+                               to_char(to_date(nvl(sch.course_date,
+                                                   t.course_date),
+                                               'YYYYMMDD'),
+                                       'yyyy-mm-dd') course_date, /*上课日期*/
+                               nvl(t.start_time, sch.start_time) start_time,
+                               nvl(t.end_time, sch.end_time) end_time,
+                               to_char(t.attend_date, 'yyyy-mm-dd') attend_date, /*考勤日期*/
+                               t.attend_type attend_type,
+                               attType.name attend_type_name, /*考勤状态*/
+                               t.last_attend_type attend_type_last,
+                               case t.last_attend_type
+                                 when 12 then
+                                  '正常上课'
+                                 when 10 then
+                                  '置空'
+                                 when 11 then
+                                  '挂起'
+                                 when 31 then
+                                  '正常上课'
+                                 when 30 then
+                                  '置空'
+                                 when 21 then
+                                  '正常上课'
+                                 when 20 then
+                                  '置空'
+                                 else
+                                  '初始化'
+                               end attend_type_last_name,
+                               case
+                                 when substr(to_char(nvl(sch.course_date,
+                                                         t.course_date)),
+                                             1,
+                                             6) -
+                                      to_char(t.attend_date, 'yyyymm') = 0 then
+                                  0
+                                 else
+                                  1
+                               end is_next_month, /*跨月考勤*/
+                               case
+                                 when substr(to_char(nvl(sch.course_date,
+                                                         t.course_date)),
+                                             1,
+                                             6) -
+                                      to_char(t.attend_date, 'yyyymm') = 0 then
+                                  '否'
+                                 else
+                                  '是'
+                               end is_next_month_name, /*跨月考勤*/
+                               CASE WHEN(
+                                toc.former_unit_price = toc.discount_unit_price
+                                )
+                                THEN 0
+                                ELSE ROUND( decode( toc.former_unit_price ,0 ,NULL
+                                ,toc.discount_unit_price / toc.former_unit_price ) ,2 )
+                                END order_discount ,/*订单折扣*/
+                               case when (attend_branch_bu.product_line=11) then /*佳音*/
+                                 nvl(cnselor.id, t.course_manager)
+                               else
+                                 nvl(nvl(nvl(cnselor.id, t.course_manager),coursetimes_employee.id),course_employee.id)
+                                 end counselor_id, /*学管师id*/
+                               case when (attend_branch_bu.product_line=11) then /*佳音*/
+                                 nvl(cnselor.employee_name,hei.employee_name )
+                               else
+                                 nvl(nvl(nvl(cnselor.employee_name,hei.employee_name ),coursetimes_employee.employee_name),course_employee.employee_name)
+                                 end counselor_name, /*学管师姓名*/
+                               t.course_tearcher_cn chinese_teacher_id, /*中教id*/
+                               hti_cn.teacher_name chinese_teacher_name, /*中教姓名*/
+                               t.course_tearcher_cn_hour chinese_teacher_length, /*中教课时长度*/
+                               t.course_tearcher_en foreign_teacher_id, /*外教id*/
+                               hti_en.teacher_name foreign_teacher_name, /*外教姓名*/
+                               t.course_tearcher_en_hour foreign_teacher_length, /*外教课时长度*/
+                               t.spoken_language_hour,
+                               toi.business_type business_type,
+                               ass.id as assteacher_id,
+                               ass.teacher_name as assteacher_name,
+                               nvl(t.encoding, t.attendance_id) as attend_encoding ,
+                               c.room_name,
+                               toi.remark as order_remark,
+                               t.remark as attendance_remark,
+                               t.COURSE_TEARCHER_CN_REMARK as CHINESE_TEACHER_REMARK,
+                               t.COURSE_TEARCHER_EN_REMARK as FOREIGN_TEACHER_REMARK,
+                 #{task_flow}
+                 from (select distinct taht.id,
+                                       taht.scheduling_id,
+                                       taht.student_id,
+                                       taht.attend_user,
+                                       taht.attend_date,
+                                       taht.attend_branch_id,
+                                       taht.attend_amount,
+                                       taht.attend_type,
+                                       taht.ts_flag,
+                                       taht.carried,
+                                       taht.create_user,
+                                       taht.create_time,
+                                       taht.update_user,
+                                       taht.update_time,
+                                       taht.course_date,
+                                       taht.remark,
+                                       taht.attendance_id,
+                                       taht.counselor_id,
+                                       taht.teacher_id,
+                                       taht.for_quit,
+                                       taht.start_time,
+                                       taht.end_time,
+                                       taht.subject_id,
+                                       taht.attend_type_teacher,
+                                       taht.last_attend_type,
+                                       taht.course_times,
+                                       taht.sub_attend_type,
+                                       taht.encoding,
+                                       taht.audit_status,
+                                       taht.course_manager,
+                                       taht.course_tearcher_cn,
+                                       taht.course_tearcher_cn_hour,
+                                       taht.course_tearcher_en,
+                                       taht.course_tearcher_en_hour,
+                                       taht.spoken_language_hour,
+                                       nvl(tss.order_course_id,
+                                           taht.order_course_id) order_course_id,
+                                       tss.times,
+                                       tss.attend_amount att_amount,
+                                       taht.COURSE_TEARCHER_CN_REMARK,
+                                       taht.COURSE_TEARCHER_EN_REMARK
+                         from t_attendance_ht taht
+                         left join T_SCHEDULE_SPLITTIME tss
+                           on taht.attendance_id = tss.attend_id
+                          and tss.times > 0
+                          where taht.attend_date >= to_date(#{minOperateNo},'yyyyMMdd')
+                               and taht.attend_date &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+                               and taht.attend_type not in (23,28,20)
+                       ) t
+                 left join tab_employee_info cnselor
+                   on t.counselor_id = cnselor.id
+                 left join tab_organization_info attend_branch
+                   on t.attend_branch_id = attend_branch.id
+                 left join tab_organization_info attend_branch_bu
+                   on attend_branch.parent_id = attend_branch_bu.id
+                 join t_order_course toc
+                   on toc.id = t.order_course_id
+                 left join t_course_scheduling sch
+                   on t.scheduling_id = sch.id
+                 left join vt_course cou
+                   on toc.course_id = cou.course_id
+                 left join t_course_room_rel b on b.course_id = sch.course_id and b.seq = sch.course_times
+                 left join t_room c  on c.id = b.room_id
+                 left join tp_subject subject
+                   on subject.id = t.subject_id
+                 left join tp_attend_type attType
+                   on t.attend_type = attType.id
+                 left join tab_student_info stu
+                   on t.student_id = stu.id
+                 left join tab_teacher_info tea
+                   on sch.teacher_id = tea.id
+                 left join tab_teacher_info tea2
+                   on t.teacher_id = tea2.id
+                 left join tab_organization_info org
+                   on toc.branch_id = org.id
+                 left join tab_organization_info org_bu
+                   on org.parent_id = org_bu.id
+                 left join tab_order_info toi
+                   on toi.id = toc.order_id
+                 left join tab_organization_info branch
+                   on toi.branch_id = branch.id
+                 left join tab_organization_info branch_bu
+                   on branch.parent_id = branch_bu.id
+                 left join tab_organization_info couBranch
+                   on couBranch.Id = cou.branch_id
+
+                 left join tab_employee_info hei
+                   on hei.id = t.course_manager
+                 left join tab_teacher_info hti_cn
+                   on hti_cn.id = t.course_tearcher_cn
+                 left join tab_teacher_info hti_en
+                   on hti_en.id = t.course_tearcher_en
+                 left join tab_teacher_info ass /* 辅导老师 */
+                   on ass.id = sch.assteacher_id
+                 left join /* 课程默认学管  一个课程只永远一个课程学管 */
+                (select assist.course_id, employee.id, employee.employee_name
+                  from t_course_scheduling_assist assist
+                  join tab_employee_info employee
+                    on to_char(employee.id) = assist.course_val
+                   and assist.course_key = 'course_manager'
+                 where assist.course_time is null) course_employee
+                   on course_employee.course_id = toc.course_id
+                  left join /*  课程课次默认学管师 */
+                (select assist.scheduling_id, employee.id, employee.employee_name
+                  from t_scheduling_times_assist assist
+                  join tab_employee_info employee
+                    on to_char(employee.id) = assist.course_val
+                   and assist.course_key = 'course_manager') coursetimes_employee
+                   on coursetimes_employee.scheduling_id = t.scheduling_id
+                   )) tmp
+	</insert>
+	
+</mapper>

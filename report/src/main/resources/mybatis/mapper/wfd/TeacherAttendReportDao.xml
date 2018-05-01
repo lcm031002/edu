@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.TeacherAttendReportDao">
+
+	<select id="queryReport" parameterType="map" resultType="com.edu.report.model.TTeacherAttendReport">
+		with contact_rpt as (
+			select 
+			id,
+			branch_id,
+			branch_name,
+			bu_id,bu_name,
+			teacher_code,
+			teacher_id,
+			teacher_name,
+			teacher_attend_date,
+			teacher_attend_length ,
+			teacher_attend_type,
+			teacher_attend_type_name,
+			attend_date,
+			attender_id,
+			attender_name
+			from t_wfdteacher_attend_report
+			<trim prefix="where" prefixOverrides="and">
+				<if test="bu_id != null and bu_id > -1">
+					and bu_id = #{bu_id}
+				</if>
+				<if test="branch_id != null and branch_id > -1">
+					and branch_id = #{branch_id}
+				</if>
+			    <if test="validBranchIds != null and validBranchIds !='' ">
+			        and branch_id in (${validBranchIds})
+			     </if>
+				<if test="calcBeginDate != null">
+					<if test="isCourseTime == 'true'">
+							<![CDATA[and teacher_attend_date >= replace(#{calcBeginDate, jdbcType=VARCHAR},'-')]]>
+					</if>
+					<if test="isCourseTime != 'true'">
+						    <![CDATA[and attend_date >= replace(#{calcBeginDate, jdbcType=VARCHAR},'-')]]>
+					</if>
+				</if>
+				<if test="calcEndDate != null">
+					<if test="isCourseTime == 'true'">
+							<![CDATA[and teacher_attend_date <= replace(#{calcEndDate, jdbcType=VARCHAR},'-')]]>
+					</if>	
+					<if test="isCourseTime != 'true'">
+					    	<![CDATA[and attend_date <= replace(#{calcEndDate, jdbcType=VARCHAR},'-')]]>
+					</if>	
+				</if>
+				<if test="search_key !=null and search_key != ''">
+					and teacher_name like '%${search_key}%' 
+					<!-- (teacher_name like '%${search_key}% or teacher_code like '%${search_key}%  or teacher_id like '%${search_key}% ) -->
+				</if>
+			</trim>
+			<choose>
+				<when test="isCourseTime == 'true'">
+					order by teacher_attend_date desc
+				</when>
+				<otherwise>
+					order by attend_date desc
+				</otherwise>
+			</choose>
+			
+		)
+		select * from contact_rpt 
+		union all (
+			select distinct
+			null id,
+			null branch_id,
+			'合计' branch_name,
+			null bu_id,
+			null bu_name,
+			null teacher_code,
+			null teacher_id,
+			null teacher_name,
+			null teacher_attend_date,
+			sum(nvl(teacher_attend_length,0))teacher_attend_length ,
+			null teacher_attend_type,
+			null teacher_attend_type_name,
+			null attend_date,
+			null attender_id,
+			null attender_name
+	 		from 
+	 		contact_rpt t
+		)
+	</select>
+	
+	<delete id="deleteByTaskFlow" parameterType="map">
+		delete from t_wfdteacher_attend_report where task_flow = #{task_flow, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertByTaskFlow" parameterType="map">
+	insert into t_wfdteacher_attend_report(
+		id,
+		branch_id,
+		branch_name,
+		bu_id,
+		bu_name,
+		teacher_id,
+		teacher_code,
+		teacher_name,
+		teacher_attend_date,
+		teacher_attend_length,
+		teacher_attend_type,
+		teacher_attend_type_name,
+		attend_date,
+		attender_id,
+		attender_name,
+		task_flow
+	)  (
+		select attend.id id,
+	       branch.id branch_id,
+	       branch.org_name branch_name,
+	       bu.id bu_id,
+	       bu.org_name bu_name,
+	       teacher.id teacher_id,
+	       teacher.encoding teacher_code,
+	       teacher.teacher_name teacher_name,
+	       attend.course_date teacher_attend_date,
+	       case
+	         when attend.attend_type = 31 then
+	          '1'
+	         when attend.attend_type = 30 then
+	          '-1'
+	       end teacher_attend_length,
+	       attend.attend_type teacher_attend_type,
+	       case
+	         when attend.attend_type = 31 then
+	          '正常上课'
+	         when attend.attend_type = 30 then
+	          '置空'
+	       end teacher_attend_type_name,
+	       
+	       to_char(attend.attend_date, 'yyyymmdd') attend_date,
+	       employ.id attender_id,
+	       employ.employee_name attender_name,
+	       #{task_flow}
+	  from t_attendance_ht attend
+	  join tab_teacher_info teacher on attend.ts_flag = 'T' and attend.student_id = teacher.id
+	  join tab_organization_info branch on attend.attend_branch_id = branch.id
+	  left join tab_organization_info bu on branch.parent_id = bu.id
+	  left join tab_user_info us on us.id = attend.attend_user
+	  left join tab_employee_info employ on us.employee_id = employ.id
+	  <trim prefix="where" prefixOverrides="and">
+			<if test="buId != null and buId != -1">
+			   and 	branch.parent_id = #{buId, jdbcType=NUMERIC}
+			</if>
+		   <if test="branchId != null and branchId != -1">
+		  	   and  attend.attend_branch_id = #{branchId, jdbcType=NUMERIC}
+			</if>
+			and to_number(to_char(attend.attend_date,'yyyymmdd')) BETWEEN #{minOperateNo} AND #{maxOperateNo}
+			and not exists (select 1 from t_wfdteacher_attend_report war where war.id=attend.id)
+		</trim>
+	)
+	
+	</insert>
+	
+</mapper>

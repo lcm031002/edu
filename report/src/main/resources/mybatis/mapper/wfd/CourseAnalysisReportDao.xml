@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.CourseAnalysisReportDao">
+
+	<select id="queryCourseAnalysisReport" parameterType="map" resultType="map">
+		select "id",
+		"courseName",
+		"courseNo",
+		"attendClassPeriod",
+		"branchId",
+		"branchName",
+		"startDate",
+		"endDate",
+		"settleAccountsStartDate",
+		"settleAccountsEndDate",
+		"subjectId",
+		"subjectName",
+		"teacherIdEn",
+		"teacherNameEn",
+		"teacherIdCn",
+		"teacherNameCn",
+		"assTeacherName",
+		"studentCount",
+		"attendStudentCount",
+		("studentCount" - "attendStudentCount") as "diffCount"
+		from (
+		select tcou.id as "id",
+		tcou.course_name as "courseName",
+		tcou.course_no as "courseNo",
+		(case
+		when length(tcou.attend_class_period) = 1 then
+		tcou.attend_class_period || '~' || tcou.start_time || '-' ||
+		tcou.end_time
+		when instr(tcou.attend_class_period, ',') = 2 and
+		instr(tcou.attend_class_period, '~') &gt; 0 then
+		substr(tcou.attend_class_period, 1, 1) || '~' || tcou.start_time || '-' ||
+		tcou.end_time || substr(tcou.attend_class_period, 2)
+		when instr(tcou.attend_class_period, ',') &gt; 0 and
+		instr(tcou.attend_class_period, '~') &lt;= 0 then
+		tcou.attend_class_period || '~' || tcou.start_time || '-' ||
+		tcou.end_time
+		else
+		tcou.attend_class_period
+		end) as "attendClassPeriod",
+		tcou.branch_id as "branchId",
+		toi.org_name as "branchName",
+		tcou.start_date as "startDate",
+		tcou.end_date as "endDate",
+		<if test="dateType == 2">nvl(vcsad.start_date, tcou.start_date) as "settleAccountsStartDate",
+			nvl(
+			vcsad.end_date, tcou.end_date) as "settleAccountsEndDate",
+		</if>
+						<if test="dateType == null or dateType == 1">
+							tcou.start_date as "settleAccountsStartDate",
+							tcou.end_date as "settleAccountsEndDate",
+						</if>
+						tcou.subject_id as "subjectId",
+						ts.name as "subjectName",
+						nvl(tti_en.id, tcou.assteacher_id) as "teacherIdEn",
+						nvl(tti_en.teacher_name, tti_ass.teacher_name) as "teacherNameEn",
+						nvl(tti_cn.id, tcou.teacher_id) as "teacherIdCn",
+						nvl(tti_cn.teacher_name, tti.teacher_name) as "teacherNameCn",
+						tti_ass.teacher_name as "assTeacherName",
+						(select count(distinct tord.student_id)
+						from t_order tord, t_order_course toco
+						where tord.id = toco.order_id
+						and toco.course_id = tcou.id
+						and tord.order_status = 1) as "studentCount",
+						(select count(distinct tord.student_id)
+						from t_order tord, t_order_course toco, t_attendance tatt
+						where tord.id = toco.order_id
+						and toco.course_id = tcou.id
+						and tatt.order_course_id = toco.id
+						and tatt.attend_type = 12
+						and tord.order_status = 1) as "attendStudentCount"
+		from t_course tcou
+		<if test="dateType == 2">
+			left join vt_course_settle_accounts_date vcsad
+			on vcsad.course_id = tcou.id
+			and vcsad.branch_id = tcou.branch_id
+		</if>
+		left join t_course_scheduling_assist tcsa_en
+		on tcsa_en.course_id = tcou.id
+		and tcsa_en.course_key = 'course_tearcher_en'
+		left join t_course_scheduling_assist tcsa_cn
+		on tcsa_en.course_id = tcou.id
+		and tcsa_en.course_key = 'course_tearcher_cn'
+		left join tab_teacher_info tti
+		on tti.id = tcou.teacher_id
+		left join tab_teacher_info tti_ass
+		on tti_ass.id = tcou.assteacher_id
+		left join tab_teacher_info tti_en
+		on tti_en.id = tcsa_en.course_val
+		left join tab_teacher_info tti_cn
+		on tti_cn.id = tcsa_en.course_val
+		left join tab_organization_info toi
+		on toi.id = tcou.branch_id
+		left join tp_subject ts
+		on ts.id = tcou.subject_id
+		where tcou.status = 1
+		and tcou.branch_id = #{branchId}
+		<if test="dateType == 2">
+			and nvl(vcsad.end_date, tcou.end_date) between #{startDate} and #{endDate}
+		</if>
+		<if test="dateType == null or dateType == 1">
+			and tcou.end_date between #{startDate} and #{endDate}
+		</if>
+		<if test="courseInfo != null and courseInfo != ''">
+			and (tcou.course_no like '%${courseInfo}%' or tcou.course_name like '%${courseInfo}%')
+		</if>
+		<if test="teacherId != null and teacherId != ''">
+			and tcou.teacher_id = #{teacherId}
+		</if>
+		order by tcou.start_date desc)
+	</select>
+
+</mapper>

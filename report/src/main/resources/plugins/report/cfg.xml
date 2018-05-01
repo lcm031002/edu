@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+
+	<!--报表任务 -->
+	<tasks>
+		<task>
+			<!--任务id -->
+			<taskId>common.t_performance_details</taskId>
+			<!--任务名称 -->
+			<name>学员业绩明细</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TPerformanceDetailsTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>10</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id 20150516 -->
+			<startId>20150516</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+		<task>
+			<!--任务id -->
+			<taskId>common.t_account_report</taskId>
+			<!--任务名称 -->
+			<name>学员账户剩余</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TAccountTask
+			</classImpl>
+			<!--依赖的表 -->
+			<tables>t_account</tables>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>H</unit>
+			<!--运行周期 -->
+			<period>24</period>
+			<!--开始执行时间 -->
+			<runTime>23:59</runTime>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+		<task>
+			<!--任务id -->
+			<taskId>common.t_surplus_amount_fee</taskId>
+			<!--任务名称 -->
+			<name>剩余课时费用表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TSurplusAmountFeeTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>H</unit>
+			<!--运行周期 -->
+			<period>24</period>
+			<!--开始执行时间 -->
+			<runTime>23:59</runTime>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+
+		<task>
+			<!--任务id -->
+			<taskId>common.t_account_change</taskId>
+			<!--任务名称 -->
+			<name>学员账户流水信息</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TAccountFlowTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>10</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id，预计1一个小时能够跑完所有的流水 -->
+			<startId>20150506</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+
+		<task>
+			<!--任务id -->
+			<taskId>common.t_account_recharge_cash</taskId>
+			<!--任务名称 -->
+			<name>充值取现表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TAccountRechargeCashTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>10</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id 1326787 -->
+			<startId>20150516</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+
+		<task>
+			<!--任务id -->
+			<taskId>common.t_account_cashier</taskId>
+			<!--任务名称 -->
+			<name>出纳报表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TAccountCashierTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>10</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+
+		<task>
+			<!--任务id -->
+			<taskId>common.t_order_change_report</taskId>
+			<!--任务名称 -->
+			<name>报冻退转报表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TOrderChangeReportTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>10</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id 1326787 -->
+			<startId>20150516</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+
+		<task>
+			<!--任务id -->
+			<taskId>common.t_performance_sum</taskId>
+			<!--任务名称 -->
+			<name>各类型汇总业绩表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TPerformanceSumTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>10</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id 1326787 -->
+			<startId>20150516</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+
+		<task>
+			<!--任务id -->
+			<taskId>common.t_attendance_report</taskId>
+			<!--任务名称 -->
+			<name>考勤消耗表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.TAttendanceReportTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>S</unit>
+			<!--运行周期 -->
+			<period>30</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id -->
+			<startId>20150430</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+		<task>
+			<!--任务id -->
+			<taskId>bjk.t_teacher_workload</taskId>
+			<!--任务名称 -->
+			<name>培英班教师工作量表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.bjk.TTeacherWorkloadReportTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>S</unit>
+			<!--运行周期 -->
+			<period>30</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id -->
+			<startId>20150430</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>bjk</type>
+		</task>
+		<task>
+			<!-- 任务id -->
+			<taskId>common.t_teacher_workload_wfd</taskId>
+			<!-- 任务名称 -->
+			<name>晚辅导教师考勤记录</name>
+			<!-- 任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.wfd.WfdAttendTeacherReportTask
+			</classImpl>
+			<!-- 开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!-- 截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!-- 运行周期单位 -->
+			<unit>M</unit>
+			<!-- 运行周期 -->
+			<period>10</period>
+			<!-- 开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!-- 一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!-- 开始运行的起止id -->
+			<startId>20150430</startId>
+			<!-- common；bjk；ydy；wfd -->
+			<type>wfd</type>
+		</task>
+		<task>
+			<!--任务id -->
+			<taskId>common.t_month_attend_report</taskId>
+			<!--任务名称 -->
+			<name>月度消耗表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.AttendanceMonthReportTask</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>S</unit>
+			<!--运行周期 -->
+			<period>30</period>
+			<!--开始执行时间 -->
+			<runTime>20:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id -->
+			<startId>20150501</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+		<task>
+			<!--任务id -->
+			<taskId>common.t_month_busattend_report</taskId>
+			<!--任务名称 -->
+			<name>月度分类考勤表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.BusinessAttendanceMonthReportTask</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>S</unit>
+			<!--运行周期 -->
+			<period>30</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id -->
+			<startId>20150501</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>
+		<task>
+			<!--任务id -->
+			<taskId>common.t_order_performance</taskId>
+			<!--任务名称 -->
+			<name>课程顾问绩效表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.common.BusinessOrderPerformanceReportTask</classImpl>
+			<!--开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!--截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!--运行周期单位 -->
+			<unit>S</unit>
+			<!--运行周期 -->
+			<period>30</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id -->
+			<startId>20150501</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>common</type>
+		</task>		
+	</tasks>
+</report>

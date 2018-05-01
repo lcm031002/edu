@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.TaskTableResultDao">
+
+	<resultMap type="com.edu.report.model.TTaskTableResult"
+		id="taskTableResultMap">
+		<id property="id" column="id" />
+		<result property="taskTable" column="task_table" />
+		<result property="taskTableId" column="task_table_id" />
+		<result property="taskTableLastVal" column="task_table_lastval" />
+		<result property="taskTableCurrentVal" column="task_table_currentval" />
+		<result property="taskLastTime" column="task_last_time" />
+		<result property="taskTableType" column="task_table_type" />
+		<result property="taskFlow" column="task_flow" />
+		<result property="taskId" column="task_id" />
+		<result property="classImpl" column="classimpl" />
+		<result property="startId" column="start_id" />
+		<result property="pageSize" column="pagesize" />
+	</resultMap>
+
+	<select id="queryTaskFlowTaskTableResult" parameterType="com.edu.report.model.TTaskTableResult"
+		resultMap="taskTableResultMap">
+		select * from t_task_table_result where task_table =
+		#{taskTable,jdbcType=VARCHAR}
+		and task_flow = #{taskFlow,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryCurrentValTaskFlows" resultMap="taskTableResultMap"
+		parameterType="HashMap">
+		select distinct tttr.id,tttr.task_table,tttr.task_table_id,tttr.task_table_lastval,tttr.task_table_currentval,trrr.run_time,tttr.task_table_type,tttr.task_flow,tttr.task_id
+		  from t_task_table_result tttr
+		  left join t_report_run_result trrr
+		    on tttr.task_flow = trrr.task_flow
+		    and tttr.task_id = trrr.task_id
+		 where to_number(to_char(sysdate, 'yyyymmdd')) between
+		       tttr.task_table_lastval and tttr.task_table_currentval
+		       and trrr.task_id = #{taskId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryTaskTableMaxCurrentVal" parameterType="com.edu.report.model.TTaskTableResult"
+		resultMap="taskTableResultMap">
+		SELECT
+		*
+		FROM
+		t_task_table_result
+		WHERE
+		task_table = #{taskTable,jdbcType=VARCHAR}
+		AND task_table_currentval =(
+		SELECT
+		MAX( task_table_currentval )
+		FROM
+		t_task_table_result
+		WHERE
+		task_table = #{taskTable,jdbcType=VARCHAR}
+		)
+		order by task_flow desc
+	</select>
+	<insert id="saveTaskTableResult" parameterType="com.edu.report.model.TTaskTableResult">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="BEFORE">
+			select SEQ_T_TASK_TABLE_RESULT.nextval as id from dual
+		</selectKey>
+		insert into T_Task_Table_Result g
+		(
+		id,
+		task_table,
+		task_table_id,
+		task_table_lastval,
+		task_table_currentval,
+		task_last_time,
+		task_table_type,
+		task_id,
+		task_flow
+		)
+		values
+		(
+
+		#{id,jdbcType=NUMERIC},
+		#{taskTable,jdbcType=VARCHAR},
+		#{taskTableId,jdbcType=VARCHAR},
+		#{taskTableLastVal,jdbcType=NUMERIC},
+		#{taskTableCurrentVal,jdbcType=NUMERIC},
+		sysdate,
+		#{taskTableType,jdbcType=VARCHAR},
+		#{taskId,jdbcType=VARCHAR},
+		#{taskFlow,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<delete id="deleteTaskTableResult" parameterType="com.edu.report.model.TTaskTableResult">
+		delete from
+		T_Task_Table_Result
+		where task_table = #{taskTable,jdbcType=VARCHAR}
+		and taskTableLastVal =
+		#{taskTableLastVal,jdbcType=NUMERIC}
+		and taskTableCurrentVal =
+		#{taskTableCurrentVal,jdbcType=NUMERIC}
+	</delete>
+
+	<select id="queryMinId" resultMap="taskTableResultMap"
+		parameterType="com.edu.report.model.TTaskTableResult">
+		select distinct min(${taskTableId}) as
+		task_table_lastval from ${taskTable}
+	</select>
+
+	<delete id="deleteByTaskFlow" parameterType="java.lang.String">
+		delete from
+		T_Task_Table_Result where task_flow = #{taskFlow}
+	</delete>
+	
+	<select id="queryYesterdayTaskFlows" resultMap="taskTableResultMap"
+		parameterType="java.lang.Integer">
+		select distinct tttr.*
+		  from t_task_table_result tttr
+		  left join t_report_run_result trrr
+		    on tttr.task_flow = trrr.task_flow
+		   and tttr.task_id = trrr.task_id
+		  left join t_report_task_settings trts
+		    on trts.task_id = tttr.task_id
+		 where to_number(to_char(sysdate - 1, 'yyyymmdd')) between
+		       tttr.task_table_lastval and tttr.task_table_currentval
+		   and trts.unit != #{unit}
+	</select>
+</mapper>

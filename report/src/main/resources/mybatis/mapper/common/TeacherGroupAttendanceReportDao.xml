@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TeacherGroupAttendanceDao">
+
+	<select id="queryReport" parameterType="Map" resultType="com.edu.report.model.TeacherGroupAttendanceReport" fetchSize="1000">
+        select tc.teacher_name,tc.group_name,tc.grade_name,nvl(tc.course_students,0) course_students,nvl(tc.attendance_students,0) attendance_students,nvl(round(tc.attendance_students/tc.course_students,3),0)*100||'%' attendance_rate,
+        nvl(ta_last.plan_attendance,0) last_plan_attendance,nvl(ta_last.actual_attendance,0) last_actual_attendance,nvl(ta_curr.plan_attendance,0) curr_plan_attendance,nvl(ta_curr.actual_attendance,0) curr_actual_attendance
+        from (
+            select
+              bu_id,teacher_id,teacher_name,grade_id,grade_name,group_name,sum(course_students) course_students,sum(attendance_students) attendance_students
+            from (
+                select
+                distinct bu_id, course_id,teacher_id,teacher_name,grade_id,grade_name,group_name,course_students,attendance_students
+                from T_TEACHER_GROUP_ATTENDANCE ttga
+                where bu_id = #{bu_id}
+                and season_id = #{season_id}
+            )
+            group by bu_id,teacher_id,teacher_name,grade_id,grade_name,group_name
+        ) tc
+        left join (
+            select teacher_id,teacher_name,grade_id,grade_name,group_name,sum(plan_attendance) plan_attendance,sum(actual_attendance) actual_attendance
+            from (
+                SELECT *
+                FROM (SELECT ROW_NUMBER() OVER(PARTITION BY course_id ORDER BY course_date DESC) rn,
+                t1.*
+                FROM T_TEACHER_GROUP_ATTENDANCE  t1
+                where bu_id = #{bu_id}
+                and season_id = #{season_id}
+                and course_date &lt; #{course_date, jdbcType=VARCHAR}
+                )
+                WHERE rn = 1
+            ) group by teacher_id,teacher_name,grade_id,grade_name,group_name
+        ) ta_last on tc.teacher_id = ta_last.teacher_id and tc.grade_id = ta_last.grade_id
+        left join (
+            select teacher_id,teacher_name,grade_id,grade_name,group_name,sum(plan_attendance) plan_attendance,sum(actual_attendance) actual_attendance
+            from (
+                SELECT *
+                FROM (SELECT ROW_NUMBER() OVER(PARTITION BY course_id ORDER BY course_date) rn,
+                t2.*
+                FROM T_TEACHER_GROUP_ATTENDANCE  t2
+                where bu_id = #{bu_id}
+                and season_id = #{season_id}
+                and course_date >= #{course_date, jdbcType=VARCHAR}
+                )
+                WHERE rn = 1
+            ) group by teacher_id,teacher_name,grade_id,grade_name,group_name
+        ) ta_curr on tc.teacher_id = ta_curr.teacher_id and tc.grade_id = ta_curr.grade_id
+        where tc.bu_id = #{bu_id}
+        <if test="grade_id != null">
+          and  tc.grade_id = #{grade_id}
+        </if>
+        <if test="group_name != null">
+          and  tc.group_name = #{group_name}
+        </if>
+
+    </select>
+
+	<delete id="deleteByTaskFlow"  parameterType="Map">
+		delete from T_TEACHER_GROUP_ATTENDANCE
+	</delete>
+	
+	<insert id="insertByTaskFlow" parameterType="Map">
+        insert into T_TEACHER_GROUP_ATTENDANCE
+		(
+			  id,
+			  task_flow,
+			  scheduling_id ,
+              course_id     ,
+              course_name  ,
+              grade_id      ,
+              grade_name   ,
+              subject_id    ,
+              subject_name  ,
+              group_name    ,
+              teacher_id    ,
+              teacher_name ,
+              season_id     ,
+              season_name   ,
+              bu_id    ,
+              branch_id    ,
+              course_students     ,
+              attendance_students    ,
+              plan_attendance      ,
+              actual_attendance      ,
+              hang_up     ,
+              course_times ,
+              course_date
+		)
+        select SEQ_T_TEACHER_GROUP_ATTENDANCE.Nextval,
+               '${taskFlow}' task_flow,
+               t.id scheduling_id,
+               c.course_id ,
+               c.course_name ,
+               c.grade_id,
+               c.grade_name ,
+               c.subject_id,
+               c.subject_name ,
+               c.group_name,
+               t.teacher_id,
+               c.teacher_name ,
+               c.season_id,
+               c.season_name,
+               c.bu_id,
+               c.branch_id,
+               o_course.students course_students,
+               att_course.students attendace_students,
+               o.cnt plan_attendace,
+               nvl(att.actual_cnt, 0) actual_attendace,
+               nvl(att.hangup_cnt, 0) hang_up,
+               t.COURSE_TIMES ,
+               to_char(to_date(t.COURSE_DATE, 'yyyy-mm-dd'), 'yyyy-mm-dd') COURSE_DATE
+          from (select t.id                   course_id,
+                       t.course_name          course_name,
+                       t.course_no            course_encoding,
+                       t.season_id            season_id,
+                       tts.end_date           season_end_date,
+                       tts.course_season_name season_name,
+                       t.city_id              city_id,
+                       t.product_line,
+                       toi.parent_id bu_id ,
+                       t.branch_id,
+                       tt.teacher_name,
+                       t.grade_id,
+                       g.grade_name,
+                       t.subject_id,
+                       sub.name               subject_name,
+                       t_group.group_name ,
+                       t.start_date,
+                       t.end_date,
+                       t.start_time,
+                       t.end_time,
+                       t.business_type,
+                       t.status
+                  from t_course t
+                  left join tab_time_season tts
+                    on t.season_id = tts.id
+                   left join tab_teacher_info tt
+                    on t.teacher_id = tt.id
+                  left join tab_data_grade g
+                    on t.grade_id = g.id
+                  left join tp_subject sub
+                    on t.subject_id = sub.id
+                  left join tab_organization_info toi on t.branch_id = toi.id
+                  left join mv_teacher_group t_group on t.grade_id =t_group.grade_id and sub.encoding = t_group.subject_code
+                  where t.status = 1 and t.is_textbooks != 1
+                  ) c
+          left join t_course_scheduling t
+            on t.course_id = c.course_id
+          left join (select toc.course_id course_id,
+                            oct.times course_times,
+                            count(1) cnt
+                       from t_order_course toc
+                       left join t_order torder
+                         on toc.order_id = torder.id
+                       left join t_order_course_times oct
+                         on toc.id = oct.ocid
+                      where oct.is_valid = 1
+                        and (toc.status != 2 or toc.status is null)
+                        and torder.order_status = 1
+                      group by toc.course_id, oct.times) o
+            on t.course_id = o.course_id
+           and t.course_times = o.course_times
+          left join (  select course_id, count(student_id) students from (
+                       select distinct toc.course_id course_id,
+                            torder.student_id  student_id
+                       from t_order_course toc
+                       left join t_order torder
+                         on toc.order_id = torder.id
+                       left join t_order_course_times oct
+                         on toc.id = oct.ocid
+                      where oct.is_valid = 1
+                        and (toc.status != 2 or toc.status is null)
+                        and torder.order_status = 1
+                       )
+
+                      group by course_id
+                      ) o_course
+            on t.course_id = o_course.course_id
+          left join ( select course_id,count(student_id) students from (
+                       select distinct tcs.course_id, a.student_id
+                       from t_attendance a
+                       left join T_COURSE_SCHEDULING tcs
+                         on tcs.ID = a.scheduling_id
+                       left join T_ORDER_COURSE_TIMES toct
+                         on toct.TIMES = tcs.COURSE_TIMES
+                        and a.ORDER_COURSE_ID = toct.OCID
+                      where toct.IS_VALID = 1 and a.attend_type = 12 )
+                      group by course_id) att_course
+            on t.course_id = att_course.course_id
+          left join (select a.scheduling_id,
+                            sum(decode(a.attend_type, 12, 1, 0)) actual_cnt,
+                            sum(decode(a.attend_type, 11, 1, 0)) hangup_cnt
+                       from t_attendance a
+                       left join T_COURSE_SCHEDULING tcs
+                         on tcs.ID = a.scheduling_id
+                       left join T_ORDER_COURSE_TIMES toct
+                         on toct.TIMES = tcs.COURSE_TIMES
+                        and a.ORDER_COURSE_ID = toct.OCID
+                      where toct.IS_VALID = 1
+                      group by a.scheduling_id) att
+            on t.id = att.scheduling_id
+ 	</insert>
+	
+</mapper>

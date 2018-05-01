@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.BusinessAttendanceMonthReportDao">
+
+	<select id="queryReport" parameterType="Map" resultType="com.edu.report.model.TBusinessAttendanceMonthReport">
+		select * from (
+			select  student_code, student_name, bu_name, 
+					sum(sum_amount)		sum_amount,
+					sum(sum_count)		sum_count,
+				   	sum(bjk_amount)		bjk_amount,
+					sum(bjk_count)		bjk_count,
+					sum(ydy_amount)		ydy_amount,
+					sum(ydy_count)		ydy_count,
+					sum(wfd_amount)		wfd_amount,
+					sum(wfd_count)		wfd_count
+			from t_month_busattend_report a
+			where
+				a.bu_id = #{bu_id}
+			<if test="start_date != null and start_date != ''">
+				and a.busi_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="end_date != null and end_date != ''">
+				and a.busi_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>
+			group by student_code, student_name, bu_name
+		
+		union all
+		
+			select  '合计'	student_code, 
+					null	student_name, 
+					null	bu_name, 
+					sum(sum_amount)		sum_amount,
+					sum(sum_count)		sum_count,
+				   	sum(bjk_amount)		bjk_amount,
+					sum(bjk_count)		bjk_count,
+					sum(ydy_amount)		ydy_amount,
+					sum(ydy_count)		ydy_count,
+					sum(wfd_amount)		wfd_amount,
+					sum(wfd_count)		wfd_count
+			from t_month_busattend_report a
+			where
+				a.bu_id = #{bu_id}
+			<if test="start_date != null and start_date != ''">
+				and a.busi_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="end_date != null and end_date != ''">
+				and a.busi_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>
+		)
+		order by nlssort(student_name,'NLS_SORT=SCHINESE_PINYIN_M')
+	</select>
+	
+	<delete id="deleteByTaskFlow"  parameterType="Map">
+		delete from t_month_busattend_report where task_flow = #{task_flow, jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 考勤消耗 -->
+	<sql id="contact_rpt">
+		select
+			attend_branch.parent_id											bu_id,
+			to_char(tah.attend_date ,'yyyy-mm-dd')  						busi_date ,
+			tah.student_id													student_id,
+			decode(tc.business_type, 
+				1, decode(tah.attend_type, 10, -1, 1),
+				2, decode(tah.attend_type, 20, -1, 21, 1, 0),
+				3, decode(tah.attend_type, 30, -1, 1),
+				0) * nvl(tah.attend_amount, 0)								sum_amount,
+			decode(tc.business_type, 
+				1, decode(tah.attend_type, 10, -1, 1),
+				2, decode(tah.attend_type, 20, -1, 21, 1, 0),
+				3, decode(tah.attend_type, 30, -1, 1),
+				0) * nvl(tah.course_times, 1)								sum_count,
+			decode(tc.business_type, 
+				1, decode(tah.attend_type, 10, -1, 1),
+				0) * nvl(tah.attend_amount, 0)								bjk_amount,
+			decode(tc.business_type, 
+				1, decode(tah.attend_type, 10, -1, 1),
+				0) * nvl(tah.course_times, 1)								bjk_count,
+			decode(tc.business_type, 
+				2, decode(tah.attend_type, 20, -1, 21, 1, 0),
+				0) * nvl(tah.attend_amount, 0)								ydy_amount,
+			decode(tc.business_type, 
+				2, decode(tah.attend_type, 20, -1, 21, 1, 0),
+				0) * nvl(tah.course_times, 1)								ydy_count,
+			decode(tc.business_type, 
+				3, decode(tah.attend_type, 30, -1, 1),
+				0) * nvl(tah.attend_amount, 0)								wfd_amount,
+			decode(tc.business_type, 
+				3, decode(tah.attend_type, 30, -1, 1),
+				0) * nvl(tah.course_times, 1)								wfd_count
+		from
+			t_attendance_ht tah 
+		left join tab_organization_info attend_branch
+		    on tah.attend_branch_id = attend_branch.id
+		left join t_order_course toc
+			on tah.order_course_id = toc.id
+		left join t_course tc
+			on toc.course_id = tc.id
+		where
+			tah.attend_date >= to_date(#{minOperateNo},'yyyyMMdd') 
+		and tah.attend_date &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		and tah.ts_flag = 'S'
+	</sql>
+	
+	<insert id="insertByTaskFlow" parameterType="Map">
+		insert into t_month_busattend_report
+	      ( id,
+	      	task_flow,
+			bu_id,
+			bu_name,
+			student_id,
+			student_code,
+			student_name,
+			sum_amount,
+			sum_count,
+		   	bjk_amount,
+			bjk_count,
+			ydy_amount,
+			ydy_count,
+			wfd_amount,
+			wfd_count,
+			busi_date
+	       )
+	      (select 
+	      		seq_t_month_busattend_report.nextval		id,
+	      		#{task_flow} 							task_flow,
+	      		t.bu_id									bu_id,
+	      		org_bu.org_name							bu_name,
+	      		t.student_id							student_id, 
+	      		stu.encoding							student_code,
+	      		stu.student_name						student_name,
+	      		t.sum_amount							sum_amount,
+				t.sum_count								sum_count,
+			   	t.bjk_amount							bjk_amount,
+				t.bjk_count								bjk_count,
+				t.ydy_amount							ydy_amount,
+				t.ydy_count								ydy_count,
+				t.wfd_amount							wfd_amount,
+				t.wfd_count								wfd_count,
+	      		t.busi_date								busi_date
+	      from 
+	      	(select
+	      		bu_id, 
+	      		student_id, 
+	      		busi_date,
+	      		sum(sum_amount)		sum_amount,
+				sum(sum_count)		sum_count,
+			    sum(bjk_amount)		bjk_amount,
+				sum(bjk_count)		bjk_count,
+			    sum(ydy_amount)		ydy_amount,
+			    sum(ydy_count)		ydy_count,
+			    sum(wfd_amount)		wfd_amount,
+			    sum(wfd_count)		wfd_count
+	      	from 
+				(<include refid="contact_rpt"/>) temp
+	      	group by bu_id, student_id, busi_date 
+	      	)	t
+	      	left join tab_student_info stu
+				on t.student_id = stu.id
+			left join tab_organization_info org_bu
+				on t.bu_id = org_bu.id 
+	   )
+	</insert>
+	
+</mapper>

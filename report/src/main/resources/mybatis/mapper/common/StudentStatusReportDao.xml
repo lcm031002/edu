@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.StudentStatusReportDao">
+    <select id="queryStudentStatusReport" parameterType="map" resultType="com.edu.report.model.StudentStatusReport">
+     select tp.branchName as branchName,tp.branchId as branchId,tp.changetime as changeTime,sum(tp.predictionNum) as predictionNum,sum(tp.readingNum) as readingNum,sum(tp.newNum) as newNum,
+sum(tp.notpayNum) as notpayNum,sum(tp.moveNum) as moveNum,sum(tp.sleepNum) as sleepNum,sum(tp.lossNum) as lossNum
+   from (
+ select t.status as studentStatus,t.branch_id as branchId,t.branch_name as branchName,t.changetime as changetime,
+ COUNT (CASE WHEN  t.status = 1 THEN 1
+                       ELSE NULL
+                       END)as predictionNum,
+   COUNT (CASE WHEN  t.status =3 THEN 1
+                       ELSE NULL
+                       END)as readingNum,
+    COUNT (CASE WHEN  t.status =7 THEN 1
+                       ELSE NULL
+                       END)as newNum,
+      COUNT (CASE WHEN  t.status =5 THEN 1
+                       ELSE NULL
+                       END)as notpayNum,
+        COUNT (CASE WHEN  t.status =6 THEN 1
+                       ELSE NULL
+                       END)as moveNum,
+           COUNT (CASE WHEN  t.status =4 THEN 1
+                       ELSE NULL
+                       END)as sleepNum,
+             COUNT (CASE WHEN  t.status =8 THEN 1
+                       ELSE NULL
+                       END)as lossNum
+        from
+       (select t.id,t.bu_id as buId，t.after_status as status,substr(t.update_time,0,7) as changetime,tsi.branch_id as branch_id,toi.org_name as branch_name
+        from student_status_record t
+        left join tab_student_info tsi
+        on t.student_id = tsi.id
+        left join tab_organization_info toi
+        on toi.id = tsi.branch_id
+        where substr(t.update_time,0,7)=#{year_month}
+        and t.id in(SELECT MAX(id) from student_status_record
+        where substr(update_time,0,7)=#{year_month}
+        group by student_id)
+        <if test="bu_id!=null and bu_id!=''">
+            and t.bu_id=#{bu_id}
+        </if>
+        <if test="branch_id!=null and branch_id!=''">
+            and tsi.branch_id=#{branch_id}
+        </if>
+        ) t
+     group by t.branch_id,status,branch_name,changetime)tp
+     group by tp.branchName,tp.branchId,tp.changetime
+  union all
+      select
+        '合计' as branchName,
+        null as  branchId,
+        null as changeTime,
+        sum(nvl(temp.predictionNum,0)) as predictionNum,
+        sum(nvl(temp.readingNum,0)) as  readingNum,
+        sum(nvl(temp.newNum,0)) as newNum,
+        sum(nvl(temp.notpayNum,0)) as notpayNum,
+        sum(nvl(temp.moveNum,0)) as moveNum,
+        sum(nvl(temp.sleepNum,0)) as sleepNum,
+        sum(nvl(temp.lossNum,0)) as lossNum
+        from(
+        select tp.branchName as branchName,tp.branchId as branchId,tp.changetime as changeTime,sum(tp.predictionNum) as predictionNum,sum(tp.readingNum) as readingNum,sum(tp.newNum) as newNum,
+        sum(tp.notpayNum) as notpayNum,sum(tp.moveNum) as moveNum,sum(tp.sleepNum) as sleepNum,sum(tp.lossNum) as lossNum
+        from (
+        select t.status as studentStatus,t.branch_id as branchId,t.branch_name as branchName,t.changetime as changetime,
+        COUNT (CASE WHEN  t.status = 1 THEN 1
+        ELSE NULL
+        END)as predictionNum,
+        COUNT (CASE WHEN  t.status =3 THEN 1
+        ELSE NULL
+        END)as readingNum,
+        COUNT (CASE WHEN  t.status =7 THEN 1
+        ELSE NULL
+        END)as newNum,
+        COUNT (CASE WHEN  t.status =5 THEN 1
+        ELSE NULL
+        END)as notpayNum,
+        COUNT (CASE WHEN  t.status =6 THEN 1
+        ELSE NULL
+        END)as moveNum,
+        COUNT (CASE WHEN  t.status =4 THEN 1
+        ELSE NULL
+        END)as sleepNum,
+        COUNT (CASE WHEN  t.status =8 THEN 1
+        ELSE NULL
+        END)as lossNum
+        from
+        (select t.id,t.bu_id as buId，t.after_status as status,substr(t.update_time,0,7) as changetime,tsi.branch_id as branch_id,toi.org_name as branch_name
+        from student_status_record t
+        left join tab_student_info tsi
+        on t.student_id = tsi.id
+        left join tab_organization_info toi
+        on toi.id = tsi.branch_id
+        where substr(t.update_time,0,7)=#{year_month}
+        and t.id in(SELECT MAX(id) from student_status_record
+        where substr(update_time,0,7)=#{year_month}
+        group by student_id)
+        <if test="bu_id!=null and bu_id!=''">
+            and t.bu_id=#{bu_id}
+        </if>
+        <if test="branch_id!=null and branch_id!=''">
+            and tsi.branch_id=#{branch_id}
+        </if>
+        ) t
+        group by t.branch_id,status,branch_name,changetime)tp
+        group by tp.branchName,tp.branchId,tp.changetime)temp
+    </select>
+
+    <select id="queryReportStudentdetails" resultType="com.edu.report.model.ReportStudentdetails">
+        select t.id,
+       t.student_id as studentId,
+       tsi.encoding as studentEcoding,
+       tsi.student_name as studentName,
+       t.after_status as status,
+       substr(t.update_time, 0, 7) as changeTime,
+       tsi.branch_id as branchId,
+       toi.org_name as branchName,
+       tdd.name  as studentStatus,
+       TSCI.COUNSELOR_ID  AS counselorId,
+			 TEI.EMPLOYEE_NAME  as counselorName,
+			 TSCI2.COUNSELOR_ID AS learningmgrId,
+			 TEI2.EMPLOYEE_NAME AS learningmgrName
+     from student_status_record t
+     left join tab_student_info tsi
+     on t.student_id = tsi.id
+     left join tab_organization_info toi
+     on toi.id = tsi.branch_id
+     LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI
+        ON TSCI.STUDENT_ID = tsi.ID
+        AND TSCI.COUNSELOR_TYPE = 1
+        AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI.START_DATE AND
+        TSCI.END_DATE
+        AND TSCI.IS_VALID = 1
+				AND TSCI.BU_ID = #{bu_id}
+				LEFT JOIN TAB_EMPLOYEE_INFO TEI
+				ON TEI.ID = TSCI.COUNSELOR_ID
+				AND TEI.STATUS = 1
+				LEFT JOIN TAB_STUDENT_COUNSELOR_INFO TSCI2
+				ON TSCI2.STUDENT_ID = tsi.ID
+				AND TSCI2.COUNSELOR_TYPE = 2
+				AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN TSCI2.START_DATE AND
+				TSCI2.END_DATE
+				AND TSCI2.IS_VALID = 1
+				AND TSCI2.BU_ID = #{bu_id}
+				LEFT JOIN TAB_EMPLOYEE_INFO TEI2
+				ON TEI2.ID = TSCI2.COUNSELOR_ID
+				AND TEI2.STATUS = 1
+             left join tp_dict_data tdd
+             on t.after_status = tdd.order_no and tdd.product_line=#{productLine}
+        where substr(t.update_time, 0, 7) =#{year_month}
+        and t.id in (SELECT MAX(id)
+                  from student_status_record
+                 where substr(update_time, 0, 7) = #{year_month}
+                 group by student_id)
+        and tsi.branch_id = #{branch_id}
+        and t.after_status=#{student_status}
+   </select>
+
+    <select id="queryProductLine" parameterType="map" resultType="long">
+        select product_line from tab_organization_info where id=#{buId}
+    </select>
+</mapper>

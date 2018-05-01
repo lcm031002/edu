@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TFullClassRateDao">
+	<select id="queryReport" parameterType="map"
+		resultType="com.edu.report.model.TFullClassRate">
+        select
+        teacher_name,grade_id,grade_name,subject_name,season_id,group_name,season_name,attendance_people,
+        people_count,bu_name,
+        round(attendance_people/people_count,3)*100||'%'
+        actual_rate
+        from (
+        select t.teacher_name,
+        t.bu_id,
+        ti.org_name bu_name,
+        t.grade_id,
+        t.grade_name,
+        t.subject_name,
+        tg.group_name,
+        t.season_id,
+        t.season_name,
+        people_count,
+        t.total attendance_people
+        from MV_DXBMANBAN_DETAIL t
+        left join MV_TEACHER_GROUP
+        tg on t.bu_id = tg.bu_id
+        and t.grade_id =tg.grade_id
+        and t.subject_code = tg.subject_code
+        left join tab_organization_info ti
+        on ti.id=t.bu_id
+        where t.season_id = #{season_id,
+		jdbcType=NUMERIC}
+        <if test="grade_id != null and grade_id != -1">
+            and t.grade_id = #{grade_id, jdbcType=VARCHAR}
+        </if>
+        group by
+        t.teacher_name,t.grade_id,t.grade_name,t.subject_name,tg.group_name,t.season_id,
+        t.season_name,t.bu_id,ti.org_name,people_count,t.total
+        order by teacher_name, grade_name,
+        season_name
+        )
+	</select>
+	
+	<!--<delete id="removeByTaskFlow"  parameterType="map">-->
+		<!--delete from t_full_class_rate where task_flow = #{taskFlow}-->
+	<!--</delete>-->
+	<!---->
+	<!--<insert id="addByTaskFlow" parameterType="map">-->
+		<!--insert into t_full_class_rate-->
+		<!--(   -->
+			   <!--id,-->
+			   <!--task_flow,-->
+               <!--bu_id,-->
+               <!--season_id,-->
+               <!--season_name,-->
+               <!--teacher_name,-->
+               <!--subject_code,-->
+               <!--subject_name,-->
+               <!--grade_id,-->
+               <!--grade_name,-->
+               <!--people_count,-->
+               <!--total-->
+		<!--)-->
+		 <!--select seq_t_full_class_rate.Nextval,'${taskFlow}'as task_flow,-->
+		 <!--tmp.* from-->
+	  <!--(SELECT-->
+       <!--bu_id,-->
+       <!--season_id,-->
+       <!--season_name,-->
+       <!--teacher_name,-->
+       <!--subject_code,-->
+       <!--subject_name,-->
+       <!--grade_id,-->
+       <!--grade_name,-->
+       <!--sum(people_count) people_conut,-->
+       <!--sum(students) total-->
+       <!--from (select bu_id,-->
+               <!--season_id,-->
+               <!--season_name,-->
+               <!--teacher_name,-->
+               <!--subject_code,-->
+               <!--subject_name,-->
+               <!--grade_id,-->
+               <!--grade_name,-->
+               <!--course_name,-->
+               <!--people_count,-->
+               <!--count(student_no) students-->
+          <!--from (select o.bu_id,-->
+                       <!--tts.id season_id,-->
+                       <!--tts.course_season_name season_name,-->
+                       <!--teacher.teacher_name,-->
+                       <!--subject.encoding subject_code,-->
+                       <!--subject.name subject_name,-->
+                       <!--tdg.id grade_id,-->
+                       <!--tdg.grade_name,-->
+                       <!--student.encoding student_no,-->
+                       <!--student.student_name,-->
+                       <!--tc.course_name,-->
+                       <!--tc.people_count people_count,-->
+                       <!--count(ta.student_id) times-->
+                  <!--from t_order             o,-->
+                       <!--t_order_course      oc,-->
+                       <!--t_course            tc,-->
+                       <!--tab_data_grade      tdg,-->
+                       <!--tab_time_season     tts,-->
+                       <!--tp_subject          subject,-->
+                       <!--t_course_scheduling tcs,-->
+                       <!--tab_teacher_info    teacher,-->
+                       <!--tab_student_info    student,-->
+                       <!--t_attendance        ta-->
+                 <!--where o.id = oc.order_id-->
+                   <!--and oc.course_id = tc.id-->
+                   <!--and tc.grade_id = tdg.id-->
+                   <!--and tc.season_id = tts.id-->
+                   <!--and tc.id = tcs.course_id-->
+                   <!--and tc.subject_id = subject.id-->
+                   <!--and tcs.id = ta.scheduling_id-->
+                   <!--and oc.id = ta.order_course_id-->
+                   <!--and tcs.teacher_id = teacher.id-->
+                   <!--and ta.student_id = student.id-->
+                   <!--and tc.course_count > 10-->
+                   <!--and ta.attend_type = 12-->
+                   <!--and (oc.status != 2 or oc.status is null)-->
+                   <!--and o.order_status = 1-->
+                 <!--group by o.bu_id,-->
+                          <!--tts.id,-->
+                          <!--tts.course_season_name,-->
+                          <!--teacher.teacher_name,-->
+                          <!--subject.encoding,-->
+                          <!--subject.name,-->
+                          <!--tdg.id,-->
+                          <!--tdg.grade_name,-->
+                          <!--student.encoding,-->
+                          <!--student.student_name,-->
+                          <!--tc.course_name,-->
+                          <!--tc.people_count-->
+                <!--having count(ta.student_id) >= 5) t-->
+                <!--group by bu_id,-->
+                  <!--season_id,-->
+                  <!--season_name,-->
+                  <!--teacher_name,-->
+                  <!--subject_code,-->
+                  <!--subject_name,-->
+                  <!--grade_id,-->
+                  <!--grade_name,-->
+                  <!--course_name,-->
+                  <!--people_count) h-->
+                <!--group by bu_id,-->
+                <!--season_id,-->
+                <!--season_name,-->
+                <!--teacher_name,-->
+                <!--subject_code,-->
+                <!--subject_name,-->
+                <!--grade_id,-->
+                <!--grade_name) tmp-->
+	<!--</insert>-->
+        <select id="queryDetail" parameterType="map" resultType="com.edu.report.model.TFULLClassRateLast">
+                select teacher_name,
+                grade_name,
+                season_name,
+                student_name,
+                bu_id,
+                t2.org_name bu_name
+                from
+                MV_DXBMANBAN_DETAIL_V4 t
+                left join tab_organization_info t2
+                on t2.id=t.bu_id
+                where t.season_id = #{season_id, jdbcType=NUMERIC}
+                <if test="grade_id != null and grade_id != -1">
+                 and t.grade_id = #{grade_id,jdbcType=VARCHAR}
+                </if>
+                <if test="teacher_name != null">
+                 and t.teacher_name like '%${teacher_name}%'
+                </if>
+                order by teacher_name, grade_name, season_name
+        </select>
+
+</mapper>

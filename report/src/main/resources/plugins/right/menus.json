@@ -1,0 +1,4412 @@
+{
+	"name": "快乐学习教育",
+	"key": "klxxedu",
+	"version": "0.0.1",
+	"error": "false",
+	"rightDir": 
+	[
+		"/templates"
+	],
+
+	"rightIgnoreDir": 
+	[
+		"/templates/block",
+		"/templates/hrm/model"
+	],
+
+	"message": "",
+	"menus": 
+	[
+		{
+			"index": "A11001",
+			"name": "首页",
+			"key": "index",
+			"icon": "fa fa-home",
+			"type": "$state",
+			"active": "true",
+			"value": "index",
+			"href": "templates/klxxedu/index.html",
+			"path": "/index",
+			"services": 
+			[
+				{
+					"name": "公告查询",
+					"key": "index.query",
+					"url": "/erp/notice/service",
+					"method": "GET"
+				}
+			],
+
+			"menus": 
+			[
+				{
+					"index": "A1100103",
+					"name": "欠费报班单",
+					"key": "indexArrearageOrder",
+					"icon": "fa fa-align-justify",
+					"type": "$state",
+					"active": "true",
+					"value": "indexArrearageOrder",
+					"href": "templates/erp/orders/arrearage_order.html",
+					"path": "/index/indexArrearageOrder",
+					"services": 
+					[
+						{
+							"name": "我的申请",
+							"key": "indexMyAppication.query",
+							"url": "/erp/workflow/task/myAppication",
+							"method": "GET"
+						},
+
+						{
+							"name": "申请删除",
+							"key": "indexMyAppication.delete",
+							"url": "/erp/workflow/task/myAppication",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "流程查询",
+							"key": "indexMyAppication.queryTask",
+							"url": "/erp/workflow/task",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A1100102",
+					"name": "我的审批",
+					"key": "indexMyTask",
+					"icon": "fa fa-align-justify",
+					"type": "$state",
+					"active": "true",
+					"value": "indexMyTask",
+					"href": "templates/erp/workflow/task_todo.html",
+					"path": "/index/indexMyTask",
+					"services": 
+					[
+						{
+							"name": "我的审批",
+							"key": "indexMyTask.query",
+							"url": "/erp/workflow/task/todo",
+							"method": "GET"
+						},
+
+						{
+							"name": "任务查询",
+							"key": "indexMyTask.queryTask",
+							"url": "/erp/workflow/task",
+							"method": "GET"
+						},
+
+						{
+							"name": "任务提交",
+							"key": "indexMyTask.postOutcomes",
+							"url": "/erp/workflow/task/complete",
+							"method": "POST"
+						},
+
+						{
+							"name": "员工查询",
+							"key": "indexMyTask.queryEmployee",
+							"url": "/erp/employee/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "历史委托查询",
+							"key": "indexMyTask.queryEmployee",
+							"url": "/erp/workflow/task/todo_change",
+							"method": "GET"
+						},
+
+						{
+							"name": "委托设置",
+							"key": "indexMyTask.postChange",
+							"url": "/erp/workflow/task/todo_change",
+							"method": "POST"
+						}
+					]
+				},
+
+				{
+					"index": "A1100101",
+					"name": "我的申请",
+					"key": "indexMyAppication",
+					"icon": "fa fa-align-justify",
+					"type": "$state",
+					"active": "true",
+					"value": "indexMyAppication",
+					"href": "templates/erp/workflow/task_appication.html",
+					"path": "/index/indexMyAppication",
+					"services": 
+					[
+						{
+							"name": "我的申请",
+							"key": "indexMyAppication.query",
+							"url": "/erp/workflow/task/myAppication",
+							"method": "GET"
+						},
+
+						{
+							"name": "申请删除",
+							"key": "indexMyAppication.delete",
+							"url": "/erp/workflow/task/myAppication",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "流程查询",
+							"key": "indexMyAppication.queryTask",
+							"url": "/erp/workflow/task",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A1100104",
+					"name": "校区任务",
+					"key": "indexBranchTask",
+					"icon": "fa fa-align-justify",
+					"type": "$state",
+					"active": "true",
+					"value": "indexBranchTask",
+					"href": "templates/erp/workflow/task_branchapplication.html",
+					"path": "/index/indexBranchTask",
+					"services": 
+					[
+						{
+							"name": "我的申请",
+							"key": "indexMyAppication.query",
+							"url": "/erp/workflow/task/myAppication",
+							"method": "GET"
+						},
+
+						{
+							"name": "申请删除",
+							"key": "indexMyAppication.delete",
+							"url": "/erp/workflow/task/myAppication",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "流程查询",
+							"key": "indexMyAppication.queryTask",
+							"url": "/erp/workflow/task",
+							"method": "GET"
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A12001",
+			"name": "招生入口",
+			"key": "RecruitStudents",
+			"icon": "fa fa-fire",
+			"type": "$state",
+			"value": "RecruitStudents",
+			"path": "/RecruitStudents",
+			"href": "templates/crm/dashboard.html",
+			"menus": 
+			[
+				{
+					"index": "A12002",
+					"name": "招生首页",
+					"key": "RecruitStudentsIndex",
+					"icon": "iconfont icon-recruit_home",
+					"type": "$state",
+					"path": "/RecruitStudents/RecruitStudentsIndex",
+					"href": "templates/crm/dashboard.html",
+					"value": "RecruitStudentsIndex"
+				},
+
+				{
+					"index": "A12003",
+					"name": "招生管理",
+					"key": "RecruitStudentsBusiness",
+					"icon": "iconfont icon-recruit_manage",
+					"type": "$state",
+					"path": "/RecruitStudents/RecruitStudentsBusiness",
+					"value": "RecruitStudentsBusiness",
+					"menus": 
+					[
+						{
+							"index": "A1200301",
+							"name": "线索转移",
+							"key": "RecruitStudentsClueTransfer",
+							"icon": "fa fa-truck",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsClueTransfer",
+							"href": "templates/crm/gc_rescrec_transfer.html",
+							"value": "RecruitStudentsClueTransfer"
+						},
+
+						{
+							"index": "A1200302",
+							"name": "线索跟踪",
+							"key": "RecruitStudentsClueTrack",
+							"icon": "fa fa-tty",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsClueTrack",
+							"href": "templates/crm/gc_rescrec_proc.html",
+							"value": "RecruitStudentsClueTrack"
+						},
+
+						{
+							"index": "A1200303",
+							"name": "线索录入",
+							"key": "RecruitStudentsClueInput",
+							"icon": "fa fa-pencil-square-o",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsClueInput",
+							"href": "templates/crm/gc_rescrec_input.html",
+							"value": "RecruitStudentsClueInput"
+						},
+
+						{
+							"index": "A1200304",
+							"name": "转化学员",
+							"key": "RecruitStudentsCustomer",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsCustomer",
+							"href": "templates/klxxedu/employee/employee.html",
+							"value": "RecruitStudentsCustomer",
+							"showMenu": "false"
+						},
+
+						{
+							"index": "A1200305",
+							"name": "我的成单",
+							"key": "MyOrdereds",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsBusiness/MyOrdereds",
+							"href": "templates/crm/myOrdereds.html",
+							"value": "MyOrdereds",
+							"showMenu": "false"
+						},
+
+						{
+							"index": "A1200306",
+							"name": "数据字典",
+							"key": "RecruitStudentsDicts",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsDicts",
+							"href": "templates/crm/gc_dict.html",
+							"value": "RecruitStudentsDicts"
+						}
+					]
+				},
+
+				{
+					"index": "A12007",
+					"name": "线索报表",
+					"key": "RecruitStudentsReports",
+					"icon": "iconfont icon-recruit_forms",
+					"type": "$state",
+					"path": "/RecruitStudents/RecruitStudentsReports",
+					"value": "RecruitStudentsReports",
+					"menus": 
+					[
+						{
+							"index": "A1200701",
+							"name": "渠道统计",
+							"key": "RecruitStudentsReportsChannel",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportsChannel",
+							"href": "templates/crm/report/gc_rpt_channel.html",
+							"value": "RecruitStudentsReportsChannel"
+						},
+
+						{
+							"index": "A1200702",
+							"name": "转化率统计",
+							"key": "RecruitStudentsReportsConversionrate",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"href": "templates/crm/report/gc_rpt_convertrate.html",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportsConversionrate",
+							"value": "RecruitStudentsReportsConversionrate"
+						},
+
+						{
+							"index": "A1200703",
+							"name": "平均单笔统计",
+							"key": "RecruitStudentsReportsAvg",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"href": "templates/crm/report/gc_rpt_avgachieve.html",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportsAvg",
+							"value": "RecruitStudentsReportsAvg"
+						},
+
+						{
+							"index": "A1200704",
+							"name": "业绩总额统计",
+							"key": "RecruitStudentsReportsTotalperformance",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"href": "templates/crm/report/gc_rpt_achievetotal.html",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportsTotalperformance",
+							"value": "RecruitStudentsReportsTotalperformance"
+						},
+
+						{
+							"index": "A1200705",
+							"name": "校区业绩排名",
+							"key": "RecruitStudentsReportsCampusperformance",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"href": "templates/crm/report/gc_rpt_orderedsort.html",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportsCampusperformance",
+							"value": "RecruitStudentsReportsCampusperformance"
+						},
+
+						{
+							"index": "A1200706",
+							"name": "业绩资源对比表",
+							"key": "RecruitStudentsReportsPerformanceresourcescomparison",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"href": "templates/crm/report/gc_rpt_performance_gc.html",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportsPerformanceresourcescomparison",
+							"value": "RecruitStudentsReportsPerformanceresourcescomparison"
+						},
+
+						{
+							"index": "A1200707",
+							"name": "挖掘资源业绩统计",
+							"key": "RecruitStudentsReportStapresources",
+							"icon": "fa fa-genderless",
+							"type": "$state",
+							"href": "templates/crm/report/gc_rpt_excavate_gc.html",
+							"path": "/RecruitStudents/RecruitStudentsReports/RecruitStudentsReportStapresources",
+							"value": "RecruitStudentsReportStapresources"
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A13001",
+			"name": "学员管理",
+			"key": "students",
+			"icon": "fa fa-bar-chart-o",
+			"type": "$state",
+			"value": "students",
+			"path": "/students",
+			"href": "templates/erp/student/students.html",
+			"menus": 
+			[
+				{
+					"index": "A13002",
+					"name": "学员搜索",
+					"key": "studentsSearch",
+					"icon": "iconfont icon-stdudents_search",
+					"type": "$state",
+					"value": "studentsSearch",
+					"href": "templates/erp/student/students.html",
+					"path": "/students/studentsSearch"
+				},
+
+				{
+					"index": "A13003",
+					"name": "我的学员",
+					"key": "studentsMine",
+					"icon": "iconfont icon-stdudents_myStudents",
+					"type": "$state",
+					"value": "studentsMine",
+					"href": "templates/erp/student/studentsMine.html",
+					"path": "/students/studentsMine"
+				},
+
+				{
+					"index": "A13004",
+					"name": "学员分配",
+					"key": "studentsDistribution",
+					"icon": "iconfont icon-stdudents_distribute",
+					"type": "$state",
+					"value": "studentsDistribution",
+					"href": "templates/erp/student/studentsDistribution.html",
+					"path": "/students/studentsDistribution"
+				},
+
+				{
+					"index": "A13005",
+					"name": "学员跟踪",
+					"key": "studentsTrack",
+					"icon": "fa fa-align-justify",
+					"type": "$state",
+					"value": "studentsTrack",
+					"showMenu": "false",
+					"href": "templates/erp/student/studentsTrack.html",
+					"path": "/students/studentsTrack"
+				}
+			]
+		},
+
+		{
+			"index": "A15001",
+			"name": "教师管理",
+			"key": "teachers",
+			"icon": "fa fa-bar-chart",
+			"type": "$state",
+			"value": "teachers",
+			"path": "/teachers",
+			"href": "templates/erp/tearchers/teacherSearch.html",
+			"menus": 
+			[
+				{
+					"index": "A15002",
+					"name": "教师搜索",
+					"key": "teacherSearch",
+					"icon": "iconfont icon-teachers_search",
+					"type": "$state",
+					"value": "teacherSearch",
+					"path": "/teachers/teacherSearch",
+					"href": "templates/erp/tearchers/teacherSearch.html",
+					"services": 
+					[
+						{
+							"name": "老师查询",
+							"key": "newTeacher.query",
+							"url": "/erp/teacherservice/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "头像上传",
+							"key": "newTeacher.postPhoto",
+							"url": "/erp/teacherservice/photo",
+							"method": "POST"
+						},
+
+						{
+							"name": "推送验证码",
+							"key": "newTeacher.sendInvation",
+							"url": "/erp/teacherservice/sendInvation",
+							"method": "POST"
+						},
+
+						{
+							"name": "同步到叮当",
+							"key": "newTeacher.synToDoubleCourse",
+							"url": "/erp/teacherservice/synToDoubleCourse",
+							"method": "POST"
+						}
+					]
+				},
+
+				{
+					"index": "A15003",
+					"name": "教研组",
+					"key": "teacherGroup",
+					"icon": "iconfont icon-teachers_groups",
+					"type": "$state",
+					"value": "teacherGroup",
+					"path": "/teachers/teacherGroup",
+					"href": "templates/erp/tearchers/teacherGroup.html",
+					"services": 
+					[
+						{
+							"name": "教研组查询",
+							"key": "teacherGroup.query",
+							"url": "/erp/teachergroup/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "教研组添加",
+							"key": "teacherGroup.post",
+							"url": "/erp/teachergroup/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "教研组修改",
+							"key": "teacherGroup.put",
+							"url": "/erp/teachergroup/service",
+							"method": "PUT"
+						},
+
+						{
+							"name": "教研组删除",
+							"key": "teacherGroup.delete",
+							"url": "/erp/teachergroup/service",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "教师查询",
+							"key": "teacherGroup.queryTeacher",
+							"url": "/erp/teacherservice/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "员工查询",
+							"key": "teacherGroup.queryEmployee",
+							"url": "/erp/employee/service",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A15006",
+					"name": "考勤教师组",
+					"key": "attendanceGroup",
+					"icon": "fa fa-plus",
+					"type": "$state",
+					"value": "attendanceGroup",
+					"path": "/teachers/attendanceGroup",
+					"href": "templates/erp/tearchers/attendanceGroup.html",
+					"services": 
+					[
+						{
+							"name": "老师组查询",
+							"key": "attendanceGroup.query",
+							"url": "/erp/attendancegroup/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "老师组添加",
+							"key": "attendanceGroup.post",
+							"url": "/erp/attendancegroup/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "老师组修改",
+							"key": "attendanceGroup.put",
+							"url": "/erp/attendancegroup/service",
+							"method": "PUT"
+						},
+
+						{
+							"name": "老师组删除",
+							"key": "attendanceGroup.delete",
+							"url": "/erp/attendancegroup/service",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "老师查询",
+							"key": "attendanceGroup.queryTeacher",
+							"url": "/erp/teacherservice/service",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "校区查询",
+							"key": "attendanceGroup.queryBranchs",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A15004",
+					"name": "教师录入",
+					"key": "newTeacher",
+					"icon": "iconfont icon-teachers_typeIn",
+					"type": "$state",
+					"value": "newTeacher",
+					"path": "/teachers/newTeacher",
+					"href": "templates/erp/tearchers/newTeacher.html",
+					"services": 
+					[
+						{
+							"name": "老师添加",
+							"key": "newTeacher.post",
+							"url": "/erp/teacherservice/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "员工查询",
+							"key": "newTeacher.queryEmployee",
+							"url": "/hrm/employee/employeeservice/page",
+							"method": "GET"
+						},
+
+						{
+							"name": "科目查询",
+							"key": "newTeacher.querySubject",
+							"url": "/erp/dictionary/subject/service",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A15005",
+					"name": "教师导入",
+					"key": "excelInput",
+					"icon": "iconfont icon-teachers_leadIn",
+					"type": "$state",
+					"value": "excelInput",
+					"path": "/teachers/excelInput",
+					"href": "templates/erp/tearchers/excelInput.html",
+					"services": 
+					[
+						{
+							"name": "老师添加",
+							"key": "excelInput.post",
+							"url": "/erp/teacherservice/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "员工查询",
+							"key": "excelInput.queryEmployee",
+							"url": "/hrm/employee/employeeservice/page",
+							"method": "GET"
+						},
+
+						{
+							"name": "科目查询",
+							"key": "excelInput.querySubject",
+							"url": "/erp/dictionary/subject/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "excel数据预览",
+							"key": "excelInput.postExcel",
+							"url": "/erp/teacherservice/inputExcel",
+							"method": "POST"
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A14000",
+			"name": "教务平台",
+			"key": "orders",
+			"icon": "fa fa-line-chart",
+			"type": "$state",
+			"value": "orders",
+			"path": "/orders",
+			"href": "templates/erp/orders/ordersIndex.html",
+			"menus": 
+			[
+				{
+					"index": "A14001",
+					"name": "首页",
+					"key": "ordersIndex",
+					"icon": "iconfont icon-orders_home",
+					"type": "$state",
+					"value": "ordersIndex",
+					"path": "/orders/ordersIndex",
+					"href": "templates/erp/orders/ordersIndex.html"
+				},
+
+				{
+					"index": "A14002",
+					"name": "报班管理",
+					"key": "ordersMgr",
+					"icon": "iconfont icon-orders_apply",
+					"type": "$state",
+					"value": "ordersMgr",
+					"path": "/orders/ordersMgr",
+					"menus": 
+					[
+						{
+							"index": "A1400201",
+							"name": "报班业务",
+							"key": "ordersMgrOrders",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrOrders",
+							"path": "/orders/ordersMgr/ordersMgrOrders",
+							"href": "templates/erp/orders/orders.html",
+							"services": 
+							[
+								{
+									"name": "晚辅导套餐查询",
+									"key": "ordersMgrOrders.queryPackage",
+									"url": "/erp/coursemanagerment/package",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员查询",
+									"key": "ordersMgrOrders.queryStudents",
+									"url": "/erp/studentservice/students",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程季查询",
+									"key": "ordersMgrOrders.queryTimeSeason",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "科目查询",
+									"key": "ordersMgrOrders.querySubject",
+									"url": "/erp/dictionary/subject/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrOrders.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrOrders.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程查询",
+									"key": "ordersMgrOrders.queryCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程课次查询",
+									"key": "ordersMgrOrders.queryCoursetimes",
+									"url": "/erp/coursemanagerment/coursetimes",
+									"method": "GET"
+								},
+
+								{
+									"name": "优惠规则查询",
+									"key": "ordersMgrOrders.queryPrivilegerule",
+									"url": "/erp/privilegerule/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "优惠券查询",
+									"key": "ordersMgrOrders.queryCouponinfo",
+									"url": "/erp/couponinfo/servicePage",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员账户查询",
+									"key": "ordersMgrOrders.queryIndexAccount",
+									"url": "/erp/studentservice/student/indexAccount",
+									"method": "GET"
+								},
+
+								{
+									"name": "公司账户查询",
+									"key": "ordersMgrOrders.queryCompanyAccount",
+									"url": "/erp/common/companyaccount/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "订单付款查询",
+									"key": "ordersMgrOrders.postOrderPay",
+									"url": "/erp/ordermanager/pay",
+									"method": "POST"
+								},
+
+								{
+									"name": "订单提交",
+									"key": "ordersMgrOrders.postOrder",
+									"url": "/erp/ordermanager/service",
+									"method": "POST"
+								}
+							]
+						},
+
+						{
+							"index": "A1400202",
+							"name": "班级课",
+							"key": "ordersMgrCourse",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourse",
+							"path": "/orders/ordersMgr/ordersMgrCourse",
+							"href": "templates/erp/course/course.html",
+							"services": 
+							[
+								{
+									"name": "课程查询",
+									"key": "ordersMgrCourse.query",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增课程",
+									"key": "ordersMgrCourse.post",
+									"url": "/erp/coursemanagerment/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改课程",
+									"key": "ordersMgrCourse.put",
+									"url": "/erp/coursemanagerment/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "上架下架课程",
+									"key": "ordersMgrCourse.putStatus",
+									"url": "/erp/coursemanagerment/changeStatus",
+									"method": "PUT"
+								},
+
+								{
+									"name": "科目查询",
+									"key": "ordersMgrCourse.querySubject",
+									"url": "/erp/dictionary/subject/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourse.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程季查询",
+									"key": "ordersMgrCourse.queryTimeSeason",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourse.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "教师查询",
+									"key": "ordersMgrCourse.queryTeacher",
+									"url": "/erp/teacherservice/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140020202",
+							"name": "双师课程",
+							"key": "ordersMgrMTCourse",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrMTCourse",
+							"path": "/orders/ordersMgr/ordersMgrMTCourse",
+							"href": "templates/erp/course/mtcourse.html",
+							"services": 
+							[
+								{
+									"name": "双师课程查询",
+									"key": "ordersMgrMTCourse.query",
+									"url": "/erp/coursemanagerment/mtcourse",
+									"method": "GET"
+								},
+
+								{
+									"name": "双师课程新增",
+									"key": "ordersMgrMTCourse.post",
+									"url": "/erp/coursemanagerment/mtcourse",
+									"method": "POST"
+								},
+
+								{
+									"name": "双师课程修改",
+									"key": "ordersMgrMTCourse.put",
+									"url": "/erp/coursemanagerment/mtcourse",
+									"method": "PUT"
+								},
+
+								{
+									"name": "双师课程删除",
+									"key": "ordersMgrMTCourse.delete",
+									"url": "/erp/coursemanagerment/mtcourse",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "同步叮当",
+									"key": "ordersMgrMTCourse.synchronization",
+									"url": "/erp/coursemanagerment/synToDoubleCourse",
+									"method": "POST"
+								},
+
+								{
+									"name": "教师查询",
+									"key": "ordersMgrMTCourse.queryTeacher",
+									"url": "/erp/teacherservice/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "双师课程状态修改",
+									"key": "ordersMgrMTCourse.changeStatus",
+									"url": "/erp/course/mtcourse/synToDoubleCourse",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140020201",
+							"name": "班级课导入",
+							"key": "ordersMgrCourseInput",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "ordersMgrCourseInput",
+							"path": "/orders/ordersMgr/ordersMgrCourseInput",
+							"href": "templates/erp/course/fileUpload_bjk.html",
+							"services": 
+							[
+								{
+									"name": "excel读取",
+									"key": "ordersMgrCourse.inputExcel",
+									"url": "/erp/coursemanagerment/inputExcel",
+									"method": "GET"
+								},
+
+								{
+									"name": "数据校验",
+									"key": "ordersMgrCourse.inputCourse",
+									"url": "/erp/coursemanagerment/inputDataCheck",
+									"method": "POST"
+								},
+
+								{
+									"name": "课程导入",
+									"key": "ordersMgrCourse.inputCourse",
+									"url": "/erp/coursemanagerment/inputData",
+									"method": "GET"
+								},
+
+								{
+									"name": "科目查询",
+									"key": "ordersMgrCourse.querySubject",
+									"url": "/erp/dictionary/subject/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourse.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程季查询",
+									"key": "ordersMgrCourse.queryTimeSeason",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourse.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "教师查询",
+									"key": "ordersMgrCourse.queryTeacher",
+									"url": "/erp/teacherservice/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1400203",
+							"name": "1对1课程",
+							"key": "ordersMgrCourseYDY",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourseYDY",
+							"path": "/orders/ordersMgr/ordersMgrCourseYDY",
+							"href": "templates/erp/course/ydy.html",
+							"services": 
+							[
+								{
+									"name": "课程查询",
+									"key": "ordersMgrCourse.query",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增课程",
+									"key": "ordersMgrCourse.post",
+									"url": "/erp/coursemanagerment/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改课程",
+									"key": "ordersMgrCourse.put",
+									"url": "/erp/coursemanagerment/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除课程",
+									"key": "ordersMgrCourse.deleteCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "课程上架下架",
+									"key": "ordersMgrCourse.courseChangeStatus",
+									"url": "/erp/coursemanagerment/changeStatus",
+									"method": "POST"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourse.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourse.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140020301",
+							"name": "1对1课程导入",
+							"key": "ordersMgrCourseYDYInput",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourseYDYInput",
+							"path": "/orders/ordersMgr/ordersMgrCourseYDYInput",
+							"href": "templates/erp/course/fileUpload_ydy.html",
+							"services": 
+							[
+								{
+									"name": "excel读取",
+									"key": "ordersMgrCourseYDYInput.inputExcel",
+									"url": "/erp/coursemanagerment/inputExcel",
+									"method": "GET"
+								},
+
+								{
+									"name": "数据校验",
+									"key": "ordersMgrCourseYDYInput.inputCourse",
+									"url": "/erp/coursemanagerment/inputDataCheck",
+									"method": "POST"
+								},
+
+								{
+									"name": "课程导入",
+									"key": "ordersMgrCourseYDYInput.inputCourse",
+									"url": "/erp/coursemanagerment/inputData",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourseYDYInput.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourseYDYInput.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140020302",
+							"name": "1对1课程阶梯",
+							"key": "ordersMgrCourseYDYLadder",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourseYDYLadder",
+							"path": "/orders/ordersMgr/ordersMgrCourseYDYLadder",
+							"href": "templates/erp/course/ydy_ladder.html",
+							"services": 
+							[
+								{
+									"name": "课程查询",
+									"key": "ordersMgrCourseYDYLadder.queryCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "阶梯查询",
+									"key": "ordersMgrCourseYDYLadder.query",
+									"url": "/erp/courseladder/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增阶梯",
+									"key": "ordersMgrCourseYDYLadder.post",
+									"url": "/erp/courseladder/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改阶梯",
+									"key": "ordersMgrCourseYDYLadder.put",
+									"url": "/erp/courseladder/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除阶梯",
+									"key": "ordersMgrCourseYDYLadder.delete",
+									"url": "/erp/courseladder/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourseYDYLadder.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourseYDYLadder.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1400204",
+							"name": "晚辅导课程",
+							"key": "ordersMgrCourseWFD",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourseWFD",
+							"path": "/orders/ordersMgr/ordersMgrCourseWFD",
+							"href": "templates/erp/course/wfd.html",
+							"services": 
+							[
+								{
+									"name": "课程查询",
+									"key": "ordersMgrCourse.query",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增课程",
+									"key": "ordersMgrCourse.post",
+									"url": "/erp/coursemanagerment/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改课程",
+									"key": "ordersMgrCourse.put",
+									"url": "/erp/coursemanagerment/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "科目查询",
+									"key": "ordersMgrCourse.querySubject",
+									"url": "/erp/dictionary/subject/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourse.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程季查询",
+									"key": "ordersMgrCourse.queryTimeSeason",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourse.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140020401",
+							"name": "晚辅导课程导入",
+							"key": "ordersMgrCourseWFDInput",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "ordersMgrCourseWFDInput",
+							"path": "/orders/ordersMgr/ordersMgrCourseWFDInput",
+							"href": "templates/erp/course/fileUpload_wfd.html",
+							"services": 
+							[
+								{
+									"name": "excel读取",
+									"key": "ordersMgrCourseWFDInput.inputExcel",
+									"url": "/erp/coursemanagerment/inputExcel",
+									"method": "GET"
+								},
+
+								{
+									"name": "数据校验",
+									"key": "ordersMgrCourseWFDInput.inputCourse",
+									"url": "/erp/coursemanagerment/inputDataCheck",
+									"method": "POST"
+								},
+
+								{
+									"name": "课程导入",
+									"key": "ordersMgrCourseWFDInput.inputCourse",
+									"url": "/erp/coursemanagerment/inputData",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourseWFDInput.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourseWFDInput.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1400205",
+							"name": "晚辅导套餐",
+							"key": "ordersMgrCourseWFDCombo",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourseWFDCombo",
+							"path": "/orders/ordersMgr/ordersMgrCourseWFDCombo",
+							"href": "templates/erp/course/wfd_combo.html",
+							"services": 
+							[
+								{
+									"name": "查询套餐",
+									"key": "ordersMgrCourseWFDCombo.query",
+									"url": "/erp/coursemanagerment/package",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增套餐",
+									"key": "ordersMgrCourseWFDCombo.post",
+									"url": "/erp/coursemanagerment/package",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改套餐",
+									"key": "ordersMgrCourseWFDCombo.put",
+									"url": "/erp/coursemanagerment/package",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除套餐",
+									"key": "ordersMgrCourseWFDCombo.delete",
+									"url": "/erp/coursemanagerment/package",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourseWFDCombo.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourseWFDCombo.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "套餐状态变更",
+									"key": "ordersMgrCourseWFDCombo.changeStatus",
+									"url": "/erp/coursemanagerment/package/changeStatus",
+									"method": "PUT"
+								}
+							]
+						},
+
+						{
+							"index": "A140020501",
+							"name": "晚辅导套餐导入",
+							"key": "ordersMgrCourseWFDComboInput",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "ordersMgrCourseWFDComboInput",
+							"path": "/orders/ordersMgr/ordersMgrCourseWFDComboInput",
+							"href": "templates/erp/course/wfd_combo_input.html",
+							"services": 
+							[
+								{
+									"name": "套餐excel导入",
+									"key": "ordersMgrCourseWFDComboInput.inputExcel",
+									"url": "/erp/coursemanagerment/package/inputExcel",
+									"method": "POST"
+								},
+
+								{
+									"name": "套餐excel校验",
+									"key": "ordersMgrCourseWFDComboInput.inputCheck",
+									"url": "/erp/coursemanagerment/package/inputCheck",
+									"method": "POST"
+								},
+
+								{
+									"name": "套餐导入",
+									"key": "ordersMgrCourseWFDComboInput.inputData",
+									"url": "/erp/coursemanagerment/package/inputData",
+									"method": "POST"
+								}
+							]
+						},
+
+						{
+							"index": "A1400206",
+							"name": "优惠前置",
+							"key": "ordersMgrPrivilegeCriteria",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrPrivilegeCriteria",
+							"path": "/orders/ordersMgr/ordersMgrPrivilegeCriteria",
+							"href": "templates/erp/orders/ordersMgrPrivilegeCriteria.html"
+						},
+
+						{
+							"index": "A1400207",
+							"name": "优惠规则",
+							"key": "ordersMgrPrivilegeRules",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrPrivilegeRules",
+							"path": "/orders/ordersMgr/ordersMgrPrivilegeRules",
+							"href": "templates/erp/orders/ordersMgrPrivilegeRules.html"
+						},
+
+						{
+							"index": "A1400208",
+							"name": "优惠券",
+							"key": "ordersMgrCoupon",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCoupon",
+							"path": "/orders/ordersMgr/ordersMgrCoupon",
+							"href": "templates/erp/orders/ordersMgrCouponInfo.html"
+						},
+
+						{
+							"index": "A1400210",
+							"name": "优惠活动",
+							"key": "ordersMgrActivityInfo",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrActivityInfo",
+							"path": "/orders/ordersMgr/ordersMgrActivityInfo",
+							"href": "templates/erp/orders/ordersMgrActivityInfo.html"
+						},
+
+						{
+							"index": "A1400211",
+							"name": "课程导入",
+							"key": "ordersMgrCourseInput",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "ordersMgrCourseInput",
+							"path": "/orders/ordersMgr/ordersMgrCourseInput",
+							"href": "templates/erp/fileUpload/fileUpload.html",
+							"services": 
+							[
+								{
+									"name": "模版查询",
+									"key": "ordersMgrCourseInput.queryModels",
+									"url": "/erp/excels/input",
+									"method": "GET"
+								},
+
+								{
+									"name": "导入excel",
+									"key": "ordersMgrCourseInput.postModels",
+									"url": "/erp/excels/input",
+									"method": "POST"
+								},
+
+								{
+									"name": "提交导入数据",
+									"key": "ordersMgrCourseInput.putModels",
+									"url": "/erp/excels/input",
+									"method": "POST"
+								}
+							]
+						}
+					]
+				},
+
+				{
+					"index": "A14003",
+					"name": "转班管理",
+					"key": "orderChangeTransfer",
+					"icon": "iconfont icon-orders_changeClass",
+					"type": "$state",
+					"value": "orderChangeTransfer",
+					"path": "/orders/orderChangeTransfer",
+					"href": "templates/erp/orders/order_change_transfer.html",
+					"services": 
+					[
+						{
+							"name": "查询订单详情",
+							"key": "classesTransfer.queryOrder",
+							"url": "/erp/ordermanager/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询课程",
+							"key": "classesTransfer.queryCourse",
+							"url": "/erp/coursemanagerment/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询学员订单",
+							"key": "classesTransfer.queryStudentCourse",
+							"url": "/erp/studentservice/orderCourse",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询校区",
+							"key": "classesTransfer.queryBranchs",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "转班单新增",
+							"key": "classesTransfer.post",
+							"url": "/erp/transfermanager/service",
+							"method": "POST"
+						}
+					]
+				},
+
+				{
+					"index": "A14004",
+					"name": "排课管理",
+					"key": "classesSchedule",
+					"icon": "iconfont icon-orders_coursePlans",
+					"type": "$state",
+					"value": "classesSchedule",
+					"path": "/orders/classesSchedule",
+					"href": "templates/erp/course/course_scheduling.html",
+					"services": 
+					[
+						{
+							"name": "查询课程信息",
+							"key": " classesSchedule.queryCourse",
+							"url": "/erp/coursemanagerment/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "修改排课信息",
+							"key": " classesSchedule.updateCourse",
+							"url": "/erp/coursemanagerment/service ",
+							"method": "PUT"
+						},
+
+						{
+							"name": "修改课次信息",
+							"key": " classesSchedule.putCourseTimes",
+							"url": "/erp/coursemanagerment/coursetimes",
+							"method": "PUT"
+						},
+
+						{
+							"name": "查询辅助参数",
+							"key": " classesSchedule.queryParams",
+							"url": "/erp/coursemanagerment/schedulingAssist",
+							"method": "GET"
+						},
+
+						{
+							"name": "修改辅助参数",
+							"key": " classesSchedule.putParams",
+							"url": "/erp/coursemanagerment/schedulingAssist",
+							"method": "PUT"
+						}
+					]
+				},
+
+				{
+					"index": "A1400401",
+					"name": "课程排课界面",
+					"key": "classesScheduleCourse",
+					"icon": "fa fa-bars",
+					"type": "$state",
+					"value": "classesScheduleCourse",
+					"showMenu": "false",
+					"path": "/orders/classesScheduleCourse",
+					"href": "templates/erp/course/course_scheduling_change.html",
+					"services": 
+					[
+						{
+							"name": "查询课程信息",
+							"key": " classesSchedule.queryCourse",
+							"url": "/erp/coursemanagerment/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "修改排课信息",
+							"key": " classesSchedule.updateCourse",
+							"url": "/erp/coursemanagerment/service ",
+							"method": "PUT"
+						},
+
+						{
+							"name": "修改课次信息",
+							"key": " classesSchedule.putCourseTimes",
+							"url": "/erp/coursemanagerment/coursetimes",
+							"method": "PUT"
+						},
+
+						{
+							"name": "查询辅助参数",
+							"key": " classesSchedule.queryParams",
+							"url": "/erp/coursemanagerment/schedulingAssist",
+							"method": "GET"
+						},
+
+						{
+							"name": "修改辅助参数",
+							"key": " classesSchedule.putParams",
+							"url": "/erp/coursemanagerment/schedulingAssist",
+							"method": "PUT"
+						}
+					]
+				},
+
+				{
+					"index": "A14005",
+					"name": "考勤管理",
+					"key": "attendanceMgr",
+					"icon": "iconfont icon-orders_attendance",
+					"type": "$state",
+					"value": "attendanceMgr",
+					"path": "/orders/attendanceMgr",
+					"menus": 
+					[
+						{
+							"index": "A1400501",
+							"name": "班级课考勤",
+							"key": "attendanceMgrBJK",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "attendanceMgrBJK",
+							"path": "/orders/attendanceMgr/attendanceMgrBJK",
+							"href": "templates/erp/attendance/attendance_bjk.html",
+							"services": 
+							[
+								{
+									"name": "查询考勤课程信息",
+									"key": " attendanceMgrBJK.queryCourse",
+									"url": "/erp/attendance/course",
+									"method": "GET"
+								},
+
+								{
+									"name": "查询考勤课次信息",
+									"key": " attendanceMgrBJK.queryCourseTimes",
+									"url": "/erp/attendance/coursetimes",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140050101",
+							"name": "班级课考勤学生列表",
+							"key": "attendanceMgrBJKStudents",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "attendanceMgrBJKStudents",
+							"path": "/orders/attendanceMgr/attendanceMgrBJKStudents",
+							"href": "templates/erp/attendance/attendance_bjk_students.html",
+							"services": 
+							[
+								{
+									"name": "查询考勤课程信息",
+									"key": " classesAttendance.queryCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "查询考勤课次信息",
+									"key": " classesAttendance.queryCourseTimes",
+									"url": "/erp/attendance/coursetimes",
+									"method": "GET"
+								},
+
+								{
+									"name": "查询课程课次学生列表",
+									"key": " classesAttendance.queryStudents",
+									"url": "/erp/attendance/students",
+									"method": "GET"
+								},
+
+								{
+									"name": "修改学生考勤",
+									"key": " classesAttendance.updateStudentsAttendance",
+									"url": "/erp/attendance/students",
+									"method": "PUT"
+								},
+
+								{
+									"name": "查询课次辅助参数",
+									"key": " classesAttendance.queryCfg",
+									"url": "/erp/attendance/coursetimes/cfg",
+									"method": "GET"
+								},
+
+								{
+									"name": "修改课次辅助参数",
+									"key": " classesAttendance.updateCfg",
+									"url": "/erp/attendance/coursetimes/cfg",
+									"method": "PUT"
+								}
+							]
+						},
+
+						{
+							"index": "A140050102",
+							"name": "班级课学生补课",
+							"key": "attendanceMgrBJKMakeup",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "attendanceMgrBJKMakeup",
+							"path": "/orders/attendanceMgr/attendanceMgrBJKMakeup",
+							"href": "templates/erp/attendance/attendance_bjk_makeup.html",
+							"services": 
+							[
+								
+							]
+						},
+
+						{
+							"index": "A1400502",
+							"name": "晚辅导考勤",
+							"key": "attendanceMgrWFD",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "attendanceMgrWFD",
+							"path": "/orders/attendanceMgr/attendanceMgrWFD",
+							"href": "templates/erp/attendance/attendance_wfd.html",
+							"services": 
+							[
+								{
+									"name": "查询考勤课程信息",
+									"key": " attendanceMgrBJK.queryCourse",
+									"url": "/erp/attendance/course",
+									"method": "GET"
+								},
+
+								{
+									"name": "查询考勤课次信息",
+									"key": " attendanceMgrBJK.queryCourseTimes",
+									"url": "/erp/attendance/coursetimes",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140050201",
+							"name": "晚辅导考勤详细列表",
+							"key": "attendanceMgrWFDDetails",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"showMenu": "false",
+							"value": "attendanceMgrWFDDetails",
+							"path": "/orders/attendanceMgr/attendanceMgrWFDDetails",
+							"href": "templates/erp/attendance/attendance_wfd_details.html",
+							"services": 
+							[
+								{
+									"name": "查询考勤课程信息",
+									"key": " classesAttendance.queryCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "查询考勤课次信息",
+									"key": " classesAttendance.queryCourseTimes",
+									"url": "/erp/attendance/coursetimes",
+									"method": "GET"
+								},
+
+								{
+									"name": "查询课程课次学生列表",
+									"key": " classesAttendance.queryStudents",
+									"url": "/erp/attendance/students",
+									"method": "GET"
+								},
+
+								{
+									"name": "修改学生考勤",
+									"key": " classesAttendance.updateStudentsAttendance",
+									"url": "/erp/attendance/students",
+									"method": "PUT"
+								},
+
+								{
+									"name": "查询课次辅助参数",
+									"key": " classesAttendance.queryCfg",
+									"url": "/erp/attendance/coursetimes/cfg",
+									"method": "GET"
+								},
+
+								{
+									"name": "修改课次辅助参数",
+									"key": " classesAttendance.updateCfg",
+									"url": "/erp/attendance/coursetimes/cfg",
+									"method": "PUT"
+								}
+							]
+						},
+
+						{
+							"index": "A1400503",
+							"name": "1对1考勤",
+							"key": "attendanceMgrYDY",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "attendanceMgrYDY",
+							"path": "/orders/attendanceMgr/attendanceMgrYDY",
+							"href": "templates/erp/attendance/attendance_ydy.html",
+							"services": 
+							[
+								{
+									"name": "1对1排课信息查询",
+									"key": "studentMgrAttendance.queryYDY",
+									"url": "/erp/studentservice/scheduling",
+									"method": "GET"
+								},
+
+								{
+									"name": "1对1排课取消",
+									"key": "studentMgrAttendance.deleteYDY",
+									"url": "/erp/studentservice/scheduling",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "1对1排课考勤",
+									"key": "studentMgrAttendance.postYDY",
+									"url": "/erp/attendanceservice/ydy",
+									"method": "POST"
+								}
+							]
+						}
+					]
+				},
+
+				{
+					"index": "A14006",
+					"name": "退费管理",
+					"key": "classesRefund",
+					"icon": "iconfont icon-orders_returnPremium",
+					"type": "$state",
+					"value": "classesRefund",
+					"path": "/orders/classesRefund",
+					"href": "templates/erp/orders/order_change_refund.html",
+					"services": 
+					[
+						{
+							"name": "查询学员",
+							"key": " classesRefund.queryStudents",
+							"url": "/erp/studentservice/students",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询学员课程剩余",
+							"key": " classesRefund.queryCourseTimes",
+							"url": "/erp/ordermanager/surplusCount",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询学员课程",
+							"key": " classesRefund.queryOrderCourse",
+							"url": "/erp/studentservice/orderCourse",
+							"method": "GET"
+						},
+
+						{
+							"name": "退费单新增",
+							"key": " classesRefund.post",
+							"url": "/erp/refundmanager/service ",
+							"method": "POST"
+						}
+					]
+				},
+
+				{
+					"index": "A14007",
+					"name": "冻结管理",
+					"key": "classesFrozen",
+					"icon": "iconfont icon-orders_frozen",
+					"type": "$state",
+					"value": "classesFrozen",
+					"path": "/orders/classesFrozen",
+					"href": "templates/erp/orders/order_change_frozen.html",
+					"services": 
+					[
+						{
+							"name": "查询学员",
+							"key": " classesFrozen.queryStudents",
+							"url": "/erp/studentservice/students",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询学员课程剩余",
+							"key": " classesFrozen.queryCourseTimes",
+							"url": "/erp/ordermanager/surplusCount",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询学员课程",
+							"key": " classesFrozen.queryOrderCourse",
+							"url": "/erp/studentservice/orderCourse",
+							"method": "GET"
+						},
+
+						{
+							"name": "冻结单新增",
+							"key": " classesFrozen.post",
+							"url": "/erp/ordermanager/frozen",
+							"method": "POST"
+						}
+					]
+				},
+
+				{
+					"index": "A14008",
+					"name": "教室管理",
+					"key": "classesRoomMgr",
+					"icon": "iconfont icon-orders_frozen",
+					"type": "$state",
+					"value": "classesRoomMgr",
+					"path": "/orders/classesRoomMgr",
+					"menus": 
+					[
+						{
+							"index": "A1400801",
+							"name": "教室信息",
+							"key": "classesRoom",
+							"icon": "iconfont icon-orders_frozen",
+							"type": "$state",
+							"value": "classesRoom",
+							"href": "templates/erp/room/room.html",
+							"path": "/orders/classesRoomMgr/classesRoom",
+							"services": 
+							[
+								{
+									"name": "教室查询",
+									"key": " classesRoom.query",
+									"url": "/erp/room/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "教室新增",
+									"key": " classesRoom.add",
+									"url": "/erp/room/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "教室修改",
+									"key": " classesRoom.update",
+									"url": "/erp/room/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "教室删除",
+									"key": " classesRoom.update",
+									"url": "/erp/room/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "校区查询",
+									"key": " classesRoom.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "团队查询",
+									"key": " classesRoom.queryBu",
+									"url": "/erp/dictionary/organization/bus",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1400802",
+							"name": "课次教室绑定",
+							"key": "classesCourseRoomRel",
+							"icon": "iconfont icon-orders_frozen",
+							"type": "$state",
+							"value": "classesCourseRoomRel",
+							"href": "templates/erp/room/course_room.html",
+							"path": "/orders/classesRoomMgr/classesCourseRoomRel",
+							"services": 
+							[
+								{
+									"name": "课程查询",
+									"key": " classesCourseRoomRel.queryCourse",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程课次教室信息查询",
+									"key": " classesCourseRoomRel.query",
+									"url": "/erp/room/rel",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程课次教室信息设置",
+									"key": " classesCourseRoomRel.post",
+									"url": "/erp/room/rel",
+									"method": "POST"
+								},
+
+								{
+									"name": "校区查询",
+									"key": " classesCourseRoomRel.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "团队查询",
+									"key": " classesCourseRoomRel.queryBu",
+									"url": "/erp/dictionary/organization/bus",
+									"method": "GET"
+								}
+							]
+						}
+					]
+				},
+
+				{
+					"index": "A14010",
+					"name": "业绩报表",
+					"key": "classesReports",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReports",
+					"path": "/classes/classesReports",
+					"menus": 
+					[
+						{
+							"index": "A140100101",
+							"name": "报表任务设置",
+							"key": "classesReportSettings",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportSettings",
+							"path": "/orders/classesReports/classesReportSettings",
+							"href": "templates/report/settings.html",
+							"services": 
+							[
+								{
+									"name": "查询报表配置信息",
+									"key": " classesReportSettings.query",
+									"url": "/report/settings/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "修改报表配置信息",
+									"key": " classesReportSettings.post",
+									"url": "/report/settings/service",
+									"method": "POST"
+								}
+							]
+						},
+
+						{
+							"index": "A140100102",
+							"name": "任务运行结果",
+							"key": "classesReportTaskResult",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportTaskResult",
+							"path": "/orders/classesReports/classesReportTaskResult",
+							"href": "templates/report/result.html",
+							"services": 
+							[
+								{
+									"name": "查询报表运行结果",
+									"key": " classesReportTaskResult.query",
+									"url": "/report/taskrun/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140100201",
+							"name": "账户剩余表",
+							"key": "classesReportAccount",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportAccount",
+							"path": "/orders/classesReports/classesReportAccount",
+							"href": "templates/report/common/account.html",
+							"services": 
+							[
+								{
+									"name": "账户剩余查询",
+									"key": "classesReportAccount.query",
+									"url": "/report/common/account",
+									"method": "GET"
+								},
+
+								{
+									"name": "账户剩余导出",
+									"key": "classesReportAccount.excelOutput",
+									"url": "/report/common/account/output",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A140100202",
+							"name": "账户流水信息表",
+							"key": "classesReportAccountFlow",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportAccountFlow",
+							"path": "/orders/classesReports/classesReportAccountFlow",
+							"href": "templates/report/common/account_flow.html",
+							"services": 
+							[
+								{
+									"name": "账户流水查询",
+									"key": "classesReportAccountFlow.query",
+									"url": "/report/common/accountflow",
+									"method": "GET"
+								},
+
+								{
+									"name": "账户流水导出",
+									"key": "classesReportAccountFlow.excelOutput",
+									"url": "/report/common/accountflow/output",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "classesReportAccountFlow.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100203",
+							"name": "充值取现表",
+							"key": "classesReportAccountRechargeCash",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportAccountRechargeCash",
+							"path": "/orders/classesReports/classesReportAccountRechargeCash",
+							"href": "templates/report/common/account_recharge_cash.html",
+							"services": 
+							[
+								{
+									"name": "充值取现查询",
+									"key": "classesReportAccountRechargeCash.query",
+									"url": "/report/common/accountFlow/recharge",
+									"method": "GET"
+								},{
+									"name": "充值取现导出",
+									"key": "classesReportAccountRechargeCash.excelOutput",
+									"url": "/report/common/accountFlow/recharge/output",
+									"method": "GET"
+								},{
+									"name": "校区查询",
+									"key": "classesReportAccountRechargeCash.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100204",
+							"name": "出纳信息表",
+							"key": "classesReportAccountCashier",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportAccountCashier",
+							"path": "/orders/classesReports/classesReportAccountCashier",
+							"href": "templates/report/common/account_cashier.html",
+							"services": 
+							[
+								{
+									"name": "出纳信息查询",
+									"key": "classesReportAccountCashier.query",
+									"url": "/report/common/accountFlow/cashier",
+									"method": "GET"
+								},{
+									"name": "出纳信息导出",
+									"key": "classesReportAccountCashier.excelOutput",
+									"url": "/report/common/accountFlow/cashier/output",
+									"method": "GET"
+								},{
+									"name": "校区查询",
+									"key": "classesReportAccountCashier.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100205",
+							"name": "业绩明细报表",
+							"key": "classesReportPerformanceDetails",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportPerformanceDetails",
+							"path": "/orders/classesReports/classesReportPerformanceDetails",
+							"href": "templates/report/common/performance_details.html",
+							"services": 
+							[
+								{
+									"name": "业绩明细查询",
+									"key": "classesReportPerformanceDetails.query",
+									"url": "/report/common/performancedetails",
+									"method": "GET"
+								},
+
+								{
+									"name": "业绩明细导出",
+									"key": "classesReportPerformanceDetails.output",
+									"url": "/report/common/performancedetails/output",
+									"method": "GET"
+								},
+
+								{
+									"name": "校区查询",
+									"key": "classesReportPerformanceDetails.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+
+								{
+									"name": "团队查询",
+									"key": "classesReportPerformanceDetails.queryBu",
+									"url": "/erp/dictionary/organization/bus",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100206",
+							"name": "各类型汇总业绩表",
+							"key": "classesReportPerformanceSum",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportPerformanceSum",
+							"path": "/orders/classesReports/classesReportPerformanceSum",
+							"href": "templates/report/common/performance_sum.html",
+							"services": 
+							[
+								{
+									"name": "汇总业绩查询",
+									"key": "classesReportPerformanceSum.query",
+									"url": "/report/common/performancesum",
+									"method": "GET"
+								},{
+									"name": "汇总业绩导出",
+									"key": "classesReportPerformanceSum.output",
+							"url": "/report/common/performancesum/output",
+									"method": "GET"
+								},{
+									"name": "校区查询",
+									"key": "classesReportPerformanceSum.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},{
+									"name": "团队查询",
+									"key": "classesReportPerformanceSum.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100207",
+							"name": "报冻退转报表",
+							"key": "classesReportOrderChange",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportOrderChange",
+							"path": "/orders/classesReports/classesReportOrderChange",
+							"href": "templates/report/common/order_change_report.html",
+							"services": 
+							[
+								{
+									"name": "报冻退转报表查询",
+									"key": "classesReportOrderChange.query",
+									"url": "/report/common/orderchange",
+									"method": "GET"
+								},
+								{
+									"name": "报冻退转报表导出",
+									"key": "classesReportOrderChange.output",
+									"url": "/report/common/orderchange/output",
+									"method": "GET"
+								},
+								{
+									"name": "校区查询",
+									"key": "classesReportOrderChange.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100210",
+							"name": "培英班续报率报表",
+							"key": "classesReportRenewalRate",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportRenewalRate",
+							"path": "/orders/classesReports/classesReportRenewalRate",
+							"href": "templates/report/common/renewal_rate.html",
+							"services": 
+							[
+								{
+									"name": "培英班续报率报表查询",
+									"key": "classesReportRenewalRate.query",
+									"url": "/report/common/renewalRate/sum",
+									"method": "GET"
+								},
+								{
+									"name": "培英班续报率报表导出",
+									"key": "classesReportRenewalRate.output",
+									"url": "/report/common/renewalRate/sum/output",
+									"method": "GET"
+								},
+								{
+									"name": "校区查询",
+									"key": "classesReportRenewalRate.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100211",
+							"name": "培英班续报率报表",
+							"key": "classesReportRenewalRateLastBase",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportRenewalRateLastBase",
+							"path": "/orders/classesReports/classesReportRenewalRateLastBase",
+							"href": "templates/report/common/renewal_rate_lastbase.html",
+							"showMenu": "false",
+							"services": 
+							[
+								{
+									"name": "培英班续报率报表查询",
+									"key": "classesReportRenewalRateLastBase.query",
+									"url": "/report/common/renewalRate/lastbase",
+									"method": "GET"
+								},
+								{
+									"name": "培英班续报率报表导出",
+									"key": "classesReportRenewalRateLastBase.output",
+									"url": "/report/common/renewalRate/lastbase/output",
+									"method": "GET"
+								},
+								{
+									"name": "校区查询",
+									"key": "classesReportRenewalRateLastBase.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100212",
+							"name": "培英班续报率报表",
+							"key": "classesReportRenewalRateEstimate",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportRenewalRateEstimate",
+							"path": "/orders/classesReports/classesReportRenewalRateEstimate",
+							"href": "templates/report/common/renewal_rate_estimate.html",
+							"showMenu": "false",
+							"services": 
+							[
+								{
+									"name": "培英班续报率报表查询",
+									"key": "classesReportRenewalRateEstimate.query",
+									"url": "/report/common/renewalRate/estimate",
+									"method": "GET"
+								},
+								{
+									"name": "培英班续报率报表导出",
+									"key": "classesReportRenewalRateEstimate.output",
+									"url": "/report/common/renewalRate/estimate/output",
+									"method": "GET"
+								},
+								{
+									"name": "校区查询",
+									"key": "classesReportRenewalRateEstimate.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						},
+						{
+							"index": "A140100213",
+							"name": "培英班续报率报表",
+							"key": "classesReportRenewalRateActual",
+							"icon": "iconfont icon-orders_performance",
+							"type": "$state",
+							"value": "classesReportRenewalRateActual",
+							"path": "/orders/classesReports/classesReportRenewalRateActual",
+							"href": "templates/report/common/renewal_rate_actual.html",
+							"showMenu": "false",
+							"services": 
+							[
+								{
+									"name": "培英班续报率报表查询",
+									"key": "classesReportRenewalRateActual.query",
+									"url": "/report/common/renewalRate/actual",
+									"method": "GET"
+								},
+								{
+									"name": "培英班续报率报表导出",
+									"key": "classesReportRenewalRateActual.output",
+									"url": "/report/common/renewalRate/actual/output",
+									"method": "GET"
+								},
+								{
+									"name": "校区查询",
+									"key": "classesReportRenewalRateActual.queryBranch",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A3000",
+			"name": "人力管理",
+			"key": "hrm",
+			"icon": "fa fa-user",
+			"type": "$state",
+			"value": "hrm",
+			"path": "/hrm",
+			"href": "templates/hrm/employee/employee.html",
+			"menus": 
+			[
+				{
+					"index": "A3101",
+					"name": "员工",
+					"key": "hrmEmployeeArchives",
+					"icon": "iconfont icon-staff",
+					"type": "$state",
+					"value": "hrmEmployeeArchives",
+					"path": "/hrm/hrmEmployeeArchives",
+					"menus": 
+					[
+						{
+							"index": "A3102",
+							"name": "员工管理",
+							"key": "hrmEmployee",
+							"icon": "iconfont icon-staff",
+							"type": "$state",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployee",
+							"href": "templates/hrm/employee/employee.html",
+							"value": "hrmEmployee"
+						},
+
+						{
+							"index": "A3103",
+							"name": "员工扩展信息",
+							"key": "hrmEmployeeExt",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployeeExt",
+							"href": "templates/hrm/employee/employeeExt.html",
+							"value": "hrmEmployeeExt"
+						},
+
+						{
+							"index": "A3104",
+							"name": "员工信息查询",
+							"key": "hrmEmployeeDetail",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployeeDetail",
+							"href": "templates/hrm/employee/employee_info.html",
+							"value": "hrmEmployeeDetail",
+							"showMenu": "false"
+						},
+
+						{
+							"index": "A3105",
+							"name": "员工添加",
+							"key": "hrmEmployeeAdd",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployeeAdd",
+							"href": "templates/hrm/employee/employee_info_add.html",
+							"value": "hrmEmployeeAdd",
+							"showMenu": "false"
+						},
+
+						{
+							"index": "A3106",
+							"name": "员工修改",
+							"key": "hrmEmployeeUpdate",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployeeUpdate",
+							"href": "templates/hrm/employee/employee_info_update.html",
+							"value": "hrmEmployeeUpdate",
+							"showMenu": "false"
+						},
+
+						{
+							"index": "A3107",
+							"name": "员工头像上传",
+							"key": "hrmEmployee_headPic",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmEmployee_headPic",
+							"path": "/hrm/hrmEmployeeArchives/hrmEmployee_headPic",
+							"showMenu": "false",
+							"href": "templates/hrm/uploadImage/uploadImage.html"
+						}
+					]
+				},
+
+				{
+					"index": "A3301",
+					"name": "人事异动管理",
+					"key": "hrmChangeEvent",
+					"icon": "iconfont icon-Administration",
+					"type": "$state",
+					"value": "hrmChangeEvent",
+					"path": "/hrm/hrmChangeEvent",
+					"menus": 
+					[
+						{
+							"index": "A3302",
+							"name": "人事异动列表",
+							"key": "hrmChangeEventList",
+							"icon": "fa fa-align-justify",
+							"type": "$state",
+							"value": "hrmChangeEventList",
+							"href": "templates/hrm/changeevent/changeEvent.html",
+							"path": "/hrm/hrmChangeEvent/hrmChangeEventList"
+						},
+
+						{
+							"index": "A3303",
+							"name": "人事异动历史",
+							"key": "hrmChangeEventHtList",
+							"icon": "fa fa-align-justify",
+							"type": "$state",
+							"value": "hrmChangeEventHtList",
+							"href": "templates/hrm/changeevent/changeevent_ht.html",
+							"path": "/hrm/hrmChangeEvent/hrmChangeEventHtList"
+						},
+
+						{
+							"index": "A3304",
+							"name": "审核流程-转正考核",
+							"key": "hrmEmployeeCheck",
+							"icon": "fa fa-align-justify",
+							"type": "$state",
+							"value": "hrmEmployeeCheck",
+							"href": "templates/hrm/changeevent/employee_check.html",
+							"path": "/hrm/hrmChangeEvent/hrmEmployeeCheck",
+							"showMenu": "false"
+						}
+					]
+				},
+
+				{
+					"index": "A3401",
+					"name": "提醒",
+					"key": "hrmMonitor",
+					"icon": "iconfont icon-remind",
+					"type": "$state",
+					"value": "hrmMonitor",
+					"path": "/hrm/hrmMonitor",
+					"menus": 
+					[
+						{
+							"index": "A3411",
+							"name": "合同续签人员名单",
+							"key": "hrmMonitor_renewContract",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmMonitor_renewContract",
+							"checked": "true",
+							"href": "templates/hrm/tobedevelop.html",
+							"path": "/hrm/hrmMonitor/hrmMonitor_renewContract"
+						},
+
+						{
+							"index": "A3412",
+							"name": "拟转正人员名单",
+							"key": "hrmMonitor_becomeRegular",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmMonitor_becomeRegular",
+							"href": "templates/hrm/tobedevelop.html",
+							"path": "/hrm/hrmMonitor/hrmMonitor_becomeRegular"
+						},
+
+						{
+							"index": "A3413",
+							"name": "已离职未完成",
+							"key": "hrmMonitor_quitUncomplete",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmMonitor_quitUncomplete",
+							"href": "templates/hrm/tobedevelop.html",
+							"path": "/hrm/hrmMonitor/hrmMonitor_quitUncomplete"
+						},
+
+						{
+							"index": "A3414",
+							"name": "本月生日名单",
+							"key": "hrmMonitor_birthday",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmMonitor_birthday",
+							"href": "templates/hrm/tobedevelop.html",
+							"path": "/hrm/hrmMonitor/hrmMonitor_birthday"
+						},
+
+						{
+							"index": "A3415",
+							"name": "关注流程名单",
+							"key": "hrmMonitor_attention",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmMonitor_attention",
+							"path": "/hrm/hrmMonitor/hrmMonitor_attention",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3416",
+							"name": "工龄-五年陈",
+							"key": "hrmMonitor_WorkFiveYears",
+							"icon": "fa fa-star-o",
+							"type": "$state",
+							"value": "hrmMonitor_WorkFiveYears",
+							"path": "/hrm/hrmMonitor/hrmMonitor_WorkFiveYears",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3417",
+							"name": "工龄-十年醇",
+							"key": "hrmMonitor_WorkTenYears",
+							"icon": "fa fa-star",
+							"type": "$state",
+							"value": "hrmMonitor_WorkTenYears",
+							"path": "/hrm/hrmMonitor/hrmMonitor_WorkTenYears",
+							"href": "templates/hrm/tobedevelop.html"
+						}
+					]
+				},
+
+				{
+					"index": "A3500",
+					"name": "离职率",
+					"key": "hrmQuitRate",
+					"icon": "iconfont icon-turnover_rate",
+					"type": "$state",
+					"value": "hrmQuitRate",
+					"path": "/hrm/hrmQuitRate",
+					"menus": 
+					[
+						{
+							"index": "A3501",
+							"name": "离职率报表",
+							"key": "hrmQuitRateReport",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmQuitRateReport",
+							"checked": "true",
+							"href": "templates/hrm/tobedevelop.html",
+							"path": "/hrm/hrmQuitRate/hrmQuitRateReport"
+						},
+
+						{
+							"index": "A3502",
+							"name": "离职率指标设置",
+							"key": "hrmQuitRateSettings",
+							"icon": "fa fa-navicon",
+							"type": "$state",
+							"value": "hrmQuitRateSettings",
+							"checked": "true",
+							"href": "templates/hrm/tobedevelop.html",
+							"path": "/hrm/hrmQuitRate/hrmQuitRateSettings"
+						}
+					]
+				},
+
+				{
+					"index": "A3600",
+					"name": "月报",
+					"key": "hrmReport",
+					"icon": "iconfont icon-Monthly_report",
+					"type": "$state",
+					"value": "hrmReport",
+					"path": "/hrm/hrmReport",
+					"menus": 
+					[
+						{
+							"index": "A3601",
+							"name": "人事异动报表",
+							"key": "hrmReport_monthEvent",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_monthEvent",
+							"path": "/hrm/hrmReport/hrmReport_monthEvent",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3602",
+							"name": "人力资源报表",
+							"key": "hrmReport_monthHrm",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_monthHrm",
+							"path": "/hrm/hrmReport/hrmReport_monthHrm",
+							"href": "templates/hrm/tobedevelop.html"
+						}
+					]
+				},
+
+				{
+					"index": "A3700",
+					"name": "年报",
+					"key": "hrmReport",
+					"icon": "iconfont icon-annual_report",
+					"type": "$state",
+					"value": "hrmReport",
+					"path": "/hrm/hrmReport",
+					"menus": 
+					[
+						{
+							"index": "A3701",
+							"name": "人力资源存量报表",
+							"key": "hrmReport_yearHrm",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_yearHrm",
+							"path": "/hrm/hrmReport/hrmReport_yearHrm",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3702",
+							"name": "按岗位离职率",
+							"key": "hrmReport_yearQuitRate_post",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_yearQuitRate_post",
+							"path": "/hrm/hrmReport/hrmReport_yearQuitRate_post",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3703",
+							"name": "按部门离职率",
+							"key": "hrmReport_yearQuitRate_dept",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_yearQuitRate_dept",
+							"path": "/hrm/hrmReport/hrmReport_yearQuitRate_dept",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3704",
+							"name": "按重点岗位离职率",
+							"key": "hrmReport_yearQuitRate_keyPost",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_yearQuitRate_keyPost",
+							"path": "/hrm/hrmReport/hrmReport_yearQuitRate_keyPost",
+							"href": "templates/hrm/tobedevelop.html"
+						},
+
+						{
+							"index": "A3705",
+							"name": "往年分析离职率",
+							"key": "hrmReport_yearQuitRate_inPreviousYears",
+							"icon": "fa fa-reorder",
+							"type": "$state",
+							"value": "hrmReport_yearQuitRate_inPreviousYears",
+							"path": "/hrm/hrmReport/hrmReport_yearQuitRate_inPreviousYears",
+							"href": "templates/hrm/tobedevelop.html"
+						}
+					]
+				},
+
+				{
+					"index": "A3700",
+					"name": "设置",
+					"key": "hrmSystemSettings",
+					"icon": "fa fa-gear",
+					"type": "$state",
+					"value": "hrmSystemSettings",
+					"path": "/hrm/hrmSystemSettings",
+					"menus": 
+					[
+						{
+							"index": "A3701",
+							"name": "数据字典",
+							"key": "hrmDicttype",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "hrmDicttype",
+							"href": "templates/hrm/dict/dict_type.html",
+							"path": "/hrm/hrmSystemSettings/hrmDicttype"
+						},
+
+						{
+							"index": "A3702",
+							"name": "组织机构",
+							"key": "hrmOrgmgr",
+							"icon": "fa fa-sitemap",
+							"type": "$state",
+							"value": "hrmOrgmgr",
+							"href": "templates/hrm/orgmgr/org.html",
+							"path": "/hrm/hrmSystemSettings/hrmOrgmgr"
+						},
+
+						{
+							"index": "A3703",
+							"name": "岗位管理",
+							"key": "hrmJobmgr",
+							"icon": "fa fa-tags",
+							"type": "$state",
+							"value": "hrmJobmgr",
+							"href": "templates/hrm/post/post.html",
+							"path": "/hrm/hrmSystemSettings/hrmJobmgr"
+						},
+
+						{
+							"index": "A3704",
+							"name": "角色管理",
+							"key": "hrmRoleMgr",
+							"icon": "fa fa-users",
+							"type": "$state",
+							"value": "hrmRoleMgr",
+							"href": "templates/hrm/rolemgr/role.html",
+							"path": "/hrm/hrmSystemSettings/hrmRoleMgr"
+						},
+
+						{
+							"index": "A3705",
+							"name": "账户管理",
+							"key": "hrmAccountMgr",
+							"icon": "fa fa-user",
+							"type": "$state",
+							"value": "hrmAccountMgr",
+							"href": "templates/hrm/accountMgr/accountMgr.html",
+							"path": "/hrm/hrmSystemSettings/hrmAccountMgr"
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A16000",
+			"name": "财务管理",
+			"key": "financial",
+			"icon": "fa fa-bar-chart",
+			"type": "$state",
+			"value": "finance",
+			"path": "/finance",
+			"menus": 
+			[
+				{
+					"index": "A16001",
+					"name": "发票管理",
+					"key": "financialInvoice",
+					"icon": "iconfont icon-financial_invoice",
+					"type": "$state",
+					"value": "financialInvoice",
+					"path": "/finance/financialInvoice",
+					"href": "templates/erp/finance/invoice.html",
+					"services": 
+					[
+						{
+							"name": "发票查询",
+							"key": "financialInvoice.query",
+							"url": "/erp/invoice/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "发票修改",
+							"key": "financialInvoice.put",
+							"url": "/erp/invoice/service",
+							"method": "PUT"
+						},
+
+						{
+							"name": "发票导出",
+							"key": "financialInvoice.output",
+							"url": "/erp/invoice/output",
+							"method": "GET"
+						},
+
+						{
+							"name": "发票导出",
+							"key": "financialInvoice.queryInvoiceCompany",
+							"url": "/erp/common/invoicecompany/service",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A16002",
+					"name": "在线支付",
+					"key": "financeEpayWap",
+					"icon": "iconfont icon-financial_payOnline",
+					"type": "$state",
+					"value": "financeEpayWap",
+					"path": "/finance/financeEpayWap",
+					"href": "templates/erp/finance/epay_wap.html",
+					"services": 
+					[
+						{
+							"name": "在线支付查询",
+							"key": "financeEpayWap.query",
+							"url": "/erp/epay_wap/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "在线支付导出",
+							"key": " financeEpayWap.output",
+							"url": "/erp/epay_wap/output",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A16003",
+					"name": "账户单据",
+					"key": "financeAccountChangeBills",
+					"icon": "iconfont icon-financial_bill",
+					"type": "$state",
+					"value": " financeAccountChangeBills",
+					"path": "/finance/financeAccountChangeBills",
+					"href": "templates/erp/student/accountChangeBills.html",
+					"services": 
+					[
+						{
+							"name": "账户单据修改",
+							"key": " financeAccountChangeBills.update",
+							"url": "/erp/studentaccount/service",
+							"method": "PUT"
+						},
+
+						{
+							"name": "账户变动作废",
+							"key": " financeAccountChangeBills.delete",
+							"url": "/erp/studentaccount/service",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "账户变动查询",
+							"key": " financeAccountChangeBills.query",
+							"url": "/erp/studentaccount/all",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A1600301",
+					"name": "账户取款",
+					"key": "financeAccountWithDrawal",
+					"icon": "fa fa-circle-o",
+					"type": "$state",
+					"showMenu": "false",
+					"value": " financeAccountWithDrawal",
+					"path": "/finance/financeAccountWithDrawal",
+					"href": "templates/erp/student/withdrawal.html",
+					"services": 
+					[
+						{
+							"name": "账户取款",
+							"key": " financeAccountWithDrawal.post",
+							"url": "/erp/studentaccount/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "账户变动查询",
+							"key": " financeAccountWithDrawal.query",
+							"url": "/erp/studentaccount/service",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": " A16004 ",
+					"name": "订单单据",
+					"key": " financeOrders",
+					"icon": "iconfont icon-financial_order",
+					"type": "$state",
+					"value": " financeOrders icon-financial_order",
+					"path": "/finance/financeOrders",
+					"href": " templates/erp/orders/torder.html",
+					"services": 
+					[
+						{
+							"name": "订单单据查询",
+							"key": " financeOrders.get",
+							"url": "/erp/order/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "订单详情查询",
+							"key": " financeOrders.getDetails",
+							"url": "/erp/order/details",
+							"method": "GET"
+						},
+
+						{
+							"name": "订单单据作废",
+							"key": " financeOrders.delete",
+							"url": "/erp/order/service ",
+							"method": "DELETE"
+						}
+					]
+				},
+
+				{
+					"index": "A16005",
+					"name": "退费单据",
+					"key": "financeRefund",
+					"icon": "iconfont icon-financial_refund",
+					"type": "$state",
+					"value": " financeRefund",
+					"path": "/finance/financeRefund",
+					"href": "templates/erp/orders/refund.html",
+					"services": 
+					[
+						{
+							"name": "退费单据查询",
+							"key": " financeRefund.query",
+							"url": "/erp/ordermanager/refund",
+							"method": "GET"
+						},
+
+						{
+							"name": "退费单据作废",
+							"key": " financeRefund.delete",
+							"url": "/erp/ordermanager/refund",
+							"method": "DELETE"
+						}
+					]
+				},
+
+				{
+					"index": "A16007",
+					"name": "财务报表",
+					"key": "treePanel01",
+					"icon": "iconfont icon-financial_forms",
+					"type": "$state",
+					"value": "treePanel01"
+				}
+			]
+		},
+
+		{
+			"index": "A16000",
+			"name": "系统设置",
+			"key": "systems",
+			"icon": "fa fa-gear",
+			"type": "$state",
+			"value": "systems",
+			"path": "/systems",
+			"href": "templates/erp/tobedevelop.html",
+			"menus": 
+			[
+				{
+					"index": "A16001",
+					"name": "组织机构",
+					"key": "systemsOgr",
+					"icon": "iconfont icon-systems_organization",
+					"type": "$state",
+					"value": "systemsOgr",
+					"href": "templates/hrm/orgmgr/org.html",
+					"path": "/systems/systemsOgr"
+				},
+
+				{
+					"index": "A16002",
+					"name": "基础数据",
+					"key": "systemsBaseDict",
+					"icon": "iconfont icon-systems_data",
+					"type": "$state",
+					"value": "systemsBaseDict",
+					"path": "/systems/systemsBaseDict",
+					"menus": 
+					[
+						{
+							"index": "A1600201",
+							"name": "年级",
+							"key": "systemsGrade",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsGrade",
+							"href": "templates/erp/dict/grade.html",
+							"path": "/systems/systemsBaseDict/systemsGrade",
+							"services": 
+							[
+								{
+									"name": "查询年级",
+									"key": "systemsGrade.query",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增年级",
+									"key": "systemsGrade.add",
+									"url": "/erp/dictionary/grade/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改年级",
+									"key": "systemsGrade.put",
+									"url": "/erp/dictionary/grade/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除年级",
+									"key": "systemsGrade.delete",
+									"url": "/erp/dictionary/grade/service",
+									"method": "DELETE"
+								}
+							]
+						},
+
+						{
+							"index": "A1600202",
+							"name": "科目",
+							"key": "systemsSubject",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsSubject",
+							"href": "templates/erp/dict/subject.html",
+							"path": "/systems/systemsBaseDict/systemsSubject",
+							"services": 
+							[
+								{
+									"name": "查询科目",
+									"key": "systemsSubject.query",
+									"url": "/erp/dictionary/subject/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增科目",
+									"key": "systemsSubject.add",
+									"url": "/erp/dictionary/subject/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改科目",
+									"key": "systemsSubject.post",
+									"url": "/erp/dictionary/subject/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "删除科目",
+									"key": "systemsSubject.delete",
+									"url": "/erp/dictionary/subject/service",
+									"method": "DELETE"
+								}
+							]
+						},
+
+						{
+							"index": "A1600203",
+							"name": "课程季",
+							"key": "systemsTimeSeason",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsTimeSeason",
+							"href": "templates/erp/dict/time_season.html",
+							"path": "/systems/systemsBaseDict/systemsTimeSeason",
+							"services": 
+							[
+								{
+									"name": "查询课程季",
+									"key": "systemsTimeSeason.query",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增课程季",
+									"key": "systemsTimeSeason.post",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改课程季",
+									"key": "systemsTimeSeason.put",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除科目",
+									"key": "systemsTimeSeason.delete",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "DELETE"
+								}
+							]
+						},
+
+						{
+							"index": "A1600204",
+							"name": "公司账户",
+							"key": "systemsDataCompanyAccount",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsDataCompanyAccount",
+							"href": "templates/erp/common/company_account.html",
+							"path": "/systems/systemsBaseDict/systemsDataCompanyAccount",
+							"services": 
+							[
+								{
+									"name": "查询公司账户",
+									"key": "systemsDataCompanyAccount.query",
+									"url": "/erp/common/companyaccount/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增公司账户",
+									"key": "systemsDataCompanyAccount.add",
+									"url": "/erp/common/companyaccount/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改公司账户",
+									"key": "systemsDataCompanyAccount.put",
+									"url": "/erp/common/companyaccount/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除公司账户",
+									"key": "systemsDataCompanyAccount.delete",
+									"url": "/erp/common/companyaccount/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "公司账户账户变更",
+									"key": "systemsDataCompanyAccount.status",
+									"url": "/erp/common/companyaccount/status",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1600205",
+							"name": "公司设备",
+							"key": "systemsDataCompanyDevice",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsDataCompanyDevice",
+							"href": "templates/erp/common/device.html",
+							"path": "/systems/systemsBaseDict/systemsDataCompanyDevice",
+							"services": 
+							[
+								{
+									"name": "查询公司设备",
+									"key": "systemsDataCompanyDevice.query",
+									"url": "/erp/common/device/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增公司设备",
+									"key": "systemsDataCompanyDevice.add",
+									"url": "/erp/common/device/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改公司设备",
+									"key": "systemsDataCompanyDevice.put",
+									"url": "/erp/common/device/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除公司设备",
+									"key": "systemsDataCompanyDevice.delete",
+									"url": "/erp/common/device/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "公司设备状态变更",
+									"key": "systemsDataCompanyDevice.status",
+									"url": "/erp/common/device/status",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1600206",
+							"name": "开票单位",
+							"key": "systemsDataInvoiceCompany",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsDataInvoiceCompany",
+							"href": "templates/erp/common/invoice_company.html",
+							"path": "/systems/systemsBaseDict/systemsDataInvoiceCompany",
+							"services": 
+							[
+								{
+									"name": "查询开票单位",
+									"key": "systemsDataInvoiceCompany.query",
+									"url": "/erp/common/invoicecompany/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增开票单位",
+									"key": "systemsDataInvoiceCompany.add",
+									"url": "/erp/common/invoicecompany/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改开票单位",
+									"key": "systemsDataInvoiceCompany.put",
+									"url": "/erp/common/invoicecompany/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除开票单位",
+									"key": "systemsDataInvoiceCompany.delete",
+									"url": "/erp/common/invoicecompany/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "公司账户账户变更",
+									"key": "systemsDataInvoiceCompany.status",
+									"url": "/erp/common/invoicecompany/status",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1600207",
+							"name": "全日制学校",
+							"key": "systemsDataSchoolCompany",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "systemsDataSchoolCompany",
+							"href": "templates/erp/common/data_school.html",
+							"path": "/systems/systemsBaseDict/systemsDataSchoolCompany",
+							"services": 
+							[
+								{
+									"name": "查询全日制学校",
+									"key": "systemsDataSchoolCompany.query",
+									"url": "/erp/common/dataschool/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "新增全日制学校",
+									"key": "systemsDataSchoolCompany.add",
+									"url": "/erp/common/dataschool/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "修改全日制学校",
+									"key": "systemsDataSchoolCompany.put",
+									"url": "/erp/common/dataschool/service",
+									"method": "PUT"
+								},
+
+								{
+									"name": "删除全日制学校",
+									"key": "systemsDataSchoolCompany.delete",
+									"url": "/erp/common/dataschool/service",
+									"method": "DELETE"
+								},
+
+								{
+									"name": "全日制学校变更",
+									"key": "systemsDataSchoolCompany.status",
+									"url": "/erp/common/dataschool/status",
+									"method": "GET"
+								}
+							]
+						}
+					]
+				},
+
+				{
+					"index": "A16003",
+					"name": "权限管理",
+					"key": "rightControl",
+					"icon": "iconfont icon-systems_rights",
+					"type": "$state",
+					"value": "rightControl",
+					"path": "/systems/rightControl",
+					"menus": 
+					[
+						{
+							"index": "A1600301",
+							"name": "角色管理",
+							"key": "rightControlRoleMgr",
+							"icon": "fa fa-users",
+							"type": "$state",
+							"value": "rightControlRoleMgr",
+							"href": "templates/hrm/rolemgr/role.html",
+							"path": "/systems/rightControl/rightControlRoleMgr"
+						},
+
+						{
+							"index": "A1600302",
+							"name": "账户管理",
+							"key": "rightControlAccountMgr",
+							"icon": "fa fa-user",
+							"type": "$state",
+							"value": "rightControlAccountMgr",
+							"href": "templates/hrm/accountMgr/accountMgr.html",
+							"path": "/systems/rightControl/rightControlAccountMgr"
+						}
+					]
+				},
+
+				{
+					"index": "A16004",
+					"name": "通知管理",
+					"key": "noticeMgr",
+					"icon": "iconfont icon-systems_message",
+					"type": "$state",
+					"value": "noticeMgr",
+					"href": "templates/erp/sysmgr/notice.html",
+					"path": "/systems/noticeMgr",
+					"services": 
+					[
+						{
+							"name": "通知查询",
+							"key": "noticeMgr.query",
+							"url": "/erp/notice/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "新增通知",
+							"key": "noticeMgr.add",
+							"url": "/erp/notice/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "修改通知",
+							"key": "noticeMgr.update",
+							"url": "/erp/notice/service",
+							"method": "PUT"
+						},
+
+						{
+							"name": "删除通知",
+							"key": "noticeMgr.delete",
+							"url": "/erp/notice/service",
+							"method": "DELETE"
+						}
+					]
+				},
+
+				{
+					"index": "A16005",
+					"name": "流程管理",
+					"key": "sysWorkflowMgr",
+					"icon": "iconfont icon-systems_flow",
+					"type": "$state",
+					"value": "sysWorkflowMgr",
+					"path": "/systems/sysWorkflowMgr",
+					"menus": 
+					[
+						{
+							"index": "A1600501",
+							"name": "首页",
+							"key": "sysWorkflowIndex",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "sysWorkflowIndex",
+							"href": "templates/erp/workflow/sysWorkflowIndex.html",
+							"path": "/systems/sysWorkflowMgr/sysWorkflowIndex"
+						},
+
+						{
+							"index": "A1600502",
+							"name": "任务列表",
+							"key": "sysWorkflowTaskList",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "sysWorkflowTaskList",
+							"href": "templates/erp/workflow/sysWorkflowTaskList.html",
+							"path": "/systems/sysWorkflowMgr/sysWorkflowTaskList"
+						},
+
+						{
+							"index": "A1600503",
+							"name": "流程节点",
+							"key": "sysWorkflowNodeList",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "sysWorkflowNodeList",
+							"href": "templates/erp/workflow/sysWorkflowNodeList.html",
+							"path": "/systems/sysWorkflowMgr/sysWorkflowNodeList"
+						},
+
+						{
+							"index": "A1600504",
+							"name": "流程实例",
+							"key": "sysWorkflowDefineList",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "sysWorkflowDefineList",
+							"href": "templates/erp/workflow/sysWorkflowDefineList.html",
+							"path": "/systems/sysWorkflowMgr/sysWorkflowDefineList"
+						},
+
+						{
+							"index": "A1600505",
+							"name": "流程管理",
+							"key": "sysWorkflowMgrment",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "sysWorkflowMgrment",
+							"href": "templates/erp/workflow/sysWorkflowMgrment.html",
+							"path": "/systems/sysWorkflowMgr/sysWorkflowMgrment"
+						},
+
+						{
+							"index": "A1600506",
+							"name": "任务历史",
+							"key": "sysWorkflowTaskHistory",
+							"icon": "fa fa-list-alt",
+							"type": "$state",
+							"value": "sysWorkflowTaskHistory",
+							"href": "templates/erp/workflow/sysWorkflowTaskHistory.html",
+							"path": "/systems/sysWorkflowMgr/sysWorkflowTaskHistory"
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A18001",
+			"name": "个人设置",
+			"key": "userManagerment",
+			"icon": "fa fa-user",
+			"type": "$state",
+			"value": "userManagerment",
+			"path": "/userManagerment",
+			"showMenu": "false",
+			"menus": 
+			[
+				{
+					"index": "C10001",
+					"name": "账户安全",
+					"key": "UMAccountMgr",
+					"icon": "fa fa-user",
+					"type": "$state",
+					"value": "UMAccountMgr",
+					"path": "/userManagerment/UMAccountMgr",
+					"href": "templates/segment/account_security.html"
+				},
+
+				{
+					"index": "C10002",
+					"name": "个人信息",
+					"key": "UMEmployee",
+					"icon": "fa fa-pencil-square-o",
+					"type": "$state",
+					"value": "UMEmployee",
+					"path": "/userManagerment/UMEmployee",
+					"href": "templates/segment/employee_info.html"
+				},
+
+				{
+					"index": "C10003",
+					"name": "个人档案",
+					"key": "UMEmployeeInfo",
+					"icon": "fa fa-user",
+					"type": "$state",
+					"value": "UMEmployeeInfo",
+					"path": "/userManagerment/UMEmployeeInfo",
+					"href": "templates/hrm/employee/employee_info_self.html"
+				}
+			]
+		},
+
+		{
+			"index": "A19000",
+			"name": "学员管理",
+			"key": "studentMgr",
+			"icon": "fa fa-user",
+			"type": "$state",
+			"value": "studentMgr",
+			"path": "/studentMgr",
+			"showMenu": "false",
+			"menus": 
+			[
+				{
+					"index": "A19001",
+					"name": "学员主页",
+					"key": "studentMgrIndex",
+					"icon": "iconfont icon-stdudents_home",
+					"type": "$state",
+					"value": "studentMgrIndex",
+					"path": "/studentMgr/studentMgrIndex",
+					"href": "templates/erp/student/studentIndex.html"
+				},
+
+				{
+					"index": "A19002",
+					"name": "基本信息",
+					"key": "studentMgrBasicInfo",
+					"icon": "iconfont icon-stdudents_basic",
+					"type": "$state",
+					"value": "studentMgrBasicInfo",
+					"path": "/studentMgr/studentMgrBasicInfo",
+					"href": "templates/erp/student/studentIndex-basicInfo.html"
+				},
+
+				{
+					"index": "A19003",
+					"name": "联系方式",
+					"key": "studentMgrContact",
+					"icon": "iconfont icon-stdudents_contact",
+					"type": "$state",
+					"value": "studentMgrContact",
+					"path": "/studentMgr/studentMgrContact",
+					"href": "templates/erp/student/studentIndex-contact.html"
+				},
+
+				{
+					"index": "A19004",
+					"name": "咨询学管",
+					"key": "studentMgrConsultingtube",
+					"icon": "iconfont icon-stdudents_consult",
+					"type": "$state",
+					"value": "studentMgrConsultingtube",
+					"path": "/studentMgr/studentMgrConsultingtube",
+					"href": "templates/erp/student/studentIndex-consultingtube.html"
+				},
+
+				{
+					"index": "A19009",
+					"name": "学员账户",
+					"key": "studentMgrAccount",
+					"icon": "iconfont icon-stdudents_account",
+					"type": "$state",
+					"value": "studentMgrAccount",
+					"path": "/studentMgr/studentMgrAccount",
+					"menus": 
+					[
+						{
+							"index": "A1900901",
+							"name": "账户详情",
+							"key": "studentAccountQuery",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentAccountQuery",
+							"path": "/studentMgr/studentMgrAccount/studentAccountQuery",
+							"href": "templates/erp/student/studentIndex-account.html"
+						},
+
+						{
+							"index": "A1900902",
+							"name": "账户充值",
+							"key": "studentAccountRecharge",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentAccountRecharge",
+							"path": "/studentMgr/studentMgrAccount/studentAccountRecharge",
+							"href": "templates/erp/student/studentIndex-accountRecharge.html"
+						},
+
+						{
+							"index": "A1900903",
+							"name": "学员转账",
+							"key": "studentAccountTransfer",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentAccountTransfer",
+							"path": "/studentMgr/studentMgrAccount/studentAccountTransfer",
+							"href": "templates/erp/student/studentIndex-accountTransfer.html"
+						},
+
+						{
+							"index": "A1900904",
+							"name": "学员理赔",
+							"key": "studentAccountClaim",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentAccountClaim",
+							"path": "/studentMgr/studentMgrAccount/studentAccountClaim",
+							"href": "templates/erp/student/studentIndex-accountClaim.html",
+							"services": 
+							[
+								{
+									"name": "学员理赔",
+									"key": "studentAccountClaim.post",
+									"url": "/erp/studentaccount/service",
+									"method": "POST"
+								}
+							]
+						}
+					]
+				},
+
+				{
+					"index": "A19005",
+					"name": "课程表",
+					"key": "studentMgrSchedule",
+					"icon": "fa fa-circle-o",
+					"type": "$state",
+					"value": "studentMgrSchedule",
+					"path": "/studentMgr/studentMgrSchedule",
+					"href": "templates/erp/student/studentIndex-schedule.html",
+					"services": 
+					[
+						{
+							"name": "学员1对1课程查询",
+							"key": "studentMgrSchedule.queryYDY",
+							"url": "/erp/studentservice/scheduling",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员班级课程查询",
+							"key": "studentMgrSchedule.queryBJK",
+							"url": "/erp/ordermanager/schedulingBJK",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A1900501",
+					"name": "课程表-更多",
+					"key": "studentMgrScheduleDetail",
+					"icon": "fa fa-circle-o",
+					"type": "$state",
+					"value": "studentMgrScheduleDetail",
+					"path": "/studentMgr/studentMgrScheduleDetail",
+					"showMenu": "false",
+					"href": "templates/erp/student/studentIndex-schedule-detail.html",
+					"services": 
+					[
+						{
+							"name": "学员课程表-更多",
+							"key": "studentMgrScheduleDetail.query",
+							"url": "/erp/student/schedule",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员课程表-新增排课",
+							"key": "studentMgrScheduleDetail.post",
+							"url": "/erp/student/schedule",
+							"method": "POST"
+						},
+
+						{
+							"name": "学员课程表-排课修改",
+							"key": "studentMgrScheduleDetail.put",
+							"url": "/erp/student/schedule",
+							"method": "PUT"
+						},
+
+						{
+							"name": "学员课程表-排课取消",
+							"key": "studentMgrScheduleDetail.delete",
+							"url": "/erp/student/schedule",
+							"method": "DELETE"
+						}
+					]
+				},
+
+				{
+					"index": "A1900502",
+					"name": "学员排课",
+					"key": "studentMgrYDYSchedule",
+					"icon": "fa fa-circle-o",
+					"type": "$state",
+					"value": "studentMgrYDYSchedule",
+					"path": "/studentMgr/studentMgrYDYSchedule",
+					"href": "templates/erp/student/studentIndex-scheduling.html",
+					"services": 
+					[
+						{
+							"name": "排课查询",
+							"key": "studentMgrYDYSchedule.query",
+							"url": "/erp/studentservice/scheduling",
+							"method": "GET"
+						},
+
+						{
+							"name": "排课新增",
+							"key": "studentMgrYDYSchedule.post",
+							"url": "/erp/studentservice/scheduling",
+							"method": "GET"
+						},
+
+						{
+							"name": "排课修改",
+							"key": "studentMgrYDYSchedule.put",
+							"url": "/erp/studentservice/scheduling",
+							"method": "PUT"
+						},
+
+						{
+							"name": "排课取消",
+							"key": "studentMgrYDYSchedule.delete",
+							"url": "/erp/studentservice/scheduling",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "学员订单查询",
+							"key": "studentMgrYDYSchedule.queryOrderCourse",
+							"url": "/erp/studentservice/orderCourse",
+							"method": "GET"
+						},
+
+						{
+							"name": "教师查询服务",
+							"key": "studentMgrYDYSchedule.queryTeacher",
+							"url": "/erp/teacherservice/service",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A19006",
+					"name": "学员课程",
+					"key": "studentMgrCourse",
+					"icon": "iconfont icon-stdudents_course",
+					"type": "$state",
+					"value": "studentMgrCourse",
+					"path": "/studentMgr/studentMgrCourse",
+					"menus": 
+					[
+						{
+							"index": "A1900601",
+							"name": "所有订单",
+							"key": "studentMgrOrders",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentMgrOrders",
+							"path": "/studentMgr/studentMgrCourse/studentMgrOrders",
+							"href": "templates/erp/student/studentIndex-order.html",
+							"services": 
+							[
+								{
+									"name": "学员订单查询",
+									"key": "studentMgrOrders.query",
+									"url": "/erp/student/order",
+									"method": "GET"
+								},
+
+								{
+									"name": "发票申请",
+									"key": "studentMgrOrdersInvoice.post",
+									"url": "/erp/invoice/service",
+									"method": "POST"
+								}
+							]
+						},
+
+						{
+							"index": "A1900602",
+							"name": "班级课",
+							"key": "studentMgrBJKCourse",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentMgrBJKCourse",
+							"path": "/studentMgr/studentMgrCourse/studentMgrBJKCourse",
+							"href": "templates/erp/student/studentIndex-order-bjk.html"
+						},
+
+						{
+							"index": "A1900603",
+							"name": "1对1",
+							"key": "studentMgrYDYCourse",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentMgrYDYCourse",
+							"path": "/studentMgr/studentMgrCourse/studentMgrYDYCourse",
+							"href": "templates/erp/student/studentIndex-order-ydy.html",
+							"services": 
+							[
+								{
+									"name": "学员1对1课程查询",
+									"key": "studentMgrYDYCourse.query",
+									"url": "/erp/studentcourse/ydy",
+									"method": "GET"
+								},
+
+								{
+									"name": "课程季查询",
+									"key": "studentMgrYDYCourse.erp_timeSeasonService",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+
+								{
+									"name": "年级查询",
+									"key": "studentMgrYDYCourse.erp_gradeService",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A1900604",
+							"name": "晚辅导",
+							"key": "studentMgrWFDCourse",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentMgrWFDCourse",
+							"path": "/studentMgr/studentMgrCourse/studentMgrWFDCourse",
+							"href": "templates/erp/student/studentIndex-order-wfd.html",
+							"services": 
+							[
+								{
+									"name": "学员晚辅导课程查询",
+									"key": "studentMgrWFDCourse.query",
+									"url": "/erp/studentcourse/wfd",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A190060105",
+							"name": "订单详情",
+							"key": "studentMgrOrderDetail",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentMgrOrderDetail",
+							"showMenu": "false",
+							"path": "/studentMgr/studentMgrCourse/studentMgrOrderDetail",
+							"href": "templates/erp/student/studentIndex-order-detail.html",
+							"services": 
+							[
+								{
+									"name": "学员订单查询",
+									"key": "studentMgrOrderDetail.queryOrder",
+									"url": "/erp/student/order",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单考勤查询",
+									"key": "studentMgrOrderDetail.queryAttendance",
+									"url": "/erp/student/order/attendance",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单预结转查询",
+									"key": "studentMgrOrderDetail.queryPreforward",
+									"url": "/erp/student/order/preforward",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单转班查询",
+									"key": "studentMgrOrderDetail.queryTransferClass",
+									"url": "/erp/student/order/transferClass",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单退费查询",
+									"key": "studentMgrOrderDetail.queryRefundClass",
+									"url": "/erp/student/order/refundClass",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单优惠券查询",
+									"key": "studentMgrOrderDetail.queryCoupon",
+									"url": "/erp/student/order/coupon",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单退费审批查询",
+									"key": "studentMgrOrderDetail.queryRefundApproval",
+									"url": "/erp/student/order/refundApproval",
+									"method": "GET"
+								},
+
+								{
+									"name": "学员订单发票查询",
+									"key": "studentMgrOrderDetail.queryInvoice",
+									"url": "/erp/invoice/service",
+									"method": "GET"
+								}
+							]
+						},
+
+						{
+							"index": "A190060101",
+							"name": "发票申请",
+							"key": "studentMgrOrdersInvoice",
+							"icon": "fa fa-circle-o",
+							"type": "$state",
+							"value": "studentMgrOrdersInvoice",
+							"path": "/studentMgr/studentMgrCourse/studentMgrOrders/studentMgrOrdersInvoice",
+							"href": "templates/erp/student/studentIndex-order-invoice.html",
+							"showMenu": "false",
+							"services": 
+							[
+								{
+									"name": "发票申请",
+									"key": "studentMgrOrdersInvoice.post",
+									"url": "/erp/invoice/service",
+									"method": "POST"
+								},
+
+								{
+									"name": "课程季查询",
+									"key": "studentMgrOrdersInvoice.queryType",
+									"url": "/erp/invoice/type",
+									"method": "GET"
+								}
+							]
+						}
+					]
+				},
+
+				{
+					"index": "A19007",
+					"name": "学员考勤",
+					"key": "studentMgrAttendance",
+					"icon": "iconfont icon-stdudents_checkingIn",
+					"type": "$state",
+					"value": "studentMgrAttendance",
+					"path": "/studentMgr/studentMgrAttendance",
+					"href": "templates/erp/student/studentIndex-attendance.html",
+					"services": 
+					[
+						{
+							"name": "1对1排课信息查询",
+							"key": "studentMgrAttendance.queryYDY",
+							"url": "/erp/studentservice/scheduling",
+							"method": "GET"
+						},
+
+						{
+							"name": "1对1排课取消",
+							"key": "studentMgrAttendance.deleteYDY",
+							"url": "/erp/studentservice/scheduling",
+							"method": "DELETE"
+						},
+
+						{
+							"name": "1对1排课考勤",
+							"key": "studentMgrAttendance.postYDY",
+							"url": "/erp/attendanceservice/ydy",
+							"method": "POST"
+						},
+
+						{
+							"name": "学员班级课查询",
+							"key": "studentMgrAttendance.queryBJK",
+							"url": "/erp/student/course/bjk",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员班级课课次查询",
+							"key": "studentMgrAttendance.queryBJKCourseTime",
+							"url": "/erp/student/course/bjk/courseTimes",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员班级课教师查询",
+							"key": "studentMgrAttendance.queryBJKTeacher",
+							"url": "/erp/teacherservice/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员班级课考勤服务",
+							"key": "studentMgrAttendance.postBJK",
+							"url": "/erp/attendanceservice/bjk",
+							"method": "POST"
+						},
+
+						{
+							"name": "学员班级课考勤历史服务",
+							"key": "studentMgrAttendance.queryBJKDetails",
+							"url": "/erp/attendanceservice/bjk/details",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员班级课预约补课",
+							"key": "studentMgrAttendance.postMakeup",
+							"url": "/erp/attendanceservice/bjk/makeup",
+							"method": "POST"
+						},
+
+						{
+							"name": "学员班级课预约补课查询",
+							"key": "studentMgrAttendance.queryMakeup",
+							"url": "/erp/attendanceservice/bjk/makeup",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员晚辅导课程查询",
+							"key": "studentMgrAttendance.queryWFD",
+							"url": "/erp/attendanceservice/wfd",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员晚辅导课程考勤",
+							"key": "studentMgrAttendance.queryWFD",
+							"url": "/erp/student/course/wfd",
+							"method": "GET"
+						},
+
+						{
+							"name": "学员晚辅导考勤查询",
+							"key": "studentMgrAttendance.queryWFDDetails",
+							"url": "/erp/attendanceservice/wfd",
+							"method": "GET"
+						},
+
+						{
+							"name": "晚辅导考勤",
+							"key": "studentMgrAttendance.postWFD",
+							"url": "/erp/attendanceservice/wfd",
+							"method": "POST"
+						}
+					]
+				},
+
+				{
+					"index": "A19008",
+					"name": "学员试听",
+					"key": "studentMgrListening",
+					"icon": "iconfont icon-stdudents_audition",
+					"type": "$state",
+					"value": "studentMgrListening",
+					"path": "/studentMgr/studentMgrListening",
+					"href": "templates/erp/student/studentIndex-listening.html",
+					"services": 
+					[
+						{
+							"name": "学员试听信息查询",
+							"key": "studentMgrListening.query",
+							"url": "/erp/courselistening/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "新增学员试听",
+							"key": "studentMgrListening.post",
+							"url": "/erp/courselistening/service",
+							"method": "POST"
+						},
+
+						{
+							"name": "修改学员试听",
+							"key": "studentMgrListening.put",
+							"url": "/erp/courselistening/service",
+							"method": "PUT"
+						},
+
+						{
+							"name": "查询课程信息",
+							"key": "studentMgrListening.queryCourse",
+							"url": "/erp/coursemanagerment/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询课程课次信息",
+							"key": "studentMgrListening.queryCourseTimes",
+							"url": "/erp/coursemanagerment/coursetimes",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询校区信息",
+							"key": "studentMgrListening.queryBranchs",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询课程季信息",
+							"key": "studentMgrListening.queryTimeSeason",
+							"url": "/erp/dictionary/timeSeason/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询科目信息",
+							"key": "studentMgrListening.querySubject",
+							"url": "/erp/dictionary/subject/service",
+							"method": "GET"
+						},
+
+						{
+							"name": "查询年级信息",
+							"key": "studentMgrListening.queryGrade",
+							"url": "/erp/dictionary/grade/service",
+							"method": "GET"
+						}
+					]
+				},
+
+				{
+					"index": "A19010",
+					"name": "学员补课",
+					"key": "studentMgrMissedlessons",
+					"icon": "iconfont icon-stdudents_remediation",
+					"type": "$state",
+					"value": "studentMgrMissedlessons",
+					"path": "/studentMgr/studentMgrMissedlessons",
+					"href": "templates/erp/attendance/attendance_bjk_makeup.html",
+					"services": 
+					[
+						{
+							"name": "学员补课息查询",
+							"key": "studentMgrMissedlessons.query",
+							"url": "/erp/attendance/makeup",
+							"method": "GET"
+						}
+					]
+				}
+			]
+		},
+
+		{
+			"index": "A20001",
+			"name": "教师管理",
+			"key": "teacherMgr",
+			"icon": "fa fa-bar-chart",
+			"type": "$state",
+			"value": "teacherMgr",
+			"path": "/teacherMgr",
+			"showMenu": "false",
+			"menus": 
+			[
+				{
+					"index": "A20002",
+					"name": "基本信息",
+					"key": "teacherMgrIndex",
+					"icon": "fa fa-reorder",
+					"type": "$state",
+					"value": "teacherMgrIndex",
+					"path": "/teacherMgr/teacherMgrIndex",
+					"href": "templates/erp/tearchers/teacherIndex.html"
+				},
+
+				{
+					"index": "A20003",
+					"name": "课程",
+					"key": "teacherMgrCourse",
+					"icon": "fa fa-reorder",
+					"type": "$state",
+					"value": "teacherMgrCourse",
+					"path": "/teacherMgr/teacherMgrCourse",
+					"href": "templates/erp/tearchers/teacherCourse.html"
+				}
+			]
+		},
+
+		{
+			"index": "A50000",
+			"name": "员工服务",
+			"key": "employeeService",
+			"icon": "fa fa-user",
+			"type": "$state",
+			"value": "employeeService",
+			"path": "/employeeService",
+			"showMenu": "false",
+			"menus": 
+			[
+				{
+					"index": "A50001",
+					"name": "员工档案",
+					"key": "employeeService_employeeInfo",
+					"icon": "fa fa-reorder",
+					"type": "$state",
+					"value": "employeeService_employeeInfo",
+					"path": "/employeeService/employeeInfo",
+					"href": "templates/hrm/employee/employee_info.html"
+				},
+
+				{
+					"index": "A50002",
+					"name": "员工自己头像上传",
+					"key": "employeeService_headPic",
+					"icon": "fa fa-reorder",
+					"type": "$state",
+					"value": "employeeService_headPic",
+					"path": "/employeeService/headPic",
+					"showMenu": "false",
+					"href": "templates/hrm/uploadImage/uploadImage.html"
+				}
+			]
+		}
+	]
+}

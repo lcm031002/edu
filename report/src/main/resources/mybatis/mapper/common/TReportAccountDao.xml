@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TReportAccountDao">
+
+	<select id="queryReport" parameterType="com.edu.report.model.TReportAccount"
+		resultType="com.edu.report.model.TReportAccount">
+		select a.*
+		from t_account_report a
+		where
+			a.bu_id = #{bu_id}
+			<if test="branch_id != null and branch_id != -1">
+				<![CDATA[ and a.branch_id = #{branch_id, jdbcType=NUMERIC} ]]>
+			</if>
+	union all
+		select
+			null id, 
+       		null bu_id, 
+	       	null bu_name, 
+			'合计' student_code, /*学生编码*/
+       		null student_name, /*学生姓名*/
+	       	sum(nvl(t.account,0)) account, 
+	       	sum(nvl(t.refund_account,0)) refund_account, 
+	       	sum(nvl(t.frozen_account,0)) frozen_account,
+    		null task_flow,
+			null branch_id
+	 	from t_account_report t
+		where
+			t.bu_id = #{bu_id}
+			<if test="branch_id != null and branch_id != -1">
+				<![CDATA[ and t.branch_id = #{branch_id, jdbcType=NUMERIC} ]]>
+			</if>
+	</select>
+	
+	<update id="deleteAll"  parameterType="HashMap">
+		truncate table t_account_report
+	</update>
+	
+	<insert id="insert" parameterType="HashMap">
+		insert into t_account_report
+	      (id, 
+	       bu_id, 
+	       bu_name,
+	       branch_id,
+	       student_code, 
+	       student_name, 
+	       account, 
+	       refund_account,
+	       frozen_account,
+	       task_flow
+	       )
+	      ( 
+	    select distinct
+			acc.id, 
+		    acc.bu_id,
+		    toi.org_name	bu_name,
+		    student.branch_id,
+		    student.encoding	student_code,
+	        student.student_name,
+	        acc.fee_amount	account, 
+	        acc.refund_account,
+	        acc.frozen_account,
+	        #{task_flow}
+	    from 
+	    	t_account acc
+          join tab_student_info student
+            on acc.student_id = student.id
+          join tab_organization_info toi
+            on acc.bu_id = toi.id
+        where acc.account_type = 0
+	       )
+	</insert>
+	
+</mapper>

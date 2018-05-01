@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.UserPermissionDao">
+	<!-- 查询在某个团队下的具有权限的校区 -->
+	<select id="queryValidBranchIdsInBu" resultType="java.lang.Long">
+		select oi.id from tab_user_info ui
+		left join ebs_accountorg_rel ar on ui.id = ar.accountid
+		left join tab_organization_info oi on ar.orgid = oi.id
+		where
+		oi.status != 0
+		and oi.parent_id = #{buId,jdbcType=NUMERIC}
+		and ui.id =#{userId,jdbcType=NUMERIC}
+	</select>
+</mapper>

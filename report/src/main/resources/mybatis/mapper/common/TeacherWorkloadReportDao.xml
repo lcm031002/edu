@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TeacherWorkloadReportDao">
+
+	<select id="queryReport" parameterType="Map" resultType="com.edu.report.model.TTeacherWorkloadReport">
+		select 
+			bu_id,
+			bu_name,
+			course_branch_id,
+			course_branch_name,
+			teacher_id,
+			teacher_code,
+	        teacher_name,
+			assteacher_id,
+			assteacher_code,
+			assteacher_name,
+	        course_id,
+	        course_no,
+	        course_name,
+	        grade_id, 
+        	grade_name,
+        	subject_id, 
+        	subject_name,
+        	teacher_group_name,
+	        start_time,
+	        end_time,
+	        hour_length,
+	        schedule_date,
+	        course_time,
+	        sum(nvl(attend_students_num,0))				attend_students_num,
+	        sum(nvl(normal_attend_students_num,0))      normal_attend_students_num,
+		    sum(nvl(hangup_students_num,0))           	hangup_students_num, 
+	        max(nvl(tobe_students_num,0))				tobe_students_num,
+	        max(nvl(listening_students_num,0))			listening_students_num,
+	        max(nvl(listen_rejection_students_num,0))	listen_rejection_students_num
+		from t_teacher_workload a
+		where
+			a.bu_id = #{bu_id}
+		<if test="branch_id != null and branch_id !='' and branch_id > -1">
+			and a.course_branch_id = #{branch_id}
+		</if>
+		<if test="validBranchIds != null and validBranchIds !='' ">
+			   and a.course_branch_id in (${validBranchIds})
+		</if>
+		<if test="start_date != null and start_date != ''">
+			<if test="isCourseTime == 'true'">
+				and a.schedule_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+			<if test="isCourseTime != 'true'">
+				and a.business_date >= #{start_date, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<if test="isCourseTime == 'true'">
+				and a.schedule_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+			<if test="isCourseTime != 'true'">
+			   and a.business_date &lt;= #{end_date, jdbcType=VARCHAR}
+			</if>	
+		</if>
+		<if test="course_name != null and course_name !=''">
+			and a.course_name like '%${course_name}%'
+		</if>
+		<if test="teacher_type == 2">
+			and a.assteacher_id is not null
+		</if>
+		group by
+			a.bu_id,
+			a.bu_name,
+			a.course_branch_id,
+			a.course_branch_name,
+			a.teacher_id,
+			a.teacher_code,
+	        a.teacher_name,
+			a.assteacher_id,
+			a.assteacher_code,
+			a.assteacher_name,
+	        a.course_id,
+	        a.course_no,
+	        a.course_name,
+	        a.grade_id, 
+        	a.grade_name,
+        	a.subject_id, 
+        	a.subject_name,
+        	a.teacher_group_name,
+	        a.start_time,
+	        a.end_time,
+	        a.hour_length,
+	        a.schedule_date,
+			a.course_time
+		order by a.course_no, a.course_time
+	</select>
+
+	<select id="queryForOrderStudents" parameterType="map"
+			resultType="com.edu.report.model.TStudentInfo" >
+		select tsi.encoding,tsi.student_name
+		from t_order tod
+		left join t_order_course toc
+		on toc.order_id = tod.id
+		left join t_order_course_times toct
+		on toct.ocid = toc.id
+		left join tab_student_info tsi on tod.student_id = tsi.id
+		where tod.order_status = 1
+		and toct.is_valid = 1
+		and toc.course_id = #{course_id, jdbcType=NUMERIC}
+		and toct.times = #{course_times, jdbcType=NUMERIC}
+		order by tsi.student_name
+	</select>
+
+	<select id="queryForAttendanceStudents" parameterType="map"
+			resultType="com.edu.report.model.TStudentInfo" >
+		select encoding,student_name from (
+			select
+			sum(case when t1.attend_type = 10 then -1 else 1 end ) attend_students_num,
+			sum(case when t1.attend_type = 10 and t1.last_attend_type = 12 then -1 when t1.attend_type = 12 then 1 else 0 end ) normal_attend_students_num,
+			sum(case when t1.attend_type = 10 and t1.last_attend_type = 11 then -1 when t1.attend_type = 11 then 1 else 0 end ) hangup_students_num,
+			t1.teacher_id,
+			t1.course_times,
+			t1.course_id,
+			t1.attend_branch_id,
+			t1.scheduling_id,
+			t1.start_time,
+			t1.end_time,
+			t1.student_id,
+			tsi.encoding,
+			tsi.student_name
+			from (select
+				sdl.course_date,
+				att.attend_date,
+				att.student_id,
+				nvl(att.teacher_id,sdl.teacher_id) as teacher_id,
+				sdl.course_times,
+				sdl.course_id,
+				att.attend_branch_id attend_branch_id,
+				att.scheduling_id,
+				att.attend_type,
+				att.last_attend_type,
+				sdl.start_time,
+				sdl.end_time
+				from
+				(select *
+				   from t_attendance_ht
+				   where ts_flag = 'S'
+				) att
+				join t_order_course ordercourse on att.order_course_id = ordercourse.id
+				join t_order torder on ordercourse.order_id = torder.id  and torder.business_type = 1 and torder.order_status = 1
+				left join t_course_scheduling sdl on att.scheduling_id = sdl.id
+				left join t_order_course_times ct on ordercourse.id = ct.ocid  and sdl.course_times = ct.times and ct.is_valid = 1
+				where sdl.course_id = #{course_id, jdbcType=NUMERIC}
+				<if test="start_date != null and start_date != ''">
+					<if test="isCourseTime == 'true'">
+						and to_char(to_date(sdl.course_date,'yyyyMMdd'),'yyyy-MM-dd') >= #{start_date, jdbcType=VARCHAR}
+					</if>
+					<if test="isCourseTime != 'true'">
+						and to_char(att.attend_date, 'yyyy-mm-dd') >= #{start_date, jdbcType=VARCHAR}
+					</if>
+				</if>
+				<if test="end_date != null and end_date != ''">
+					<if test="isCourseTime == 'true'">
+						and to_char(to_date(sdl.course_date,'yyyyMMdd'),'yyyy-MM-dd') &lt;= #{end_date, jdbcType=VARCHAR}
+					</if>
+					<if test="isCourseTime != 'true'">
+						and to_char(att.attend_date, 'yyyy-mm-dd') &lt;= #{end_date, jdbcType=VARCHAR}
+					</if>
+				</if>
+			) t1,tab_student_info tsi
+			where
+			t1.student_id = tsi.id
+			and t1.course_id = #{course_id, jdbcType=NUMERIC}
+		    and t1.course_times = #{course_times, jdbcType=NUMERIC}
+			group by
+				t1.student_id,
+				t1.attend_branch_id,
+				t1.teacher_id,
+				t1.scheduling_id,
+				t1.course_times,
+				t1.course_id,
+				t1.start_time,
+				t1.end_time,
+				student_id,
+				tsi.encoding,
+				tsi.student_name
+		)
+		where normal_attend_students_num = 1
+		order by student_name
+	</select>
+
+	<delete id="deleteByTaskFlow"  parameterType="Map">
+		delete from t_teacher_workload where task_flow = #{task_flow, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertByTaskFlow" parameterType="Map">
+		insert into t_teacher_workload
+	      ( id,
+			bu_id,
+			bu_name,
+			course_branch_id,
+			course_branch_name,
+			teacher_id,
+			teacher_code,
+	        teacher_name,
+	        assteacher_id,
+	        assteacher_code,
+	        assteacher_name,
+	        course_id,
+	        course_no,
+	        course_name,
+	        grade_id, 
+        	grade_name,
+        	subject_id, 
+        	subject_name,
+        	teacher_group_name,
+	        start_time,
+	        end_time,
+	        hour_length,
+	        schedule_date,
+	        business_date,
+	        course_time,
+	        attend_students_num,
+	        normal_attend_students_num,
+		    hangup_students_num,
+		    tobe_students_num,
+			task_flow
+	       )
+	      (select 
+	      	seq_t_teacher_workload.nextval	  			id,
+	      	b_bu.id										bu_id,
+	      	b_bu.org_name								bu_name,
+	      	b_course.id 								course_branch_id,
+		    b_course.org_name 							course_branch_name,
+		    attend.teacher_id							teacher_id,
+		    t.encoding 									teacher_code, 
+		    t.teacher_name 								teacher_name, 
+		    attend.assteacher_id,
+		    tti.encoding assteacher_code,
+		    tti.teacher_name assteacher_name,
+		    c.id										course_id,
+		    c.course_no 								course_no, 
+		    c.course_name 								course_name,
+			tdg.id										grade_id, 
+			tdg.grade_name						        grade_name,
+			ts.id								        subject_id, 
+			ts.name								        subject_name,
+			mvtg.group_name								teacher_group_name,
+		    attend.start_time							start_time,
+		    attend.end_time								end_time,
+		    nvl(c.hour_len,0) 							hour_length, 
+		    to_char(to_date(attend.course_date,'YYYYMMDD'), 'yyyy-mm-dd') 	schedule_date,
+		    to_char(attend.attend_date, 'yyyy-mm-dd') 						business_date,
+		    attend.course_times 						course_time,
+		    attend.attend_students_num 					attend_students_num,
+		    attend.normal_attend_students_num           normal_attend_students_num,
+		    attend.hangup_students_num                  hangup_students_num,
+		    attend.tobe_students_num,
+	     	#{task_flow}
+	  	from (select
+	               sum(case when t1.attend_type = 10 then -1 else 1 end ) attend_students_num,
+	               sum(case when t1.attend_type = 10 and t1.last_attend_type = 12 then -1 when t1.attend_type = 12 then 1 else 0 end ) normal_attend_students_num,
+	               sum(case when t1.attend_type = 10 and t1.last_attend_type = 11 then -1 when t1.attend_type = 11 then 1 else 0 end ) hangup_students_num,
+	               t1.course_date,
+	               t1.attend_date,
+	               t1.teacher_id,
+	               t1.assteacher_id,
+	               t1.course_times,
+	               t1.course_id,
+	               t1.attend_branch_id,
+	               t1.scheduling_id,
+	               t1.start_time,
+	               t1.end_time,
+	               t2.tobe_students_num
+             from (select 
+		               sdl.course_date,
+		               att.attend_date,
+		               nvl(att.teacher_id,sdl.teacher_id) as teacher_id,
+		               sdl.assteacher_id,
+		               sdl.course_times,
+		               sdl.course_id,
+		               att.attend_branch_id attend_branch_id,
+		               att.scheduling_id,
+		               att.attend_type,
+		               att.last_attend_type,
+		               sdl.start_time,
+		               sdl.end_time
+		          from 
+		           	  (select * from t_attendance_ht
+				        where attend_date >= to_date(#{minOperateNo},'yyyyMMdd')  
+		       			  and attend_date &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+		       			  and ts_flag = 'S' 
+		              ) att      
+			          join t_order_course ordercourse on att.order_course_id = ordercourse.id
+			          join t_order torder on ordercourse.order_id = torder.id and torder.business_type = 1 and torder.order_status = 1
+			          left join t_course_scheduling sdl on att.scheduling_id = sdl.id
+			          left join t_order_course_times ct on ordercourse.id = ct.ocid  and sdl.course_times = ct.times and ct.is_valid = 1
+		         ) t1,
+		         (select toc.course_id, toct.times, count(1) as tobe_students_num
+                from t_order tod
+                left join t_order_course toc
+                  on toc.order_id = tod.id
+                left join t_order_course_times toct
+                  on toct.ocid = toc.id
+                where tod.order_status = 1
+                  and toct.is_valid = 1
+                group by toc.course_id, toct.times) t2
+              where t1.course_id = t2.course_id and t1.course_times = t2.times
+	          group by 
+	                  t1.attend_branch_id,
+	                  t1.teacher_id,
+	                  t1.assteacher_id,
+	                  t1.scheduling_id,
+	                  t1.course_date,
+	                  t1.attend_date,
+	                  t1.course_times,
+	                  t1.course_id,
+	                  t1.start_time,
+	               	  t1.end_time,
+	               	  t2.tobe_students_num
+	     	) attend
+	  		left join t_course c
+	    		on attend.course_id = c.id
+	    	left join tab_data_grade tdg
+			    on c.grade_id = tdg.id
+			left join tp_subject ts
+			    on c.subject_id = ts.id
+	  		left join tab_teacher_info t
+	    		on attend.teacher_id = t.id
+    		left join tab_teacher_info tti
+    			on attend.assteacher_id = tti.id
+	  		left join tab_organization_info b
+	   			on attend.attend_branch_id = b.id
+	   		left join tab_organization_info b_bu
+	   			on b.parent_id = b_bu.id
+   	  		left join tab_organization_info b_course 
+   	  			on b_course.id = c.branch_id
+   	  		left join mv_teacher_group mvtg
+	    		on mvtg.bu_id = b_bu.id	and mvtg.grade_id = tdg.id and mvtg.subject_code = ts.encoding  
+	    )
+	</insert>
+	
+	<!-- 更新应到学生数 -->
+	<update id="updateTobeStudentsByTaskFlow" parameterType="Map">
+		MERGE INTO t_teacher_workload t
+		USING  (select toc.course_id, toct.times, count(1) as cnt
+                from t_order tod
+                left join t_order_course toc
+                	on toc.order_id = tod.id
+                left join t_order_course_times toct
+                	on toct.ocid = toc.id
+              	where tod.order_status = 1
+                	and toct.is_valid = 1
+              	group by toc.course_id, toct.times) t2
+		  	ON (t.course_id = t2.course_id and t.course_time = t2.times)
+		WHEN MATCHED THEN
+		    update SET t.tobe_students_num = t2.cnt
+	</update>
+	
+	<!-- 更新 试听学生数/试听拒缴学生数 -->
+	<update id="updateListeningStudentsByTaskFlow" parameterType="Map">
+		MERGE INTO t_teacher_workload t
+		USING  (select
+					l.course_id, 
+					l.course_times, 
+                    count(id) ttls,
+					sum(decode(l.pay_status, 2, 1, 0)) notpayls
+               	from t_course_listening l
+              	group by l.course_id, l.course_times) t2
+		  	ON (t.course_id = t2.course_id and t.course_time = t2.course_times)
+		WHEN MATCHED THEN
+		    update SET t.listening_students_num = t2.ttls,
+		    		   t.listen_rejection_students_num = t2.notpayls
+		where t.task_flow = #{task_flow}
+	</update>
+	
+</mapper>

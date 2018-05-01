@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.ReportTaskSettingsDao">
+	<select id="queryReportTaskSettings" parameterType="map"
+		resultType="com.edu.report.model.TReportTaskSettings">
+		select id,
+		task_name as taskName,
+		task_id as taskId,
+		start_date as startDate,
+		end_date as endDate,
+		run_time as runTime,
+		unit,
+		decode(unit, 1, '天', 2, '时', 3, '分', 4, '秒', 5, '毫秒') as unitName,
+		pagesize as pageSize,
+		period,
+		status,
+		decode(status, 1, '启用', '停用') as statusName,
+		tables,
+		classimpl as classImpl,
+		type,
+		decode(type, 'common', '通用', 'bjk', '班级课', 'ydy', '一对一', 'wfd', '晚辅导') as
+		typeName,
+		start_id as startId,
+		remark
+		from t_report_task_settings a
+		where 1=1
+		and to_char(sysdate,'yyyy-mm-dd') between a.start_date and a.end_date
+		<if test="type != null and type != ''">
+			and a.type = #{type}
+		</if>
+		<if test="status != null and status != ''">
+			and a.status = #{status}
+		</if>
+	</select>
+
+	<select id="queryReportTaskIds" parameterType="map"
+		resultType="java.lang.String">
+		select task_id as taskId from t_report_task_settings
+	</select>
+
+	<select id="selectCountByTaskId" parameterType="com.edu.report.model.TReportTaskSettings"
+		resultType="java.lang.Integer">
+		select count(0) from t_report_task_settings
+		where task_id = #{taskId}
+		<if test="id != null">
+			and id != #{id}
+		</if>
+	</select>
+
+	<select id="queryByTaskId" parameterType="java.lang.String"
+		resultType="com.edu.report.model.TReportTaskSettings">
+		select t.id,
+		       t.task_name as taskName,
+		       t.task_id as taskId,
+		       t.start_date as startDate,
+		       t.end_date as endDate,
+		       t.run_time as runTime,
+		       t.unit,
+		       t.pagesize as pageSize,
+		       t.period,
+		       t.status,
+		       t.tables,
+		       t.classimpl as classImpl,
+		       t.type,
+		       t.remark,
+		       t.start_id as startId
+		  from t_report_task_settings t 
+		 where t.task_id = #{taskId}
+	</select>
+
+	<insert id="add" parameterType="com.edu.report.model.TReportTaskSettings">
+		insert into
+		t_report_task_settings (
+		id,
+		task_name,
+		task_id,
+		start_date,
+		end_date,
+		run_time,
+		unit,
+		pagesize,
+		period,
+		status,
+		tables,
+		classimpl,
+		type,
+		start_id,
+		remark)
+		values (
+		seq_t_report_task_settings.nextval,
+		#{taskName, jdbcType=VARCHAR},
+		#{taskId, jdbcType=VARCHAR},
+		#{startDate, jdbcType=VARCHAR},
+		#{endDate, jdbcType=VARCHAR},
+		#{runTime, jdbcType=VARCHAR},
+		#{unit, jdbcType=NUMERIC},
+		#{pageSize, jdbcType=NUMERIC},
+		#{period, jdbcType=NUMERIC},
+		1,
+		#{tables, jdbcType=VARCHAR},
+		#{classImpl, jdbcType=VARCHAR},
+		#{type, jdbcType=VARCHAR},
+		#{startId, jdbcType=VARCHAR},
+		#{remark, jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="addByReportCfg" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="; end;" separator=";">
+			insert into t_report_task_settings (
+			id,
+			task_name,
+			task_id,
+			start_date,
+			end_date,
+			run_time,
+			unit,
+			pagesize,
+			period,
+			status,
+			tables,
+			classimpl,
+			type,
+			start_id)
+			values (
+			seq_t_report_task_settings.nextval,
+			#{item.taskName, jdbcType=VARCHAR},
+			#{item.taskId, jdbcType=VARCHAR},
+			#{item.startDate, jdbcType=VARCHAR},
+			#{item.endDate, jdbcType=VARCHAR},
+			#{item.runTime, jdbcType=VARCHAR},
+			#{item.unit, jdbcType=NUMERIC},
+			#{item.pageSize, jdbcType=NUMERIC},
+			#{item.period, jdbcType=NUMERIC},
+			1,
+			#{item.tables, jdbcType=VARCHAR},
+			#{item.classImpl, jdbcType=VARCHAR},
+			#{item.type, jdbcType=VARCHAR},
+			#{item.startId, jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.edu.report.model.TReportTaskSettings">
+		update t_report_task_settings
+		set
+		task_name = #{taskName, jdbcType=VARCHAR},
+		start_date = #{startDate, jdbcType=VARCHAR},
+		end_date = #{endDate, jdbcType=VARCHAR},
+		run_time = #{runTime, jdbcType=VARCHAR},
+		unit = #{unit, jdbcType=NUMERIC},
+		pagesize = #{pageSize, jdbcType=NUMERIC},
+		period = #{period, jdbcType=NUMERIC},
+		tables = #{tables, jdbcType=VARCHAR},
+		classimpl = #{classImpl, jdbcType=VARCHAR},
+		type = #{type, jdbcType=VARCHAR},
+		start_id = #{startId, jdbcType=VARCHAR},
+		remark = #{remark, jdbcType=VARCHAR},
+		task_id = #{taskId, jdbcType=VARCHAR}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<update id="changeStatus" parameterType="com.edu.report.model.TReportTaskSettings">
+		update
+		t_report_task_settings set
+		status = #{status, jdbcType=NUMERIC}
+		where id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<update id="updateByReportCfg" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="; end;" separator=";">
+			update t_report_task_settings set
+			task_name = #{item.taskName, jdbcType=VARCHAR},
+			start_date = #{item.startDate, jdbcType=VARCHAR},
+			end_date = #{item.endDate, jdbcType=VARCHAR},
+			run_time = #{item.runTime, jdbcType=VARCHAR},
+			unit = #{item.unit, jdbcType=NUMERIC},
+			pagesize = #{item.pageSize, jdbcType=NUMERIC},
+			period = #{item.period, jdbcType=NUMERIC},
+			tables = #{item.tables, jdbcType=VARCHAR},
+			classimpl = #{item.classImpl, jdbcType=VARCHAR},
+			type = #{item.type, jdbcType=VARCHAR},
+			start_id = #{item.startId, jdbcType=VARCHAR}
+			where task_id = #{item.taskId, jdbcType=VARCHAR}
+		</foreach>
+	</update>
+</mapper>

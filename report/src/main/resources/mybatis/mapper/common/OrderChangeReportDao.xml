@@ -1,0 +1,1359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.OrderChangeReportDao">
+	<select id="queryReport" parameterType="map"
+		resultType="com.edu.report.model.TOrderChangeReport">
+		select t.*
+		from t_order_change_report t
+		where t.bu_id = #{bu_id}
+		<if test="branch_id != null and branch_id != -1">
+			<![CDATA[ and t.branch_id = #{branch_id, jdbcType=NUMERIC} ]]>
+		</if>
+		<if test="validBranchIds != null and validBranchIds !='' ">
+			   and t.branch_id  in (${validBranchIds})
+		</if>
+		<if test="start_date != null and start_date != ''">
+			<![CDATA[ and t.bus_date >= #{start_date} ]]>
+		</if>
+		<if test="end_date != null and end_date != ''">
+			<![CDATA[ and t.bus_date <= #{end_date} ]]>
+		</if>		
+		<if test="business_type != null and business_type != -1">
+			<![CDATA[ and t.business_type = #{business_type} ]]>
+		</if>		
+		order by t.order_encoding		
+	</select>
+	
+	<delete id="removeByTaskFlow"  parameterType="HashMap">
+		delete from t_order_change_report where task_flow = #{taskFlow}
+	</delete>
+	
+	<insert id="saveBaoBan" parameterType="HashMap">
+		insert into t_order_change_report 
+		(   
+			  id,
+			  task_flow,
+			  bus_date,
+  			  order_encoding,
+			  student_encoding,
+			  grade_name,
+			  student_name,
+			  branch_name,
+			  course_branch_name,
+			  course_name,
+			  order_detail_id,
+			  baoban,
+			  bao,
+			  baobanyujiezhuan,
+			  yujiezhuan,
+			  tui,
+			  bukou,
+			  tuikeshi,
+			  zhuanchu,
+			  zhuanchukeshi,
+			  zhuanru,
+			  zhuanrukeshi,
+			  bujiezhuan,
+			  order_status,
+			  bus_type,
+			  subject_name,
+			  is_textbooks,
+			  short_or_long,
+              business_type,
+	          bu_id,
+	          branch_id
+		)
+		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+	      select bus_date,
+	               order_encoding,
+	               student_encoding,
+	               grade_name,
+	               student_name,
+	               branch_name,
+	               course_branch_name,
+	               course_name,
+	               order_detail_id,
+	               case
+	                 when zhuanRuKeShi > 0 then
+	                  0
+	                 else
+	                  baoBan
+	               end as baoBan,
+	               case
+	                 when zhuanRuKeShi > 0 then
+	                  0
+	                 else
+	                  bao
+	               end as bao,
+	               baoBanYuJieZhuan,
+	               yuJieZhuan,
+	               case
+	                 when tui > 0 then
+	                  tui * -1
+	               end as tui,
+	               buKou,
+	               tuiKeShi,
+	               case
+	                 when zhuanChu > 0 then
+	                  zhuanChu * -1
+	               end zhuanChu,
+	               case
+	                 when zhuanChuKeShi > 0 then
+	                  zhuanChuKeShi * -1
+	               end zhuanChuKeShi,
+	               zhuanRu,
+	               zhuanRuKeShi,
+	               bujiezhuan,
+	               case
+	                 when tod.order_status = 0 then
+	                  '无效'
+	                 else
+	                  '有效'
+	               end as order_status,
+	               '报班' as bus_type,
+	               subject_name,
+	               is_textbooks,
+	               short_or_long,
+	               tmp.business_type,
+	               tmp.bu_id,
+	               tmp.branch_id
+	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	                       ord.order_encoding order_encoding,
+	                       ord.student_encoding student_encoding,
+	                       grade.grade_name grade_name,
+	                       cou.subject_name,
+	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       ord.student_name student_name,
+	                       ord.branch_name branch_name,
+	                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+	                       cou.course_name course_name,
+	                       d.order_detail_id, /*子单ID*/
+	                       sum(case d.fee_type
+	                             when 41 then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) + sum(case
+	                                        when d.fee_type = 42 and d.fee_amount is not null and
+	                                             t.operate_type = 4 then
+	                                         d.fee_amount
+	                                        else
+	                                         0
+	                                      end) baoBan, /*课程金额*/
+	                       c.course_total_count bao, /*报班课时*/
+	                       sum(case
+	                             when d.fee_type = 62 and d.operate_type = 4 and
+	                                  d.fee_amount is not null then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) baoBanYuJieZhuan,
+	                       sum(case
+	                             when d.fee_type = 42 and d.operate_type = 4 and
+	                                  d.fee_amount is not null then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) yuJieZhuan, /*预结转*/
+	                       0 tui, /*退费金额*/
+	                       0 buKou, --冻结补扣 
+	                       0 tuiKeShi, /*退费课时*/
+	                       0 zhuanChu, /*转出金额*/
+	                       0 zhuanChuKeShi, /*转出课时*/
+	                       0 zhuanRu, /*转入金额*/
+	                       0 zhuanRuKeShi, /*转入课时*/
+	                       0 bujiezhuan /*补结转*/,
+	                       ord.business_type,
+	                       ord.bu_id,
+	                       nvl(tc.branch_id,ord.branch_id) branch_id
+	                  from t_fee t
+	                  left join t_fee_detail d
+	                    on t.id = d.fee_id
+	                  left join t_order_course c
+	                    on d.order_detail_id = c.id
+	                  left join vt_order ord
+	                    on d.order_id = ord.order_id
+	                  left join vt_course cou
+	                    on c.course_id = cou.course_id
+	                  left join t_order torder
+	                    on d.order_id = torder.id
+	                  left join tab_student_info stu
+	                    on torder.student_id = stu.id
+	                  left join tab_data_grade grade
+	                    on stu.grade_id = grade.id
+	                  left join T_ORDER_COURSE toc
+	                    on ord.order_id = toc.order_id
+	                   and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+	                 where t.fee_type in (41, 42)
+	                   and t.operate_type in (4)
+	                   and ord.business_type in ('1','2','3')
+	                 group by t.finish_time,
+	                          ord.order_encoding,
+	                          ord.student_encoding,
+	                          ord.student_name,
+	                          ord.product_line,
+	                          ord.business_type,
+	                          grade.grade_name,
+	                          ord.branch_name,
+	                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+	                          cou.course_name,
+	                          decode(cou.is_textbooks, 1, '是', '否'),
+	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          cou.performance_belong_type,
+	                          cou.subject_name,
+	                          c.course_total_count,
+	                          d.order_detail_id,
+	                          toc.manage_fee,
+	                          ord.business_type,
+	                          ord.bu_id,
+	                          nvl(tc.branch_id,ord.branch_id)
+	               ) tmp
+	          left join t_order_course toc
+	            on toc.id = tmp.order_detail_id
+	          left join t_order tod
+	            on toc.order_id = tod.id
+	          union all
+		        select bus_date,
+		               order_encoding,
+		               student_encoding,
+		               grade_name,
+		               student_name,
+		               branch_name,
+		               course_branch_name,
+		               course_name,
+		               order_detail_id,
+		               case
+		                 when zhuanRuKeShi > 0 then
+		                  0
+		                 else
+		                  baoBan
+		               end as baoBan,
+		               case
+		                 when zhuanRuKeShi > 0 then
+		                  0
+		                 else
+		                  bao
+		               end as bao,
+		               baoBanYuJieZhuan,
+		               yuJieZhuan,
+		               case
+		                 when tui > 0 then
+		                  tui * -1
+		               end as tui,
+		               buKou,
+		               tuiKeShi,
+		               case
+		                 when zhuanChu > 0 then
+		                  zhuanChu * -1
+		               end zhuanChu,
+		               case
+		                 when zhuanChuKeShi > 0 then
+		                  zhuanChuKeShi * -1
+		               end zhuanChuKeShi,
+		               zhuanRu,
+		               zhuanRuKeShi,
+		               bujiezhuan,
+		               case
+		                 when tod.order_status = 0 then
+		                  '无效'
+		                 else
+		                  '有效'
+		               end as order_status,
+		               '报班作废' as bus_type,
+		               subject_name,
+		               is_textbooks,
+		               short_or_long,
+		               tmp.business_type,
+		               tmp.bu_id,
+		               tmp.branch_id
+		          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+		                       ord.order_encoding order_encoding,
+		                       ord.student_encoding student_encoding,
+		                       grade.grade_name grade_name,
+		                       cou.subject_name,
+		                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+		                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+		                       ord.student_name student_name,
+		                       ord.branch_name branch_name,
+		                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+		                       cou.course_name course_name,
+		                       d.order_detail_id, /*子单ID*/
+		                       sum(case d.fee_type
+		                             when 53 then
+		                              -1 * d.fee_amount
+		                             else
+		                              0
+		                           end) + sum(case
+		                                        when d.fee_type = 42 and d.fee_amount is not null and
+		                                             d.fee_amount > 0 and t.operate_type = 4 then
+		                                         -1 * d.fee_amount
+		                                        else
+		                                         0
+		                                      end) baoBan, /*课程金额*/
+		                       -1 * c.COURSE_SURPLUS_COUNT bao, /*报班课时*/
+		                       -1 * dd.fee_amount baoBanYuJieZhuan,
+		                       -1 * dd.fee_amount yuJieZhuan, /*预结转*/
+		                       0 tui, /*退费金额*/
+		                       0 buKou, --冻结补扣 
+		                       0 tuiKeShi, /*退费课时*/
+		                       0 zhuanChu, /*转出金额*/
+		                       0 zhuanChuKeShi, /*转出课时*/
+		                       0 zhuanRu, /*转入金额*/
+		                       0zhuanRuKeShi, /*转入课时*/
+		                       0 bujiezhuan /*补结转*/,
+		                       ord.business_type,
+		                       ord.bu_id,
+		                       nvl(tc.branch_id,ord.branch_id) branch_id
+		                  from t_fee t
+		                  left join t_fee_detail d
+		                    on t.id = d.fee_id
+		                  left join t_order_course c
+		                    on d.order_detail_id = c.id
+		                  left join vt_order ord
+		                    on d.order_id = ord.order_id
+		                  left join vt_course cou
+		                    on c.course_id = cou.course_id
+		                  left join t_order torder
+		                    on d.order_id = torder.id
+		                  left join tab_student_info stu
+		                    on torder.student_id = stu.id
+		                  left join tab_data_grade grade
+		                    on stu.grade_id = grade.id
+		                  left join T_ORDER_COURSE toc
+		                    on ord.order_id = toc.order_id
+		                   and d.order_detail_id = toc.id
+	                      left join T_COURSE tc
+	                        on tc.id = toc.course_id
+		                  left join t_fee_detail dd
+		                    on dd.order_id = d.order_id
+		                   and dd.order_detail_id = d.order_detail_id
+		                   and dd.fee_type = 42
+		                   and dd.operate_type = 4
+		                 where t.fee_type in (53)
+		                   and t.operate_type in (4, 5)
+		                   and ord.business_type in ('1','2','3')
+		                 group by t.finish_time,
+		                          ord.order_encoding,
+		                          ord.student_encoding,
+		                          ord.student_name,
+		                          grade.grade_name,
+		                          ord.branch_name,
+		                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+		                          cou.course_name,
+		                          cou.subject_name,
+		                          decode(cou.is_textbooks, 1, '是', '否'),
+		                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+		                          cou.performance_belong_type,
+		                          c.COURSE_SURPLUS_COUNT,
+		                          d.order_detail_id,
+		                          toc.manage_fee,
+		                          dd.fee_amount,
+		                          ord.business_type,
+		                          ord.bu_id,
+		                          nvl(tc.branch_id,ord.branch_id)
+		                ) tmp
+		          left join t_order_course toc
+		            on toc.id = tmp.order_detail_id
+		          left join t_order tod
+		            on toc.order_id = tod.id 
+	    ) t
+	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	</insert>
+
+	<insert id="saveTuiFei" parameterType="HashMap">
+		insert into t_order_change_report 
+		(   
+			  id,
+			  task_flow,
+			  bus_date,
+  			  order_encoding,
+			  student_encoding,
+			  grade_name,
+			  student_name,
+			  branch_name,
+			  course_branch_name,
+			  course_name,
+			  order_detail_id,
+			  baoban,
+			  bao,
+			  baobanyujiezhuan,
+			  yujiezhuan,
+			  tui,
+			  bukou,
+			  tuikeshi,
+			  zhuanchu,
+			  zhuanchukeshi,
+			  zhuanru,
+			  zhuanrukeshi,
+			  bujiezhuan,
+			  order_status,
+			  bus_type,
+			  subject_name,
+			  is_textbooks,
+			  short_or_long,
+              business_type,
+	          bu_id,
+	          branch_id
+		)
+		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+          select bus_date,
+                 order_encoding,
+                 student_encoding,
+                 grade_name,
+                 student_name,
+                 branch_name,
+                 course_branch_name,
+                 course_name,
+                 order_detail_id,
+                 baoBan,
+                 bao,
+                 baoBanYuJieZhuan,
+                 yuJieZhuan,
+                 tui,
+                 buKou,
+                 tuiKeShi,
+                 zhuanChu,
+                 zhuanChuKeShi,
+                 zhuanRu,
+                 zhuanRuKeShi,
+                 bujiezhuan,
+                 case
+                   when tod.order_status = 0 then
+                    '无效'
+                   else
+                    '有效'
+                 end as order_status,
+                 '退费' as bus_type,
+                 subject_name,
+                 is_textbooks,
+                 short_or_long,
+                 tmp.business_type,
+                 tmp.bu_id,
+                 tmp.branch_id
+            from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+                         ord.order_no order_encoding,
+                         stu.encoding student_encoding,
+                         stu.student_name student_name,
+                         grade.grade_name grade_name,
+                         tooi.org_name branch_name,
+                         decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+                         cou.course_name course_name,
+                         d.order_detail_id, /*子单ID*/
+                         0 baoBan, /*课程金额*/
+                         0 bao, /*报班课时*/
+                         fanyujiezhuan.fee_amount baoBanYuJieZhuan,
+                         fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
+                         sum(case
+                               when (d.fee_type = 51 or d.fee_type = 54) and
+                                    tocc.change_type = 1 and
+                                    (tocc.change_status = 5 or tocc.change_status = 7) then
+                                d.fee_amount
+                               else
+                                0
+                             end) tui, /*退费金额*/
+                         sum(case
+                               when d.fee_type = 54 and d.fee_flag = 2 then
+                                d.fee_amount
+                               else
+                                0
+                             end) buKou, --冻结补扣
+                         sum(case
+                               when t.fee_type = 51 and tocc.change_type = 1 and
+                                    (tocc.change_status = 5 or tocc.change_status = 7) then
+                                d.course_sum
+                               else
+                                0
+                             end) tuiKeShi, /*退费课时*/
+                         sum(case
+                               when d.fee_type = 52 and d.fee_flag = 2 then
+                                -1 * d.fee_amount
+                               else
+                                0
+                             end) zhuanChu, /*转出金额*/
+                         0 zhuanChuKeShi, /*转出课时*/
+                         sum(case
+                               when d.fee_type = 52 and d.fee_flag = 1 then
+                                d.fee_amount
+                               else
+                                0
+                             end) zhuanRu, /*转入金额*/
+                         0 zhuanRuKeShi, /*转入课时*/
+                         sum(case
+                               when (d.fee_type = 62 and d.operate_type = 5) then
+                                d.fee_amount
+                               else
+                                0
+                             end) bujiezhuan, /*补结转*/
+                         cou.subject_name,
+                         decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+                         decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+                         ord.business_type,
+                         ord.bu_id,
+                         nvl(tc.branch_id,ord.branch_id) branch_id
+                    from t_fee t
+                    left join t_fee_detail d
+                      on t.id = d.fee_id
+                    left join t_order_course c
+                      on d.order_detail_id = c.id
+                    left join t_order ord
+                      on d.order_id = ord.id
+                    left join vt_course cou
+                      on c.course_id = cou.course_id
+                    left join t_order torder
+                      on d.order_id = torder.id
+                    left join tab_student_info stu
+                      on torder.student_id = stu.id
+                    left join tab_data_grade grade
+                      on stu.grade_id = grade.id
+                    left join T_ORDER_COURSE toc
+                      on ord.id = toc.order_id
+                     and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+                    left join t_order_change tocc
+                      on tocc.id = t.operate_no
+                     and t.order_id = tocc.order_id
+                    left join TAB_ORGANIZATION_INFO tooi
+                      on tooi.id = ord.branch_id
+                    left join (select tfd2.order_detail_id,
+                                     tfd2.operate_no,
+                                     sum(tfd2.fee_amount) as fee_amount
+                                from T_FEE_DETAIL tfd2
+                               where tfd2.fee_type = 42
+                               group by order_detail_id, tfd2.operate_no) fanyujiezhuan
+                      on fanyujiezhuan.order_detail_id = d.order_detail_id
+                     and fanyujiezhuan.operate_no = tocc.id
+                   where t.fee_type in (51, 54, 62, 52)
+                     and t.operate_type in (5)
+                     and tocc.change_type = 1
+                     and (tocc.change_status = 5 or tocc.change_status = 7)
+                     and ord.business_type in ('1','2','3')
+                   group by t.finish_time,
+                            ord.order_no ,
+                            stu.encoding,
+                            stu.student_name,
+                            grade.grade_name,
+                            cou.subject_name,
+                            tooi.org_name,
+                            decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+                            cou.course_name,
+                            decode(cou.is_textbooks, 1, '是', '否'),
+                            decode(cou.short_or_long, 2, '短期班', '系统班'),
+                            cou.performance_belong_type,
+                            c.course_total_count,
+                            d.order_detail_id,
+                            toc.manage_fee,
+                            fanyujiezhuan.fee_amount,
+                            ord.business_type,
+                            ord.bu_id,
+                            nvl(tc.branch_id,ord.branch_id)
+                  ) tmp
+            left join t_order_course toc
+              on toc.id = tmp.order_detail_id
+            left join t_order tod
+              on toc.order_id = tod.id
+          union all
+          select bus_date,
+                 order_encoding,
+                 student_encoding,
+                 grade_name,
+                 student_name,
+                 branch_name,
+                 course_branch_name,
+                 course_name,
+                 order_detail_id,
+                 baoBan,
+                 bao,
+                 baoBanYuJieZhuan,
+                 yuJieZhuan,
+                 tui,
+                 buKou,
+                 tuiKeShi,
+                 zhuanChu,
+                 zhuanChuKeShi,
+                 zhuanRu,
+                 zhuanRuKeShi,
+                 bujiezhuan,
+                 case
+                   when tod.order_status = 0 then
+                    '无效'
+                   else
+                    '有效'
+                 end as order_status,
+                 '退费作废' as bus_type,
+                 subject_name,
+                 is_textbooks,
+                 short_or_long,
+                 tmp.business_type,
+                 tmp.bu_id,
+                 tmp.branch_id
+            from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+                         ord.order_no order_encoding,
+                         stu.encoding student_encoding,
+                         stu.student_name student_name,
+                         grade.grade_name grade_name,
+                         tooi.org_name branch_name,
+                         decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+                         cou.course_name course_name,
+                         d.order_detail_id, /*子单ID*/
+                         0 baoBan, /*课程金额*/
+                         0 bao, /*报班课时*/
+                         fanyujiezhuan.fee_amount baoBanYuJieZhuan,
+                         fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
+                         sum(case
+                               when (d.fee_type = 51 or d.fee_type = 54) and
+                                    tocc.change_type = 4 and tocc.change_status = 5 then
+                                d.fee_amount
+                               else
+                                0
+                             end) tui, /*退费金额*/
+                         sum(case
+                               when d.fee_type = 54 and d.fee_flag = 2 then
+                                d.fee_amount
+                               else
+                                0
+                             end) buKou, --冻结补扣
+                         sum(case
+                               when tocc.change_type = 4 and tocc.change_status = 5 and
+                                    d.fee_type = 51 then
+                                d.course_sum
+                               else
+                                0
+                             end) tuiKeShi, /*退费课时*/
+                         sum(case
+                               when d.fee_type = 52 and d.fee_flag = 2 then
+                                -1 * d.fee_amount
+                               else
+                                0
+                             end) zhuanChu, /*转出金额*/
+                         0 zhuanChuKeShi, /*转出课时*/
+                         sum(case
+                               when d.fee_type = 52 and d.fee_flag = 1 then
+                                d.fee_amount
+                               else
+                                0
+                             end) zhuanRu, /*转入金额*/
+                         0 zhuanRuKeShi, /*转入课时*/
+                         sum(case
+                               when (d.fee_type = 62 and d.operate_type = 5) then
+                                d.fee_amount
+                               else
+                                0
+                             end) bujiezhuan, /*补结转*/
+                         cou.subject_name,
+                         decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+                         decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+                         torder.business_type,
+                         torder.bu_id,
+                         nvl(tc.branch_id,torder.branch_id) branch_id
+                    from t_fee t
+                    left join t_fee_detail d
+                      on t.id = d.fee_id
+                    left join t_order_course c
+                      on d.order_detail_id = c.id
+                    left join t_order ord
+                      on d.order_id = ord.id
+                    left join vt_course cou
+                      on c.course_id = cou.course_id
+                    left join t_order torder
+                      on d.order_id = torder.id
+                    left join tab_student_info stu
+                      on torder.student_id = stu.id
+                    left join tab_data_grade grade
+                      on stu.grade_id = grade.id
+                    left join T_ORDER_COURSE toc
+                      on ord.id = toc.order_id
+                     and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+                    left join t_order_change tocc
+                      on tocc.id = t.operate_no
+                     and t.order_id = tocc.order_id
+                    left join TAB_ORGANIZATION_INFO tooi
+                      on tooi.id = ord.branch_id
+                    left join (select tfd2.order_detail_id,
+                                     tfd2.operate_no,
+                                     sum(tfd2.fee_amount) as fee_amount
+                                from T_FEE_DETAIL tfd2
+                               where tfd2.fee_type = 42
+                               group by order_detail_id, operate_no) fanyujiezhuan
+                      on fanyujiezhuan.order_detail_id = d.order_detail_id
+                     and fanyujiezhuan.operate_no = d.operate_no
+                   where t.fee_type in (51, 42, 54, 62, 52)
+                     and t.operate_type in (5)
+                     and tocc.change_type = 4
+                     and tocc.change_status = 5
+                     and torder.business_type in ('1','2','3')
+                   group by t.finish_time,
+                            ord.order_no ,
+                            stu.encoding,
+                            stu.student_name,
+                            grade.grade_name,
+                            tooi.org_name,
+                            decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+                            cou.course_name,
+                            cou.subject_name,
+                            decode(cou.is_textbooks, 1, '是', '否'),
+                            decode(cou.short_or_long, 2, '短期班', '系统班'),
+                            cou.performance_belong_type,
+                            c.course_total_count,
+                            d.order_detail_id,
+                            toc.manage_fee,
+                            fanyujiezhuan.fee_amount,
+                            torder.business_type,
+                            torder.bu_id,
+                            nvl(tc.branch_id,torder.branch_id)
+                  ) tmp
+            left join t_order_course toc
+              on toc.id = tmp.order_detail_id
+            left join t_order tod
+              on toc.order_id = tod.id
+      ) t
+	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	</insert>	
+
+	<insert id="saveDonJie" parameterType="HashMap">
+		insert into t_order_change_report 
+		(   
+			  id,
+			  task_flow,
+			  bus_date,
+  			  order_encoding,
+			  student_encoding,
+			  grade_name,
+			  student_name,
+			  branch_name,
+			  course_branch_name,
+			  course_name,
+			  order_detail_id,
+			  baoban,
+			  bao,
+			  baobanyujiezhuan,
+			  yujiezhuan,
+			  tui,
+			  bukou,
+			  tuikeshi,
+			  zhuanchu,
+			  zhuanchukeshi,
+			  zhuanru,
+			  zhuanrukeshi,
+			  bujiezhuan,
+			  order_status,
+			  bus_type,
+			  subject_name,
+			  is_textbooks,
+			  short_or_long,
+              business_type,
+	          bu_id,
+	          branch_id
+		)
+		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+	        	        select bus_date,
+	               order_encoding,
+	               student_encoding,
+	               grade_name,
+	               student_name,
+	               branch_name,
+	               course_branch_name,
+	               course_name,
+	               order_detail_id,
+	               baoBan,
+	               bao,
+	               baoBanYuJieZhuan,
+	               yuJieZhuan,
+	               tui,
+	               buKou,
+	               tuiKeShi,
+	               zhuanChu,
+	               zhuanChuKeShi,
+	               zhuanRu,
+	               zhuanRuKeShi,
+	               bujiezhuan,
+	               case
+	                 when tod.order_status = 0 then
+	                  '无效'
+	                 else
+	                  '有效'
+	               end as order_status,
+	               '冻结' as bus_type,
+	               subject_name,
+	               is_textbooks,
+	               short_or_long,
+	               tmp.business_type,
+	               tmp.bu_id,
+	               tmp.branch_id
+	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	                       torder.order_no order_encoding,
+                           stu.encoding student_encoding,
+                           stu.student_name student_name,
+	                       grade.grade_name grade_name,
+	                       tooi.org_name branch_name,
+	                       decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+	                       cou.course_name course_name,
+	                       d.order_detail_id, /*子单ID*/
+	                       0 baoBan, /*课程金额*/
+	                       0 bao, /*报班课时*/
+	                       fanyujiezhuan.fee_amount baoBanYuJieZhuan,
+	                       fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
+	                       sum(case
+	                             when (d.fee_type = 55 or d.fee_type = 54) and
+	                                  tocc.change_type = 5 and
+	                                  (tocc.change_status = 5 or tocc.change_status = 7) then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) tui, /*退费金额*/
+	                       sum(case
+	                             when d.fee_type = 54 and d.fee_flag = 2 then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) buKou, --冻结补扣 
+	                       sum(case
+	                             when t.fee_type = 55 and tocc.change_type = 5 and
+	                                  (tocc.change_status = 5 or tocc.change_status = 7) then
+	                              d.course_sum
+	                             else
+	                              0
+	                           end) tuiKeShi, /*退费课时*/
+	                       sum(case
+	                             when d.fee_type = 52 and d.fee_flag = 2 then
+	                              -1 * d.fee_amount
+	                             else
+	                              0
+	                           end) zhuanChu, /*转出金额*/
+	                       0 zhuanChuKeShi, /*转出课时*/
+	                       sum(case
+	                             when d.fee_type = 52 and d.fee_flag = 1 then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) zhuanRu, /*转入金额*/
+	                       0 zhuanRuKeShi, /*转入课时*/
+	                       sum(case
+	                             when (d.fee_type = 62 and d.operate_type = 5) then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) bujiezhuan, /*补结转*/
+	                       cou.subject_name,
+	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       torder.business_type,
+                           tooi.parent_id bu_id,
+	                       nvl(tc.branch_id,torder.branch_id) branch_id
+	                  from t_fee t
+	                  left join t_fee_detail d
+	                    on t.id = d.fee_id
+	                  left join t_order_course c
+	                    on d.order_detail_id = c.id
+	                  left join vt_course cou
+	                    on c.course_id = cou.course_id
+	                  left join t_order torder
+	                    on d.order_id = torder.id
+	                  left join tab_student_info stu
+	                    on torder.student_id = stu.id
+	                  left join tab_data_grade grade
+	                    on stu.grade_id = grade.id
+	                  left join T_ORDER_COURSE toc
+	                    on torder.id = toc.order_id
+	                   and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+	                  left join t_order_change tocc
+	                    on tocc.id = t.operate_no
+	                   and t.order_id = tocc.order_id
+	                  left join TAB_ORGANIZATION_INFO tooi
+	                    on tooi.id = torder.branch_id
+	                  left join (select tfd2.order_detail_id,
+	                                   tfd2.operate_no,
+	                                   sum(tfd2.fee_amount) as fee_amount
+	                              from T_FEE_DETAIL tfd2
+	                             where tfd2.fee_type = 42 
+	                             group by order_detail_id, tfd2.operate_no) fanyujiezhuan
+	                    on fanyujiezhuan.order_detail_id = d.order_detail_id
+	                   and fanyujiezhuan.operate_no = tocc.id
+	                 where t.fee_type in (51, 54, 62, 52, 55)
+	                   and t.operate_type in (5)
+	                   and tocc.change_type = 5
+	                   and (tocc.change_status = 5 or tocc.change_status = 7)
+	                   and torder.business_type in ('1','2','3')
+	                 group by t.finish_time,
+	                          torder.order_no,
+                              stu.encoding,
+                              stu.student_name,
+	                          grade.grade_name,
+	                          cou.subject_name,
+	                          tooi.org_name,
+	                          decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+	                          cou.course_name,
+	                          decode(cou.is_textbooks, 1, '是', '否'),
+	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          cou.performance_belong_type,
+	                          c.course_total_count,
+	                          d.order_detail_id,
+	                          toc.manage_fee,
+	                          fanyujiezhuan.fee_amount,
+	                          torder.business_type,
+                              tooi.parent_id,
+	                          nvl(tc.branch_id,torder.branch_id)
+	                ) tmp
+	          left join t_order_course toc
+	            on toc.id = tmp.order_detail_id
+	          left join t_order tod
+	            on toc.order_id = tod.id
+	        union all
+	        select bus_date,
+	               order_encoding,
+	               student_encoding,
+	               grade_name,
+	               student_name,
+	               branch_name,
+	               course_branch_name,
+	               course_name,
+	               order_detail_id,
+	               baoBan,
+	               bao,
+	               baoBanYuJieZhuan,
+	               yuJieZhuan,
+	               tui,
+	               buKou,
+	               tuiKeShi,
+	               zhuanChu,
+	               zhuanChuKeShi,
+	               zhuanRu,
+	               zhuanRuKeShi,
+	               bujiezhuan,
+	               case
+	                 when tod.order_status = 0 then
+	                  '无效'
+	                 else
+	                  '有效'
+	               end as order_status,
+	               '冻结作废' as bus_type,
+	               subject_name,
+	               is_textbooks,
+	               short_or_long,
+	               tmp.business_type,
+	               tmp.bu_id,
+	               tmp.branch_id
+	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	          			   torder.order_no order_encoding,
+                           stu.encoding student_encoding,
+                           stu.student_name student_name,
+	                       grade.grade_name grade_name,
+	                       tooi.org_name branch_name,
+	                       decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+	                       cou.course_name course_name,
+	                       d.order_detail_id, /*子单ID*/
+	                       0 baoBan, /*课程金额*/
+	                       0 bao, /*报班课时*/
+	                       fanyujiezhuan.fee_amount baoBanYuJieZhuan,
+	                       fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
+	                       sum(case
+	                             when (d.fee_type = 54 or d.fee_type = 55) and
+	                                  tocc.change_type = 6 and tocc.change_status = 5 then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) tui, /*退费金额*/
+	                       sum(case
+	                             when d.fee_type = 54 and d.fee_flag = 2 then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) buKou, --冻结补扣 
+	                       sum(case
+	                             when tocc.change_type = 6 and tocc.change_status = 5 and
+	                                  d.fee_type = 55 then
+	                              d.course_sum
+	                             else
+	                              0
+	                           end) tuiKeShi, /*退费课时*/
+	                       sum(case
+	                             when d.fee_type = 52 and d.fee_flag = 2 then
+	                              -1 * d.fee_amount
+	                             else
+	                              0
+	                           end) zhuanChu, /*转出金额*/
+	                       0 zhuanChuKeShi, /*转出课时*/
+	                       sum(case
+	                             when d.fee_type = 52 and d.fee_flag = 1 then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) zhuanRu, /*转入金额*/
+	                       0 zhuanRuKeShi, /*转入课时*/
+	                       sum(case
+	                             when (d.fee_type = 62 and d.operate_type = 5) then
+	                              d.fee_amount
+	                             else
+	                              0
+	                           end) bujiezhuan, /*补结转*/
+	                       cou.subject_name,
+	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       torder.business_type,
+	                       tooi.parent_id bu_id,
+	                       nvl(tc.branch_id,torder.branch_id) branch_id
+	                  from t_fee t
+	                  left join t_fee_detail d
+	                    on t.id = d.fee_id
+	                  left join t_order_course c
+	                    on d.order_detail_id = c.id
+	                  left join vt_course cou
+	                    on c.course_id = cou.course_id
+	                  left join t_order torder
+	                    on d.order_id = torder.id
+	                  left join tab_student_info stu
+	                    on torder.student_id = stu.id
+	                  left join tab_data_grade grade
+	                    on stu.grade_id = grade.id
+	                  left join T_ORDER_COURSE toc
+	                    on torder.id = toc.order_id
+	                   and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+	                  left join t_order_change tocc
+	                    on tocc.id = t.operate_no
+	                   and t.order_id = tocc.order_id
+	                  left join TAB_ORGANIZATION_INFO tooi
+	                    on tooi.id = torder.branch_id
+	                  left join (select tfd2.order_detail_id,
+	                                   tfd2.operate_no,
+	                                   sum(tfd2.fee_amount) as fee_amount
+	                              from T_FEE_DETAIL tfd2
+	                             where tfd2.fee_type = 42
+	                             group by order_detail_id, operate_no) fanyujiezhuan
+	                    on fanyujiezhuan.order_detail_id = d.order_detail_id
+	                   and fanyujiezhuan.operate_no = d.operate_no
+	                 where t.fee_type in (51, 42, 54, 62, 52, 55)
+	                   and t.operate_type in (5)
+	                   and tocc.change_type = 6
+	                   and tocc.change_status = 5
+	                   and torder.business_type in ('1','2','3')
+	                 group by t.finish_time,
+	                          torder.order_no,
+                              stu.encoding,
+                              stu.student_name,
+	                          grade.grade_name,
+	                          tooi.org_name,
+	                          decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+	                          cou.course_name,
+	                          cou.subject_name,
+	                          decode(cou.is_textbooks, 1, '是', '否'),
+	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          cou.performance_belong_type,
+	                          c.course_total_count,
+	                          d.order_detail_id,
+	                          toc.manage_fee,
+	                          fanyujiezhuan.fee_amount,
+	                          torder.business_type,
+                              tooi.parent_id,
+	                          nvl(tc.branch_id,torder.branch_id)
+	                ) tmp
+	          left join t_order_course toc
+	            on toc.id = tmp.order_detail_id
+	          left join t_order tod
+	            on toc.order_id = tod.id
+	    ) t
+	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	</insert>	
+
+	<insert id="saveZhuanBan" parameterType="HashMap">
+		insert into t_order_change_report 
+		(   
+			  id,
+			  task_flow,
+			  bus_date,
+  			  order_encoding,
+			  student_encoding,
+			  grade_name,
+			  student_name,
+			  branch_name,
+			  course_branch_name,
+			  course_name,
+			  order_detail_id,
+			  baoban,
+			  bao,
+			  baobanyujiezhuan,
+			  yujiezhuan,
+			  tui,
+			  bukou,
+			  tuikeshi,
+			  zhuanchu,
+			  zhuanchukeshi,
+			  zhuanru,
+			  zhuanrukeshi,
+			  bujiezhuan,
+			  order_status,
+			  bus_type,
+			  subject_name,
+			  is_textbooks,
+			  short_or_long,
+              business_type,
+	          bu_id,
+	          branch_id
+		)
+		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+	        select bus_date,
+	               order_encoding,
+	               student_encoding,
+	               grade_name,
+	               student_name,
+	               branch_name,
+	               course_branch_name,
+	               course_name,
+	               order_detail_id,
+	               baoBan,
+	               bao,
+	               baoBanYuJieZhuan,
+	               nvl(yuJieZhuan, 0), /*预结转*/
+	               tui,
+	               buKou,
+	               tuiKeShi,
+	               zhuanChu,
+	               zhuanChuKeShi,
+	               zhuanRu,
+	               zhuanRuKeShi,
+	               bujiezhuan,
+	               case
+	                 when tod.order_status = 0 then
+	                  '无效'
+	                 else
+	                  '有效'
+	               end as order_status,
+	               '转入' as bus_type,
+	               subject_name,
+	               is_textbooks,
+	               short_or_long,
+	               tmp.business_type,
+	               tmp.bu_id,
+	               tmp.branch_id
+	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	                       ord.order_encoding order_encoding,
+	                       ord.student_encoding student_encoding,
+	                       grade.grade_name grade_name,
+	                       ord.student_name student_name,
+	                       tooi.org_name branch_name,
+	                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+	                       cou.course_name course_name,
+	                       d.order_detail_id, /*子单ID*/
+	                       0 baoBan, /*课程金额*/
+	                       0 bao, /*报班课时*/
+	                       0 baoBanYuJieZhuan,
+	                       fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
+	                       0 tui, /*退费金额*/
+	                       0 buKou, --冻结补扣 
+	                       0 tuiKeShi, /*退费课时*/
+	                       0 zhuanChu, /*转出金额*/
+	                       0 zhuanChuKeShi, /*转出课时*/
+	                       sum(d.fee_amount) zhuanRu, /*转入金额*/
+	                       sum(d.course_sum) zhuanRuKeShi, /*转入课时*/
+	                       0 bujiezhuan, /*补结转*/
+	                       cou.subject_name,
+	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       ord.business_type,
+	                       ord.bu_id,
+	                       nvl(tc.branch_id,ord.branch_id) branch_id
+	                  from t_fee t
+	                  left join t_fee_detail d
+	                    on t.id = d.fee_id
+	                  left join t_order_course c
+	                    on d.order_detail_id = c.id
+	                  left join vt_order ord
+	                    on d.order_id = ord.order_id
+	                  left join vt_course cou
+	                    on c.course_id = cou.course_id
+	                  left join t_order torder
+	                    on d.order_id = torder.id
+	                  left join tab_student_info stu
+	                    on torder.student_id = stu.id
+	                  left join tab_data_grade grade
+	                    on stu.grade_id = grade.id
+	                  left join T_ORDER_COURSE toc
+	                    on ord.order_id = toc.order_id
+	                   and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+	                  left join t_order_change tocc
+	                    on tocc.id = t.operate_no
+	                   and t.order_id = tocc.order_id
+	                  left join TAB_ORGANIZATION_INFO tooi
+	                    on tooi.id = tc.branch_id
+	                  left join (select tfd2.order_detail_id,
+	                                   tfd2.operate_no,
+	                                   sum(tfd2.fee_amount) as fee_amount
+	                              from T_FEE_DETAIL tfd2
+	                             where tfd2.fee_type = 42
+	                             group by order_detail_id, operate_no
+	                             order by null, null) fanyujiezhuan
+	                    on fanyujiezhuan.order_detail_id = d.order_detail_id
+	                   and fanyujiezhuan.operate_no = d.operate_no
+	                 where t.fee_type in (52)
+	                   and t.operate_type in (4, 5)
+	                   and tocc.change_type = 2
+	                   and tocc.change_status = 5
+	                   and d.fee_flag = 1
+	                   and ord.business_type in ('1','2','3')
+	                 group by t.finish_time,
+	                          ord.order_encoding,
+	                          ord.student_encoding,
+	                          ord.student_name,
+	                          grade.grade_name,
+	                          tooi.org_name,
+	                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+	                          cou.course_name,
+	                          cou.subject_name,
+	                          decode(cou.is_textbooks, 1, '是', '否'),
+	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          cou.performance_belong_type,
+	                          c.course_total_count,
+	                          d.order_detail_id,
+	                          toc.manage_fee,
+	                          fanyujiezhuan.fee_amount,
+	                          ord.business_type,
+	                          ord.bu_id,
+	                          nvl(tc.branch_id,ord.branch_id)
+	                ) tmp
+	          left join t_order_course toc
+	            on toc.id = tmp.order_detail_id
+	          left join t_order tod
+	            on toc.order_id = tod.id
+	        union all
+	        select bus_date,
+	               order_encoding,
+	               student_encoding,
+	               grade_name,
+	               student_name,
+	               branch_name,
+	               course_branch_name,
+	               course_name,
+	               order_detail_id,
+	               baoBan,
+	               bao,
+	               baoBanYuJieZhuan,
+	               nvl(-1 * yuJieZhuan, 0),
+	               tui,
+	               buKou,
+	               tuiKeShi,
+	               zhuanChu,
+	               zhuanChuKeShi,
+	               zhuanRu,
+	               zhuanRuKeShi,
+	               bujiezhuan,
+	               case
+	                 when tod.order_status = 0 then
+	                  '无效'
+	                 else
+	                  '有效'
+	               end as order_status,
+	               '转出' as bus_type,
+	               subject_name,
+	               is_textbooks,
+	               short_or_long,
+	               tmp.business_type,
+	               tmp.bu_id,
+	               tmp.branch_id
+	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	                       ord.order_encoding order_encoding,
+	                       ord.student_encoding student_encoding,
+	                       grade.grade_name grade_name,
+	                       ord.student_name student_name,
+	                       tooi.org_name branch_name,
+	                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+	                       cou.course_name course_name,
+	                       d.order_detail_id, /*子单ID*/
+	                       0 baoBan, /*课程金额*/
+	                       0 bao, /*报班课时*/
+	                       0 baoBanYuJieZhuan,
+	                       fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
+	                       0 tui, /*退费金额*/
+	                       0 buKou, --冻结补扣 
+	                       0 tuiKeShi, /*退费课时*/
+	                       sum(d.fee_amount) * -1 zhuanChu, /*转出金额*/
+	                       sum(d.course_sum) * -1 zhuanChuKeShi, /*转出课时*/
+	                       0 zhuanRu, /*转入金额*/
+	                       0 zhuanRuKeShi, /*转入课时*/
+	                       0 bujiezhuan, /*补结转*/
+	                       cou.subject_name,
+	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
+	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       ord.business_type,
+	                       ord.bu_id,
+	                       nvl(tc.branch_id,ord.branch_id) branch_id
+	                  from t_fee t
+	                  left join t_fee_detail d
+	                    on t.id = d.fee_id
+	                  left join t_order_course c
+	                    on d.order_detail_id = c.id
+	                  left join vt_order ord
+	                    on d.order_id = ord.order_id
+	                  left join vt_course cou
+	                    on c.course_id = cou.course_id
+	                  left join t_order torder
+	                    on d.order_id = torder.id
+	                  left join tab_student_info stu
+	                    on torder.student_id = stu.id
+	                  left join tab_data_grade grade
+	                    on stu.grade_id = grade.id
+	                  left join T_ORDER_COURSE toc
+	                    on ord.order_id = toc.order_id
+	                   and d.order_detail_id = toc.id
+                      left join T_COURSE tc
+                        on tc.id = toc.course_id
+	                  left join t_order_change tocc
+	                    on tocc.id = t.operate_no
+	                   and t.order_id = tocc.order_id
+	                  left join TAB_ORGANIZATION_INFO tooi
+	                    on tooi.id = tc.branch_id
+	                  left join (select tfd2.order_detail_id,
+	                                   tfd2.operate_no,
+	                                   sum(tfd2.fee_amount) as fee_amount
+	                              from T_FEE_DETAIL tfd2
+	                             where tfd2.fee_type = 42
+	                             group by order_detail_id, operate_no
+	                             order by null, null) fanyujiezhuan
+	                    on fanyujiezhuan.order_detail_id = d.order_detail_id
+	                   and fanyujiezhuan.operate_no = d.operate_no
+	                 where t.fee_type in (52)
+	                   and t.operate_type in (4, 5)
+	                   and tocc.change_type = 2
+	                   and tocc.change_status = 5
+	                   and d.fee_flag = 2
+	                   and ord.business_type in ('1','2','3')
+	                 group by t.finish_time,
+	                          ord.order_encoding,
+	                          ord.student_encoding,
+	                          ord.student_name,
+	                          grade.grade_name,
+	                          tooi.org_name,
+	                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+	                          cou.course_name,
+	                          cou.subject_name,
+	                          decode(cou.is_textbooks, 1, '是', '否'),
+	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          cou.performance_belong_type,
+	                          c.course_total_count,
+	                          d.order_detail_id,
+	                          toc.manage_fee,
+	                          fanyujiezhuan.fee_amount,
+	                          ord.business_type,
+	                          ord.bu_id,
+	                          nvl(tc.branch_id,ord.branch_id)
+	                ) tmp
+	          left join t_order_course toc
+	            on toc.id = tmp.order_detail_id
+	          left join t_order tod
+	            on toc.order_id = tod.id
+	    ) t
+	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	</insert>
+	
+</mapper>

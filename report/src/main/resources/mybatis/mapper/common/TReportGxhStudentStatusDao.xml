@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.framework.dao.TReportGxhStudentStatusDao">
+
+	<select id="queryForBu" parameterType="map" resultType="com.edu.report.model.TReportGxhStudentStatus">
+	   select year_month,
+       bu_id,
+       branch_id,
+       branch_name,
+       zt_new,
+       zt_normal,
+       zt_sleep,
+       zt_new+zt_normal+zt_sleep zt_count,
+       cs_new,
+       cs_normal,
+       cs_end,
+       cs_new+cs_normal+cs_end cs_count
+  		from (
+		select
+		year_month,bu_id,branch_id,branch_name,
+		sum(DECODE(status,'新在读',1,0)) zt_new,
+		sum(DECODE(status,'常规在读',1,0)) zt_normal,
+		sum(DECODE(status,'唤醒在读',1,0)) zt_sleep,
+		sum(DECODE(status,'新生沉睡',1,0)) cs_new,
+		sum(DECODE(status,'常规沉睡',1,0)) cs_normal,
+		sum(DECODE(status,'结课',1,0)) cs_end
+		from (
+		select year_month,
+		bu_id,
+		branch_id,
+		branch_name,
+		counselor_name,
+		grade_name,
+		CASE
+		WHEN orders > 0 then
+		'新在读'
+		WHEN last_attend_times > 0 then
+		'常规在读'
+		else
+		'唤醒在读'
+		END status
+		from MV_GXH_READING_STUDENTS
+		union all
+		select year_month,
+		bu_id,
+		branch_id,
+		branch_name,
+		counselor_name,
+		grade_name,
+		CASE
+		WHEN course_surplus_count > 0 and orders > 0 then
+		'新生沉睡'
+		WHEN course_surplus_count > 0 and orders = 0 then
+		'常规沉睡'
+		else
+		'结课'
+		END status
+		from MV_GXH_SLEEP_STUDENTS)
+		where bu_id = #{bu_id}
+		and  year_month = #{year_month, jdbcType=VARCHAR}
+		<if test="validBranchIds != null and validBranchIds !='' ">
+			and branch_id in (${validBranchIds})
+		</if>
+		<if test="branch_id != null">
+			and branch_id in (${branch_id})
+		</if>
+		group by year_month,bu_id,branch_id,branch_name)
+		order by branch_name
+	</select>
+
+	<select id="queryForBranch" parameterType="map" resultType="com.edu.report.model.TReportGxhStudentStatus">
+	   select year_month,
+	   bu_id,
+       branch_id,
+       branch_name,
+       counselor_id,
+       counselor_name,
+       zt_new,
+       zt_normal,
+       zt_sleep,
+       zt_new+zt_normal+zt_sleep zt_count,
+       cs_new,
+       cs_normal,
+       cs_end,
+       cs_new+cs_normal+cs_end cs_count
+  	   from (
+		select
+		year_month,bu_id,branch_id,branch_name,counselor_id,counselor_name,
+		sum(DECODE(status,'新在读',1,0)) zt_new,
+		sum(DECODE(status,'常规在读',1,0)) zt_normal,
+		sum(DECODE(status,'唤醒在读',1,0)) zt_sleep,
+		sum(DECODE(status,'新生沉睡',1,0)) cs_new,
+		sum(DECODE(status,'常规沉睡',1,0)) cs_normal,
+		sum(DECODE(status,'结课',1,0)) cs_end
+		from (
+		select year_month,
+		bu_id,
+		branch_id,
+		branch_name,
+		counselor_id,
+		counselor_name,
+		grade_name,
+		CASE
+		WHEN orders > 0 then
+		'新在读'
+		WHEN last_attend_times > 0 then
+		'常规在读'
+		else
+		'唤醒在读'
+		END status
+		from MV_GXH_READING_STUDENTS
+		union all
+		select year_month,
+		bu_id,
+		branch_id,
+		branch_name,
+		counselor_id,
+		counselor_name,
+		grade_name,
+		CASE
+		WHEN course_surplus_count > 0 and orders > 0 then
+		'新生沉睡'
+		WHEN course_surplus_count > 0 and orders = 0 then
+		'常规沉睡'
+		else
+		'结课'
+		END status
+		from MV_GXH_SLEEP_STUDENTS)
+		where bu_id = #{bu_id}
+		and  year_month = #{year_month, jdbcType=VARCHAR}
+		<if test="validBranchIds != null and validBranchIds !='' ">
+			and branch_id in (${validBranchIds})
+		</if>
+		<if test="branch_id != null">
+			and branch_id in (${branch_id})
+		</if>
+		group by year_month,bu_id,branch_id,branch_name,counselor_id,counselor_name)
+		order by branch_name,counselor_name
+	</select>
+
+	<select id="queryForStudents" parameterType="map" resultType="com.edu.report.model.TReportGxhStudentStatus">
+		select
+		year_month,branch_id,branch_name,counselor_name,grade_name,status_name,student_code,student_name
+		from (
+		select year_month,
+		bu_id,
+		branch_id,
+		branch_name,
+		counselor_id,
+		counselor_name,
+		grade_name,
+		CASE
+		WHEN orders > 0 then
+		'新在读'
+		WHEN last_attend_times > 0 then
+		'常规在读'
+		else
+		'唤醒在读'
+		END status_name,
+		student_code,
+        student_name
+		from MV_GXH_READING_STUDENTS
+		union all
+		select year_month,
+		bu_id,
+		branch_id,
+		branch_name,
+		counselor_id,
+		counselor_name,
+		grade_name,
+		CASE
+		WHEN course_surplus_count > 0 and orders > 0 then
+		'新生沉睡'
+		WHEN course_surplus_count > 0 and orders = 0 then
+		'常规沉睡'
+		else
+		'结课'
+		END status_name,
+		student_code,
+        student_name
+		from MV_GXH_SLEEP_STUDENTS)
+		where bu_id = #{bu_id}
+		and  year_month = #{year_month, jdbcType=VARCHAR}
+		<if test="validBranchIds != null and validBranchIds !='' ">
+			and branch_id in (${validBranchIds})
+		</if>
+		<if test="branch_id != null">
+			and branch_id in (${branch_id})
+		</if>
+		<if test="counselor_name != null">
+			and counselor_name like '%${counselor_name}%'
+		</if>
+		order by branch_name,counselor_name,student_name
+	</select>
+
+</mapper>

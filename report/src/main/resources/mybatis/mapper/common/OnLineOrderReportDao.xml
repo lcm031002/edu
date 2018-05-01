@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.report.dao.OnLineOrderReportDao">
+    <select id="selectForPage" parameterType="map" resultType="com.edu.report.model.TOnlineOrderReport">
+        SELECT
+        toi.encoding order_no,
+        topcd.eb_no,
+        toi.update_time pay_time,
+        '在线支付(微信公众号)' payment_way,
+        toid.discount_sum_price pay_amount,
+        tsi.login_no,
+        tsi.student_name,
+        torg.org_name branch_name,
+        tc.course_name,
+        tps.name subject_name,
+        CASE
+        WHEN tec.type ='cut'
+        THEN '立减优惠'
+        WHEN tec.type='discount'
+        THEN '折扣优惠'
+        END coupon_type
+        FROM
+        tab_order_info toi
+        LEFT JOIN
+        tab_order_info_detail toid
+        ON
+        toid.order_id=toi.id
+        LEFT JOIN
+        t_course tc
+        ON
+        tc.id=toid.course_id
+        LEFT JOIN
+        tp_subject tps
+        ON
+        tps.id=tc.subject_id
+        LEFT JOIN
+        tab_order_pay_cost topc
+        ON
+        toi.id=topc.order_id
+        LEFT JOIN
+        TAB_ORDER_PAY_COST_DETAIL topcd
+        ON
+        topcd.order_buy_id=topc.id
+        LEFT JOIN
+        tab_student_info tsi
+        ON
+        tsi.id=toi.student_id
+        LEFT JOIN
+        tab_organization_info torg
+        ON
+        toi.branch_id=torg.id
+        LEFT JOIN
+        tab_order_coupon_rel tocr
+        ON
+        tocr.order_id=toi.id
+        LEFT JOIN
+        tab_eb_coupon tec
+        ON
+        tec.id=tocr.coupon_id
+        WHERE
+        toi.on_line=1
+        AND toi.valid_status=1
+        AND toi.check_Status=3
+        AND toi.pay_status=1
+        AND toi.bu_id = #{bu_id}
+        <if test="start_date != null and start_date != ''">
+            <![CDATA[ and toi.update_time  >=to_date( (#{start_date} || ' 00:00:00'),'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="end_date != null and end_date != ''">
+            <![CDATA[ and toi.update_time  <=to_date( (#{end_date} || ' 23:59:59'),'yyyy-mm-dd hh24:mi:ss')  ]]>
+        </if>
+
+        <if test="branch_id != null and branch_id!=''">
+            and toi.branch_id = #{branch_id}
+        </if>
+        <if test="season_id != null and season_id!=''">
+            and tc.season_id = #{season_id}
+        </if>
+        <if test="student_info != null and student_info != ''">
+            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+        </if>
+        <if test="payment_Way != null and payment_Way!=''">
+            and topcd.payment_way = #{payment_Way}
+        </if>
+        union all
+        SELECT
+        toi.encoding order_no,
+        topcd.eb_no,
+        toi.update_time pay_time,
+        '在线支付(WEB页面)' payment_way,
+        topcd.staffappprem pay_amount,
+        tsi.login_no,
+        tsi.student_name,
+        torg.org_name branch_name,
+        tc.course_name,
+        tps.name subject_name,
+        CASE
+        WHEN tec.type ='cut'
+        THEN '立减优惠'
+        WHEN tec.type='discount'
+        THEN '折扣优惠'
+        END coupon_type
+        FROM
+        tab_order_info toi
+        LEFT JOIN
+        tab_order_info_detail toid
+        ON
+        toid.order_id=toi.id
+        LEFT JOIN
+        t_course tc
+        ON
+        tc.id=toid.course_id
+        LEFT JOIN
+        tp_subject tps
+        ON
+        tps.id=tc.subject_id
+        LEFT JOIN
+        tab_order_pay_cost topc
+        ON
+        toi.id=topc.order_id
+        LEFT JOIN
+        TAB_ORDER_PAY_COST_DETAIL topcd
+        ON
+        topcd.order_buy_id=topc.id
+        LEFT JOIN
+        tab_student_info tsi
+        ON
+        tsi.id=toi.student_id
+        LEFT JOIN
+        tab_organization_info torg
+        ON
+        toi.branch_id=torg.id
+        LEFT JOIN
+        tab_order_coupon_rel tocr
+        ON
+        tocr.order_id=toi.id
+        LEFT JOIN
+        tab_eb_coupon tec
+        ON
+        tec.id=tocr.coupon_id
+        WHERE
+        toi.billno IS NOT NULL
+        AND toi.valid_status=1
+        AND toi.check_Status=3
+        AND toi.pay_status=1
+        and topcd.payment_way=11
+        AND toi.bu_id = #{bu_id}
+        <if test="start_date != null and start_date != ''">
+            <![CDATA[ and toi.update_time  >=to_date( (#{start_date} || ' 00:00:00'),'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="end_date != null and end_date != ''">
+            <![CDATA[ and toi.update_time  <=to_date( (#{end_date} || ' 23:59:59'),'yyyy-mm-dd hh24:mi:ss')  ]]>
+        </if>
+
+        <if test="branch_id != null and branch_id!=''">
+            and toi.branch_id = #{branch_id}
+        </if>
+        <if test="season_id != null and season_id!=''">
+            and tc.season_id = #{season_id}
+        </if>
+        <if test="student_info != null and student_info != ''">
+            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+        </if>
+        <if test="payment_Way != null and payment_Way!=''">
+            and topcd.payment_way = #{payment_Way}
+        </if>
+        order by   order_no ,pay_time
+    </select>
+
+    <select id="selectForList" parameterType="map"
+            resultType="com.edu.report.model.TOnlineOrderReport">
+        select * from (
+        SELECT
+        toi.encoding order_no,
+        topcd.eb_no,
+        toi.update_time pay_time,
+        '在线支付(微信公众号)' payment_way,
+        toid.discount_sum_price pay_amount,
+        tsi.login_no,
+        tsi.student_name,
+        torg.org_name branch_name,
+        tc.course_name,
+        tps.name subject_name,
+        CASE
+        WHEN tec.type ='cut'
+        THEN '立减优惠'
+        WHEN tec.type='discount'
+        THEN '折扣优惠'
+        END coupon_type
+        FROM
+        tab_order_info toi
+        LEFT JOIN
+        tab_order_info_detail toid
+        ON
+        toid.order_id=toi.id
+        LEFT JOIN
+        t_course tc
+        ON
+        tc.id=toid.course_id
+        LEFT JOIN
+        tp_subject tps
+        ON
+        tps.id=tc.subject_id
+        LEFT JOIN
+        tab_order_pay_cost topc
+        ON
+        toi.id=topc.order_id
+        LEFT JOIN
+        TAB_ORDER_PAY_COST_DETAIL topcd
+        ON
+        topcd.order_buy_id=topc.id
+        LEFT JOIN
+        tab_student_info tsi
+        ON
+        tsi.id=toi.student_id
+        LEFT JOIN
+        tab_organization_info torg
+        ON
+        toi.branch_id=torg.id
+        LEFT JOIN
+        tab_order_coupon_rel tocr
+        ON
+        tocr.order_id=toi.id
+        LEFT JOIN
+        tab_eb_coupon tec
+        ON
+        tec.id=tocr.coupon_id
+        WHERE
+        toi.on_line=1
+        AND toi.valid_status=1
+        AND toi.check_Status=3
+        AND toi.pay_status=1
+        AND toi.bu_id = #{bu_id}
+        <if test="start_date != null and start_date != ''">
+            <![CDATA[ and toi.update_time  >=to_date( (#{start_date} || ' 00:00:00'),'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="end_date != null and end_date != ''">
+            <![CDATA[ and toi.update_time  <=to_date( (#{end_date} || ' 23:59:59'),'yyyy-mm-dd hh24:mi:ss')  ]]>
+        </if>
+
+        <if test="branch_id != null and branch_id!=-1">
+            and toi.branch_id = #{branch_id}
+        </if>
+        <if test="validBranchIds != null and validBranchIds !='' ">
+            and toi.branch_id in (${validBranchIds})
+        </if>
+        <if test="season_id != null and season_id!=''">
+            and tc.season_id = #{season_id}
+        </if>
+        <if test="student_info != null and student_info != ''">
+            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+        </if>
+        <if test="payment_Way != null and payment_Way!=''">
+            and topcd.payment_way = #{payment_Way}
+        </if>
+        union all
+        SELECT
+        toi.encoding order_no,
+        topcd.eb_no,
+        toi.update_time pay_time,
+        '在线支付(WEB页面)' payment_way,
+        topcd.staffappprem pay_amount,
+        tsi.login_no,
+        tsi.student_name,
+        torg.org_name branch_name,
+        tc.course_name,
+        tps.name subject_name,
+        CASE
+        WHEN tec.type ='cut'
+        THEN '立减优惠'
+        WHEN tec.type='discount'
+        THEN '折扣优惠'
+        END coupon_type
+        FROM
+        tab_order_info toi
+        LEFT JOIN
+        tab_order_info_detail toid
+        ON
+        toid.order_id=toi.id
+        LEFT JOIN
+        t_course tc
+        ON
+        tc.id=toid.course_id
+        LEFT JOIN
+        tp_subject tps
+        ON
+        tps.id=tc.subject_id
+        LEFT JOIN
+        tab_order_pay_cost topc
+        ON
+        toi.id=topc.order_id
+        LEFT JOIN
+        TAB_ORDER_PAY_COST_DETAIL topcd
+        ON
+        topcd.order_buy_id=topc.id
+        LEFT JOIN
+        tab_student_info tsi
+        ON
+        tsi.id=toi.student_id
+        LEFT JOIN
+        tab_organization_info torg
+        ON
+        toi.branch_id=torg.id
+        LEFT JOIN
+        tab_order_coupon_rel tocr
+        ON
+        tocr.order_id=toi.id
+        LEFT JOIN
+        tab_eb_coupon tec
+        ON
+        tec.id=tocr.coupon_id
+        WHERE
+        toi.billno IS NOT NULL
+        AND toi.valid_status=1
+        AND toi.check_Status=3
+        AND toi.pay_status=1
+        and topcd.payment_way=11
+        AND toi.bu_id = #{bu_id}
+        <if test="start_date != null and start_date != ''">
+            <![CDATA[ and toi.update_time  >=to_date( (#{start_date} || ' 00:00:00'),'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="end_date != null and end_date != ''">
+            <![CDATA[ and toi.update_time  <=to_date( (#{end_date} || ' 23:59:59'),'yyyy-mm-dd hh24:mi:ss')  ]]>
+        </if>
+
+        <if test="branch_id != null and branch_id!=-1">
+            and toi.branch_id = #{branch_id}
+        </if>
+        <if test="validBranchIds != null and validBranchIds !='' ">
+            and toi.branch_id in (${validBranchIds})
+        </if>
+        <if test="season_id != null and season_id!=''">
+            and tc.season_id = #{season_id}
+        </if>
+        <if test="student_info != null and student_info != ''">
+            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+        </if>
+        <if test="payment_Way != null and payment_Way!=''">
+            and topcd.payment_way = #{payment_Way}
+        </if>
+        order by   order_no ,pay_time
+        ) tmp
+        union all
+        <include refid="sum_rpt1"/>
+    </select>
+
+    <sql id="sum_rpt1">
+        select
+        '合计' order_no, /* 单据编号 */
+        null eb_no,
+        null pay_time,
+        NULL payment_way,
+        tt.pay_amount pay_amount,
+        null login_no,
+        null student_name, /* 学生姓名 */
+        null branch_name,
+        null course_name,
+        null subject_name,
+        null coupon_type
+        from (
+        select
+        sum(nvl(t.pay_amount,0)) as pay_amount
+        from (SELECT
+        toi.encoding order_no,
+        topcd.eb_no,
+        toi.update_time pay_time,
+        '在线支付(微信公众号)' payment_way,
+        toid.discount_sum_price pay_amount,
+        tsi.login_no,
+        tsi.student_name,
+        torg.org_name branch_name,
+        tc.course_name,
+        tps.name subject_name,
+        CASE
+        WHEN tec.type ='cut'
+        THEN '立减优惠'
+        WHEN tec.type='discount'
+        THEN '折扣优惠'
+        END coupon_type
+        FROM
+        tab_order_info toi
+        LEFT JOIN
+        tab_order_info_detail toid
+        ON
+        toid.order_id=toi.id
+        LEFT JOIN
+        t_course tc
+        ON
+        tc.id=toid.course_id
+        LEFT JOIN
+        tp_subject tps
+        ON
+        tps.id=tc.subject_id
+        LEFT JOIN
+        tab_order_pay_cost topc
+        ON
+        toi.id=topc.order_id
+        LEFT JOIN
+        TAB_ORDER_PAY_COST_DETAIL topcd
+        ON
+        topcd.order_buy_id=topc.id
+        LEFT JOIN
+        tab_student_info tsi
+        ON
+        tsi.id=toi.student_id
+        LEFT JOIN
+        tab_organization_info torg
+        ON
+        toi.branch_id=torg.id
+        LEFT JOIN
+        tab_order_coupon_rel tocr
+        ON
+        tocr.order_id=toi.id
+        LEFT JOIN
+        tab_eb_coupon tec
+        ON
+        tec.id=tocr.coupon_id
+        WHERE
+        toi.on_line=1
+        AND toi.valid_status=1
+        AND toi.check_Status=3
+        AND toi.pay_status=1
+        AND toi.bu_id = #{bu_id}
+        <if test="start_date != null and start_date != ''">
+            <![CDATA[ and  toi.update_time >=to_date( (#{start_date} || ' 00:00:00'),'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="end_date != null and end_date != ''">
+            <![CDATA[ and  toi.update_time  <=to_date( (#{end_date} || ' 23:59:59'),'yyyy-mm-dd hh24:mi:ss')  ]]>
+        </if>
+        <if test="branch_id != null and branch_id!=''">
+            and toi.branch_id = #{branch_id}
+        </if>
+        <if test="validBranchIds != null and validBranchIds !='' ">
+            and toi.branch_id in (${validBranchIds})
+        </if>
+        <if test="season_id != null and season_id!=''">
+            and tc.season_id = #{season_id}
+        </if>
+        <if test="student_info != null and student_info != ''">
+            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+        </if>
+        <if test="payment_Way != null and payment_Way!=''">
+            and topcd.payment_way = #{payment_Way}
+        </if>
+        union all
+        SELECT
+        toi.encoding order_no,
+        topcd.eb_no,
+        toi.update_time pay_time,
+        '在线支付(WEB页面)' payment_way,
+        topcd.staffappprem pay_amount,
+        tsi.login_no,
+        tsi.student_name,
+        torg.org_name branch_name,
+        tc.course_name,
+        tps.name subject_name,
+        CASE
+        WHEN tec.type ='cut'
+        THEN '立减优惠'
+        WHEN tec.type='discount'
+        THEN '折扣优惠'
+        END coupon_type
+        FROM
+        tab_order_info toi
+        LEFT JOIN
+        tab_order_info_detail toid
+        ON
+        toid.order_id=toi.id
+        LEFT JOIN
+        t_course tc
+        ON
+        tc.id=toid.course_id
+        LEFT JOIN
+        tp_subject tps
+        ON
+        tps.id=tc.subject_id
+        LEFT JOIN
+        tab_order_pay_cost topc
+        ON
+        toi.id=topc.order_id
+        LEFT JOIN
+        TAB_ORDER_PAY_COST_DETAIL topcd
+        ON
+        topcd.order_buy_id=topc.id
+        LEFT JOIN
+        tab_student_info tsi
+        ON
+        tsi.id=toi.student_id
+        LEFT JOIN
+        tab_organization_info torg
+        ON
+        toi.branch_id=torg.id
+        LEFT JOIN
+        tab_order_coupon_rel tocr
+        ON
+        tocr.order_id=toi.id
+        LEFT JOIN
+        tab_eb_coupon tec
+        ON
+        tec.id=tocr.coupon_id
+        WHERE
+        toi.billno IS NOT NULL
+        AND toi.valid_status=1
+        AND toi.check_Status=3
+        AND toi.pay_status=1
+        and topcd.payment_way=11
+        AND toi.bu_id = #{bu_id}
+        <if test="start_date != null and start_date != ''">
+            <![CDATA[ and toi.update_time  >=to_date( (#{start_date} || ' 00:00:00'),'yyyy-mm-dd hh24:mi:ss') ]]>
+        </if>
+        <if test="end_date != null and end_date != ''">
+            <![CDATA[ and toi.update_time  <=to_date( (#{end_date} || ' 23:59:59'),'yyyy-mm-dd hh24:mi:ss')  ]]>
+        </if>
+
+        <if test="branch_id != null and branch_id!=-1">
+            and toi.branch_id = #{branch_id}
+        </if>
+        <if test="validBranchIds != null and validBranchIds !='' ">
+            and toi.branch_id in (${validBranchIds})
+        </if>
+        <if test="season_id != null and season_id!=''">
+            and tc.season_id = #{season_id}
+        </if>
+        <if test="student_info != null and student_info != ''">
+            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+        </if>
+        <if test="payment_Way != null and payment_Way!=''">
+            and topcd.payment_way = #{payment_Way}
+        </if>
+        ) t
+        ) tt
+    </sql>
+
+</mapper>
