@@ -16,8 +16,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.edu.common.util.NumberUtils;
-import com.edu.erp.dao.TCOrderCourseDao;
-import com.edu.erp.dao.TCourseDao;
+import com.edu.erp.dao.*;
 import com.edu.erp.model.*;
 import com.edu.erp.util.*;
 import org.apache.log4j.Logger;
@@ -31,8 +30,6 @@ import com.edu.common.util.DateUtil;
 import com.edu.common.util.EncodingSequenceUtil;
 import com.edu.erp.attendance.service.AttendanceService;
 import com.edu.common.constants.Constants;
-import com.edu.erp.dao.TOrderChangeDao;
-import com.edu.erp.dao.TOrderCourseDao;
 import com.edu.erp.orders.ext.IOrderFrozen;
 import com.edu.erp.orders.ext.IOrderRefund;
 import com.edu.erp.orders.ext.IOrderYDY;
@@ -87,6 +84,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	
 	@Resource(name = "orderFrozen")
 	private IOrderFrozen orderFrozen;
+
+	@Resource(name = "tabChangeCourseDao")
+	private TabChangeCourseDao tabChangeCourseDao;
 
 	/*
 	 * (non-Javadoc)
@@ -221,19 +221,20 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 //		}
 
 		Long businessType = orderInfo.getBusiness_type();
-		if (Constants.BusinessType.GXH == businessType) {
+//		if (Constants.BusinessType.GXH == businessType) {
             this.orderRefund.readyPremium(refundObj, businessType);
-        } else {
-            if ("2".equals(refundObj.get("premiumType"))) {
-                tOrderChangeDao.readyVIPPremium(refundObj);
-            } else {
-                tOrderChangeDao.readyPremium(refundObj);    
-            }
-            
-            if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
-				throw new Exception("存储过程异常" + refundObj.get("error_desc") + "");
-			}
-        }
+//        }
+//        else {
+//            if ("2".equals(refundObj.get("premiumType"))) {
+//                tOrderChangeDao.readyVIPPremium(refundObj);
+//            } else {
+//                tOrderChangeDao.readyPremium(refundObj);
+//            }
+//
+//            if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
+//				throw new Exception("存储过程异常" + refundObj.get("error_desc") + "");
+//			}
+//        }
 
 		refundObj.put("p_encoding", EncodingSequenceUtil.getSequenceNum(4L));
 		refundObj.put("v_change_id", 0);
@@ -269,132 +270,132 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		this.orderRefund.updateOrderCourseScheduleCount(refundObj);
 
 		// 判断课时退费是否需要审批
-		String isApprove = orderInfo.getApproved() + "";
+//		String isApprove = orderInfo.getApproved() + "";
 		// 课时退费，根据配置判断报班没有走审批流程，退费是否需要走审批流程
-        if (!"1".equals(isApprove)
-                && "true".equals(DxbCityCfg.getInstance().getConfigItem("return.apply.audit", "false"))
-                && "true".equals(DxbCityCfg.getInstance().getConfigItem("return.audit." + refundObj.get("cityId"),
-                        "false"))) {
-		    if (Constants.BusinessType.GXH == businessType) {
-	            this.orderRefund.premium(refundObj, businessType);
-	        } else {
-	            tOrderChangeDao.premium(refundObj);
-	            
-	            if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
-					throw new Exception("存储过程异常" + refundObj.get("error_desc") + "");
-				}
-	        }
-		    
-			refundObj.put("p_change_id",
-					Long.parseLong(refundObj.get("v_change_id") + ""));
-			refundObj.put("P_input_user", refundObj.get("user_id"));
-			refundObj.put("p_change_status", "1");
-			
-			tOrderChangeDao.premiumAudit(refundObj);
-			
-			if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("o_err_code") + "")) {
-				throw new Exception("存储过程异常" + refundObj.get("o_err_desc") + "");
-			}
-			return;
-		}
+//        if (!"1".equals(isApprove)
+//                && "true".equals(DxbCityCfg.getInstance().getConfigItem("return.apply.audit", "false"))
+//                && "true".equals(DxbCityCfg.getInstance().getConfigItem("return.audit." + refundObj.get("cityId"),
+//                        "false"))) {
+//		    if (Constants.BusinessType.GXH == businessType) {
+//	            this.orderRefund.premium(refundObj, businessType);
+//	        } else {
+//	            tOrderChangeDao.premium(refundObj);
+//
+//	            if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
+//					throw new Exception("存储过程异常" + refundObj.get("error_desc") + "");
+//				}
+//	        }
+//
+//			refundObj.put("p_change_id",
+//					Long.parseLong(refundObj.get("v_change_id") + ""));
+//			refundObj.put("P_input_user", refundObj.get("user_id"));
+//			refundObj.put("p_change_status", "1");
+//
+//			tOrderChangeDao.premiumAudit(refundObj);
+//
+//			if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("o_err_code") + "")) {
+//				throw new Exception("存储过程异常" + refundObj.get("o_err_desc") + "");
+//			}
+//			return;
+//		}
 
-		if (!WorkflowHelper.isDeployed(processEngine, "erpv5.DXB_tuifei")) {
-			throw new Exception("退费流程尚未发布，请联系管理员发布退费流程!");
-		}
+//		if (!WorkflowHelper.isDeployed(processEngine, "erpv5.DXB_tuifei")) {
+//			throw new Exception("退费流程尚未发布，请联系管理员发布退费流程!");
+//		}
 		
-		if (Constants.BusinessType.GXH == businessType) {
+//		if (Constants.BusinessType.GXH == businessType) {
 		    this.orderRefund.premium(refundObj, businessType);
-		} else {
-		    tOrderChangeDao.premium(refundObj);
-		}
+//		} else {
+//		    tOrderChangeDao.premium(refundObj);
+//		}
 
-		if (!CollectionUtils.isEmpty(refundObj)
-				&& "0".equals(refundObj.get("error_code") + "")) {
-			refundObj.put("change_id",
-					Long.parseLong(refundObj.get("v_change_id") + ""));
-			refundObj.put("order_id", orderId);
-
-			Map<String, Object> workflowParam = new HashMap<String, Object>();
-			workflowParam.put("change_id", Long.parseLong(refundObj.get("v_change_id") + ""));
-			workflowParam.put("remark_order", refundObj.get("p_remark"));
-			workflowParam.put("student_id", orderInfo.getStudent_id());
-			workflowParam.put("student_name", orderInfo.getStudent_name());
-			workflowParam.put("student_encoding",
-					orderInfo.getStudent_encoding());
-			workflowParam.put("order_encoding", orderInfo.getEncoding());
-			workflowParam.put("order_id", orderInfo.getId());
-			workflowParam.put("branch_id", orderInfo.getBranch_id());
-
-			Map<String, Object> queryParam = new HashMap<String, Object>();
-			queryParam.put("businessType", orderInfo.getBusiness_type());
-			queryParam.put("studentId", orderInfo.getStudent_id());
-			// 查询订单课程时，应该用当前的登录校区，不能用订单的校区（存在转班的情况）
-			//queryParam.put("branchId", orderInfo.getBranch_id());
-			queryParam.put("branchId", (Long) refundObj.get("branch_id"));
-			queryParam.put("id", refundObj.get("order_detail_id"));
-			queryParam.put("product_line", refundObj.get("product_line"));
-			List<TOrderCourse> orderDetailCourse = tOrderCourseDao
-					.queryStudentOrderCourse(queryParam);
-			if (CollectionUtils.isEmpty(orderDetailCourse)) {
-				log.error("没有找到订单详情！");
-				throw new Exception("没有找到订单详情！");
-			}
-			refundObj.put("course_name", orderDetailCourse.get(0)
-					.getCourse_name());
-			refundObj.put("teacher_name", orderDetailCourse.get(0)
-					.getTeacher_name());
-			refundObj.put("premium_deduction_amount",
-					refundObj.get("p_premium_deduction_amount"));
-
-			workflowParam.put("businessDetailInfo",
-					DetailBusinessInfoFormat.tuifeiString(refundObj));
-			Map<String, Object> userApplication = new HashMap<String, Object>();
-			userApplication.put("APPLICATION_ID", refundObj.get("user_id"));
-			StringBuilder application = new StringBuilder("退费审批：");
-			if (null != orderInfo.getStudent_id()) {
-				application.append("学生ID[");
-				application.append(orderInfo.getStudent_name() + ""
-						+ orderInfo.getStudent_id());
-				application.append("]");
-			}
-
-			application.append("订单[");
-			application.append(orderInfo.getEncoding());
-			application.append("]");
-			application.append("详单ID[");
-			application.append(refundObj.get("order_detail_id"));
-			application.append("]");
-			application.append("[" + refundObj.get("premium_result") + "]");
-
-			userApplication.put("APPLICATION", application.toString());
-			userApplication.put("STATUS", 1L);
-			userApplication.put("CREATETIME",
-					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
-			userApplication.put(
-					"WORKURL",
-					"#/order-detail/" + orderInfo.getBusiness_type() + "/"
-							+ orderInfo.getStudent_id() + "/"
-							+ orderInfo.getId());
-			userApplication.put("REMARK", refundObj.get("premium_remark"));
-			userApplication.put("CURRENT_STATE", "申请已提交");
-			userApplication.put("CURRENT_STEP", "申请提交");
-
-			userApplication.put("CURRENT_MAN", refundObj.get("user_name"));
-
-			userApplication.put("UPDATETIME",
-					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
-			userTaskService.insertApplication(userApplication);
-			workflowParam.put("application_id", userApplication.get("id"));
-
-			ProcessInstance pi = genProcessInstance(processEngine, orderInfo,
-					workflowParam);
-
-			processEngine.getExecutionService().createVariables(pi.getId(),
-					workflowParam, true);
-
-		} else {
-			throw new Exception(refundObj.get("error_desc") + "");
-		}
+//		if (!CollectionUtils.isEmpty(refundObj)
+//				&& "0".equals(refundObj.get("error_code") + "")) {
+//			refundObj.put("change_id",
+//					Long.parseLong(refundObj.get("v_change_id") + ""));
+//			refundObj.put("order_id", orderId);
+//
+//			Map<String, Object> workflowParam = new HashMap<String, Object>();
+//			workflowParam.put("change_id", Long.parseLong(refundObj.get("v_change_id") + ""));
+//			workflowParam.put("remark_order", refundObj.get("p_remark"));
+//			workflowParam.put("student_id", orderInfo.getStudent_id());
+//			workflowParam.put("student_name", orderInfo.getStudent_name());
+//			workflowParam.put("student_encoding",
+//					orderInfo.getStudent_encoding());
+//			workflowParam.put("order_encoding", orderInfo.getEncoding());
+//			workflowParam.put("order_id", orderInfo.getId());
+//			workflowParam.put("branch_id", orderInfo.getBranch_id());
+//
+//			Map<String, Object> queryParam = new HashMap<String, Object>();
+//			queryParam.put("businessType", orderInfo.getBusiness_type());
+//			queryParam.put("studentId", orderInfo.getStudent_id());
+//			// 查询订单课程时，应该用当前的登录校区，不能用订单的校区（存在转班的情况）
+//			//queryParam.put("branchId", orderInfo.getBranch_id());
+//			queryParam.put("branchId", (Long) refundObj.get("branch_id"));
+//			queryParam.put("id", refundObj.get("order_detail_id"));
+//			queryParam.put("product_line", refundObj.get("product_line"));
+//			List<TOrderCourse> orderDetailCourse = tOrderCourseDao
+//					.queryStudentOrderCourse(queryParam);
+//			if (CollectionUtils.isEmpty(orderDetailCourse)) {
+//				log.error("没有找到订单详情！");
+//				throw new Exception("没有找到订单详情！");
+//			}
+//			refundObj.put("course_name", orderDetailCourse.get(0)
+//					.getCourse_name());
+//			refundObj.put("teacher_name", orderDetailCourse.get(0)
+//					.getTeacher_name());
+//			refundObj.put("premium_deduction_amount",
+//					refundObj.get("p_premium_deduction_amount"));
+//
+//			workflowParam.put("businessDetailInfo",
+//					DetailBusinessInfoFormat.tuifeiString(refundObj));
+//			Map<String, Object> userApplication = new HashMap<String, Object>();
+//			userApplication.put("APPLICATION_ID", refundObj.get("user_id"));
+//			StringBuilder application = new StringBuilder("退费审批：");
+//			if (null != orderInfo.getStudent_id()) {
+//				application.append("学生ID[");
+//				application.append(orderInfo.getStudent_name() + ""
+//						+ orderInfo.getStudent_id());
+//				application.append("]");
+//			}
+//
+//			application.append("订单[");
+//			application.append(orderInfo.getEncoding());
+//			application.append("]");
+//			application.append("详单ID[");
+//			application.append(refundObj.get("order_detail_id"));
+//			application.append("]");
+//			application.append("[" + refundObj.get("premium_result") + "]");
+//
+//			userApplication.put("APPLICATION", application.toString());
+//			userApplication.put("STATUS", 1L);
+//			userApplication.put("CREATETIME",
+//					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
+//			userApplication.put(
+//					"WORKURL",
+//					"#/order-detail/" + orderInfo.getBusiness_type() + "/"
+//							+ orderInfo.getStudent_id() + "/"
+//							+ orderInfo.getId());
+//			userApplication.put("REMARK", refundObj.get("premium_remark"));
+//			userApplication.put("CURRENT_STATE", "申请已提交");
+//			userApplication.put("CURRENT_STEP", "申请提交");
+//
+//			userApplication.put("CURRENT_MAN", refundObj.get("user_name"));
+//
+//			userApplication.put("UPDATETIME",
+//					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
+//			userTaskService.insertApplication(userApplication);
+//			workflowParam.put("application_id", userApplication.get("id"));
+//
+//			ProcessInstance pi = genProcessInstance(processEngine, orderInfo,
+//					workflowParam);
+//
+//			processEngine.getExecutionService().createVariables(pi.getId(),
+//					workflowParam, true);
+//
+//		} else {
+//			throw new Exception(refundObj.get("error_desc") + "");
+//		}
 	}
 	
 	@Override
@@ -421,11 +422,12 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			throw new Exception("补扣金额不允许为负值！");
 		}
 
-		if ("2".equals(refundObj.get("premiumType"))) {
-			tOrderChangeDao.readyVIPPremium(refundObj);
-		} else {
-			tOrderChangeDao.readyPremium(refundObj);
-		}
+		this.orderRefund.readyPremium(refundObj, orderInfo.getBusiness_type());
+//		if ("2".equals(refundObj.get("premiumType"))) {
+//			tOrderChangeDao.readyVIPPremium(refundObj);
+//		} else {
+//			tOrderChangeDao.readyPremium(refundObj);
+//		}
 		long readyPremiumTime = System.currentTimeMillis();
 		log.debug("==============准备退费数据，存储过程耗时：" + (readyPremiumTime - start) + " 毫秒.");
 		refundObj.put("p_encoding", EncodingSequenceUtil.getSequenceNum(4L));
@@ -458,16 +460,16 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		long negativePremiumTime = System.currentTimeMillis();
 		Long orderChangeId = null;
 		log.debug("==============退费负值处理(审批流), 耗时：" + (negativePremiumTime - readyPremiumTime) + " 毫秒.");
-		if(Integer.parseInt(refundObj.get("businessType").toString())==1){
-			tOrderChangeDao.premiumFrozen(refundObj);
-			long endTime = System.currentTimeMillis();
-			log.debug("==============冻结处理, 存储过程耗时：" + (endTime - negativePremiumTime) + " 毫秒.");
-			if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
-				throw new Exception(refundObj.get("error_desc") + "");
-			}
-			orderChangeId = NumberUtils.object2Long(refundObj.get("v_change_id"));
-
-		}else{
+//		if(Integer.parseInt(refundObj.get("businessType").toString())==1){
+//			tOrderChangeDao.premiumFrozen(refundObj);
+//			long endTime = System.currentTimeMillis();
+//			log.debug("==============冻结处理, 存储过程耗时：" + (endTime - negativePremiumTime) + " 毫秒.");
+//			if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
+//				throw new Exception(refundObj.get("error_desc") + "");
+//			}
+//			orderChangeId = NumberUtils.object2Long(refundObj.get("v_change_id"));
+//
+//		}else{
 			TOrderChange orderChange=new TOrderChange();
 			orderChange.setBranch_id(Long.valueOf(refundObj.get("branch_id")+""));
 			orderChange.setCreate_user(Long.valueOf(refundObj.get("user_id")+""));
@@ -477,7 +479,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			orderChange.setEncoding(refundObj.get("p_encoding").toString());
 			orderChange.setRemark(refundObj.get("p_remark").toString());
 			iOrderYDY.frozenOrder(orderChange);
-		}
+//		}
 
 	}
 
@@ -555,7 +557,17 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			refundObj.put("p_remark", "");
 		}
 
-		tOrderChangeDao.premiumAudit(refundObj);
+		refundObj.put("change_id", refundObj.get("p_change_id"));
+		List<TabChangeCourse> changeCourseList = this.tabChangeCourseDao.queryChangeCourseInfo(refundObj);
+		if (!CollectionUtils.isEmpty(changeCourseList)) {
+			TabChangeCourse changeCourse = changeCourseList.get(0);
+			Integer premiumType = changeCourse.getPremium_type();
+			if (2 == premiumType) {
+
+			} else {
+
+			}
+		}
 
 	}
 

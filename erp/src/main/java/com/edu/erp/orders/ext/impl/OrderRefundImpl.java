@@ -113,8 +113,8 @@ public class OrderRefundImpl implements IOrderRefund {
         paramMap.put("rootCourseId", orderCourse.getRoot_course_id());
         // 获取订单课程预结转金额（本单+子单+主单+同属本单子单预结转金额）
         Map<String, Object> manageFeeMap = this.tOrderCourseDao.queryTotalManageFee(paramMap);
-        Double manageFee = ((BigDecimal) manageFeeMap.get("MANAGE_FEE")).doubleValue();
-        Long courseSurplusCount = ((BigDecimal) manageFeeMap.get("COURSE_SURPLUS_COUNT")).longValue();
+        Double manageFee = ((BigDecimal) manageFeeMap.get("manage_fee")).doubleValue();
+        Long courseSurplusCount = ((BigDecimal) manageFeeMap.get("course_surplus_count")).longValue();
         // 反预结转金额
         Double preAmount = manageFee;
 

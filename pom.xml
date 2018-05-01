@@ -264,5 +264,6 @@
 		<module>edu</module>
 		<module>erp</module>
 		<module>workflow</module>
+		<module>report</module>
 	</modules>
 </project>

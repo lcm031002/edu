@@ -40,43 +40,23 @@
 	       #{change_no})
 	</insert>
 	
-	<insert id="addList" parameterType="java.util.List">
-		<foreach collection="list" item="item" index="index" open="begin"
-			close="; end;" separator=";">
-			insert into tab_change_course_times (
-		    <if test="item.change_id != null">
-		       change_id,
-		    </if>
-		    <if test="item.change_course_id != null">
-		       change_course_id,
-		    </if>
-		    <if test="item.course_times != null">
-		       course_times,
-		    </if>
-		    <if test="item.pre_price != null">
-		       pre_price,
-		    </if>
-		    <if test="item.next_price != null">
-		       next_price,
-		    </if>
-		       change_no)
-		    values (
-		    <if test="item.change_id != null">
+	<insert id="addList">
+		insert into tab_change_course_times (
+		   change_id,
+		   change_course_id,
+		   course_times,
+		   pre_price,
+		   next_price,
+		   change_no)
+		values
+		<foreach collection="tabChangeCourseTimesList" item="item" index="index" separator=",">
+		     (
 		       #{item.change_id},
-		    </if>
-		    <if test="item.change_course_id != null">
 		       #{item.change_course_id},
-		    </if>
-		    <if test="item.course_times != null">
 		       #{item.course_times},
-		    </if>
-		    <if test="item.pre_price != null">
 		       #{item.pre_price},
-		    </if>
-		    <if test="item.next_price != null">
 		       #{item.next_price},
-		    </if>
-		       #{item.change_no}
+		       #{item.change_no})
 		</foreach>
 	</insert>
 	

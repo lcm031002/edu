@@ -1062,7 +1062,8 @@ public class OrderFrozenImpl implements IOrderFrozen{
     		Map<String,Object> map=new HashMap<String,Object>();
     		map.put("is_valid", 1);
     		map.put("id", tOrderCourseTimesLog.getId());
-    		tOrderCourseTimesDao.updateTOrderCourseTimes(map);
+    		tOrderCourseTimesDao.
+					updateTOrderCourseTimes(map);
     	}
     	//更新批改状态为生效
     	param.put("change_stuatus", 5);
