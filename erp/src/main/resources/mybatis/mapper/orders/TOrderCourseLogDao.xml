@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TOrderCourseLogDao">
+
+	<insert id="insert" parameterType="com.edu.erp.model.TOrderCourseLog" useGeneratedKeys="true" keyProperty="id">
+		insert into t_order_course_log
+			(
+		     change_id,
+		     old_new,
+		     order_id,
+		     course_id,
+		     branch_id,
+		     former_unit_price,
+		     former_sum_price,
+		     discount_unit_price,
+		     discount_sum_price,
+		     discount_rate,
+		     discount_amount,
+		     manage_fee,
+		     course_total_count,
+		     course_surplus_count,
+		     course_schedule_count,
+		     create_user,
+		     create_time,
+		     update_user,
+		     update_time,
+		     surplus_cost,
+		     quit_flag,
+		     order_type,
+		     status,
+		     root_course_id,
+		     log_create_time,
+		     log_update_time 
+	       )
+	    values (
+	    	#{change_id,jdbcType=NUMERIC},
+	    	#{old_new,jdbcType=NUMERIC},
+	    	#{order_id,jdbcType=NUMERIC},
+	    	#{course_id,jdbcType=NUMERIC},
+	    	#{branch_id,jdbcType=NUMERIC},
+	    	#{former_unit_price,jdbcType=NUMERIC},
+	    	#{former_sum_price,jdbcType=NUMERIC},
+	    	#{discount_unit_price,jdbcType=NUMERIC},
+	    	#{discount_sum_price,jdbcType=NUMERIC},
+	    	#{discount_rate,jdbcType=NUMERIC},
+	    	#{discount_amount,jdbcType=NUMERIC},
+	    	#{manage_fee,jdbcType=NUMERIC},
+	    	#{course_total_count,jdbcType=NUMERIC},
+	    	#{course_surplus_count,jdbcType=NUMERIC},
+	    	#{course_schedule_count,jdbcType=NUMERIC},
+	    	#{create_user,jdbcType=NUMERIC},
+	    	#{create_time,jdbcType=TIMESTAMP},
+	    	#{update_user,jdbcType=NUMERIC},
+	    	#{update_time,jdbcType=TIMESTAMP},
+	    	#{surplus_cost,jdbcType=NUMERIC},
+	    	#{quit_flag,jdbcType=NUMERIC},
+	    	#{order_type,jdbcType=NUMERIC},
+	    	#{status,jdbcType=NUMERIC},
+	    	#{root_course_id,jdbcType=NUMERIC},
+	    	sysdate(),
+	    	sysdate()
+	       )
+	</insert>
+	
+	<insert id="insertOrderCourseLog" parameterType="map">
+		insert into t_order_course_log
+		   (change_id,
+		    old_new,
+		    id,
+		    order_id,
+		    course_id,
+		    branch_id,
+		    former_unit_price,
+		    former_sum_price,
+		    discount_unit_price,
+		    discount_sum_price,
+		    discount_rate,
+		    discount_amount,
+		    manage_fee,
+		    course_total_count,
+		    course_surplus_count,
+		    course_schedule_count,
+		    create_user,
+		    create_time,
+		    update_user,
+		    update_time,
+		    surplus_cost,
+		    quit_flag,
+		    order_type,
+		    status,
+		    root_course_id,
+		    log_create_time,
+		    log_update_time)
+		   select  ${changeId},
+		          1,
+		          t.id,
+		          t.order_id,
+		          t.course_id,
+		          t.branch_id,
+		          t.former_unit_price,
+		          t.former_sum_price,
+		          t.discount_unit_price,
+		          t.discount_sum_price,
+		          t.discount_rate,
+		          t.discount_amount,
+		          t.manage_fee,
+		          t.course_total_count,
+		          t.course_surplus_count,
+		          t.course_schedule_count,
+		          t.create_user,
+		          t.create_time,
+		          t.update_user,
+		          t.update_time,
+		          t.surplus_cost,
+		          t.quit_flag,
+		          t.order_type,
+		          t.status,
+		          t.root_course_id,
+		          sysdate(),
+		          sysdate()
+		     from t_order_course t
+		    where exists (select 1
+		             from tc_order_course c
+		            where c.order_id = t.order_id
+		              and c.change_id =  #{changeId})
+	</insert>
+	
+	<insert id="insertOrderCourseTimesLog" parameterType="map">
+		insert into t_order_course_times_log
+	    (change_id,
+	     old_new,
+	     id,
+	     ocid,
+	     times,
+	     is_valid,
+	     log_create_time,
+	     log_update_time)
+	    select ${changeId}, 1, t.*, sysdate(), sysdate()
+	      from t_order_course_times t, tc_order_course_times c
+	     where t.ocid = c.order_course_id
+	       and t.times = c.course_times
+	       and c.change_id = #{changeId}
+	</insert>
+	
+	<!-- 如果后面有其他业务操作则不允许退费作废，如果退费有回复原价的需要-->
+	<select id="queryChangePriceNumByChangeId"  resultType="java.lang.Integer" parameterType="long">
+		select count(1)
+	    	from t_order_course_log t, t_order_course oc
+	     where t.id = oc.id
+	       	and t.change_id = #{changeId}
+	       	<![CDATA[
+	       	and (t.former_unit_price <> oc.former_unit_price 
+	        or t.discount_unit_price <> oc.discount_unit_price)
+	        ]]>
+	</select>
+	
+	<!-- 退费作废前验证 退费后订单是否包含考勤-->
+	<select id="queryAttendNumsByChangeId"  resultType="java.lang.Integer" parameterType="map">
+		select count(1)
+	      from t_order_change tocc
+	      left join TC_ORDER_COURSE tcoc
+	        on tcoc.change_id = tocc.id
+	      left join t_order_course toc
+	        on toc.id = tcoc.order_course_id
+	      inner join t_attendance t3
+	        on toc.id = t3.order_course_id
+	       and t3.attend_date >#{validateTime }
+	     where t3.attend_type in (11, 12, 21, 22, 31)
+	       and tocc.order_id = #{orderId }
+	       and toc.former_sum_price != toc.discount_sum_price
+	       and tocc.id = #{changeId}
+	</select>
+	
+	<!-- 退费作废前验证 退费后订单时候有批改操作-->
+	<select id="queryChangesNumsByChangeId"  resultType="java.lang.Integer" parameterType="map">
+		select count(1)
+	      from t_order_change t2, tc_order_course t1,t_order_course t3
+	     where t2.id = t1.change_id
+	       and t1.order_course_id = t3.id
+	       and exists(select 1                             
+	               from tc_order_course l,t_order_course c
+	              where l.order_course_id = c.id
+	                and  l.change_id = #{changeId}
+	                and (t1.order_course_id = l.order_course_id or 
+	                    t3.root_course_id = l.order_course_id or   
+	                    t1.order_course_id = c.root_course_id or 
+	                    t3.root_course_id = c.root_course_id  
+	                    ))
+	       and t2.change_status not in (6,7,8)
+	       and t2.id not in (${changeId}, ${pChangeId}) 
+	       and t2.apply_time > #{inputTime}
+	       and t2.order_id = #{orderId}
+	</select>
+	
+	<select id="queryTuiFeiNumsByChangeId"  resultType="java.lang.Integer" parameterType="map">
+		select count(1)
+	      from t_order_change toc
+	      left join tc_order_course tcoc
+	      on tcoc.change_id = toc.id
+	      where toc.order_id = (select order_id from t_order_change where id = #{changeId})
+	      and toc.id >${changeId}
+	      and toc.change_status = 5
+	      and toc.change_type = 5
+	      and tcoc.ORDER_COURSE_ID in (
+	      select tcoc2.ORDER_COURSE_ID
+	        from t_order_change toc2
+	         left join tc_order_course tcoc2
+	           on tcoc2.change_id = toc2.id
+	        where toc2.id = #{id}
+	       )
+	</select>
+	
+	<select id="queryRootCourseTuiFeiNumsByChangeId"  resultType="java.lang.Integer" parameterType="map">
+		 select count(1)
+	      from t_order_change toc
+	      left join tc_order_course tcoc
+	        on tcoc.change_id = toc.id
+	      left join t_order_course todc
+	        on todc.id = tcoc.ORDER_COURSE_ID
+	     where toc.order_id = (select order_id from t_order_change where id =  #{changeId})
+	       and toc.id >  ${changeId}
+	       and toc.change_status = 5
+	       and toc.change_type = 5
+	       and todc.ROOT_COURSE_ID in
+	           (select todc.root_COURSE_ID
+	              from t_order_change toc2
+	              left join tc_order_course tcoc2
+	                on tcoc2.change_id = toc2.id
+	              left join t_order_course todc2
+	                on todc2.id = tcoc2.ORDER_COURSE_ID
+	             where toc2.id =  #{id})
+	</select>
+	
+	<select id="queryTOrderCourseLogByChangeId"  resultType="com.edu.erp.model.TOrderCourseLog" parameterType="long">
+		select t.*,
+           oc.former_unit_price cur_former_unit_price,
+           oc.discount_unit_price cur_discount_unit_price,
+           tc.course_times charge_back_num,
+           oc.course_surplus_count  cur_course_surplus_count,
+           oc.course_schedule_count  cur_course_schedule_count
+          from t_order_course_log t,t_order_course oc,tc_order_course tc
+         where t.id = oc.id
+           and t.change_id = tc.change_id
+           and oc.id = tc.order_course_id
+           and t.change_id = #{changeId}
+	</select>
+	
+	<select id="queryTOrderCourseTimesLogByChangeId"  resultType="com.edu.erp.model.TOrderCourseTimesLog" parameterType="map">
+		select *  from t_order_course_times_log t where t.change_id = #{changeId} 
+		<if test="id != null and id != ''">
+			and  t.id=#{id}
+		</if>
+	</select>
+	
+	<select id="queryTOrderCourseLogByMap"  resultType="com.edu.erp.model.TOrderCourseLog" parameterType="map">
+		select *  from t_order_course_log t where t.change_id = #{changeId} 
+		<if test="id != null and id != ''">
+			and  t.id=#{id}
+		</if>
+	</select>
+
+
+</mapper>

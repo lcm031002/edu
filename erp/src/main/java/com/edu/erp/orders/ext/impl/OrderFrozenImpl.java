@@ -130,8 +130,6 @@ public class OrderFrozenImpl implements IOrderFrozen{
     	
     	ArrayList<TLock> lockList=new ArrayList<TLock>();
 		try{
-			//查询订单-需要冻结的订单ID  queryOrderIdByChangeNo 
-	//		List<TOrderCourse> tOrderCourse=orderChangeService.queryOrderCourseByChangeNo(orderChange.getEncoding());
 			//生成批改申请记录--用于从临时表数据生成正式订单数据
 			//1.行级独占锁
 			Map<String, Object> param=new HashMap<String,Object>();
@@ -269,7 +267,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 			tAccountChange.setPay_mode(1l);
 			studentAccountService.saveAccountChange(tAccountChange);
 			//8.4 更新账户余额
-			studentAccountService.updateFrozenAccount(tAccount.getId(), tAccount.getFrozen_account()==null?encoder.getFee_amount():tAccount.getFrozen_account()+encoder.getFee_amount());
+			studentAccountService.updateFrozenAccount(tAccount.getId(), tAccount.getFee_amount()==null?encoder.getFee_amount():tAccount.getFee_amount()+encoder.getFee_amount());
 			//8.5 生成财务费用
 			TFee fee=new TFee();
 			fee.setOrder_id(encoder.getOrder_id());
@@ -293,6 +291,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 			tOrderChangeDao.updateOrderChangeStatus(param);
 			//9 生效接口---订单批改正式生效后的处理逻辑
 			updateTOrderCoursePremiumInfo(tOrderChange,param);
+			orderCourseTimesInfoService.updateValidOrderCourseTimes(param);
 		}catch(Exception e){
 			throw e;
 		} finally {

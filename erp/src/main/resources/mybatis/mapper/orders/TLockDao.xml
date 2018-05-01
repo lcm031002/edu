@@ -23,7 +23,7 @@
 	
 	
 	<select id="queryLockOrderId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select id  from t_order where id = #{order_id,jdbcType=NUMERIC} for update nowait
+		select id  from t_order where id = #{order_id,jdbcType=NUMERIC} for update
 	</select>
 	
 	<select id="queryLockOrderFlag" parameterType="java.util.HashMap" resultType="java.lang.Integer">
@@ -58,16 +58,28 @@
 	</insert>
 	
 	<delete id="releaseLock" parameterType="com.edu.erp.model.TLock">
-	 	delete from t_lock t 
-	 	where t.busi_type = #{busiType,jdbcType=NUMERIC} 
-	 	and t.busi_id = #{busiId,jdbcType=NUMERIC}
+	 	delete from t_lock
+	 	where busi_type = #{busiType,jdbcType=NUMERIC}
+	 	and busi_id = #{busiId,jdbcType=NUMERIC}
 	</delete>
 
 
 	<!-- 锁校验,是否有课程被锁定 -->
 	<select id="queryCourseLock" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		with orderCourse as
-			(select t.id, t.course_id, t.order_id
+		SELECT
+		tor.order_no as orderNo,
+		tochange.change_type as changeType,
+		(case tochange.change_type when 1 then '退费'
+		 	when 2 then '转班'
+		 	when 3 then '报班作废'
+		 	when 4 then  '退费作废'
+		 	when 5 then '冻结'
+		 	when 6 then '冻结作废' else '其他' end) as changeName,
+		tc.course_name courseName
+		FROM tc_order_course t
+		JOIN t_lock l
+		ON t.order_course_id = l.resource_id AND l.type = 2
+		JOIN (select t.id, t.course_id, t.order_id
 				from t_order_course t
 			   where t.id = #{orderCourseId}
 				  or t.root_course_id = #{orderCourseId}
@@ -83,21 +95,7 @@
 			   where t.root_course_id = (select t1.root_course_id
 					from t_order_course t1
 				   where t1.id = #{orderCourseId})
-				 and t.id != #{orderCourseId})
-		SELECT
-		tor.order_no as orderNo,
-		tochange.change_type as changeType,
-		(case tochange.change_type when 1 then '退费'
-		 	when 2 then '转班'
-		 	when 3 then '报班作废'
-		 	when 4 then  '退费作废'
-		 	when 5 then '冻结'
-		 	when 6 then '冻结作废' else '其他' end) as changeName,
-		tc.course_name courseName
-		FROM tc_order_course t
-		JOIN t_lock l
-		ON t.order_course_id = l.resource_id AND l.type = 2
-		JOIN orderCourse toc
+				 and t.id != #{orderCourseId}) toc
 		ON toc.id=t.order_course_id
 		LEFT JOIN t_course tc
 		ON tc.id=toc.course_id

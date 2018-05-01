@@ -154,7 +154,7 @@
 		  LEFT JOIN TAB_ORGANIZATION_INFO TOI
 		    ON TOI.ID = TOC.BRANCH_ID
 		  left join user_application_task t
-		    on t.application like '退费审批%' || TCOC.order_course_id || '%' and (t.current_state not in ('审批通过，退费单生效','审批不通过，退费单作废') or t.current_state is null)
+		    on t.application like concat('退费审批%', TCOC.order_course_id, '%') and (t.current_state not in ('审批通过，退费单生效','审批不通过，退费单作废') or t.current_state is null)
 		 WHERE TOC.CHANGE_TYPE = 1
 		   AND TOC.ORDER_ID = #{orderId,jdbcType=NUMERIC}
 		   and TOC.CHANGE_STATUS in (3, 4)
@@ -168,7 +168,7 @@
                 toc.fin_confirm_user,
                 toc.fin_confirm_time,
                 tcs.teacher_id,
-                to_date(tcs.course_date || '', 'yyyymmdd') as course_date,
+                date_format(tcs.course_date, '%Y%m%d') as course_date,
                 tti.teacher_name,
                 tei.employee_name as createrName,
                 tei2.employee_name as confirmerName,
@@ -208,9 +208,9 @@
 		        date_format(tf.INSERT_TIME,'%Y-%m-%d %H:%m:%s') as INSERT_TIME,
 		        TEI.EMPLOYEE_NAME,
 		        tooc.ORDER_COURSE_ID,
-		        '课程名称：' || tood.COURSE_NAME || '，' || '总价：' ||
-		        tood.FORMER_SUM_PRICE || '.00元' || '，' || '折扣价：' ||
-		        tood.DISCOUNT_SUM_PRICE || '.00元' as REMARK
+		        concat('课程名称：', tood.COURSE_NAME, '，', '总价：',
+		        tood.FORMER_SUM_PRICE, '.00元', '，', '折扣价：',
+		        tood.DISCOUNT_SUM_PRICE, '.00元') as REMARK
 		   from t_fee tf
 		   left join T_ORDER_CHANGE TOC
 		     on TOC.ID = tf.operate_no
@@ -238,9 +238,9 @@
              date_format(tf.INSERT_TIME, '%Y-%m-%d %H:%m:%s') as INSERT_TIME,
              TEI.EMPLOYEE_NAME,
              tfd.order_detail_id as ORDER_COURSE_ID,
-             '课程名称：' || tood.COURSE_NAME || '，' || '总价：' ||
-             tood.FORMER_SUM_PRICE || '.00元' || '，' || '折扣价：' ||
-             tood.DISCOUNT_SUM_PRICE || '.00元' as REMARK
+             concat('课程名称：', tood.COURSE_NAME, '，', '总价：',
+             tood.FORMER_SUM_PRICE, '.00元', '，', '折扣价：',
+             tood.DISCOUNT_SUM_PRICE, '.00元') as REMARK
         from t_fee_detail tfd
         left join t_fee tf
           on tf.id = tfd.fee_id
@@ -419,7 +419,7 @@
 		   and c.id = t.ocid 
 		   and l.course_times = t.times
 		   and t.is_valid = 1
-		   and nvl(c.status,1) = 1
+		   and ifnull(c.status,1) = 1
 		   and not exists (select 1
 		          from t_attendance a
 		         where a.order_course_id = c.id
@@ -586,7 +586,7 @@
 	       create_time, 
 	       update_user, 
 	       update_time, 
-	       encoding, 
+	       encoding,
 	       branch_id, 
 	       invalid_id,
 	    <if test="fee_deduction_amount != null">

@@ -124,9 +124,7 @@ public class OrderRefundImpl implements IOrderRefund {
         Integer changeCourseTimes = changeCourse.getCourse_times();
         if (businessType == 1) {
             changeCourseTimes = this.changeCourseTimesService.queryChangeCourseTimes(paramMap);
-            if (changeCourseTimes == 0) {
-                changeCourseTimes = changeCourse.getCourse_times();
-            } else {
+            if (changeCourseTimes != 0) {
                 changeCourse.setCourse_times(changeCourseTimes);
             }
         }
@@ -149,13 +147,13 @@ public class OrderRefundImpl implements IOrderRefund {
 
     private Double getFormerUnitPrice(TOrderCourse orderCourse, Map<String, Object> paramMap,
             Integer changeCourseTimes, Long businessType) throws Exception {
-        Double formerUnitPrice = orderCourse.getFormer_sum_price();
+        Double discountSumPrice = orderCourse.getDiscount_sum_price();
         if (businessType == Constants.BusinessType.GXH) {
             paramMap.put("student_id", orderCourse.getStudent_id());
             paramMap.put("create_date", DateUtil.getDateOfYearsAgoOrLater(-1));
             paramMap.put("course_id", orderCourse.getCourse_id());
         }
-        return formerUnitPrice <= 0 ? orderCourse.getFormer_unit_price() : formerUnitPrice;
+        return discountSumPrice > 0 ? orderCourse.getFormer_unit_price() : orderCourse.getDiscount_unit_price();
     }
 
     private void setChangeCourseAmount(TabChangeCourse changeCourse, TOrderCourse orderCourse,
@@ -173,18 +171,22 @@ public class OrderRefundImpl implements IOrderRefund {
             formerUnitPrice = getFormerUnitPrice(orderCourse, paramMap, changeCourseTimes, businessType);
             // 退费金额 订单总金额 - 订单原价 * （订单课次 - 退费课次）
             totalAmount = surplusAmount - formerUnitPrice * (surplusCount - changeCourseTimes);
-        } else if (discountUnitPrice.doubleValue() != formerUnitPrice.doubleValue()) {
-            if (orderCourse.getRoot_course_id() != null) {
-                orderCourse = this.tOrderCourseDao.queryOrderCourseById(orderCourse.getRoot_course_id());
-            }
+        } else {
+            if (discountUnitPrice.doubleValue() != formerUnitPrice.doubleValue()) {
+                if (orderCourse.getRoot_course_id() != null) {
+                    orderCourse = this.tOrderCourseDao.queryOrderCourseById(orderCourse.getRoot_course_id());
+                }
 
-            formerUnitPrice = getFormerUnitPrice(orderCourse, paramMap, changeCourseTimes, businessType);
-            discountSumPrice = orderCourse.getDiscount_sum_price();
-            discountUnitPrice = orderCourse.getDiscount_unit_price();
-            courseTotalCount = orderCourse.getCourse_total_count();
-            attendCount = this.attendanceDao.countAttendByOrderCourseId(paramMap);
-            // 退费金额 订单总金额 - 订单原价 * （订单课次 - 退费课次）
-            totalAmount = discountSumPrice - formerUnitPrice * (courseTotalCount - changeCourseTimes);
+                formerUnitPrice = getFormerUnitPrice(orderCourse, paramMap, changeCourseTimes, businessType);
+                discountSumPrice = orderCourse.getDiscount_sum_price();
+                discountUnitPrice = orderCourse.getDiscount_unit_price();
+                courseTotalCount = orderCourse.getCourse_total_count();
+                attendCount = this.attendanceDao.countAttendByOrderCourseId(paramMap);
+                // 退费金额 订单总金额 - 订单原价 * （订单课次 - 退费课次）
+                totalAmount = discountSumPrice - formerUnitPrice * (courseTotalCount - changeCourseTimes);
+            } else {
+                totalAmount = discountUnitPrice * changeCourseTimes;
+            }
         }
 
         // 补考勤金额 （订单原价 - 订单折扣价） * 考勤次数

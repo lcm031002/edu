@@ -463,9 +463,6 @@
 		<if test="branch_id != null">
 			and		t1.branch_id = #{branch_id}
 		</if>
-		<if test="account_type != null">
-			and		t1.account_type = #{account_type}
-		</if>
 		<if test="product_line != null">
 			and		t1.product_line = #{product_line}
 		</if>
@@ -523,9 +520,6 @@
 			<![CDATA[
 			and	 date_format(t10.fin_confirm_date, 'yyyy-MM-dd') between #{paramMap.start_date} and #{paramMap.end_date}
 			]]>	
-		</if>	
-		<if test="paramMap.account_type != null">
-			and			t2.account_type = #{paramMap.account_type}
 		</if>
 		<if test="paramMap.change_type != null">
 			and			t1.change_type = #{paramMap.change_type}
@@ -594,9 +588,6 @@
 			<![CDATA[
 			and	 to_char(t5.confirm_time, 'yyyy-MM-dd') between #{paramMap.start_date} and #{paramMap.end_date}
 			]]>	
-		</if>	
-		<if test="paramMap.account_type != null">
-			and			t2.account_type = #{paramMap.account_type}
 		</if>
 		<if test="paramMap.change_type != null">
 			and			t1.change_type = #{paramMap.change_type}
@@ -843,7 +834,7 @@
 	</update>
 	<!-- 更新冻结账户   -->
 	<update id="updateFrozenAccount">
-		update t_account t set  t.frozen_account = #{amount} where t.id = #{accountId}
+		update t_account t set  t.fee_amount = #{amount} where t.id = #{accountId}
 	</update>
 	<!--更新退费账户   -->
 	<update id="updateRefundAccount">
@@ -859,9 +850,6 @@
 		    </if>
 		    <if test="cityId!=null">
 		    AND TA.CITY_ID = #{cityId,jdbcType=NUMERIC}
-		    </if>
-		     <if test="accountType!=null">
-		    AND TA.ACCOUNT_TYPE =  #{accountType,jdbcType=NUMERIC}
 		    </if>
 	</select>
 	
@@ -899,9 +887,6 @@
 		</if>
 		<if test="cityId!=null">
 			AND TA.CITY_ID = #{cityId,jdbcType=NUMERIC}
-		</if>
-		<if test="accountType!=null">
-			AND TA.ACCOUNT_TYPE =  #{accountType,jdbcType=NUMERIC}
 		</if>
 	</select>
 

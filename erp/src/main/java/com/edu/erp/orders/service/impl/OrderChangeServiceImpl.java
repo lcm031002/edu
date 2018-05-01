@@ -409,9 +409,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		refundObj.put("pre_amount", 0);
 		refundObj.put("error_code", 0);
 		refundObj.put("error_desc", "");
-		//String changeNo = new RandomGUID().toString();
-		//refundObj.put("change_no", changeNo);
 		refundObj.put("change_type", 1);
+		refundObj.put("p_encoding", EncodingSequenceUtil.getSequenceNum(4L));
+		refundObj.put("change_no", refundObj.get("p_encoding"));
 		Long orderId = Long.parseLong(refundObj.get("order_id") + "");
 		TabOrderInfo orderInfo = orderInfoService.queryTemporaryOrderInfo(orderId);
 		if (orderInfo == null) {
@@ -423,17 +423,12 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		}
 
 		this.orderRefund.readyPremium(refundObj, orderInfo.getBusiness_type());
-//		if ("2".equals(refundObj.get("premiumType"))) {
-//			tOrderChangeDao.readyVIPPremium(refundObj);
-//		} else {
-//			tOrderChangeDao.readyPremium(refundObj);
-//		}
+
 		long readyPremiumTime = System.currentTimeMillis();
 		log.debug("==============准备退费数据，存储过程耗时：" + (readyPremiumTime - start) + " 毫秒.");
-		refundObj.put("p_encoding", EncodingSequenceUtil.getSequenceNum(4L));
 		refundObj.put("v_change_id", 0);
 
-		// 退费负值
+		// 退费负值t
 		if (refundObj.get("premium_result_val") != null && orderInfo != null
 				&& orderInfo.getBusiness_type() != null
 				&& orderInfo.getBusiness_type().intValue() == 1) {
@@ -460,27 +455,16 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		long negativePremiumTime = System.currentTimeMillis();
 		Long orderChangeId = null;
 		log.debug("==============退费负值处理(审批流), 耗时：" + (negativePremiumTime - readyPremiumTime) + " 毫秒.");
-//		if(Integer.parseInt(refundObj.get("businessType").toString())==1){
-//			tOrderChangeDao.premiumFrozen(refundObj);
-//			long endTime = System.currentTimeMillis();
-//			log.debug("==============冻结处理, 存储过程耗时：" + (endTime - negativePremiumTime) + " 毫秒.");
-//			if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
-//				throw new Exception(refundObj.get("error_desc") + "");
-//			}
-//			orderChangeId = NumberUtils.object2Long(refundObj.get("v_change_id"));
-//
-//		}else{
-			TOrderChange orderChange=new TOrderChange();
-			orderChange.setBranch_id(Long.valueOf(refundObj.get("branch_id")+""));
-			orderChange.setCreate_user(Long.valueOf(refundObj.get("user_id")+""));
-			//orderChange.setChange_no(changeNo);
-			orderChange.setOrder_id(orderId);
-			orderChange.setFee_deduction_amount(NumberUtils.object2Double(refundObj.get("p_premium_deduction_amount")!=null?refundObj.get("p_premium_deduction_amount").toString():"0"));
-			orderChange.setEncoding(refundObj.get("p_encoding").toString());
-			orderChange.setRemark(refundObj.get("p_remark").toString());
-			iOrderYDY.frozenOrder(orderChange);
-//		}
 
+		TOrderChange orderChange=new TOrderChange();
+		orderChange.setBranch_id(Long.valueOf(refundObj.get("branch_id")+""));
+		orderChange.setCreate_user(Long.valueOf(refundObj.get("user_id")+""));
+		orderChange.setOrder_id(orderId);
+		orderChange.setChange_no((String) refundObj.get("change_no"));
+		orderChange.setFee_deduction_amount(NumberUtils.object2Double(refundObj.get("p_premium_deduction_amount")!=null?refundObj.get("p_premium_deduction_amount").toString():"0"));
+		orderChange.setEncoding(refundObj.get("p_encoding").toString());
+		orderChange.setRemark(refundObj.get("p_remark").toString());
+		iOrderYDY.frozenOrder(orderChange);
 	}
 
 	private ProcessInstance genProcessInstance(ProcessEngine processEngine,

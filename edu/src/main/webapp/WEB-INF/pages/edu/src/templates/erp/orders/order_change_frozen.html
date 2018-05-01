@@ -164,17 +164,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="attendance in selectedRefundCourse.orderCourseSurplusCount" ng-if="attendance.ATTEND_TYPE==10||!attendance.ATTEND_TYPE" ng-click="checkRefundCourseTimes(attendance)">
+                                    <tr ng-repeat="attendance in selectedRefundCourse.orderCourseSurplusCount" ng-if="attendance.attend_type==10||!attendance.attend_type" ng-click="checkRefundCourseTimes(attendance)">
                                         <td>
                                             <input type=checkbox checked ng-if=attendance.checked>
                                             <input type=checkbox ng-if=!attendance.checked>
                                         </td>
                                         <td>{{attendance.TIMES}}</td>
-                                        <td>{{attendance.TEACHER_NAME}}</td>
-                                        <td>{{attendance.COURSE_DATE}}</td>
-                                        <td>{{attendance.ATTEND_DATE?attendance.ATTEND_DATE:'-'}}</td>
-                                        <td>{{attendance.ATTEND_USER_NAME?attendance.ATTEND_USER_NAME:'-'}}</td>
-                                        <td>{{attendance.NAME}}</td>
+                                        <td>{{attendance.teacher_name}}</td>
+                                        <td>{{attendance.course_date}}</td>
+                                        <td>{{attendance.attend_date?attendance.attend_date:'-'}}</td>
+                                        <td>{{attendance.attend_user_name?attendance.attend_user_name:'-'}}</td>
+                                        <td>{{attendance.name}}</td>
                                     </tr>
                                     <tr ng-if="showDetailTimesPanelLoading == 'loading'">
                                         <td colspan="6" align="center">
