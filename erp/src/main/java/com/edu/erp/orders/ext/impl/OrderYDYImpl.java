@@ -461,6 +461,10 @@ public class OrderYDYImpl implements IOrderYDY {
 			outputOrderCourseLog.setChange_id(orderChange.getId());
 			outputOrderCourseLog.setOld_new(1l); //新旧标识:1修改前数据
 			tOrderCourseLogDao.insert(outputOrderCourseLog);
+
+            queryParam.put("changeId", orderChange.getId());
+			tOrderCourseLogDao.insertOrderCourseTimesLog(queryParam);
+
 			// 10.减少转出订单  剩余课程次数，剩余费用
 			// 剩余课程（课时）总次数 
 			outputOrderCourse.setCourse_surplus_count(outputOrderCourse.getCourse_surplus_count() 
