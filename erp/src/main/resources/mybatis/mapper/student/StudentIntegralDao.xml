@@ -26,21 +26,16 @@
 	</select>
 	
 	<insert id="insert_integral"  parameterType="java.util.HashMap">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
-      		SELECT seq_tab_student_integral.currval as id from dual
-   		</selectKey>
-		insert into tab_student_integral t 
+		insert into tab_student_integral
 		(
-			t.ID,
-			t.STUDENT_ID,
-			t.CRRENT_INTEGRAL,
-			t.LAST_INTEGRAL,
-			t.UPDATE_USER,
-			t.UPDATE_TIME
+			STUDENT_ID,
+			CRRENT_INTEGRAL,
+			LAST_INTEGRAL,
+			UPDATE_USER,
+			UPDATE_TIME
 		)   
 		values 
 		(
-			seq_tab_student_integral.nextval,
 			#{STUDENT_ID,jdbcType=NUMERIC},
 			#{CRRENT_INTEGRAL,jdbcType=NUMERIC},
 			#{LAST_INTEGRAL,jdbcType=NUMERIC},
@@ -66,12 +61,8 @@
     </select>
 
     <insert id="saveIntegral" parameterType="com.edu.erp.model.StudentIntegral">
-        <selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
-            SELECT seq_tab_student_integral.nextval AS id from dual
-        </selectKey>
         insert into tab_student_integral
         (
-        id,
         student_id,<!--学生id-->
         crrent_integral,<!--当前积分值-->
         last_integral,<!--上一次值-->
@@ -83,12 +74,11 @@
         )
         values
         (
-        #{id,jdbcType=NUMERIC},
         #{student_id,jdbcType=NUMERIC},
         #{crrent_integral,jdbcType=NUMERIC},
         #{last_integral,jdbcType=NUMERIC},
         #{update_user,jdbcType=NUMERIC},
-        sysdate,
+        sysdate(),
         #{attend_amount,jdbcType=NUMERIC},
         #{last_attend_amount,jdbcType=NUMERIC},
         #{branch_id,jdbcType=NUMERIC}
@@ -102,7 +92,7 @@
                attend_amount      = #{attend_amount,jdbcType=NUMERIC},
                last_attend_amount = #{last_attend_amount,jdbcType=NUMERIC},
                update_user        = #{update_user,jdbcType=NUMERIC},
-               update_time        =  sysdate
+               update_time        =  sysdate()
          where id = #{id,jdbcType=NUMERIC}
     </update>
 </mapper>

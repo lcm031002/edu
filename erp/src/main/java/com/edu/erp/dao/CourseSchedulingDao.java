@@ -215,7 +215,7 @@ public interface CourseSchedulingDao {
 
 	AttendanceAuxiliaryData queryAttendanceSchedualingInfo(@Param("studentId") Long studentId, @Param("schedualingId") Long schedualingId);
 
-	@Update("update t_course_scheduling set attended = #{attendStatus,jdbcType=VARCHAR},update_time=sysdate,update_user=#{updateUser,jdbcType=NUMERIC} where id = #{schedualingId,jdbcType=NUMERIC}")
+	@Update("update t_course_scheduling set attended = #{attendStatus,jdbcType=VARCHAR},update_time=sysdate(),update_user=#{updateUser,jdbcType=NUMERIC} where id = #{schedualingId,jdbcType=NUMERIC}")
 	Integer updateAttendStatus(@Param("schedualingId") Long schedualingId, @Param("attendStatus") String attendStatus,
                                @Param("updateUser") Long updateUser);
 
