@@ -103,6 +103,6 @@
 		ON tor.id=toc.order_id
 		LEFT JOIN t_order_change tochange
 		ON tochange.id=l.busi_id
-		where rownum = 1
+		limit 1
 	</select>
 </mapper>

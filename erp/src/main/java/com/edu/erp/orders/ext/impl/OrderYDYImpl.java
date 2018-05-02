@@ -461,6 +461,10 @@ public class OrderYDYImpl implements IOrderYDY {
 			outputOrderCourseLog.setChange_id(orderChange.getId());
 			outputOrderCourseLog.setOld_new(1l); //新旧标识:1修改前数据
 			tOrderCourseLogDao.insert(outputOrderCourseLog);
+
+            queryParam.put("changeId", orderChange.getId());
+			tOrderCourseLogDao.insertOrderCourseTimesLog(queryParam);
+
 			// 10.减少转出订单  剩余课程次数，剩余费用
 			// 剩余课程（课时）总次数 
 			outputOrderCourse.setCourse_surplus_count(outputOrderCourse.getCourse_surplus_count() 
@@ -468,7 +472,10 @@ public class OrderYDYImpl implements IOrderYDY {
 			outputOrderCourse.setSurplus_cost(outputOrderCourse.getSurplus_cost() 
 					- outputTcOrderCourse.getTotal_amount());
 			// 计算剩余可排课时
-			outputOrderCourse.setCourse_schedule_count(outputOrderCourse.getCourse_schedule_count() - outputTcOrderCourse.getCourse_times());
+			if (outputOrderCourse.getCourse_surplus_count() != null) {
+				outputOrderCourse.setCourse_schedule_count(outputOrderCourse.getCourse_schedule_count() - outputTcOrderCourse.getCourse_times());
+			}
+
 			outputOrderCourse.setUpdate_user(orderChange.getUpdate_user());
 			tOrderCourseDao.updateOrderCourse(outputOrderCourse);
 			// 11.生成转入订单
