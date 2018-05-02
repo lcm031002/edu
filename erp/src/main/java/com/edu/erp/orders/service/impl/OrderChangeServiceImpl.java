@@ -121,7 +121,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		Long orderId = orderDetailCourse.get(0).getOrder_id();
 
 		// 1对1的转班
-		if(TCourse.BusinessTypeEnum.YDY.getCode() == transferObj.get("businessType")) {
+//		if(TCourse.BusinessTypeEnum.YDY.getCode() == transferObj.get("businessType")) {
 			//转班主表
 			TOrderChange orderChange = new TOrderChange();
 			orderChange.setOrder_id(orderId);
@@ -151,7 +151,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			//转班子表-转入
 			TCOrderCourse intputTcOrderCourse = new TCOrderCourse();
 			intputTcOrderCourse.setOrder_id(orderChange.getOrder_id());
-			intputTcOrderCourse.setOrder_course_id(tOrderCourseDao.getOrderCourseId());
+			intputTcOrderCourse.setOrder_course_id(orderDetailCourse.get(0).getId());
 			intputTcOrderCourse.setCourse_times(Long.valueOf(transferObj.get("P_input_count").toString()));
 			BigDecimal inputCourseTimes = new BigDecimal(transferObj.get("P_input_count").toString());    
 			intputTcOrderCourse.setTotal_amount(inputCourseTimes.multiply(outputUnitPrice).doubleValue());
@@ -161,14 +161,14 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			orderChange.getTcOrderCourse().add(intputTcOrderCourse);
 			
 			iOrderYDY.transferOrder(orderChange);
-		} else {
-			tOrderChangeDao.orderChangeTransfer(transferObj);
-			
-			if (!transferObj.get("o_err_code").toString().equals("0")) {
-				log.error("error found,see:" + transferObj.get("o_err_desc"));
-				throw new Exception("存储过程异常" + transferObj.get("o_err_desc"));
-			}
-		}
+//		} else {
+//			tOrderChangeDao.orderChangeTransfer(transferObj);
+//
+//			if (!transferObj.get("o_err_code").toString().equals("0")) {
+//				log.error("error found,see:" + transferObj.get("o_err_desc"));
+//				throw new Exception("存储过程异常" + transferObj.get("o_err_desc"));
+//			}
+//		}
 		Map<String, Object> querymMap=new HashMap<String,Object>();
 		querymMap.put("times",transferObj.get("p_input_times"));
 		querymMap.put("course_id",transferObj.get("p_input_course_id"));

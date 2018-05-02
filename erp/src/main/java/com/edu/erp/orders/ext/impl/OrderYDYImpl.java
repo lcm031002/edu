@@ -468,7 +468,10 @@ public class OrderYDYImpl implements IOrderYDY {
 			outputOrderCourse.setSurplus_cost(outputOrderCourse.getSurplus_cost() 
 					- outputTcOrderCourse.getTotal_amount());
 			// 计算剩余可排课时
-			outputOrderCourse.setCourse_schedule_count(outputOrderCourse.getCourse_schedule_count() - outputTcOrderCourse.getCourse_times());
+			if (outputOrderCourse.getCourse_surplus_count() != null) {
+				outputOrderCourse.setCourse_schedule_count(outputOrderCourse.getCourse_schedule_count() - outputTcOrderCourse.getCourse_times());
+			}
+
 			outputOrderCourse.setUpdate_user(orderChange.getUpdate_user());
 			tOrderCourseDao.updateOrderCourse(outputOrderCourse);
 			// 11.生成转入订单
