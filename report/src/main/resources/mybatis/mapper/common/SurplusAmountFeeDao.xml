@@ -37,10 +37,10 @@
 			null student_code,
 			null student_name,
 			null course_name,
-			sum(nvl(t.remain_coursetime,0)) remain_coursetime, /*剩余课时*/
+			sum(ifnull(t.remain_coursetime,0)) remain_coursetime, /*剩余课时*/
 			null unit_price,
-			sum(nvl(t.forward_transfer,0))  forward_transfer, /*预结转*/
-			sum(nvl(t.surplus_amount,0)) 	surplus_amount, /*剩余金额*/
+			sum(ifnull(t.forward_transfer,0))  forward_transfer, /*预结转*/
+			sum(ifnull(t.surplus_amount,0)) 	surplus_amount, /*剩余金额*/
 			null business_type,
 			null business_type_name,
 			null task_flow
@@ -62,9 +62,9 @@
 		</if>
 	</select>
 
-	<update id="deleteAll" parameterType="HashMap">
-		truncate table t_surplus_amount_fee
-	</update>
+	<delete id="deleteAll" parameterType="HashMap">
+		delete from t_surplus_amount_fee
+	</delete>
 
 	<insert id="insert" parameterType="HashMap">
 		insert into
@@ -97,10 +97,10 @@
        		org.id                		branch_id, 
        		org_bu.id					bu_id,
        		org_bu.org_name				bu_name,
-       		decode(cou.performance_belong_type,1,org.org_name,cou.branch_name) performance_branch_name, /*业绩校区*/
-       		decode(cou.performance_belong_type,1,org.id,cou.branch_id) performance_branch_id,   /*业绩校区*/
-            decode(cou.performance_belong_type,1,org_bu.org_name,cou.bu_name) performance_bu_name,   /*业绩团队*/
-            decode(cou.performance_belong_type,1,org_bu.id,cou.bu_id) performance_bu_id,   /*业绩团队*/
+       		case when cou.performance_belong_type = 1 then org.org_name else cou.branch_name end performance_branch_name, /*业绩校区*/
+       		case when cou.performance_belong_type = 1 then org.id else cou.branch_id end  performance_branch_id,   /*业绩校区*/
+          	case when cou.performance_belong_type = 1 then org_bu.org_name else cou.bu_name end performance_bu_name,   /*业绩团队*/
+          	case when cou.performance_belong_type = 1 then org_bu.id else cou.bu_id end performance_bu_id,   /*业绩团队*/
        		stu.encoding                 student_code, /*学生编号*/
       	 	stu.student_name             student_name, /*学生姓名*/
        		cou.course_name              course_name, /*课程名称*/
@@ -109,7 +109,7 @@
        		ord_cou.surplus_cost         surplus_amount, /*剩余金额*/
        		ord_cou.manage_fee			 forward_transfer,/*预结转*/
        		ord.business_type			 business_type,
-       		decode(ord.business_type, 1,'班级课', 2,'一对一', 3,'晚辅导') business_type_name,
+       		case when ord.business_type = 1 then '班级课' when ord.business_type = 2 then '一对一' when ord.business_type = 3 then '晚辅导' end  business_type_name,
 			#{task_flow}
 		from t_order ord
 		join t_order_course ord_cou

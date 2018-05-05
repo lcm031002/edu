@@ -111,8 +111,7 @@
 	
 	<insert id="addByTaskFlow" parameterType="map">
 		insert into t_account_recharge_cash 
-		(   
-				  id,
+		(
 				  opt_encoding,
 				  calc_date,
 				  opt_type,
@@ -138,31 +137,20 @@
 				  task_flow,
 				  creatmaker
 		)
-		select SEQ_T_ACCOUNT_recharge_cash.Nextval,
+		select
 		       d.encoding opt_encoding,
-		       to_char(d.confirm_time,'yyyy-MM-dd') calc_date,
+		       date_format(d.confirm_time,'%Y-%m-%d') calc_date,
 		       d.dynamic_type opt_type,
-		       decode(d.dynamic_type,
-		              1,
-		              '充值',
-		              2,
-		              '转账',
-		              3,
-		              '理赔',
-		              4,
-		              '取款',
-		              5,
-		              '充值作废',
-		              6,
-		              '理赔作废',
-		              7,
-		              '取款作废',
-		              8,
-		              '一元转校',
-		              9,
-		              '一元结转',
-		              -1,
-		              '期初导入') opt_name,
+		       case when d.dynamic_type = 1 then '充值'
+                when d.dynamic_type = 2 then '转账'
+		            when d.dynamic_type = 3 then '理赔'
+								when d.dynamic_type = 4 then '取款'
+		            when d.dynamic_type = 5 then '充值作废'
+		            when d.dynamic_type = 6 then '理赔作废'
+		            when d.dynamic_type = 7 then '取款作废'
+		            when d.dynamic_type = 8 then '一元转校'
+		            when d.dynamic_type = 9 then '一元结转'
+		            when d.dynamic_type = -1 then '期初导入' end opt_name,
 		       d.bu_id,
 		       bu.org_name bu_name,
 		       d.branch_id,
@@ -200,7 +188,7 @@
 		       r.card_no student_bankcard,
 		       acc.account_num company_bankcard,
 		       d.status,
-		       decode(d.status, 1, '待审批', 2, '未通过', 3, '生效', 4, '作废') status_name,
+		       case when d.status = 1 then  '待审批'when d.status =  2 then  '未通过'when d.status =  3 then  '生效'when d.status =  4 then '作废' end status_name,
 		       d.remark,
 		       '${taskFlow}' as task_flow,
 		        i.employee_name creatmaker

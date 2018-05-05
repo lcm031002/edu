@@ -1,16 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <jsp:directive.include file="includes/top2.jsp" />
 <!DOCTYPE html>
-<html ng-app="ework-ui" style="height: 100%;">
+<html ng-app="ework-ui" style="width:100%;height:100%;position:fixed;">
 <head lang="zh-cn">
     <title>厝边素高</title>
+    <meta name="keywords" content="厝边素高" />
     <link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="厝边素高" />
+
     <jsp:directive.include file="includes/head.jsp" />
     <script src="lib/js/main.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/eWorkUI.min.css">
     <script type="text/javascript" src="js/eWorkUI.min.js"></script>
 
     <script type="text/javascript">
@@ -22,42 +24,33 @@
         }
     </script>
 </head>
-<body>
+<body ng-controller="LoginCtrl">
 <!--header start here-->
-<div class="login-form">
-    <div class="top-login">
-        <span><img src="images/group.png" alt=""/></span>
+<div class="login-form" style="margin-top:150px;right: 100px;position: absolute;">
+    <div class="clear"> </div>
+    <div class="avtar">
+        <img src="images/logo.png" />
     </div>
-    <h1>登录</h1>
-    <div class="login-top">
-        <form:form  method="post"  htmlEscape="true">
-            <div class="login-ic">
-                <i></i>
-                <input type="text"  value="用户" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '用户';}" ng-model="user.name" required="" type="text" name="username" id="txtUsername"/>
-                <div class="clear"> </div>
-            </div>
-            <div class="login-ic">
-                <i class="icon"></i>
-                <input type="password"  value="密码" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'password';}" ng-model="user.password" required="" type="password"  name="password"/>
-                <div class="clear"> </div>
-            </div>
+    <form:form  method="post" commandName="${commandName}" htmlEscape="true">
+        <input type="text" class="text" placeholder="用户名" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '用户名';} " ng-model="user.name" required=""  name="username" id="txtUsername">
+        <input type="password" class="text" style="margin-bottom: 0px" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" ng-model="user.password" required=""  name="password">
 
-            <div class="login-ic">
-                <i class="icon"></i>
-                <input placeholder="验证码" class="form-control pull-left" style="width:50%;" name="captcha" required="" type="text">
-                <img src = "captcha.htm" id="validcode" style="margin-right: 10px;">
-                <a href="#" onclick="javascript:changeValideCode();">刷新</a>
-            </div>
+        <input placeholder="验证码" class="text" name="captcha" required="" type="text" style="width:42.5%;margin-top:0px;margin-bottom:40px">
+        <img src = "captcha.htm" id="validcode" style="margin-right: 10px;">
+        <a href="#" style="color:#fff" onclick="javascript:changeValideCode();">刷新</a>
 
-            <div class="log-bwn">
-                <input type="hidden" name="lt" value="${flowExecutionKey}" />
-                <input type="hidden" name="_eventId" value="submit" />
-                <input type="submit"  value="登录" onclick="handleBeforeSubmit()">
-            </div>
-        </form:form>
-    </div>
-    <p class="copy">Copyright 2017-2018 厦门住总物业管理有限公司 版权所有 All Rights Reserved</p>
+        <div class="signin">
+            <input type="hidden" name="lt" value="${flowExecutionKey}" />
+            <input type="hidden" name="_eventId" value="submit" />
+            <input type="submit" value="登录" name="submit" onclick="handleBeforeSubmit()">
+        </div>
+    </form:form>
+
 </div>
+<div class="copy-rights" style="color:#ffffff;bottom:30px;width:100%;position: absolute;">
+    <p>Copyright &copy; 2017-2018 厦门住总物业管理有限公司 版权所有 All Rights Reserved</p>
+</div>
+
 </body>
 
 <script type="text/javascript">
@@ -69,7 +62,7 @@
     $(window).resize(function(){
     	setWrapperHeight()
     })
-    
+
     function setWrapperHeight() {
     	var $wrapper = $('.wrapper');
     	var wH = $(window).height();

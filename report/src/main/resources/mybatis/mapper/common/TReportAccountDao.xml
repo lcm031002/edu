@@ -20,9 +20,9 @@
 	       	null bu_name, 
 			'合计' student_code, /*学生编码*/
        		null student_name, /*学生姓名*/
-	       	sum(nvl(t.account,0)) account, 
-	       	sum(nvl(t.refund_account,0)) refund_account, 
-	       	sum(nvl(t.frozen_account,0)) frozen_account,
+	       	sum(ifnull(t.account,0)) account,
+	       	sum(ifnull(t.refund_account,0)) refund_account,
+	       	sum(ifnull(t.frozen_account,0)) frozen_account,
     		null task_flow,
 			null branch_id
 	 	from t_account_report t
@@ -33,9 +33,9 @@
 			</if>
 	</select>
 	
-	<update id="deleteAll"  parameterType="HashMap">
-		truncate table t_account_report
-	</update>
+	<delete id="deleteAll"  parameterType="HashMap">
+		delete from t_account_report
+	</delete>
 	
 	<insert id="insert" parameterType="HashMap">
 		insert into t_account_report
@@ -45,9 +45,7 @@
 	       branch_id,
 	       student_code, 
 	       student_name, 
-	       account, 
-	       refund_account,
-	       frozen_account,
+	       account,
 	       task_flow
 	       )
 	      ( 
@@ -58,9 +56,7 @@
 		    student.branch_id,
 		    student.encoding	student_code,
 	        student.student_name,
-	        acc.fee_amount	account, 
-	        acc.refund_account,
-	        acc.frozen_account,
+	        acc.fee_amount	account,
 	        #{task_flow}
 	    from 
 	    	t_account acc
@@ -68,7 +64,6 @@
             on acc.student_id = student.id
           join tab_organization_info toi
             on acc.bu_id = toi.id
-        where acc.account_type = 0
 	       )
 	</insert>
 	

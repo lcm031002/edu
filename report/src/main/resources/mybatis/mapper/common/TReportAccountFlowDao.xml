@@ -52,7 +52,7 @@
 	
 	<insert id="addAccountFlow" parameterType="map">
 		insert into t_account_flow
-		  (id,
+		  (
 		   student_code,
 		   student_name,
 		   branch_id,
@@ -77,11 +77,10 @@
 		   operate_name,
 		   account_change_id,
 		   task_flow)
-		  select seq_t_account_flow.nextval,
-		         t3.encoding,
+		 select t3.encoding,
 		         t3.student_name,
-		         nvl(t4.id, t12.id) as branch_id,
-		         nvl(t4.org_name, t12.org_name) as branch_name,
+		         ifnull(t4.id, t12.id) as branch_id,
+				 ifnull(t4.org_name, t12.org_name) as branch_name,
 		         t2.bu_id,
 		         t13.org_name as bu_name,
 		         t1.change_type,
@@ -113,7 +112,6 @@
 		           when t1.change_type = 12 then
 		            '退费作废'
 		         end) change_type_name,
-		         
 		         (case
 		           when t1.account_type is null or t1.account_type = 1 then
 		            (case
@@ -206,8 +204,8 @@
 		            t6.name
 		         end) as charge_mode_name,
 		         t1.change_time as operate_time,
-		         nvl(t7.create_user, t5.input_user) as operate_id,
-		         nvl(t9.employee_name, t11.employee_name) as operate_name,
+				 ifnull(t7.create_user, t5.create_user) as operate_id,
+		         ifnull(t9.employee_name, t11.employee_name) as operate_name,
 		         t1.id,
 		         #{taskFlow}
 		    from t_account_change t1
@@ -228,7 +226,7 @@
 		    left join tab_employee_info t9
 		      on t8.employee_id = t9.id
 		    left join tab_user_info t10
-		      on t5.input_user = t10.id
+		      on t5.create_user = t10.id
 		    left join tab_employee_info t11
 		      on t10.employee_id = t11.id
 		    left join tab_organization_info t12
@@ -237,10 +235,10 @@
 		      on t13.id = t2.bu_id
 		   where t1.change_type != -1
 		   <if test="minOperateNo != null">
-		     <![CDATA[ and t1.change_time >= to_date(#{minOperateNo}, 'yyyyMMdd') ]]>
+		     <![CDATA[ and t1.change_time >= str_to_date(#{minOperateNo}, '%Y-%m-%d') ]]>
 		   </if>
 		   <if test="maxOperateNo != null">
-		     <![CDATA[ and t1.change_time < to_date(#{maxOperateNo}, 'yyyyMMdd') + 1 ]]>
+		     <![CDATA[ and t1.change_time < str_to_date(#{maxOperateNo}, '%Y-%m-%d') + 1 ]]>
 		   </if>
 	</insert>
 </mapper>

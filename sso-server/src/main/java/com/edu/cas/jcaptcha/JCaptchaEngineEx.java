@@ -62,7 +62,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
          * A captcha attacker won't affaid colorful backgroud, so we just use
          * white color, like google and hotmail.
          */
-        Color bgColor = new Color(255, 255, 255);
+        Color bgColor = new Color(43, 43, 54);
         BackgroundGenerator backgroundGenerator = new GradientBackgroundGenerator(
                 imageWidth, imageHeight, bgColor, bgColor);
         /**
@@ -70,7 +70,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
          */
         FontGenerator _fontGenerator = new FontGenerator() {
             public Font getFont() {
-                return new Font("Arial", Font.ITALIC, 16);
+                return new Font("Arial", Font.ITALIC, 20);
             }
             public int getMinFontSize() {
                 return minFontSize.intValue();
@@ -82,7 +82,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
         /**
          * Note that our captcha color is Blue
          */
-        SingleColorGenerator scg = new SingleColorGenerator(Color.BLACK);
+        SingleColorGenerator scg = new SingleColorGenerator(Color.white);
         /**
          * decorator is very useful pretend captcha attack.
          * we use two line text decorators.
