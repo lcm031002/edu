@@ -1212,19 +1212,6 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 		if (!paramMap.get("o_err_code").toString().equals("0")) {
 			throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
 		}
-
-		// 审批通过，发送短信给学生家长
-		try {
-			if ("1".equals(auditStatus)) {
-				Map<String, Object> stuAccountInfoMap = this.studentAccountDao.queryStuAccountInfo(dynamicId);
-				if (!CollectionUtils.isEmpty(stuAccountInfoMap)) {
-					accountTransferSendMsg(stuAccountInfoMap);
-				}
-			}
-		} catch (Exception e) {
-			log.error("跨团队转账审批发送短信失败：" + e.getMessage());
-		}
-
 	}
 
 	/**
