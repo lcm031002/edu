@@ -5,31 +5,32 @@
 <mapper namespace="com.edu.report.framework.dao.TReportAccountRechargeCashDao">
 	<select id="queryReport" parameterType="map"
 		resultType="com.edu.report.model.TAccountRechargeCash">
-		select * from(select t.id,
-		t.task_flow,
-		t.opt_encoding,
-		t.calc_date,
-		t.opt_type,
-		t.opt_name,
-		t.bu_id,
-		t.bu_name,
-		t.branch_id,
-		t.branch_name,
-		t.zhuanru,
-		t.student_id,
-		t.student_name,
-		t.student_encoding,
-		nvl(t.fee_amount,0) fee_amount ,
-		nvl(t.pay_cash,0) pay_cash,
-		nvl(t.pay_card,0) pay_card,
-		nvl(t.pay_trans,0) pay_trans,
-		t.qukuan,
-		t.student_bankcard,
-		t.company_bankcard,
-		t.status,
-		t.status_name,
-		t.creatmaker,
-		t.remark
+		select * from(select
+			t.id,
+			t.task_flow,
+			t.opt_encoding,
+			t.calc_date,
+			t.opt_type,
+			t.opt_name,
+			t.bu_id,
+			t.bu_name,
+			t.branch_id,
+			t.branch_name,
+			t.zhuanru,
+			t.student_id,
+			t.student_name,
+			t.student_encoding,
+			ifnull (t.fee_amount, 0) fee_amount,
+			ifnull (t.pay_cash, 0) pay_cash,
+			ifnull (t.pay_card, 0) pay_card,
+			ifnull (t.pay_trans, 0) pay_trans,
+			t.qukuan,
+			t.student_bankcard,
+			t.company_bankcard,
+			t. STATUS,
+			t.status_name,
+			t.creatmaker,
+			t.remark
 		from t_account_recharge_cash t
 		where t.bu_id = #{bu_id}
 		<if test="branch_id != null and branch_id != -1">
@@ -50,7 +51,7 @@
 		<if test="input_user_name != null and input_user_name != ''">
 			<![CDATA[ and t.creatmaker like '%${input_user_name}%' ]]>
 		</if>
-		order by t.opt_encoding)
+		order by t.opt_encoding ) t
 		union all
 		select null id,
 		null task_flow,
@@ -66,21 +67,21 @@
 		null student_id,
 		null student_name,
 		null student_encoding,
-		sum(nvl(fee_amount, 0)) fee_amount,
-		sum(nvl(pay_cash, 0)) pay_cash,
-		sum(nvl(pay_card, 0)) pay_card,
-		sum(nvl(pay_trans, 0)) pay_trans,
+		sum(ifnull(fee_amount, 0)) fee_amount,
+		sum(ifnull(pay_cash, 0)) pay_cash,
+		sum(ifnull(pay_card, 0)) pay_card,
+		sum(ifnull(pay_trans, 0)) pay_trans,
 		null qukuan,
 		null student_bankcard,
 		null company_bankcard,
 		null status,
 		null status_name,
 		null creatmaker,
-		to_char(sum(nvl(total, 0))) remark from(
-		select  sum(nvl(fee_amount, 0)) fee_amount,
-		sum(nvl(pay_cash, 0)) pay_cash,
-		sum(nvl(pay_card, 0)) pay_card,
-		sum(nvl(pay_trans, 0)) pay_trans,
+		sum(ifnull(total, 0)) remark from(
+		select  sum(ifnull(fee_amount, 0)) fee_amount,
+		sum(ifnull(pay_cash, 0)) pay_cash,
+		sum(ifnull(pay_card, 0)) pay_card,
+		sum(ifnull(pay_trans, 0)) pay_trans,
 		count(0) total
 		from t_account_recharge_cash t
 		where t.bu_id = #{bu_id}
@@ -120,7 +121,6 @@
 				  bu_name,
 				  branch_id,
 				  branch_name,
-				  zhuanru,
 				  student_id,
 				  student_encoding,
 				  student_name,
@@ -155,7 +155,6 @@
 		       bu.org_name bu_name,
 		       d.branch_id,
 		       branch.org_name branch_name,
-		       b2.org_name zhuanru,
 		       d.student_id,
 		       stu.encoding student_encoding,
 		       stu.student_name,
@@ -169,21 +168,21 @@
 		       d.money_fee qukuan,
 		       case
 		         when d.dynamic_type in (5, 4) then
-		          decode(d.pay_mode, 1, d.money) * -1
+		          d.money * -1
 		         else
-		          decode(d.pay_mode, 1, d.money)
+		          d.money
 		       end pay_cash,
 		       case
 		         when d.dynamic_type in (5, 4) then
-		          decode(d.pay_mode, 2, d.money) * -1
+		          d.money * -1
 		         else
-		          decode(d.pay_mode, 2, d.money)
+		          d.money
 		       end pay_card,
 		       case
 		         when d.dynamic_type in (5, 4) then
-		          decode(d.pay_mode, 3, d.money) * -1
+		          d.money * -1
 		         else
-		          decode(d.pay_mode, 3, d.money)
+		          d.money
 		       end pay_trans,
 		       r.card_no student_bankcard,
 		       acc.account_num company_bankcard,
@@ -193,7 +192,7 @@
 		       '${taskFlow}' as task_flow,
 		        i.employee_name creatmaker
 		  from t_account_dynamic d
-		  left join tab_user_info ui on ui.id = d.input_user
+		  left join tab_user_info ui on ui.id = d.create_user
       	  left join tab_employee_info i on ui.employee_id=i.id
 		  left join t_account_change chang
 		    on d.id = chang.dynamic_id
@@ -201,14 +200,6 @@
 		    on ac.id = chang.account_id
 		  left join t_account_recharge_info r
 		    on d.id = r.dynamic_id
-		  left join t_account_trans_course tatc
-		    on d.id = tatc.dynamic_id
-		   and d.dynamic_type = 8
-		   and tatc.trans_type = 0
-		  left join t_account ta
-		    on ta.id = tatc.account_id
-		  left join tab_organization_info b2
-		    on ta.branch_id = b2.id
 		  left join tab_organization_info branch
 		    on d.branch_id = branch.id
 		  join tab_organization_info bu
@@ -218,7 +209,7 @@
 		  left join tab_data_company_account acc
 		    on acc.id = r.company_account
 		 where d.dynamic_type != -1
-			and to_number(to_char(d.confirm_time,'yyyymmdd')) BETWEEN #{minOperateNo} AND #{maxOperateNo}
+			and date_format(d.confirm_time,'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>
 	
 </mapper>

@@ -22,7 +22,7 @@ import com.edu.report.web.common.service.ReportAccountCashierService;
  */
 public class TAccountCashierTask extends BaseReportTask {
 	private static final String TABLE = "T_ACCOUNT_CASHIER";
-	private static final String TABLE_KEY = "OPERATE_NO";
+	private static final String TABLE_KEY = "OPT_ENCODING";
 	private static final String TABLE_TYPE = "INCREMENT";
 
 	

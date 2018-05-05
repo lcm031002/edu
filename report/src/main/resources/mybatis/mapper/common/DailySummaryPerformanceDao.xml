@@ -29,119 +29,115 @@
 	</delete>
 	
 	<insert id="addByTaskFlow" parameterType="HashMap">
-		insert into T_PERFORMANCE_SUM 
-		(   
-			  id,
-			  task_flow,
-			  bu_id,
-			  business_type,
-			  branch_id,
-			  courseasonname,
-			  datetime,
-			  business1,
-			  business2,
-			  business3,
-			  claimamount,
-			  allamount
+		insert into T_PERFORMANCE_SUM
+		(
+		task_flow,
+		bu_id,
+		business_type,
+		branch_id,
+		courseasonname,
+		datetime,
+		business1,
+		business2,
+		business3,
+		claimamount,
+		allamount
 		)
-		select SEQ_T_PERFORMANCE_SUM.Nextval,'${taskFlow}' task_flow,tmp.*
-		  from (select t.bu_id,
-		  			   t.business_type,
-		               t.branch_id,
-		               t.course_season_name courseasonname /*课程季*/,
-		               to_char(t.finish_time, 'yyyy-mm-dd') datetime /*日期*/,
-		               sum(decode(t.business_type, 1, nvl(t.singleamount, 0), 0)) business1 /*一对多*/,
-		               sum(decode(t.business_type, 2, nvl(t.singleamount, 0), 0)) business2 /*一对一*/,
-		               sum(decode(t.business_type, 3, nvl(t.singleamount, 0), 0)) business3 /*多对多*/,
-		               sum(nvl(t.claimamount, 0)) claimamount /*理赔金额*/,
-		               sum(nvl(t.singleamount, 0)) + sum(nvl(t.claimamount, 0)) allamount /*总金额*/
-		          from (select case
-		                         when to_char(t.finish_time, 'yyyy-MM-dd') >=
-		                              ts.end_date and
-		                              ts.course_season_name not like '%佳音%'
-		                              and ts.course_season_name not like '%艾伦%' then
-		                          (select max(son.course_season_name) as course_season_name
-		                             from tab_time_season son
-		                            where son.start_date &lt;=
-		                                  to_char(t.finish_time, 'yyyy-MM-dd')
-		                              and son.end_date >=
-		                                  to_char(t.finish_time, 'yyyy-MM-dd')
-		                              and son.city_id = o.city_id
-		                              and son.status != 0
-		                              and son.product_line = tc.product_line
-		                              and son.course_season_name not like '%佳音%'
-		                              and son.course_season_name not like '%艾伦%')
-		                         else
-		                          ts.course_season_name
-		                       end course_season_name,
-		                       t.finish_time,
-		                       0 claimamount,
-		                       o.business_type,
-		                       case
-		                         when t.fee_type in (51, 53, 54, 55) then
-		                          -td.fee_amount
-		                         when t.fee_type = 52 and td.fee_flag = 2 then
-		                          -td.fee_amount
-		                         when t.fee_type = 52 and td.fee_flag = 1 then
-		                          td.fee_amount
-		                         when td.fee_type = 41 or
-		                              (td.fee_type = 42 and td.operate_type = 4) then
-		                          td.fee_amount
-		                         else
-		                          0
-		                       end singleamount,
-		                       td.order_detail_id,
-		                       o.bu_id,
-		                       decode(tc.performance_belong_type ,1 ,o.branch_id ,tc.branch_id) branch_id
-		                  from t_fee t
-		                  left join t_fee_detail td
-		                    on td.fee_id = t.id
-		                  left join tp_fee_type ft
-		                    on ft.id = td.fee_type
-		                  left join t_order o
-		                    on o.id = t.order_id
-		                  left join tab_organization_info o2
-		                    on o.bu_id = o2.id
-		                  left join t_order_course oc
-		                    on oc.id = td.order_detail_id
-		                   and oc.order_id = o.id
-		                  left join t_course tc
-		                    on tc.id = oc.course_id
-		                  left join tab_data_grade gra
-		                    on gra.id = tc.grade_id
-		                  left join tab_time_season ts
-		                    on ts.id = tc.season_id
-		                   and ts.status != 0
-		                  left join t_encoder te
-		                    on o.id = te.busi_id
-		                   and te.busi_type in (4, 5)
-		                   and te.status = 1
-		                 where (t.fee_type = 41 or t.fee_type = 42 or t.fee_type = 51 or
-		                        t.fee_type = 53 or t.fee_type = 55 or td.fee_type = 52 or
-		                        td.fee_type = 54 )
-		                   and t.fee_status = 1
-		                   and t.operate_type in (4, 5)
-		                   and o.business_type in (1, 2, 3)
-		                union all
-		                select null course_season_name,
-		                       acc.confirm_time finish_time,
-		                       decode(acc.dynamic_type, 3, -acc.money, acc.money) claimamount,
-		                       4 business_type,
-		                       null singleamount,
-		                       null order_detail_id,
-		                       acc.bu_id,
-		                       acc.branch_id
-		                  from t_account_dynamic acc
-		                 where acc.status in (3, 4)
-		                   and (acc.dynamic_type = 3 or acc.dynamic_type = 6)
-		                
-		                ) t
-		         group by t.bu_id,
-		         	      t.business_type,
-		                  t.branch_id,
-		                  t.course_season_name,
-		                  to_char(t.finish_time, 'yyyy-mm-dd')) tmp
-			           where to_char(to_date(datetime,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+		select '${taskFlow}' task_flow,tmp.*
+		from (select t.bu_id,
+		t.business_type,
+		t.branch_id,
+		t.course_season_name courseasonname /*课程季*/,
+		date_format(t.finish_time, '%Y-%m-%d') datetime /*日期*/,
+		sum(case when t.business_type = 1 then ifnull(t.singleamount, 0) else 0 end ) business1 /*一对多*/,
+		sum(case when t.business_type = 2 then ifnull(t.singleamount, 0) else 0 end ) business2 /*一对一*/,
+		sum(case when t.business_type = 3 then ifnull(t.singleamount, 0) else 0 end ) business3 /*多对多*/,
+		sum(ifnull(t.claimamount, 0)) claimamount /*理赔金额*/,
+		sum(ifnull(t.singleamount, 0)) + sum(ifnull(t.claimamount, 0)) allamount /*总金额*/
+		from (select case
+		when date_format(t.finish_time, '%Y-%m-%d') >=
+		ts.end_date then
+		(select max(son.course_season_name) as course_season_name
+		from tab_time_season son
+		where son.start_date &lt;=
+		date_format(t.finish_time, '%Y-%m-%d')
+		and son.end_date >=
+		date_format(t.finish_time, '%Y-%m-%d')
+		and son.org_city_id = o.city_id
+		and son.status != 0
+		and son.bu_id = o.bu_id
+		)
+		else
+		ts.course_season_name
+		end course_season_name,
+		t.finish_time,
+		0 claimamount,
+		o.business_type,
+		case
+		when t.fee_type in (51, 53, 54, 55) then
+		-td.fee_amount
+		when t.fee_type = 52 and td.fee_flag = 2 then
+		-td.fee_amount
+		when t.fee_type = 52 and td.fee_flag = 1 then
+		td.fee_amount
+		when td.fee_type = 41 or
+		(td.fee_type = 42 and td.operate_type = 4) then
+		td.fee_amount
+		else
+		0
+		end singleamount,
+		td.order_detail_id,
+		o.bu_id,
+		case when tc.performance_belong_type  = 1 then o.branch_id else tc.branch_id end branch_id
+		from t_fee t
+		left join t_fee_detail td
+		on td.fee_id = t.id
+		left join tp_fee_type ft
+		on ft.id = td.fee_type
+		left join t_order o
+		on o.id = t.order_id
+		left join tab_organization_info o2
+		on o.bu_id = o2.id
+		left join t_order_course oc
+		on oc.id = td.order_detail_id
+		and oc.order_id = o.id
+		left join t_course tc
+		on tc.id = oc.course_id
+		left join tab_data_grade gra
+		on gra.id = tc.grade_id
+		left join tab_time_season ts
+		on ts.id = tc.season_id
+		and ts.status != 0
+		left join t_encoder te
+		on o.id = te.busi_id
+		and te.busi_type in (4, 5)
+		and te.status = 1
+		where (t.fee_type = 41 or t.fee_type = 42 or t.fee_type = 51 or
+		t.fee_type = 53 or t.fee_type = 55 or td.fee_type = 52 or
+		td.fee_type = 54 )
+		and t.fee_status = 1
+		and t.operate_type in (4, 5)
+		and o.business_type in (1, 2, 3)
+		union all
+		select null course_season_name,
+		acc.confirm_time finish_time,
+		case when acc.dynamic_type = 3 then  -acc.money else  acc.money end claimamount,
+		4 business_type,
+		null singleamount,
+		null order_detail_id,
+		acc.bu_id,
+		acc.branch_id
+		from t_account_dynamic acc
+		where acc.status in (3, 4)
+		and (acc.dynamic_type = 3 or acc.dynamic_type = 6)
+
+		) t
+		group by t.bu_id,
+		t.business_type,
+		t.branch_id,
+		t.course_season_name,
+		date_format(t.finish_time, '%Y-%m-%d')) tmp
+		where date_format(datetime,'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>
 	
 </mapper>

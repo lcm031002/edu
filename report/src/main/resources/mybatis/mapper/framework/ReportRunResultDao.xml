@@ -23,35 +23,30 @@
 	</resultMap>
 	
 	<select id="selectForPage" parameterType="map" resultMap="ReportRunResultMap">
-		select t1.task_id,
-		       t1.task_flow,
-		       t1.task_name,
-		       t1.run_time,
-		       t1.run_result,
-		       decode(t1.run_result, 1, '成功', '失败') as run_result_name,
-		       t1.remark,
-		       t2.type,
-		       decode(t2.type,
-		              'common',
-		              '通用',
-		              'bjk',
-		              '班级课',
-		              'ydy',
-		              '一对一',
-		              'wfd',
-		              '晚辅导') as type_name,
-		       t3.task_table_lastval,
-		       t3.task_table_currentval,
-		       t3.task_table_type,
-		       decode(t3.task_table_type, 'INCREMENT', '增量', 'FULL', '全量') as task_table_type_name
-		  from t_report_run_result    t1,
-		       t_report_task_settings t2,
-		       t_task_table_result    t3
+		SELECT
+		t1.task_id,
+		t1.task_flow,
+		t1.task_name,
+		t1.run_time,
+		t1.run_result,
+		case when
+		t1.run_result = 1 then '成功' else '失败' end  AS run_result_name,
+		t1.remark,
+		t2.type,
+		case when t2.type = 'common' then 	'通用' when t2.type = 'bjk' then '班级课' when t2.type =  'ydy' then  '一对一' when t2.type = 'wfd' then '晚辅导' end AS type_name,
+		t3.task_table_lastval,
+		t3.task_table_currentval,
+		t3.task_table_type,
+		case when  t3.task_table_type = 'INCREMENT' then '增量' when  t3.task_table_type =  'FULL' then '全量' end  AS task_table_type_name
+		FROM
+		t_report_run_result t1,
+		t_report_task_settings t2,
+		t_task_table_result t3
 		 where t1.task_id = t2.task_id
 		   and t1.task_flow = t3.task_flow
 		   and t1.task_id = t3.task_id
 		 <if test="run_time != null and run_time != ''">
-		   and to_char(t1.run_time, 'yyyy-MM-dd') = #{run_time}
+		   and date_format(t1.run_time, '%Y-%m-%d') = #{run_time}
 		 </if>
 		 <if test="type != null">
 		   and t2.type = #{type}

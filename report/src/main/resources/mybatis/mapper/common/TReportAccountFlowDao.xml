@@ -16,10 +16,10 @@
 			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and t.operate_time >= to_date(#{start_date}, 'yyyy-MM-dd hh24:mi:ss') ]]>
+			<![CDATA[ and t.operate_time >= str_to_date(#{start_date}, '%Y-%m-%d %H') ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and t.operate_time < to_date(#{end_date}, 'yyyy-MM-dd hh24:mi:ss') + 1 ]]>
+			<![CDATA[ and t.operate_time < str_to_date(#{end_date}, '%Y-%m-%d %H') + 1 ]]>
 		</if>
 	</select>
 
@@ -39,10 +39,10 @@
 			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and t.operate_time >= to_date(#{start_date}, 'yyyy-MM-dd hh24:mi:ss') ]]>
+			<![CDATA[ and t.operate_time >= str_to_date(#{start_date}, '%Y-%m-%d %H') ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and t.operate_time < to_date(#{end_date}, 'yyyy-MM-dd hh24:mi:ss') + 1 ]]>
+			<![CDATA[ and t.operate_time < str_to_date(#{end_date}, '%Y-%m-%d %H') + 1 ]]>
 		</if>
 	</select>
 	
@@ -235,10 +235,10 @@
 		      on t13.id = t2.bu_id
 		   where t1.change_type != -1
 		   <if test="minOperateNo != null">
-		     <![CDATA[ and t1.change_time >= str_to_date(#{minOperateNo}, '%Y-%m-%d') ]]>
+		     <![CDATA[ and t1.change_time >= str_to_date(#{minOperateNo}, '%Y%m%d') ]]>
 		   </if>
 		   <if test="maxOperateNo != null">
-		     <![CDATA[ and t1.change_time < str_to_date(#{maxOperateNo}, '%Y-%m-%d') + 1 ]]>
+		     <![CDATA[ and t1.change_time < str_to_date(#{maxOperateNo}, '%Y%m%d') + 1 ]]>
 		   </if>
 	</insert>
 </mapper>

@@ -21,14 +21,6 @@
 		       a.course_hour, /*消耗课时*/
 		       a.course_id,
 		       a.course_name,
-               case  a.is_textbooks
-               when 0 then
-               '否'
-               when 1 then
-               '是'
-               else
-               '未设置'
-               end is_textbookstag,
 		       a.course_no,
 		       a.course_count,
 		       a.course_time,
@@ -51,7 +43,7 @@
 		       a.is_next_month_name,
                a.order_discount,
 		       a.counselor_id,
-		       nvl(a.counselor_name,a.chinese_teacher_name) counselor_name,
+               ifnull(a.counselor_name,a.chinese_teacher_name) counselor_name,
 		       a.chinese_teacher_id,
 		       a.chinese_teacher_name,
 		       a.chinese_teacher_length,
@@ -135,11 +127,10 @@
 			null performance_branch_name,
 			null student_code,
 			null student_name,
-			sum(nvl(amount,0)) amount, /*金额*/
-			sum(nvl(course_hour,0)) course_hour, /*消耗课时*/
+			sum(ifnull(amount,0)) amount, /*金额*/
+			sum(ifnull(course_hour,0)) course_hour, /*消耗课时*/
 	        null course_id,
 	        null course_name,
-            null is_textbookstag,
 	        null course_no,
 	        null course_count,
 	        null course_time,
@@ -233,7 +224,7 @@
 	
 	<insert id="insertByTaskFlow" parameterType="Map">
     insert into t_attendance_report
-      (id,
+      (
        attendance_ht_id,
        order_no,
        bu_id,
@@ -285,19 +276,17 @@
        assteacher_id,
        assteacher_name,
        attend_encoding,
-       room_name,
        order_remark,
        attendance_remark,
        CHINESE_TEACHER_REMARK,
        FOREIGN_TEACHER_REMARK,
        task_flow)
-      select seq_t_attendance_report.nextval id, tmp.*
-        from ((select distinct t.id attendance_ht_id,
+      	select distinct t.id attendance_ht_id,
                                toi.encoding order_no,
-                               nvl(attend_branch_bu.id, org_bu.id) bu_id,
-                               nvl(attend_branch_bu.org_name, org_bu.org_name) bu_name,
-                               nvl(attend_branch.id, org.id) branch_id,
-                               nvl(attend_branch.org_name, org.org_name) branch_name,
+                               ifnull(attend_branch_bu.id, org_bu.id) bu_id,
+                               ifnull(attend_branch_bu.org_name, org_bu.org_name) bu_name,
+                               ifnull(attend_branch.id, org.id) branch_id,
+                               ifnull(attend_branch.org_name, org.org_name) branch_name,
                                case
                                  when cou.performance_belong_type = 1 then
                                   branch_bu.id
@@ -327,18 +316,18 @@
                                case
                                  when t.attend_type = 10 or t.attend_type = 29 or
                                       t.attend_type = 30 then
-                                  abs(nvl(t.att_amount, t.attend_amount)) * -1
+                                  abs(ifnull(t.att_amount, t.attend_amount)) * -1
                                  else
-                                  abs(nvl(t.att_amount, t.attend_amount))
+                                  abs(ifnull(t.att_amount, t.attend_amount))
                                end amount, /*金额*/
                                case
                                  when t.attend_type = 10 or t.attend_type = 29 or
                                       t.attend_type = 30 then
-                                  abs(nvl(sch.course_cnt,
-                                      nvl(nvl(t.times, t.course_times), 1))) * -1
+                                  abs(ifnull(sch.course_cnt,
+                                      ifnull(ifnull(t.times, t.course_times), 1))) * -1
                                  else
-                                  abs(nvl(sch.course_cnt,
-                                      nvl(nvl(t.times, t.course_times), 1)))
+                                  abs(ifnull(sch.course_cnt,
+                                      ifnull(ifnull(t.times, t.course_times), 1)))
                                end course_hour, /*消耗课时*/
                                cou.course_id course_id,
                                cou.course_name  course_name, /*课程*/
@@ -363,13 +352,13 @@
                                   subject.name
                                end subject_name, /*科目*/
                                cou.hour_len length, /*课时长度*/
-                               to_char(to_date(nvl(sch.course_date,
+                               date_format(date_format(ifnull(sch.course_date,
                                                    t.course_date),
-                                               'YYYYMMDD'),
-                                       'yyyy-mm-dd') course_date, /*上课日期*/
-                               nvl(t.start_time, sch.start_time) start_time,
-                               nvl(t.end_time, sch.end_time) end_time,
-                               to_char(t.attend_date, 'yyyy-mm-dd') attend_date, /*考勤日期*/
+                                               '%Y%m%d'),
+                                       '%Y-%m-%d') course_date, /*上课日期*/
+                               ifnull(t.start_time, sch.start_time) start_time,
+                               ifnull(t.end_time, sch.end_time) end_time,
+                               date_format(t.attend_date, '%Y-%m-%d') attend_date, /*考勤日期*/
                                t.attend_type attend_type,
                                attType.name attend_type_name, /*考勤状态*/
                                t.last_attend_type attend_type_last,
@@ -392,21 +381,21 @@
                                   '初始化'
                                end attend_type_last_name,
                                case
-                                 when substr(to_char(nvl(sch.course_date,
-                                                         t.course_date)),
+                                 when substr(ifnull(sch.course_date,
+                                                         t.course_date),
                                              1,
                                              6) -
-                                      to_char(t.attend_date, 'yyyymm') = 0 then
+                                      date_format(t.attend_date, '%Y%m') = 0 then
                                   0
                                  else
                                   1
                                end is_next_month, /*跨月考勤*/
                                case
-                                 when substr(to_char(nvl(sch.course_date,
-                                                         t.course_date)),
+                                 when substr(ifnull(sch.course_date,
+                                                         t.course_date),
                                              1,
                                              6) -
-                                      to_char(t.attend_date, 'yyyymm') = 0 then
+                                      date_format(t.attend_date, '%Y%m') = 0 then
                                   '否'
                                  else
                                   '是'
@@ -415,18 +404,17 @@
                                 toc.former_unit_price = toc.discount_unit_price
                                 )
                                 THEN 0
-                                ELSE ROUND( decode( toc.former_unit_price ,0 ,NULL
-                                ,toc.discount_unit_price / toc.former_unit_price ) ,2 )
+                                ELSE ROUND( case when toc.former_unit_price  = 0  then NULL else toc.discount_unit_price / toc.former_unit_price end ,2 )
                                 END order_discount ,/*订单折扣*/
                                case when (attend_branch_bu.product_line=11) then /*佳音*/
-                                 nvl(cnselor.id, t.course_manager)
+                                 ifnull(cnselor.id, t.course_manager)
                                else
-                                 nvl(nvl(nvl(cnselor.id, t.course_manager),coursetimes_employee.id),course_employee.id)
+                                 ifnull(ifnull(ifnull(cnselor.id, t.course_manager),coursetimes_employee.id),course_employee.id)
                                  end counselor_id, /*学管师id*/
                                case when (attend_branch_bu.product_line=11) then /*佳音*/
-                                 nvl(cnselor.employee_name,hei.employee_name )
+                                 ifnull(cnselor.employee_name,hei.employee_name )
                                else
-                                 nvl(nvl(nvl(cnselor.employee_name,hei.employee_name ),coursetimes_employee.employee_name),course_employee.employee_name)
+                                 ifnull(ifnull(ifnull(cnselor.employee_name,hei.employee_name ),coursetimes_employee.employee_name),course_employee.employee_name)
                                  end counselor_name, /*学管师姓名*/
                                t.course_tearcher_cn chinese_teacher_id, /*中教id*/
                                hti_cn.teacher_name chinese_teacher_name, /*中教姓名*/
@@ -438,13 +426,12 @@
                                toi.business_type business_type,
                                ass.id as assteacher_id,
                                ass.teacher_name as assteacher_name,
-                               nvl(t.encoding, t.attendance_id) as attend_encoding ,
-                               c.room_name,
+                               ifnull(t.encoding, t.attendance_id) as attend_encoding ,
                                toi.remark as order_remark,
                                t.remark as attendance_remark,
                                t.COURSE_TEARCHER_CN_REMARK as CHINESE_TEACHER_REMARK,
                                t.COURSE_TEARCHER_EN_REMARK as FOREIGN_TEACHER_REMARK,
-                 #{task_flow}
+                 '{task_flow}'
                  from (select distinct taht.id,
                                        taht.scheduling_id,
                                        taht.student_id,
@@ -480,7 +467,7 @@
                                        taht.course_tearcher_en,
                                        taht.course_tearcher_en_hour,
                                        taht.spoken_language_hour,
-                                       nvl(tss.order_course_id,
+                                       ifnull(tss.order_course_id,
                                            taht.order_course_id) order_course_id,
                                        tss.times,
                                        tss.attend_amount att_amount,
@@ -490,9 +477,9 @@
                          left join T_SCHEDULE_SPLITTIME tss
                            on taht.attendance_id = tss.attend_id
                           and tss.times > 0
-                          where taht.attend_date >= to_date(#{minOperateNo},'yyyyMMdd')
-                               and taht.attend_date &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
-                               and taht.attend_type not in (23,28,20)
+                          where taht.attend_date >= date_format(#{minOperateNo},'%Y%m%d')
+                               and taht.attend_date &lt; date_format(#{maxOperateNo},'%Y%m%d')+1
+                                         and taht.attend_type not in (23,28,20)
                        ) t
                  left join tab_employee_info cnselor
                    on t.counselor_id = cnselor.id
@@ -506,8 +493,6 @@
                    on t.scheduling_id = sch.id
                  left join vt_course cou
                    on toc.course_id = cou.course_id
-                 left join t_course_room_rel b on b.course_id = sch.course_id and b.seq = sch.course_times
-                 left join t_room c  on c.id = b.room_id
                  left join tp_subject subject
                    on subject.id = t.subject_id
                  left join tp_attend_type attType
@@ -543,7 +528,7 @@
                 (select assist.course_id, employee.id, employee.employee_name
                   from t_course_scheduling_assist assist
                   join tab_employee_info employee
-                    on to_char(employee.id) = assist.course_val
+                    on employee.id = assist.course_val
                    and assist.course_key = 'course_manager'
                  where assist.course_time is null) course_employee
                    on course_employee.course_id = toc.course_id
@@ -551,10 +536,9 @@
                 (select assist.scheduling_id, employee.id, employee.employee_name
                   from t_scheduling_times_assist assist
                   join tab_employee_info employee
-                    on to_char(employee.id) = assist.course_val
+                    on employee.id = assist.course_val
                    and assist.course_key = 'course_manager') coursetimes_employee
                    on coursetimes_employee.scheduling_id = t.scheduling_id
-                   )) tmp
 	</insert>
 	
 </mapper>
