@@ -67,10 +67,6 @@
             <i class="iconfont icon-Mobile_phone" style="color:#fc5964;"></i>
             {{stu.phone || '暂无电话'}}
           </div>
-          <div class="app-id text-left">
-            <i class="fa fa-user" style="color:#FCB249; margin-left: -12px;"></i> 
-            {{stu.login_no || '暂无APP ID'}}
-          </div>
           <div class="learning-mgr text-left">
             <i class="iconfont icon-Student_code" style="color:#58DBCD;"></i>
             {{stu.encoding}}
@@ -82,9 +78,6 @@
           <div class="school-name text-left" ng-if="false">
             <i class="iconfont icon-Track" style="color: #328df0;"></i>
             <a href="?studentId={{stu.id}}#/studentMgr/studentTraceInfo" target="_blank">学员跟踪</a>
-          </div>
-          <div class="bu-name text-left text-overflow" uib-popover="初始团队：{{stu.bu_name}}" popover-trigger="'{{stu.bu_name.length>11?'mouseenter':'none'}}'">
-            初始团队：{{stu.bu_name || '暂无初始团队'}}
           </div>
         </li>
         <li class="clearfix"></li>

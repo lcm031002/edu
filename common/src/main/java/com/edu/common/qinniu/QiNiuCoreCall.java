@@ -18,9 +18,6 @@ import sun.misc.BASE64Decoder;
 
 /**
  * 七牛图片服务器配置
- * 
- * @author wCong
- *
  */
 public class QiNiuCoreCall {
     private static final Logger log = Logger.getLogger(QiNiuCoreCall.class);
@@ -29,11 +26,11 @@ public class QiNiuCoreCall {
 		return new QiNiuCoreCall();
 	}
 
-	public final String bucket_name = "erp-v4";
-	public final String do_main = "http://7rf32s.com2.z0.glb.qiniucdn.com/"; // 删除img的时候要用
+	public final String bucket_name = "homesky-learn";
+	public final String do_main = "http://p88k06uq2.bkt.clouddn.com/"; // 删除img的时候要用
 
-	public final Auth auth = Auth.create("NjPpF1ZAjpvkGDJuf-s8DMCn4fgRdVoooblgTtXN",
-			"IbhWtexo5ZGBD221OeKacpjyNZJirc7MrGeah3hr");
+	public final Auth auth = Auth.create("alSKM90kNKC_xFSEmwPPwUql4oeFb_oYzDGC7LWN",
+			"ZbP0IAWHIxyfqV6NinAQJ1TIXSFHc3p5jU47W9Tc");
 	public final BucketManager bucketManager = new BucketManager(auth);
 
 	public final String callbackUrl = "";
@@ -132,7 +129,7 @@ public class QiNiuCoreCall {
 		} else {
 			throw new RuntimeException("不支持的图片类型：" + imageMime);
 		}
-		String fileName = "webERPv5" + new Date().getTime() + UUID.randomUUID() + suffix;
+		String fileName = "homeskylearn" + new Date().getTime() + UUID.randomUUID() + suffix;
 		return fileName;
 	}
 

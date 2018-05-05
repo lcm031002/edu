@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentInfoController.java
- * @Package com.ebusiness.erp.student.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月14日 下午2:44:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.controller;
 
 import com.edu.common.constants.Constants.RespMapKey;
@@ -49,13 +42,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-/**
- * @ClassName: StudentInfoController
- * @Description: 学生信息控制类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月14日 下午2:44:27
- *
- */
 @Controller
 @RequestMapping(value = { "/studentservice" })
 public class StudentInfoController extends ImageUploadController {
