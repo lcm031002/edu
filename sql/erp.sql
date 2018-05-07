@@ -1333,7 +1333,7 @@ CREATE TABLE `tab_data_device` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `encoding` varchar(50) NOT NULL COMMENT 'POS编码',
   `pos_name` varchar(50) NOT NULL COMMENT 'POS名称',
-  `short_post_name` varchar(50) DEFAULT NULL COMMENT '简称',
+  `short_pos_name` varchar(50) DEFAULT NULL COMMENT '简称',
   `account_id` bigint(10) NOT NULL COMMENT '公司账号',
   `status` int(1) NOT NULL COMMENT '状态(1=有效 0=逻辑删除)',
   `description` varchar(100) DEFAULT NULL COMMENT '描述',

@@ -8,7 +8,7 @@ public class TabDataDevice extends BaseObject {
     private static final long serialVersionUID = 272009015148065646L;
 
     private String pos_name; // 设备名称
-    private String short_post_name; // 设备简称
+    private String short_pos_name; // 设备简称
     private Integer account_id;// 公司账号ID
     private String description;// 描述
     private String account_info; // 账户信息 账户名（账户卡号）
@@ -24,12 +24,12 @@ public class TabDataDevice extends BaseObject {
         this.pos_name = pos_name;
     }
 
-    public String getShort_post_name() {
-        return short_post_name;
+    public String getShort_pos_name() {
+        return short_pos_name;
     }
 
-    public void setShort_post_name(String short_post_name) {
-        this.short_post_name = short_post_name;
+    public void setShort_pos_name(String short_pos_name) {
+        this.short_pos_name = short_pos_name;
     }
 
     public Integer getAccount_id() {
@@ -89,7 +89,7 @@ public class TabDataDevice extends BaseObject {
         buff.append(getPos_name());
         buff.append("，");
         buff.append("设备简称：");
-        buff.append(getShort_post_name());
+        buff.append(getShort_pos_name());
         buff.append("，");
         buff.append("公司账户ID：");
         buff.append(getAccount_id());

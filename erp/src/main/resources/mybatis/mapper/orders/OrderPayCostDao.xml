@@ -235,7 +235,7 @@
 		          from tab_organization_info toi
 		         where toi.id = topc.branch_id) org_name,
 		       '' descrption,
-		       dd.short_post_name as simple_name,
+		       dd.short_pos_name as simple_name,
 		       dd.encoding as device_code,
 		       topcd.eb_no
 		  from tab_order_pay_cost topc, tab_order_pay_cost_detail topcd

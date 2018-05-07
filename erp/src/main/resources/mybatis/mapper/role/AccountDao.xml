@@ -64,7 +64,7 @@
 		#{password,jdbcType=VARCHAR},/*账户密码*/
 		#{status,jdbcType=NUMERIC},
 		#{create_user,jdbcType=NUMERIC},
-		#{create_time,jdbcType=TIMESTAMP},
+		#{create_time,jdbcType=TIMESTAMP}
 		)
 	</insert>
 	
