@@ -75,7 +75,7 @@
 
 		<task>
 			<!--任务id -->
-			<taskId>common.t_account_change</taskId>
+			<taskId>common.t_account_flow</taskId>
 			<!--任务名称 -->
 			<name>学员账户流水信息</name>
 			<!--任务实现类 -->

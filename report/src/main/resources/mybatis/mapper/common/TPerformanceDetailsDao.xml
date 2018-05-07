@@ -548,7 +548,6 @@
 		insert
 		into t_performance_details
 		(
-		id,
 		order_number,
 		business_date,
 		order_no,
@@ -581,8 +580,6 @@
 		company_account,
 		course_id,
 		course_name,
-		is_textbooks,
-		is_textbooks_name,
 		grade_id,
 		grade_name,
 		subject_id,
@@ -622,26 +619,25 @@
 		date_long_value
 		)
 		SELECT
-		seq_t_performance_details.nextval,
 		tod.order_no AS order_number ,
-		to_char(TF.FINISH_TIME ,'yyyy-mm-dd hh24:mi:ss') AS business_date ,
+		date_format(TF.FINISH_TIME ,'%Y-%m-%d %H') AS business_date ,
 		tod.order_no AS order_no ,
 		tod.branch_id AS branch_id ,
 		toi.ORG_NAME AS branch_name ,
 		tsi.ENCODING AS student_code ,
 		tsi.STUDENT_NAME AS student_name ,
 		tf.OPERATE_TYPE ,
-		decode(tf.OPERATE_TYPE ,4 ,'报班' ,5 ,'批改' ,6 ,'考勤' ,7 ,'理赔') AS OPERATE_TYPE_NAME ,
+		case when tf.OPERATE_TYPE  = 4 then '报班' when tf.OPERATE_TYPE  = 5  then '批改' when tf.OPERATE_TYPE  =  6 then '考勤' when tf.OPERATE_TYPE  = 7  then '理赔' end AS OPERATE_TYPE_NAME ,
 		tfd.FEE_TYPE ,
 		TPFT.NAME AS FEE_TYPE_NAME ,
-		nvl(tfd.FEE_AMOUNT ,0) AS performance ,
-		nvl(topc.CASH_PRICE ,0) AS cash ,
-		nvl(topc.CARD_PRICE ,0) AS card ,
-		nvl(topc.TRANSFER_PRICE , 0) AS transfer ,
-		nvl(topc.ACCOUNT_PRICE ,0) AS account ,
-		nvl(topc.EB_PRICE ,0) AS eb_price ,
-		nvl(topc.online_price ,0) AS online_price ,
-		nvl(topc.FROZEN_ACCOUNT_PRICE ,0) AS FROZEN_ACCOUNT ,
+		ifnull(tfd.FEE_AMOUNT ,0) AS performance ,
+		ifnull(topc.CASH_PRICE ,0) AS cash ,
+		ifnull(topc.CARD_PRICE ,0) AS card ,
+		ifnull(topc.TRANSFER_PRICE , 0) AS transfer ,
+		ifnull(topc.ACCOUNT_PRICE ,0) AS account ,
+		ifnull(topc.EB_PRICE ,0) AS eb_price ,
+		ifnull(topc.online_price ,0) AS online_price ,
+		ifnull(topc.FROZEN_ACCOUNT_PRICE ,0) AS FROZEN_ACCOUNT ,
 		0 AS REFUND_ACCOUNT ,
 		0 AS transfer_out ,
 		0 AS transfer_in ,
@@ -649,49 +645,45 @@
 		0 AS refund ,
 		0 AS cancel_refund_amount ,
 		0 AS claim ,
-		decode(tfd.FEE_TYPE ,41 ,toc.COURSE_TOTAL_COUNT, 0) AS course_time ,
+		case when tfd.FEE_TYPE  = 41 then toc.COURSE_TOTAL_COUNT else 0 end AS course_time ,
 		card_info.client_card_nos AS customer_account ,
 		card_info.company_names AS company_account_name ,
 		card_info.account_nums AS company_account ,
 		tc.id AS course_id ,
 		tc.COURSE_NAME AS COURSE_NAME ,
-		tc.IS_TEXTBOOKS AS is_textbooks ,
-		decode(nvl(tc.IS_TEXTBOOKS ,0) ,1 ,'是' , 0 ,'否') AS is_textbooks_name ,
 		tc.grade_id AS grade_id ,
 		tdg.GRADE_NAME AS grade_name ,
 		tpsubject.id AS subject_id ,
 		tpsubject.NAME AS subject_name ,
-		nvl(tc.HOUR_LEN ,0) AS duration ,
+		ifnull(tc.HOUR_LEN ,0) AS duration ,
 		tti.id AS teacher_id ,
 		tti.ENCODING AS teacher_ENCODING ,
 		tti.TEACHER_NAME AS TEACHER_NAME ,
 		tta.id AS assteacher_id ,
 		tta.ENCODING AS assteacher_ENCODING ,
 		tta.TEACHER_NAME AS assTEACHER_NAME ,
-		decode(tc.performance_belong_type ,1 ,tod.branch_id ,tc.branch_id) AS performance_branch_id ,
-		decode(tc.performance_belong_type ,1 , toi.ORG_NAME ,toii.ORG_NAME) AS
+		case when tc.performance_belong_type = 1 then tod.branch_id else tc.branch_id end AS performance_branch_id ,
+		case when tc.performance_belong_type = 1 then toi.ORG_NAME else toii.ORG_NAME end AS
 		performance_branch_name ,
 		tc.SEASON_ID ,
-		CASE WHEN to_char(TF.FINISH_TIME ,'yyyy-mm-dd') &gt;= tts.START_DATE
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%佳音%'  AND tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%'
+		CASE WHEN date_format(TF.FINISH_TIME ,'%Y-%m-%d') >= tts.START_DATE
 		THEN(
 		SELECT
 		MAX(son.course_season_name) AS course_season_name
 		FROM
 		tab_time_season son
 		WHERE
-		son.start_date &lt;= to_char(
+		son.start_date &lt;= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.end_date &gt;= to_char(
+		AND son.end_date >= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%'
+
+		AND son.bu_id = tod.bu_id
+
 		)
 		ELSE tts.COURSE_SEASON_NAME
 		END season_name ,
@@ -699,39 +691,24 @@
 		tei.EMPLOYEE_NAME AS agent_name ,
 		NULL AS original_create_user ,
 		NULL AS original_create_user_name ,
-		nvl( toc.order_type ,tod.order_type) AS is_new_continued ,
-		decode(nvl(toc.order_type ,tod.order_type) ,1 ,'新单' ,2 ,'赠单' ,3 ,'转班单'
-		,4 ,'续单') AS is_new_continued_name ,
+		ifnull( toc.order_type ,tod.order_type) AS is_new_continued ,
+		case when ifnull(toc.order_type ,tod.order_type) = 1 then '新单' when ifnull(toc.order_type ,tod.order_type) = 2 then '赠单' when ifnull(toc.order_type ,tod.order_type) = 3 then '转班单' when ifnull(toc.order_type ,tod.order_type) = 4 then '续单' end AS is_new_continued_name ,
 		CASE
 		WHEN(
 		toc.former_unit_price = toc.discount_unit_price
 		)
 		THEN 0
-		ELSE ROUND( decode( toc.former_unit_price ,0 ,NULL
-		,toc.discount_unit_price / toc.former_unit_price ) ,2 )
+		ELSE ROUND( case when toc.former_unit_price = 0 then NULL else toc.discount_unit_price/toc.former_unit_price end ,2 )
 		END order_discount ,
-		nvl(
+		ifnull(
 		toc.former_sum_price ,
 		0
 		) AS order_amount_payable ,
-		tod.remark || '--课程ID:' || tc.id || '详单ID：' || toc.id AS order_explain ,
+		concat(tod.remark , '--课程ID:' , tc.id , '详单ID：' ,toc.id) AS order_explain ,
 		tc.short_or_long ,
-		decode(
-		tc.short_or_long ,
-		2 ,
-		'短期班' ,
-		'系统班'
-		) AS short_or_long_name ,
+		case when tc.short_or_long = 2 then '短期班' else '系统班' end AS short_or_long_name ,
 		tod.BUSINESS_TYPE ,
-		decode(
-		tod.BUSINESS_TYPE ,
-		1 ,
-		'班级课' ,
-		2 ,
-		'1对1' ,
-		3 ,
-		'晚辅导'
-		) AS BUSINESS_TYPE_name ,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE = 3 then '晚辅导' end AS BUSINESS_TYPE_name ,
 		toi_bu.id AS bu_id ,
 		toi_bu.org_name AS bu_name ,
 		toi_city.id AS city_id ,
@@ -740,7 +717,7 @@
 		TF.OPERATE_NO,
 		tod_rule.rule_name order_rule_name,
 		toc_rule.rule_name course_rule_name,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM
 		T_FEE TF LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE LEFT JOIN TP_FEE_FLAG TPFF
@@ -763,12 +740,12 @@
 		ON tti.id = tc.teacher_id LEFT JOIN tab_teacher_info tta
 		ON tta.id = tc.assteacher_id LEFT JOIN TAB_ORGANIZATION_INFO toi_bu
 		ON tod.bu_id = toi_bu.id LEFT JOIN TAB_ORGANIZATION_INFO toi_city
-		ON tod.city_id = toi_city.id LEFT JOIN(
+		ON tod.bu_id = tod.bu_id LEFT JOIN(
 		SELECT
 		topc.order_id ,
-		wm_concat(tdca.account_name) company_names ,
-		wm_concat(topcd.client_card_no) client_card_nos ,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names ,
+		group_concat(topcd.client_card_no) client_card_nos ,
+		group_concat(tdca.account_num) account_nums
 		FROM
 		tab_order_pay_cost topc LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id LEFT JOIN tab_data_company_account tdca
@@ -782,7 +759,7 @@
 		left join tab_order_info_detail toid  on toc.id = toid.id
 		left join tab_privilege_rule toc_rule on toid.rule_id = toc_rule.id
 		WHERE
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 4
 		AND(
@@ -795,7 +772,6 @@
 		insert into
 		t_performance_details
 		(
-		id,
 		order_number,
 		business_date,
 		order_no,
@@ -828,8 +804,6 @@
 		company_account,
 		course_id,
 		course_name,
-		is_textbooks,
-		is_textbooks_name,
 		grade_id,
 		grade_name,
 		subject_id,
@@ -867,11 +841,10 @@
 		date_long_value
 		)
 		SELECT
-		seq_t_performance_details.nextval,
 		todc.encoding AS order_number ,
-		to_char(
+		date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd hh24:mi:ss'
+		'%Y-%m-%d %H'
 		) AS business_date ,
 		tod.order_no AS order_no ,
 		tod.branch_id AS branch_id ,
@@ -879,51 +852,45 @@
 		tsi.ENCODING AS student_code ,
 		tsi.STUDENT_NAME AS student_name ,
 		tf.OPERATE_TYPE ,
-		decode(
-		tf.OPERATE_TYPE ,
-		4 ,
-		'报班' ,
-		5 ,
-		'报班作废'
-		) AS OPERATE_TYPE_NAME ,
+		case when tf.OPERATE_TYPE = 4 then '报班' when tf.OPERATE_TYPE = 5 then '报班作废' end AS OPERATE_TYPE_NAME ,
 		tfd.FEE_TYPE ,
 		TPFT.NAME AS FEE_TYPE_NAME ,
-		nvl(
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
 		) * - 1 AS performance ,
-		nvl(
+		ifnull(
 		topc.CASH_PRICE ,
 		0
 		) * - 1 AS cash ,
-		nvl(
+		ifnull(
 		topc.CARD_PRICE ,
 		0
 		) * - 1 AS card ,
-		nvl(
+		ifnull(
 		topc.TRANSFER_PRICE ,
 		0
 		) * - 1 AS transfer ,
-		nvl(
+		ifnull(
 		topc.ACCOUNT_PRICE ,
 		0
 		) * - 1 AS account ,
-		nvl(
+		ifnull(
 		topc.eb_price ,
 		0
 		) * - 1 AS eb_price ,
-		nvl(
+		ifnull(
 		topc.online_price ,
 		0
 		) * - 1 AS online_price ,
-		nvl(
+		ifnull(
 		topc.FROZEN_ACCOUNT_PRICE ,
 		0
 		) * - 1 AS FROZEN_ACCOUNT ,
 		0 AS REFUND_ACCOUNT ,
 		0 AS transfer_out ,
 		0 AS transfer_in ,
-		nvl(
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
 		) * - 1 AS cancel_order_amount ,
@@ -936,22 +903,11 @@
 		card_info.account_nums AS company_account ,
 		tc.id AS course_id ,
 		tc.COURSE_NAME AS COURSE_NAME ,
-		tc.IS_TEXTBOOKS AS is_textbooks ,
-		decode(
-		nvl(
-		tc.IS_TEXTBOOKS ,
-		0
-		) ,
-		1 ,
-		'是' ,
-		0 ,
-		'否'
-		) AS is_textbooks_name ,
 		tc.grade_id AS grade_id ,
 		tdg.GRADE_NAME AS grade_name ,
 		tpsubject.id AS subject_id ,
 		tpsubject.NAME AS subject_name ,
-		nvl(
+		ifnull(
 		tc.HOUR_LEN ,
 		0
 		) AS duration ,
@@ -961,44 +917,29 @@
 		tta.id AS assteacher_id ,
 		tta.ENCODING AS assteacher_ENCODING ,
 		tta.TEACHER_NAME AS assTEACHER_NAME ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		tod.branch_id ,
-		tc.branch_id
-		) AS performance_branch_id ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		toi.ORG_NAME ,
-		toii.ORG_NAME
-		) AS performance_branch_name ,
+		case when tc.performance_belong_type = 1  then tod.branch_id else tc.branch_id end AS performance_branch_id ,
+		case when tc.performance_belong_type = 1  then toi.ORG_NAME  else toii.ORG_NAME end AS performance_branch_name ,
 		tc.SEASON_ID ,
 		CASE
-		WHEN to_char(
+		WHEN date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
-		) &gt;= tts.START_DATE
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%佳音%'
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%'
+		'%Y-%m-%d'
+		) >= tts.START_DATE
 		THEN(
 		SELECT
 		MAX(son.course_season_name) AS course_season_name
 		FROM
 		tab_time_season son
 		WHERE
-		son.start_date &lt;= to_char(
+		son.start_date &lt;= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.end_date &gt;= to_char(
+		AND son.end_date >= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%'
+		AND son.bu_id = tod.bu_id
 		)
 		ELSE tts.COURSE_SEASON_NAME
 		END season_name ,
@@ -1006,61 +947,35 @@
 		todc_tei.EMPLOYEE_NAME AS agent_name ,
 		tod.create_user AS original_create_user ,
 		tei.EMPLOYEE_NAME AS original_create_user_name ,
-		nvl(
+		ifnull(
 		toc.order_type ,
 		tod.order_type
 		) AS is_new_continued ,
-		decode(
-		nvl(
-		toc.order_type ,
-		tod.order_type
-		) ,
-		1 ,
-		'新单' ,
-		2 ,
-		'赠单' ,
-		3 ,
-		'转班单' ,
-		4 ,
-		'续单'
-		) AS is_new_continued_name ,
+		case when
+		ifnull(toc.order_type ,tod.order_type) = 1 then '新单' when ifnull(toc.order_type ,tod.order_type) = 2 then '赠单' when ifnull(toc.order_type ,tod.order_type) = 3 then '转班单' when ifnull(toc.order_type ,tod.order_type)	=	4 then '续单' end AS is_new_continued_name ,
 		CASE
 		WHEN(
 		toc.former_unit_price = toc.discount_unit_price
 		)
 		THEN 0
-		ELSE ROUND( decode( toc.former_unit_price ,0 ,NULL
-		,toc.discount_unit_price / toc.former_unit_price ) ,2 )
+		ELSE ROUND( case when toc.former_unit_price  = 0 then NULL else toc.discount_unit_price / toc.former_unit_price end ,2 )
 		END order_discount ,
-		nvl(
+		ifnull(
 		toc.former_sum_price ,
 		0
 		) * - 1 AS order_amount_payable ,
-		tod.remark || '--课程ID:' || tc.id || '详单ID：' || toc.id AS order_explain ,
+		concat(tod.remark , '--课程ID:' , tc.id , '详单ID：' , toc.id) AS order_explain ,
 		tc.short_or_long ,
-		decode(
-		tc.short_or_long ,
-		2 ,
-		'短期班' ,
-		'系统班'
-		) AS short_or_long_name ,
+		case when tc.short_or_long  = 2 then '短期班' else '系统班' end AS short_or_long_name ,
 		tod.BUSINESS_TYPE ,
-		decode(
-		tod.BUSINESS_TYPE ,
-		1 ,
-		'班级课' ,
-		2 ,
-		'1对1' ,
-		3 ,
-		'晚辅导'
-		) AS BUSINESS_TYPE_name ,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE = 3  then '晚辅导' end AS BUSINESS_TYPE_name ,
 		toi_bu.id AS bu_id ,
 		toi_bu.org_name AS bu_name ,
 		toi_city.id AS city_id ,
 		toi_city.org_name AS city_name ,
 		'${taskFlow}' AS task_flow,
 		TF.OPERATE_NO,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM
 		T_FEE TF LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE LEFT JOIN TP_FEE_FLAG TPFF
@@ -1091,9 +1006,9 @@
 		ON tod.city_id = toi_city.id LEFT JOIN(
 		SELECT
 		topc.order_id ,
-		wm_concat(tdca.account_name) company_names ,
-		wm_concat(topcd.client_card_no) client_card_nos ,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names ,
+		group_concat(topcd.client_card_no) client_card_nos ,
+		group_concat(tdca.account_num) account_nums
 		FROM
 		tab_order_pay_cost topc LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id LEFT JOIN tab_data_company_account tdca
@@ -1103,7 +1018,7 @@
 		) card_info
 		ON card_info.order_id = tod.id
 		WHERE
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 5
 		AND(
@@ -1115,7 +1030,6 @@
 		insert
 		into t_performance_details
 		(
-		id,
 		order_number,
 		business_date,
 		order_no,
@@ -1148,8 +1062,6 @@
 		company_account,
 		course_id,
 		course_name,
-		is_textbooks,
-		is_textbooks_name,
 		grade_id,
 		grade_name,
 		subject_id,
@@ -1186,12 +1098,11 @@
 		OPERATE_NO,
 		date_long_value
 		)
-		select seq_t_performance_details.Nextval,t.* from (
 		SELECT
 		todc.encoding AS order_number ,
-		to_char(
+		date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd hh24:mi:ss'
+		'%Y-%m-%d %H'
 		) AS business_date ,
 		tod.order_no AS order_no ,
 		todc.branch_id AS branch_id ,
@@ -1199,16 +1110,10 @@
 		tsi.ENCODING AS student_code ,
 		tsi.STUDENT_NAME AS student_name ,
 		tf.OPERATE_TYPE ,
-		decode(
-		todc.CHANGE_TYPE ,
-		4 ,
-		'退费作废' ,
-		1 ,
-		'退费'
-		) AS OPERATE_TYPE_NAME ,
+		case when todc.CHANGE_TYPE  = 4  then '退费作废' when todc.CHANGE_TYPE = 1 then '退费' end AS OPERATE_TYPE_NAME ,
 		tfd.FEE_TYPE ,
 		TPFT.NAME AS FEE_TYPE_NAME ,
-		nvl(
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
 		) * - 1 AS performance ,
@@ -1223,55 +1128,26 @@
 		0 AS transfer_out ,
 		0 AS transfer_in ,
 		0 AS cancel_order_amount ,
-		nvl(
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
-		) * decode(
-		todc.CHANGE_TYPE ,
-		4 ,
-		0 ,
-		1 ,
-		- 1
-		) AS refund ,
-		nvl(
+		) * case when todc.CHANGE_TYPE = 4 then 0  when todc.CHANGE_TYPE = 1 then -1 end AS refund ,
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
-		) * decode(
-		todc.CHANGE_TYPE ,
-		4 ,
-		-1 ,
-		1 ,
-		0
-		) AS cancel_refund_amount ,
+		) * case when todc.CHANGE_TYPE = 4 then -1  when todc.CHANGE_TYPE = 1 then 0 end AS cancel_refund_amount ,
 		0 AS claim ,
-		decode(
-		todc.CHANGE_TYPE ,
-		4 ,
-		-tfd.course_sum ,
-		1 ,
-		-tcc.course_times
-		)*decode(tf.fee_TYPE,54,0,51,1)  AS course_time ,
+		case when todc.CHANGE_TYPE = 4 then -tfd.course_sum when todc.CHANGE_TYPE = 1 then -tcc.course_times end  * case when tf.fee_TYPE = 54 then 0 when tf.fee_TYPE = 51 then 1 end  AS course_time ,
 		card_info.client_card_nos AS customer_account ,
 		card_info.company_names AS company_account_name ,
 		card_info.account_nums AS company_account ,
 		tc.id AS course_id ,
 		tc.COURSE_NAME AS COURSE_NAME ,
-		tc.IS_TEXTBOOKS AS is_textbooks ,
-		decode(
-		nvl(
-		tc.IS_TEXTBOOKS ,
-		0
-		) ,
-		1 ,
-		'是' ,
-		0 ,
-		'否'
-		) AS is_textbooks_name ,
 		tc.grade_id AS grade_id ,
 		tdg.GRADE_NAME AS grade_name ,
 		tpsubject.id AS subject_id ,
 		tpsubject.NAME AS subject_name ,
-		nvl(
+		ifnull(
 		tc.HOUR_LEN ,
 		0
 		) AS duration ,
@@ -1281,44 +1157,29 @@
 		tta.id AS assteacher_id ,
 		tta.ENCODING AS assteacher_ENCODING ,
 		tta.TEACHER_NAME AS assTEACHER_NAME ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		tod.branch_id ,
-		tc.branch_id
-		) AS performance_branch_id ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		toi.ORG_NAME ,
-		toii.ORG_NAME
-		) AS performance_branch_name ,
+		case when tc.performance_belong_type = 1 then tod.branch_id else tc.branch_id end AS performance_branch_id ,
+		case when tc.performance_belong_type = 1 then toi.ORG_NAME  else toii.ORG_NAME end AS performance_branch_name ,
 		tc.SEASON_ID ,
 		CASE
-		WHEN to_char(
+		WHEN date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
-		) &gt;= tts.START_DATE
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%佳音%'
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%'
+		'%Y-%m-%d'
+		) >= tts.START_DATE
 		THEN(
 		SELECT
 		MAX(son.course_season_name) AS course_season_name
 		FROM
 		tab_time_season son
 		WHERE
-		son.start_date &lt;= to_char(
+		son.start_date &lt;= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.end_date &gt;= to_char(
+		AND son.end_date >= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%'
+		AND son.bu_id = tod.bu_id
 		)
 		ELSE tts.COURSE_SEASON_NAME
 		END season_name ,
@@ -1326,51 +1187,25 @@
 		todc_tei.EMPLOYEE_NAME AS agent_name ,
 		tod.create_user AS original_create_user ,
 		tei.EMPLOYEE_NAME AS original_create_user_name ,
-		nvl(
+		ifnull(
 		toc.order_type ,
 		tod.order_type
 		) AS is_new_continued ,
-		decode(
-		nvl(
-		toc.order_type ,
-		tod.order_type
-		) ,
-		1 ,
-		'新单' ,
-		2 ,
-		'赠单' ,
-		3 ,
-		'转班单' ,
-		4 ,
-		'续单'
-		) AS is_new_continued_name ,
+		case when ifnull(toc.order_type ,tod.order_type) = 1 then '新单' when ifnull(toc.order_type ,tod.order_type) = 2 then '赠单' when ifnull(toc.order_type ,tod.order_type) = 3  then '转班单'  when ifnull(toc.order_type ,tod.order_type) = 4  then '续单' end  AS is_new_continued_name ,
 		0 order_discount ,
 		0 AS order_amount_payable ,
-		todc.id || ':' || todc.remark || toc.id AS order_explain ,
+		concat(todc.id , ':' , todc.remark , toc.id) AS order_explain ,
 		tc.short_or_long ,
-		decode(
-		tc.short_or_long ,
-		2 ,
-		'短期班' ,
-		'系统班'
-		) AS short_or_long_name ,
+		case when  tc.short_or_long  = 2  then '短期班'  else '系统班' end AS short_or_long_name ,
 		tod.BUSINESS_TYPE ,
-		decode(
-		tod.BUSINESS_TYPE ,
-		1 ,
-		'班级课' ,
-		2 ,
-		'1对1' ,
-		3 ,
-		'晚辅导'
-		) AS BUSINESS_TYPE_name ,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE =  3 then '晚辅导' end AS BUSINESS_TYPE_name ,
 		toi_bu.id AS bu_id ,
 		toi_bu.org_name AS bu_name ,
 		toi_city.id AS city_id ,
 		toi_city.org_name AS city_name ,
 		'${taskFlow}' AS task_flow ,
 		TF.OPERATE_NO,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM
 		T_FEE TF LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE LEFT JOIN TP_FEE_FLAG TPFF
@@ -1403,9 +1238,9 @@
 		ON tod.city_id = toi_city.id LEFT JOIN(
 		SELECT
 		topc.order_id ,
-		wm_concat(tdca.account_name) company_names ,
-		wm_concat(topcd.client_card_no) client_card_nos ,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names ,
+		group_concat(topcd.client_card_no) client_card_nos ,
+		group_concat(tdca.account_num) account_nums
 		FROM
 		tab_order_pay_cost topc LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id LEFT JOIN tab_data_company_account tdca
@@ -1415,7 +1250,7 @@
 		) card_info
 		ON card_info.order_id = tod.id
 		WHERE
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 5
 		AND (todc.CHANGE_TYPE = 1 or todc.CHANGE_TYPE = 4)
@@ -1430,17 +1265,17 @@
 		)
 		union all
 		SELECT todc.encoding AS order_number,
-		to_char(TF.FINISH_TIME, 'yyyy-mm-dd hh24:mi:ss') AS business_date,
+		date_format(TF.FINISH_TIME, '%Y-%m-%d %H') AS business_date,
 		tod.order_no AS order_no,
 		todc.branch_id AS branch_id,
 		toi.ORG_NAME AS branch_name,
 		tsi.ENCODING AS student_code,
 		tsi.STUDENT_NAME AS student_name,
 		tf.OPERATE_TYPE,
-		decode(todc.CHANGE_TYPE, 4, '退费作废', 1, '退费') AS OPERATE_TYPE_NAME,
+		case when todc.CHANGE_TYPE = 4 then '退费作废' when todc.CHANGE_TYPE = 1 then '退费' end AS OPERATE_TYPE_NAME,
 		tfd.FEE_TYPE,
 		TPFT.NAME AS FEE_TYPE_NAME,
-		decode(tfd.fee_type,52,decode(tfd.fee_flag,2,-1*tfd.fee_amount,1,tfd.fee_amount,tfd.fee_amount),-1 *tfd.fee_amount) performance,
+		case when tfd.fee_type = 52 then case when tfd.fee_flag = 2 then -1*tfd.fee_amount when tfd.fee_flag = 1 then tfd.fee_amount else tfd.fee_amount end else -1 *tfd.fee_amount end performance,
 		0 AS cash,
 		0 AS card,
 		0 AS transfer,
@@ -1461,34 +1296,28 @@
 		card_info.account_nums AS company_account,
 		tc.id AS course_id,
 		tc.COURSE_NAME AS COURSE_NAME,
-		tc.IS_TEXTBOOKS AS is_textbooks,
-		decode(nvl(tc.IS_TEXTBOOKS, 0), 1, '是', 0, '否') AS is_textbooks_name,
 		tc.grade_id AS grade_id,
 		tdg.GRADE_NAME AS grade_name,
 		tpsubject.id AS subject_id,
 		tpsubject.NAME AS subject_name,
-		nvl(tc.HOUR_LEN, 0) AS duration,
+		ifnull(tc.HOUR_LEN, 0) AS duration,
 		tti.id AS teacher_id,
 		tti.ENCODING AS teacher_ENCODING,
 		tti.TEACHER_NAME AS TEACHER_NAME,
 		null assteacher_id ,
 		null assteacher_ENCODING ,
 		null assTEACHER_NAME ,
-		decode(tc.performance_belong_type, 1, tod.branch_id, tc.branch_id) AS performance_branch_id,
-		decode(tc.performance_belong_type, 1, toi.ORG_NAME, toii.ORG_NAME) AS performance_branch_name,
+		case when tc.performance_belong_type = 1 then tod.branch_id else tc.branch_id end AS performance_branch_id,
+		case when tc.performance_belong_type = 1 then toi.ORG_NAME else toii.ORG_NAME end AS performance_branch_name,
 		tc.SEASON_ID,
 		CASE
-		WHEN to_char(TF.FINISH_TIME, 'yyyy-mm-dd') &gt;= tts.START_DATE AND
-		tts.COURSE_SEASON_NAME NOT LIKE '%佳音%' AND
-		tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%' THEN
+		WHEN date_format(TF.FINISH_TIME, '%Y-%m-%d') >= tts.START_DATE  THEN
 		(SELECT MAX(son.course_season_name) AS course_season_name
 		FROM tab_time_season son
-		WHERE son.start_date &lt;= to_char(TF.FINISH_TIME, 'yyyy-mm-dd')
-		AND son.end_date &gt;= to_char(TF.FINISH_TIME, 'yyyy-mm-dd')
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%')
+		WHERE son.start_date &lt;= date_format(TF.FINISH_TIME, '%Y-%m-%d')
+		AND son.end_date >= date_format(TF.FINISH_TIME, '%Y-%m-%d')
+		AND son.bu_id = tod.bu_id
+		)
 		ELSE
 		tts.COURSE_SEASON_NAME
 		END season_name,
@@ -1496,30 +1325,22 @@
 		todc_tei.EMPLOYEE_NAME AS agent_name,
 		tod.create_user AS original_create_user,
 		tei.EMPLOYEE_NAME AS original_create_user_name,
-		nvl(toc.order_type, tod.order_type) AS is_new_continued,
-		decode(nvl(toc.order_type, tod.order_type),
-		1,
-		'新单',
-		2,
-		'赠单',
-		3,
-		'转班单',
-		4,
-		'续单') AS is_new_continued_name,
+		ifnull(toc.order_type, tod.order_type) AS is_new_continued,
+		case when ifnull(toc.order_type, tod.order_type) = 1 then '新单' when ifnull(toc.order_type, tod.order_type) = 2 then '赠单' when ifnull(toc.order_type, tod.order_type) = 3 then  '转班单' when ifnull(toc.order_type, tod.order_type) = 4 then '续单' end  AS is_new_continued_name,
 		0 order_discount,
 		0 AS order_amount_payable,
-		todc.id || ':' || todc.remark || toc.id AS order_explain,
+		concat(todc.id , ':' , todc.remark , toc.id) AS order_explain,
 		tc.short_or_long,
-		decode(tc.short_or_long, 2, '短期班', '系统班') AS short_or_long_name,
+		case when tc.short_or_long =  2 then  '短期班' else  '系统班' end  AS short_or_long_name,
 		tod.BUSINESS_TYPE,
-		decode(tod.BUSINESS_TYPE, 1, '班级课', 2, '1对1', 3, '晚辅导') AS BUSINESS_TYPE_name,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE = 3 then '晚辅导' end AS BUSINESS_TYPE_name,
 		toi_bu.id AS bu_id,
 		toi_bu.org_name AS bu_name,
 		toi_city.id AS city_id,
 		toi_city.org_name AS city_name,
 		'${taskFlow}' AS task_flow,
 		TF.OPERATE_NO,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM T_FEE TF
 		LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE
@@ -1567,9 +1388,9 @@
 		LEFT JOIN TAB_ORGANIZATION_INFO toi_city
 		ON tod.city_id = toi_city.id
 		LEFT JOIN (SELECT topc.order_id,
-		wm_concat(tdca.account_name) company_names,
-		wm_concat(topcd.client_card_no) client_card_nos,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names,
+		group_concat(topcd.client_card_no) client_card_nos,
+		group_concat(tdca.account_num) account_nums
 		FROM tab_order_pay_cost topc
 		LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id
@@ -1577,22 +1398,19 @@
 		ON topcd.company_card_id = tdca.id
 		GROUP BY topc.order_id) card_info
 		ON card_info.order_id = tod.id
-		WHERE to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		WHERE date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 5
 		AND (todc.CHANGE_TYPE = 1 or todc.CHANGE_TYPE = 4)
 		AND (todc.CHANGE_STATUS = 7 or todc.CHANGE_STATUS = 5)
 		AND (tf.fee_type = 52)
 		and tod.order_no is not null
-
-		) t
 	</insert>
 
 	<insert id="savePerformanceDetail55and54" parameterType="HashMap">
 		insert
 		into t_performance_details
 		(
-		id,
 		order_number,
 		business_date,
 		order_no,
@@ -1625,8 +1443,6 @@
 		company_account,
 		course_id,
 		course_name,
-		is_textbooks,
-		is_textbooks_name,
 		grade_id,
 		grade_name,
 		subject_id,
@@ -1663,12 +1479,11 @@
 		OPERATE_NO,
 		date_long_value
 		)
-		select seq_t_performance_details.nextval,t.* from (
 		SELECT
 		todc.encoding AS order_number ,
-		to_char(
+		date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd hh24:mi:ss'
+		'%Y-%m-%d %H'
 		) AS business_date ,
 		tod.order_no AS order_no ,
 		todc.branch_id AS branch_id ,
@@ -1676,16 +1491,10 @@
 		tsi.ENCODING AS student_code ,
 		tsi.STUDENT_NAME AS student_name ,
 		tf.OPERATE_TYPE ,
-		decode(
-		todc.CHANGE_TYPE ,
-		6 ,
-		'冻结作废' ,
-		5 ,
-		'冻结'
-		) AS OPERATE_TYPE_NAME ,
+		case when todc.CHANGE_TYPE  = 6 then '冻结作废' when todc.CHANGE_TYPE  = 5  then '冻结' end AS OPERATE_TYPE_NAME ,
 		tfd.FEE_TYPE ,
 		TPFT.NAME AS FEE_TYPE_NAME ,
-		nvl(
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
 		) * -1 AS performance ,
@@ -1700,55 +1509,26 @@
 		0 AS transfer_out ,
 		0 AS transfer_in ,
 		0 AS cancel_order_amount ,
-		nvl(
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
-		) * decode(
-		todc.CHANGE_TYPE ,
-		6 ,
-		0 ,
-		5 ,
-		- 1
-		) AS refund ,
-		nvl(
+		) * case when todc.CHANGE_TYPE  = 6  then 0 when todc.CHANGE_TYPE  = 5  then -1 end AS refund ,
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
-		) * decode(
-		todc.CHANGE_TYPE ,
-		6 ,
-		-1 ,
-		5 ,
-		0
-		) AS cancel_refund_amount ,
+		) * case when todc.CHANGE_TYPE  = 6  then -1 when todc.CHANGE_TYPE  = 5  then 0 end AS cancel_refund_amount ,
 		0 AS claim ,
-		decode(
-		todc.CHANGE_TYPE ,
-		6 ,
-		-tfd.course_sum ,
-		5 ,
-		-tcc.course_times
-		)*decode(tf.fee_TYPE,54,0,55,1)  AS course_time,
+		case when todc.CHANGE_TYPE  = 6  then -tfd.course_sum  when todc.CHANGE_TYPE  =  5  then -tcc.course_times end * case when tf.fee_TYPE = 54 then 0 when tf.fee_TYPE = 55 then 1 end  AS course_time,
 		card_info.client_card_nos AS customer_account ,
 		card_info.company_names AS company_account_name ,
 		card_info.account_nums AS company_account ,
 		tc.id AS course_id ,
 		tc.COURSE_NAME AS COURSE_NAME ,
-		tc.IS_TEXTBOOKS AS is_textbooks ,
-		decode(
-		nvl(
-		tc.IS_TEXTBOOKS ,
-		0
-		) ,
-		1 ,
-		'是' ,
-		0 ,
-		'否'
-		) AS is_textbooks_name ,
 		tc.grade_id AS grade_id ,
 		tdg.GRADE_NAME AS grade_name ,
 		tpsubject.id AS subject_id ,
 		tpsubject.NAME AS subject_name ,
-		nvl(
+		ifnull(
 		tc.HOUR_LEN ,
 		0
 		) AS duration ,
@@ -1758,44 +1538,29 @@
 		tta.id AS assteacher_id ,
 		tta.ENCODING AS assteacher_ENCODING ,
 		tta.TEACHER_NAME AS assTEACHER_NAME ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		tod.branch_id ,
-		tc.branch_id
-		) AS performance_branch_id ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		toi.ORG_NAME ,
-		toii.ORG_NAME
-		) AS performance_branch_name ,
+		case when tc.performance_belong_type = 1 then tod.branch_id else tc.branch_id end AS performance_branch_id ,
+		case when tc.performance_belong_type = 1 then toi.ORG_NAME  else toii.ORG_NAME end AS performance_branch_name ,
 		tc.SEASON_ID ,
 		CASE
-		WHEN to_char(
+		WHEN date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
-		) &gt;= tts.START_DATE
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%佳音%'
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%'
+		'%Y-%m-%d'
+		) >= tts.START_DATE
 		THEN(
 		SELECT
 		MAX(son.course_season_name) AS course_season_name
 		FROM
 		tab_time_season son
 		WHERE
-		son.start_date &lt;= to_char(
+		son.start_date &lt;= date_format(
 		TF.FINISH_TIME ,
 		'yyyy-mm-dd'
 		)
-		AND son.end_date &gt;= to_char(
+		AND son.end_date >= date_format(
 		TF.FINISH_TIME ,
 		'yyyy-mm-dd'
 		)
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%'
+		AND son.bu_id = tod.bu_id
 		)
 		ELSE tts.COURSE_SEASON_NAME
 		END season_name ,
@@ -1803,51 +1568,25 @@
 		todc_tei.EMPLOYEE_NAME AS agent_name ,
 		tod.create_user AS original_create_user ,
 		tei.EMPLOYEE_NAME AS original_create_user_name ,
-		nvl(
+		ifnull(
 		toc.order_type ,
 		tod.order_type
 		) AS is_new_continued ,
-		decode(
-		nvl(
-		toc.order_type ,
-		tod.order_type
-		) ,
-		1 ,
-		'新单' ,
-		2 ,
-		'赠单' ,
-		3 ,
-		'转班单' ,
-		4 ,
-		'续单'
-		) AS is_new_continued_name ,
+		case when ifnull(toc.order_type ,tod.order_type) = 1 then '新单' when ifnull(toc.order_type ,tod.order_type) = 2 then '赠单' when ifnull(toc.order_type ,tod.order_type) = 3  then '转班单'  when ifnull(toc.order_type ,tod.order_type) = 4  then '续单' end  AS is_new_continued_name ,
 		0 order_discount ,
 		0 AS order_amount_payable ,
-		todc.id || ':' || todc.remark || toc.id AS order_explain ,
+		concat(todc.id , ':' , todc.remark , toc.id) AS order_explain ,
 		tc.short_or_long ,
-		decode(
-		tc.short_or_long ,
-		2 ,
-		'短期班' ,
-		'系统班'
-		) AS short_or_long_name ,
+		case when  tc.short_or_long  = 2  then '短期班'  else '系统班' end AS short_or_long_name ,
 		tod.BUSINESS_TYPE ,
-		decode(
-		tod.BUSINESS_TYPE ,
-		1 ,
-		'班级课' ,
-		2 ,
-		'1对1' ,
-		3 ,
-		'晚辅导'
-		) AS BUSINESS_TYPE_name ,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE =  3 then '晚辅导' end AS BUSINESS_TYPE_name ,
 		toi_bu.id AS bu_id ,
 		toi_bu.org_name AS bu_name ,
 		toi_city.id AS city_id ,
 		toi_city.org_name AS city_name ,
 		'${taskFlow}' AS task_flow ,
 		TF.OPERATE_NO,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM
 		T_FEE TF LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE LEFT JOIN TP_FEE_FLAG TPFF
@@ -1880,9 +1619,9 @@
 		ON tod.city_id = toi_city.id LEFT JOIN(
 		SELECT
 		topc.order_id ,
-		wm_concat(tdca.account_name) company_names ,
-		wm_concat(topcd.client_card_no) client_card_nos ,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names ,
+		group_concat(topcd.client_card_no) client_card_nos ,
+		group_concat(tdca.account_num) account_nums
 		FROM
 		tab_order_pay_cost topc LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id LEFT JOIN tab_data_company_account tdca
@@ -1892,7 +1631,7 @@
 		) card_info
 		ON card_info.order_id = tod.id
 		WHERE
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 5
 		AND (todc.CHANGE_TYPE = 5 or todc.CHANGE_TYPE = 6)
@@ -1905,20 +1644,19 @@
 		tf.fee_TYPE = 55
 		OR tf.fee_TYPE = 54
 		)
-
 		union all
 		SELECT todc.encoding AS order_number,
-		to_char(TF.FINISH_TIME, 'yyyy-mm-dd hh24:mi:ss') AS business_date,
+		date_format(TF.FINISH_TIME, '%Y-%m-%d %H') AS business_date,
 		tod.order_no AS order_no,
 		todc.branch_id AS branch_id,
 		toi.ORG_NAME AS branch_name,
 		tsi.ENCODING AS student_code,
 		tsi.STUDENT_NAME AS student_name,
 		tf.OPERATE_TYPE,
-		decode(todc.CHANGE_TYPE, 4, '冻结作废', 1, '冻结') AS OPERATE_TYPE_NAME,
+		case when todc.CHANGE_TYPE = 4 then '冻结作废' when todc.CHANGE_TYPE = 1 then '冻结' end AS OPERATE_TYPE_NAME,
 		tfd.FEE_TYPE,
 		TPFT.NAME AS FEE_TYPE_NAME,
-		decode(tfd.fee_type,52,decode(tfd.fee_flag,2,-1*tfd.fee_amount,1,tfd.fee_amount,tfd.fee_amount),-1 *tfd.fee_amount) performance,
+		case when tfd.fee_type = 52 then case when tfd.fee_flag = 2 then -1*tfd.fee_amount when tfd.fee_flag =  1 then tfd.fee_amount else tfd.fee_amount end else -1 *tfd.fee_amount end performance,
 		0 AS cash,
 		0 AS card,
 		0 AS transfer,
@@ -1939,34 +1677,28 @@
 		card_info.account_nums AS company_account,
 		tc.id AS course_id,
 		tc.COURSE_NAME AS COURSE_NAME,
-		tc.IS_TEXTBOOKS AS is_textbooks,
-		decode(nvl(tc.IS_TEXTBOOKS, 0), 1, '是', 0, '否') AS is_textbooks_name,
 		tc.grade_id AS grade_id,
 		tdg.GRADE_NAME AS grade_name,
 		tpsubject.id AS subject_id,
 		tpsubject.NAME AS subject_name,
-		nvl(tc.HOUR_LEN, 0) AS duration,
+		ifnull(tc.HOUR_LEN, 0) AS duration,
 		tti.id AS teacher_id,
 		tti.ENCODING AS teacher_ENCODING,
 		tti.TEACHER_NAME AS TEACHER_NAME,
 		null assteacher_id ,
 		null assteacher_ENCODING ,
 		null assTEACHER_NAME ,
-		decode(tc.performance_belong_type, 1, tod.branch_id, tc.branch_id) AS performance_branch_id,
-		decode(tc.performance_belong_type, 1, toi.ORG_NAME, toii.ORG_NAME) AS performance_branch_name,
+		case when tc.performance_belong_type = 1 then tod.branch_id else tc.branch_id end AS performance_branch_id,
+		case when tc.performance_belong_type = 1 then toi.ORG_NAME else  toii.ORG_NAME end AS performance_branch_name,
 		tc.SEASON_ID,
 		CASE
-		WHEN to_char(TF.FINISH_TIME, 'yyyy-mm-dd') &gt;= tts.START_DATE AND
-		tts.COURSE_SEASON_NAME NOT LIKE '%佳音%' AND
-		tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%' THEN
+		WHEN date_format(TF.FINISH_TIME, '%Y-%m-%d') >= tts.START_DATE  THEN
 		(SELECT MAX(son.course_season_name) AS course_season_name
 		FROM tab_time_season son
-		WHERE son.start_date &lt;= to_char(TF.FINISH_TIME, 'yyyy-mm-dd')
-		AND son.end_date &gt;= to_char(TF.FINISH_TIME, 'yyyy-mm-dd')
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%')
+		WHERE son.start_date &lt;= date_format(TF.FINISH_TIME, '%Y-%m-%d')
+		AND son.end_date >= date_format(TF.FINISH_TIME, '%Y-%m-%d')
+		AND son.bu_id = tod.bu_id
+		)
 		ELSE
 		tts.COURSE_SEASON_NAME
 		END season_name,
@@ -1974,30 +1706,22 @@
 		todc_tei.EMPLOYEE_NAME AS agent_name,
 		tod.create_user AS original_create_user,
 		tei.EMPLOYEE_NAME AS original_create_user_name,
-		nvl(toc.order_type, tod.order_type) AS is_new_continued,
-		decode(nvl(toc.order_type, tod.order_type),
-		1,
-		'新单',
-		2,
-		'赠单',
-		3,
-		'转班单',
-		4,
-		'续单') AS is_new_continued_name,
+		ifnull(toc.order_type, tod.order_type) AS is_new_continued,
+		case when ifnull(toc.order_type ,tod.order_type) = 1 then '新单' when ifnull(toc.order_type ,tod.order_type) = 2 then '赠单' when ifnull(toc.order_type ,tod.order_type) = 3  then '转班单'  when ifnull(toc.order_type ,tod.order_type) = 4  then '续单' end  AS is_new_continued_name ,
 		0 order_discount,
 		0 AS order_amount_payable,
-		todc.id || ':' || todc.remark || toc.id AS order_explain,
+		concat(todc.id , ':' , todc.remark , toc.id) AS order_explain,
 		tc.short_or_long,
-		decode(tc.short_or_long, 2, '短期班', '系统班') AS short_or_long_name,
+		case when  tc.short_or_long  = 2  then '短期班'  else '系统班' end AS short_or_long_name ,
 		tod.BUSINESS_TYPE,
-		decode(tod.BUSINESS_TYPE, 1, '班级课', 2, '1对1', 3, '晚辅导') AS BUSINESS_TYPE_name,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE =  3 then '晚辅导' end AS BUSINESS_TYPE_name ,
 		toi_bu.id AS bu_id,
 		toi_bu.org_name AS bu_name,
 		toi_city.id AS city_id,
 		toi_city.org_name AS city_name,
 		'${taskFlow}' AS task_flow,
 		TF.OPERATE_NO,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM T_FEE TF
 		LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE
@@ -2045,9 +1769,9 @@
 		LEFT JOIN TAB_ORGANIZATION_INFO toi_city
 		ON tod.city_id = toi_city.id
 		LEFT JOIN (SELECT topc.order_id,
-		wm_concat(tdca.account_name) company_names,
-		wm_concat(topcd.client_card_no) client_card_nos,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names,
+		group_concat(topcd.client_card_no) client_card_nos,
+		group_concat(tdca.account_num) account_nums
 		FROM tab_order_pay_cost topc
 		LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id
@@ -2055,21 +1779,19 @@
 		ON topcd.company_card_id = tdca.id
 		GROUP BY topc.order_id) card_info
 		ON card_info.order_id = tod.id
-		WHERE to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		WHERE date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 5
 		AND (todc.CHANGE_TYPE = 5)
 		AND (todc.CHANGE_STATUS = 7 or todc.CHANGE_STATUS = 5)
 		AND (tf.fee_type = 52)
 		and tod.order_no is not null
-		) t
 	</insert>
 
 	<insert id="savePerformanceDetail52" parameterType="HashMap">
 		insert into
 		t_performance_details
 		(
-		id,
 		order_number,
 		business_date,
 		order_no,
@@ -2102,8 +1824,6 @@
 		company_account,
 		course_id,
 		course_name,
-		is_textbooks,
-		is_textbooks_name,
 		grade_id,
 		grade_name,
 		subject_id,
@@ -2141,11 +1861,10 @@
 		date_long_value
 		)
 		SELECT
-		seq_t_performance_details.nextval,
 		todc.encoding AS order_number ,
-		to_char(
+		date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd hh24:mi:ss'
+		'%Y-%m-%d %H'
 		) AS business_date ,
 		tod.order_no AS order_no ,
 		todc.branch_id AS branch_id ,
@@ -2153,33 +1872,13 @@
 		tsi.ENCODING AS student_code ,
 		tsi.STUDENT_NAME AS student_name ,
 		tf.OPERATE_TYPE ,
-		decode(
-		todc.CHANGE_STATUS ,
-		7 ,
-		'转班作废' ,
-		5 ,
-		'转班'
-		) AS OPERATE_TYPE_NAME ,
+		case when todc.CHANGE_STATUS  = 7 then '转班作废' when todc.CHANGE_STATUS  = 5  then '转班' end AS OPERATE_TYPE_NAME ,
 		tfd.FEE_TYPE ,
-		decode(
-		tfd.FEE_FLAG ,
-		1 ,
-		'转班转入' ,
-		2 ,
-		'转班转出'
-		) AS FEE_TYPE_NAME ,
-		nvl(
+		case when tfd.FEE_FLAG  = 1 then '转班转入' when tfd.FEE_FLAG  = 2  then '转班转出' end AS FEE_TYPE_NAME ,
+		ifnull(
 		tfd.FEE_AMOUNT ,
 		0
-		) *(
-		decode(
-		tfd.FEE_FLAG ,
-		1 ,
-		1 ,
-		2 ,
-		- 1
-		)
-		) AS performance ,
+		) * case when tfd.FEE_FLAG  = 1 then 1 when tfd.FEE_FLAG  = 2  then -1 end AS performance ,
 		0 AS cash ,
 		0 AS card ,
 		0 AS transfer ,
@@ -2188,54 +1887,23 @@
 		0 AS online_price ,
 		0 AS FROZEN_ACCOUNT ,
 		0 AS REFUND_ACCOUNT ,
-		decode(
-    	tfd.FEE_FLAG ,
-    	1 ,
-    	0 ,
-    	2 ,
-    	-tfd.FEE_AMOUNT
-    	) AS transfer_out ,
-		decode(
-    	tfd.FEE_FLAG ,
-    	1 ,
-    	tfd.FEE_AMOUNT ,
-    	2 ,
-    	0
-    	) AS transfer_in ,
+		case when tfd.FEE_FLAG  = 1 then 0  when tfd.FEE_FLAG  =  2  then -tfd.FEE_AMOUNT end AS transfer_out ,
+		case when tfd.FEE_FLAG = 1 then tfd.FEE_AMOUNT when tfd.FEE_FLAG =  2 then 0 end AS transfer_in ,
 		0 AS cancel_order_amount ,
 		0 AS refund ,
 		0 AS cancel_refund_amount ,
 		0 AS claim ,
-		tfd.COURSE_SUM *(
-		decode(
-		tfd.FEE_FLAG ,
-		1 ,
-		1 ,
-		2 ,
-		- 1
-		)
-		) AS course_time ,
+		tfd.COURSE_SUM * case when tfd.FEE_FLAG = 1 then 1 when tfd.FEE_FLAG = 2 then -1 end AS course_time ,
 		card_info.client_card_nos AS customer_account ,
 		card_info.company_names AS company_account_name ,
 		card_info.account_nums AS company_account ,
 		tc.id AS course_id ,
 		tc.COURSE_NAME AS COURSE_NAME ,
-		tc.IS_TEXTBOOKS AS is_textbooks ,
-		decode(
-		nvl(
-		tc.IS_TEXTBOOKS ,
-		0
-		) ,
-		1 ,
-		'是' ,
-		0 ,
-		'否'
-		) AS is_textbooks_name ,
 		tc.grade_id AS grade_id ,
 		tdg.GRADE_NAME AS grade_name ,
 		tpsubject.id AS subject_id ,
 		tpsubject.NAME AS subject_name ,
-		nvl(
+		ifnull(
 		tc.HOUR_LEN ,
 		0
 		) AS duration ,
@@ -2245,44 +1913,29 @@
 		tta.id AS assteacher_id ,
 		tta.ENCODING AS assteacher_ENCODING ,
 		tta.TEACHER_NAME AS assTEACHER_NAME ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		tod.branch_id ,
-		tc.branch_id
-		) AS performance_branch_id ,
-		decode(
-		tc.performance_belong_type ,
-		1 ,
-		toi.ORG_NAME ,
-		toii.ORG_NAME
-		) AS performance_branch_name ,
+		case when tc.performance_belong_type  = 1  then tod.branch_id  else tc.branch_id end AS performance_branch_id ,
+		case when tc.performance_belong_type  = 1  then toi.ORG_NAME else toii.ORG_NAME end AS performance_branch_name ,
 		tc.SEASON_ID ,
 		CASE
-		WHEN to_char(
+		WHEN date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
-		) &gt;= tts.START_DATE
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%佳音%'
-		AND tts.COURSE_SEASON_NAME NOT LIKE '%艾伦%'
+		'%Y-%m-%d'
+		) >= tts.START_DATE
 		THEN(
 		SELECT
 		MAX(son.course_season_name) AS course_season_name
 		FROM
 		tab_time_season son
 		WHERE
-		son.start_date &lt;= to_char(
+		son.start_date &lt;= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.end_date &gt;= to_char(
+		AND son.end_date >= date_format(
 		TF.FINISH_TIME ,
-		'yyyy-mm-dd'
+		'%Y-%m-%d'
 		)
-		AND son.city_id = tod.city_id
-		AND son.product_line = tc.product_line
-		AND son.course_season_name NOT LIKE '%佳音%'
-		AND son.course_season_name NOT LIKE '%艾伦%'
+		AND son.bu_id = tod.bu_id
 		)
 		ELSE tts.COURSE_SEASON_NAME
 		END season_name ,
@@ -2290,51 +1943,25 @@
 		todc_tei.EMPLOYEE_NAME AS agent_name ,
 		tod.create_user AS original_create_user ,
 		tei.EMPLOYEE_NAME AS original_create_user_name ,
-		nvl(
+		ifnull(
 		toc.order_type ,
 		tod.order_type
 		) AS is_new_continued ,
-		decode(
-		nvl(
-		toc.order_type ,
-		tod.order_type
-		) ,
-		1 ,
-		'新单' ,
-		2 ,
-		'赠单' ,
-		3 ,
-		'转班单' ,
-		4 ,
-		'续单'
-		) AS is_new_continued_name ,
+		case when ifnull(toc.order_type ,tod.order_type) = 1 then '新单' when ifnull(toc.order_type ,tod.order_type) = 2 then '赠单' when ifnull(toc.order_type ,tod.order_type) = 3  then '转班单'  when ifnull(toc.order_type ,tod.order_type) = 4  then '续单' end  AS is_new_continued_name ,
 		0 order_discount ,
 		0 AS order_amount_payable ,
-		todc.id || ':' || todc.remark || toc.id AS order_explain ,
+		concat(todc.id , ':' , todc.remark ,toc.id) AS order_explain ,
 		tc.short_or_long ,
-		decode(
-		tc.short_or_long ,
-		2 ,
-		'短期班' ,
-		'系统班'
-		) AS short_or_long_name ,
+		case when  tc.short_or_long  = 2  then '短期班'  else '系统班' end AS short_or_long_name ,
 		tod.BUSINESS_TYPE ,
-		decode(
-		tod.BUSINESS_TYPE ,
-		1 ,
-		'班级课' ,
-		2 ,
-		'1对1' ,
-		3 ,
-		'晚辅导'
-		) AS BUSINESS_TYPE_name ,
+		case when tod.BUSINESS_TYPE = 1 then '班级课' when tod.BUSINESS_TYPE = 2 then '1对1' when tod.BUSINESS_TYPE =  3 then '晚辅导' end AS BUSINESS_TYPE_name ,
 		toi_bu.id AS bu_id ,
 		toi_bu.org_name AS bu_name ,
 		toi_city.id AS city_id ,
 		toi_city.org_name AS city_name ,
 		'${taskFlow}' AS task_flow ,
 		TF.OPERATE_NO,
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd'))
+		date_format(tf.FINISH_TIME,'%Y%m%d')
 		FROM
 		T_FEE TF LEFT JOIN TP_FEE_TYPE TPFT
 		ON TPFT.ID = TF.FEE_TYPE LEFT JOIN TP_FEE_FLAG TPFF
@@ -2366,9 +1993,9 @@
 		ON tod.city_id = toi_city.id LEFT JOIN(
 		SELECT
 		topc.order_id ,
-		wm_concat(tdca.account_name) company_names ,
-		wm_concat(topcd.client_card_no) client_card_nos ,
-		wm_concat(tdca.account_num) account_nums
+		group_concat(tdca.account_name) company_names ,
+		group_concat(topcd.client_card_no) client_card_nos ,
+		group_concat(tdca.account_num) account_nums
 		FROM
 		tab_order_pay_cost topc LEFT JOIN tab_order_pay_cost_detail topcd
 		ON topc.id = topcd.order_buy_id LEFT JOIN tab_data_company_account tdca
@@ -2378,7 +2005,7 @@
 		) card_info
 		ON card_info.order_id = tod.id
 		WHERE
-		to_number(to_char(tf.FINISH_TIME,'yyyymmdd')) BETWEEN #{minOperateNo}
+		date_format(tf.FINISH_TIME,'%Y%m%d') BETWEEN #{minOperateNo}
 		AND #{maxOperateNo}
 		AND tf.OPERATE_TYPE = 5
 		AND todc.CHANGE_TYPE = 2
@@ -2390,134 +2017,4 @@
 		)
 	</insert>
 
-	<insert id="savePerformanceDetailLipei" parameterType="HashMap">
-		insert into t_performance_details
-		(
-		id,
-		order_number,
-		business_date,
-		branch_id,
-		branch_name,
-		student_code ,
-		student_name ,
-		operate_type,
-		OPERATE_TYPE_name,
-		FEE_TYPE,
-		FEE_TYPE_name,
-		performance,
-		agent_id,
-		agent_name,
-		performance_branch_id,
-		performance_branch_name,
-		cash,
-		card,
-		transfer,
-		account,
-		eb_price,
-		online_price,
-		FROZEN_ACCOUNT,
-		REFUND_ACCOUNT,
-		transfer_out,
-		transfer_in,
-		cancel_order_amount,
-		refund,
-		cancel_refund_amount,
-		claim,
-		course_time,
-		order_explain,
-		bu_id,
-		bu_name,
-		city_id,
-		city_name,
-		task_flow,
-		OPERATE_NO,
-		date_long_value
-		)
-		SELECT
-		seq_t_performance_details.nextval,
-		tad.encoding AS order_number ,
-		to_char(
-		tad.CONFIRM_TIME ,
-		'yyyy-mm-dd hh24:mi:ss'
-		) AS business_date ,
-		tad.branch_id AS branch_id ,
-		org.org_name AS branch_name ,
-		stu.encoding AS student_code ,
-		stu.student_name AS student_name ,
-		tad.DYNAMIC_TYPE + 10 AS operate_type ,
-		decode(
-		tad.DYNAMIC_TYPE ,
-		3 ,
-		'理赔基金' ,
-		6 ,
-		'理赔作废'
-		) AS operate_type_name ,
-		tad.DYNAMIC_TYPE + 10 AS fee_type ,
-		decode(
-		tad.DYNAMIC_TYPE ,
-		3 ,
-		'理赔基金' ,
-		6 ,
-		'理赔作废'
-		) AS fee_type_name ,
-		decode(
-		tad.DYNAMIC_TYPE ,
-		3 ,
-		- 1 ,
-		6 ,
-		1
-		) * tad.money performance ,
-		tad.INPUT_USER AS agent_id ,
-		tei.EMPLOYEE_NAME AS agent_name ,
-		org.id AS performance_branch_id ,
-		org.org_name AS performance_branch_name ,
-		0 AS cash ,
-		0 AS card ,
-		0 AS transfer ,
-		0 AS account ,
-		0 AS eb_price ,
-		0 AS online_price ,
-		0 AS FROZEN_ACCOUNT ,
-		0 AS REFUND_ACCOUNT ,
-		0 AS transfer_out ,
-		0 AS transfer_in ,
-		0 AS cancel_order_amount ,
-		0 AS refund ,
-		0 AS cancel_refund_amount ,
-		decode(
-		tad.DYNAMIC_TYPE ,
-		3 ,
-		- 1 ,
-		6 ,
-		1
-		) * tad.money claim ,
-		0 AS course_time ,
-		tad.id || ':' || tad.remark remark ,
-		org_bu.id AS bu_id ,
-		org_bu.org_name AS bu_name ,
-		org_city.id AS city_id ,
-		org_city.org_name AS city_name,
-		'${taskFlow}' AS task_flow ,
-		tad.id as OPERATE_NO,
-		to_number(to_char(tad.CONFIRM_TIME,'yyyymmdd'))
-		FROM
-		t_account_dynamic tad JOIN tab_organization_info org
-		ON tad.branch_id = org.id JOIN tab_user_info tui
-		ON tad.INPUT_USER = tui.id LEFT JOIN TAB_EMPLOYEE_INFO tei
-		ON tei.id = tui.EMPLOYEE_ID JOIN tab_student_info stu
-		ON tad.student_id = stu.id LEFT JOIN tab_organization_info org_bu
-		ON org_bu.id = org.PARENT_ID LEFT JOIN tab_organization_info org_city
-		ON org_city.id = org_bu.PARENT_ID
-		WHERE
-		(
-		tad.status = 3
-		OR tad.status = 4
-		)
-		AND(
-		tad.dynamic_type = 3
-		OR tad.dynamic_type = 6
-		)
-		and to_number(to_char(tad.CONFIRM_TIME,'yyyymmdd')) BETWEEN
-		#{minOperateNo} AND #{maxOperateNo}
-	</insert>
 </mapper>

@@ -72,9 +72,7 @@ public class PerformanceDetailsServiceImpl implements PerformanceDetailsService 
 		
 		// 转班业绩
 		performanceDetailsDao.savePerformanceDetail52(queryParam);
-		
-		// 理赔业绩 or 理赔作废业绩
-		performanceDetailsDao.savePerformanceDetailLipei(queryParam);
+
 	}
 
     @Override

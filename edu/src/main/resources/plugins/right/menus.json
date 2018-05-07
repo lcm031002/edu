@@ -414,60 +414,6 @@
 							]
 						},
 						{
-							"index": "A3000307",
-							"name": "晚辅导套餐",
-							"key": "ordersMgrCourseWFDCombo",
-							"icon": "fa fa-bars",
-							"type": "$state",
-							"value": "ordersMgrCourseWFDCombo",
-							"path": "/orders/ordersMgr/ordersMgrCourseWFDCombo",
-							"href": "templates/erp/course/wfd_combo.html",
-							"services": [
-								{
-									"name": "查询套餐",
-									"key": "ordersMgrCourseWFDCombo.query",
-									"url": "/erp/coursemanagerment/package",
-									"method": "GET"
-								},
-								{
-									"name": "新增套餐",
-									"key": "ordersMgrCourseWFDCombo.post",
-									"url": "/erp/coursemanagerment/package",
-									"method": "POST"
-								},
-								{
-									"name": "修改套餐",
-									"key": "ordersMgrCourseWFDCombo.put",
-									"url": "/erp/coursemanagerment/package",
-									"method": "PUT"
-								},
-								{
-									"name": "删除套餐",
-									"key": "ordersMgrCourseWFDCombo.delete",
-									"url": "/erp/coursemanagerment/package",
-									"method": "DELETE"
-								},
-								{
-									"name": "校区查询",
-									"key": "ordersMgrCourseWFDCombo.queryBranchs",
-									"url": "/erp/dictionary/organization/branchs",
-									"method": "GET"
-								},
-								{
-									"name": "年级查询",
-									"key": "ordersMgrCourseWFDCombo.queryGrade",
-									"url": "/erp/dictionary/grade/service",
-									"method": "GET"
-								},
-								{
-									"name": "套餐状态变更",
-									"key": "ordersMgrCourseWFDCombo.changeStatus",
-									"url": "/erp/coursemanagerment/package/changeStatus",
-									"method": "PUT"
-								}
-							]
-						},
-						{
 							"index": "A3000308",
 							"name": "晚辅导套餐导入",
 							"key": "ordersMgrCourseWFDComboInput",

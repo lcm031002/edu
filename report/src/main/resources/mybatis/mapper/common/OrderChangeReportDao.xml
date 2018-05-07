@@ -33,7 +33,6 @@
 	<insert id="saveBaoBan" parameterType="HashMap">
 		insert into t_order_change_report 
 		(   
-			  id,
 			  task_flow,
 			  bus_date,
   			  order_encoding,
@@ -59,13 +58,12 @@
 			  order_status,
 			  bus_type,
 			  subject_name,
-			  is_textbooks,
 			  short_or_long,
               business_type,
 	          bu_id,
 	          branch_id
 		)
-		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+		select '${taskFlow}' task_flow,t.* from (
 	      select bus_date,
 	               order_encoding,
 	               student_encoding,
@@ -114,21 +112,19 @@
 	               end as order_status,
 	               '报班' as bus_type,
 	               subject_name,
-	               is_textbooks,
 	               short_or_long,
 	               tmp.business_type,
 	               tmp.bu_id,
 	               tmp.branch_id
-	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	          from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
 	                       ord.order_encoding order_encoding,
 	                       ord.student_encoding student_encoding,
 	                       grade.grade_name grade_name,
 	                       cou.subject_name,
-	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       case when cou.short_or_long = 2 then  '短期班' else '系统班' end short_or_long,
 	                       ord.student_name student_name,
 	                       ord.branch_name branch_name,
-	                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+	                       case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end course_branch_name,
 	                       cou.course_name course_name,
 	                       d.order_detail_id, /*子单ID*/
 	                       sum(case d.fee_type
@@ -159,7 +155,7 @@
 	                              0
 	                           end) yuJieZhuan, /*预结转*/
 	                       0 tui, /*退费金额*/
-	                       0 buKou, --冻结补扣 
+	                       0 buKou, /*冻结补扣 */
 	                       0 tuiKeShi, /*退费课时*/
 	                       0 zhuanChu, /*转出金额*/
 	                       0 zhuanChuKeShi, /*转出课时*/
@@ -168,7 +164,7 @@
 	                       0 bujiezhuan /*补结转*/,
 	                       ord.business_type,
 	                       ord.bu_id,
-	                       nvl(tc.branch_id,ord.branch_id) branch_id
+	                       ifnull(tc.branch_id,ord.branch_id) branch_id
 	                  from t_fee t
 	                  left join t_fee_detail d
 	                    on t.id = d.fee_id
@@ -200,10 +196,9 @@
 	                          ord.business_type,
 	                          grade.grade_name,
 	                          ord.branch_name,
-	                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+	                          case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end,
 	                          cou.course_name,
-	                          decode(cou.is_textbooks, 1, '是', '否'),
-	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          case when cou.short_or_long = 2 then  '短期班' else '系统班' end ,
 	                          cou.performance_belong_type,
 	                          cou.subject_name,
 	                          c.course_total_count,
@@ -211,7 +206,7 @@
 	                          toc.manage_fee,
 	                          ord.business_type,
 	                          ord.bu_id,
-	                          nvl(tc.branch_id,ord.branch_id)
+	                          ifnull(tc.branch_id,ord.branch_id)
 	               ) tmp
 	          left join t_order_course toc
 	            on toc.id = tmp.order_detail_id
@@ -266,21 +261,19 @@
 		               end as order_status,
 		               '报班作废' as bus_type,
 		               subject_name,
-		               is_textbooks,
 		               short_or_long,
 		               tmp.business_type,
 		               tmp.bu_id,
 		               tmp.branch_id
-		          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+		          from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
 		                       ord.order_encoding order_encoding,
 		                       ord.student_encoding student_encoding,
 		                       grade.grade_name grade_name,
 		                       cou.subject_name,
-		                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-		                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+		                       case when cou.short_or_long =  2 then  '短期班' else '系统班' end short_or_long,
 		                       ord.student_name student_name,
 		                       ord.branch_name branch_name,
-		                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+		                       case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end  course_branch_name,
 		                       cou.course_name course_name,
 		                       d.order_detail_id, /*子单ID*/
 		                       sum(case d.fee_type
@@ -299,16 +292,16 @@
 		                       -1 * dd.fee_amount baoBanYuJieZhuan,
 		                       -1 * dd.fee_amount yuJieZhuan, /*预结转*/
 		                       0 tui, /*退费金额*/
-		                       0 buKou, --冻结补扣 
+		                       0 buKou, /*冻结补扣 */
 		                       0 tuiKeShi, /*退费课时*/
 		                       0 zhuanChu, /*转出金额*/
 		                       0 zhuanChuKeShi, /*转出课时*/
 		                       0 zhuanRu, /*转入金额*/
-		                       0zhuanRuKeShi, /*转入课时*/
+		                       0 zhuanRuKeShi, /*转入课时*/
 		                       0 bujiezhuan /*补结转*/,
 		                       ord.business_type,
 		                       ord.bu_id,
-		                       nvl(tc.branch_id,ord.branch_id) branch_id
+		                       ifnull(tc.branch_id,ord.branch_id) branch_id
 		                  from t_fee t
 		                  left join t_fee_detail d
 		                    on t.id = d.fee_id
@@ -343,11 +336,10 @@
 		                          ord.student_name,
 		                          grade.grade_name,
 		                          ord.branch_name,
-		                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+		                          case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end,
 		                          cou.course_name,
 		                          cou.subject_name,
-		                          decode(cou.is_textbooks, 1, '是', '否'),
-		                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+		                          case when cou.short_or_long =  2 then  '短期班' else  '系统班' end,
 		                          cou.performance_belong_type,
 		                          c.COURSE_SURPLUS_COUNT,
 		                          d.order_detail_id,
@@ -355,20 +347,19 @@
 		                          dd.fee_amount,
 		                          ord.business_type,
 		                          ord.bu_id,
-		                          nvl(tc.branch_id,ord.branch_id)
+		                          ifnull(tc.branch_id,ord.branch_id)
 		                ) tmp
 		          left join t_order_course toc
 		            on toc.id = tmp.order_detail_id
 		          left join t_order tod
-		            on toc.order_id = tod.id 
+		            on toc.order_id = tod.id
 	    ) t
-	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	    where date_format(str_to_date(bus_date,'%Y-%m-%d'),'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>
 
 	<insert id="saveTuiFei" parameterType="HashMap">
 		insert into t_order_change_report 
 		(   
-			  id,
 			  task_flow,
 			  bus_date,
   			  order_encoding,
@@ -394,13 +385,12 @@
 			  order_status,
 			  bus_type,
 			  subject_name,
-			  is_textbooks,
 			  short_or_long,
               business_type,
 	          bu_id,
 	          branch_id
 		)
-		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+		select '${taskFlow}' task_flow,t.* from (
           select bus_date,
                  order_encoding,
                  student_encoding,
@@ -430,18 +420,17 @@
                  end as order_status,
                  '退费' as bus_type,
                  subject_name,
-                 is_textbooks,
                  short_or_long,
                  tmp.business_type,
                  tmp.bu_id,
                  tmp.branch_id
-            from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+            from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
                          ord.order_no order_encoding,
                          stu.encoding student_encoding,
                          stu.student_name student_name,
                          grade.grade_name grade_name,
                          tooi.org_name branch_name,
-                         decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+                         case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end course_branch_name,
                          cou.course_name course_name,
                          d.order_detail_id, /*子单ID*/
                          0 baoBan, /*课程金额*/
@@ -461,7 +450,7 @@
                                 d.fee_amount
                                else
                                 0
-                             end) buKou, --冻结补扣
+                             end) buKou, /*冻结补扣*/
                          sum(case
                                when t.fee_type = 51 and tocc.change_type = 1 and
                                     (tocc.change_status = 5 or tocc.change_status = 7) then
@@ -490,11 +479,10 @@
                                 0
                              end) bujiezhuan, /*补结转*/
                          cou.subject_name,
-                         decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-                         decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+                         case when cou.short_or_long = 2 then  '短期班' else  '系统班' end short_or_long,
                          ord.business_type,
                          ord.bu_id,
-                         nvl(tc.branch_id,ord.branch_id) branch_id
+                         ifnull(tc.branch_id,ord.branch_id) branch_id
                     from t_fee t
                     left join t_fee_detail d
                       on t.id = d.fee_id
@@ -540,10 +528,9 @@
                             grade.grade_name,
                             cou.subject_name,
                             tooi.org_name,
-                            decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+                            case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end,
                             cou.course_name,
-                            decode(cou.is_textbooks, 1, '是', '否'),
-                            decode(cou.short_or_long, 2, '短期班', '系统班'),
+                            case when cou.short_or_long = 2 then '短期班' else  '系统班' end,
                             cou.performance_belong_type,
                             c.course_total_count,
                             d.order_detail_id,
@@ -551,7 +538,7 @@
                             fanyujiezhuan.fee_amount,
                             ord.business_type,
                             ord.bu_id,
-                            nvl(tc.branch_id,ord.branch_id)
+                            ifnull(tc.branch_id,ord.branch_id)
                   ) tmp
             left join t_order_course toc
               on toc.id = tmp.order_detail_id
@@ -587,18 +574,17 @@
                  end as order_status,
                  '退费作废' as bus_type,
                  subject_name,
-                 is_textbooks,
                  short_or_long,
                  tmp.business_type,
                  tmp.bu_id,
                  tmp.branch_id
-            from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+            from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
                          ord.order_no order_encoding,
                          stu.encoding student_encoding,
                          stu.student_name student_name,
                          grade.grade_name grade_name,
                          tooi.org_name branch_name,
-                         decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+                         case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end course_branch_name,
                          cou.course_name course_name,
                          d.order_detail_id, /*子单ID*/
                          0 baoBan, /*课程金额*/
@@ -617,7 +603,7 @@
                                 d.fee_amount
                                else
                                 0
-                             end) buKou, --冻结补扣
+                             end) buKou, /*冻结补扣*/
                          sum(case
                                when tocc.change_type = 4 and tocc.change_status = 5 and
                                     d.fee_type = 51 then
@@ -646,11 +632,10 @@
                                 0
                              end) bujiezhuan, /*补结转*/
                          cou.subject_name,
-                         decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-                         decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+                         case when cou.short_or_long =  2 then  '短期班' else  '系统班' end short_or_long,
                          torder.business_type,
                          torder.bu_id,
-                         nvl(tc.branch_id,torder.branch_id) branch_id
+                         ifnull(tc.branch_id,torder.branch_id) branch_id
                     from t_fee t
                     left join t_fee_detail d
                       on t.id = d.fee_id
@@ -695,11 +680,10 @@
                             stu.student_name,
                             grade.grade_name,
                             tooi.org_name,
-                            decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+                            case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end,
                             cou.course_name,
                             cou.subject_name,
-                            decode(cou.is_textbooks, 1, '是', '否'),
-                            decode(cou.short_or_long, 2, '短期班', '系统班'),
+                            case when cou.short_or_long = 2 then '短期班' else  '系统班' end,
                             cou.performance_belong_type,
                             c.course_total_count,
                             d.order_detail_id,
@@ -707,20 +691,19 @@
                             fanyujiezhuan.fee_amount,
                             torder.business_type,
                             torder.bu_id,
-                            nvl(tc.branch_id,torder.branch_id)
+                            ifnull(tc.branch_id,torder.branch_id)
                   ) tmp
             left join t_order_course toc
               on toc.id = tmp.order_detail_id
             left join t_order tod
               on toc.order_id = tod.id
       ) t
-	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	    where date_format(str_to_date(bus_date,'%Y-%m-%d'),'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>	
 
 	<insert id="saveDonJie" parameterType="HashMap">
 		insert into t_order_change_report 
 		(   
-			  id,
 			  task_flow,
 			  bus_date,
   			  order_encoding,
@@ -746,13 +729,12 @@
 			  order_status,
 			  bus_type,
 			  subject_name,
-			  is_textbooks,
 			  short_or_long,
               business_type,
 	          bu_id,
 	          branch_id
 		)
-		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+		select '${taskFlow}' task_flow,t.* from (
 	        	        select bus_date,
 	               order_encoding,
 	               student_encoding,
@@ -782,18 +764,17 @@
 	               end as order_status,
 	               '冻结' as bus_type,
 	               subject_name,
-	               is_textbooks,
 	               short_or_long,
 	               tmp.business_type,
 	               tmp.bu_id,
 	               tmp.branch_id
-	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	          from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
 	                       torder.order_no order_encoding,
                            stu.encoding student_encoding,
                            stu.student_name student_name,
 	                       grade.grade_name grade_name,
 	                       tooi.org_name branch_name,
-	                       decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+	                       case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end course_branch_name,
 	                       cou.course_name course_name,
 	                       d.order_detail_id, /*子单ID*/
 	                       0 baoBan, /*课程金额*/
@@ -813,7 +794,7 @@
 	                              d.fee_amount
 	                             else
 	                              0
-	                           end) buKou, --冻结补扣 
+	                           end) buKou, /*冻结补扣*/
 	                       sum(case
 	                             when t.fee_type = 55 and tocc.change_type = 5 and
 	                                  (tocc.change_status = 5 or tocc.change_status = 7) then
@@ -842,11 +823,10 @@
 	                              0
 	                           end) bujiezhuan, /*补结转*/
 	                       cou.subject_name,
-	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       case when cou.short_or_long = 2 then  '短期班' else  '系统班' end short_or_long,
 	                       torder.business_type,
                            tooi.parent_id bu_id,
-	                       nvl(tc.branch_id,torder.branch_id) branch_id
+	                       ifnull(tc.branch_id,torder.branch_id) branch_id
 	                  from t_fee t
 	                  left join t_fee_detail d
 	                    on t.id = d.fee_id
@@ -874,7 +854,7 @@
 	                                   tfd2.operate_no,
 	                                   sum(tfd2.fee_amount) as fee_amount
 	                              from T_FEE_DETAIL tfd2
-	                             where tfd2.fee_type = 42 
+	                             where tfd2.fee_type = 42
 	                             group by order_detail_id, tfd2.operate_no) fanyujiezhuan
 	                    on fanyujiezhuan.order_detail_id = d.order_detail_id
 	                   and fanyujiezhuan.operate_no = tocc.id
@@ -890,10 +870,9 @@
 	                          grade.grade_name,
 	                          cou.subject_name,
 	                          tooi.org_name,
-	                          decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+	                          case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end,
 	                          cou.course_name,
-	                          decode(cou.is_textbooks, 1, '是', '否'),
-	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          case when cou.short_or_long = 2 then  '短期班' else  '系统班' end,
 	                          cou.performance_belong_type,
 	                          c.course_total_count,
 	                          d.order_detail_id,
@@ -901,7 +880,7 @@
 	                          fanyujiezhuan.fee_amount,
 	                          torder.business_type,
                               tooi.parent_id,
-	                          nvl(tc.branch_id,torder.branch_id)
+	                          ifnull(tc.branch_id,torder.branch_id)
 	                ) tmp
 	          left join t_order_course toc
 	            on toc.id = tmp.order_detail_id
@@ -937,18 +916,17 @@
 	               end as order_status,
 	               '冻结作废' as bus_type,
 	               subject_name,
-	               is_textbooks,
 	               short_or_long,
 	               tmp.business_type,
 	               tmp.bu_id,
 	               tmp.branch_id
-	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	          from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
 	          			   torder.order_no order_encoding,
                            stu.encoding student_encoding,
                            stu.student_name student_name,
 	                       grade.grade_name grade_name,
 	                       tooi.org_name branch_name,
-	                       decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name) course_branch_name,
+	                       case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end course_branch_name,
 	                       cou.course_name course_name,
 	                       d.order_detail_id, /*子单ID*/
 	                       0 baoBan, /*课程金额*/
@@ -967,7 +945,7 @@
 	                              d.fee_amount
 	                             else
 	                              0
-	                           end) buKou, --冻结补扣 
+	                           end) buKou, /*冻结补扣*/
 	                       sum(case
 	                             when tocc.change_type = 6 and tocc.change_status = 5 and
 	                                  d.fee_type = 55 then
@@ -996,11 +974,10 @@
 	                              0
 	                           end) bujiezhuan, /*补结转*/
 	                       cou.subject_name,
-	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       case when cou.short_or_long = 2 then  '短期班' else  '系统班' end short_or_long,
 	                       torder.business_type,
 	                       tooi.parent_id bu_id,
-	                       nvl(tc.branch_id,torder.branch_id) branch_id
+	                       ifnull(tc.branch_id,torder.branch_id) branch_id
 	                  from t_fee t
 	                  left join t_fee_detail d
 	                    on t.id = d.fee_id
@@ -1043,11 +1020,10 @@
                               stu.student_name,
 	                          grade.grade_name,
 	                          tooi.org_name,
-	                          decode(cou.performance_belong_type,1,tooi.org_name,cou.branch_name),
+	                          case when cou.performance_belong_type = 1 then tooi.org_name else cou.branch_name end,
 	                          cou.course_name,
 	                          cou.subject_name,
-	                          decode(cou.is_textbooks, 1, '是', '否'),
-	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          case when cou.short_or_long = 2 then '短期班' else  '系统班' end,
 	                          cou.performance_belong_type,
 	                          c.course_total_count,
 	                          d.order_detail_id,
@@ -1055,20 +1031,19 @@
 	                          fanyujiezhuan.fee_amount,
 	                          torder.business_type,
                               tooi.parent_id,
-	                          nvl(tc.branch_id,torder.branch_id)
+	                          ifnull(tc.branch_id,torder.branch_id)
 	                ) tmp
 	          left join t_order_course toc
 	            on toc.id = tmp.order_detail_id
 	          left join t_order tod
 	            on toc.order_id = tod.id
 	    ) t
-	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	    where date_format(str_to_date(bus_date,'%Y-%m-%d'),'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>	
 
 	<insert id="saveZhuanBan" parameterType="HashMap">
 		insert into t_order_change_report 
 		(   
-			  id,
 			  task_flow,
 			  bus_date,
   			  order_encoding,
@@ -1094,13 +1069,12 @@
 			  order_status,
 			  bus_type,
 			  subject_name,
-			  is_textbooks,
 			  short_or_long,
               business_type,
 	          bu_id,
 	          branch_id
 		)
-		select SEQ_t_order_change_report.Nextval,'${taskFlow}' task_flow,t.* from (
+		select '${taskFlow}' task_flow,t.* from (
 	        select bus_date,
 	               order_encoding,
 	               student_encoding,
@@ -1113,7 +1087,7 @@
 	               baoBan,
 	               bao,
 	               baoBanYuJieZhuan,
-	               nvl(yuJieZhuan, 0), /*预结转*/
+	               ifnull(yuJieZhuan, 0), /*预结转*/
 	               tui,
 	               buKou,
 	               tuiKeShi,
@@ -1130,18 +1104,17 @@
 	               end as order_status,
 	               '转入' as bus_type,
 	               subject_name,
-	               is_textbooks,
 	               short_or_long,
 	               tmp.business_type,
 	               tmp.bu_id,
 	               tmp.branch_id
-	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	          from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
 	                       ord.order_encoding order_encoding,
 	                       ord.student_encoding student_encoding,
 	                       grade.grade_name grade_name,
 	                       ord.student_name student_name,
 	                       tooi.org_name branch_name,
-	                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+	                       case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end course_branch_name,
 	                       cou.course_name course_name,
 	                       d.order_detail_id, /*子单ID*/
 	                       0 baoBan, /*课程金额*/
@@ -1149,7 +1122,7 @@
 	                       0 baoBanYuJieZhuan,
 	                       fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
 	                       0 tui, /*退费金额*/
-	                       0 buKou, --冻结补扣 
+	                       0 buKou, /*冻结补扣 */
 	                       0 tuiKeShi, /*退费课时*/
 	                       0 zhuanChu, /*转出金额*/
 	                       0 zhuanChuKeShi, /*转出课时*/
@@ -1157,11 +1130,10 @@
 	                       sum(d.course_sum) zhuanRuKeShi, /*转入课时*/
 	                       0 bujiezhuan, /*补结转*/
 	                       cou.subject_name,
-	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       case when cou.short_or_long = 2 then '短期班' else '系统班' end short_or_long,
 	                       ord.business_type,
 	                       ord.bu_id,
-	                       nvl(tc.branch_id,ord.branch_id) branch_id
+	                       ifnull(tc.branch_id,ord.branch_id) branch_id
 	                  from t_fee t
 	                  left join t_fee_detail d
 	                    on t.id = d.fee_id
@@ -1208,11 +1180,10 @@
 	                          ord.student_name,
 	                          grade.grade_name,
 	                          tooi.org_name,
-	                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+	                          case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end,
 	                          cou.course_name,
 	                          cou.subject_name,
-	                          decode(cou.is_textbooks, 1, '是', '否'),
-	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          case when cou.short_or_long = 2 then '短期班' else  '系统班' end,
 	                          cou.performance_belong_type,
 	                          c.course_total_count,
 	                          d.order_detail_id,
@@ -1220,7 +1191,7 @@
 	                          fanyujiezhuan.fee_amount,
 	                          ord.business_type,
 	                          ord.bu_id,
-	                          nvl(tc.branch_id,ord.branch_id)
+	                          ifnull(tc.branch_id,ord.branch_id)
 	                ) tmp
 	          left join t_order_course toc
 	            on toc.id = tmp.order_detail_id
@@ -1239,7 +1210,7 @@
 	               baoBan,
 	               bao,
 	               baoBanYuJieZhuan,
-	               nvl(-1 * yuJieZhuan, 0),
+	               ifnull(-1 * yuJieZhuan, 0),
 	               tui,
 	               buKou,
 	               tuiKeShi,
@@ -1256,18 +1227,17 @@
 	               end as order_status,
 	               '转出' as bus_type,
 	               subject_name,
-	               is_textbooks,
 	               short_or_long,
 	               tmp.business_type,
 	               tmp.bu_id,
 	               tmp.branch_id
-	          from (select to_char(t.finish_time, 'yyyy-mm-dd') as bus_date,
+	          from (select date_format(t.finish_time, '%Y-%m-%d') as bus_date,
 	                       ord.order_encoding order_encoding,
 	                       ord.student_encoding student_encoding,
 	                       grade.grade_name grade_name,
 	                       ord.student_name student_name,
 	                       tooi.org_name branch_name,
-	                       decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name) course_branch_name,
+	                       case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end course_branch_name,
 	                       cou.course_name course_name,
 	                       d.order_detail_id, /*子单ID*/
 	                       0 baoBan, /*课程金额*/
@@ -1275,7 +1245,7 @@
 	                       0 baoBanYuJieZhuan,
 	                       fanyujiezhuan.fee_amount yuJieZhuan, /*预结转*/
 	                       0 tui, /*退费金额*/
-	                       0 buKou, --冻结补扣 
+	                       0 buKou, /*冻结补扣*/
 	                       0 tuiKeShi, /*退费课时*/
 	                       sum(d.fee_amount) * -1 zhuanChu, /*转出金额*/
 	                       sum(d.course_sum) * -1 zhuanChuKeShi, /*转出课时*/
@@ -1283,11 +1253,10 @@
 	                       0 zhuanRuKeShi, /*转入课时*/
 	                       0 bujiezhuan, /*补结转*/
 	                       cou.subject_name,
-	                       decode(cou.is_textbooks, 1, '是', '否') is_textbooks,
-	                       decode(cou.short_or_long, 2, '短期班', '系统班') short_or_long,
+	                       case when cou.short_or_long = 2 then '短期班' else  '系统班' end  short_or_long,
 	                       ord.business_type,
 	                       ord.bu_id,
-	                       nvl(tc.branch_id,ord.branch_id) branch_id
+	                       ifnull(tc.branch_id,ord.branch_id) branch_id
 	                  from t_fee t
 	                  left join t_fee_detail d
 	                    on t.id = d.fee_id
@@ -1334,11 +1303,10 @@
 	                          ord.student_name,
 	                          grade.grade_name,
 	                          tooi.org_name,
-	                          decode(cou.performance_belong_type,1,ord.branch_name,cou.branch_name),
+	                          case when cou.performance_belong_type = 1 then ord.branch_name else cou.branch_name end,
 	                          cou.course_name,
 	                          cou.subject_name,
-	                          decode(cou.is_textbooks, 1, '是', '否'),
-	                          decode(cou.short_or_long, 2, '短期班', '系统班'),
+	                          case when cou.short_or_long = 2 then '短期班' else  '系统班' end,
 	                          cou.performance_belong_type,
 	                          c.course_total_count,
 	                          d.order_detail_id,
@@ -1346,14 +1314,14 @@
 	                          fanyujiezhuan.fee_amount,
 	                          ord.business_type,
 	                          ord.bu_id,
-	                          nvl(tc.branch_id,ord.branch_id)
+	                          ifnull(tc.branch_id,ord.branch_id)
 	                ) tmp
 	          left join t_order_course toc
 	            on toc.id = tmp.order_detail_id
 	          left join t_order tod
 	            on toc.order_id = tod.id
 	    ) t
-	    where to_char(to_date(bus_date,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+	    where date_format(str_to_date(bus_date,'%Y-%m-%d'),'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>
 	
 </mapper>

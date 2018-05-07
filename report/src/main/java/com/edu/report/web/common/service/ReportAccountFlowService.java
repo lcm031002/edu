@@ -14,7 +14,7 @@ import com.github.pagehelper.Page;
  *
  */
 public interface ReportAccountFlowService {
-    String TABLE = "T_ACCOUNT_CHANGE";
+    String TABLE = "T_ACCOUNT_FLOW";
     String TABLE_KEY = "CHANGE_TIME";
     String TABLE_TYPE = "INCREMENT";
     

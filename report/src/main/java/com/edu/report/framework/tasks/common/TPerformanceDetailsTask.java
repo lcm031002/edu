@@ -28,7 +28,7 @@ import com.edu.report.web.service.PerformanceDetailsService;
  * 
  */
 public class TPerformanceDetailsTask extends BaseReportTask {
-	private static final String TABLE = "T_FEE";
+	private static final String TABLE = "T_Performance_Details";
 	private static final String TABLE_KEY = "FINISH_TIME";
 	private static final String TABLE_TYPE = "INCREMENT";
 
