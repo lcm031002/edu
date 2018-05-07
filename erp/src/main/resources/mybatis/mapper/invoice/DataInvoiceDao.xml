@@ -149,17 +149,14 @@
 			   torder.student_id as studentId,
 			   tsi.student_name as studentName,
 		       torder.branch_id as branchId,
-		       nvl(torder.ACTURAL_AMOUNT, 0) - nvl(tinvoice.actual_money, 0) - nvl(tchange.premium_amount, 0) - nvl(payInfo.frozen_pay, 0) as orderMoney,
-		       nvl(tinvoice.actual_money, 0) as money,
+		       ifnull(torder.ACTURAL_AMOUNT, 0) - ifnull(tinvoice.actual_money, 0) - ifnull(tchange.premium_amount, 0) - ifnull(payInfo.frozen_pay, 0) as orderMoney,
+		       ifnull(tinvoice.actual_money, 0) as money,
 		       torder.branch_id as branchId
 		  FROM t_order torder
 		  left join TAB_STUDENT_INFO tsi
 		    on tsi.id = torder.student_id
 		  left join (SELECT tdi.order_id,
-		                    sum(nvl(decode(tdi.status,
-		                                   1,
-		                                   tdi.actual_money,
-		                                   tdi.required_money),
+		                    sum(ifnull(case when tdi. STATUS =	1 then tdi.actual_money else tdi.required_money  end,
 		                            0)) AS actual_money
 		               FROM tab_data_invoice tdi
 		              WHERE tdi.STATUS in (1, 4)
@@ -167,14 +164,14 @@
 		              group by tdi.order_id) tinvoice
 		    on torder.ID = tinvoice.order_id
 		  left join (select toc.order_id,
-		                    sum(nvl(toc.fee_amount, 0)) as premium_amount
+		                    sum(ifnull(toc.fee_amount, 0)) as premium_amount
 		               from t_order_change toc
 		              where toc.change_type = 1
 		                and toc.change_status = 5
 		                and toc.order_id = #{orderId, jdbcType = NUMERIC}
 		              group by toc.ORDER_ID) tchange
 		    on tchange.order_id = torder.id
-		  left join (select topc.order_id, sum(nvl(topc.frozen_account_price,0)) as frozen_pay
+		  left join (select topc.order_id, sum(ifnull(topc.frozen_account_price,0)) as frozen_pay
 		  			from tab_order_pay_cost topc
 		  		   where topc.order_id = #{orderId, jdbcType = NUMERIC}
 		  		   group by topc.order_id) payInfo
@@ -188,12 +185,8 @@
 		 where tdi.ID = #{id, jdbcType = NUMERIC}
 	</select>
 	
-	<insert id="save" parameterType="com.edu.erp.model.TabDataInvoice">
-			<selectKey resultType="java.lang.Long" keyProperty="id" order="BEFORE" >
-	      		SELECT seq_tab_data_invoice.nextval AS id from dual
-	   		</selectKey>
+	<insert id="save" parameterType="com.edu.erp.model.TabDataInvoice"  useGeneratedKeys="true" keyProperty="id">
 			INSERT INTO TAB_DATA_INVOICE(
-			            ID,
 			            ENCODING,
 			            ORDER_ID,
 			            STUDENT_ID,
@@ -217,10 +210,9 @@
 			            APPLY_USER,
 			            INVOICE_DATE,
 			            INVOICE_USER,
-									RECEIVE_STATUS
+						RECEIVE_STATUS
 			        )
 			    VALUES(
-			        #{id,jdbcType=NUMERIC},
 			        #{encoding,jdbcType=VARCHAR},
 			        #{orderId,jdbcType=NUMERIC},
 			        #{studentId,jdbcType=NUMERIC},
@@ -244,7 +236,7 @@
 			        #{applyUser,jdbcType=NUMERIC},
 			        #{invoiceDate,jdbcType=TIMESTAMP},
 			        #{invoiceUser,jdbcType=NUMERIC},
-							#{receiveStatus,jdbcType=NUMERIC}
+					#{receiveStatus,jdbcType=NUMERIC}
 			    )
 	</insert>
 	<update id="update" parameterType="com.edu.erp.model.TabDataInvoice">

@@ -845,12 +845,6 @@
 	<select id="queryAccountInfo" parameterType="java.util.HashMap" resultType="com.edu.erp.model.TAccount">
 		SELECT * FROM T_ACCOUNT TA WHERE
 		    TA.STUDENT_ID = #{studentId,jdbcType=NUMERIC} 
-		    <if test="buId!=null">
-		    AND TA.BU_ID = #{buId,jdbcType=NUMERIC}
-		    </if>
-		    <if test="cityId!=null">
-		    AND TA.CITY_ID = #{cityId,jdbcType=NUMERIC}
-		    </if>
 	</select>
 	
 	<!--新建账户信息 -->

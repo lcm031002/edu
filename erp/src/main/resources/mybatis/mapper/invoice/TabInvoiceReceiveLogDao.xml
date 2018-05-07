@@ -27,11 +27,7 @@
   </select>
 
   <insert id="add" parameterType="com.edu.erp.model.TabInvoiceReceiveLog">
-    <selectKey keyProperty="id" resultType="long" order="BEFORE">
-      SELECT SEQ_TAB_INVOICE_RECEIVE_LOG.nextval AS id from dual
-    </selectKey>
     insert into tab_invoice_receive_log (
-      id,
       invoice_id,
       receiver_code,
       status,
@@ -41,7 +37,6 @@
       create_user,
       create_time
     ) values (
-      #{id},
       #{invoiceId},
       #{receiverCode},
       #{status},
