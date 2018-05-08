@@ -48,19 +48,19 @@
           </td>
         </tr>
         <tr ng-repeat="orderInfo in orderBJK" ng-if="isLoading!='isLoading'">
-          <td>{{orderInfo.COURSE_SEASON_NAME}}</td>
-          <td>{{orderInfo.SUBJECT_NAME}}</td>
-          <td>{{orderInfo.TEACHER_NAME}}</td>
-          <td>{{orderInfo.START_TIME}}-{{orderInfo.END_TIME}}</td>
-          <td>{{orderInfo.COURSE_TOTAL_COUNT}}</td>
-          <td><span class="grey-num">{{orderInfo.TRANSFER_IN_COUNT}}</span></td>
-          <td>{{orderInfo.TRANSFER_OUT_COUNT}}</td>
-          <td><span class="yellow-num">{{orderInfo.QUIT_LESSON}}</span></td>
-          <td><span class="grey-num">{{orderInfo.ATTEND_COUNT}}</span></td>
-          <td><span class="green-num">{{orderInfo.COURSE_SURPLUS_COUNT_ING}}</span></td>
+          <td>{{orderInfo.course_season_name}}</td>
+          <td>{{orderInfo.subject_name}}</td>
+          <td>{{orderInfo.teacher_name}}</td>
+          <td>{{orderInfo.start_time}}-{{orderInfo.end_time}}</td>
+          <td>{{orderInfo.course_total_count}}</td>
+          <td><span class="grey-num">{{orderInfo.transfer_in_count}}</span></td>
+          <td>{{orderInfo.transfer_out_count}}</td>
+          <td><span class="yellow-num">{{orderInfo.quit_lesson}}</span></td>
+          <td><span class="grey-num">{{orderInfo.attend_count}}</span></td>
+          <td><span class="green-num">{{orderInfo.course_surplus_count_ing}}</span></td>
           <td>
             <span class="cell-payc-detailc drop-menu-sub2">
-                   <a class="menu_field" href="?studentId={{orderInfo.STUDENT_ID}}&orderId={{orderInfo.ORDER_ID}}#/studentMgr/studentMgrCourse/studentMgrOrderDetail">详情</a>
+                   <a class="menu_field" href="?studentId={{orderInfo.student_id}}&orderId={{orderInfo.order_id}}#/studentMgr/studentMgrCourse/studentMgrOrderDetail">详情</a>
                 </span>
           </td>
         </tr>

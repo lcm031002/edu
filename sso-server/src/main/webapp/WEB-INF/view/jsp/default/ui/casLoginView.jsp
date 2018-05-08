@@ -37,7 +37,7 @@
 
         <input placeholder="验证码" class="text" name="captcha" required="" type="text" style="width:42.5%;margin-top:0px;margin-bottom:40px">
         <img src = "captcha.htm" id="validcode" style="margin-right: 10px;">
-        <a href="#" style="color:#fff" onclick="javascript:changeValideCode();">刷新</a>
+        <a href="#" style="color:#000" onclick="javascript:changeValideCode();">刷新</a>
 
         <div class="signin">
             <input type="hidden" name="lt" value="${flowExecutionKey}" />

@@ -62,7 +62,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
          * A captcha attacker won't affaid colorful backgroud, so we just use
          * white color, like google and hotmail.
          */
-        Color bgColor = new Color(43, 43, 54);
+        Color bgColor = new Color(255, 255, 255);
         BackgroundGenerator backgroundGenerator = new GradientBackgroundGenerator(
                 imageWidth, imageHeight, bgColor, bgColor);
         /**
@@ -82,7 +82,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
         /**
          * Note that our captcha color is Blue
          */
-        SingleColorGenerator scg = new SingleColorGenerator(Color.white);
+        SingleColorGenerator scg = new SingleColorGenerator(Color.black);
         /**
          * decorator is very useful pretend captcha attack.
          * we use two line text decorators.
@@ -95,7 +95,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
         textdecorators[1] = line_decorator2;
 
         TextPaster _textPaster = new DecoratedRandomTextPaster(minAcceptedWordLength,
-                maxAcceptedWordLength, scg, new TextDecorator[]{new BaffleTextDecorator(new Integer(0), Color.WHITE)});
+                maxAcceptedWordLength, scg, new TextDecorator[]{new BaffleTextDecorator(new Integer(0), Color.white)});
 
         /**
          * ok, generate the WordToImage Object for logon service to use.

@@ -802,7 +802,7 @@
                 <input class="paywin-input2 mr5 col-sm-12" type="text" ng-model="inputCradInfo.client_card_no" />
               </td>
               <td>
-                <select class="paywin-input2 mr5 col-sm-12" ng-model="inputCradInfo.account" ng-options="item1.id as item1.short_post_name for item1 in accountListPos"
+                <select class="paywin-input2 mr5 col-sm-12" ng-model="inputCradInfo.account" ng-options="item1.id as item1.short_pos_name for item1 in accountListPos"
                   ng-change="selectAccountPOS()">
                 </select>
               </td>
@@ -885,7 +885,7 @@
                 <input class="paywin-input2 mr5 col-sm-12" type="text" ng-model="transferPriceData.client_card_no" />
               </td>
               <td>
-                <select class="paywin-input2 mr5 col-sm-12" ng-model="transferPriceData.account" ng-options="item1.ACCOUNT_NAME for item1 in accountTransferList">
+                <select class="paywin-input2 mr5 col-sm-12" ng-model="transferPriceData.account" ng-options="item1.account_name for item1 in accountTransferList">
                 </select>
               </td>
               <td>
