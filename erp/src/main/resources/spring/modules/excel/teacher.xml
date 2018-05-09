@@ -2,7 +2,7 @@
 <workbook> 
    <worksheet name="Sheet1"> 
     <section startRow="0" endRow="3"/> 
-    <loop startRow="4" endRow="4" items="teacherList" var="teacher" varType="com.ebusiness.erp.model.TeacherExcel"> 
+    <loop startRow="4" endRow="4" items="teacherList" var="teacher" varType="com.edu.erp.model.TeacherExcel">
 	    <section startRow="1" endRow="1"> 
 		    <mapping row="1" col="0">teacher.employee_encoding</mapping> 
 		    <mapping row="1" col="1">teacher.teacher_encoding</mapping> 

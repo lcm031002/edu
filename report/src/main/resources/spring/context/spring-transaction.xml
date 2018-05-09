@@ -22,7 +22,7 @@
 	</tx:advice>
 
 	<aop:config>
-		<aop:pointcut id="aopPointcut" expression="execution(* com.ebusiness..service.impl..*.*(..))" />
+		<aop:pointcut id="aopPointcut" expression="execution(* com.edu..service.impl..*.*(..))" />
 		<aop:advisor pointcut-ref="aopPointcut" advice-ref="txAdvice" />
 	</aop:config>
 	
