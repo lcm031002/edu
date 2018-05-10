@@ -155,7 +155,7 @@ function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,Menu
 
 
         }else{
-            $state.go("index",{});
+            $state.go("students",{});
         }
     }
 
