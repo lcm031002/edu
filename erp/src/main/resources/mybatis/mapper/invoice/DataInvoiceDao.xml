@@ -87,10 +87,10 @@
 		    AND torder.BU_ID = #{bu_id,jdbcType=NUMERIC}
 		    </if>
 		    <if test="start_date != null">
-		    	AND tdi.create_time >=  date_format(#{start_date}, '%Y-%m-%d')
+		    	AND tdi.create_time >=  str_to_date(#{start_date}, '%Y-%m-%d')
 		    </if>
 		     <if test="end_date != null">
-		    AND tdi.create_time &lt; date_format(#{end_date}, '%Y-%m-%d') + 1
+		    AND tdi.create_time &lt; str_to_date(#{end_date}, '%Y-%m-%d') + 1
 		    </if>
 		    <if test="status != null and status > 0">
 		    AND tdi.status = #{status,jdbcType=NUMERIC}
