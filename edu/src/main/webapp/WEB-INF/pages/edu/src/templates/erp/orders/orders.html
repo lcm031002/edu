@@ -236,26 +236,6 @@
             </tr>
           </tbody>
         </table>
-
-        <!--阶梯说明-->
-        <div class="cl panel panel-primary ">
-          <div class="panel-heading ">
-            <span class="title ">
-              阶梯说明:
-            </span>
-          </div>
-          <div class="order-step ">
-            <ul class="order-step-c " style="padding: 20px 0; ">
-              <li class="step-con text-center cur fl {{$index>0?'ml30':''}} {{comboId==$index?'item-selected':'item-unselected'}}" ng-repeat="ladder in ladders"
-                ng-click="selectLadder(ladder,$index)" title=" " style="margin: 10px;">
-                <img src="{{comboWfd.IMG_PATH || 'img/erp/02.png'}}" style="width: 150px;height: 100px; border-radius: 6px;" />
-                <br>
-                <span>{{ladder.ladder_name}}</span>
-              </li>
-              <li class="clearfix"></li>
-            </ul>
-          </div>
-        </div>
       </div>
       <!-- 晚辅导课程选择 -->
       <div class="tab-pane {{business_type==3?'active':''}}" id="wfd">
@@ -511,18 +491,18 @@
         <span class=fr>合计缴费：￥{{payment.cash+payment.onlinePrice+payment.card+payment.transfer+payment.storeAccount+payment.frozenAccount}}</span>
       </h3>
       <table class="table table-striped table-hover table-bordered">
-        <col width=16.66%>
-        <col width=16.66%>
-        <col width=16.66%>
-        <col width=16.66%>
-        <col width=16.68%>
-        <col width=16.68%>
+        <col width=20%>
+        <col width=20%>
+        <col width=20%>
+        <!--<col width=16.66%>-->
+        <col width=20%>
+        <col width=20%>
         <tr>
           <th>现金</th>
           <th>刷卡</th>
           <th>转账</th>
           <!-- 合并需要 -->
-          <th>在线支付</th>
+          <!--<th>在线支付</th>-->
           <th>账户金额</th>
         </tr>
         <tr>
@@ -538,10 +518,10 @@
             <button type=button class="btn btn-default" ng-click="openRechargePanel('transfer')">缴费</button>
             <div class="mt10">已缴费：{{payment.transfer}}</div>
           </td>
-          <td>
-            <button type="button" class="btn btn-default" ng-disabled="!payment.onlinePayEnable" ng-click="openPayOnline()">{{payment.onlinePayBtnLabel || '缴费'}}</button>
-            <div class="mt10">已缴费：{{payment.onlinePrice}}</div>
-          </td>
+          <!--<td>-->
+            <!--<button type="button" class="btn btn-default" ng-disabled="!payment.onlinePayEnable" ng-click="openPayOnline()">{{payment.onlinePayBtnLabel || '缴费'}}</button>-->
+            <!--<div class="mt10">已缴费：{{payment.onlinePrice}}</div>-->
+          <!--</td>-->
           <td>
             <button type=button class="btn btn-default" ng-click="openRechargePanel('storeAccount')">缴费</button>
             <div class="mt10">已缴费：{{payment.storeAccount}}，</div>
