@@ -1065,17 +1065,14 @@
 	</select>
 
 	<insert id="insertOrgRef" parameterType="java.util.List">
-		<foreach collection="list" item="item" index="index" open="begin"
-				 close="; end;" separator=";">
 			insert into t_course_branch_ref
 			(
-			id,
 			course_id,
 			branch_id
 			)
 			values
+		<foreach collection="list" item="item" index="index" separator=",">
 			(
-			seq_t_course_branch_ref.nextval,
 			#{item.major_id},
 			#{item.foreign_id}
 			)
@@ -1083,7 +1080,6 @@
 	</insert>
 
 	<delete id="removeOrgRef" parameterType="java.lang.String">
-
 		delete from
 		t_course_branch_ref
 		where course_id in (${_parameter})

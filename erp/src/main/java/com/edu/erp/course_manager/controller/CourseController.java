@@ -546,7 +546,6 @@ public class CourseController extends BaseController {
 				courseService.toAdd(course);
 			} else if(business_type == (long)TCourse.BusinessTypeEnum.WFD.getCode()) {
 				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(11L));
-				course.setPerformance_belong_type(orgModel.getProductLine().equals(1L) ?2:1);
 				courseService.toAdd(course,null);
 			} else if(business_type == (long)TCourse.BusinessTypeEnum.YDY.getCode()) {
 				//一对一课程新增

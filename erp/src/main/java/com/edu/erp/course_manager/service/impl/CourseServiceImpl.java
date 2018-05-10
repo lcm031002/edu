@@ -861,11 +861,11 @@ public class CourseServiceImpl implements CourseService {
 					ydyCourse.getBranchInfos().addAll(organizationInfoList);
 				}else {
 					for (Map<String, Object> branch : branchList) {
-						if (ydyCourse.getId().equals(((BigDecimal) branch.get("COURSE_ID")).longValue())) {
+						if (ydyCourse.getId().longValue() == NumberUtils.object2Long(branch.get("course_id"))) {
 							OrganizationInfo brandhInfo = new OrganizationInfo();
-							if (branch.get("ORG_NAME") != null) {
-								brandhInfo.setOrg_name(branch.get("ORG_NAME").toString());
-								brandhInfo.setId(((BigDecimal) branch.get("ID")).longValue());
+							if (branch.get("org_name") != null) {
+								brandhInfo.setOrg_name(branch.get("org_name").toString());
+								brandhInfo.setId(NumberUtils.object2Long(branch.get("id")));
 								ydyCourse.getBranchInfos().add(brandhInfo);
 							}
 						}
