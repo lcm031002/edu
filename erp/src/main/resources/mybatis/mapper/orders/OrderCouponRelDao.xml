@@ -12,7 +12,7 @@
 	</resultMap>
 	
 	<insert id="saveOrderCouponRel" parameterType="com.edu.erp.model.OrderCouponRel" useGeneratedKeys="true" keyProperty="id">
-			insert into TAB_ORDER_COUPON_REL t
+			insert into TAB_ORDER_COUPON_REL
 			(
 					ORDER_ID ,
 					COUPON_ID ,

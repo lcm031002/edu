@@ -67,7 +67,6 @@
 		       tpr.end_date       as pr_end_date,
 		       tpr.bu_id          as pr_bu_id,
 		       tpr.city_id        as pr_city_id,
-		       tpr.is_check       as pr_is_check,
 		       tpr.status         as pr_status,
 		       tpr.create_user    as pr_create_user,
 		       tpr.create_time    as pr_create_time,
@@ -92,7 +91,7 @@
 		    on tpr.id = tci.rule_id
 		  left join tab_privilege_criteria tpc
 		    on tpc.RULE_ID = tpr.id
-		 where nvl(tci.status,0)!= 0
+		 where ifnull(tci.status,0)!= 0
 		   and tci.ENCODING = #{encoding,jdbcType=VARCHAR}
 	</select>
 	
@@ -106,7 +105,6 @@
 		       tpr.end_date       as pr_end_date,
 		       tpr.bu_id          as pr_bu_id,
 		       tpr.city_id        as pr_city_id,
-		       tpr.is_check       as pr_is_check,
 		       tpr.status         as pr_status,
 		       tpr.create_user    as pr_create_user,
 		       tpr.create_time    as pr_create_time,
@@ -279,7 +277,7 @@
 		   <if test="branch_names!=null">
 			   branch_names = #{branch_names, jdbcType=VARCHAR},
 		   </if>
-		   update_time = sysdate
+		   update_time = sysdate()
 	    </set> 
 		WHERE id = #{id, jdbcType=NUMERIC}	
 	</update>
