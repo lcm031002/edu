@@ -64,7 +64,7 @@ h1 {
 .login-form {
 	background: #FFFFFF;
 	position: relative;
-	width: 30%;
+	width: 25%;
 	margin: 3% auto 0 auto;
 	text-align: center;
 	border-radius: 15px;
@@ -96,7 +96,7 @@ h1 {
 	-o-border-top-right-radius: 10p
 }
 input[type="text"] {
-	  width: 70%;
+	  width: 65%;
 	  padding: 1em 2em 1em 3em;
 	  color: #9199aa;
 	  font-size: 18px;
@@ -108,7 +108,7 @@ input[type="text"] {
 	  margin-top: 2em;
 }
  input[type="password"]{
-	  width: 70%;
+	  width: 65%;
 	  padding: 1em 2em 1em 3em;
 	  color: #dd3e3e;
 	  font-size: 18px;
