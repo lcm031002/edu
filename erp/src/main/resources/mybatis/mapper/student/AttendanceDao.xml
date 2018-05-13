@@ -907,7 +907,7 @@
 			       (select root_course_id
 			          from t_order_course
 			         where id = #{orderCourseId})
-			   and t.attend_type in (11, 12, 21, 22, 31))
+			   and t.attend_type in (11, 12, 21, 22, 31)) t
 	</select>
 	
 	<resultMap type="com.edu.erp.model.TAttendance" id="attendancePojoMap">

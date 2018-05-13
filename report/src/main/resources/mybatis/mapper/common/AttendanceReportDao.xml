@@ -431,7 +431,7 @@
                                t.remark as attendance_remark,
                                t.COURSE_TEARCHER_CN_REMARK as CHINESE_TEACHER_REMARK,
                                t.COURSE_TEARCHER_EN_REMARK as FOREIGN_TEACHER_REMARK,
-                 '{task_flow}'
+                 '${task_flow}'
                  from (select distinct taht.id,
                                        taht.scheduling_id,
                                        taht.student_id,

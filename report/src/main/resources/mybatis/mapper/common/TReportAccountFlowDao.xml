@@ -16,10 +16,10 @@
 			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and t.operate_time >= str_to_date(#{start_date}, '%Y-%m-%d %H') ]]>
+			<![CDATA[ and DATE_FORMAT(t.operate_time,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and t.operate_time < str_to_date(#{end_date}, '%Y-%m-%d %H') + 1 ]]>
+			<![CDATA[ and DATE_FORMAT(t.operate_time,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 	</select>
 
@@ -39,10 +39,10 @@
 			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and t.operate_time >= str_to_date(#{start_date}, '%Y-%m-%d %H') ]]>
+			<![CDATA[ and DATE_FORMAT(t.operate_time,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and t.operate_time < str_to_date(#{end_date}, '%Y-%m-%d %H') + 1 ]]>
+			<![CDATA[ and DATE_FORMAT(t.operate_time,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 	</select>
 	
