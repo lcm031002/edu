@@ -163,7 +163,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			TCCourseTimes tcCourseTimes = null;
 			for (int i = 0; i < outputTimesArr.length; i++) {
 				tcCourseTimes = new TCCourseTimes();
-				tcCourseTimes.setChangeCourseId(outputOrderCourseId);
+				tcCourseTimes.setOrderCourseId(outputOrderCourseId);
 				tcCourseTimes.setCourseTimes(Long.parseLong(outputTimesArr[i]));
 				tcCourseTimes.setOrderId(orderId);
 				outputTcCourseTimesList.add(tcCourseTimes);
