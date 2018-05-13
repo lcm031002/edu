@@ -2508,7 +2508,7 @@
 			"icon": "iconfont icon-Monthly_report",
 			"type": "$state",
 			"value": "orders_performance",
-			"path": "/orders/classesReports",
+			"path": "/report/classesReports",
 			"menus": [
 				{
 					"index": "A11000101",
@@ -2517,7 +2517,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportSettings",
-					"path": "/orders/classesReports/classesReportSettings",
+					"path": "/report/classesReports/classesReportSettings",
 					"href": "templates/report/settings.html",
 					"services": [
 						{
@@ -2541,7 +2541,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportTaskResult",
-					"path": "/orders/classesReports/classesReportTaskResult",
+					"path": "/report/classesReports/classesReportTaskResult",
 					"href": "templates/report/result.html",
 					"services": [
 						{
@@ -2559,7 +2559,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportAccountRechargeCash",
-					"path": "/orders/classesReports/classesReportAccountRechargeCash",
+					"path": "/report/classesReports/classesReportAccountRechargeCash",
 					"href": "templates/report/common/account_recharge_cash.html",
 					"services":
 					[
@@ -2588,7 +2588,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportAccountCashier",
-					"path": "/orders/classesReports/classesReportAccountCashier",
+					"path": "/report/classesReports/classesReportAccountCashier",
 					"href": "templates/report/common/account_cashier.html",
 					"services":
 					[
@@ -2623,7 +2623,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportOrderChange",
-					"path": "/orders/classesReports/classesReportOrderChange",
+					"path": "/report/classesReports/classesReportOrderChange",
 					"href": "templates/report/common/order_change_report.html",
 					"services":
 					[
@@ -2663,7 +2663,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportPerformanceDetails",
-					"path": "/orders/classesReports/classesReportPerformanceDetails",
+					"path": "/report/classesReports/classesReportPerformanceDetails",
 					"href": "templates/report/common/performance_details.html",
 					"services": [
 						{
@@ -2699,7 +2699,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportPerformanceSum",
-					"path": "/orders/classesReports/classesReportPerformanceSum",
+					"path": "/report/classesReports/classesReportPerformanceSum",
 					"href": "templates/report/common/performance_sum.html",
 					"services":
 					[
@@ -2733,7 +2733,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportAccount",
-					"path": "/orders/classesReports/classesReportAccount",
+					"path": "/report/classesReports/classesReportAccount",
 					"href": "templates/report/common/account.html",
 					"services": [
 						{
@@ -2757,7 +2757,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportAccountFlow",
-					"path": "/orders/classesReports/classesReportAccountFlow",
+					"path": "/report/classesReports/classesReportAccountFlow",
 					"href": "templates/report/common/account_flow.html",
 					"services": [
 						{
@@ -2787,7 +2787,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportSurplusAmountFee",
-					"path": "/orders/classesReports/classesReportSurplusAmountFee",
+					"path": "/report/classesReports/classesReportSurplusAmountFee",
 					"href": "templates/report/common/surplus_amount_fee.html",
 					"services":
 					[
@@ -2827,7 +2827,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesReportAttendance",
-					"path": "/orders/classesReports/classesReportAttendance",
+					"path": "/report/classesReports/classesReportAttendance",
 					"href": "templates/report/common/attendance_report.html",
 					"services":
 					[
@@ -2867,7 +2867,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesTeacherWorkloadReport",
-					"path": "/orders/classesReports/classesTeacherWorkloadReport",
+					"path": "/report/classesReports/classesTeacherWorkloadReport",
 					"href": "templates/report/bjk/teacher_workload_report.html",
 					"services":
 					[
@@ -2907,7 +2907,7 @@
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
 					"value": "classesWfdTeacherAttendReport",
-					"path": "/orders/classes/classesReports/classesWfdTeacherAttendReport",
+					"path": "/report/classes/classesReports/classesWfdTeacherAttendReport",
 					"href": "templates/report/wfd/teacher_attend_report.html",
 					"services":
 					[

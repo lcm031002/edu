@@ -203,7 +203,7 @@
                  recharge.card_no card_no,
                  acc.account_name company_names,
                  acc.account_num company_account,
-                 t.encoding || '操作ID' || t.id remark,
+                 concat(t.encoding , '操作ID' , t.id) remark,
                  case
                    when tt.id is null then
                     ''
@@ -262,7 +262,7 @@
                  top.card_no,
                  top.company_names,
                  top.company_account,
-                 t.remark || t.order_id remark,
+                 concat(t.remark , '操作ID' , t.order_id) remark,
                  case
                    when toi.VALID_STATUS = 1 then
                     '有效'
@@ -320,7 +320,7 @@
                  top.card_no,
                  top.company_names,
                  top.company_account,
-                 chg.remark || '' || fee.order_detail_id as remark,
+                 concat(chg.remark , ' ' , fee.order_detail_id) as remark,
                  '' as status,
                  fee.order_detail_id,
                  top.eb_no
@@ -437,7 +437,7 @@
                  recharge.card_no card_no,
                  acc.account_name company_names,
                  acc.account_num company_account,
-                 t.encoding || '操作ID' || t.id remark,
+                 concat(t.encoding , '操作ID' , t.id) remark,
                  case
                    when tt.id is null then
                     ''
@@ -560,7 +560,7 @@
                        t.agent_id input_user,
                        t.agent_name input_user_name,
                        toi.APPROVE_TIME input_time,
-                       t.remark || t.order_id remark,
+                       concat(t.remark ,t.order_id ) remark,
                        case
                          when toi.VALID_STATUS = 1 then
                           '有效'
