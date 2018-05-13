@@ -31,9 +31,6 @@ function erp_accountChangeBillsController($rootScope, $scope, $log, $uibMsgbox,
         "key": "充值",
         "value": "1"
     }, {
-        "key": "理赔",
-        "value": "3"
-    }, {
         "key": "取款",
         "value": "4"
     },{
@@ -42,9 +39,6 @@ function erp_accountChangeBillsController($rootScope, $scope, $log, $uibMsgbox,
     },  {
         "key": "充值作废",
         "value": "5"
-    }, {
-        "key": "理赔作废",
-        "value": "6"
     }, {
         "key": "取款作废",
         "value": "7"

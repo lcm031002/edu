@@ -587,7 +587,7 @@ public class StudentAccountController extends BaseController {
 							"，申请ID：" + processInstance.getId());
 				}
 			} else if ("withDrawal".equals(json.get("accountOperateType"))) {
-				result = studentAccountService.accountDrawing(json,orgModel.getBuId(), account.getId(),orgModel.getId());
+				result = studentAccountService.accountDrawing(json,orgModel.getCityId(), orgModel.getBuId(), account.getId(),orgModel.getId());
 				StringBuilder detailInfoStr = new StringBuilder();
 				detailInfoStr.append("参数对象：");
 				detailInfoStr.append(json);

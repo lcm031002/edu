@@ -22,7 +22,7 @@
 		<result property="taskTableTypeName" column="task_table_type_name"/>
 	</resultMap>
 	
-	<select id="selectForPage" parameterType="map" resultMap="ReportRunResultMap">
+	<select id="selectForPage" parameterType="page" resultMap="ReportRunResultMap">
 		SELECT
 		t1.task_id,
 		t1.task_flow,

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.edu.report.framework.service.ReportRunResultService;
 import com.edu.report.framework.service.ReportTaskSettingsService;
 import com.edu.report.model.TReportRunResult;
+import com.github.pagehelper.PageHelper;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,11 +41,27 @@ public class ReportRunResultController extends BaseController {
     public Map<String, Object> selectForPage(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            getOrgModel(request);
-            setPageInfo(request);
+
             Map<String, Object> paramMap = WebUtils.getParametersStartingWith(request, "p_");
+            // 当前页数
+            Integer currentPage = genIntParameter("currentPage", request);
+            // 每页显示记录数
+            Integer pageSize = genIntParameter("pageSize", request);
+
+            if (currentPage == null) {
+                currentPage = 1;
+            }
+
+            if (pageSize == null) {
+                pageSize = 10;
+            }
+
+            // 获取第1页，10条内容，默认查询总数count
+            PageHelper.startPage(currentPage, pageSize);
+
             Page<TReportRunResult> page = this.reportRunResultService.selectForPage(paramMap);
-            setRespDataForPage(request, page.getResult(), resultMap);
+            setRespDataForPage(request, page, resultMap);
+
         } catch (Exception e) {
             resultMap.put("error", true);
             resultMap.put("message", e.getMessage());
@@ -58,7 +75,7 @@ public class ReportRunResultController extends BaseController {
     public Map<String, Object> executeTask(@RequestBody JSONObject jsonObj, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            getOrgModel(request);
+            //getOrgModel(request);
             String taskFlow = jsonObj.getString("taskFlow");
             String taskId = jsonObj.getString("taskId");
             if (StringUtils.isEmpty(taskFlow)) {
@@ -76,4 +93,5 @@ public class ReportRunResultController extends BaseController {
 
         return resultMap;
     }
+
 }

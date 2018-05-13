@@ -9,7 +9,7 @@
 		parameterType="java.lang.Long">
 		SELECT torder.ORDER_NO       as order_encoding,
 		       tdi.*,
-		       decode(tdi.heading, '1', '个人', '2', '公司') as heading_name,
+			   case when tdi.heading = '1' then '个人' when tdi.heading = '2' then '公司' end heading_name,
 		       tdic.COMPANY_NAME     as invoice_Compamy_Name,
 		       torder.ACTURAL_AMOUNT as order_money,
 		       tsi.encoding          as student_encoding,
@@ -17,7 +17,7 @@
 		       toio.org_name         as branch_name,
 		       tei.EMPLOYEE_NAME     as apply_user_name,
 		       tei2.EMPLOYEE_NAME    as invoice_user_name,
-		       decode(tdi.status, 1, '已开票', 2, '已回收作废', 3, '未回收作废', 4, '申请中', 5, '拒绝') as status_name
+		       case when tdi. STATUS = 1 then '已开票' when tdi. STATUS = 2 then '已回收作废' when tdi. STATUS = 3 then '未回收作废' when tdi. STATUS = 4 then '申请中' when tdi. STATUS = 5 then  '拒绝' end status_name
 		  FROM tab_data_invoice tdi
 		  LEFT JOIN t_order torder
 		    ON torder.id = tdi.ORDER_ID
@@ -116,13 +116,13 @@
 		SELECT
 		    torder.ORDER_NO as order_encoding,
 		    tdi.*,
-		    decode(tdi.heading, '1', '个人', '2', '公司') as heading_name,
+		    case when tdi.heading = '1' then '个人' when tdi.heading = '2' then '公司' end heading_name,
 		    tdic.COMPANY_NAME as invoice_Compamy_Name,
 		    torder.ACTURAL_AMOUNT as money,
 		    tei.EMPLOYEE_NAME as apply_user_name,
 		    tei2.EMPLOYEE_NAME as invoice_user_name,
 		    tooi.org_name as branch_name,
-		    decode(tdi.status, 1, '已开票', 2, '已回收作废', 3, '未回收作废', 4, '申请中', 5, '拒绝') as status_name
+		    case when tdi. STATUS = 1 then '已开票' when tdi. STATUS = 2 then '已回收作废' when tdi. STATUS = 3 then '未回收作废' when tdi. STATUS = 4 then '申请中' when tdi. STATUS = 5 then  '拒绝' end status_name
 		FROM
 		    tab_data_invoice tdi LEFT JOIN t_order torder
 		        ON torder.id = tdi.ORDER_ID LEFT JOIN tab_data_invoice_company tdic

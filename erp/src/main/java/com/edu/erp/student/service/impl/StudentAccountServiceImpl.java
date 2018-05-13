@@ -532,7 +532,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 	 * @throws Exception
 	 */
 	@Override
-	public Map<String, Object> accountDrawing(Map<String, Object> json, Long buId,
+	public Map<String, Object> accountDrawing(Map<String, Object> json,Long cityId, Long buId,
 			Long userId, Long branchId) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -599,12 +599,12 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			TAccountDynamic tAccountDynamic  = new TAccountDynamic();
 			tAccountDynamic.setAccount_id(Long.parseLong(queryAccount.get("id") + ""));
 			tAccountDynamic.setDynamic_type(4L);//取现
+			tAccountDynamic.setCity_id(cityId);
 			tAccountDynamic.setBranch_id(branchId);
 			tAccountDynamic.setBu_id(buId);
 			tAccountDynamic.setStudent_id(Long.parseLong(paramMap.get("p_student_id") + ""));
 			tAccountDynamic.setStatus(3);
 			tAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_money") + ""));
-			tAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_money_fee") + ""));
 			tAccountDynamic.setPay_flag(2L);//付费
 			tAccountDynamic.setPay_mode(paramMap.get("p_pay_mode")+"");
 			tAccountDynamic.setCreate_user(userId);

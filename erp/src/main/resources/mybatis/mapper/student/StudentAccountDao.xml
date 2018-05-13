@@ -805,6 +805,7 @@
 		pay_mode,
 		create_user,
 		create_time,
+		confirm_time,
 		status,
 		encoding,
 		account_type
@@ -821,6 +822,7 @@
 		#{pay_flag,jdbcType=NUMERIC},
 		#{pay_mode,jdbcType=NUMERIC},
 		#{create_user,jdbcType=VARCHAR},
+		sysdate(),
 		sysdate(),
 		#{status,jdbcType=NUMERIC},
 		#{encoding,jdbcType=VARCHAR},

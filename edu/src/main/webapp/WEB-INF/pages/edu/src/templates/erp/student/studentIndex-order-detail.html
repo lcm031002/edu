@@ -770,8 +770,8 @@
                                 </tr>
                                 <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.orderCourseSurplusCount" ng-if="attendance.ATTEND_TYPE==10||!attendance.ATTEND_TYPE">
                                     <td>{{attendance.TIMES}}</td>
-                                    <td>{{attendance.TEACHER_NAME}}</td>
-                                    <td>{{attendance.COURSE_DATE}}</td>
+                                    <td>{{attendance.teacher_name}}</td>
+                                    <td>{{attendance.course_date}}</td>
                                     <td>{{attendance.ATTEND_DATE?attendance.ATTEND_DATE:'-'}}</td>
                                     <td>{{attendance.ATTEND_USER_NAME?attendance.ATTEND_USER_NAME:'-'}}</td>
                                     <td>{{attendance.NAME?attendance.NAME:'-'}}</td>
@@ -809,7 +809,7 @@
                                 <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.tAttendanceList" ng-if="attendance.attend_type&&attendance.attend_type != 10&&attendance.attend_type != 20&&attendance.attend_type != 30&&attendance.attend_type != 11">
                                     <td>{{attendance.course_times}}</td>
                                     <td>{{attendance.schedulingTeacherName}}</td>
-                                    <td>{{attendance.course_time}}</td>
+                                    <td>{{attendance.course_date}}</td>
                                     <td>{{attendance.attend_date}}</td>
                                     <td>{{attendance.attTeacherName?attendance.attTeacherName:'-'}}</td>
                                     <td>{{attendance.attendTypeName}}</td>

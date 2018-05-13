@@ -405,12 +405,12 @@
 		data_time.course_time course_time  /*课次course_data.course_time*/
 		from  (
 		select
-		sum(nvl(t.cash,0)) as cash,
-		sum(nvl(t.card,0)) as card,
-		sum(nvl(t.transfer,0)) as transfer,
-		sum(nvl(t.account,0))    as account,
-		sum(nvl(t.eb_price,0))    as eb_price,
-		sum(nvl(t.online_price,0))  as online_price
+		sum(ifnull(t.cash,0)) as cash,
+		sum(ifnull(t.card,0)) as card,
+		sum(ifnull(t.transfer,0)) as transfer,
+		sum(ifnull(t.account,0))    as account,
+		sum(ifnull(t.eb_price,0))    as eb_price,
+		sum(ifnull(t.online_price,0))  as online_price
 		from (select distinct order_number,
 		cash,
 		card,
@@ -450,13 +450,13 @@
 		) t
 		) tt left join (
 		select
-		sum(nvl(performance,0)) as performance,
-		sum(nvl(order_amount_payable,0)) as order_amount_payable,
-		sum(nvl(cancel_order_amount,0)) as cancel_order_amount,
-		sum(nvl(transfer_out,0)) as transfer_out,
-		sum(nvl(transfer_in,0)) as transfer_in,
-		sum(nvl(refund,0)) as refund,
-		sum(nvl(cancel_refund_amount,0)) as cancel_refund_amount
+		sum(ifnull(performance,0)) as performance,
+		sum(ifnull(order_amount_payable,0)) as order_amount_payable,
+		sum(ifnull(cancel_order_amount,0)) as cancel_order_amount,
+		sum(ifnull(transfer_out,0)) as transfer_out,
+		sum(ifnull(transfer_in,0)) as transfer_in,
+		sum(ifnull(refund,0)) as refund,
+		sum(ifnull(cancel_refund_amount,0)) as cancel_refund_amount
 		from (select   order_number,
 		course_name,
 		operate_type_name,
@@ -496,9 +496,9 @@
 		<if test="agent_name != null and agent_name != ''">
 			and tpd.agent_name = #{agent_name}
 		</if>
-		) ) course_data on 1=1   left join (
+		) t ) course_data on 1=1   left join (
 		select
-		sum(nvl(course_time,0)) as course_time
+		sum(ifnull(course_time,0)) as course_time
 		from (select   course_time
 		from t_performance_details   tpd
 		where tpd.bu_id = #{bu_id} and tpd.fee_type!=42
@@ -529,7 +529,7 @@
 		<if test="agent_name != null and agent_name != ''">
 			and tpd.agent_name = #{agent_name}
 		</if>
-		) ) data_time
+		) t ) data_time
 		on 1 = 1
 	</sql>
 

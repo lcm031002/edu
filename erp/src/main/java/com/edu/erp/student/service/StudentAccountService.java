@@ -133,7 +133,7 @@ public interface StudentAccountService {
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String, Object> accountDrawing(Map<String, Object> json, Long buId, Long userId,
+	Map<String, Object> accountDrawing(Map<String, Object> json,Long cityId, Long buId, Long userId,
 			Long branchId) throws Exception;
 
 	/***

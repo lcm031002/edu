@@ -14,7 +14,7 @@
 		       t.branch_id,
 		       t.branch_name,
 		       t.opt_type,
-		       t.opt_type_name,0
+		       t.opt_type_name,
 		       t.opt_id,
 		       t.opt_encoding,
 		       t.student_id,
@@ -57,7 +57,7 @@
 		<if test="input_user_name != null and input_user_name != ''">
 			<![CDATA[ and t.input_user_name like '%${input_user_name}%' ]]>
 		</if>
-		order by t.input_time,t.opt_encoding)
+		order by t.input_time,t.opt_encoding ) temp1
 		union all
 		select null id,
            null task_flow,
@@ -74,26 +74,26 @@
            null student_id,
            null student_name,
            null student_encoding,
-           sum(nvl(pay_amount, 0)) pay_amount,
-           sum(nvl(pay_cash, 0)) pay_cash,
-           sum(nvl(pay_card, 0)) pay_card,
-           sum(nvl(pay_trans, 0)) pay_trans,
-           sum(nvl(pay_ebprice, 0)) pay_ebprice,
-           sum(nvl(pay_onlineprice, 0)) pay_onlineprice,
-           sum(nvl(pay_account, 0)) pay_account,
+           sum(ifnull(pay_amount, 0)) pay_amount,
+           sum(ifnull(pay_cash, 0)) pay_cash,
+           sum(ifnull(pay_card, 0)) pay_card,
+           sum(ifnull(pay_trans, 0)) pay_trans,
+           sum(ifnull(pay_ebprice, 0)) pay_ebprice,
+           sum(ifnull(pay_onlineprice, 0)) pay_onlineprice,
+           sum(ifnull(pay_account, 0)) pay_account,
            null input_user,
            null input_user_name,
            null input_time,
            null card_no,
            null company_names,
            null company_account,
-           to_char(sum(nvl(total, 0))) remark,
+           sum(ifnull(total, 0)) remark,
            null status,
            null order_detail_id,
            null eb_no
       from (
           select
-           sum(nvl(t.pay_amount, 0)) pay_amount,
+           sum(ifnull(t.pay_amount, 0)) pay_amount,
            t.pay_cash ,
            t.pay_card ,
            t.pay_trans ,
@@ -122,7 +122,7 @@
             <![CDATA[ and t.input_user_name like '%${input_user_name}%']]>
 		</if>
           group by t.input_time,t.opt_encoding,t.pay_cash,t.pay_card,t.pay_trans,t.pay_ebprice,t.pay_onlineprice,t.pay_account
-      ) temp
+      ) temp2
 	</select>
 	
 	<delete id="removeByTaskFlow"  parameterType="map">
@@ -131,8 +131,7 @@
 	
 	<insert id="addByTaskFlow" parameterType="map">
 		insert into t_account_cashier 
-		(   
-			  id,
+		(
 	          task_flow,
 	          city_id,
 	          city_name,
@@ -165,7 +164,7 @@
 	          order_detail_id,
 	          eb_no
 		)
-		 select SEQ_t_account_cashier.Nextval,'${taskFlow}' task_flow,
+		 select '${taskFlow}' task_flow,
         tmp.*
     from (select t.city_id,
                  city.org_name city_name,
@@ -200,7 +199,7 @@
                  0 as pay_account,
                  t.input_user,
                  e.employee_name input_user_name,
-                 to_char(t.confirm_time, 'yyyy-mm-dd') input_time,
+                 date_format(t.confirm_time, '%Y-%m-%d') input_time,
                  recharge.card_no card_no,
                  acc.account_name company_names,
                  acc.account_num company_account,
@@ -274,10 +273,10 @@
                  top.eb_no
             from vt_order t
             left join (select topc.order_id,
-                              to_char(wm_concat(acc.account_name)) company_names,
-                              to_char(wm_concat(topcd.client_card_no)) card_no,
-                              to_char(wm_concat(acc.account_num)) company_account,
-                              to_char(wm_concat(topcd.eb_no)) eb_no
+                              group_concat(acc.account_name) company_names,
+                              group_concat(wm_concat(topcd.client_card_no) card_no,
+                              group_concat(wm_concat(acc.account_num) company_account,
+                              group_concat(wm_concat(topcd.eb_no) eb_no
                          from TAB_ORDER_PAY_COST topc
                          join TAB_ORDER_PAY_COST_DETAIL topcd
                            on topcd.ORDER_BUY_ID = topc.id
@@ -317,7 +316,7 @@
                  decode(chg.change_type, 3, -1, 1) * nvl(en.account0, 0) as pay_account,
                  chg.apply_user input_user,
                  e.employee_name input_user_name,
-                 to_char(chg.validate_time, 'yyyy-mm-dd') input_time,
+                 date_format(chg.validate_time, '%Y-%m-%d') input_time,
                  top.card_no,
                  top.company_names,
                  top.company_account,
@@ -346,10 +345,10 @@
             join tab_student_info i
               on o.student_id = i.id
             left join (select topc.order_id,
-                              to_char(wm_concat(acc.account_name)) company_names,
-                              to_char(wm_concat(topcd.client_card_no)) card_no,
-                              to_char(wm_concat(acc.account_num)) company_account,
-                              to_char(wm_concat(topcd.eb_no)) eb_no
+                              group_concat(acc.account_name) company_names,
+                              group_concat(topcd.client_card_no) card_no,
+                              group_concat(acc.account_num) company_account,
+                              group_concat(topcd.eb_no) eb_no
                          from TAB_ORDER_PAY_COST topc
                          join TAB_ORDER_PAY_COST_DETAIL topcd
                            on topcd.ORDER_BUY_ID = topc.id
@@ -370,7 +369,7 @@
            where chg.change_type in (1, 3, 4)
              and chg.change_status in (5, 7)
              ) tmp
-		where to_char(to_date(input_time,'yyyy-MM-dd'),'yyyymmdd') BETWEEN #{minOperateNo} AND #{maxOperateNo}
+		where date_format(input_time,'%Y%m%d') BETWEEN #{minOperateNo} AND #{maxOperateNo}
 	</insert>
 
     <insert id="addByTaskFlowBatch1" parameterType="map">
