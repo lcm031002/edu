@@ -280,6 +280,7 @@
 	<insert id="saveOrderInfoDetail" parameterType="com.edu.erp.model.TabOrderInfoDetail" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO TAB_ORDER_INFO_DETAIL
 		(
+		ID,
 		ORDER_ID,
 		ENCODING,
 		STUDENT_ID,
@@ -316,6 +317,7 @@
 		BRANCH_ID
 		)
 		VALUES (
+		id_nextval('t_order_course'),
 		#{order_id,jdbcType=NUMERIC},
 		#{encoding,jdbcType=VARCHAR},
 		#{student_id,jdbcType=NUMERIC},

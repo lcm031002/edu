@@ -273,6 +273,7 @@
 	<insert id="insertOrderCourseWithId" parameterType="com.edu.erp.model.TOrderCourse" useGeneratedKeys="true" keyProperty="id">
 		insert into t_order_course
 			(
+			 id,
 		     order_id,
 		     course_id,
 		     branch_id,
@@ -297,6 +298,7 @@
 		     root_course_id
 	       )
 	    values (
+	        id_nextval('t_order_course'),
 	    	#{order_id,jdbcType=NUMERIC},
 	    	#{course_id,jdbcType=NUMERIC},
 	    	#{branch_id,jdbcType=NUMERIC},
