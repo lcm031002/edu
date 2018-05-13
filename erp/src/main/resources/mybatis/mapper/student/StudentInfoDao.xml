@@ -350,7 +350,7 @@
 	<!-- 学生首页订单信息查询，需要区分校区 -->
 	<select id="queryStudentOrders" parameterType="java.util.Map"  resultType="java.util.Map">
 		  SELECT TOI.*,
-		         PAYMENT_INFO.course_total_count,
+		         PAYMENT_INFO.COURSE_TOTAL_COUNT,
 		         changecourse.premium_amount,
 				 case when toi.check_status = 	3 then 4 when toi.check_status = 2 then 3 when toi.check_status = 1 then 2 when toi.check_status = 4 then 1 end  orderNumber<!-- 审核状态1：未审核   2：审核中  3：已通过   4 ：未通过 -->
 		    FROM TAB_ORDER_INFO TOI
@@ -475,9 +475,9 @@
 	<!-- 查询学员订单详细信息 -->
 	<select id="queryStudentOrdersDetail" parameterType="java.util.Map"  resultType="java.util.Map">
 		SELECT TOID.*,
-		 	   toc.course_total_count as course_total_count_real,
-			   toc.course_surplus_count as course_surplus_count_ing,
-			   toc.order_type order_type_real,
+		 	   toc.course_total_count as COURSE_TOTAL_COUNT_REAL,
+			   toc.course_surplus_count as COURSE_SURPLUS_COUNT_ING,
+			   toc.order_type ORDER_TYPE_REAL,
 		       COURSE_INFO.COURSE_NAME,
 		       COURSE_INFO.COURSE_SEASON_NAME,
 		       COURSE_INFO.SEASON,

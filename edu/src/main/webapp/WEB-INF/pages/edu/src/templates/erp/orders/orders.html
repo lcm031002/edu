@@ -754,7 +754,7 @@
             <tr>
               <th>金额</th>
               <th>付款卡号</th>
-              <th>缴费方式</th>
+              <th>支付方式</th>
               <th>公司账户</th>
               <th>备注</th>
               <th>操作</th>
@@ -782,7 +782,7 @@
                 <input class="paywin-input2 mr5 col-sm-12" type="text" ng-model="inputCradInfo.client_card_no" />
               </td>
               <td>
-                <select class="paywin-input2 mr5 col-sm-12" ng-model="inputCradInfo.account" ng-options="item1.id as item1.short_pos_name for item1 in accountListPos"
+                <select class="paywin-input2 mr5 col-sm-12" ng-model="inputCradInfo.account" ng-options="item1.id as item1.pos_name for item1 in accountListPos"
                   ng-change="selectAccountPOS()">
                 </select>
               </td>

@@ -47,7 +47,7 @@ function erp_StudentListController(
       currentPage: $scope.pageConf.currentPage,
       need_contact: '1',
       searchInfo: $scope.searchParam.searchInfo,
-      searchType: $scope.searchParam.exact ? 1 : 0
+      searchType: $scope.searchParam.exact ? 0 : 0
     }, function (resp) {
       $scope.loadStatues = false;
       $scope.studentsList.splice(0, $scope.studentsList.length);

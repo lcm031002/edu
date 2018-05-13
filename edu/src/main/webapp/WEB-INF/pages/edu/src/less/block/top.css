@@ -203,10 +203,10 @@ body{
     } */
     .left_nav{
         /* top:60px; */
-        width:160px;
+        width:200px;
     }
     .right_content{
-        margin-left:170px;
+        margin-left:210px;
         /* margin-top:-10px; */
     }
 }
