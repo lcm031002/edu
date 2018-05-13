@@ -54,12 +54,20 @@
 	
 	
 	<update id="updateValidOrderCourseTimes" parameterType="map">
-		update t_order_course_times t set t.is_valid = 0 where exists (select 1
+		update t_order_course_times set is_valid = 0 where exists (select 1
               from tc_order_course_times c
-             where t.ocid = c.order_course_id
-               and t.times = c.course_times
-               and c.change_id = = #{change_id})
+             where ocid = c.order_course_id
+               and times = c.course_times
+               and c.change_id = #{change_id})
 	</update>
+
+	<insert id="addOrderCourseTimesByChangeId">
+		insert into t_order_course_times (ocid, times, is_valid)
+		SELECT toct.order_course_id, course_times, 1
+		from tc_order_course_times toct
+		where toct.order_course_id = #{orderCourseId}
+		  and toct.change_id = #{changeId}
+	</insert>
 	
 	<select id="queryTabChangeCourseTimesInfo"  parameterType="map" resultType="com.edu.erp.model.TCChangeCourseTimes">
 		select * from tab_change_course_times

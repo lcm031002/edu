@@ -8,10 +8,7 @@
 package com.edu.erp.orders.service.impl;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -108,7 +105,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		Assert.notNull(transferObj.get("p_input_times"));
 		Assert.notNull(transferObj.get("P_input_user"));
 		Assert.notNull(transferObj.get("businessType"));
-// 		Assert.notNull(transferObj.get("p_remark"), "备注必填！");
 		transferObj.put("p_encoding", EncodingSequenceUtil.getSequenceNum(3L));
 
 		Map<String, Object> queryParam = new HashMap<String, Object>();
@@ -119,73 +115,86 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			throw new Exception("没有找到订单详情！");
 		}
 		Long orderId = orderDetailCourse.get(0).getOrder_id();
+		Integer businessType = NumberUtils.object2Integer(transferObj.get("businessType"));
 
-		// 1对1的转班
-//		if(TCourse.BusinessTypeEnum.YDY.getCode() == transferObj.get("businessType")) {
-			//转班主表
-			TOrderChange orderChange = new TOrderChange();
-			orderChange.setOrder_id(orderId);
-			orderChange.setChange_type(2L);  //转班
-			orderChange.setEncoding((String)transferObj.get("p_encoding"));
-			orderChange.setBranch_id(Long.valueOf(transferObj.get("p_input_branch_id").toString()));
-			orderChange.setApply_user(Long.valueOf(transferObj.get("P_input_user").toString()));
-			orderChange.setApply_time(new Date());
-			orderChange.setChange_status(2L); //录入
-			orderChange.setCreate_user(Long.valueOf(transferObj.get("P_input_user").toString()));
-			orderChange.setCreate_time(new Date());
-			orderChange.setUpdate_user(Long.valueOf(transferObj.get("P_input_user").toString()));
-			orderChange.setUpdate_time(new Date());
-			orderChange.setRemark((String)transferObj.get("p_remark"));
-			
-			//转班子表-转出
-			TCOrderCourse outputTcOrderCourse = new TCOrderCourse();
-			outputTcOrderCourse.setOrder_id(orderChange.getOrder_id());
-			outputTcOrderCourse.setOrder_course_id(orderDetailCourse.get(0).getId());
-			outputTcOrderCourse.setCourse_times(Long.valueOf(transferObj.get("P_output_count").toString()));
-			BigDecimal outputCourseTimes = new BigDecimal(transferObj.get("P_output_count").toString());    
-			BigDecimal outputUnitPrice = new BigDecimal(orderDetailCourse.get(0).getDiscount_unit_price());    
-			outputTcOrderCourse.setTotal_amount(outputCourseTimes.multiply(outputUnitPrice).doubleValue());
-			outputTcOrderCourse.setTransfer_flag(0L); //转出
-			orderChange.getTcOrderCourse().add(outputTcOrderCourse);
-			
-			//转班子表-转入
-			TCOrderCourse intputTcOrderCourse = new TCOrderCourse();
-			intputTcOrderCourse.setOrder_id(orderChange.getOrder_id());
-			intputTcOrderCourse.setOrder_course_id(orderDetailCourse.get(0).getId());
-			intputTcOrderCourse.setCourse_times(Long.valueOf(transferObj.get("P_input_count").toString()));
-			BigDecimal inputCourseTimes = new BigDecimal(transferObj.get("P_input_count").toString());    
-			intputTcOrderCourse.setTotal_amount(inputCourseTimes.multiply(outputUnitPrice).doubleValue());
-			intputTcOrderCourse.setCourse_id(Long.valueOf(transferObj.get("p_input_course_id").toString()));
-			intputTcOrderCourse.setBranch_id(orderChange.getBranch_id());
-			intputTcOrderCourse.setTransfer_flag(1L); //转入
-			orderChange.getTcOrderCourse().add(intputTcOrderCourse);
-			
-			iOrderYDY.transferOrder(orderChange);
-//		} else {
-//			tOrderChangeDao.orderChangeTransfer(transferObj);
-//
-//			if (!transferObj.get("o_err_code").toString().equals("0")) {
-//				log.error("error found,see:" + transferObj.get("o_err_desc"));
-//				throw new Exception("存储过程异常" + transferObj.get("o_err_desc"));
-//			}
-//		}
-		Map<String, Object> querymMap=new HashMap<String,Object>();
-		querymMap.put("times",transferObj.get("p_input_times"));
-		querymMap.put("course_id",transferObj.get("p_input_course_id"));
-		querymMap.put("order_id",orderId);
-//		querymMap.put("root_course_id",transferObj.get("p_order_detail_id"));
-		List<TOrderCourse> orderCourseList=tOrderCourseDao.queryOrderCourseByRootTimes(querymMap);
-		if(!CollectionUtils.isEmpty(orderCourseList)){
-			TCourse courseBusiness=new TCourse();
-			courseBusiness.setId(orderCourseList.get(0).getCourse_id());
-			TCourse course=tCourseDao.queryCourseById(courseBusiness);
-			orderCourseList.get(0).setCourse(course);
-			transferObj.put("rollInOrderCourseInfo",orderCourseList.get(0));
-			//查询转入的课次ID
-			Long o_change_id=Long.parseLong(transferObj.get("o_change_id").toString());
-			List<TOrderCourseTimes> tcCourseTimesList=tCOrderCourseDao.queryOrderCourseTimesByChangeId(o_change_id);
-			transferObj.put("tcCourseTimesList",tcCourseTimesList);
+		//转班主表
+		TOrderChange orderChange = new TOrderChange();
+		orderChange.setOrder_id(orderId);
+		orderChange.setChange_type(2L);  //转班
+		orderChange.setEncoding((String)transferObj.get("p_encoding"));
+		orderChange.setBranch_id(Long.valueOf(transferObj.get("p_input_branch_id").toString()));
+		orderChange.setApply_user(Long.valueOf(transferObj.get("P_input_user").toString()));
+		orderChange.setApply_time(new Date());
+		orderChange.setChange_status(2L); //录入
+		orderChange.setCreate_user(Long.valueOf(transferObj.get("P_input_user").toString()));
+		orderChange.setCreate_time(new Date());
+		orderChange.setUpdate_user(Long.valueOf(transferObj.get("P_input_user").toString()));
+		orderChange.setUpdate_time(new Date());
+		orderChange.setRemark((String)transferObj.get("p_remark"));
+
+		//转班子表-转出
+		Long outputOrderCourseId = orderDetailCourse.get(0).getId();
+		TCOrderCourse outputTcOrderCourse = new TCOrderCourse();
+		outputTcOrderCourse.setOrder_id(orderChange.getOrder_id());
+		outputTcOrderCourse.setOrder_course_id(outputOrderCourseId);
+		outputTcOrderCourse.setCourse_times(Long.valueOf(transferObj.get("P_output_count").toString()));
+		BigDecimal outputCourseTimes = new BigDecimal(transferObj.get("P_output_count").toString());
+		BigDecimal outputUnitPrice = new BigDecimal(orderDetailCourse.get(0).getDiscount_unit_price());
+		outputTcOrderCourse.setTotal_amount(outputCourseTimes.multiply(outputUnitPrice).doubleValue());
+		outputTcOrderCourse.setTransfer_flag(0L); //转出
+		orderChange.getTcOrderCourse().add(outputTcOrderCourse);
+
+		//转班子表-转入
+		TCOrderCourse intputTcOrderCourse = new TCOrderCourse();
+		intputTcOrderCourse.setOrder_id(orderChange.getOrder_id());
+		intputTcOrderCourse.setCourse_times(Long.valueOf(transferObj.get("P_input_count").toString()));
+		BigDecimal inputCourseTimes = new BigDecimal(transferObj.get("P_input_count").toString());
+		intputTcOrderCourse.setTotal_amount(inputCourseTimes.multiply(outputUnitPrice).doubleValue());
+		intputTcOrderCourse.setCourse_id(Long.valueOf(transferObj.get("p_input_course_id").toString()));
+		intputTcOrderCourse.setBranch_id(orderChange.getBranch_id());
+		intputTcOrderCourse.setTransfer_flag(1L); //转入
+		orderChange.getTcOrderCourse().add(intputTcOrderCourse);
+
+		if (Constants.BusinessType.BJK.intValue() == businessType) {
+			String strOutputTimes = transferObj.get("p_output_times").toString();
+			String[] outputTimesArr = strOutputTimes.split(",");
+			List<TCCourseTimes> outputTcCourseTimesList = new ArrayList<TCCourseTimes>(outputTimesArr.length);
+			List<TCCourseTimes> inutputTcCourseTimesList = new ArrayList<TCCourseTimes>(outputTimesArr.length);
+			TCCourseTimes tcCourseTimes = null;
+			for (int i = 0; i < outputTimesArr.length; i++) {
+				tcCourseTimes = new TCCourseTimes();
+				tcCourseTimes.setChangeCourseId(outputOrderCourseId);
+				tcCourseTimes.setCourseTimes(Long.parseLong(outputTimesArr[i]));
+				tcCourseTimes.setOrderId(orderId);
+				outputTcCourseTimesList.add(tcCourseTimes);
+
+				tcCourseTimes = new TCCourseTimes();
+				tcCourseTimes.setCourseTimes(Long.parseLong(outputTimesArr[i]));
+				tcCourseTimes.setOrderId(orderId);
+				inutputTcCourseTimesList.add(tcCourseTimes);
+			}
+			outputTcOrderCourse.setTcCourseTimes(outputTcCourseTimesList);
+			intputTcOrderCourse.setTcCourseTimes(inutputTcCourseTimesList);
 		}
+
+		iOrderYDY.transferOrder(orderChange, businessType);
+
+//		Map<String, Object> querymMap=new HashMap<String,Object>();
+//		querymMap.put("times",transferObj.get("p_input_times"));
+//		querymMap.put("course_id",transferObj.get("p_input_course_id"));
+//		querymMap.put("order_id",orderId);
+//		List<TOrderCourse> orderCourseList=tOrderCourseDao.queryOrderCourseByRootTimes(querymMap);
+//		if(!CollectionUtils.isEmpty(orderCourseList)){
+//			TCourse courseBusiness=new TCourse();
+//			courseBusiness.setId(orderCourseList.get(0).getCourse_id());
+//			TCourse course=tCourseDao.queryCourseById(courseBusiness);
+//			orderCourseList.get(0).setCourse(course);
+//			transferObj.put("rollInOrderCourseInfo",orderCourseList.get(0));
+//			//查询转入的课次ID
+//			Long o_change_id=Long.parseLong(transferObj.get("o_change_id").toString());
+//			List<TOrderCourseTimes> tcCourseTimesList=tCOrderCourseDao.queryOrderCourseTimesByChangeId(o_change_id);
+//			transferObj.put("tcCourseTimesList",tcCourseTimesList);
+//		}
 	}
 
 	/*

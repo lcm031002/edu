@@ -90,6 +90,14 @@ public interface OrderCourseTimesInfoService {
 	 * @throws Exception
 	 */
 	void updateValidOrderCourseTimes(Map<String,Object> map) throws Exception;
+
+	/**
+	 * 转班，根据变动id添加转入课次信息
+	 * @param changeId 变动ID
+	 * @param orderCourseId 转入订单课程ID
+	 * @throws Exception
+	 */
+	void addOrderCourseTimesByChangeId(Long changeId, Long orderCourseId) throws Exception;
 	/**
 	 * 查询退费课次信息
 	 * @param map

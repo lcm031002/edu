@@ -35,7 +35,7 @@
 	
 	
 	<!-- 查询订单课程课次信息 -->
-	<select id="queryOrderCourseTimesInfo" resultType="HashMap" parameterType="java.lang.Long">
+	<select id="queryOrderCourseTimesInfo" resultType="map" parameterType="java.lang.Long">
 		select distinct toct.*,
                 tcs.teacher_id,
                 tti.teacher_name,

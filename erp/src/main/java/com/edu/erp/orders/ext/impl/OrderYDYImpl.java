@@ -69,8 +69,6 @@ public class OrderYDYImpl implements IOrderYDY {
 	
 	@Resource(name = "tcOrderCourseService")
 	private TcOrderCourseService tcOrderCourseService;
-	@Resource(name = "tabChangeCourseDao")
-	private TabChangeCourseDao tabChangeCourseDao;
 	
 	@Resource(name = "tLockDao")
 	private TLockDao tLockDao;
@@ -80,8 +78,6 @@ public class OrderYDYImpl implements IOrderYDY {
 	private TOrderCourseDao tOrderCourseDao;
 	@Resource(name = "orderCourseTimesInfoService")
 	private OrderCourseTimesInfoService orderCourseTimesInfoService; //课程课次服务
-	@Resource(name = "attendanceService")
-	private AttendanceService attendanceService; //考勤服务
 	@Resource(name = "attendanceDao")
 	private AttendanceDao attendanceDao;
 	@Resource(name = "tOrderChangeDao")
@@ -399,7 +395,7 @@ public class OrderYDYImpl implements IOrderYDY {
 	}
 
 	@Override
-	public void transferOrder(TOrderChange orderChange) throws Exception {
+	public void transferOrder(TOrderChange orderChange, Integer businessType) throws Exception {
 		// 1.行级独占锁
 		Map<String, Object> queryParam = new HashMap<String,Object>();
 		queryParam.put("order_id", orderChange.getOrder_id());
@@ -410,10 +406,22 @@ public class OrderYDYImpl implements IOrderYDY {
 		TCOrderCourse outputTcOrderCourse = orderChange.getTcOrderCourse().get(0);
 		outputTcOrderCourse.setChange_id(orderChange.getId());
 		tCOrderCourseDao.saveTcOrderCourse(outputTcOrderCourse);
+
+		if (!CollectionUtils.isEmpty(outputTcOrderCourse.getTcCourseTimes())) {
+			for (TCCourseTimes tcCourseTimes : outputTcOrderCourse.getTcCourseTimes()) {
+				tcCourseTimes.setChangeId(orderChange.getId());
+				tcCourseTimes.setChangeCourseId(outputTcOrderCourse.getId());
+				orderCourseTimesInfoService.saveTcOrderCourseTimes(tcCourseTimes);
+			}
+
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("change_id", orderChange.getId());
+			orderCourseTimesInfoService.updateValidOrderCourseTimes(paramMap);
+		}
 		// 4.将转班-转入课程信息，导入到批改子表
 		TCOrderCourse inputTcOrderCourse = orderChange.getTcOrderCourse().get(1);
 		inputTcOrderCourse.setChange_id(orderChange.getId());
-		tCOrderCourseDao.saveTcOrderCourse(inputTcOrderCourse);
+
 		// 5.锁校验
 		queryParam.clear();
 		queryParam.put("orderCourseId", outputTcOrderCourse.getOrder_course_id());
@@ -478,9 +486,9 @@ public class OrderYDYImpl implements IOrderYDY {
 
 			outputOrderCourse.setUpdate_user(orderChange.getUpdate_user());
 			tOrderCourseDao.updateOrderCourse(outputOrderCourse);
+
 			// 11.生成转入订单
 			TOrderCourse inputOrderCourse = new TOrderCourse();
-			inputOrderCourse.setId(inputTcOrderCourse.getOrder_course_id());
 			inputOrderCourse.setOrder_id(inputTcOrderCourse.getOrder_id());
 			inputOrderCourse.setCourse_id(inputTcOrderCourse.getCourse_id());
 			inputOrderCourse.setBranch_id(inputTcOrderCourse.getBranch_id());
@@ -522,6 +530,18 @@ public class OrderYDYImpl implements IOrderYDY {
 			inputOrderCourse.setStatus(1);
 			
 			tOrderCourseDao.insertOrderCourseWithId(inputOrderCourse);
+
+			inputTcOrderCourse.setOrder_course_id(inputOrderCourse.getId());
+			tCOrderCourseDao.saveTcOrderCourse(inputTcOrderCourse);
+			if (!CollectionUtils.isEmpty(inputTcOrderCourse.getTcCourseTimes())) {
+				for (TCCourseTimes tcCourseTimes : inputTcOrderCourse.getTcCourseTimes()) {
+					tcCourseTimes.setChangeId(orderChange.getId());
+					tcCourseTimes.setOrderCourseId(inputOrderCourse.getId());
+					tcCourseTimes.setChangeCourseId(inputTcOrderCourse.getId());
+					orderCourseTimesInfoService.saveTcOrderCourseTimes(tcCourseTimes);
+				}
+				orderCourseTimesInfoService.addOrderCourseTimesByChangeId(orderChange.getId(), inputOrderCourse.getId());
+			}
 			
 			// 12.更新批改状态为生效
 			updateOrderChange = new TOrderChange();

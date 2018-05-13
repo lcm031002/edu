@@ -102,7 +102,7 @@ public interface IOrderYDY {
 	 *             设定文件 void 返回类型
 	 * 
 	 */
-	void transferOrder(TOrderChange orderChange) throws Exception;
+	void transferOrder(TOrderChange orderChange, Integer businessType) throws Exception;
 
 	/**
 	 * 

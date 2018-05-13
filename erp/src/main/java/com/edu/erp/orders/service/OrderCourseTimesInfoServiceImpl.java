@@ -118,6 +118,11 @@ public class OrderCourseTimesInfoServiceImpl implements
 	}
 
 	@Override
+	public void addOrderCourseTimesByChangeId(Long changeId, Long orderCourseId) throws Exception {
+		orderCourseTimesInfoDao.addOrderCourseTimesByChangeId(changeId, orderCourseId);
+	}
+
+	@Override
 	public List<TCChangeCourseTimes> queryTabChangeCourseTimesInfo(
 			Map<String, Object> map) throws Exception {
 		return orderCourseTimesInfoDao.queryTabChangeCourseTimesInfo(map);

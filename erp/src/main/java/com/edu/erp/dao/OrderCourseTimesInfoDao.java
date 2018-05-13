@@ -10,6 +10,7 @@ package com.edu.erp.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.edu.erp.model.TCChangeCourseTimes;
@@ -104,6 +105,14 @@ public interface OrderCourseTimesInfoDao {
 	 * @throws Exception
 	 */
 	void updateValidOrderCourseTimes(Map<String, Object> map) throws Exception;
+
+	/**
+	 * 转班，根据变动id添加转入课次信息
+	 * @param changeId 变动ID
+	 * @param orderCourseId 转入订单课程ID
+	 */
+	void addOrderCourseTimesByChangeId(@Param("changeId") Long changeId, @Param("orderCourseId") Long orderCourseId);
+
 	/**
 	 * 查询退费课次信息
 	 * @param map
@@ -113,7 +122,7 @@ public interface OrderCourseTimesInfoDao {
 	List<TCChangeCourseTimes> queryTabChangeCourseTimesInfo(Map<String, Object> map) throws Exception;
 	/**
 	 * 保存退费课次信息
-	 * @param tCChangeCourseTimes
+	 * @param tCCourseTimes
 	 * @throws Exception
 	 */
 	void saveTcOrderCourseTimes(TCCourseTimes tCCourseTimes) throws Exception;
