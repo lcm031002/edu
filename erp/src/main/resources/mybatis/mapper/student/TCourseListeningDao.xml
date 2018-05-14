@@ -102,12 +102,8 @@
 	</select>
 	
 	<insert id="insertTCourseListening"  parameterType="java.util.HashMap">
-		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
-      		SELECT SEQ_T_COURSE_LISTENING.currval AS id from dual
-   		</selectKey>
 		insert into T_COURSE_LISTENING
 		(
-            ID ,
             BRANCH_ID ,
             STUDENT_ID ,
             COURSE_ID ,
@@ -122,7 +118,6 @@
 		)   
 		values 
 		(
-			SEQ_T_COURSE_LISTENING.nextval,
 			#{BRANCH_ID,jdbcType=NUMERIC},
 			#{STUDENT_ID,jdbcType=NUMERIC},
 			#{COURSE_ID,jdbcType=NUMERIC},
