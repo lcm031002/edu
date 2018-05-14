@@ -438,4 +438,40 @@
 				and tord.order_no = #{orderNo}
 			</if>
 	</select>
+
+	<select id="queryTransCampusTransfer" parameterType="long" resultType="integer">
+		select ifnull(sum(toc2.course_surplus_count), 0) sum_ct
+		  from t_order_course toc
+		  left join t_order_course toc2
+			on toc.id = toc2.root_course_id
+		 where toc.branch_id != toc2.branch_id
+		   and toc2.course_surplus_count > 0
+		   and toc.order_id = #{orderId}
+		   and toc2.order_id = #{orderId}
+	</select>
+
+	<select id="queryOrderChangeCount" parameterType="long" resultType="integer">
+		select max(result)
+		   from (select case
+						  when toc.COURSE_TOTAL_COUNT = toc.COURSE_SURPLUS_COUNT then
+						   0
+						  else
+						   1
+						end as result,
+						toc.id
+				   from T_ORDER_COURSE toc
+          		where toc.order_id = #{orderId}) toc
+	</select>
+
+	<select id="queryOrderChangeCountInfo" parameterType="long" resultType="map">
+		select sum(case
+              when root_course_id is not null then
+               0
+              else
+               COURSE_TOTAL_COUNT
+              end) COURSE_TOTAL_COUNT,
+             sum(COURSE_SURPLUS_COUNT) COURSE_SURPLUS_COUNT
+           from T_ORDER_COURSE toc
+          where order_id = #{orderId}
+	</select>
 </mapper>
