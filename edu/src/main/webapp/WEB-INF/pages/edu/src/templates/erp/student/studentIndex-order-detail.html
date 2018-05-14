@@ -768,7 +768,7 @@
                                     <th>考勤状态</th>
                                     <th>备注</th>
                                 </tr>
-                                <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.orderCourseSurplusCount" ng-if="attendance.ATTEND_TYPE==10||!attendance.ATTEND_TYPE">
+                                <tr ng-repeat="attendance in showDetailTimesPanelSelectedDetail.orderCourseSurplusCount" ng-if="attendance.attend_type==10||!attendance.attend_type">
                                     <td>{{attendance.TIMES}}</td>
                                     <td>{{attendance.teacher_name}}</td>
                                     <td>{{attendance.course_date}}</td>
