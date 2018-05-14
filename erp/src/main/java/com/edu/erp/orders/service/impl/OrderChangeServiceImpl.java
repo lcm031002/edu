@@ -157,7 +157,13 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 
 		if (Constants.BusinessType.BJK.intValue() == businessType) {
 			String strOutputTimes = transferObj.get("p_output_times").toString();
+			String strInputTimes = transferObj.get("p_input_times").toString();
 			String[] outputTimesArr = strOutputTimes.split(",");
+			String[] inputTimesArr = strInputTimes.split(",");
+			if (inputTimesArr.length != outputTimesArr.length) {
+				throw new Exception("转出、转入课次数量不一致，转出失败！");
+			}
+
 			List<TCCourseTimes> outputTcCourseTimesList = new ArrayList<TCCourseTimes>(outputTimesArr.length);
 			List<TCCourseTimes> inutputTcCourseTimesList = new ArrayList<TCCourseTimes>(outputTimesArr.length);
 			TCCourseTimes tcCourseTimes = null;
@@ -167,9 +173,11 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 				tcCourseTimes.setCourseTimes(Long.parseLong(outputTimesArr[i]));
 				tcCourseTimes.setOrderId(orderId);
 				outputTcCourseTimesList.add(tcCourseTimes);
+			}
 
+			for (int i = 0; i < inputTimesArr.length; i++) {
 				tcCourseTimes = new TCCourseTimes();
-				tcCourseTimes.setCourseTimes(Long.parseLong(outputTimesArr[i]));
+				tcCourseTimes.setCourseTimes(Long.parseLong(inputTimesArr[i]));
 				tcCourseTimes.setOrderId(orderId);
 				inutputTcCourseTimesList.add(tcCourseTimes);
 			}
@@ -178,23 +186,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		}
 
 		iOrderYDY.transferOrder(orderChange, businessType);
-
-//		Map<String, Object> querymMap=new HashMap<String,Object>();
-//		querymMap.put("times",transferObj.get("p_input_times"));
-//		querymMap.put("course_id",transferObj.get("p_input_course_id"));
-//		querymMap.put("order_id",orderId);
-//		List<TOrderCourse> orderCourseList=tOrderCourseDao.queryOrderCourseByRootTimes(querymMap);
-//		if(!CollectionUtils.isEmpty(orderCourseList)){
-//			TCourse courseBusiness=new TCourse();
-//			courseBusiness.setId(orderCourseList.get(0).getCourse_id());
-//			TCourse course=tCourseDao.queryCourseById(courseBusiness);
-//			orderCourseList.get(0).setCourse(course);
-//			transferObj.put("rollInOrderCourseInfo",orderCourseList.get(0));
-//			//查询转入的课次ID
-//			Long o_change_id=Long.parseLong(transferObj.get("o_change_id").toString());
-//			List<TOrderCourseTimes> tcCourseTimesList=tCOrderCourseDao.queryOrderCourseTimesByChangeId(o_change_id);
-//			transferObj.put("tcCourseTimesList",tcCourseTimesList);
-//		}
 	}
 
 	/*
