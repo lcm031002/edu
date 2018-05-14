@@ -370,4 +370,6 @@ public interface AttendanceDao {
     @Select("select * from t_attendance a where a.for_quit = 1 and a.student_id = #{studentId,jdbcType=NUMERIC} and a.scheduling_id = #{schedualingId,jdbcType=NUMERIC}")
     TAttendance getForQuitAttendance(@Param("studentId") Long studentId, @Param("schedualingId") Long schedualingId);
 
+    Integer getOrderAttendCourseTimes(Long orderId);
+
 }

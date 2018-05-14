@@ -163,4 +163,15 @@ public interface TOrderCourseDao {
 	 * @throws Exception
 	 */
 	List<Map<String, Object>> queryOrderCourseList4Compare(Map<String, Object> paramMap) throws Exception;
+
+	/**
+	 * 查询订单是否有跨校区转班
+	 * @param orderId
+	 * @return
+	 */
+	Integer queryTransCampusTransfer(Long orderId);
+
+	Integer queryOrderChangeCount(Long orderId);
+
+	Map<String, Object> queryOrderChangeCountInfo(Long orderId);
 }

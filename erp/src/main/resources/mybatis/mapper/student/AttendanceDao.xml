@@ -289,7 +289,7 @@
 
 	</select>
 	
-	<select id="querySchedulingById" parameterType="string" resultType="HashMap">
+	<select id="querySchedulingById" parameterType="string" resultType="map">
 		select *
 		  from t_course_scheduling t
 		  left join t_course c
@@ -1478,4 +1478,15 @@
         from t_attendance
         where id = #{attendanceId,jdbcType=NUMERIC}
     </insert>
+
+	<select id="getOrderAttendCourseTimes" parameterType="long" resultType="integer">
+		select count(1)
+        from t_order t1
+        left join t_order_course t2
+          on t1.id = t2.order_id
+        left join t_attendance t3
+          on t2.id = t3.order_course_id
+       where t3.attend_type in (11, 12, 21, 22,28, 31)
+         and t1.id = #{orderId}
+	</select>
 </mapper>

@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderInfoServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:39:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import java.util.Date;
@@ -16,6 +9,8 @@ import javax.annotation.Resource;
 
 import com.edu.erp.dao.*;
 import com.edu.erp.model.*;
+import com.edu.erp.orders.service.*;
+import com.edu.erp.orders.service.OrderPayCostService;
 import org.apache.commons.lang.StringUtils;
 import org.jbpm.api.ProcessEngine;
 import org.jbpm.api.ProcessInstance;
@@ -30,13 +25,6 @@ import com.edu.common.util.EncodingSequenceUtil;
 import com.edu.erp.course_manager.service.CourseSchedulingService;
 import com.edu.erp.course_manager.service.CourseService;
 import com.edu.erp.orders.ext.IOrderYDY;
-import com.edu.erp.orders.service.OrderChangeService;
-import com.edu.erp.orders.service.OrderCouponRelService;
-import com.edu.erp.orders.service.OrderInfoDetailService;
-import com.edu.erp.orders.service.OrderInfoService;
-import com.edu.erp.orders.service.OrderPayCostService;
-import com.edu.erp.orders.service.OrderRenewalService;
-import com.edu.erp.orders.service.OrderService;
 import com.edu.erp.promotion.service.PrivilegeRuleService;
 import com.edu.erp.student.service.StudentAttendanceService;
 import com.edu.erp.student.service.StudentInfoService;
@@ -50,14 +38,6 @@ import com.github.pagehelper.Page;
 
 import jxl.common.Logger;
 
-/**
- * 
- * @ClassName: OrderInfoServiceImpl
- * @Description: 订单服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:39:27
- * 
- */
 @Service(value = "orderInfoService")
 public class OrderInfoServiceImpl implements OrderInfoService {
 	private static final Logger log = Logger
@@ -98,12 +78,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	@Resource(name = "userTaskService")
 	private UserTaskService userTaskService;
 
-	
 	@Resource(name = "orderInfoService")
 	private OrderInfoService orderInfoService;
-
-	@Resource(name = "orderService")
-	private OrderService orderService;
 	
 	@Resource(name = "orderChangeService")
 	private OrderChangeService orderChangeService;
@@ -1131,6 +1107,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			param.put("student_id", tabOrderInfo.getStudent_id());
 			param.put("student_name", tabOrderInfo.getStudent_name());
 			param.put("change_type", 3);// 订单作废
+			param.put("lock_type", 1);
 			// 校验是否可以做订单作废
 			orderChangeService.orderChangeCheck(param);
 

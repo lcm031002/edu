@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderChangeServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月13日 下午8:52:22
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import java.math.BigDecimal;
@@ -15,6 +8,7 @@ import javax.annotation.Resource;
 import com.edu.common.util.NumberUtils;
 import com.edu.erp.dao.*;
 import com.edu.erp.model.*;
+import com.edu.erp.orders.service.OrderChangeCheckService;
 import com.edu.erp.util.*;
 import org.apache.log4j.Logger;
 import org.jbpm.api.ProcessEngine;
@@ -23,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import com.edu.common.util.DateUtil;
 import com.edu.common.util.EncodingSequenceUtil;
 import com.edu.erp.attendance.service.AttendanceService;
 import com.edu.common.constants.Constants;
@@ -32,46 +25,24 @@ import com.edu.erp.orders.ext.IOrderRefund;
 import com.edu.erp.orders.ext.IOrderYDY;
 import com.edu.erp.orders.service.OrderChangeService;
 import com.edu.erp.orders.service.OrderInfoService;
-import com.edu.erp.student.service.StudentInfoService;
-import com.edu.erp.workflow.service.UserTaskService;
 import com.github.pagehelper.Page;
 
-/**
- * @ClassName: OrderChangeServiceImpl
- * @Description: 订单修改服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月13日 下午8:52:22
- * 
- */
 @Service(value = "orderChangeService")
 public class OrderChangeServiceImpl implements OrderChangeService {
 	private static final Logger log = Logger
 			.getLogger(OrderChangeServiceImpl.class);
-	
-	
+
 	@Resource(name = "tOrderChangeDao")
 	private TOrderChangeDao tOrderChangeDao;
 
 	@Resource(name = "tOrderCourseDao")
 	private TOrderCourseDao tOrderCourseDao;
 
-	@Resource(name = "tCourseDao")
-	private TCourseDao tCourseDao;
-
-	@Resource(name = "tCOrderCourseDao")
-	private TCOrderCourseDao tCOrderCourseDao;
-
 	@Resource(name = "attendanceService")
 	private AttendanceService attendanceService;
 
 	@Resource(name = "orderInfoService")
 	private OrderInfoService orderInfoService;
-
-	@Resource(name = "studentInfoService")
-	private StudentInfoService studentInfoService;
-
-	@Resource(name = "userTaskService")
-	private UserTaskService userTaskService;
 	
 	@Resource(name = "iOrderYDY")
 	private IOrderYDY iOrderYDY;
@@ -84,6 +55,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 
 	@Resource(name = "tabChangeCourseDao")
 	private TabChangeCourseDao tabChangeCourseDao;
+
+	@Resource(name = "orderChangeCheckService")
+	private OrderChangeCheckService orderChangeCheckService;
 
 	/*
 	 * (non-Javadoc)
@@ -557,8 +531,12 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 
 	@Override
 	public void orderChangeCheck(Map<String, Object> params) throws Exception {
-		tOrderChangeDao.orderChangeCheck(params);
-		
+		Long orderId = NumberUtils.object2Long(params.get("order_id"));
+		this.orderChangeCheckService.isOrderLock(params, "当前订单被锁定，不能订单作废!");
+		this.orderChangeCheckService.hasAttendedCourseTimes(orderId, "订单包含有效考勤，不能作废，如要作废需将考勤置空！");
+		this.orderChangeCheckService.checkOrderChangeCount(orderId, "该订单已有批改操作，请撤销做作废批改操作后，进行作废处理！");
+		this.orderChangeCheckService.isOrderCanceled(orderId, "该订单已作废！");
+		this.orderChangeCheckService.hasTransfer(orderId, "该订单存在跨校区转班，且转出去的课时没有转回来，需要转班回原校区才能作废！");
 	}
 
 	@Override

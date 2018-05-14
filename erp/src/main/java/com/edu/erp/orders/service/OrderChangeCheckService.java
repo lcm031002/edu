@@ -38,4 +38,24 @@ public interface OrderChangeCheckService {
     boolean hasChangeCourseRecord(String changeNo) throws Exception;
     
     boolean hasChangeCourseRecord(String changeNo, String errorMsg) throws Exception;
+
+    /**
+     * 校验订单是否有考勤
+     * @param orderId 订单ID
+     * @param errorMsg 错误信息
+     * @return
+     * @throws Exception
+     */
+    boolean hasAttendedCourseTimes(Long orderId, String errorMsg) throws Exception;
+
+    /**
+     * 校验订单是否有转出课次
+     * @param orderId 订单ID
+     * @param errorMsg 错误信息
+     * @return
+     * @throws Exception
+     */
+    boolean hasTransfer(Long orderId, String errorMsg) throws Exception;
+
+    boolean checkOrderChangeCount(Long orderId, String errorMsg) throws Exception;
 }
