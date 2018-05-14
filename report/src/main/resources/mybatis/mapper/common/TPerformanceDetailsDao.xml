@@ -7,7 +7,7 @@
 			resultType="com.edu.report.model.TPerformanceDetails">
 		select
 		order_number              ,
-		business_date             ,
+		date_format(business_date,'%Y-%m-%d %h:%i:%s')  business_date,
 		order_no                  ,
 		branch_id                 ,
 		branch_name               ,
@@ -76,10 +76,10 @@
 		from t_performance_details t
 		where t.bu_id = #{bu_id}
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and t.business_date >= (#{start_date} || ' 00:00:00') ]]>
+			<![CDATA[ and date_format(t.business_date,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and t.business_date <= (#{end_date} || ' 23:59:59') ]]>
+			<![CDATA[ and date_format(t.business_date,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 		<if test="isWfd == 1">
 			and t.business_type = 3
@@ -100,7 +100,7 @@
 			and t.agent_name = #{agent_name}
 		</if>
 		group by   order_number              ,
-		business_date             ,
+		date_format(business_date,'%Y-%m-%d %h:%i:%s')             ,
 		order_no                  ,
 		branch_id                 ,
 		branch_name               ,
@@ -168,7 +168,7 @@
 		select * from (
 		select
 		order_number              ,
-		business_date             ,
+		date_format(business_date,'%Y-%m-%d %h:%i:%s')  business_date,
 		order_no                  ,
 		branch_id                 ,
 		branch_name               ,
@@ -238,10 +238,10 @@
 		from t_performance_details t
 		where t.bu_id = #{bu_id}
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and t.business_date >= (#{start_date} || ' 00:00:00') ]]>
+			<![CDATA[ and date_format(business_date,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and t.business_date <= (#{end_date} || ' 23:59:59') ]]>
+			<![CDATA[ and date_format(business_date,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 		<if test="branch_id != null">
 			and t.performance_branch_id = #{branch_id}
@@ -265,7 +265,7 @@
 			and t.season_id = #{season_id}
 		</if>
 		group by   order_number              ,
-		business_date             ,
+		date_format(business_date,'%Y-%m-%d %h:%i:%s')             ,
 		order_no                  ,
 		branch_id                 ,
 		branch_name               ,
@@ -436,10 +436,10 @@
 			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and tpd.business_date >= (#{start_date} || ' 00:00:00') ]]>
+			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and tpd.business_date <= (#{end_date} || ' 23:59:59') ]]>
+			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 		<if test="season_id != null and season_id!=''">
 			and tpd.season_id = #{season_id}
@@ -485,10 +485,10 @@
 			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and tpd.business_date >= (#{start_date} || ' 00:00:00') ]]>
+			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and tpd.business_date <= (#{end_date} || ' 23:59:59') ]]>
+			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 		<if test="season_id != null and season_id!=''">
 			and tpd.season_id = #{season_id}
@@ -518,10 +518,10 @@
 			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
 		</if>
 		<if test="start_date != null and start_date != ''">
-			<![CDATA[ and tpd.business_date >= (#{start_date} || ' 00:00:00') ]]>
+			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') >= #{start_date} ]]>
 		</if>
 		<if test="end_date != null and end_date != ''">
-			<![CDATA[ and tpd.business_date <= (#{end_date} || ' 23:59:59') ]]>
+			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') <= #{end_date} ]]>
 		</if>
 		<if test="season_id != null and season_id!=''">
 			and tpd.season_id = #{season_id}
@@ -620,7 +620,7 @@
 		)
 		SELECT
 		tod.order_no AS order_number ,
-		date_format(TF.FINISH_TIME ,'%Y-%m-%d %H') AS business_date ,
+		TF.FINISH_TIME AS business_date ,
 		tod.order_no AS order_no ,
 		tod.branch_id AS branch_id ,
 		toi.ORG_NAME AS branch_name ,
@@ -740,7 +740,7 @@
 		ON tti.id = tc.teacher_id LEFT JOIN tab_teacher_info tta
 		ON tta.id = tc.assteacher_id LEFT JOIN TAB_ORGANIZATION_INFO toi_bu
 		ON tod.bu_id = toi_bu.id LEFT JOIN TAB_ORGANIZATION_INFO toi_city
-		ON tod.bu_id = tod.bu_id LEFT JOIN(
+		ON tod.city_id = toi_city.id LEFT JOIN(
 		SELECT
 		topc.order_id ,
 		group_concat(tdca.account_name) company_names ,
@@ -842,10 +842,7 @@
 		)
 		SELECT
 		todc.encoding AS order_number ,
-		date_format(
-		TF.FINISH_TIME ,
-		'%Y-%m-%d %H'
-		) AS business_date ,
+		TF.FINISH_TIME AS business_date ,
 		tod.order_no AS order_no ,
 		tod.branch_id AS branch_id ,
 		toi.ORG_NAME AS branch_name ,
@@ -1100,10 +1097,7 @@
 		)
 		SELECT
 		todc.encoding AS order_number ,
-		date_format(
-		TF.FINISH_TIME ,
-		'%Y-%m-%d %H'
-		) AS business_date ,
+		TF.FINISH_TIME AS business_date ,
 		tod.order_no AS order_no ,
 		todc.branch_id AS branch_id ,
 		toi.ORG_NAME AS branch_name ,
@@ -1265,7 +1259,7 @@
 		)
 		union all
 		SELECT todc.encoding AS order_number,
-		date_format(TF.FINISH_TIME, '%Y-%m-%d %H') AS business_date,
+		TF.FINISH_TIME AS business_date,
 		tod.order_no AS order_no,
 		todc.branch_id AS branch_id,
 		toi.ORG_NAME AS branch_name,
@@ -1481,10 +1475,7 @@
 		)
 		SELECT
 		todc.encoding AS order_number ,
-		date_format(
-		TF.FINISH_TIME ,
-		'%Y-%m-%d %H'
-		) AS business_date ,
+		TF.FINISH_TIME AS business_date ,
 		tod.order_no AS order_no ,
 		todc.branch_id AS branch_id ,
 		toi.ORG_NAME AS branch_name ,
@@ -1646,7 +1637,7 @@
 		)
 		union all
 		SELECT todc.encoding AS order_number,
-		date_format(TF.FINISH_TIME, '%Y-%m-%d %H') AS business_date,
+		TF.FINISH_TIME AS business_date,
 		tod.order_no AS order_no,
 		todc.branch_id AS branch_id,
 		toi.ORG_NAME AS branch_name,
@@ -1862,10 +1853,7 @@
 		)
 		SELECT
 		todc.encoding AS order_number ,
-		date_format(
-		TF.FINISH_TIME ,
-		'%Y-%m-%d %H'
-		) AS business_date ,
+		TF.FINISH_TIME AS business_date ,
 		tod.order_no AS order_no ,
 		todc.branch_id AS branch_id ,
 		toi.ORG_NAME AS branch_name ,

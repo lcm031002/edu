@@ -269,7 +269,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			studentAccountDao.updateFeeAccount(paramAccountMap);
 
 			// 返回充值记录Id
-			map.put("dynamic_id", paramMap.get("o_dynamic_id"));
+			map.put("dynamic_id", tAccountDynamic.getId());
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();

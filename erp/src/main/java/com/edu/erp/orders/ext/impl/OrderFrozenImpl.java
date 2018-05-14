@@ -257,12 +257,12 @@ public class OrderFrozenImpl implements IOrderFrozen{
 			TAccountChange tAccountChange=new TAccountChange();
 			tAccountChange.setChange_flag(0l);
 			tAccountChange.setChange_type(13l);
-			tAccountChange.setAccount_type(2l);
+			tAccountChange.setAccount_type(1l);
 			tAccountChange.setOrder_id(encoder.getOrder_id());
 			tAccountChange.setEncoder_id(encoder.getId());
 			tAccountChange.setAccount_id(tAccount.getId());
 			tAccountChange.setChange_amount(encoder.getFee_amount());
-			tAccountChange.setPre_amount(tAccount.getFrozen_account()==null?0:tAccount.getFrozen_account());
+			tAccountChange.setPre_amount(tAccount.getFee_amount()==null?0:tAccount.getFee_amount());
 			tAccountChange.setNext_amount(tAccountChange.getPre_amount()+encoder.getFee_amount());
 			tAccountChange.setPay_mode(1l);
 			studentAccountService.saveAccountChange(tAccountChange);
@@ -950,7 +950,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 		TAccountChange tAccountChange=new TAccountChange();
 		tAccountChange.setChange_flag(1l);  //取出
 		tAccountChange.setChange_type(14l); //冻结作废
-		tAccountChange.setAccount_type(2l); //冻结账户
+		tAccountChange.setAccount_type(1l); //冻结账户
 		tAccountChange.setOrder_id(encoder.getOrder_id());
 		tAccountChange.setEncoder_id(encoder.getId());
 		tAccountChange.setAccount_id(tAccount.getId());
@@ -961,7 +961,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 		studentAccountDao.saveAccountChange(tAccountChange);
 		//8.4 更新账户余额
 		HashMap<String,Object> queryParam=new HashMap<String,Object>();
-		Double amount=tAccount.getFrozen_account()==null?0:tAccount.getFrozen_account()+encoder.getFee_amount();
+		Double amount=tAccount.getFee_amount()==null?0:tAccount.getFee_amount()+encoder.getFee_amount();
 		queryParam.put("amount", amount);
 		queryParam.put("accountId", tAccount.getId());
 		if(amount<0){
