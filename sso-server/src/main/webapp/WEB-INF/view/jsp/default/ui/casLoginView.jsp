@@ -35,7 +35,7 @@
         <input type="text" class="text" placeholder="用户名" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '用户名';} " ng-model="user.name" required=""  name="username" id="txtUsername">
         <input type="password" class="text" style="margin-bottom: 0px" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" ng-model="user.password" required=""  name="password">
 
-        <input placeholder="验证码" class="text" name="captcha" required="" type="text" style="margin-top:0px;margin-bottom:40px">
+        <input placeholder="验证码" class="text" name="captcha" required="" type="text" style="margin-top:0px;margin-bottom:50px">
         <div class="copy-rights" style="color:#ffffff;bottom:110px;right: 0px;width:150px;position: absolute;margin-top: 0px;left: 200px;width:40%">
             <a href="#" style="color:#000" onclick="javascript:changeValideCode();"><img src="captcha.htm" id="validcode" style="margin-right: 10px;"></a>
         </div>

@@ -70,7 +70,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
          */
         FontGenerator _fontGenerator = new FontGenerator() {
             public Font getFont() {
-                return new Font("Arial", Font.ITALIC, 20);
+                return new Font("宋体", Font.ITALIC, 20);
             }
             public int getMinFontSize() {
                 return minFontSize.intValue();
@@ -82,7 +82,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
         /**
          * Note that our captcha color is Blue
          */
-        SingleColorGenerator scg = new SingleColorGenerator(Color.black);
+        SingleColorGenerator scg = new SingleColorGenerator(Color.BLACK);
         /**
          * decorator is very useful pretend captcha attack.
          * we use two line text decorators.
@@ -95,7 +95,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
         textdecorators[1] = line_decorator2;
 
         TextPaster _textPaster = new DecoratedRandomTextPaster(minAcceptedWordLength,
-                maxAcceptedWordLength, scg, new TextDecorator[]{new BaffleTextDecorator(new Integer(0), Color.white)});
+                maxAcceptedWordLength, scg, new TextDecorator[]{new BaffleTextDecorator(new Integer(0), Color.WHITE)});
 
         /**
          * ok, generate the WordToImage Object for logon service to use.
