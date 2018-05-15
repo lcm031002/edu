@@ -1035,31 +1035,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 					.queryTCourseListeningSc(param);
 
 			if (!CollectionUtils.isEmpty(resultList)) {
-				for (Map<String, Object> listening : resultList) {
-					if (null != listening.get("LISTENING_DATE")
-							&& !"".equals(listening.get("LISTENING_DATE"))) {
-						Map<String, Object> attend = new HashMap<String, Object>();
-						attend.put("attendanceId", null);
-						if (null == listening.get("SCHEDULING_ID")) {
-							continue;
-						}
-						attend.put(
-								"schedulingId",
-								Long.parseLong(listening.get("SCHEDULING_ID")
-										+ "")); // 排课表ID
-						attend.put("userId", userId);
-						attend.put("attendType", 12L);
-						attend.put("remark", "试听课次，补考勤。");
-						attend.put("branchId", branchId);
-						attend.put("courseDate",
-								DateUtil.stringToDate(
-										"" + listening.get("LISTENING_DATE"),
-										"yyyy-MM-dd"));
-
-						attend.put("studentId", student_id);
-						attendanceService.attandanceSubmit(attend);
-					}
-				}
 				tCourseListeningService.updateTCourseListening(param);
 			}
 

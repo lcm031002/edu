@@ -171,15 +171,15 @@
             </thead>
             <tbody>
               <tr ng-repeat="cl in courseListeningList" ng-hide="cl.courseSelected">
-                <td>{{cl.COURSE_NAME}}</td>
+                <td>{{cl.course_name}}</td>
                 <td>{{cl.COURSE_TIMES}}</td>
-                <td>{{cl.GRADE_NAME}}</td>
-                <td>{{cl.SUBJECT_NAME}}</td>
-                <td>{{cl.BRANCH_NAME}}</td>
-                <td>{{cl.TEACHER_NAME}}</td>
-                <td>{{cl.ENCODING}}</td>
+                <td>{{cl.grade_name}}</td>
+                <td>{{cl.subject_name}}</td>
+                <td>{{cl.branch_name}}</td>
+                <td>{{cl.teacher_name}}</td>
+                <td>{{cl.encoding}}</td>
                 <td>{{cl.LISTENING_DATE}}</td>
-                <td ng-switch="cl.pay_status">
+                <td ng-switch="cl.PAY_STATUS">
                   <span ng-switch-when="1">成功缴费</span>
                   <span ng-switch-when="2">拒缴</span>
                   <span ng-switch-when="3">已试听</span>
