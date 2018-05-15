@@ -245,7 +245,7 @@ function erp_orderChangeFrozenController(
     $scope.queryCourse =  function (){
 
         var param = {
-            studentId : $scope.curStudent.id,
+            studentId : $scope.curStudent != null ? $scope.curStudent.id : $scope.studentId,
             businessType:$scope.businessType
         };
 
@@ -275,7 +275,7 @@ function erp_orderChangeFrozenController(
     $scope.queryWfdCourse =  function (){
 
         var param = {
-            studentId : $scope.curStudent.id,
+            studentId : $scope.curStudent != null ? $scope.curStudent.id : $scope.studentId,
             businessType:$scope.businessType
         };
 
@@ -306,7 +306,7 @@ function erp_orderChangeFrozenController(
     $scope.queryYdyCourse =  function (){
 
         var param = {
-            studentId : $scope.curStudent.id,
+            studentId : $scope.curStudent != null ? $scope.curStudent.id : $scope.studentId,
             businessType:$scope.businessType
         };
 
@@ -586,7 +586,9 @@ function erp_orderChangeFrozenController(
         $scope.isSubmitRefund = '';
     }
 
-
-
     initial();
+
+    if($scope.studentId != null || $scope.curStudent != null) {
+        $scope.nextStep(1,2);
+    }
 }

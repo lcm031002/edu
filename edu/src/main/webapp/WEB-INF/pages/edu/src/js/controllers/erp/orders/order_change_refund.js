@@ -276,7 +276,7 @@ function erp_orderChangeRefundController(
         }
 
         var param = {
-            studentId : $scope.curStudent.id,
+            studentId : $scope.curStudent != null ? $scope.curStudent.id : $scope.studentId,
             businessType:$scope.businessType
         };
         if ($scope.businessType == 1) {
@@ -557,4 +557,8 @@ function erp_orderChangeRefundController(
     }
 
     initial();
+
+    if($scope.studentId != null || $scope.curStudent != null) {
+        $scope.nextStep(1,2);
+    }
 }

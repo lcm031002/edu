@@ -314,6 +314,10 @@ function erp_OrdersIndexOrdersController(
         }else{
           $uibMsgbox.alert(resp.message);
         }
+
+         if ($scope.studentId != null && !$("#rootIndex_temporaryOrderId").val()) {
+            $scope.nextStep(1, 2);
+         }
       });
   };
 
