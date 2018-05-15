@@ -1093,121 +1093,120 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 			}
 
 			// 进行作废操作，当天的直接作废
-			String createDate = DateUtil.dateToString(tabOrderInfo.getCreate_time(), "yyyy-MM-dd");
-			String today = DateUtil.getCurrDate("yyyy-MM-dd");
-			if (today.endsWith(createDate)) {
-				resultMap = orderChangeService.cancelOrder(remark, orderId,account.getId());
+//			String createDate = DateUtil.dateToString(tabOrderInfo.getCreate_time(), "yyyy-MM-dd");
+//			String today = DateUtil.getCurrDate("yyyy-MM-dd");
+//			if (today.endsWith(createDate)) {
+				resultMap = orderChangeService.cancelOrder(tabOrderInfo, remark, account.getId());
 				if ("false".equals(resultMap)) {
 					resultMap.put("message", "手工作废订单成功！");
-					StringBuilder detailInfoStr = new StringBuilder();
-					detailInfoStr.append("订单为当日订单，时间为：");
-					detailInfoStr.append(today);
-					detailInfoStr.append("处理结果：");
-					detailInfoStr.append(resultMap);
-					TabOrderPayCost payCostInfo = orderPayCostService.queryTabOrderPayCost(orderId);
+//					StringBuilder detailInfoStr = new StringBuilder();
+//					detailInfoStr.append("订单为当日订单，时间为：");
+//					detailInfoStr.append(today);
+//					detailInfoStr.append("处理结果：");
+//					detailInfoStr.append(resultMap);
+//					TabOrderPayCost payCostInfo = orderPayCostService.queryTabOrderPayCost(orderId);
 				}
 
 				return resultMap;
-			}
+//			}
 
 			// 获取当前登录地区ID
-			String city_id =orgModel.getCityId().toString();
-			String buid_id = orgModel.getBuId().toString();
+//			String city_id =orgModel.getCityId().toString();
+//			String buid_id = orgModel.getBuId().toString();
 
 			// 开始处理个别地区需要走两层审批的工作流
-
-			String flag = DxbCityCfg.getInstance().getConfigItem("workflow.zuofei.shenpi.2c." + city_id, "-1");
-
-			boolean shenpi_2c = false;
-
-			if (flag.equals("true")) {
-				if (!WorkflowHelper.isDeployed(processEngine,"erpv5.DXB_order_menucancel_2C")) {
-					resultMap.put("error", "true");
-					resultMap.put("message", "订单手工作废审批流程尚未发布，请联系管理员发布流程！");
-
-					StringBuilder detailInfoStr = new StringBuilder();
-					detailInfoStr.append("失败原因：订单手工作废审批流程尚未发布！");
-					return resultMap;
-				} else {
-					shenpi_2c = true;
-				}
-			} else if (!WorkflowHelper.isDeployed(processEngine,"erpv5.DXB_order_menucancel")) {
-				resultMap.put("error", "true");
-				resultMap.put("message", "订单手工作废审批流程尚未发布，请联系管理员发布流程！");
-
-				StringBuilder detailInfoStr = new StringBuilder();
-				detailInfoStr.append("失败原因：订单手工作废审批流程尚未发布！");
-				return resultMap;
-			}
-			param.put("remark", remark);
-			param.put("remark_order", remark);
-			param.put("branch_id", tabOrderInfo.getBranch_id());
-			param.put("workbenchURL",
-					"/apps/student_index/index-student#/order-detail/"
-							+ tabOrderInfo.getBusiness_type() + "/"
-							+ tabOrderInfo.getStudent_id() + "/"
-							+ tabOrderInfo.getId());
-			param.put("businessDetailInfo", DetailBusinessInfoFormat.menuOrderCancelString(tabOrderInfo, remark));
-
-			Map<String, Object> userApplication = new HashMap<String, Object>();
-			userApplication.put("APPLICATION_ID",account.getId());
-			StringBuilder application = new StringBuilder("订单手工作废审批：");
-			application.append("学生ID[");
-			application.append(tabOrderInfo.getStudent_id());
-			application.append("]");
-			application.append("订单ID[");
-			application.append(tabOrderInfo.getId());
-			application.append("]");
-			application.append("订单总价[");
-			application.append(tabOrderInfo.getActual_price());
-			application.append(".00元]");
-
-			userApplication.put("APPLICATION", application.toString());
-			userApplication.put("STATUS", 1L);
-			userApplication.put("CREATETIME",DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
-			userApplication.put("REMARK", remark);
-			userApplication.put("CURRENT_STATE", "申请已提交");
-			userApplication.put("CURRENT_STEP", "申请提交");
-			if (null != account) {
-				userApplication.put("CURRENT_MAN", account.getEmployeeName());
-			}
-			userApplication.put("UPDATETIME",
-					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
-			userApplication.put("WORKURL",
-					"#/order-detail/" + tabOrderInfo.getBusiness_type() + "/"
-							+ tabOrderInfo.getStudent_id() + "/"
-							+ tabOrderInfo.getId());
-			userTaskService.insertApplication(userApplication);
-			param.put("application_id", userApplication.get("id"));
-			param.put("sponsor", account.getId());
-
-			// 处理佳音意外情况
-			if (buid_id.equals("100000042")) {
-				// 佳音跨月走两层，不跨月原样
-				String createMonth = DateUtil.dateToString(tabOrderInfo.getCreate_time(), "yyyy-MM");
-				String Month = DateUtil.getCurrDate("yyyy-MM");
-				if (createMonth.equals(Month)) {
-					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel", param);
-					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
-				} else {
-					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel_2C", param);
-					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
-				}
-			} else {
-				// shenpi标识为ture则走两层审批
-				if (shenpi_2c) {
-					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel_2C", param);
-					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
-				} else {
-					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel", param);
-					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
-				}
-			}
-			resultMap.put("error", "false");
-			resultMap.put("message", "手工作废订单审批申请已提交！");
-			StringBuilder detailInfoStr = new StringBuilder();
-			detailInfoStr.append(application.toString());
-			return resultMap;
+//			String flag = DxbCityCfg.getInstance().getConfigItem("workflow.zuofei.shenpi.2c." + city_id, "-1");
+//
+//			boolean shenpi_2c = false;
+//
+//			if (flag.equals("true")) {
+//				if (!WorkflowHelper.isDeployed(processEngine,"erpv5.DXB_order_menucancel_2C")) {
+//					resultMap.put("error", "true");
+//					resultMap.put("message", "订单手工作废审批流程尚未发布，请联系管理员发布流程！");
+//
+//					StringBuilder detailInfoStr = new StringBuilder();
+//					detailInfoStr.append("失败原因：订单手工作废审批流程尚未发布！");
+//					return resultMap;
+//				} else {
+//					shenpi_2c = true;
+//				}
+//			} else if (!WorkflowHelper.isDeployed(processEngine,"erpv5.DXB_order_menucancel")) {
+//				resultMap.put("error", "true");
+//				resultMap.put("message", "订单手工作废审批流程尚未发布，请联系管理员发布流程！");
+//
+//				StringBuilder detailInfoStr = new StringBuilder();
+//				detailInfoStr.append("失败原因：订单手工作废审批流程尚未发布！");
+//				return resultMap;
+//			}
+//			param.put("remark", remark);
+//			param.put("remark_order", remark);
+//			param.put("branch_id", tabOrderInfo.getBranch_id());
+//			param.put("workbenchURL",
+//					"/apps/student_index/index-student#/order-detail/"
+//							+ tabOrderInfo.getBusiness_type() + "/"
+//							+ tabOrderInfo.getStudent_id() + "/"
+//							+ tabOrderInfo.getId());
+//			param.put("businessDetailInfo", DetailBusinessInfoFormat.menuOrderCancelString(tabOrderInfo, remark));
+//
+//			Map<String, Object> userApplication = new HashMap<String, Object>();
+//			userApplication.put("APPLICATION_ID",account.getId());
+//			StringBuilder application = new StringBuilder("订单手工作废审批：");
+//			application.append("学生ID[");
+//			application.append(tabOrderInfo.getStudent_id());
+//			application.append("]");
+//			application.append("订单ID[");
+//			application.append(tabOrderInfo.getId());
+//			application.append("]");
+//			application.append("订单总价[");
+//			application.append(tabOrderInfo.getActual_price());
+//			application.append(".00元]");
+//
+//			userApplication.put("APPLICATION", application.toString());
+//			userApplication.put("STATUS", 1L);
+//			userApplication.put("CREATETIME",DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
+//			userApplication.put("REMARK", remark);
+//			userApplication.put("CURRENT_STATE", "申请已提交");
+//			userApplication.put("CURRENT_STEP", "申请提交");
+//			if (null != account) {
+//				userApplication.put("CURRENT_MAN", account.getEmployeeName());
+//			}
+//			userApplication.put("UPDATETIME",
+//					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
+//			userApplication.put("WORKURL",
+//					"#/order-detail/" + tabOrderInfo.getBusiness_type() + "/"
+//							+ tabOrderInfo.getStudent_id() + "/"
+//							+ tabOrderInfo.getId());
+//			userTaskService.insertApplication(userApplication);
+//			param.put("application_id", userApplication.get("id"));
+//			param.put("sponsor", account.getId());
+//
+//			// 处理佳音意外情况
+//			if (buid_id.equals("100000042")) {
+//				// 佳音跨月走两层，不跨月原样
+//				String createMonth = DateUtil.dateToString(tabOrderInfo.getCreate_time(), "yyyy-MM");
+//				String Month = DateUtil.getCurrDate("yyyy-MM");
+//				if (createMonth.equals(Month)) {
+//					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel", param);
+//					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
+//				} else {
+//					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel_2C", param);
+//					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
+//				}
+//			} else {
+//				// shenpi标识为ture则走两层审批
+//				if (shenpi_2c) {
+//					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel_2C", param);
+//					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
+//				} else {
+//					ProcessInstance pi = processEngine.getExecutionService().startProcessInstanceByKey("erpv5.DXB_order_menucancel", param);
+//					processEngine.getExecutionService().createVariables(pi.getId(), param, true);
+//				}
+//			}
+//			resultMap.put("error", "false");
+//			resultMap.put("message", "手工作废订单审批申请已提交！");
+//			StringBuilder detailInfoStr = new StringBuilder();
+//			detailInfoStr.append(application.toString());
+//			return resultMap;
 		} catch (Exception e) {
 			resultMap.put("error", "true");
 			resultMap.put("message",  e.getMessage());
@@ -1536,5 +1535,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	@Override
 	public void updateOrderLockStatus(Map<String, Object> params) throws Exception {
 		orderInfoDao.updateOrderLockStatus(params);
+	}
+
+	@Override
+	public void updateOrderStatusById(Long id, Integer validStatus) {
+		orderInfoDao.updateOrderStatusById(id, validStatus);
 	}
 }

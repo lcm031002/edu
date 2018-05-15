@@ -5,10 +5,14 @@ import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.edu.common.util.DateUtil;
 import com.edu.common.util.NumberUtils;
 import com.edu.erp.dao.*;
 import com.edu.erp.model.*;
-import com.edu.erp.orders.service.OrderChangeCheckService;
+import com.edu.erp.orders.service.*;
+import com.edu.erp.orders.service.OrderPayCostService;
+import com.edu.erp.role.service.AccountService;
+import com.edu.erp.student.service.StudentAccountService;
 import com.edu.erp.util.*;
 import org.apache.log4j.Logger;
 import org.jbpm.api.ProcessEngine;
@@ -23,8 +27,6 @@ import com.edu.common.constants.Constants;
 import com.edu.erp.orders.ext.IOrderFrozen;
 import com.edu.erp.orders.ext.IOrderRefund;
 import com.edu.erp.orders.ext.IOrderYDY;
-import com.edu.erp.orders.service.OrderChangeService;
-import com.edu.erp.orders.service.OrderInfoService;
 import com.github.pagehelper.Page;
 
 @Service(value = "orderChangeService")
@@ -38,11 +40,20 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	@Resource(name = "tOrderCourseDao")
 	private TOrderCourseDao tOrderCourseDao;
 
+	@Resource(name = "tLockDao")
+	private TLockDao tLockDao;
+
 	@Resource(name = "attendanceService")
 	private AttendanceService attendanceService;
 
 	@Resource(name = "orderInfoService")
 	private OrderInfoService orderInfoService;
+
+	@Resource(name = "orderCourseTimesInfoService")
+	private OrderCourseTimesInfoService orderCourseTimesInfoService;
+
+	@Resource(name = "orderService")
+	private OrderService orderService;
 	
 	@Resource(name = "iOrderYDY")
 	private IOrderYDY iOrderYDY;
@@ -58,6 +69,27 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 
 	@Resource(name = "orderChangeCheckService")
 	private OrderChangeCheckService orderChangeCheckService;
+
+	@Resource(name = "feeService")
+	private FeeService feeService;
+
+	@Resource(name = "feeDetailService")
+	private FeeDetailService feeDetailService;
+
+	@Resource(name = "encoderService")
+	private EncoderService encoderService;
+
+	@Resource(name = "orderPayCostService")
+	private OrderPayCostService orderPayCostService;
+
+	@Resource(name = "finFeeService")
+	private FinFeeService finFeeService;
+
+	@Resource(name = "accountService")
+	private AccountService accountService;
+
+	@Resource(name = "studentAccountService")
+	private StudentAccountService studentAccountService;
 
 	/*
 	 * (non-Javadoc)
@@ -540,29 +572,176 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	}
 
 	@Override
-	public Map<String, Object> cancelOrder(String remark, Long orderId,Long userId) throws Exception {
+	public Map<String, Object> cancelOrder(TabOrderInfo orderInfo, String remark, Long userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("error", "false");
 		map.put("message", "");
 		
 		try {
-			if (StringUtil.isEmpty(orderId) || StringUtil.isEmpty(userId)) {
+			Long orderId = orderInfo.getId();
+			if (orderId == null || userId == null) {
 				map.put("error", "true");
 				map.put("message", "参数不能为空！");
 				return map;
 			}
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("p_order_id", orderId);
-			paramMap.put("P_input_user", userId);
-			paramMap.put("p_remark", remark);
-			paramMap.put("p_encoding", EncodingSequenceUtil.getSequenceNum(23L));
 
-			tOrderChangeDao.cancelOrder(paramMap);
+			Date curDateTime = DateUtil.getCurrDateTime();
+			TOrderChange orderChange = new TOrderChange();
+			orderChange.setOrder_id(orderId);
+			orderChange.setChange_type(3L);
+			orderChange.setEncoding(EncodingSequenceUtil.getSequenceNum(23L));
+			orderChange.setApply_user(userId);
+			orderChange.setApply_time(curDateTime);
+			orderChange.setBranch_id(orderInfo.getBranch_id());
+			orderChange.setCreate_user(userId);
+			orderChange.setCreate_time(curDateTime);
+			orderChange.setRemark(remark);
+			orderChange.setInput_time(curDateTime);
+			orderChange.setInput_user(userId);
+			tOrderChangeDao.saveOrderChange(orderChange);
 
-			if (!paramMap.get("o_err_code").toString().equals("0")) {
-				map.put("message", paramMap.get("o_err_desc"));
-				throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
+//			TLock tLock = new TLock();
+//			tLock.setType(1L);
+//			tLock.setResourceId(orderId);
+//			tLock.setBusiType(5L);
+//			tLock.setBusiId(orderChange.getId());
+//			this.tLockDao.saveLock(tLock);
+
+			TFee oldFee = feeService.queryFeeByOrderIdAndFeeType(orderInfo.getId(), 11);
+
+			TEncoder encoder = new TEncoder();
+			encoder.setEncoder_type(11L);
+			encoder.setOrder_id(orderId);
+			encoder.setBusi_type(5L);
+			encoder.setBusi_id(orderChange.getId());
+			encoder.setCreate_time(curDateTime);
+			encoder.setCreate_user(userId);
+			encoder.setUpdate_time(curDateTime);
+			encoder.setUpdate_user(userId);
+			encoder.setStatus(1);
+			encoder.setFee_amount(oldFee.getFee_amount());
+			encoder.setFee_flag(2L);
+			encoderService.saveTEncoder(encoder);
+
+			encoder.setEncoder_no("ENCODER" + encoder.getId());
+			encoderService.updateEncoderNo(encoder);
+
+			TFee fee = new TFee();
+			fee.setOrder_id(orderId);
+			fee.setFee_type(53L);
+			fee.setFee_flag(2L);
+			fee.setFee_amount(oldFee.getFee_amount());
+			fee.setPay_mode(oldFee.getPay_mode());
+			fee.setInsert_time(curDateTime);
+			fee.setFinish_time(curDateTime);
+			fee.setFee_status(1L);
+			fee.setEncoder_id(encoder.getId());
+			fee.setOperate_type(5L);
+			fee.setOperate_no(orderChange.getId().toString());
+			feeService.saveFee(fee);
+
+			List<TOrderCourse> orderCourseList = tOrderCourseDao.queryOrderCoursePage(orderId);
+			if (!CollectionUtils.isEmpty(orderCourseList)) {
+				TFeeDetail feeDetail = null;
+				for (TOrderCourse orderCourse : orderCourseList) {
+					feeDetail = new TFeeDetail();
+					feeDetail.setFee_id(fee.getId());
+					feeDetail.setOrder_id(orderId);
+					feeDetail.setOrder_detail_id(orderCourse.getId());
+					feeDetail.setFee_type(53L);
+					feeDetail.setFee_flag(2L);
+					feeDetail.setFee_amount(orderCourse.getSurplus_cost() + orderCourse.getManage_fee());
+					feeDetail.setCourse_sum(orderCourse.getCourse_surplus_count());
+					feeDetail.setOperate_type(5L);
+					feeDetail.setOperate_no(orderChange.getId());
+					feeDetailService.saveFeeDetail(feeDetail);
+				}
 			}
+
+			map.put("fee_amount", -1 * oldFee.getFee_amount());
+			map.put("change_id", orderChange.getId());
+			tOrderChangeDao.updateFeeAmountByChangeId(map);
+
+			// 生成应退费用
+			TFee refundFee = new TFee();
+			refundFee.setOrder_id(orderId);
+			refundFee.setFee_type(32L);
+			refundFee.setFee_flag(2L);
+			refundFee.setFee_amount(oldFee.getFee_amount());
+			refundFee.setInsert_time(curDateTime);
+			refundFee.setFinish_time(curDateTime);
+			refundFee.setFee_status(1L);
+			refundFee.setEncoder_id(encoder.getId());
+			refundFee.setOperate_type(5L);
+			refundFee.setOperate_no(orderChange.getId().toString());
+			feeService.saveFee(fee);
+
+			// 生成资金用途
+			TFinFee finFee = null;
+			TFinFeeUse finFeeUse = null;
+
+			TBankAccount bankAccount = null;
+			TAccountChange accountChange = null;
+
+			TabOrderPayCost orderPayCost = this.orderPayCostService.queryTabOrderPayCost(orderId);
+			if (orderPayCost != null && !CollectionUtils.isEmpty(orderPayCost.getDetails())) {
+				for (TabOrderPayCostDetail orderPayCostDetail : orderPayCost.getDetails()) {
+					finFee = new TFinFee();
+					finFee.setPay_flag(2L);
+
+					finFeeUse = new TFinFeeUse();
+					finFeeUse.setUse_type(11L);
+					finFeeUse.setOrder_id(orderId);
+					finFeeUse.setEncoder_id(encoder.getId());
+
+					bankAccount = new TBankAccount();
+
+					long paymentWay = orderPayCostDetail.getPayment_way();
+					if (paymentWay == 1 || paymentWay == 2 || paymentWay == 3) {
+						finFee.setStudent_id(orderPayCost.getStudentId());
+						finFee.setPay_mode(orderPayCostDetail.getPayment_way());
+						finFee.setFee_amount(orderPayCostDetail.getStaffappprem().doubleValue());
+						finFeeService.saveTFinFee(finFee);
+
+						finFeeUse.setFin_fee_id(finFee.getId());
+						finFeeUse.setFee_amount(orderPayCostDetail.getStaffappprem().doubleValue());
+						finFeeService.saveTFinFeeUse(finFeeUse);
+
+						if (paymentWay == 2 || paymentWay == 3) {
+							bankAccount.setFin_fee_id(finFee.getId());
+							bankAccount.setAccount_owner(orderPayCostDetail.getClient_name());
+							bankAccount.setAccount_no(orderPayCostDetail.getClient_card_no());
+							finFeeService.saveTBankAccount(bankAccount);
+						}
+					} else if (paymentWay == 4) { // 储值账户
+						TAccount account = accountService.queryByStudentIdAndBuId(orderInfo.getStudent_id(), orderInfo.getBu_id());
+						if (account != null) {
+							accountChange = new TAccountChange();
+							accountChange.setChange_flag(0L);
+							accountChange.setChange_type(11L);
+							accountChange.setPay_mode(1L);
+							accountChange.setAccount_id(account.getId());
+							accountChange.setOrder_id(orderId);
+							accountChange.setEncoder_id(encoder.getId());
+							accountChange.setChange_amount(orderPayCostDetail.getStaffappprem().doubleValue());
+							accountChange.setPre_amount(account.getFee_amount());
+							accountChange.setNext_amount(account.getFee_amount() + orderPayCostDetail.getStaffappprem());
+							accountChange.setAccount_type(1L);
+							studentAccountService.saveAccountChange(accountChange);
+
+							studentAccountService.updateFeeAccount(account.getId(), accountChange.getNext_amount());
+						}
+					}
+				}
+			}
+
+			TOrder order = new TOrder();
+			order.setId(orderId);
+			order.setOrder_status(0L);
+			orderService.updateOrderStatus(order);
+			orderCourseTimesInfoService.updateInValidOrderCourseTimes(orderId);
+			orderInfoService.updateOrderStatusById(orderId, 0);
+//			tLockDao.releaseLock(tLock);
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();

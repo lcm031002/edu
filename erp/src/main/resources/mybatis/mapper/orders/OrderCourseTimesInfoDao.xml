@@ -158,4 +158,15 @@
 		AND toi.valid_status=1
 		AND toi.pay_status=0
 	</select>
+
+	<update id="updateInValidOrderCourseTimes" parameterType="long">
+		update t_order_course_times
+		   set is_valid = 0
+		 where ocid in (select t2.id
+						  from t_order t1
+						  left join t_order_course t2
+							on t1.id = t2.order_id
+						  where t1.id = #{orderId}
+							)
+	</update>
 </mapper>

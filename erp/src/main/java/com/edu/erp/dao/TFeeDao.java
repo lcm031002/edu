@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.edu.erp.model.TFee;
@@ -81,4 +82,6 @@ public interface TFeeDao {
 	 * @throws Exception
 	 */
 	List<TFee> queryCancelFeeByChangeId(Map<String, Object> hashMap) throws Exception;
+
+	TFee queryFeeByOrderIdAndFeeType(@Param("orderId") Long orderId, @Param("feeType") Integer feeType);
 }

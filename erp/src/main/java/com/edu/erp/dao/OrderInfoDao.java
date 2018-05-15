@@ -3,6 +3,7 @@ package com.edu.erp.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.edu.erp.model.TabOrderInfo;
@@ -183,5 +184,7 @@ public interface OrderInfoDao {
 	 * @param params
 	 */
 	void updateOrderLockStatus(Map<String, Object> params);
+
+	void updateOrderStatusById(@Param("id") Long id, @Param("validStatus") Integer validStatus);
 
 }

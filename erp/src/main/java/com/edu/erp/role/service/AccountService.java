@@ -1,6 +1,7 @@
 package com.edu.erp.role.service;
 
 import com.edu.erp.model.Account;
+import com.edu.erp.model.TAccount;
 import com.github.pagehelper.Page;
 
 import java.util.List;
@@ -98,4 +99,6 @@ public interface AccountService {
      * @throws Exception
      */
     void deleteAccountRoleById(Long accountRoleId) throws Exception;
+
+    TAccount queryByStudentIdAndBuId(Long studentId, Long buId);
 }

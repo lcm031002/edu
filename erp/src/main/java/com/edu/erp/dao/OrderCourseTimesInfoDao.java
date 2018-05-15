@@ -144,4 +144,6 @@ public interface OrderCourseTimesInfoDao {
 	 * @throws Exception
 	 */
 	List<Map<String,Object>> queryUncheckPeopleByCourseTimes(Map<String, Object> map) throws Exception;
+
+	void updateInValidOrderCourseTimes(Long orderId);
 }

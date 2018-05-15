@@ -4,6 +4,7 @@ import com.edu.erp.dao.AccountDao;
 import com.edu.erp.dao.AccountOrgRelDao;
 import com.edu.erp.dao.AccountRoleRelDao;
 import com.edu.erp.model.Account;
+import com.edu.erp.model.TAccount;
 import com.edu.erp.role.service.AccountService;
 import com.github.pagehelper.Page;
 import junit.framework.Assert;
@@ -149,5 +150,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccountRoleById(Long accountRoleId) throws Exception {
         this.accountRoleRelDao.deleteAccountRoleById(accountRoleId);
+    }
+
+    @Override
+    public TAccount queryByStudentIdAndBuId(Long studentId, Long buId) {
+        return this.accountDao.queryByStudentIdAndBuId(studentId, buId);
     }
 }

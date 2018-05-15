@@ -3,12 +3,9 @@ package com.edu.erp.orders.service;
 import java.util.List;
 import java.util.Map;
 
+import com.edu.erp.model.*;
 import org.jbpm.api.ProcessEngine;
 
-import com.edu.erp.model.TCOrderCourse;
-import com.edu.erp.model.TLadder;
-import com.edu.erp.model.TOrderChange;
-import com.edu.erp.model.TOrderCourse;
 import com.github.pagehelper.Page;
 
 
@@ -74,13 +71,13 @@ public interface OrderChangeService {
 	
 	/***
 	 * Description ： 订单作废 service 接口
+	 * @param orderInfo 订单信息
 	 * @param remark	: 备注
-	 * @param orderId	：订单Id
 	 * @param userId	：操作用户
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String,Object> cancelOrder(String remark,Long orderId,Long userId) throws Exception;
+	Map<String,Object> cancelOrder(TabOrderInfo orderInfo, String remark, Long userId) throws Exception;
 	
 	/**
      * 退费单据-分页查询

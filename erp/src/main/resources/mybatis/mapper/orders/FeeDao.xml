@@ -93,5 +93,12 @@
 		 	 and t.operate_type =#{operateType}
 		  </if>
 	</select>
+
+	<select id="queryFeeByOrderIdAndFeeType" resultType="com.edu.erp.model.TFee">
+		select t.*
+		  from t_fee t
+		 where t.order_id = #{orderId}
+		   and t.fee_type = #{feeType}
+	</select>
 	
 </mapper>

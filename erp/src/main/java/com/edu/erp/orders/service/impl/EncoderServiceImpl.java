@@ -51,9 +51,11 @@ public class EncoderServiceImpl implements EncoderService {
 	@Override
 	public void updateEncoderById(TEncoder tEncoder) throws Exception {
 		encoderDao.updateEncoderById(tEncoder);
-		
 	}
 
-
+	@Override
+	public void updateEncoderNo(TEncoder tEncoder) throws Exception {
+		encoderDao.updateEncoderNo(tEncoder);
+	}
 
 }

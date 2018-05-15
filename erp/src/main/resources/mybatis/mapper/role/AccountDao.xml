@@ -103,4 +103,15 @@
 		</if>
 	</select>
 
+	<select id="queryByStudentIdAndBuId" resultType="com.edu.erp.model.TAccount">
+		SELECT
+			t.id,
+			t.bu_id,
+			t.student_id,
+			ifnull(t.fee_amount, 0) as fee_amount
+		 FROM t_account t
+		where t.student_id = #{studentId}
+		  and t.bu_id = #{buId}
+	</select>
+
 </mapper>

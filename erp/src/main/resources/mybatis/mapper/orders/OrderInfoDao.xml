@@ -465,4 +465,10 @@
 		unlocktime = sysdate
 		where order_id = #{order_id,jdbcType=NUMERIC}
 	</update>
+
+	<update id="updateOrderStatusById">
+		update tab_order_info
+			   set valid_status = #{validStatus}
+			 where id = #{id}
+	</update>
 </mapper>

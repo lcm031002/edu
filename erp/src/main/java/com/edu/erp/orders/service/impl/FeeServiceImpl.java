@@ -240,4 +240,9 @@ public class FeeServiceImpl implements FeeService {
         this.feeDetailService.createAttendFeeDetail(fee.getId(), attend, orderCourse, attendAmount);
     }
 
+    @Override
+    public TFee queryFeeByOrderIdAndFeeType(Long orderId, Integer feeType) {
+        return tFeeDao.queryFeeByOrderIdAndFeeType(orderId, feeType);
+    }
+
 }

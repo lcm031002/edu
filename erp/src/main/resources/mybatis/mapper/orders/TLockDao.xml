@@ -50,7 +50,12 @@
 	       )
     	values
 	      (
-		  2,
+	      <if test="type != null">
+			  #{type,jdbcType=NUMERIC}
+		  </if>
+		  <if test="type == null">
+			  2,
+		  </if>
 		  #{resourceId,jdbcType=NUMERIC},
 		  5,
 		  #{busiId,jdbcType=NUMERIC}

@@ -257,4 +257,6 @@ public interface OrderInfoService {
 	 */
 	void updateOrderLockStatus(Map<String, Object> params) throws Exception;
 
+	void updateOrderStatusById(Long id, Integer validStatus);
+
 }

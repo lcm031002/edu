@@ -107,4 +107,6 @@ public interface FeeService {
      * @throws Exception
      */
     void createAttendFee(TAttendance attend, TOrderCourse orderCourse, Double attendAmount) throws Exception;
+
+    TFee queryFeeByOrderIdAndFeeType(Long orderId, Integer feeType);
 }

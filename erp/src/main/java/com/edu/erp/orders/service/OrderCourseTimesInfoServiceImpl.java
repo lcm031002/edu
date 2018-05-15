@@ -152,4 +152,9 @@ public class OrderCourseTimesInfoServiceImpl implements
 		return orderCourseTimesInfoDao.queryUncheckPeopleByCourseTimes(map);
 	}
 
+	@Override
+	public void updateInValidOrderCourseTimes(Long orderId) {
+		this.orderCourseTimesInfoDao.updateInValidOrderCourseTimes(orderId);
+	}
+
 }

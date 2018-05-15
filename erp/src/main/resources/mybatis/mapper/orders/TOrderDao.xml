@@ -123,7 +123,7 @@
 	</select>
 	
 	<update id="updateOrderStatus" parameterType="com.edu.erp.model.TOrder">
-		update t_order t set t.order_status = #{order_status,jdbcType=NUMERIC} where ID = #{id,jdbcType=NUMERIC}
+		update t_order set order_status = #{order_status,jdbcType=NUMERIC} where ID = #{id,jdbcType=NUMERIC}
 	</update>
 	
 	<!-- 保存订单信息 -->

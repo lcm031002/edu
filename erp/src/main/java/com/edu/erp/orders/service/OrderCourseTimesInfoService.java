@@ -123,5 +123,11 @@ public interface OrderCourseTimesInfoService {
 	 * @throws Exception
 	 */
 	List<Map<String, Object>> queryCheckPeopleByCourseTimes(Map<String, Object> map) throws Exception;
+
+	/**
+	 * 订单作废，更新订单课程课次为无效
+	 * @param orderId
+	 */
+	void updateInValidOrderCourseTimes(Long orderId);
 }
 

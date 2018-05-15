@@ -1,6 +1,7 @@
 package com.edu.erp.dao;
 
 import com.edu.erp.model.Account;
+import com.edu.erp.model.TAccount;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -63,5 +64,7 @@ public interface AccountDao {
 	 * @throws Exception
 	 */
 	Integer queryEmployeeBindedCount(Account account) throws Exception;
+
+	TAccount queryByStudentIdAndBuId(@Param("studentId") Long studentId, @Param("buId") Long buId);
 
 }
