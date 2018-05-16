@@ -27,7 +27,7 @@
         <table class="table table-striped min-width-1600">
             <thead>
                 <tr>
-                    <th width="120">操作</th>
+                    <th width="150">操作</th>
                     <th>名称</th>
                     <th>简称</th>
                     <th>类型</th>
@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="school in schoolList" 
+                <tr ng-repeat="school in schoolList"
                     ng-if="!loadStatues && schoolList && schoolList.length">
                     <td>
                         <span class="cur" ng-click="handlePutSchool(school)">

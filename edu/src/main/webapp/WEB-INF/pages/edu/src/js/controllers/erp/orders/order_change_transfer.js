@@ -84,11 +84,29 @@ function erp_orderChangeTransferController(
      */
     $scope.nextStep = function(before,next) {
         if (next == 2 && before == 1) { //转出
-            if ($scope.productLine == 2) {
-                $scope.businessType = 2;
-                $scope.transferOutTab = 'ydy';
+            if(!$scope.productLine){
+                PUBORGSelectedService.query({},function(resp){
+                    if(!resp.error){
+                        $scope.productLine =  resp.data.productLine;
+                        stepTwo();
+                    }else{
+                        $uibMsgbox.error(resp.message);
+                    }
+                })
+            }else{
+                stepTwo();
             }
-            $scope.queryCourse();
+            function stepTwo() {
+                if ($scope.productLine == 2) {
+                    $scope.businessType = 2;
+                    $scope.transferOutTab = 'ydy';
+                }
+                if ($scope.bizType) {
+                    $scope.businessType = $scope.bizType;
+                    $scope.transferOutTab = ($scope.bizType == 3) ? 'wfd' : (($scope.bizType == 2) ? 'ydy' : 'bjk');
+                }
+                $scope.queryCourse();
+            }
         }
         if (next == 3 && before == 2) { //转入
             if($scope.businessType == 1) {
@@ -180,7 +198,7 @@ function erp_orderChangeTransferController(
         }
 
         var param = {
-            studentId : $scope.curStudent.id,
+            studentId : $scope.curStudent != null ? $scope.curStudent.id : $scope.studentId,
             businessType:$scope.businessType
         };
 

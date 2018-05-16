@@ -62,9 +62,8 @@ function erp_schoolController(
     $scope.paginationConf = {
         currentPage: 1, //当前页
         totalItems: 0,
-        itemsPerPage: 10,
-        onChange: function() {
-            $scope.query();
+        onChange: function(){
+            $scope.query()
         }
     };
 

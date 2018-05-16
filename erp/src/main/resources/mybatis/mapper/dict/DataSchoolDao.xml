@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.edu.erp.dao.DataSchoolDao">
 
-	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="map">
+	<select id="selectForPage" resultType="com.edu.erp.model.DataSchool" parameterType="page">
 		select a.id,
 				a.school_name,
 				a.short_school_name,

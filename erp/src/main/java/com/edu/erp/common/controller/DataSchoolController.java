@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.edu.erp.model.TabDataDevice;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -95,10 +97,8 @@ public class DataSchoolController extends BaseController{
 	@RequestMapping(value = { "/service" }, headers = { "Accept=application/json" }, method = RequestMethod.GET)
 	public Map<String, Object> querySchoolPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		try {			
+		try {
 			Map<String, Object> queryParam = initParamMap(request, true);
-			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
-			queryParam.put("org_city_id", orgModel.getCityId());
 			Page<Map<String, Object>> page = dataSchoolService.queryPage(queryParam);
 			setRespDataForPage(request, page, resultMap);
 			resultMap.put("error", false);
