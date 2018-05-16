@@ -45,8 +45,8 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
         /**
          * Set up Captcha Image Size: Height and Width
          */
-        Integer imageHeight = new Integer(28);
-        Integer imageWidth = new Integer(75);
+        Integer imageHeight = new Integer(40);
+        Integer imageWidth = new Integer(90);
         /**
          * Set Captcha Font Size between 50 and 55
          */
@@ -70,7 +70,7 @@ public class JCaptchaEngineEx extends ListImageCaptchaEngine {
          */
         FontGenerator _fontGenerator = new FontGenerator() {
             public Font getFont() {
-                return new Font("宋体", Font.ITALIC, 20);
+                return new Font("宋体", Font.ITALIC, 22);
             }
             public int getMinFontSize() {
                 return minFontSize.intValue();
