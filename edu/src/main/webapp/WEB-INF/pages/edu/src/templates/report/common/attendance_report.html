@@ -49,14 +49,14 @@
             <col width="180"/>
             <col width="180"/>
             <col width="180"/>
-            <col width="90"/>   <!-- 学员姓名-->
+            <col width="90"/>
             <col width="180"/>
             <col width="90"/>
             <col width="90"/>
             <col width="90"/>
             <col width="90"/>
             <col width="110"/>
-            <col width="60"/>   <!-- 课次-->
+            <col width="60"/>
             <col width="90"/>
             <col width="90"/>
             <col width="110"/>
@@ -64,27 +64,16 @@
             <col width="90"/>
             <col width="90"/>
             <col width="90"/>
-            <col width="90"/>  <!-- 课时长度-->
+            <col width="90"/>
             <col width="120"/>
             <col width="90"/>
             <col width="90"/>
             <col width="90"/>
-            <col width="120"/>   <!-- 考勤日期-->
+            <col width="120"/>
             <col width="90"/>
             <col width="110"/>
             <col width="90"/>
             <col width="80"/>
-            <col width="150"/> <!-- 业绩校区-->
-            <col width="90"/>
-            <col width="90"/>
-            <col width="90"/>
-            <col width="90"/>
-            <col width="90"/>
-            <col width="90"/>
-            <col width="90"/>
-            <col width="90"/>
-            <col width="150"/>
-            <col width="150"/>
             <thead>
             <tr>
                 <th>序号</th>
@@ -94,15 +83,12 @@
                 <th>学员姓名</th>
                 <th>课程名称</th>
                 <th>课程校区</th>
-                <th>是否教材</th>
                 <th>金额</th>
                 <th>消耗课时</th>
                 <th>报班总次数</th>
                 <th>课次</th>
                 <th>老师ID</th>
                 <th>老师</th>
-                <th>辅导老师ID</th>
-                <th>辅导老师</th>
                 <th>课程年级</th>
                 <th>当前年级</th>
                 <th>科目</th>
@@ -117,14 +103,6 @@
                 <th>是否跨月</th>
                 <th>折扣</th>
                 <th>业绩校区</th>
-                <th>学管师</th>
-                <th>中教</th>
-                <th>中教长度</th>
-                <th>中教备注</th>
-                <th>外教</th>
-                <th>外教长度</th>
-                <th>外教备注</th>
-                <th>教室</th>
                 <th>报班备注</th>
                 <th>考勤备注</th>
             </tr>
@@ -139,15 +117,12 @@
                 <td>{{data.student_name}}</td>
                 <td>{{data.course_name}}</td>
                 <td>{{data.course_branch_name}}</td>
-                <td>{{data.is_textbookstag}}</td>
                 <td>{{data.amount}}</td>
                 <td>{{data.course_hour}}</td>
                 <td>{{data.course_count}}</td>
                 <td>{{data.course_time}}</td>
                 <td>{{data.teacher_id}}</td>
                 <td>{{data.teacher_name}}</td>
-                <td>{{data.assteacher_id}}</td>
-                <td>{{data.assteacher_name}}</td>
                 <td>{{data.grade_name}}</td>
                 <td>{{data.now_grade}}</td>
                 <td>{{data.subject_name}}</td>
@@ -162,14 +137,6 @@
                 <td>{{data.is_next_month_name}}</td>
                 <td>{{data.order_discount}}</td>
                 <td>{{data.performance_branch_name}}</td>
-                <td>{{data.counselor_name}}</td>
-                <td>{{data.chinese_teacher_name}}</td>
-                <td>{{data.chinese_teacher_length}}</td>
-                <td>{{data.chinese_teacher_remark}}</td>
-                <td>{{data.foreign_teacher_name}}</td>
-                <td>{{data.foreign_teacher_length}}</td>
-                <td>{{data.foreign_teacher_remark}}</td>
-                <td>{{data.room_name}}</td>
                 <td>{{data.order_remark}}</td>
                 <td>{{data.attendance_remark}}</td>
             </tr>
