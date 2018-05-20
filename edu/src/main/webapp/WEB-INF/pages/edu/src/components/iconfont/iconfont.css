@@ -31,7 +31,7 @@
 
 .icon-nav_students:before { content: "\e60c"; }
 
-.icon-nav_orders_performance:before { content: "\e615"; }
+.icon-nav_report:before { content: "\e615"; }
 
 .icon-orders_apply:before { content: "\e60d"; }
 
@@ -47,7 +47,7 @@
 
 .icon-orders_home:before { content: "\e613"; }
 
-.icon-orders_performance:before { content: "\e615"; }
+.icon-report:before { content: "\e615"; }
 
 .icon-stdudents_myStudents:before { content: "\e617"; }
 

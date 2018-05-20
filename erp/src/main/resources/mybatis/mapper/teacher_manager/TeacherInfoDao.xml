@@ -251,7 +251,8 @@
 		create_time,
 		teacher_type,
 		email,
-		city_id
+		city_id,
+		coop_org_id
 		)
 		values
 		(
@@ -267,7 +268,8 @@
 		#{create_time,jdbcType=TIMESTAMP},
 		#{teacher_type,jdbcType=NUMERIC},
 		#{email,jdbcType=VARCHAR},
-		#{city_id,jdbcType=NUMERIC}
+		#{city_id,jdbcType=NUMERIC},
+		#{coop_org_id,jdbcType=NUMERIC}
 		)
 	</insert>
 
@@ -303,6 +305,9 @@
 			</if>
 			<if test="email != null and email != ''">
 				email = #{email,jdbcType=NUMERIC},
+			</if>
+			<if test="coop_org_id != null">
+				coop_org_id = #{coop_org_id,jdbcType=NUMERIC},
 			</if>
 			update_time = #{update_time,jdbcType=TIMESTAMP}
 		</set>
@@ -382,12 +387,12 @@
 			values
 			(
 			#{teacherTeamRel.teacherId},
-			#{teacherTeamRel.cityId}
+			#{teacherTeamRel.city_id}
 			)
 	</insert>
 
 	<select id="searchTeacherTeam" parameterType="int" resultType="com.edu.erp.model.TeacherTeamRel">
-		select t.id as id,t.teacher_id as teacherId,t.city_id as cityId,toi.org_name as org_name from tab_teacher_team_ref t
+		select t.id as id,t.teacher_id as teacherId,t.city_id as city_id,toi.org_name as org_name from tab_teacher_team_ref t
 		left join tab_organization_info toi on t.city_id = toi.id
 		where t.teacher_id=#{teacherId}
 	</select>

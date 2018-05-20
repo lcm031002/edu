@@ -9,7 +9,7 @@ package com.edu.erp.model;
 public class TeacherTeamRel {
     private  Long id;
     private  Long teacherId;
-    private  Long cityId;
+    private  Long city_id;
     private  String teacherName;
     private  String org_name;
 
@@ -29,13 +29,9 @@ public class TeacherTeamRel {
         this.teacherId = teacherId;
     }
 
-    public Long getCityId() {
-        return cityId;
-    }
+    public Long getCity_id() { return city_id; }
 
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
-    }
+    public void setCity_id(Long city_id) { this.city_id = city_id; }
 
     public String getTeacherName() {
         return teacherName;

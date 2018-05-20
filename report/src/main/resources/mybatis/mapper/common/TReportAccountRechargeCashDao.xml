@@ -168,21 +168,39 @@
 		       d.money_fee qukuan,
 		       case
 		         when d.dynamic_type in (5, 4) then
-		          d.money * -1
+		           case when d.pay_mode = 1 then
+                    d.money * -1
+	             else 0
+               end
 		         else
-		          d.money
+		          case when d.pay_mode = 1 then
+                    d.money
+	             else 0
+               end
 		       end pay_cash,
 		       case
 		         when d.dynamic_type in (5, 4) then
-		          d.money * -1
+		           case when d.pay_mode = 2 then
+                    d.money * -1
+	             else 0
+               end
 		         else
-		          d.money
+		           case when d.pay_mode = 2 then
+                    d.money
+	             else 0
+               end
 		       end pay_card,
 		       case
 		         when d.dynamic_type in (5, 4) then
-		          d.money * -1
+		           case when d.pay_mode = 3 then
+                    d.money * -1
+	             else 0
+               end
 		         else
-		          d.money
+		          case when d.pay_mode = 3 then
+                    d.money
+	             else 0
+               end
 		       end pay_trans,
 		       r.card_no student_bankcard,
 		       acc.account_num company_bankcard,

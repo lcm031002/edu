@@ -51,10 +51,14 @@ public class TAttendanceReport {
 	
 	private Long course_time;				//课次
 	
+	private Long coop_org_id;				//合作机构ID
+	
+	private String coop_org_name;			//合作机构
+
 	private Long teacher_id;				//老师ID
-	
+
 	private String teacher_name;			//老师名称
-	
+
 	private Long grade_id;					//年级ID
 	
 	private String grade_name;				//课程年级名称

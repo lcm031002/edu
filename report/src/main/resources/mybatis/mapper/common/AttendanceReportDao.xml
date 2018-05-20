@@ -26,6 +26,8 @@
 		       a.course_time,
 		       a.teacher_id,
 		       a.teacher_name,
+               a.coop_org_id,
+               a.coop_org_name,
 		       a.grade_id,
 		       a.grade_name,
 		       a.subject_id,
@@ -136,6 +138,8 @@
 	        null course_time,
 	        null teacher_id,
 	        null teacher_name,
+            null coop_org_id,
+            null coop_org_name,
 	        null grade_id,
 	        null grade_name,
 	        null subject_id,
@@ -247,6 +251,8 @@
        course_time,
        teacher_id,
        teacher_name,
+       coop_org_id,
+       coop_org_name,
        grade_id,
        grade_name,
        subject_id,
@@ -337,6 +343,8 @@
                                sch.course_times course_time, /*课次*/
                                case when tea2.teacher_name is not null then tea2.id else tea.id end teacher_id, /*老师*/
                                case when tea2.teacher_name is not null then tea2.teacher_name else tea.teacher_name end teacher_name, /*老师*/
+                               case when tco2.coop_org_name is not null then tco2.id else tco.id end coop_org_id, /*合作机构*/
+                               case when tco2.coop_org_name is not null then tco2.coop_org_name else tco.coop_org_name end coop_org_name, /*合作机构*/
                                cou.grade_id grade_id,
                                cou.grade_name grade_name,
                                case
@@ -360,7 +368,24 @@
                                ifnull(t.end_time, sch.end_time) end_time,
                                date_format(t.attend_date, '%Y-%m-%d') attend_date, /*考勤日期*/
                                t.attend_type attend_type,
-                               attType.name attend_type_name, /*考勤状态*/
+                               case t.attend_type
+                                 when 12 then
+                                  '正常上课'
+                                 when 10 then
+                                  '置空'
+                                 when 11 then
+                                  '挂起'
+                                 when 31 then
+                                  '正常上课'
+                                 when 30 then
+                                  '置空'
+                                 when 21 then
+                                  '正常上课'
+                                 when 20 then
+                                  '置空'
+                                 else
+                                  '初始化'
+                               end attend_type_name, /*考勤状态*/
                                t.last_attend_type attend_type_last,
                                case t.last_attend_type
                                  when 12 then
@@ -495,14 +520,14 @@
                    on toc.course_id = cou.course_id
                  left join tp_subject subject
                    on subject.id = t.subject_id
-                 left join tp_attend_type attType
-                   on t.attend_type = attType.id
                  left join tab_student_info stu
                    on t.student_id = stu.id
                  left join tab_teacher_info tea
                    on sch.teacher_id = tea.id
                  left join tab_teacher_info tea2
                    on t.teacher_id = tea2.id
+  				 left join tab_coop_org tco on tea.coop_org_id = tco.id
+				 left join tab_coop_org tco2 on tea2.coop_org_id = tco2.id
                  left join tab_organization_info org
                    on toc.branch_id = org.id
                  left join tab_organization_info org_bu

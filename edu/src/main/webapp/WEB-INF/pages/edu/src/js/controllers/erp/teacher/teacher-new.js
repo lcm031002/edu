@@ -105,10 +105,10 @@ function erp_NewTeacherController(
     };
 
     $scope.checkBeforeSave = function() {
-        if (!$scope.newTeacher.employee_name||$scope.newTeacher.employee_name == '请输入员工姓名') {
-            $uibMsgbox.error('关联员工必填');
-            return false;
-        }
+        //if (!$scope.newTeacher.employee_name||$scope.newTeacher.employee_name == '请输入员工姓名') {
+        //    $uibMsgbox.error('关联员工必填');
+        //    return false;
+       // }
 
         if (!$scope.newTeacher.encoding) {
             $uibMsgbox.error('教师编码必填');

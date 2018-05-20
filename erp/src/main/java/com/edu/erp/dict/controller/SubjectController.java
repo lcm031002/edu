@@ -57,6 +57,7 @@ public class SubjectController extends BaseController {
 				throw new Exception("请选择校区！");
 			}
 			Map<String, Object> param = initParamMap(request, true, StringUtils.EMPTY);
+			param.put("org_city_id", orgModel.getCityId());
 			Page<TPSubject> result = subjectService.queryDataList(param);
 			setRespDataForPage(request, result.getResult(), resultMap);
 		} catch (Exception e) {
@@ -85,6 +86,7 @@ public class SubjectController extends BaseController {
 			}
 
 			Map<String, Object> param = initParamMap(request, false, StringUtils.EMPTY);
+			param.put("org_city_id", orgModel.getCityId());
 			List<TPSubject> result = subjectService.queryList(param);
 			resultMap.put("error", false);
 			resultMap.put("data", result.toArray());

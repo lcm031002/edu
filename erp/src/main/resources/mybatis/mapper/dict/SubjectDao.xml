@@ -21,8 +21,8 @@
 		 <!-- 修改用户-->
 		 left join tab_user_info u_user on t1.update_user = u_user.id
 		 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-		 <if test="city_id!=null">
-			inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{city_id}
+		 <if test="org_city_id!=null">
+			inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id}
 			and bdr.DICT_ID = t1.id
 			and bdr.DICT_TYPE = 'tp_subject'
 		 </if>
@@ -46,8 +46,8 @@
 				t.update_user,
 				t.update_time
 	  	FROM tp_subject t
-	  	<if test="city_id!=null">
-         	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{city_id}
+	  	<if test="org_city_id!=null">
+         	inner join Bu_Dict_Rel bdr on bdr.org_city_id = #{org_city_id}
          	and bdr.DICT_ID = t.id
          	and bdr.DICT_TYPE = 'tp_subject'
         </if>

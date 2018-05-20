@@ -405,7 +405,8 @@
 	          remark,
 	          status,
 	          order_detail_id,
-	          eb_no
+	          eb_no,
+	          pay_type
 		)
 		select  '${taskFlow}' task_flow,
 		         t.city_id,
@@ -445,7 +446,8 @@
                     '作废'
                  end as status,
                  null order_detail_id,
-                 null eb_no
+                 null eb_no,
+                 tdd.pos_name pay_type
             from t_account_dynamic t
             join tab_organization_info city
               on t.city_id = city.id
@@ -455,6 +457,8 @@
               on t.branch_id = branch.id
             left join t_account_recharge_info recharge
               on t.id = recharge.dynamic_id
+             left join tab_data_device tdd
+              on recharge.pos_id = tdd.id
             join tab_student_info stu
               on t.student_id = stu.id
             join tab_user_info u
@@ -505,7 +509,8 @@
 	          remark,
 	          status,
 	          order_detail_id,
-	          eb_no
+	          eb_no,
+	          pay_type
 		)
        select '${taskFlow}' task_flow,
                t.city_id,
@@ -537,7 +542,8 @@
                t.remark,
                t.status,
                null order_detail_id,
-               top.eb_no
+               top.eb_no,
+               top.pay_type
           from (select t.city_id,
                        t.city_name,
                        t.bu_id,
@@ -574,12 +580,14 @@
                                     group_concat(acc.account_name) company_names,
                                     group_concat(topcd.client_card_no) card_no,
                                     group_concat(acc.account_num) company_account,
-                                    group_concat(topcd.eb_no) eb_no
+                                    group_concat(topcd.eb_no) eb_no,
+                                    group_concat(tdd.pos_name) pay_type
                                from TAB_ORDER_PAY_COST topc
                                join TAB_ORDER_PAY_COST_DETAIL topcd
                                  on topcd.ORDER_BUY_ID = topc.id
                                left join tab_data_company_account acc
                                  on acc.id = topcd.COMPANY_CARD_ID
+                               left join tab_data_device tdd on topcd.POS_ID = tdd.id
                                  left join tab_order_info toi
                                  on toi.id = topc.order_id
                               where acc.account_name is not null
@@ -621,7 +629,8 @@
 	          remark,
 	          status,
 	          order_detail_id,
-	          eb_no
+	          eb_no,
+	          pay_type
 		)
          select  '${taskFlow}' task_flow,
                  city.id city_id,
@@ -653,7 +662,8 @@
                  concat(chg.remark ,' - ',fee.order_detail_id) as remark,
                  '' as status,
                  fee.order_detail_id,
-                 top.eb_no
+                 top.eb_no,
+				 pay_type
             from t_order_change chg
             join (select fee.operate_no,
                          fd.order_detail_id,
@@ -678,12 +688,14 @@
                               group_concat(acc.account_name) company_names,
                               group_concat(topcd.client_card_no) card_no,
                               group_concat(acc.account_num) company_account,
-                              group_concat(topcd.eb_no) eb_no
+                              group_concat(topcd.eb_no) eb_no,
+                              group_concat(tdd.pos_name) pay_type
                          from TAB_ORDER_PAY_COST topc
                          join TAB_ORDER_PAY_COST_DETAIL topcd
                            on topcd.ORDER_BUY_ID = topc.id
                          left join tab_data_company_account acc
                            on acc.id = topcd.COMPANY_CARD_ID
+                         left join tab_data_device tdd on topcd.POS_ID = tdd.id
                         group by topc.order_id) top
               on top.order_id = chg.order_id
             join tab_user_info u

@@ -259,6 +259,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 				paramAccountRechargeMap.put("cardNum",param.get("stu_card"));
 				paramAccountRechargeMap.put("companyAccount",param.get("company_card_id"));
 				paramAccountRechargeMap.put("dynamicId",tAccountDynamic.getId());
+				paramAccountRechargeMap.put("posId",param.get("pos_id"));
 
 				addAccountRecharge(paramAccountRechargeMap);
 			}

@@ -110,14 +110,23 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label">合作机构：</label>
+                <div class="col-sm-4">
+                  <select class="form-control"
+                          ng-model="updateTeacher.coop_org_id"
+                          ng-options="coopOrg.id as coopOrg.coopOrgName for coopOrg in coopOrgList">
+                    <option  value="">-- 全部 --</option></select>
+                </div>
                 <label class="col-sm-2 control-label">邮箱：</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control" ng-model="updateTeacher.email" required/>
                 </div>
+                <!--
                 <label class="col-sm-2 control-label">描述：</label>
                 <div class="col-sm-4">
                   <textarea rows="2" class="form-control" ng-model="updateTeacher.description"></textarea>
                 </div>
+                -->
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span class="text-danger">*</span>所属城市：</label>

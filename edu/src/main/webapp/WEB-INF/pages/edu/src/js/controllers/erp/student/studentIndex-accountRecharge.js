@@ -138,6 +138,7 @@ function erp_studentAccountRechargeController(
       pay_mode: cardDetail.payment_way,
       money: cardDetail.staffappprem,
       stu_card: cardDetail.client_card_no,
+      pos_id: cardDetail.pos_id,
       company_card_id: cardDetail.company_card_id,
       remark: cardDetail.extend_column,
       id: cardDetail.id

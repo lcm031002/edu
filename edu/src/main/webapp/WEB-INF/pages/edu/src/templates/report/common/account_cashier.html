@@ -1,4 +1,4 @@
-<div class="report min-width-2500" ng-controller="report_accountCashierController">
+<div class="report" ng-controller="report_accountCashierController">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="title">出纳信息表</span>
@@ -52,6 +52,7 @@
 	            <col width="4%"/>
 	            <col width="4%"/>
 	            <col width="4%"/>
+                <col width="4%"/>
                 <col width="3.5%"/>  <!-- 制单人 -->
                 <col width="5%"/>
                 <col width="6%"/>
@@ -73,6 +74,7 @@
                 <th>账户金额</th>
                 <th>制单人</th>
                 <th>客户账号</th>
+                <th>支付方式</th>
                 <th>状态</th>
                 <th>报班说明</th>
                 <th>操作</th>
@@ -95,6 +97,7 @@
                 <td class="word_break">{{accountCashier.pay_card}}</td>
                 <td class="word_break">{{accountCashier.pay_trans}}</td>
                 <td class="word_break">{{accountCashier.pay_account}}</td>
+                <td class="word_break">{{accountCashier.pay_type}}</td>
                 <td class="word_break">{{accountCashier.input_user_name}}</td>
                 <td class="word_break">{{accountCashier.card_no}}</td>
                 <td>{{accountCashier.status}}</td>

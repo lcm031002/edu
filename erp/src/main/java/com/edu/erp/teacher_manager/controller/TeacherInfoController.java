@@ -290,7 +290,7 @@ public class TeacherInfoController extends BaseController {
                 TeacherTeamRel teacherTeamRel = null;
                 for (String team : teacher.getTeam().split("[,，]")) {
                     teacherTeamRel = new TeacherTeamRel();
-                    teacherTeamRel.setCityId(Long.parseLong(team));
+                    teacherTeamRel.setCity_id(Long.parseLong(team));
                     teacherTeamRelList.add(teacherTeamRel);
                 }
             }
@@ -321,7 +321,7 @@ public class TeacherInfoController extends BaseController {
         try {
             Assert.hasText(teacher.getEncoding(), "教师编码必填");
             Assert.hasText(teacher.getTeacher_name(), "教师姓名必填");
-            Assert.notNull(teacher.getEmployee_id(), "关联员工必填");
+            //Assert.notNull(teacher.getEmployee_id(), "关联员工必填");
             Assert.hasText(teacher.getPhone(), "手机号必填");
             Assert.notNull(teacher.getSex(), "性别必填");
             Map<String, Object> param = new HashMap<String, Object>();
@@ -363,7 +363,7 @@ public class TeacherInfoController extends BaseController {
                 TeacherTeamRel teacherTeamRel = null;
                 for (String team : teacher.getTeam().split("[,，]")) {
                     teacherTeamRel = new TeacherTeamRel();
-                    teacherTeamRel.setCityId(Long.parseLong(team));
+                    teacherTeamRel.setCity_id(Long.parseLong(team));
                     teacherTeamRelList.add(teacherTeamRel);
                 }
             }

@@ -72,7 +72,7 @@
 		select * from tp_subject
 		where 1 = 1
 		<if test="bu_id!=null">
-		and id in (select dict_id from BU_DICT_REL where bu_id = #{bu_id} and dict_type = 'tp_subject')
+		and id in (select dict_id from BU_DICT_REL where org_city_id = #{org_city_id} and dict_type = 'tp_subject')
 		</if>
 		order by id
 	</select>

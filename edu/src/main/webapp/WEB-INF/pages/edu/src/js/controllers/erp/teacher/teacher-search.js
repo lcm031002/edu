@@ -25,6 +25,7 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
       }
     };
     $scope.cityList = [];
+    $scope.coopOrgList = [];
 
     $scope.queryTeacher = function() {
       var _uibModalInstance = $uibMsgbox.waiting('加载中，请稍候...');
@@ -234,14 +235,14 @@ angular.module('ework-ui').controller('erp_TeacherSearchController', [
 // 修改教师信息
 angular.module('ework-ui').controller(
   'updateTeacherModalInstanceController', ['$rootScope', '$scope', '$state', '$uibMsgbox',
-    'erp_TeacherIndexService', 'erp_employeeMgrService',
+    'erp_TeacherIndexService', 'erp_employeeMgrService','erp_CoopOrgService',
     'erp_studentOrgService', 'erp_TeacherListService','erp_subjectService',
     '$uibModalInstance', 'params',
     updateTeacherModalInstanceController
   ]);
 
 function updateTeacherModalInstanceController($rootScope, $scope, $state,
-  $uibMsgbox, erp_TeacherIndexService, erp_employeeMgrService,
+  $uibMsgbox, erp_TeacherIndexService, erp_employeeMgrService,erp_CoopOrgService,
   erp_studentOrgService, erp_TeacherListService,erp_subjectService, $uibModalInstance,
   params) {
   $scope.cityList = [];
@@ -256,6 +257,7 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
     encoding: params.teacher.encoding,
     teacher_name: params.teacher.teacher_name,
     teacher_type: params.teacher.teacher_type,
+    coop_org_id: params.teacher.coop_org_id,
     status: params.teacher.status,
     sex: params.teacher.sex,
     phone: params.teacher.phone,
@@ -307,10 +309,10 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
   };
 
   $scope.checkBeforeSave = function() {
-    if (!$scope.updateTeacher.employee_name||$scope.updateTeacher.employee_name == '请输入员工姓名') {
-      $uibMsgbox.error('关联员工必填');
-      return false;
-    }
+    //if (!$scope.updateTeacher.employee_name||$scope.updateTeacher.employee_name == '请输入员工姓名') {
+    //  $uibMsgbox.error('关联员工必填');
+    //   return false;
+    //}
 
     if (!$scope.updateTeacher.encoding) {
       $uibMsgbox.error('教师编码必填');
@@ -441,6 +443,16 @@ function updateTeacherModalInstanceController($rootScope, $scope, $state,
   }
 
   $scope.initialize = function() {
+
+    erp_CoopOrgService.queryList({}, function(resp) {
+        if (!resp.error) {
+             $scope.coopOrgList = resp.data;
+         } else {
+             $uibMsgbox.error(resp.message);
+         }
+    })
+
+
     // 通过教师id查询教师关联的科目
     if ($scope.updateTeacher && $scope.updateTeacher.id) {
         erp_TeacherListService.querySubject({

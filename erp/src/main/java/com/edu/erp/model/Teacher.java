@@ -31,6 +31,7 @@ public class Teacher extends BaseObject {
 	private String team; // 团队 多个用逗号分隔
     private List<TeacherTeamRel> teacherTeamReList;//教师团队关系表
 	private List<TeacherSubject> teacherSubjectList;
+	private Long coop_org_id;
 
 	public static enum StatusEnum {
 		// delete(0, "删除"),
@@ -321,5 +322,13 @@ public class Teacher extends BaseObject {
 
 	public void setTeacherTeamReList(List<TeacherTeamRel> teacherTeamReList) {
 		this.teacherTeamReList = teacherTeamReList;
+	}
+
+	public Long getCoop_org_id() {
+		return coop_org_id;
+	}
+
+	public void setCoop_org_id(Long coop_org_id) {
+		this.coop_org_id = coop_org_id;
 	}
 }

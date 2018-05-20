@@ -184,10 +184,11 @@
 	<insert id="addAccountCharge" parameterType="java.util.HashMap">
 		insert into
 		t_account_recharge_info
-		(card_no,company_account,dynamic_id)
+		(card_no,company_account,pos_id,dynamic_id)
 		values(
 		#{cardNum,jdbcType=VARCHAR},
 		#{companyAccount,jdbcType=NUMERIC},
+		#{posId,jdbcType=NUMERIC},
 		#{dynamicId,jdbcType=NUMERIC}
 		)
 	</insert>

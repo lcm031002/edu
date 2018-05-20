@@ -62,14 +62,8 @@
 		   operate_type,
 		   operate_type_name,
 		   change_account_amount,
-		   change_frozen_amount,
-		   change_refund_amount,
 		   before_account_amount,
-		   before_frozen_amount,
-		   before_refund_amount,
 		   after_account_amount,
-		   after_frozen_amount,
-		   after_refund_amount,
 		   charge_mode,
 		   charge_mode_name,
 		   operate_time,
@@ -112,83 +106,15 @@
 		           when t1.change_type = 12 then
 		            '退费作废'
 		         end) change_type_name,
-		         (case
-		           when t1.account_type is null or t1.account_type = 1 then
-		            (case
-		              when t1.change_flag = 0 and t1.change_amount > 0 then
-		               t1.change_amount
-		              when t1.change_flag = 1 and t1.change_amount > 0 then
-		               t1.change_amount
-		              else
-		               t1.change_amount * -1
-		            end)
-		           else
-		            0
-		         end) as change_account_amount,
-		         (case
-		           when t1.account_type = 2 then
-		            (case
-		              when t1.change_flag = 0 and t1.change_amount > 0 then
-		               t1.change_amount
-		              when t1.change_flag = 1 and t1.change_amount > 0 then
-		               t1.change_amount
-		              else
-		               t1.change_amount * -1
-		            end)
-		           else
-		            0
-		         end) as change_frozen_amount,
-		         (case
-		           when t1.account_type = 3 then
-		            (case
-		              when t1.change_flag = 0 and t1.change_amount > 0 then
-		               t1.change_amount
-		              when t1.change_flag = 1 and t1.change_amount > 0 then
-		               t1.change_amount
-		              else
-		               t1.change_amount * -1
-		            end)
-		           else
-		            0
-		         end) as change_refund_amount,
-		         
-		         (case
-		           when t1.account_type is null or t1.account_type = 1 then
-		            t1.pre_amount
-		           else
-		            0
-		         end) as before_account_amount,
-		         (case
-		           when t1.account_type = 2 then
-		            t1.pre_amount
-		           else
-		            0
-		         end) as before_frozen_amount,
-		         (case
-		           when t1.account_type = 3 then
-		            t1.pre_amount
-		           else
-		            0
-		         end) as before_refund_amount,
-		         
-		         (case
-		           when t1.account_type is null or t1.account_type = 1 then
-		            t1.next_amount
-		           else
-		            0
-		         end) as after_account_amount,
-		         (case
-		           when t1.account_type = 2 then
-		            t1.next_amount
-		           else
-		            0
-		         end) as after_frozen_amount,
-		         (case
-		           when t1.account_type = 3 then
-		            t1.next_amount
-		           else
-		            0
-		         end) as after_refund_amount,
+				case
+				when t1.change_flag = 0 and t1.change_amount > 0 then
+				t1.change_amount
+				when t1.change_flag = 1 and t1.change_amount > 0 then
+				t1.change_amount
+				else
+				t1.change_amount * -1 end as change_account_amount,
+				t1.pre_amount as before_account_amount,
+				t1.next_amount as after_account_amount,
 		         t1.pay_mode as charge_mode,
 		         (case
 		           when t6.name is null then

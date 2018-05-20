@@ -1,4 +1,4 @@
-<div class="report {{loadStatues!=false?'':'min-width-2200'}}" ng-controller="report_orderChangeReportController">
+<div class="report" ng-controller="report_orderChangeReportController">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="title">报冻退转报表</span>
@@ -22,9 +22,10 @@
                     <kl-branch-select bu-id="searchParam.p_bu_id" branch-id="searchParam.p_branch_id"></kl-branch-select>
                   </div>
                   <div class="form-group">
-                    <span class="input-label">业务模式：</span>
-                    <select class="form-control" ng-model="searchParam.p_business_type" ng-options="var.code as var.name for var in businessList"></select> 
-                    
+					  <!--
+					  <span class="input-label">业务模式：</span>
+					  <select class="form-control" ng-model="searchParam.p_business_type" ng-options="var.code as var.name for var in businessList"></select>
+                      -->
                     <button class="btn btn-primary" ng-click="queryReport()"><i class="iconfont icon-search"></i> 查询</button>
                     <button class="btn btn-primary" ng-click="exportReport()"><i class="iconfont icon-export"></i> 导出</button>
                  </div>
