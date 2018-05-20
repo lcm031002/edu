@@ -36,7 +36,8 @@
 		       t.remark,
 		       t.status,
 		       t.order_detail_id,
-               t.eb_no
+               t.eb_no,
+                t.pay_type
 		from t_account_cashier t
 		where t.bu_id = #{bu_id}
 		<if test="branch_id != null and branch_id != -1">
@@ -90,7 +91,8 @@
            sum(ifnull(total, 0)) remark,
            null status,
            null order_detail_id,
-           null eb_no
+           null eb_no,
+           null pay_type
       from (
           select
            sum(ifnull(t.pay_amount, 0)) pay_amount,

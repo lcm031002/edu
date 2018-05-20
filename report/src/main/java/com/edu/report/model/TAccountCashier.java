@@ -48,6 +48,7 @@ public class TAccountCashier {
 	private String  status;
 	private Long 	order_detail_id;
 	private String eb_no;
+	private String pay_type;
 	public Long getId() {
 		return id;
 	}
@@ -238,4 +239,8 @@ public class TAccountCashier {
 	public void setEb_no(String eb_no) {
 		this.eb_no = eb_no;
 	}
+
+	public String getPay_type() { return pay_type;}
+
+	public void setPay_type(String pay_type) {	this.pay_type = pay_type;	}
 }
