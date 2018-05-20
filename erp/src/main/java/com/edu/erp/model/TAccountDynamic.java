@@ -22,6 +22,7 @@ public class TAccountDynamic extends BaseObject {
 	private String dynamic_type_name;// 账户变动类型
 	private String input_time;// 业务日期
 	private Double money;// 金额
+	private Double money_fee;// 手续费
 	private String status_name;// 动户单据状态（4表示作废）
 
 	private Long pay_mode_id;// 收付费方式主键
@@ -173,6 +174,10 @@ public class TAccountDynamic extends BaseObject {
 	public void setMoney(Double money) {
 		this.money = money;
 	}
+
+	public Double getMoney_fee() { return money_fee; 	}
+
+	public void setMoney_fee(Double money_fee) { this.money_fee = money_fee;	}
 
 	public String getPay_mode() {
 		return pay_mode;

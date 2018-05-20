@@ -51,7 +51,7 @@
     	values
 	      (
 	      <if test="type != null">
-			  #{type,jdbcType=NUMERIC}
+			  #{type,jdbcType=NUMERIC},
 		  </if>
 		  <if test="type == null">
 			  2,

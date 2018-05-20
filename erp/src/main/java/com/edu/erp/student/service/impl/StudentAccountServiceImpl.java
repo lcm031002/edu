@@ -606,10 +606,11 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			tAccountDynamic.setStudent_id(Long.parseLong(paramMap.get("p_student_id") + ""));
 			tAccountDynamic.setStatus(3);
 			tAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_money") + ""));
+			tAccountDynamic.setMoney_fee(Double.parseDouble(paramMap.get("p_money_fee") + ""));
 			tAccountDynamic.setPay_flag(2L);//付费
 			tAccountDynamic.setPay_mode(paramMap.get("p_pay_mode")+"");
 			tAccountDynamic.setCreate_user(userId);
-			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 1));
+			tAccountDynamic.setEncoding(paramMap.get("p_encoding")+"");
 
 			studentAccountDao.saveAccountDynamic(tAccountDynamic);
 
