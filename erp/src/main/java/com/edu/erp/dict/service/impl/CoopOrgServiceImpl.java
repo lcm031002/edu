@@ -3,6 +3,7 @@ package com.edu.erp.dict.service.impl;
 import com.edu.erp.dao.CoopOrgDao;
 import com.edu.erp.dict.service.CoopOrgService;
 import com.edu.erp.model.CoopOrg;
+import com.edu.erp.model.CoopOrgRel;
 import com.github.pagehelper.Page;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,15 @@ public class CoopOrgServiceImpl implements CoopOrgService {
     @Override
     public Integer changeStatus(Map<String, Object> paramMap) {
         return this.coopOrgDao.changeStatus(paramMap);
+    }
+
+    @Override
+    public Integer insertPercentage(CoopOrgRel coopOrgRel) {
+        return this.coopOrgDao.insertPercentage(coopOrgRel);
+    }
+
+    @Override
+    public List<CoopOrgRel> selectPercentageList(Map<String, Object> paramMap) {
+        return this.coopOrgDao.selectPercentageList(paramMap);
     }
 }

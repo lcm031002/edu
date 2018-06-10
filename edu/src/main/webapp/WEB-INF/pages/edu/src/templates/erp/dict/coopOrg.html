@@ -13,7 +13,7 @@
         <form class="form-inline">
           <form class="form-group">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="合作机构名称"
+              <input type="text" class="form-control" placeholder="机构名称"
                      ng-model="searchParam.coopOrgName" autocomplete="off">
                 <button class="btn btn-primary"
                        ng-click="handleQueryCoopOrg()"><i class="iconfont icon-search"></i>  搜索</button>
@@ -28,7 +28,8 @@
       <thead>
         <tr>
           <th width="150">操作</th>
-          <th>合作机构名称</th>
+          <th>机构名称</th>
+          <th>抽成</th>
           <th>状态</th>
           <th>描述</th>
           <th>创建人</th>
@@ -46,9 +47,13 @@
             </span>&nbsp;&nbsp;
             <span class="cur"  ng-click="handleDeleteCoopOrg(coopOrg.id)">
               <i class="iconfont icon-delete text-danger"></i>删除
+            </span>&nbsp;&nbsp;
+            <span class="cur"  ng-click="handlePercentageCoopOrg(coopOrg)">
+              <i class="iconfont icon-edit text-primary"></i>抽成
             </span>
           </td>
           <td>{{coopOrg.coopOrgName}}</td>
+          <td>{{coopOrg.percentage}}</td>
           <td>
             <input type="checkbox" 
               bs-switch 
@@ -83,13 +88,21 @@
                   <input type="text" ng-model='coopOrg.id'>
                 </div>
                 <div class="klxx-erp-form-item-label form-group">
-                  <label class="klxx-erp-form-item-required col-sm-2 control-label">合作机构名称</label>
+                  <label class="klxx-erp-form-item-required col-sm-2 control-label">机构名称</label>
                   <div class="col-sm-10" ng-class="{'has-error': coopOrgForm.coopOrgName.$invalid && coopOrgForm.coopOrgName.$dirty}">
                     <input type="text" name="coopOrgName" class="klxx-erp-input form-control"
                      ng-model='coopOrg.coopOrgName' required>
                      <div ng-show="coopOrgForm.coopOrgName.$invalid && coopOrgForm.coopOrgName.$dirty && coopOrgForm.coopOrgName.$error.required" class="has-error klxx-erp-form-explain">合作机构名称必填</div>
                   </div>
                 </div>
+                <div class="klxx-erp-form-item-label form-group">
+                  <label class="klxx-erp-form-item-required col-sm-2 control-label">抽成</label>
+                  <div class="col-sm-10" ng-class="{'has-error': coopOrgForm.percentage.$invalid && coopOrgForm.percentage.$dirty}">
+                    <input type="text" name="percentage" class="klxx-erp-input form-control"
+                           ng-model='coopOrg.percentage' required>
+                    <div ng-show="coopOrgForm.percentage.$invalid && coopOrgForm.percentage.$dirty && coopOrgForm.percentage.$error.required" class="has-error klxx-erp-form-explain">抽成必填</div>
+                </div>
+              </div>
                 <div class="klxx-erp-form-item-label form-group">
                   <label class="col-sm-2 control-label">描述</label>
                   <div class="col-sm-10">
@@ -106,6 +119,75 @@
                 ng-click="handleModalConfirm()"
                 ng-disabled="coopOrgForm.$invalid"
               >确定</button>
+            </div>
+          </div><!-- .modal-content end-->
+        </form>
+        <!-- .klxx-erp-from end-->
+      </div>
+    </div>
+
+    <div id="erpSystemCommonPercentageCoopOrgPanel" class="modal fade klxx-modal-primary"
+         tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog" role="document">
+        <form class="klxx-erp-form form-horizontal" name="coopOrgForm" novalidate>
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">合作机构抽成</h4>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="hide">
+                  <input type="text" ng-model='coopOrgRel.coopOrgId'>
+                </div>
+
+                <div class="klxx-erp-form-item-label form-group">
+                  <label class="klxx-erp-form-item-required col-sm-2 control-label">开始日期</label>
+                  <div class="col-sm-4" ng-class="{'has-error': coopOrgForm.start_date.$invalid && coopOrgForm.start_date.$dirty}">
+                    <rd-date-picker-popup ng-model="coopOrgRel.start_date" name="start_date" required></rd-date-picker-popup>
+                    <div ng-show="coopOrgForm.start_date.$invalid && coopOrgForm.start_date.$dirty && coopOrgForm.start_date.$error.required" class="has-error klxx-erp-form-explain">开始日期必填</div>
+                  </div>
+
+                  <label class="klxx-erp-form-item-required col-sm-2 control-label">结束日期</label>
+                  <div class="col-sm-4" ng-class="{'has-error': coopOrgForm.end_date.$invalid && coopOrgForm.end_date.$dirty}">
+                    <rd-date-picker-popup ng-model="coopOrgRel.end_date" name="end_date" required></rd-date-picker-popup>
+                    <div ng-show="coopOrgForm.end_date.$invalid && coopOrgForm.end_date.$dirty && coopOrgForm.end_date.$error.required" class="has-error klxx-erp-form-explain">结束日期必填</div>
+                  </div>
+                </div>
+
+                <div class="klxx-erp-form-item-label form-group">
+                  <label class="klxx-erp-form-item-required col-sm-2 control-label">抽成</label>
+                  <div class="col-sm-10" ng-class="{'has-error': coopOrgForm.percentage.$invalid && coopOrgForm.percentage.$dirty}">
+                    <input type="text" name="percentage" class="klxx-erp-input form-control"
+                           ng-model='coopOrgRel.percentage' required>
+                    <div ng-show="coopOrgForm.percentage.$invalid && coopOrgForm.percentage.$dirty && coopOrgForm.percentage.$error.required" class="has-error klxx-erp-form-explain">抽成必填</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger"
+                      ng-click="handleModalPercentageCancel()">取消</button>
+              <button type="submit" class="btn btn-primary"
+                      ng-click="handleModalPercentageConfirm()"
+              >新增</button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <table class="table table-striped table-bordered">
+                  <tr>
+                    <th width="120">开始日期</th>
+                    <th width="120">结束日期</th>
+                    <th>抽成比例</th>
+                  </tr>
+                  <tr ng-repeat="coopOrgRel in coopOrgRelList" class="cur">
+                    <td>{{coopOrgRel.start_date}}</td>
+                    <td>{{coopOrgRel.end_date}}</td>
+                    <td>{{coopOrgRel.percentage}}</td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div><!-- .modal-content end-->
         </form>

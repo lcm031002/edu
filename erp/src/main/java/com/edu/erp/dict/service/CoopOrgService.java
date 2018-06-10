@@ -1,6 +1,7 @@
 package com.edu.erp.dict.service;
 
 import com.edu.erp.model.CoopOrg;
+import com.edu.erp.model.CoopOrgRel;
 import com.github.pagehelper.Page;
 
 import java.util.List;
@@ -51,4 +52,22 @@ public interface CoopOrgService {
      * @return 影响行数
      */
     Integer changeStatus(Map<String, Object> paramMap);
+
+    /**
+     * 新增抽成
+     *
+     * @param coopOrgRel
+     * @throws Exception
+     * @return 影响行数
+     */
+    Integer insertPercentage(CoopOrgRel coopOrgRel);
+
+    /**
+     * 根据条件查询List<T>
+     *
+     * @param paramMap 动态参数
+     * @return
+     * @throws Exception
+     */
+    List<CoopOrgRel> selectPercentageList(Map<String, Object> paramMap);
 }

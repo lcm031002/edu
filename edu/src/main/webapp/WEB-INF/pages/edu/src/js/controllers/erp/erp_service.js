@@ -3703,6 +3703,18 @@ function erp_CoopOrgService($resource){
             method : 'PUT',
             params : {},
             isArray : false
+        },
+        addPercentage:{
+            url : '/erp/common/coopOrg/addPercentage',
+            method : 'POST',
+            params : {},
+            isArray : false
+        },
+        queryPercentage : {
+            url : '/erp/common/coopOrg/listPercentage',
+            method : 'GET',
+            params : {},
+            isArray : false
         }
     });
 }

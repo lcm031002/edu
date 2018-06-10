@@ -4,6 +4,7 @@ import com.edu.common.constants.Constants;
 import com.edu.erp.dict.service.CoopOrgService;
 import com.edu.erp.model.BaseObject;
 import com.edu.erp.model.CoopOrg;
+import com.edu.erp.model.CoopOrgRel;
 import com.edu.erp.util.BaseController;
 import com.github.pagehelper.Page;
 import org.apache.log4j.Logger;
@@ -120,6 +121,43 @@ public class CoopOrgController extends BaseController {
         try {
             coopOrgService.changeStatus(jsonMap);
             resultMap.put(Constants.RespMapKey.ERROR, false);
+        } catch (Exception e) {
+            log.error(e);
+            resultMap.put(Constants.RespMapKey.ERROR, true);
+            resultMap.put(Constants.RespMapKey.MESSAGE, e.getMessage());
+        }
+        return resultMap;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = {"/addPercentage"}, method = RequestMethod.POST, headers = {"Accept=application/json"})
+    public Map<String, Object> addPercentage(@RequestBody CoopOrgRel coopOrgRel, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try {
+            setDefaultValue(request, coopOrgRel, false);
+            coopOrgService.insertPercentage(coopOrgRel);
+            resultMap.put(Constants.RespMapKey.ERROR, false);
+        } catch (Exception e) {
+            log.error(e);
+            resultMap.put(Constants.RespMapKey.ERROR, true);
+            resultMap.put(Constants.RespMapKey.MESSAGE, e.getMessage());
+        }
+        return resultMap;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = {"/listPercentage"}, method = RequestMethod.GET, headers = {"Accept=application/json"})
+    public Map<String, Object> listPercentage(HttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try {
+            String coopOrgId = request.getParameter("coopOrgId");
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("coopOrgId", coopOrgId);
+
+            List<CoopOrgRel> coopOrgList = coopOrgService.selectPercentageList(paramMap);
+            resultMap.put(Constants.RespMapKey.ERROR, false);
+            resultMap.put(Constants.RespMapKey.DATA, coopOrgList);
         } catch (Exception e) {
             log.error(e);
             resultMap.put(Constants.RespMapKey.ERROR, true);

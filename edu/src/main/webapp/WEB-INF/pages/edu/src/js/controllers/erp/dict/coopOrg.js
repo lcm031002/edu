@@ -31,7 +31,16 @@ function erp_CoopOrgController(
     $scope.coopOrg = {
         id: 0,
         coopOrgName: '',
+        percentage:0,
         description: ''
+    };
+
+    // 与表单绑定的数据，用于添加和修改
+    $scope.coopOrgRel = {
+        id: 0,
+        coopOrgId: 0,
+        start_date: '',
+        end_date: ''
     };
 
     /**
@@ -76,9 +85,20 @@ function erp_CoopOrgController(
         $scope.coopOrg = {
             id: coopOrg.id,
             coopOrgName: coopOrg.coopOrgName,
+            percentage: coopOrg.percentage,
             description: coopOrg.description
         };
         $("#erpSystemCommonCoopOrgPanel").modal('show');
+    };
+
+    // 处理【抽成】按钮点击事件
+    $scope.handlePercentageCoopOrg = function (coopOrg) {
+        $scope.coopOrgRel = {
+            coopOrgId: coopOrg.id
+        };
+
+        $scope.queryPercentage(coopOrg.id);
+        $("#erpSystemCommonPercentageCoopOrgPanel").modal('show');
     };
 
     // 处理【查询】按钮点击事件
@@ -91,6 +111,11 @@ function erp_CoopOrgController(
         $('#erpSystemCommonCoopOrgPanel').modal('hide');
     };
 
+    // 处理【取消】按钮点击事件
+    $scope.handleModalPercentageCancel = function () {
+        $('#erpSystemCommonPercentageCoopOrgPanel').modal('hide');
+    };
+
     // 处理【确认】按钮点击事件
     $scope.handleModalConfirm = function () {
         if ($scope.optype == 'add') {
@@ -101,6 +126,15 @@ function erp_CoopOrgController(
         }
         $('#erpSystemCommonCoopOrgPanel').modal('hide');
     };
+
+    // 处理【确认】按钮点击事件
+    $scope.handleModalPercentageConfirm = function () {
+
+       $scope.addPercentage();
+
+        $('#erpSystemCommonPercentageCoopOrgPanel').modal('hide');
+    };
+
     // 状态变化
     $scope.onStatusChange = function (coopOrg) {
         erp_CoopOrgService.changeStatus({
@@ -152,6 +186,18 @@ function erp_CoopOrgController(
         })
     };
 
+    // 添加
+    $scope.addPercentage = function () {
+        erp_CoopOrgService.addPercentage($scope.coopOrgRel, function (resp) {
+            if (!resp.error) {
+                $uibMsgbox.success('添加成功！');
+                $scope.query();
+            } else {
+                $uibMsgbox.error(resp.message);
+            }
+        })
+    };
+
     // 查询
     $scope.query = function () {
         erp_CoopOrgService.queryPage({
@@ -162,6 +208,19 @@ function erp_CoopOrgController(
             if (!resp.error) {
                 $scope.coopOrgList = resp.data;
                 $scope.paginationConf.totalItems = resp.total || 0;
+            } else {
+                $uibMsgbox.error(resp.message)
+            }
+        });
+    };
+
+    // 查询抽成
+    $scope.queryPercentage = function (id) {
+        erp_CoopOrgService.queryPercentage({
+            coopOrgId: id
+        }, function (resp) {
+            if (!resp.error) {
+                $scope.coopOrgRelList = resp.data;
             } else {
                 $uibMsgbox.error(resp.message)
             }
