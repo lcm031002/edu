@@ -3,11 +3,6 @@ package com.edu.erp.jstree;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 
- * @author Lyk
- *
- */
 public class TreeModel {
 	private Integer id;
 	private String text;

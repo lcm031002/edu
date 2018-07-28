@@ -1,10 +1,3 @@
-/**  
- * @Title: AttendanceObj.java
- * @Package com.ebusiness.erp.attendance.business
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月21日 下午3:49:11
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.attendance.business;
 
 import com.edu.erp.model.BaseObject;
@@ -12,8 +5,6 @@ import com.edu.erp.model.BaseObject;
 /**
  * @ClassName: AttendanceBusiness
  * @Description: 考勤对象
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月21日 下午3:49:11
  *
  */
 public class AttendanceBusiness extends BaseObject {

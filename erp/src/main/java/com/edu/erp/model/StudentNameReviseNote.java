@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * 学生姓名修改记录类
  *
- * @author: linj
- * @create: 2018/1/30  15:52
  */
 public class StudentNameReviseNote {
 

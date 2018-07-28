@@ -6,9 +6,7 @@ import java.util.List;
 
 /**
  * 优惠规则
- * 
- * @author wCong
- * 
+ *
  */
 public class PrivilegeRule extends BaseObject {
 	public static enum CouponTypeEnum {

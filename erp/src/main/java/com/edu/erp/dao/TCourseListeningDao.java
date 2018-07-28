@@ -1,10 +1,3 @@
-/**  
- * @Title: TCourseListeningDao.java
- * @Package com.ebusiness.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月14日 下午2:59:00
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,8 +11,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: TCourseListeningDao
  * @Description: 学员试听服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月14日 下午2:59:00
  *
  */
 @Repository(value = "tCourseListeningDao")

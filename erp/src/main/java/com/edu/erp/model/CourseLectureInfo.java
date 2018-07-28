@@ -5,7 +5,6 @@ import java.io.Serializable;
 /**
  * 课程讲义信息
  * 
- * @author liufq
  *
  */
 public class CourseLectureInfo implements Serializable {

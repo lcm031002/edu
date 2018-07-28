@@ -1,10 +1,3 @@
-/**  
- * @Title: DataCompanyAccountServiceImpl.java
- * @Package com.edu.erp.common.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月20日 下午4:49:09
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.common.service.impl;
 
 import java.util.HashMap;
@@ -25,8 +18,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DataCompanyAccountServiceImpl
  * @Description: 公司账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月20日 下午4:49:09
  * 
  */
 @Service("dataCompanyAccountService")

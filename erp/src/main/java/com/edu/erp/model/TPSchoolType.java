@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 学校类型
- * 
- * @author wCong
  *
  */
 public class TPSchoolType extends BaseObject{

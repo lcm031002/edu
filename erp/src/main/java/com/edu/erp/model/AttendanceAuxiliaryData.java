@@ -2,7 +2,6 @@ package com.edu.erp.model;
 
 /**
  * 考勤辅助数据
- * @Author zenglw@20171021
  */
 public class AttendanceAuxiliaryData {
     private Long orderId;

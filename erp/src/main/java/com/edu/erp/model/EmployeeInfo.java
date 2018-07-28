@@ -5,8 +5,6 @@ import java.util.List;
 
 /**
  * 员工信息
- * 
- * @author wCong
  *
  */
 public class EmployeeInfo extends BaseObject {

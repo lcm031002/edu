@@ -4,8 +4,6 @@ package com.edu.erp.model;
  * 课程教室关系表
  * @ClassName: TCourseRoomRel
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年4月19日 下午8:11:22
  *
  */
 public class TCourseRoomRel extends BaseObject{

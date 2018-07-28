@@ -1,10 +1,3 @@
-/**  
- * @Title: IOrderLadder.java
- * @Package com.ebusiness.erp.orders.ext
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年3月30日 下午5:37:58
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.ext;
 
 import com.edu.erp.model.TOrder;
@@ -14,9 +7,7 @@ import com.edu.erp.model.TabOrderInfo;
 /**
  * @ClassName: IOrderLadder
  * @Description: 1对1阶梯算法接口
- * @author zhuliyong zly@entstudy.com
- * @date 2017年3月30日 下午5:37:58
- * 
+ *
  */
 public interface IOrderLadder {
 	/**

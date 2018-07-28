@@ -3,7 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 优惠规则校区权限
- * @author wCong
  *
  */
 public class PrivilegeSchoolRef extends BaseObject{

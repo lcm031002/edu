@@ -15,10 +15,7 @@ import com.edu.erp.model.TabRegion;
 
 /***
  * Description ： 省市地区Service 接口实现
- * 
- * Author ：junli.zhang
  *
- * Date : 2014-08-29
  */
 @Service("regionService")
 public class RegionServiceImpl implements RegionService {

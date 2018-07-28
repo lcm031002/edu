@@ -10,8 +10,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: StudentIntegralDetailsDao
  * @Description: 学生积分账户流水
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月18日 下午4:59:26
  *
  */
 @Repository(value = "studentIntegralDetailsDao")

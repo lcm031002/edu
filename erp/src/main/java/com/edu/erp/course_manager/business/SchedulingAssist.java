@@ -1,10 +1,3 @@
-/**  
- * @Title: SchedulingAssist.java
- * @Package com.edu.erp.course_manager.business
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月17日 下午12:12:54
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.course_manager.business;
 
 import java.io.Serializable;
@@ -16,8 +9,6 @@ import com.edu.erp.model.TCourseSchedulingAssist;
 /**
  * @ClassName: SchedulingAssist
  * @Description: 课程高级参数
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月17日 下午12:12:54
  *
  */
 public class SchedulingAssist implements Serializable{

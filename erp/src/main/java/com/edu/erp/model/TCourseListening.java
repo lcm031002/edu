@@ -1,10 +1,3 @@
-/**  
- * @Title: TCourseListening.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月14日 下午2:53:23
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.io.Serializable;
@@ -12,8 +5,6 @@ import java.io.Serializable;
 /**
  * @ClassName: TCourseListening
  * @Description: 试听实体对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月14日 下午2:53:23
  *
  */
 public class TCourseListening implements Serializable, Cloneable{

@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 排课课时拆分表
- * 
- * @author yecb
  *
  */
 public class TScheduleSplitTime extends BaseObject{

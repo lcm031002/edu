@@ -34,8 +34,6 @@ import com.github.pagehelper.PageInfo;
 /**
  * 学生联系方式
  * 
- * @author wCong
- * 
  */
 @Controller
 @RequestMapping(value = { "/studentservice/student/contact" })

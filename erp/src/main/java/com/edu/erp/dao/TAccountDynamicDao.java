@@ -10,8 +10,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: TAccountDynamicDao
  * @Description: 账户单据信息
- * @author zengliwen zenglw@entstudy.com
- * 
+ *
  */
 
 @Repository(value = "tAccountDynamicDao")

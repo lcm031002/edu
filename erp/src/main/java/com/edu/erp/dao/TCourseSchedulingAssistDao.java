@@ -1,10 +1,3 @@
-/**  
- * @Title: TCourseSchedulingAssistDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月16日 下午9:36:35
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,9 +11,7 @@ import com.edu.erp.model.TCourseSchedulingAssist;
 /**
  * @ClassName: TCourseSchedulingAssistDao
  * @Description: 查询课程排课参数
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月16日 下午9:36:35
- * 
+ *
  */
 @Repository(value = "tCourseSchedulingAssistDao")
 public interface TCourseSchedulingAssistDao {

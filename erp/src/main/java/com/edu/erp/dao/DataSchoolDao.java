@@ -1,10 +1,3 @@
-/**  
- * @Title: DataSchoolDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月20日 下午7:22:17
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,8 +11,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DataSchoolDao
  * @Description: 就读学校Dao
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月20日 下午7:22:17
  *
  */
 @Repository(value = "dataSchoolDao")

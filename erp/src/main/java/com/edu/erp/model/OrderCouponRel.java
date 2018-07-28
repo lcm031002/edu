@@ -1,18 +1,9 @@
-/**  
- * @Title: OrderCouponRel.java
- * @Package com.pojo
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年12月8日 上午2:05:53
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 
 /**
  * @ClassName: OrderCouponRel
  * @Description: 订单优惠券关系表
- * @author zhuliyong zly@entstudy.com
- * @date 2015年12月8日 上午2:05:53
  *
  */
 public class OrderCouponRel  extends BaseObject{

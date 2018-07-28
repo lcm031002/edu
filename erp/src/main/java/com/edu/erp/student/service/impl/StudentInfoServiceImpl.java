@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentInfoServiceImpl.java
- * @Package com.ebusiness.erp.student.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月14日 下午2:40:44
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.service.impl;
 
 import com.edu.erp.dict.service.DataGradeService;
@@ -50,9 +43,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: StudentInfoServiceImpl
  * @Description: 学员信息服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月14日 下午2:40:44
- * 
+ *
  */
 @Service("studentInfoService")
 public class StudentInfoServiceImpl implements StudentInfoService {

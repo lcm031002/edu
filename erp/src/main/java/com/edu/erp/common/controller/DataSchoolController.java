@@ -35,9 +35,7 @@ import com.github.pagehelper.Page;
  * 
  * @ClassName: DataSchoolController
  * @Description: 就读学校控制器
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月20日 下午8:37:37
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/common/dataschool" })

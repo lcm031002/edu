@@ -5,7 +5,6 @@ import java.util.Date;
 
 /**
  * 优惠券
- * @author wCong
  *
  */
 public class CouponRuleRel extends BaseObject{

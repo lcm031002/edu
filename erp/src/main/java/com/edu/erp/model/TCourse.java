@@ -8,10 +8,7 @@ import java.util.Set;
 
 /***
  * Description : 课程商品 POJO
- * 
- * Author ： junli.zhang
- * 
- * Date : 2014-09-01
+ *
  */
 public class TCourse extends BaseObject{
 	

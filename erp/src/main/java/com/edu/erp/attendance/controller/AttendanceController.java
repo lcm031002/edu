@@ -1,10 +1,3 @@
-/**  
- * @Title: AttendanceController.java
- * @Package com.ebusiness.erp.attendance.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月18日 下午3:45:34
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.attendance.controller;
 
 import java.io.File;
@@ -49,9 +42,7 @@ import net.sf.json.JSONObject;
 /**
  * @ClassName: AttendanceController
  * @Description: 考勤服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月18日 下午3:45:34
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/attendance" })

@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 课程商品类型
- * 
- * @author wCong
  *
  */
 public class CourseType extends BaseObject{

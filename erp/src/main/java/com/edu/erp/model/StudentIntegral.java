@@ -1,19 +1,10 @@
-/**  
- * @Title: StudentIntegral.java
- * @Package com.pojo
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月24日 下午2:04:16
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 
 /**
  * @ClassName: StudentIntegral
  * @Description: 学生积分账户
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月24日 下午2:04:16
- * 
+ *
  */
 public class StudentIntegral extends BaseObject {
 	/**

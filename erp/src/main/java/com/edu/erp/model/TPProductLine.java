@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 团队（产品线）
- * 
- * @author wCong
  *
  */
 public class TPProductLine extends BaseObject{

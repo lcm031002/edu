@@ -19,8 +19,6 @@ import com.edu.erp.orders.service.OrderService;
 /**
  * @ClassName: OrderLockedServiceImpl
  * @Description: 订单锁定
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月8日 下午3:11:42
  *
  */
 @Service(value = "orderLockedService")

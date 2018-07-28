@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * 数据处理类
- * @author wCong
  *
  */
 public class ModelDataUtils {

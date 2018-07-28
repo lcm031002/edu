@@ -1,10 +1,3 @@
-/**  
- * @Title: SQLUtils.java
- * @Package com.ebusiness.erp.util
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月27日 下午7:44:10
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.util;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,9 +5,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @ClassName: SQLUtils
  * @Description: sql防止注入检查
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月27日 下午7:44:10
- * 
+ *
  */
 public class SQLUtils {
 	public static boolean sql_inj(String str) {

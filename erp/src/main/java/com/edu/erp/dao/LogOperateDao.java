@@ -1,10 +1,3 @@
-/**  
- * @Title: LogOperateDao.java
- * @Package com.modules.log_operate.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月3日 下午4:50:12
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import com.github.pagehelper.Page;
@@ -16,8 +9,6 @@ import org.springframework.stereotype.Repository;
 /**
  * @ClassName: LogOperateDao
  * @Description: 操作日志dao层
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月3日 下午4:50:12
  * 
  */
 @Repository("logOperateDao")

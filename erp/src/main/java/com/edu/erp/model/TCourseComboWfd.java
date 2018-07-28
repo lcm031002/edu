@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 晚辅导套餐
- * 
- * @author wCong
  *
  */
 public class TCourseComboWfd extends BaseObject {

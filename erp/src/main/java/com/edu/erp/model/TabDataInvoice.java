@@ -1,10 +1,3 @@
-/**  
- * @Title: TabDataInvoice.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月6日 下午1:24:43
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.util.Date;
@@ -12,8 +5,6 @@ import java.util.Date;
 /**
  * @ClassName: TabDataInvoice
  * @Description: 发票模型
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月6日 下午1:24:43
  *
  */
 public class TabDataInvoice extends BaseObject {

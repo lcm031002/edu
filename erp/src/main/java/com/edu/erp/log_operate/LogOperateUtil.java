@@ -1,10 +1,3 @@
-/**  
- * @Title: LogOperateUtil.java
- * @Package com.modules.log_operate
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月3日 下午5:18:39
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.log_operate;
 
 import java.util.HashMap;
@@ -24,8 +17,6 @@ import com.sun.jna.platform.win32.Netapi32Util.UserInfo;
 /**
  * @ClassName: LogOperateUtil
  * @Description: 记录操作日志
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月3日 下午5:18:39
  */
 public class LogOperateUtil {
 

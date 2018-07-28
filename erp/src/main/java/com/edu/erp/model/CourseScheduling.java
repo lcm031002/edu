@@ -7,8 +7,6 @@ import com.edu.erp.model.BaseObject.StatusEnum;
 
 /**
  * 课程排课表 
- * 
- * @author wCong
  *
  */
 public class CourseScheduling extends BaseObject{

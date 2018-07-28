@@ -309,20 +309,6 @@
 		having 			t1.course_count > count(t2.id) or count(t2.id) = 0 and t1.course_count > 0
 	</select>
 	
-	<select id="p_update_Scheduling" statementType="CALLABLE" parameterType="java.util.Map">
-   	    {call pkg_course_main.p_update_scheduling(	
-   	    											#{course_id,mode=IN,jdbcType=NUMERIC},
-								              		#{course_times,mode=IN,jdbcType=NUMERIC},
-								              		#{course_date,mode=IN,jdbcType=VARCHAR},
-								              		#{start_time,mode=IN,jdbcType=VARCHAR},
-								              		#{end_time,mode=IN,jdbcType=VARCHAR},
-								              		#{user_id,mode=IN,jdbcType=NUMERIC},
-								              		#{error_code,mode=OUT,jdbcType=NUMERIC},
-								             		#{error_desc,mode=OUT,jdbcType=VARCHAR}
-								             	)
-        }
-	</select>
-	
 	<insert id="insert" parameterType="com.edu.erp.model.CourseScheduling" useGeneratedKeys="true" keyProperty="id">
 		insert into t_course_scheduling
 		(course_id,
@@ -372,27 +358,6 @@
 			#{assteacher_id,	jdbcType=NUMERIC}
 		 )
 	</insert>
-	
-	<!-- 排课 -->
-	<select id="schedulingCourse" statementType="CALLABLE" parameterType="java.util.HashMap">
-		<![CDATA[
-		    {call pkg_course_main.p_course_plan(#{course_id,mode=IN,jdbcType=NUMERIC},
-										        #{error_code,mode=OUT,jdbcType=NUMERIC},
-										        #{error_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	<!-- 删除排课 -->
-	<select id="deleteSchedulingCourse" statementType="CALLABLE" 			parameterType="java.util.HashMap">
-			<![CDATA[
-			    	{
-			call pkg_course_main.p_delete_course_plan(
-			#{course_id,mode=IN,jdbcType=NUMERIC},
-						#{error_code,mode=OUT,jdbcType=NUMERIC},
-			         		#{error_desc,mode=OUT,jdbcType=VARCHAR})}
-			]]>
-	</select>
-	
 	
 	<select id="queryCourseSchedulingStudents" parameterType="HashMap" resultType="HashMap">
 		select distinct a.id "attendanceId",

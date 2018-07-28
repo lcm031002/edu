@@ -2,8 +2,6 @@ package com.edu.erp.model;
 
 /**
  * 教师信息
- * @author wsf
- * @date 2014-09-11
  */
 public class TEDocTemplateTeacherInfo extends BaseObject{
 

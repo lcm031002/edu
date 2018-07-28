@@ -1,10 +1,3 @@
-/**  
- * @Title: TCOrderCourseDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午10:14:56
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -20,9 +13,7 @@ import com.edu.erp.model.TCOrderCourse;
 /**
  * @ClassName: TCOrderCourseDao
  * @Description: 订单批改课次信息
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午10:14:56
- * 
+ *
  */
 @Repository("tCOrderCourseDao")
 public interface TCOrderCourseDao {

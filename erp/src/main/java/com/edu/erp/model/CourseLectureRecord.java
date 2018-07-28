@@ -6,8 +6,6 @@ import java.io.Serializable;
 /**
  * 课次讲义绑定关系
  * 
- * @author liufq
- * 2017-12-19
  *
  */
 public class CourseLectureRecord implements Serializable{

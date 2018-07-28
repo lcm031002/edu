@@ -5,8 +5,6 @@ import java.util.Date;
 /**
  * 摄像机模型
  *
- * @author: linj
- * @create: 2017/12/8  10:46
  */
 public class CameraInfo extends BaseObject{
 

@@ -4,8 +4,6 @@ package com.edu.erp.model;
  * 阶梯定义表
  * @ClassName: TLadder
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年4月6日 下午8:41:30
  *
  */
 public class TLadder extends BaseObject{

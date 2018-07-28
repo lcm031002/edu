@@ -13,8 +13,6 @@ import com.github.pagehelper.Page;
 
 /***
  * Description：学生账户管理 DAO 接口
- * Author: JunliZhang
- * Date:2014-11-10
  */
 @Repository("studentAccountDao")
 public interface StudentAccountDao{

@@ -10,8 +10,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DataCompanyAccountService
  * @Description: 公司账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月20日 下午4:48:45
  *
  */
 public interface DataCompanyAccountService {

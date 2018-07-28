@@ -9,9 +9,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DeviceService
  * @Description:
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:29:06
- * 
+ *
  */
 public interface DeviceService {
 

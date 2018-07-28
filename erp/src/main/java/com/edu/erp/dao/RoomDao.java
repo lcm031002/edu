@@ -12,9 +12,6 @@ import com.github.pagehelper.Page;
 /***
  * Description ：教室信息DAO 接口
  * 
- * Author ：liwen。zeng
- *
- * Date : 2017-04-20
  */
 @Repository(value = "roomDao")
 public interface RoomDao {

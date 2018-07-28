@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderPayCostServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:52:34
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import java.util.Date;
@@ -26,9 +19,7 @@ import com.edu.erp.orders.service.OrderPayCostService;
 /**
  * @ClassName: OrderPayCostServiceImpl
  * @Description: 支付信息服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:52:34
- * 
+ *
  */
 @Service(value = "orderPayCostService")
 public class OrderPayCostServiceImpl implements OrderPayCostService {

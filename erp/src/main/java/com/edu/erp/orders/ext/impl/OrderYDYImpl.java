@@ -36,7 +36,6 @@ import com.edu.erp.student.service.StudentAccountService;
 import com.edu.erp.util.StringUtil;
 /**
  * 1对1个性化业务
- * @author yecb
  *
  */
 @Service(value = "iOrderYDY")

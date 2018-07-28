@@ -1,17 +1,8 @@
-/**  
- * @Title: StudentRel.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月8日 下午6:07:28
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 /**
  * @ClassName: StudentRel
  * @Description: 学员关系
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月8日 下午6:07:28
  *
  */
 public class StudentRel extends BaseObject{

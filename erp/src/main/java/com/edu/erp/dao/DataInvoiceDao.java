@@ -1,10 +1,3 @@
-/**  
- * @Title: DataInvoiceDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月6日 下午1:34:56
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,9 +11,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DataInvoiceDao
  * @Description: 发票信息持久层
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月6日 下午1:34:56
- * 
+ *
  */
 @Repository(value = "dataInvoiceDao")
 public interface DataInvoiceDao {

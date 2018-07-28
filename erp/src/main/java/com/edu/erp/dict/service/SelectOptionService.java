@@ -8,10 +8,7 @@ import com.edu.erp.model.Grade;
 import com.edu.erp.model.TimeSeason;
 
 /**
- * 公用选择 
- * 
- * 
- * @author wCong
+ * 公用选择
  *
  */
 public interface SelectOptionService extends DictionaryService{

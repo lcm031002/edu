@@ -2,8 +2,6 @@ package com.edu.erp.model;
 
 /**
  * 删除标识枚举
- * @author Madison
- * @date 2014-7-29
  */
 public enum DelFlag 
 {

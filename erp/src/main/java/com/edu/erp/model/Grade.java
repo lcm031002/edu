@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 年级管理
- * @author wsf
- * @date 2014-08-20
  */
 public class Grade extends BaseObject{
 

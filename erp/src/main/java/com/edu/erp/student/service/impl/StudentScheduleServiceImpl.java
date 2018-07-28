@@ -18,9 +18,7 @@ import com.edu.erp.student.service.StudentScheduleService;
 /**
  * 学生课程服务
  * @ClassName: StudentScheduleServiceImpl
- * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年4月18日 下午3:21:04
+ * @Description:
  *
  */
 @Service("studentScheduleService")

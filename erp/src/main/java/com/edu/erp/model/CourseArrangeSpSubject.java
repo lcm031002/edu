@@ -6,7 +6,6 @@ import org.codehaus.jackson.map.Serializers.Base;
 /**
  * 排课专员科目实体
  *
- * @author lincm
  */
 public class CourseArrangeSpSubject extends BaseObject {
 

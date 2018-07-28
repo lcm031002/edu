@@ -13,7 +13,6 @@ import com.edu.erp.dao.TeacherImportDao;
 
 /**
  * @Description 用户校验Excel数据正确性的数据集合
- * @Author zenglw
  */
 @Scope("prototype")
 @Component("teacherExcelCheckHelperForWrap")

@@ -6,8 +6,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * 咨询学管
- * 
- * @author wCong
  *
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)

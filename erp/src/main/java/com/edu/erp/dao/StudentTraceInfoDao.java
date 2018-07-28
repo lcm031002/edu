@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentInfoDao.java
- * @Package com.edu.erp.student.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月14日 下午2:28:47
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,8 +11,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: StudentTraceInfo
  * @Description: 学员信息服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月14日 下午2:28:47
  * 
  */
 

@@ -1,9 +1,6 @@
 package com.edu.erp.model;
 
-/**
- * @author lpe
- */
-public class DataDictionary extends BaseObject 
+public class DataDictionary extends BaseObject
 {
 	private String encoding;//编码
 	private String data_name;//名称

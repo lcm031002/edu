@@ -3,7 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 优惠券
- * @author wCong
  *
  */
 public class CouponInfo extends BaseObject{

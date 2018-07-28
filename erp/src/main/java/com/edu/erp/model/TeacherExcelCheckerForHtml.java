@@ -10,7 +10,6 @@ import com.edu.erp.dao.TeacherImportDao;
 
 /**
  * @Description 前端发起保存数据时的校验
- * @Author zenglw
  */
 @Scope("prototype")
 @Component("teacherExcelCheckerForHtml")

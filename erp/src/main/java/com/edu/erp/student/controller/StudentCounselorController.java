@@ -35,8 +35,6 @@ import com.github.pagehelper.PageInfo;
 /**
  * 咨询学管
  * 
- * @author wCong
- * 
  */
 @Controller
 @RequestMapping(value = { "/studentservice/student/counselor" })

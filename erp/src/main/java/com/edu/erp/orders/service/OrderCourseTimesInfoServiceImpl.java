@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderCourseTimesInfoServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:56:53
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import java.util.List;
@@ -25,9 +18,7 @@ import com.edu.erp.orders.service.OrderCourseTimesInfoService;
 /**
  * @ClassName: OrderCourseTimesInfoServiceImpl
  * @Description: 报班订单课程课次信息服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:56:53
- * 
+ *
  */
 @Service(value = "orderCourseTimesInfoService")
 public class OrderCourseTimesInfoServiceImpl implements

@@ -1,10 +1,3 @@
-/**  
- * @Title: CourseServiceImpl.java
- * @Package com.ebusiness.erp.course_manager.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月17日 下午5:47:17
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.course_manager.service.impl;
 
 import com.edu.common.util.NumberUtils;
@@ -50,9 +43,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: CourseServiceImpl
  * @Description: 课程查询服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月17日 下午5:47:17
- * 
+ *
  */
 @Service("courseService")
 public class CourseServiceImpl implements CourseService {

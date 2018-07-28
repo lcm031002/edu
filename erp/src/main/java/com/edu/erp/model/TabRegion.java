@@ -3,10 +3,7 @@ package com.edu.erp.model;
 
 /***
  * Description ： 全国省市地区信息表
- * 
- * Author ：junli.zhang
- * 
- * Date : 2014-08-29
+ *
  */
 public class TabRegion extends BaseObject {
 

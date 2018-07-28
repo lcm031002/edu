@@ -11,9 +11,7 @@ import com.github.pagehelper.Page;
 
 /**
  * 科目dao
- * 
- * @author lpe
- * @date 2014-8-19
+ *
  */
 @Repository(value = "subjectDao")
 public interface SubjectDao {

@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentRelServiceImpl.java
- * @Package com.ebusiness.erp.student.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月8日 下午6:13:23
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.service.impl;
 
 import java.util.List;
@@ -20,12 +13,10 @@ import com.edu.erp.model.StudentRel;
 import com.edu.erp.student.service.StudentRelService;
 
 /**
- * 
+ *
  * @ClassName: StudentRelServiceImpl
  * @Description: 学员推荐关系服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月8日 下午6:13:23
- * 
+ *
  */
 @Service("studentRelService")
 public class StudentRelServiceImpl implements StudentRelService {

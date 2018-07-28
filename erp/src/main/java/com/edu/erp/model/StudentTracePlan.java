@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * 学生跟踪信息
  * 
- * @author wsf
- * @date 2014-08-20
  */
 public class StudentTracePlan extends BaseObject {
 

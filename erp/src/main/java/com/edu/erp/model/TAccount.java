@@ -3,10 +3,7 @@ package com.edu.erp.model;
 
 /***
  * Description : 学生账户表 POJO
- * 
- * Author ： junli.zhang
- * 
- * Date : 2014-09-01
+ *
  */
 public class TAccount extends BaseObject{
 	

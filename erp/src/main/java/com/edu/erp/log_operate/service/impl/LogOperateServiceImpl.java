@@ -1,10 +1,3 @@
-/**  
- * @Title: LogOperateServiceImpl.java
- * @Package com.modules.log_operate.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月3日 下午5:08:57
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.log_operate.service.impl;
 
 import com.github.pagehelper.Page;
@@ -26,9 +19,7 @@ import org.springframework.util.CollectionUtils;
 /**
  * @ClassName: LogOperateServiceImpl
  * @Description: 操作日志类型
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月3日 下午5:08:57
- * 
+ *
  */
 @Repository("logOperateService")
 public class LogOperateServiceImpl implements LogOperateService {

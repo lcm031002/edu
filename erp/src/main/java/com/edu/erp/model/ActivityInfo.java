@@ -3,7 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 活动信息表
- * @author ohs
  *
  */
 public class ActivityInfo extends BaseObject{

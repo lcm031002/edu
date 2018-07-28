@@ -1,17 +1,9 @@
-/**  
- * @Title: OrderPayCostService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:48:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import com.edu.erp.model.TEncoder;
 
 /**
  * 业务单据服务
- * @author yecb
  *
  */
 public interface EncoderService {

@@ -15,9 +15,6 @@ import com.edu.erp.model.TPTeacherAttendType;
 
 /**
  * 数据字典(原本是单表,现如今拆分成8张表)
- * 
- * 
- * @author wCong
  *
  */
 public interface DictionaryService {

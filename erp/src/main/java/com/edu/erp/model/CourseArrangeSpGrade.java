@@ -3,7 +3,6 @@ package com.edu.erp.model;
 /**
  * 排课专员科目年级实体
  *
- * @author lincm
  */
 public class CourseArrangeSpGrade extends BaseObject {
 

@@ -1,10 +1,3 @@
-/**  
- * @Title: UserApplicationTaskServiceImpl.java
- * @Package com.modules.business_center.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年1月22日 下午3:03:56
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.workflow.service.impl;
 
 import java.util.HashMap;
@@ -22,8 +15,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: UserApplicationTaskServiceImpl
  * @Description: 用户申请查询
- * @author zhuliyong zly@entstudy.com
- * @date 2015年1月22日 下午3:03:56
  *
  */
 @Repository("userTaskService")

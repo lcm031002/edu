@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderCourseTimes.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午7:24:20
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.io.Serializable;
@@ -12,8 +5,6 @@ import java.io.Serializable;
 /**
  * @ClassName: TOrderCourseTimes
  * @Description: 课次信息
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午7:24:20
  *
  */
 public class TOrderCourseTimes implements Serializable {

@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderLockDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月22日 下午3:53:05
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -17,9 +10,7 @@ import com.edu.erp.model.TOrderLock;
 /**
  * @ClassName: TOrderLockDao
  * @Description: 查询订单冻结状态
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月22日 下午3:53:05
- * 
+ *
  */
 @Repository(value = "tOrderLockDao")
 public interface TOrderLockDao {

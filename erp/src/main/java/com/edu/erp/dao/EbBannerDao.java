@@ -10,9 +10,6 @@ import com.github.pagehelper.Page;
 /***
  * Description ：电商banner DAO 接口
  * 
- * Author ：yecb
- * 
- * Date :
  */
 @Repository("ebBannerDao")
 public interface EbBannerDao {

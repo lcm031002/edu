@@ -1,10 +1,3 @@
-/**  
- * @Title: LogOperateService.java
- * @Package com.modules.log_operate.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月3日 下午5:08:34
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.log_operate.service;
 
 import com.github.pagehelper.Page;
@@ -13,8 +6,6 @@ import java.util.Map;
 /**
  * @ClassName: LogOperateService
  * @Description: 操作日志服务
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月3日 下午5:08:34
  *
  */
 public interface LogOperateService {

@@ -1085,26 +1085,6 @@
 		where course_id in (${_parameter})
 	</delete>
 
-	<!-- 排课 -->
-	<select id="schedulingCourse" statementType="CALLABLE"
-			parameterType="java.util.HashMap">
-	<![CDATA[
-		{call pkg_course_main.p_course_plan(#{course_id,mode=IN,jdbcType=NUMERIC},
-											#{error_code,mode=OUT,jdbcType=NUMERIC},
-											#{error_desc,mode=OUT,jdbcType=VARCHAR})}
-	]]>
-	</select>
-
-	<!-- 删除排课 -->
-	<select id="deleteSchedulingCourse" statementType="CALLABLE"
-			parameterType="java.util.HashMap">
-	<![CDATA[
-		{call pkg_course_main.p_delete_course_plan(#{course_id,mode=IN,jdbcType=NUMERIC},
-												   #{error_code,mode=OUT,jdbcType=NUMERIC},
-												   #{error_desc,mode=OUT,jdbcType=VARCHAR})}
-	]]>
-	</select>
-
 	<select id="queryTCourseByStudentYDY" parameterType="com.edu.erp.model.TCourse"
 			resultType="com.edu.erp.model.TCourse">
 		select tc.*,toi.org_name as branch_name

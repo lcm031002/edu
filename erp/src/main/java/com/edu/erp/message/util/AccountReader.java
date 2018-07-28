@@ -1,10 +1,3 @@
-/**  
- * @Title: AccountReader.java
- * @Package com.ebusiness.messagecenter.account
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年1月7日 下午3:17:48
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.message.util;
 
 import java.io.IOException;
@@ -15,8 +8,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @ClassName: AccountReader
  * @Description: 账户信息读取器
- * @author zhuliyong zly@entstudy.com
- * @date 2015年1月7日 下午3:17:48
  */
 public class AccountReader {
 	private static final String FILE_CFG = "/properties/messagecenter.properties";

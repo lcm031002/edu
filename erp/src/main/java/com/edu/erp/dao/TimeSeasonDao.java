@@ -12,8 +12,6 @@ import com.github.pagehelper.Page;
 /**
  * 课程季dao
  * 
- * @author lpe
- * @date 2014-8-19
  */
 @Repository(value = "timeSeasonDao")
 public interface TimeSeasonDao {

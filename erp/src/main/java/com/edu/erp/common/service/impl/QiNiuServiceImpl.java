@@ -7,11 +7,6 @@ import org.springframework.stereotype.Service;
 import com.edu.common.qinniu.QiNiuCoreCall;
 import com.edu.erp.common.service.QiNiuService;
 
-/**
- * 
- * @author yecb
- *
- */
 @Service("qiNiuService")
 public class QiNiuServiceImpl implements QiNiuService {
 

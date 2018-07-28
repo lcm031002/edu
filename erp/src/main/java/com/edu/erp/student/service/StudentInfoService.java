@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentInfoService.java
- * @Package com.ebusiness.erp.student.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月14日 下午2:40:04
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.service;
 
 import com.edu.erp.student.business.StudentAccount;
@@ -22,9 +15,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: StudentInfoService
  * @Description: 学员信息服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月14日 下午2:40:04
- * 
+ *
  */
 public interface StudentInfoService {
     /**

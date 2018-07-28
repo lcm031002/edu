@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 课程校区权限关系
- * 
- * @author wCong
  *
  */
 public class TCourseSchool extends BaseObject{

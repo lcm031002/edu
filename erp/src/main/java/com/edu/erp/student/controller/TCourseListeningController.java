@@ -1,10 +1,3 @@
-/**  
- * @Title: TCourseListeningController.java
- * @Package com.ebusiness.erp.student.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月14日 下午3:15:13
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.controller;
 
 import java.util.HashMap;
@@ -42,9 +35,7 @@ import com.github.pagehelper.PageInfo;
 /**
  * @ClassName: TCourseListeningController
  * @Description:学员试听服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月14日 下午3:15:13
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/courselistening" })

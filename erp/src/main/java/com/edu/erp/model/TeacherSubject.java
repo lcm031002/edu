@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 教师科目
- * @author wsf
- * @date 2014-09-11
  */
 public class TeacherSubject extends BaseObject{
 	

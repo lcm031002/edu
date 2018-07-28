@@ -10,8 +10,6 @@ import org.apache.ibatis.type.JdbcType;
 
 /**
  * 删除标识枚举转换器
- * @author Madison
- * @date 2014-7-29
  */
 public class DelFlagHandler extends BaseTypeHandler<DelFlag>
 {

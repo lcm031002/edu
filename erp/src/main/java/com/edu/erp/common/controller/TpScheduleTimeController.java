@@ -27,8 +27,6 @@ import java.util.Map;
  *
  * @ClassName: TpScheduleTimeController
  * @Description: 排课档期控制器
- * @author yecb
- * @date 2017年8月28日 下午8:37:37
  *
  */
 @Controller

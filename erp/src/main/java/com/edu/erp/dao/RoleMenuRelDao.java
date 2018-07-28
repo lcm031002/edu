@@ -10,9 +10,7 @@ import java.util.Map;
 /**
  * @ClassName: RoleMenuRelDao
  * @Description: 角色菜单权限关系
- * @author WP
- * @date 2016年11月9日 
- * 
+ *
  */
 @Repository(value="roleMenuRelDao")
 public interface RoleMenuRelDao {

@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @Description 教师Excel行包装类
- * @Author zenglw
  */
 public class TeacherExcelWraper {
 
@@ -348,7 +347,6 @@ public class TeacherExcelWraper {
     /**
      * 教师类型
      *
-     * @author zenglw
      */
     private enum TeacherType {
 
@@ -398,7 +396,6 @@ public class TeacherExcelWraper {
     /**
      * 教师状态
      *
-     * @author zenglw
      */
     private enum TeacherStatus {
 
@@ -448,7 +445,6 @@ public class TeacherExcelWraper {
     /**
      * 性别枚举
      *
-     * @author zenglw
      */
     private enum Sex {
 
@@ -498,7 +494,6 @@ public class TeacherExcelWraper {
     /**
      * 是否兼职枚举
      *
-     * @author zenglw
      */
     private enum PartTime {
 

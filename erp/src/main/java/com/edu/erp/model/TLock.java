@@ -1,17 +1,8 @@
-/**  
- * @Title: TLock.java
- * @Package com.pojo
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月12日 下午3:37:47
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 /**
  * @ClassName: TLock
  * @Description: 锁对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月12日 下午3:37:47
  *
  */
 public class TLock {

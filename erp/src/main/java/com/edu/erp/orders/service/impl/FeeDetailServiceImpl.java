@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderChangeServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月13日 下午8:52:22
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import java.util.HashMap;
@@ -24,8 +17,6 @@ import com.edu.erp.orders.service.FeeDetailService;
 
 /**
  * 费用明细服务
- * 
- * @author yecb
  *
  */
 @Service(value = "feeDetailService")

@@ -13,9 +13,6 @@ import com.github.pagehelper.Page;
 /***
  * Description ：课程商品 DAO 接口
  * 
- * Author ：
- * 
- * Date :
  */
 @Repository("tCourseDao")
 public interface TCourseDao {

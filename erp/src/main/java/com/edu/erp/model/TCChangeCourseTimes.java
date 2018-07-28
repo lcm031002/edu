@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 退费课次表
- * 
- * @author yecb
  *
  */
 public class TCChangeCourseTimes extends BaseObject {

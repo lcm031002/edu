@@ -9,8 +9,6 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * 学生跟踪信息
  * 
- * @author wsf
- * @date 2014-08-20
  */
 public class StudentTraceInfo extends BaseObject {
 

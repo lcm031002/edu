@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderInfoDetailService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:38:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import java.util.List;
@@ -14,9 +7,7 @@ import com.edu.erp.model.TabOrderInfoDetail;
 /**
  * @ClassName: OrderInfoDetailService
  * @Description: 订单详情
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:38:18
- * 
+ *
  */
 public interface OrderInfoDetailService {
 	/**

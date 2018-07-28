@@ -1,10 +1,3 @@
-/**  
- * @Title: DetailBusinessInfoFormat.java
- * @Package com.modules.work_flow.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月11日 下午5:21:55
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.util;
 
 import java.util.Map;
@@ -21,9 +14,7 @@ import com.edu.erp.model.TabOrderInfo;
 /**
  * @ClassName: DetailBusinessInfoFormat
  * @Description: 业务详细信息格式化处理类
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月11日 下午5:21:55
- * 
+ *
  */
 public class DetailBusinessInfoFormat {
 

@@ -233,16 +233,6 @@
 		delete from TAB_ORDER_INFO where id = #{id,jdbcType=NUMERIC}
 	</delete>
 	
-	<!-- 创建正式的报班单 -->
-	<select id="createOrder" statementType="CALLABLE" parameterType="HashMap" resultType="HashMap">
-		<![CDATA[
-		    {call pkg_order_main_v5.p_main(#{order_id,mode=IN,jdbcType=VARCHAR},
-		    	                        #{user_id,mode=IN,jdbcType=VARCHAR},
-		    	                        #{error_code,mode=OUT,jdbcType=NUMERIC},
-										#{error_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
 	<select id="queryTuiFeiByStudentId" parameterType="map" resultType="java.lang.String">
 		select sum(nvl(oc.course_times,0)) course_times
 		  from t_order_change t

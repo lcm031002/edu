@@ -1,10 +1,3 @@
-/**  
- * @Title: CouponInfoServiceImpl.java
- * @Package com.ebusiness.erp.promotion.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月2日 下午2:57:46
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.promotion.service.impl;
 
 import java.math.BigDecimal;
@@ -29,9 +22,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: CouponInfoServiceImpl
  * @Description: 优惠券
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月2日 下午2:57:46
- * 
+ *
  */
 @Service("couponInfoService")
 public class CouponInfoServiceImpl implements CouponInfoService {

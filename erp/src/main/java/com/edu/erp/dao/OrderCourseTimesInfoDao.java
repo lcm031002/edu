@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderCourseTimesInfoDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午7:21:54
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -20,8 +13,6 @@ import com.edu.erp.model.TabOrderCourseTimesInfo;
 /**
  * @ClassName: OrderCourseTimesInfoDao
  * @Description: 报班单课次服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午7:21:54
  * 
  */
 @Repository(value = "orderCourseTimesInfoDao")

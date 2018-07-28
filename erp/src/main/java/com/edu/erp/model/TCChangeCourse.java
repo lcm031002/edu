@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 页面退费课程数据
- * 
- * @author yecb
  *
  */
 public class TCChangeCourse extends BaseObject {

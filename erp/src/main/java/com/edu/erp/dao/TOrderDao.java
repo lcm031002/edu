@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午6:20:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -20,8 +13,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: TOrderDao
  * @Description: 正式订单服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午6:20:18
  *
  */
 @Repository(value = "tOrderDao")

@@ -6,7 +6,6 @@ import java.util.Date;
 
 /**
  * banner轮播配置
- * @author yecb
  *
  */
 public class EbTBanner implements Serializable{

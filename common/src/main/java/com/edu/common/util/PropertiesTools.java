@@ -14,10 +14,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 /***
  * Description : 配置文件读取工具类
- * 
- * Author : junli.zhang
- * 
- * Date	: 2014-08-21
+ *
  */
 public class PropertiesTools {
 

@@ -1,10 +1,3 @@
-/**  
- * @Title: TCourseListeningServiceImpl.java
- * @Package com.ebusiness.erp.student.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月14日 下午3:11:05
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.service.impl;
 
 import java.util.List;
@@ -24,8 +17,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: TCourseListeningServiceImpl
  * @Description: 课程试听服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月14日 下午3:11:05
  *
  */
 @Service("tCourseListeningService")

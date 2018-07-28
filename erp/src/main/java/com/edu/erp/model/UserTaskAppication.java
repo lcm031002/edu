@@ -1,17 +1,8 @@
-/**  
- * @Title: UserApplicationTask.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月12日 下午4:42:43
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 /**
  * @ClassName: UserApplicationTask
  * @Description: 工作流任务情况
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月12日 下午4:42:43
  *
  */
 public class UserTaskAppication {

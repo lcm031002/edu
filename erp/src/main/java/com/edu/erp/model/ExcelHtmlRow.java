@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * excel行数据对于的界面显示的行对象
- * @author jimboi
  *
  */
 public class ExcelHtmlRow {

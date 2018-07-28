@@ -4,9 +4,7 @@ import java.util.Date;
 
 /**
  * 订单课程备份表
- * 
- * @author chenyl
- * 
+ *
  */
 public class TOrderCourseLog extends BaseObject {
 

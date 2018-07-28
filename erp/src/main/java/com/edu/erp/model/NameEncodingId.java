@@ -2,8 +2,6 @@ package com.edu.erp.model;
 
 /**
  * 名称，编码，ID组合对象
- * 
- * @author zenglw
  *
  */
 public class NameEncodingId {

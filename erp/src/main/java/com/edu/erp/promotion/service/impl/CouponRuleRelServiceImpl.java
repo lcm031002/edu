@@ -1,10 +1,3 @@
-/**  
- * @Title: CouponInfoServiceImpl.java
- * @Package com.ebusiness.erp.promotion.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月2日 下午2:57:46
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.promotion.service.impl;
 
 import java.util.List;
@@ -22,9 +15,7 @@ import com.edu.erp.util.PromotionUtils;
 /**
  * @ClassName: CouponInfoServiceImpl
  * @Description: 优惠券
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月2日 下午2:57:46
- * 
+ *
  */
 @Service("couponRuleRelService")
 public class CouponRuleRelServiceImpl implements CouponRuleRelService {

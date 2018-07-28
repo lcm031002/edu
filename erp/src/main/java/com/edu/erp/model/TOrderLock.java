@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderLock.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月22日 下午3:48:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.util.Date;
@@ -12,8 +5,6 @@ import java.util.Date;
 /**
  * @ClassName: TOrderLock
  * @Description: 订单冻结状态
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月22日 下午3:48:27
  *
  */
 public class TOrderLock {

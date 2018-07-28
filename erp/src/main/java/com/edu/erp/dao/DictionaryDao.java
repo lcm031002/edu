@@ -1,10 +1,3 @@
-/**  
- * @Title: DicttypeDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月20日 下午7:22:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -25,8 +18,6 @@ import com.edu.erp.model.TPTeacherAttendType;
 /**
  * @ClassName: DictionaryDao
  * @Description: 数据字典查询服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月20日 下午7:22:40
  * 
  */
 @Repository(value = "dictionaryDao")

@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderCouponRelDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午8:22:21
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -14,8 +7,6 @@ import com.edu.erp.model.OrderCouponRel;
 /**
  * @ClassName: OrderCouponRelDao
  * @Description: 订单优惠券服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午8:22:21
  *
  */
 public interface OrderCouponRelDao {

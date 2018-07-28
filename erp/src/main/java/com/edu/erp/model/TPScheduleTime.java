@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 排课档期表
- * 
- * @author yecb
  *
  */
 public class TPScheduleTime extends BaseObject{

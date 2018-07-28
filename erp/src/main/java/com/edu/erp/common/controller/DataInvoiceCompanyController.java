@@ -26,8 +26,6 @@ import com.github.pagehelper.Page;
 /**
  * 课程季Controller
  * 
- * @author lpe
- * @date 2014-8-6
  */
 @Controller
 @RequestMapping("/common/invoicecompany")

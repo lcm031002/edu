@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentAccountController.java
- * @Package com.ebusiness.erp.student.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月19日 下午4:11:42
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.controller;
 
 import java.math.BigDecimal;
@@ -51,9 +44,7 @@ import net.sf.json.JSONObject;
 /**
  * @ClassName: StudentAccountController
  * @Description: 学员账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月19日 下午4:11:42
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/studentaccount" })

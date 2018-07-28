@@ -15,8 +15,6 @@ import com.edu.erp.model.CouponInfo;
 
 /**
  * 促销工具类
- * 
- * @author wCong
  *
  */
 public class PromotionUtils extends BaseModuleUtils{

@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderCourseTimesInfoService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:54:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import java.util.List;
@@ -17,8 +10,6 @@ import com.edu.erp.model.TabOrderCourseTimesInfo;
 /**
  * @ClassName: OrderCourseTimesInfoService
  * @Description: 课程课次服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:54:27
  * 
  */
 public interface OrderCourseTimesInfoService {

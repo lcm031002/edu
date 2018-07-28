@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 学生联系方式
- * 
- * @author wCong
  *
  */
 public class StudentContact extends BaseObject{

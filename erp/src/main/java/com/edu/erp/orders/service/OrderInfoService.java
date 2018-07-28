@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderInfoService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:37:56
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import java.util.Map;
@@ -19,9 +12,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: OrderInfoService
  * @Description: 订单服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:37:56
- * 
+ *
  */
 public interface OrderInfoService {
 	/**

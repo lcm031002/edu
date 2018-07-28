@@ -1,10 +1,3 @@
-/**  
- * @Title: MessageRequirementService.java
- * @Package com.ebusiness.messagecenter
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年1月7日 下午2:55:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.message.service;
 
 import java.util.Map;
@@ -13,9 +6,7 @@ import java.util.Map;
  * 
  * @ClassName: MessageRequirementService
  * @Description: 短信需求发送接口信息
- * @author zhuliyong zly@entstudy.com
- * @date 2015年1月7日 下午2:55:27
- * 
+ *
  */
 public interface MessageRequirementService {
 	/**

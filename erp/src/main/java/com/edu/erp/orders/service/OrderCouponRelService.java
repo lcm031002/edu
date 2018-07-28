@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderCouponRelService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午8:22:49
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import java.util.List;
@@ -14,8 +7,6 @@ import com.edu.erp.model.OrderCouponRel;
 /**
  * @ClassName: OrderCouponRelService
  * @Description: 优惠券服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午8:22:49
  *
  */
 public interface OrderCouponRelService {

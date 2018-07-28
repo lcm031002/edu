@@ -9,10 +9,7 @@ import com.edu.erp.model.TabRegion;
 
 /***
  * Description ： 省市地区DAO 接口
- * 
- * Author ：junli.zhang
  *
- * Date : 2014-08-29
  */
 @Repository(value = "regionDao")
 public interface RegionDao {

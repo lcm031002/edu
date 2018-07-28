@@ -17,7 +17,6 @@ import com.edu.erp.util.BaseController;
 
 /**
  * @Description: 数据字典基础服务
- * @author zenglw
  */
 @Controller
 @RequestMapping(value = { "/dictionary" })

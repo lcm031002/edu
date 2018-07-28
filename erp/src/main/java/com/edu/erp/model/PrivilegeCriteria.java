@@ -2,7 +2,6 @@ package com.edu.erp.model;
 
 /**
  * 优惠前置条件
- * @author ouhengshan
  *
  */
 public class PrivilegeCriteria extends BaseObject{

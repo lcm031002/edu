@@ -4,8 +4,6 @@ import java.util.List;
 
 /**
  * 考勤教师分组
- * 
- * @author wCong
  *
  */
 public class AttendTeacherGroup extends BaseObject {

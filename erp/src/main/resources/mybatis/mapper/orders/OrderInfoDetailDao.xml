@@ -219,20 +219,6 @@
 		    </if>
 		order by TOID.COURSE_PACK_PRICE    
 	</select>
-	
-	<select id="updateOrderWfdStardate" parameterType="HashMap" statementType="CALLABLE">
-	     <![CDATA[ 
-	      { call 
-	       pkg_wfd_change.p_change_startdate(
-	          #{order_detail_id,mode=IN,jdbcType=NUMERIC},
-	          to_date(#{start_date,mode=IN,jdbcType=DATE},'yyyy-mm-dd'),
-	          #{end_date,mode=OUT,jdbcType=VARCHAR},
-	          #{err_code,mode=OUT,jdbcType=NUMERIC},
-	          #{err_msg,mode=OUT,jdbcType=VARCHAR}
-	        )
-	    }
-		]]>
-	</select>
 
 	<select id="queryStudentOrderDetailInfo"
 		resultType="com.edu.erp.model.TabOrderInfoDetail"

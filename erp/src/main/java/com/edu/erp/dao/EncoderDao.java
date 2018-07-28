@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午6:20:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import org.springframework.stereotype.Repository;
@@ -13,7 +6,6 @@ import com.edu.erp.model.TEncoder;
 
 /**
  * 业务单据DAO
- * @author yecb
  *
  */
 @Repository(value = "encoderDao")

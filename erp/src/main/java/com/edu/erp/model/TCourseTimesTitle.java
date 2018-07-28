@@ -1,16 +1,8 @@
-/**  
- * @Title: TOrderCourseTimes.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午7:24:20
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 
 /**
  * 课次标题信息
- * @author yecb
  *
  */
 public class TCourseTimesTitle extends BaseObject {

@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentAttendanceServiceImpl.java
- * @Package com.ebusiness.erp.attendance.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月18日 下午3:51:52
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.attendance.service.impl;
 
 import com.edu.common.constants.Constants.AttendType;
@@ -53,9 +46,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: AttendanceServiceImpl
  * @Description: 考勤服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月18日 下午3:51:52
- * 
+ *
  */
 @Service(value = "attendanceService")
 public class AttendanceServiceImpl implements AttendanceService {

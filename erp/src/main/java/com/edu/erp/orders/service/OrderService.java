@@ -1,11 +1,3 @@
-/**  
- * @Title: OrderService.java
- * @Package com.modules.ordermanager.service
- * @Description: 订单管理服务API
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年9月19日 下午1:20:29
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import java.util.List;
@@ -23,9 +15,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: OrderService
  * @Description: 订单管理服务API，提供与订单相关的服务的操作的能力
- * @author zhuliyong zly@entstudy.com
- * @date 2014年9月19日 下午1:20:29
- * 
+ *
  */
 public interface OrderService {
 

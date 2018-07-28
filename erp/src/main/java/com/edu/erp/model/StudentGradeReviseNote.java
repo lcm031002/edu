@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * 学生年级修改记录类
  *
- * @author: linj
- * @create: 2018/1/31  10:39
  */
 public class StudentGradeReviseNote {
     //学生ID

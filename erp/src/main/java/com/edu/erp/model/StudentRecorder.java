@@ -5,7 +5,6 @@ import java.util.Date;
 
 /**
  * 学员报备人
- * @author zenglw
  *
  */
 public class StudentRecorder implements Serializable{

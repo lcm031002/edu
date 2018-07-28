@@ -4,8 +4,6 @@ package com.edu.erp.model;
  * 课程阶梯关系表
  * @ClassName: TCourseLadderRel
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年4月6日 下午8:41:30
  *
  */
 public class TCourseLadderRel  extends BaseObject{

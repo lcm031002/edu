@@ -1,10 +1,3 @@
-/**  
- * @Title: PrivilegeCriteriaController.java
- * @Package com.ebusiness.erp.promotion.controller
- * @author ouhengshan ohs@klxuexi.org  
- * @date 2016年11月1日 上午11:07:30
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.promotion.controller;
 
 import java.util.Date;
@@ -36,9 +29,7 @@ import com.github.pagehelper.PageInfo;
 /**
  * @ClassName: PrivilegeCriteriaController
  * @Description: 优惠前置服务
- * @author ouhengshan ohs@klxuexi.org  
- * @date 2017年1月12日 上午11:07:30
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/privilegecriteria" })

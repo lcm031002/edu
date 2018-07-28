@@ -1,10 +1,3 @@
-/**  
- * @Title: MessageRequirementServiceImpl.java
- * @Package com.ebusiness.messagecenter.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年1月7日 下午3:11:22
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.message.service.impl;
 
 import java.util.ArrayList;
@@ -35,8 +28,6 @@ import com.edu.erp.message.util.AccountReader;
 /**
  * @ClassName: MessageRequirementServiceImpl
  * @Description: 短信需求发送接口信息
- * @author zhuliyong zly@entstudy.com
- * @date 2015年1月7日 下午3:11:22
  */
 @Service(value = "messageRequirementService")
 public class MessageRequirementServiceImpl implements MessageRequirementService {

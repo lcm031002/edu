@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentIntegralDetails.java
- * @Package com.pojo
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月24日 下午2:08:20
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.util.Date;
@@ -12,9 +5,7 @@ import java.util.Date;
 /**
  * @ClassName: StudentIntegralDetails
  * @Description: 学生积分详情
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月24日 下午2:08:20
- * 
+ *
  */
 public class StudentIntegralDetails extends BaseObject {
 	/**

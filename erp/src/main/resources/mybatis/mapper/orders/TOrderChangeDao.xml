@@ -257,25 +257,6 @@
        order by tf.finish_time desc
 	</select>
 	
-	<!-- 学员转班 -->
-	<select id="orderChangeTransfer" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_02(#{p_order_detail_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_output_count,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_output_times,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_input_course_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_input_branch_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_count,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_input_times,mode=IN,jdbcType=VARCHAR},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR},
-											    #{o_change_id,mode=OUT,jdbcType=NUMERIC})}
-		]]>
-	</select>
-	
 	<resultMap type="com.edu.erp.model.TOrderCourseTimesLog" id="orderCourseTimesLogPojoMap">
 		<id property="id" column="id"/>
 		<result property="changeId" column="CHANGE_ID"/>
@@ -295,113 +276,6 @@
 		<result property="changeStatus" column="CHANGE_STATUS"/>
 		<result property="transferFlag" column="TRANSFER_FLAG" />
 	</resultMap>
-	
-	<!-- 准备退费数据 -->
-	<select id="readyPremium" statementType="CALLABLE" parameterType="java.util.HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_input_01(#{order_detail_id,mode=IN,jdbcType=NUMERIC},
-										    #{change_no,mode=IN,jdbcType=VARCHAR},
-										    #{course_cnt,mode=IN,jdbcType=NUMERIC},
-										    #{course_times,mode=IN,jdbcType=VARCHAR},
-										    #{error_code,mode=OUT,jdbcType=NUMERIC},
-										    #{error_desc,mode=OUT,jdbcType=VARCHAR},
-										    #{total_amount,mode=OUT,jdbcType=DOUBLE},
-										    #{attend_amount,mode=OUT,jdbcType=DOUBLE},
-										    #{surplus_count,mode=OUT,jdbcType=DOUBLE},
-										    #{pre_amount,mode=OUT,jdbcType=DOUBLE})}
-		]]>
-	</select>
-	
-	<!-- 准备VIP退费准备信息 -->
-	<select id="readyVIPPremium" statementType="CALLABLE" parameterType="java.util.HashMap">
-		<![CDATA[
-		    {call pkg_change_vip_web.p_input_01(#{order_detail_id,mode=IN,jdbcType=NUMERIC},
-										    #{change_no,mode=IN,jdbcType=VARCHAR},
-										    #{course_cnt,mode=IN,jdbcType=NUMERIC},
-										    #{course_times,mode=IN,jdbcType=VARCHAR},
-										    #{error_code,mode=OUT,jdbcType=NUMERIC},
-										    #{error_desc,mode=OUT,jdbcType=VARCHAR},
-										    #{total_amount,mode=OUT,jdbcType=DOUBLE},
-										    #{attend_amount,mode=OUT,jdbcType=DOUBLE},
-										    #{surplus_count,mode=OUT,jdbcType=DOUBLE},
-										    #{pre_amount,mode=OUT,jdbcType=DOUBLE})}
-		]]>
-	</select>
-
-	<!-- 删除退费准备数据 -->
-	<select id="deleteReadyPremium" statementType="CALLABLE" parameterType="java.util.HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_delete_01(#{change_no,mode=IN,jdbcType=VARCHAR},
-		    	                             #{error_code,mode=OUT,jdbcType=NUMERIC},
-											 #{error_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	<!-- 退费审批提交 -->
-	<select id="premium" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_01(#{change_no,mode=IN,jdbcType=VARCHAR},
-		    	                                #{user_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{branch_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		                            			#{p_premium_deduction_amount,mode=IN,jdbcType=NUMERIC},
-		    	                                #{v_change_id,mode=OUT,jdbcType=NUMERIC},
-		    	                                #{error_code,mode=OUT,jdbcType=NUMERIC},
-											    #{error_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	<!-- 退费审批提交 -->
-	<select id="premiumFrozen" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call PKG_CHANGE_WEB_FROZEN.p_do_change_01(#{change_no,mode=IN,jdbcType=VARCHAR},
-		    	                                #{user_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{branch_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		                            			#{p_premium_deduction_amount,mode=IN,jdbcType=NUMERIC},
-		    	                                #{v_change_id,mode=OUT,jdbcType=NUMERIC},
-		    	                                #{error_code,mode=OUT,jdbcType=NUMERIC},
-											    #{error_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	<!-- 退费审批通过 -->
-	<select id="premiumAudit" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_audit(#{p_change_id,mode=IN,jdbcType=NUMERIC},
-		    									#{p_change_status,mode=IN,jdbcType=NUMERIC},
-		    									#{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	<!-- 订单取消 -->
-	<select id="orderCancel" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_03(#{p_order_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	<!-- 退费取消 -->
-	<select id="premiumCancel" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_04(#{p_change_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
 	
 	<!-- 获取课程剩余课次 -->
 	<select id="getRemainCourseTimesCount" parameterType="long" resultType="integer">
@@ -426,29 +300,6 @@
 		           and a.scheduling_id = l.id
 		           and a.attend_type not in (10, 20, 30))
 		   and c.id = #{orderCourseId,jdbcType=NUMERIC}
-	</select>
-	
-	<select id="orderChangeCheck" statementType="CALLABLE" parameterType="HashMap"> 
-	    <![CDATA[
-	    {call pkg_order_change_v5.p_apply_check(#{change_no,mode=IN,jdbcType=VARCHAR},
-	                                            #{order_id,mode=IN,jdbcType=NUMERIC},
-	    								     	#{change_id,mode=IN,jdbcType=NUMERIC},
-	    								     	#{change_type,mode=IN,jdbcType=NUMERIC},
-	    	                                    #{err_code,mode=OUT,jdbcType=NUMERIC},
-										        #{err_desc,mode=OUT,jdbcType=VARCHAR})}
-	    ]]>
-	</select>
-	
-	<!-- 作废订单 -->
-	<select id="cancelOrder" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_03(#{p_order_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
 	</select>
 	
 	<!-- 退费单据-分页查询 -->
@@ -512,32 +363,7 @@
 		</if>
 		order by a.id DESC	
 	</select>
-	
-	<!-- 退费单据-作废 -->
-	<select id="cancelRefund" statementType="CALLABLE" parameterType="map">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_04(#{p_change_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	<!-- 冻结退费-作废 -->
-	<select id="cancelFrozen" statementType="CALLABLE" parameterType="map">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_04(#{p_change_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
-	</select>
-	
-	
-	
+
 	<!-- 退费单据-标记已取款 -->
 	<update id="drawRefund" parameterType="map">
 		update t_order_change 
@@ -693,17 +519,6 @@
 	       and t2.change_type = 5
 	       and t2.id not in (${changeId},${pchangeId}) 
 	       and t2.order_id = #{orderId}
-	</select>
-	
-	<select id="doOrderChange_3" statementType="CALLABLE" parameterType="HashMap">
-		<![CDATA[
-		    {call pkg_change_web_v5.p_do_change_03(#{p_order_id,mode=IN,jdbcType=NUMERIC},
-		    	                                #{P_input_user,mode=IN,jdbcType=NUMERIC},
-		    	                                #{p_encoding,mode=IN,jdbcType=VARCHAR},
-		    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-		    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-											    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-		]]>
 	</select>
 
 	<select id="queryExpiredChangeCourseTimesCount" parameterType="long" resultType="integer">

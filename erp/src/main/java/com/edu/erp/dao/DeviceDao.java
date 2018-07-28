@@ -1,10 +1,3 @@
-/**
- * @Title: DeviceDao.java
- * @Package: com.edu.erp.dao
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:24:54
- * @version KLXX ERPV5.0
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,8 +11,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DeviceDao
  * @Description:
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:24:54
  * 
  */
 @Repository(value = "deviceDao")

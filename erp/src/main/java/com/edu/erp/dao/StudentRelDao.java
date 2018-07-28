@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentRelDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月8日 下午6:10:13
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -15,8 +8,6 @@ import com.edu.erp.model.StudentRel;
 /**
  * @ClassName: StudentRelDao
  * @Description: 学员推荐关系列表
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月8日 下午6:10:13
  * 
  */
 public interface StudentRelDao {

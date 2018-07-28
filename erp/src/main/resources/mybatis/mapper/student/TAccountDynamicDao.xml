@@ -152,21 +152,6 @@
 		id=#{dynamicId,jdbcType=NUMERIC}
 	</select>
 
-	<!-- 学生充值 理赔 取款作废 张军利 2014-11-27 -->
-	<select id="accountDynamicCancel" statementType="CALLABLE"
-		parameterType="java.util.HashMap">
-<![CDATA[
-    {call pkg_account_dynamic_v5.pro_recharge_cancel_v5(
-    								#{p_dynamic_id,mode=IN,jdbcType=NUMERIC},
-								    #{p_encoding,mode=IN,jdbcType=NUMERIC},
-								    #{p_input_user,mode=IN,jdbcType=NUMERIC},
-								    #{p_remark,mode=IN,jdbcType=VARCHAR},
-								    #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-								    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-						    
-]]>
-	</select>
-
 	<insert id="addReChargeHis" parameterType="java.util.HashMap">
 		insert into
 		T_ACCOUNT_RECHARGE_INFO_HIS

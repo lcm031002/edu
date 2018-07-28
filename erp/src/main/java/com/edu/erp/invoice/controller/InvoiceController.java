@@ -1,10 +1,3 @@
-/**  
- * @Title: InvoiceController.java
- * @Package com.ebusiness.erp.orders.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月6日 下午1:21:28
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.invoice.controller;
 
 import com.edu.common.constants.Constants.RespMapKey;
@@ -45,9 +38,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: InvoiceController
  * @Description: 发票信息管理
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月6日 下午1:21:28
- * 
+ *
  */
 @Controller
 public class InvoiceController extends BaseController {

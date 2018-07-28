@@ -8,11 +8,6 @@ import net.sf.json.JSONObject;
 import com.edu.erp.model.TAttendance;
 import com.edu.erp.model.TAttendanceHt;
 
-/**
- * 
- * @author KL-LL
- * 
- */
 public interface StudentAttendanceService {
 
 	/**

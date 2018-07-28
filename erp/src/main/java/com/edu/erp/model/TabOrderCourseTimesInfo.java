@@ -1,18 +1,9 @@
-/**  
- * @Title: TabOrderCourseTimesInfo.java
- * @Package com.pojo
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年10月13日 上午10:30:51
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 
 /**
  * @ClassName: TabOrderCourseTimesInfo
  * @Description: 班级课选课表
- * @author zhuliyong zly@entstudy.com
- * @date 2014年10月13日 上午10:30:51
  * 
  */
 public class TabOrderCourseTimesInfo extends BaseObject {

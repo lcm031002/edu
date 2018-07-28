@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 课程模型（数学模型）
- * 
- * @author wCong
  *
  */
 public class TPCourseModel extends BaseObject{

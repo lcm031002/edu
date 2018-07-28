@@ -8,8 +8,6 @@ import com.edu.erp.model.CouponInfo;
 import com.github.pagehelper.Page;
 /**
  * 优惠活动
- * 
- * @author wCong
  *
  */
 public interface ActivityInfoDao {

@@ -1,10 +1,3 @@
-/**  
- * @Title: TCourseSchedulingAssist.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月16日 下午9:31:08
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.io.Serializable;
@@ -12,9 +5,7 @@ import java.io.Serializable;
 /**
  * @ClassName: TCourseSchedulingAssist
  * @Description: 排课参数配置
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月16日 下午9:31:08
- * 
+ *
  */
 public class TCourseSchedulingAssist implements Serializable{
 	/**

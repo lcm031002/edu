@@ -5,11 +5,6 @@ import java.util.List;
 
 import com.edu.erp.model.OrganizationInfo;
 
-/**
- * 
- * @author wCong
- *
- */
 @SuppressWarnings("static-access")
 public class OrganizationUtils extends BaseModuleUtils{
 	

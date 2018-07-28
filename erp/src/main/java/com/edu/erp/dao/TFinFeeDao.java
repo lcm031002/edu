@@ -8,7 +8,6 @@ import com.edu.erp.model.TFinFeeUse;
 
 /**
  * 资金往来DAO
- * @author yecb
  *
  */
 @Repository(value = "tFinFeeDao")

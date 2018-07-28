@@ -7,10 +7,7 @@ import java.util.Random;
 
 /***
  * Description : 密码加密、生成随机密码工具类
- * 
- * Author : junli.zhang
- * 
- * Date	: 2014-08-21
+ *
  */
 public class PwdEncryptUtil 
 {

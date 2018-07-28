@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderPayCostService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:48:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import com.edu.erp.model.TabOrderPayCost;
@@ -12,9 +5,7 @@ import com.edu.erp.model.TabOrderPayCost;
 /**
  * @ClassName: OrderPayCostService
  * @Description: 缴费信息服务对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:48:18
- * 
+ *
  */
 public interface OrderPayCostService {
 	/**

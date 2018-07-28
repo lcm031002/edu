@@ -6,8 +6,6 @@ import java.util.List;
  * 个性化课程阶梯定义表
  * @ClassName: TCourseLadder
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年4月6日 下午8:41:30
  *
  */
 public class TCourseLadder  extends BaseObject{

@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 课程科目表
- * 
- * @author wCong
  *
  */
 public class TPSubject extends BaseObject{

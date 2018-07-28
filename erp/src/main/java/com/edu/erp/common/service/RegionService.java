@@ -8,10 +8,7 @@ import com.edu.erp.model.TabRegion;
 
 /***
  * Description ： 省市地区Service 接口
- * 
- * Author ：junli.zhang
  *
- * Date : 2014-08-29
  */
 public interface RegionService {
 

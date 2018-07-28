@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderChangeController.java
- * @Package com.ebusiness.erp.orders.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月13日 下午8:59:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.controller;
 
 import java.util.HashMap;
@@ -41,9 +34,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: OrderChangeController
  * @Description: 学员批改服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月13日 下午8:59:27
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/ordermanager" })

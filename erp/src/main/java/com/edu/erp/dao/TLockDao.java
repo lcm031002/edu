@@ -1,10 +1,3 @@
-/**  
- * @Title: TLockDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月12日 下午3:43:47
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -17,8 +10,6 @@ import com.edu.erp.model.TLock;
 /**
  * @ClassName: TLockDao
  * @Description: 查询锁
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月12日 下午3:43:47
  * 
  */
 @Repository(value = "tLockDao")

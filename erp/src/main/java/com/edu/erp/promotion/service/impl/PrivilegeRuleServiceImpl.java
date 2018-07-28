@@ -1,10 +1,3 @@
-/**  
- * @Title: PrivilegeRuleServiceImpl.java
- * @Package com.ebusiness.erp.promotion.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月1日 下午3:03:58
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.promotion.service.impl;
 
 import java.util.ArrayList;
@@ -35,9 +28,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: PrivilegeRuleServiceImpl
  * @Description: 优惠规则服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月1日 下午3:03:58
- * 
+ *
  */
 @Service("privilegeRuleService")
 public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {

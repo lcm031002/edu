@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderCourseTimesDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午6:29:12
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -17,8 +10,6 @@ import com.edu.erp.model.TOrderCourseTimes;
 /**
  * @ClassName: TOrderCourseTimesDao
  * @Description: 订单详单课次信息
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午6:29:12
  *
  */
 @Repository(value = "tOrderCourseTimesDao")

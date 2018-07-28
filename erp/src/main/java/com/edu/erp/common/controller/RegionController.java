@@ -22,10 +22,7 @@ import com.edu.erp.util.StringUtil;
 
 /***
  * Description : 全国城市联动
- * 
- * Author : junli.zhang
- * 
- * Date : 2014-08-29
+ *
  */
 @Controller
 @RequestMapping("/common/region")

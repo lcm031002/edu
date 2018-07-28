@@ -38,7 +38,6 @@ import com.github.pagehelper.PageInfo;
 
 /**
  * 优惠活动
- * @author ohs
  *
  */
 @Controller

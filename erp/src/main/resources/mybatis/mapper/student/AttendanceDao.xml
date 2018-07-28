@@ -23,12 +23,6 @@
 		<parameter mode="OUT" property="errorDesc" javaType="string" jdbcType="VARCHAR"/>
 	</parameterMap>
 	
-	<select id="attandanceSubmit" statementType="CALLABLE" parameterMap="attandanceSubmitParam">
-		<![CDATA[
-			{call pkg_attend_main.p_attendance(?,?,?,?,?,?,?,?,?,?,?)}
-		]]>
-	</select>
-	
 	<insert id="saveAttandance"   parameterType="com.edu.erp.model.TAttendance" useGeneratedKeys="true" keyProperty="id">
 		 insert into t_attendance
 	      (
@@ -252,42 +246,6 @@
       date_format(#{valid_end_date,jdbcType=VARCHAR},'%Y-%m-%d')
       )
 	</insert>
-	
-	<select id="wfdAttend" statementType="CALLABLE" parameterType="HashMap">
-	<![CDATA[
-	    {call pkg_attend_main.p_wfd_attendance(
-	    									#{p_order_course_id,mode=IN,jdbcType=NUMERIC},
-	    									#{p_scheduling_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_attend_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_student_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_teacher_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_counselor_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_attend_type,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_course_date,mode=IN,jdbcType=DATE},
-	    	                                #{p_branch_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_input_user,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-	    	                                #{p_for_quit,mode=IN,jdbcType=NUMERIC},
-	    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-										    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-	]]>
-	</select>
-	
-	<select id="teacherAttend" statementType="CALLABLE" parameterType="HashMap">
-	<![CDATA[
-	    {call pkg_attend_main.p_teacher_attendance(
-	    									#{p_attend_id,mode=IN,jdbcType=NUMERIC},
-	    									#{p_teacher_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_attend_type,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_attend_date,mode=IN,jdbcType=DATE},
-	    	                                #{p_branch_id,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_input_user,mode=IN,jdbcType=NUMERIC},
-	    	                                #{p_remark,mode=IN,jdbcType=VARCHAR},
-	    	                                #{o_err_code,mode=OUT,jdbcType=NUMERIC},
-										    #{o_err_desc,mode=OUT,jdbcType=VARCHAR})}
-	]]>
-
-	</select>
 	
 	<select id="querySchedulingById" parameterType="string" resultType="map">
 		select *

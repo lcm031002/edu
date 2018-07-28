@@ -8,9 +8,7 @@ import com.github.pagehelper.Page;
 
 /**
  * 科目Service
- * 
- * @author lpe
- * @date 2014-8-19
+ *
  */
 public interface SubjectService {
 

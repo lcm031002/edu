@@ -5,8 +5,6 @@ import java.util.List;
 
 /**
  * 订单批改课程表
- * 
- * @author wCong
  *
  */
 public class TCOrderCourse extends BaseObject {

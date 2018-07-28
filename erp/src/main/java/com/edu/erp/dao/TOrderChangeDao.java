@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderChangeDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午8:23:17
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -20,9 +13,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: TOrderChangeDao
  * @Description: 订单批改动作
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午8:23:17
- * 
+ *
  */
 @Repository(value = "tOrderChangeDao")
 public interface TOrderChangeDao {

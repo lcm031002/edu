@@ -1,10 +1,3 @@
-/**  
- * @Title: InvoiceService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月6日 下午1:21:48
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.invoice.service;
 
 import java.util.List;
@@ -16,8 +9,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: InvoiceService
  * @Description: TODO(这里用一句话描述这个类的作用)
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月6日 下午1:21:48
  *
  */
 public interface InvoiceService {

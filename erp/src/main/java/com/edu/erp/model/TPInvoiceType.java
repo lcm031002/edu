@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 发票类型
- * 
- * @author wCong
  *
  */
 public class TPInvoiceType extends BaseObject{

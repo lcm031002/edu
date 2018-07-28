@@ -1,10 +1,3 @@
-/**  
- * @Title: CourseController.java
- * @Package com.ebusiness.erp.course_manager.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月17日 下午6:08:16
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.course_manager.controller;
 
 import java.io.File;
@@ -53,9 +46,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: CourseController
  * @Description: 课程控制器服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月17日 下午6:08:16
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/coursemanagerment" })

@@ -5,10 +5,7 @@ import java.util.List;
 
 /***
  * Description : POJO
- * 
- * Author ： junli.zhang
- * 
- * Date : 2014-09-01
+ *
  */
 public class TabOrderInfo extends BaseObject {
 

@@ -3,8 +3,6 @@ package com.edu.erp.model;
 
 /**
  * 教师考勤状态
- * 
- * @author wCong
  *
  */
 public class TPTeacherAttendType extends BaseObject{

@@ -1,10 +1,3 @@
-/**  
- * @Title: InvoiceServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月6日 下午1:22:01
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.invoice.service.impl;
 
 import com.edu.erp.invoice.service.TabInvoiceReceiveLogService;
@@ -29,9 +22,7 @@ import com.github.pagehelper.Page;
  * 
  * @ClassName: InvoiceServiceImpl
  * @Description: 发票服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月6日 下午1:22:01
- * 
+ *
  */
 @Service(value = "invoiceService")
 public class InvoiceServiceImpl implements InvoiceService {

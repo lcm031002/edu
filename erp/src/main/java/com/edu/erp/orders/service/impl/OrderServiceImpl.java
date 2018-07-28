@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午6:18:35
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import com.edu.erp.dao.TCourseDao;
@@ -63,9 +56,7 @@ import jxl.common.Logger;
  * 
  * @ClassName: OrderServiceImpl
  * @Description: 正式订单服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午6:18:35
- * 
+ *
  */
 @Service(value = "orderService")
 public class OrderServiceImpl implements OrderService {

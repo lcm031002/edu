@@ -13,7 +13,6 @@ import com.edu.erp.orders.service.FinFeeService;
 
 /**
  * 资金业务往来服务
- * @author yecb
  *
  */
 @Service(value = "finFeeService")

@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * 学生状态信息
  *
- * @author: linj
- * @create: 2018/2/7  16:19
  */
 public class StudentStatusInfo {
     //id

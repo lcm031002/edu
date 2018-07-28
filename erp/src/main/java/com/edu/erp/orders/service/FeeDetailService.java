@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderPayCostService.java
- * @Package com.ebusiness.erp.orders.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:48:18
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service;
 
 import java.util.HashMap;
@@ -17,8 +10,6 @@ import com.edu.erp.model.TOrderCourse;
 
 /**
  * 费用明细服务
- * 
- * @author yecb
  *
  */
 public interface FeeDetailService {

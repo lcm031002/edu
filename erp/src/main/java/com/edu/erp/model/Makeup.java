@@ -4,9 +4,7 @@ import java.util.Date;
 
 /**
  * 补课信息
- * 
- * @author zengliwen
- * 
+ *
  */
 public class Makeup extends BaseObject {
 	private static final long serialVersionUID = 1L;

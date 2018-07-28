@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * ${教师团队关系表}
  *
- * @author: linj
- * @create: 2018/1/9  11:10
  */
 public class TeacherTeamRel {
     private  Long id;

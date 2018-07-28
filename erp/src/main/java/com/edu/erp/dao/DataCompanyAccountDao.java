@@ -1,10 +1,3 @@
-/**  
- * @Title: DataCompanyAccountDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年10月20日 下午4:46:03
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -19,8 +12,6 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: DataCompanyAccountDao
  * @Description: 公司账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年10月20日 下午4:46:03
  * 
  */
 @Repository(value = "dataCompanyAccountDao")

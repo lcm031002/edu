@@ -4,8 +4,6 @@ package com.edu.erp.model;
 /**
  * @ClassName: StudentBusiness
  * @Description: 查询学生的账户信息
- * @author zhuliyong zly@entstudy.com
- * @date 2014年9月23日 下午2:08:10
  */
 public class StudentBusiness extends StudentInfo {
 	/**

@@ -1,11 +1,3 @@
-/**  
- * @Title: OrderPayCostDao.java
- * @Package com.modules.ordermanager.dao
- * @Description: 订单缴费信息dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年9月21日 下午8:54:21
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,8 +10,6 @@ import com.edu.erp.model.TabOrderPayCostDetail;
 /**
  * @ClassName: OrderPayCostDao
  * @Description: 订单缴费信息dao
- * @author zhuliyong zly@entstudy.com
- * @date 2014年9月21日 下午8:54:21
  * 
  */
 @Repository(value = "orderPayCostDao")

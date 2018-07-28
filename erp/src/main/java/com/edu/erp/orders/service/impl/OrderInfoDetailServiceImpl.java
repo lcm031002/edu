@@ -1,10 +1,3 @@
-/**  
- * @Title: OrderInfoDetailServiceImpl.java
- * @Package com.ebusiness.erp.orders.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月3日 下午6:39:47
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.service.impl;
 
 import java.util.ArrayList;
@@ -34,9 +27,7 @@ import com.edu.erp.teacher_manager.service.TeacherInfoService;
 /**
  * @ClassName: OrderInfoDetailServiceImpl
  * @Description: 订单详情服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:39:47
- * 
+ *
  */
 @Service(value = "orderInfoDetailService")
 public class OrderInfoDetailServiceImpl implements OrderInfoDetailService {

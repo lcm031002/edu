@@ -28,8 +28,6 @@ import org.springframework.util.ReflectionUtils;
  * 报表按指定的Excel模板写入数据
  * @ClassName: ReportWriteExcelHandler
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月8日 上午9:53:23
  *
  */
 public class ReportWriteExcelHandler {

@@ -36,9 +36,6 @@ import com.edu.erp.student.service.StudentInfoService;
 import com.edu.erp.util.ModelDataUtils;
 import com.edu.erp.util.StringUtil;
 
-/**
- * @author KL-LL
- */
 @Service(value = "studentAttendanceService")
 public class StudentAttendanceServiceImpl implements StudentAttendanceService {
 
@@ -134,7 +131,6 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
      * 7.校验该学生是否有包含当前考勤课程的订单
      * 8.校验当前课次依然有效
      * 9.校验当前课次在退费审批中不允许退费
-     * @Author zenglw@2017/10/13
      */
     public void attendanceCommonCheck(Map<String, Object> map) throws Exception {
         Integer count = 0;

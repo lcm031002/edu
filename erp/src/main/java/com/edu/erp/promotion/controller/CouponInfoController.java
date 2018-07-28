@@ -1,10 +1,3 @@
-/**  
- * @Title: CouponInfoController.java
- * @Package com.ebusiness.erp.promotion.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月2日 下午3:06:51
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.promotion.controller;
 
 import java.util.Date;
@@ -36,8 +29,6 @@ import com.github.pagehelper.PageInfo;
 /**
  * @ClassName: CouponInfoController
  * @Description: 优惠券
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月2日 下午3:06:51
  *
  */
 @Controller

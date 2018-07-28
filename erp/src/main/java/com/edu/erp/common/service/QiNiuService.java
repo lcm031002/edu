@@ -4,7 +4,6 @@ package com.edu.erp.common.service;
 
 /**
  * 七牛上传图片
- * @author yecb
  *
  */
 public interface QiNiuService {

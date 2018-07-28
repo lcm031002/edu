@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentIntegralDao.java
- * @Package com.modules.student_manager.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年3月24日 下午2:31:02
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import java.util.List;
@@ -18,8 +11,6 @@ import com.edu.erp.model.StudentIntegral;
 /**
  * @ClassName: StudentIntegralDao
  * @Description: 学生积分账户
- * @author zhuliyong zly@entstudy.com
- * @date 2015年3月24日 下午2:31:02
  *
  */
 @Repository(value = "studentIntegralDao")

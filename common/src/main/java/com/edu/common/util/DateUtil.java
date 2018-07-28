@@ -9,10 +9,7 @@ import java.util.Date;
 
 /**
  * Description : 日期工具类
- * 
- * Author : junli.zhang
- * 
- * Date	: 2014-08-21
+ *
  */
 public final class DateUtil
 {

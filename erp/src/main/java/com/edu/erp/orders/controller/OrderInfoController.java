@@ -41,9 +41,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: OrderInfoController
  * @Description: 订单信息服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月3日 下午6:35:51
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/ordermanager" })

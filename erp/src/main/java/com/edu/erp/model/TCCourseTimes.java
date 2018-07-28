@@ -1,10 +1,3 @@
-/**  
- * @Title: TCCourseTimes.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月19日 下午10:06:01
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.io.Serializable;
@@ -12,9 +5,7 @@ import java.io.Serializable;
 /**
  * @ClassName: TCCourseTimes
  * @Description: 课次批改信息
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月19日 下午10:06:01
- * 
+ *
  */
 public class TCCourseTimes implements Serializable {
 	/**

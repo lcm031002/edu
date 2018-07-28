@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderCourseTimesLog.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月22日 下午7:02:33
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.util.Date;
@@ -12,8 +5,6 @@ import java.util.Date;
 /**
  * @ClassName: TOrderCourseTimesLog
  * @Description: 课程课次信息
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月22日 下午7:02:33
  *
  */
 public class TOrderCourseTimesLog {

@@ -3,9 +3,6 @@ package com.edu.erp.model;
 /***
  * Description : 订单在线支付流水表
  * 
- * Author ： liufq@klxuexi.org
- * 
- * Date : 2017-04-17
  */
 public class PayFlowInfo {
 

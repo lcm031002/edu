@@ -2,10 +2,7 @@ package com.edu.erp.model;
 
 /**
  * Description ： 缴费单据详情
- * 
- * Author ： junli.zhang
- * 
- * Date : 2014-09-01
+ *
  */
 public class TabOrderPayCostDetail extends BaseObject {
 

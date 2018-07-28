@@ -3,11 +3,6 @@ package com.edu.erp.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-/**
- * 推荐人
- * @author zenglw
- * @Timestamp 20170726
- */
 public class ReferenceStudent implements Serializable {
 
 	private static final long serialVersionUID = 1L;

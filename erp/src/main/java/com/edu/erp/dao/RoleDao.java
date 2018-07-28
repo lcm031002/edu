@@ -10,9 +10,7 @@ import java.util.Map;
 /**
  * @ClassName: RoleDao
  * @Description: 角色管理持久层
- * @author WP
- * @date 2016年11月3日 
- * 
+ *
  */
 @Repository(value="roleDao")
 public interface RoleDao {

@@ -12,9 +12,6 @@ import com.github.pagehelper.Page;
 /***
  * Description ： DAO 接口
  * 
- * Author ：
- * 
- * Date :
  */
 @Repository("orderInfoDao")
 public interface OrderInfoDao {

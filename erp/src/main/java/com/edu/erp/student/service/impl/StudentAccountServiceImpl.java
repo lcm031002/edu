@@ -43,7 +43,7 @@ import com.edu.erp.util.StringUtil;
 import com.github.pagehelper.Page;
 
 /***
- * Description：学生账户管理 Service 接口 Author: JunliZhang Date:2014-11-10
+ * Description：学生账户管理 Service 接口
  */
 @Service("studentAccountService")
 public class StudentAccountServiceImpl implements StudentAccountService {

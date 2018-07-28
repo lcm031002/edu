@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentIntegralService.java
- * @Package com.ebusiness.erp.student.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月8日 下午5:17:02
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.student.service;
 
 import java.util.List;
@@ -17,9 +10,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: StudentIntegralService
  * @Description: 学员积分账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月8日 下午5:17:02
- * 
+ *
  */
 public interface StudentIntegralService {
 	/**

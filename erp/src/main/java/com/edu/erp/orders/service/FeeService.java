@@ -10,8 +10,6 @@ import com.edu.erp.model.TOrderCourse;
 
 /**
  * 费用总表服务
- * 
- * @author yecb
  *
  */
 public interface FeeService {

@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * 课程教室绑定与解绑类
  *
- * @author: linj
- * @create: 2018/1/3  16:14
  */
 public class RoomClass {
 

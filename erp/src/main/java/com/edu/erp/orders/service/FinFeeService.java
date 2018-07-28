@@ -6,7 +6,6 @@ import com.edu.erp.model.TFinFeeUse;
 
 /**
  * 资金往来服务
- * @author yecb
  *
  */
 public interface FinFeeService {

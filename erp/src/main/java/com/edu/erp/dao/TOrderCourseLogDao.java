@@ -13,8 +13,6 @@ import com.edu.erp.model.TOrderCourseTimesLog;
  * 订单课程备份表
  * @ClassName: TOrderCourseLogDao
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年4月12日 下午1:42:29
  *
  */
 @Repository(value = "tOrderCourseLogDao")

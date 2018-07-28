@@ -9,10 +9,7 @@ import java.util.regex.Pattern;
 
 /***
  * Description : String 工具类
- * 
- * Author : junli.zhang
- * 
- * Date	: 2014-08-21
+ *
  */
 public class StringUtil {
 

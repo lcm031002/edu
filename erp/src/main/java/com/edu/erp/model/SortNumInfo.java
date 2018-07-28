@@ -1,10 +1,3 @@
-/**  
- * @Title: StudentInfo.java
- * @Package com.ebusiness.erp.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月14日 下午2:19:21
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.model;
 
 import java.io.Serializable;
@@ -12,7 +5,6 @@ import java.util.Date;
 
 /**
  * 排号信息表
- * @author yecb
  *
  */
 public class SortNumInfo implements Serializable{

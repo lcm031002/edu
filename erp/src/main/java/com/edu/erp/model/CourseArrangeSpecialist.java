@@ -4,8 +4,6 @@ import java.util.List;
 
 /**
  * 排课专员实体
- *
- * @author lincm
  */
 public class CourseArrangeSpecialist extends BaseObject {
 

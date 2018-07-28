@@ -1,10 +1,3 @@
-/**  
- * @Title: IOrderYDY.java
- * @Package com.ebusiness.erp.orders.ext
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年3月30日 下午6:26:34
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.orders.ext;
 
 import com.edu.erp.model.TAttendance;
@@ -14,9 +7,7 @@ import com.edu.erp.model.TabOrderInfo;
 /**
  * @ClassName: IOrderYDY
  * @Description: 1对1业务模型接口
- * @author zhuliyong zly@entstudy.com
- * @date 2017年3月30日 下午6:26:34
- * 
+ *
  */
 public interface IOrderYDY {
 	

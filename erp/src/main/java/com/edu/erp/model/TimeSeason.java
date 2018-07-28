@@ -31,8 +31,7 @@ public class TimeSeason extends BaseObject
 	private String season_name; // 季节名称
 	
 	/**
-	 * @author lpe
-	 * 状态枚举 季节的值 
+	 * 状态枚举 季节的值
 	 */
 	public static enum StatusEnum
 	{	

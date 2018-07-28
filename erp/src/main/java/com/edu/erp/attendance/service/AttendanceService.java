@@ -1,10 +1,3 @@
-/**  
- * @Title: AttendanceService.java
- * @Package com.ebusiness.erp.attendance.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年2月18日 下午3:51:15
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.attendance.service;
 
 import java.util.ArrayList;
@@ -25,8 +18,6 @@ import net.sf.json.JSONObject;
 /**
  * @ClassName: AttendanceService
  * @Description: 考勤服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年2月18日 下午3:51:15
  *
  */
 public interface AttendanceService {

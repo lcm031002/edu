@@ -32,9 +32,7 @@ import com.edu.erp.util.BaseController;
 
 /**
  * 组织机构
- * 
- * @author wCong
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/dictionary/organization")

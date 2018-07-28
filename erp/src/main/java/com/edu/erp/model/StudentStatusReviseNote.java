@@ -3,8 +3,6 @@ package com.edu.erp.model;
 /**
  * 学员状态修改记录类
  *
- * @author: linj
- * @create: 2018/2/9  17:12
  */
 public class StudentStatusReviseNote {
     private Long id;

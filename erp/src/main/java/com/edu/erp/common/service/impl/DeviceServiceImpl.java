@@ -15,13 +15,6 @@ import com.edu.erp.dao.DeviceDao;
 import com.edu.erp.model.TabDataDevice;
 import com.github.pagehelper.Page;
 
-/**
- * @ClassName: DeviceServiceImpl
- * @Description:
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月8日 下午2:31:26
- * 
- */
 @Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
 	

@@ -2,7 +2,6 @@ package com.edu.erp.model;
 
 /**
  * excel单元格对于的界面显示的单元格数据
- * @author jimboi
  *
  * @param <T>
  */

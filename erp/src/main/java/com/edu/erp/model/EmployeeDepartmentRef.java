@@ -4,7 +4,6 @@ package com.edu.erp.model;
 /**
  * 员工部门关系
  * 
- * @author wCong
  *
  */
 public class EmployeeDepartmentRef extends BaseObject {

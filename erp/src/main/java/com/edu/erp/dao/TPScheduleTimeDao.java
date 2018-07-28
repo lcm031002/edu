@@ -1,10 +1,3 @@
-/**  
- * @Title: TPScheduleTimeDao.java
- * @Package com.edu.erp.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月20日 下午7:22:17
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.dao;
 
 import com.edu.erp.model.TPScheduleTime;
@@ -18,8 +11,6 @@ import java.util.Map;
 /**
  * @ClassName: TPScheduleTimeDao
  * @Description: 排课档期Dao
- * @author yecb
- * @date 2017年8月28日
  *
  */
 @Repository(value = "tpScheduleTimeDao")

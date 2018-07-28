@@ -2,9 +2,7 @@ package com.edu.erp.model;
 
 /**
  * 补课信息
- * 
- * @author zengliwen
- * 
+ *
  */
 public class TAccountDynamic extends BaseObject {
 	private static final long serialVersionUID = 1L;

@@ -1,10 +1,3 @@
-/**  
- * @Title: PrivilegeRuleController.java
- * @Package com.ebusiness.erp.promotion.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月1日 上午11:07:30
- * @version KLXX ERPV4.0  
- */
 package com.edu.erp.promotion.controller;
 
 import java.util.Date;
@@ -36,9 +29,7 @@ import com.github.pagehelper.PageInfo;
 /**
  * @ClassName: PrivilegeRuleController
  * @Description: 优惠规则服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月1日 上午11:07:30
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/privilegerule" })

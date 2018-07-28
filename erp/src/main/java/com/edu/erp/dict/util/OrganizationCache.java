@@ -11,8 +11,7 @@ import com.edu.erp.model.OrganizationInfo;
 
 /**
  * 组织机构缓存
- * 
- * @author wCong
+ *
  */
 public class OrganizationCache {
 	

@@ -6,9 +6,7 @@ import java.util.List;
 
 /**
  * 订单课程表
- * 
- * @author wCong
- * 
+ *
  */
 public class TOrderCourse extends BaseObject {
     private static final long serialVersionUID = -7847011407416330390L;

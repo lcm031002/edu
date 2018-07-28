@@ -17,8 +17,6 @@ import org.apache.log4j.Logger;
  * 		提供一些共用的方法
  * @ClassName: BaseInputController
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年3月29日 下午5:23:12
  *
  */
 public class BaseInputController extends BaseController{
