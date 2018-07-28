@@ -17,7 +17,7 @@ angular
         'erp_workflowTaskTodoService',
         'erp_workflowTaskService',
         'erp_workflowTaskExamineAndApproveService',
-        'klxx_EmployeeService',
+        'edu_EmployeeService',
         'erp_workflowTaskTodoChangeService',
         erp_workflowTaskTodoController]);
 
@@ -31,7 +31,7 @@ function erp_workflowTaskTodoController(
     erp_workflowTaskTodoService,
     erp_workflowTaskService,
     erp_workflowTaskExamineAndApproveService,
-    klxx_EmployeeService,
+    edu_EmployeeService,
     erp_workflowTaskTodoChangeService
     ) {
     $scope.page = {
@@ -231,7 +231,7 @@ function erp_workflowTaskTodoController(
         var param = {};
         $scope.employeeList = [];
         param.searchName = todoTask.searchName;
-        klxx_EmployeeService.query(param,function(resp){
+        edu_EmployeeService.query(param,function(resp){
             todoTask.entrustIsLoadingDetail='';
             if(!resp.error){
                 $scope.employeeList = resp.data;

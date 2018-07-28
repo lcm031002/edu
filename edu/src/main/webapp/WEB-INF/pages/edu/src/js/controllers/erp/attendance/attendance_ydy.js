@@ -8,7 +8,7 @@ angular.module('ework-ui').controller('erp_attendanceYdyController', [
 	'$scope',
 	'$uibModal',
 	'$uibMsgbox',
-	'klxx_accountService',
+	'edu_accountService',
 	'erp_studentCounselorService',
 	'erp_studentCourseSchedulingService',
 	'erp_attendanceService',
@@ -21,7 +21,7 @@ function erp_attendanceYdyController(
 	$scope,
 	$uibModal,
 	$uibMsgbox,
-	klxx_accountService,
+    edu_accountService,
 	erp_studentCounselorService,
 	erp_studentCourseSchedulingService,
 	erp_attendanceService,
@@ -367,7 +367,7 @@ function erp_attendanceYdyController(
                 $scope.getAttendTypes()
 				// 获取考勤列表
                 if (!$rootScope.curAccount || !$rootScope.curAccount.employeeId) {
-                    klxx_accountService.query({}, function (resp) {
+                    edu_accountService.query({}, function (resp) {
                         if (!resp.error) {
 							$rootScope.curAccount = resp.data;
 							$scope.queryStudentSchedulings();

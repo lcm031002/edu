@@ -3,9 +3,9 @@
  */
 
 angular.module('ework-ui')
-    .controller('MasterCtrl', ['$scope','$rootScope','$location', '$log','$state','ProjectService','MenusService','klxx_accountService','klxxedu_LoginEmployeeService', MasterCtrl]);
+    .controller('MasterCtrl', ['$scope','$rootScope','$location', '$log','$state','ProjectService','MenusService','edu_accountService','klxxedu_LoginEmployeeService', MasterCtrl]);
 
-function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,MenusService,klxx_accountService,klxxedu_LoginEmployeeService) {
+function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,MenusService,edu_accountService,klxxedu_LoginEmployeeService) {
     $scope.topMenus = {};
     $scope.topBodyURL = 'templates/block/top.html?_='+(new Date()).getTime();
     $scope.leftNavURL = 'templates/block/left_nav.html?_='+(new Date()).getTime();
@@ -18,7 +18,7 @@ function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,Menu
         }
     }
     function queryAccount(){
-        klxx_accountService.query({},function(resp){
+        edu_accountService.query({},function(resp){
             if(!resp.error){
                 $rootScope.curAccount = resp.data;
             }else{

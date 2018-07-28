@@ -7,17 +7,17 @@
 angular.module('ework-ui').factory('LogoutService', [ '$resource', LogoutService ]);
 
 //员工查询服务
-angular.module('ework-ui').factory('klxx_EmployeeService', [ '$resource', klxx_EmployeeService ]);
+angular.module('ework-ui').factory('edu_EmployeeService', [ '$resource', edu_EmployeeService ]);
 
 //账户服务
-angular.module('ework-ui').factory('klxx_accountService', [ '$resource', klxx_accountService ]);
+angular.module('ework-ui').factory('edu_accountService', [ '$resource', edu_accountService ]);
 
 /**
  * 账户查询服务
  * @param $resource
  * @returns {*}
  */
-function klxx_accountService($resource){
+function edu_accountService($resource){
     return $resource('/erp/common/accountservice', {}, {
         query:{
             method : 'GET',
@@ -32,7 +32,7 @@ function klxx_accountService($resource){
  * @param $resource
  * @returns {*}
  */
-function klxx_EmployeeService($resource){
+function edu_EmployeeService($resource){
     return $resource('/common/employeeservice/list', {}, {
         query:{
             method : 'GET',
