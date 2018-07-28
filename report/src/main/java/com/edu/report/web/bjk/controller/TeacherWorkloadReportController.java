@@ -36,8 +36,6 @@ import com.edu.report.web.common.service.UserPermissionService;
 /**
  * @ClassName: TeacherWorkloadReportController
  * @Description: 培英班教师工作量
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月17日 下午8:29:52
  *
  */
 @Controller

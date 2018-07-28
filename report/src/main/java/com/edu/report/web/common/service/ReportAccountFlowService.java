@@ -9,8 +9,6 @@ import com.github.pagehelper.Page;
 
 /**
  * 报表-账户流水查询接口
- * 
- * @author lincm
  *
  */
 public interface ReportAccountFlowService {

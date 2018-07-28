@@ -3,8 +3,6 @@ package com.edu.report.model;
 /**
  * @ClassName: TTeacherAttendReport
  * @Description: 晚辅导教师考勤表
- * @author zenglw zenglw@klxuexi.org
- * @date 2017年5月17日 上午10:06:12
  *
  */
 public class TTeacherAttendReport {

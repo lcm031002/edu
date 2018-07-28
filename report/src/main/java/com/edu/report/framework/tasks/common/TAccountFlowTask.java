@@ -7,8 +7,6 @@ import com.edu.report.api.BaseReportTask;
 
 /**
  * 账户流水报表任务
- * 
- * @author lincm
  *
  */
 public class TAccountFlowTask extends BaseReportTask {

@@ -9,8 +9,6 @@ import com.edu.report.model.TOrderChangeReport;
 /**
  * @ClassName: PerformanceSumService
  * @Description: 报退冻转服务API
- * @author Au yeung ohs@klxuexi.org
- * @date 2017年5月8日 下午5:36:48
  *
  */
 public interface OrderChangeService {

@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportPerformanceDetailsService.java
- * @Package com.edu.report.web.common.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:47:43
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.web.common.service;
 
 import java.util.List;
@@ -16,7 +9,6 @@ import com.github.pagehelper.Page;
 
 /**
  * 在线支付报表服务
- * @author yecb
  *
  */
 public interface OnLineOrderService {

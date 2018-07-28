@@ -3,8 +3,6 @@ package com.edu.report.model;
 /**
  * 学员状态报表实体类
  *
- * @author: linj
- * @create: 2018/3/1  17:05
  */
 public class StudentStatusReport {
     private Long   branchId;

@@ -11,8 +11,6 @@ import com.edu.report.web.common.service.SurplusAmountFeeService;
 /**
  * @ClassName: TSurplusAmountFeeTask
  * @Description: 学员剩余课时费用任务
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月12日 下午2:55:41
  *
  */
 public class TSurplusAmountFeeTask implements IReportTask {

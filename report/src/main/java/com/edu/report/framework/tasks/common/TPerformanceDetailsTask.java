@@ -1,10 +1,3 @@
-/**  
- * @Title: TPerformanceDetailsTask.java
- * @Package com.edu.report.tasks.common
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:42:02
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.tasks.common;
 
 import java.util.Date;
@@ -23,9 +16,7 @@ import com.edu.report.web.service.PerformanceDetailsService;
 /**
  * @ClassName: TPerformanceDetailsTask
  * @Description: 业绩明细报表任务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午4:42:02
- * 
+ *
  */
 public class TPerformanceDetailsTask extends BaseReportTask {
 	private static final String TABLE = "T_Performance_Details";

@@ -9,8 +9,6 @@ import java.util.Map;
 /**
  * @ClassName: TeacherGroupAttendanceService
  * @Description: 培英班教研组统计
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月7日 下午7:25:24
  *
  */
 public interface TeacherGroupAttendanceService {

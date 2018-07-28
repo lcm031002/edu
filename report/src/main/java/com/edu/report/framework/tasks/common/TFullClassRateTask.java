@@ -1,9 +1,6 @@
 ///**
 // * @Title: TAccountCashierTask.java
 // * @Package com.edu.report.tasks.common
-// * @author Au yeung ohs@klxuexi.org
-// * @date 2017年5月8日 下午4:42:02
-// * @version KLXX ERPV4.0
 // */
 //package com.edu.report.framework.tasks.common;
 //
@@ -14,8 +11,6 @@
 ///**
 // * @ClassName: TFullClassRateTask
 // * @Description: 满班率报表任务
-// * @author linj@klxuexi.org
-// * @date 2017年10月18日 下午4:42:02
 // *
 // */
 //public class TFullClassRateTask extends AbstactDailyReportTask {

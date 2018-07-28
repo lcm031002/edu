@@ -6,8 +6,6 @@ import java.math.BigDecimal;
  * 学员账户余额表
  * @ClassName: TReportAccount
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月2日 下午5:22:25
  *
  */
 public class TReportAccount {

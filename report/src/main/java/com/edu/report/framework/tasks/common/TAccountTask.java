@@ -10,8 +10,6 @@ import com.edu.report.web.common.service.ReportAccountService;
 /**
  * @ClassName: TAccountTask
  * @Description: 学员账户余额表任务
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月4日 上午11:43:00
  *
  */
 public class TAccountTask implements IReportTask {

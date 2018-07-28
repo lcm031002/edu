@@ -1,10 +1,3 @@
-/**  
- * @Title: TReportRunResult.java
- * @Package com.edu.report.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午5:03:53
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 import java.util.Date;
@@ -12,9 +5,7 @@ import java.util.Date;
 /**
  * @ClassName: TReportRunResult
  * @Description: 任务运算结果表
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午5:03:53
- * 
+ *
  */
 public class TReportRunResult {
     private Long id;

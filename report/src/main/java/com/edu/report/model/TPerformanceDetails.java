@@ -1,17 +1,8 @@
-/**  
- * @Title: TPerformanceDetails.java
- * @Package com.edu.report.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:42:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 /**
  * @ClassName: TPerformanceDetails
  * @Description: 业绩明细表
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午4:42:40
  *
  */
 public class TPerformanceDetails {

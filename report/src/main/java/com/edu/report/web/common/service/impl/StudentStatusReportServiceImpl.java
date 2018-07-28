@@ -19,8 +19,6 @@ import java.util.Map;
 /**
  * 学员报表服务实现类
  *
- * @author: linj
- * @create: 2018/3/2  10:00
  */
 @Service("studentStatusReportService")
 public class StudentStatusReportServiceImpl implements StudentStatusReportService {

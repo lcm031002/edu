@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 /**
  * @ClassName: TAttendanceReport
  * @Description: 考勤消耗表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月15日 下午2:44:12
  *
  */
 public class TeacherGroupAttendanceReport {

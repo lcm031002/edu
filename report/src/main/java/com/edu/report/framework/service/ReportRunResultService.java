@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportRunResultService.java
- * @Package com.edu.report.framework.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午6:53:34
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.service;
 
 import java.util.List;
@@ -17,9 +10,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: ReportRunResultService
  * @Description: 报表运行状态
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午6:53:34
- * 
+ *
  */
 public interface ReportRunResultService {
     /**

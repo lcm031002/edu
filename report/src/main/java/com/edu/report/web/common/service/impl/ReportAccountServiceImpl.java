@@ -19,8 +19,6 @@ import com.edu.report.web.common.service.ReportAccountService;
 /**
  * @ClassName: ReportAccountServiceImpl
  * @Description: 学员账户余额服务实现类
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月2日 下午5:40:13
  *
  */
 @Service("reportAccountService")

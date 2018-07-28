@@ -9,8 +9,6 @@ import com.edu.report.web.common.service.ReportOrderPerformanceService;
 /**
  * @ClassName: BusinessOrderPerformanceReportTask
  * @Description: 课程顾问绩效表
- * @author ohs ohs@klxuexi.org
- * @date 2017年8月25日 上午11:38:49
  *
  */
 public class BusinessOrderPerformanceReportTask extends AbstactDailyReportTask {

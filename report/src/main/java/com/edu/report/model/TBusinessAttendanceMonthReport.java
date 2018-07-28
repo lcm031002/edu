@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 /**
  * @ClassName: TBusinessAttendanceMonthReport
  * @Description: 月度分类考勤表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:47:19
  *
  */
 public class TBusinessAttendanceMonthReport {

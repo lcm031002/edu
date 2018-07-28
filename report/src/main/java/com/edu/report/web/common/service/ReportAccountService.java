@@ -9,8 +9,6 @@ import com.edu.report.model.TReportAccount;
 /**
  * @ClassName: ReportAccountService
  * @Description: 学员账户余额服务API
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月2日 下午5:36:48
  *
  */
 public interface ReportAccountService {

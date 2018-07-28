@@ -2,7 +2,6 @@ package com.edu.report.model;
 
 /**
  * 电商在线支付明细
- * @author yecb
  *
  */
 public class TOnlineOrderReport {

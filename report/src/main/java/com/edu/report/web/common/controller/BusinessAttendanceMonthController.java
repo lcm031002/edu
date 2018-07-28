@@ -28,8 +28,6 @@ import com.edu.report.web.common.service.BusinessAttendanceMonthService;
 /**
  * @ClassName: BusinessAttendanceMonthController
  * @Description: 月度分类考勤表Controller
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:04:17
  *
  */
 @Controller

@@ -12,8 +12,6 @@ import java.util.Map;
 /**
  * 学员状态报表服务
  *
- * @author: linj
- * @create: 2018/3/2  9:57
  */
 public interface StudentStatusReportService {
 

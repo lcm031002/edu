@@ -17,8 +17,6 @@ import java.util.Map;
 /**
  * @ClassName: TFullClassRateServiceImpl
  * @Description: 满班率表实现类
- * @author linj@klxuexi.org
- * @date 2017年10月17日 下午4:27:36
  *
  */
 @Service("tFullClassRateService")

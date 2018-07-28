@@ -21,8 +21,6 @@ import com.edu.report.web.common.service.AttendanceMonthService;
 /**
  * @ClassName: AttendanceMonthServiceImpl
  * @Description: 月度消耗表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:33:20
  *
  */
 @Service("attendanceMonthService")

@@ -11,8 +11,6 @@ import com.edu.report.model.TAttendanceReport;
 /**
  * @ClassName: AttendanceReportDao
  * @Description: 考勤消耗表DAO
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月15日 下午2:42:22
  *
  */
 @Repository(value = "attendanceReportDao")

@@ -10,8 +10,6 @@ import java.util.Map;
 /**
  * @ClassName: TeacherGroupAttendanceDao
  * @Description: 培英班教研组报表DAO
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月7日 下午2:42:22
  *
  */
 @Repository(value = "teacherGroupAttendanceDao")

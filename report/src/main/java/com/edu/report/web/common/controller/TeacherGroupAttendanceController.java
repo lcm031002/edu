@@ -35,8 +35,6 @@ import java.util.Map;
 /**
  * @ClassName: AttendanceReportController
  * @Description: 培英班教研组统计Controller
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月7日 下午7:40:23
  *
  */
 @Controller

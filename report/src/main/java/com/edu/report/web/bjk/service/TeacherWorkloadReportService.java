@@ -11,8 +11,6 @@ import com.edu.report.model.TTeacherWorkloadReport;
 /**
  * @ClassName: TeacherWorkloadReportService
  * @Description: 培英班教师工作量
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月17日 下午8:24:46
  *
  */
 public interface TeacherWorkloadReportService {

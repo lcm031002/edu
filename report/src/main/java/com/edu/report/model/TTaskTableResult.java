@@ -1,10 +1,3 @@
-/**  
- * @Title: TTaskTableResult.java
- * @Package com.edu.report.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:45:32
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 import java.util.Date;
@@ -12,9 +5,7 @@ import java.util.Date;
 /**
  * @ClassName: TTaskTableResult
  * @Description: 任务运行依赖表记录
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:45:32
- * 
+ *
  */
 public class TTaskTableResult {
 	private Long id;

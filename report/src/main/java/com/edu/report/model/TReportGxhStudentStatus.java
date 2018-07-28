@@ -3,8 +3,6 @@ package com.edu.report.model;
 /**
  * @ClassName: TReportGxhStudentStatus
  * @Description: 学生状态表
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月23日 下午2:44:12
  *
  */
 public class TReportGxhStudentStatus {

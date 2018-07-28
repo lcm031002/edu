@@ -8,9 +8,6 @@ import com.edu.report.model.TAccountCashier;
 
 /**
  * @ClassName: ReportAccountCashierService
- * @Description: 充值取现服务API
- * @author ohs@klxuexi.org
- * @date 2017年5月8日 下午5:36:48
  *
  */
 public interface ReportAccountCashierService {

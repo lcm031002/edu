@@ -6,8 +6,6 @@ import java.math.BigDecimal;
  * 剩余课时费用表
  * @ClassName: TSurplusAmountFee
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月12日 上午11:21:18
  *
  */
 public class TSurplusAmountFee {

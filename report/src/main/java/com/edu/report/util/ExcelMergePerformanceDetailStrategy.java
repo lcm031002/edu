@@ -6,7 +6,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  * excel单元格合并策略,merge方法为默认实现，如果规则和merge不一样，请Override"merge"方法
- * @author zenglw
  *
  */
 public class ExcelMergePerformanceDetailStrategy extends ExcelMergeStrategy {

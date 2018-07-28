@@ -1,10 +1,3 @@
-/**  
- * @Title: DataSourceTypeManager.java
- * @Package com.edu.report.db.datasource
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月25日 下午6:15:07
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.db.datasource;
 
 import com.edu.report.db.enums.DataSourceType;
@@ -12,9 +5,7 @@ import com.edu.report.db.enums.DataSourceType;
 /**
  * @ClassName: DataSourceTypeManager
  * @Description: 数据源管理
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月25日 下午6:15:07
- * 
+ *
  */
 public class DataSourceTypeManager {
 	private static final ThreadLocal<DataSourceType> dataSourceTypes = new ThreadLocal<DataSourceType>() {

@@ -1,10 +1,3 @@
-/**  
- * @Title: TAccountCashierTask.java
- * @Package com.edu.report.tasks.common
- * @author Au yeung ohs@klxuexi.org  
- * @date 2017年5月8日 下午4:42:02
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.tasks.common;
 
 import com.edu.common.util.ApplicationContextUtil;
@@ -16,9 +9,7 @@ import com.edu.report.web.common.service.ReportAccountCashierService;
 /**
  * @ClassName: TAccountCashierTask
  * @Description: 出纳报表任务
- * @author ohs@klxuexi.org
- * @date 2017年5月8日 下午4:42:02
- * 
+ *
  */
 public class TAccountCashierTask extends BaseReportTask {
 	private static final String TABLE = "T_ACCOUNT_CASHIER";

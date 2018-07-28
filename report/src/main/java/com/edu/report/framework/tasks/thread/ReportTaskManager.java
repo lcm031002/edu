@@ -1,10 +1,3 @@
-/**  
- * @Title: TaskDispatcherManager.java
- * @Package com.edu.report.framework.tasks.thread
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午4:57:50
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.tasks.thread;
 
 import java.util.ArrayList;
@@ -43,9 +36,7 @@ import com.edu.report.util.TaskFlowUtils;
 /**
  * @ClassName: TaskDispatcherManager
  * @Description: 报表任务调度
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午4:57:50
- * 
+ *
  */
 public class ReportTaskManager implements Runnable {
 	private static final Logger log = Logger.getLogger(ReportTaskManager.class);

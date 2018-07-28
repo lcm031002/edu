@@ -36,8 +36,6 @@ import java.util.Map;
 /**
  * @ClassName: FullClassRateController
  * @Description: 满班率报表控制类
- * @author  linj@klxuexi.org
- * @date 2017年10月17日 下午16:42:36
  *
  */
 @Controller

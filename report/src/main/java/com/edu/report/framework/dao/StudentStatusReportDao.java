@@ -13,8 +13,6 @@ import java.util.Map;
 /**
  * 学员状态表DAO
  *
- * @author: linj
- * @create: 2018/3/1  17:18
  */
 public interface StudentStatusReportDao {
 

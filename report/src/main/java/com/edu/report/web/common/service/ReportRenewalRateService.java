@@ -11,8 +11,6 @@ import com.edu.report.model.TReportRenewalRateSum;
 /**
  * @ClassName: ReportRenewalRateService
  * @Description: 业绩总表服务API
- * @author Au yeung ohs@klxuexi.org
- * @date 2017年5月8日 下午5:36:48
  *
  */
 public interface ReportRenewalRateService {

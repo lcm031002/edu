@@ -19,8 +19,6 @@ import com.edu.report.web.common.service.ReportAccountCashierService;
 /**
  * @ClassName: ReportAccountCashierServiceImpl
  * @Description: 充值取现服务实现类
- * @author Au yeung ohs@klxuexi.org
- * @date 2017年5月8日 下午5:40:13
  *
  */
 @Service("reportAccountCashierService")

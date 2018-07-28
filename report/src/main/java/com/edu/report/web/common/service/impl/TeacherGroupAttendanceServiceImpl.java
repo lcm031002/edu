@@ -18,8 +18,6 @@ import java.util.Map;
 /**
  * @ClassName: TeacherGroupAttendanceServiceImpl
  * @Description: 厦门培英班教研组统计
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月7日 下午7:27:00
  *
  */
 @Service("teacherGroupAttendanceService")

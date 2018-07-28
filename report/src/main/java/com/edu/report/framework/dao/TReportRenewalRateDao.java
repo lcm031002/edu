@@ -14,8 +14,6 @@ import com.edu.report.model.TReportRenewalRateSum;
  * 学员账户余额表DAO
  * @ClassName: TReportRenewalRateDao
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月2日 下午5:28:52
  *
  */
 @Repository(value = "tReportRenewalRateDao")

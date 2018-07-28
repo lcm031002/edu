@@ -21,8 +21,6 @@ import com.edu.report.web.common.service.BusinessAttendanceMonthService;
 /**
  * @ClassName: BusinessAttendanceMonthServiceImpl
  * @Description: 月度分类考勤表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:33:20
  *
  */
 @Service("businessAttendanceMonthService")

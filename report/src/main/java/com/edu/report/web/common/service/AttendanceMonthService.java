@@ -9,8 +9,6 @@ import com.edu.report.model.TAttendanceMonthReport;
 /**
  * @ClassName: AttendanceMonthService
  * @Description: 月度消耗表Service
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:31:00
  *
  */
 public interface AttendanceMonthService {

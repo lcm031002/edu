@@ -1,10 +1,3 @@
-/**  
- * @Title: TaskTableResultDao.java
- * @Package com.edu.report.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:39:58
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.dao;
 
 import java.util.List;
@@ -18,9 +11,7 @@ import com.edu.report.model.TTaskTableResult;
 /**
  * @ClassName: TaskTableResultDao
  * @Description: 任务运行依赖表记录
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:39:58
- * 
+ *
  */
 @Repository("taskTableResultDao")
 public interface TaskTableResultDao {

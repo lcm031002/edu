@@ -1,17 +1,8 @@
-/**  
- * @Title: TOrderPerformance.java
- * @Package com.edu.report.model
- * @author ohs ohs@klxuexi.org  
- * @date 2017年8月24日 下午4:42:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 /**
  * @ClassName: TBusinessStatistics
  * @Description: 运营统计指标
- * @author ohs ohs@klxuexi.org
- * @date 2017年10月20日 下午4:42:40
  *
  */
 public class TBusinessStatistics {

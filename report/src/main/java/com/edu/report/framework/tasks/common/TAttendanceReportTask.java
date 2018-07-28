@@ -9,8 +9,6 @@ import com.edu.report.web.common.service.AttendanceReportService;
 /**
  * @ClassName: TAttendanceReportTask
  * @Description: 考勤消耗表任务
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月15日 下午7:44:03
  *
  */
 public class TAttendanceReportTask extends AbstactDailyReportTask {

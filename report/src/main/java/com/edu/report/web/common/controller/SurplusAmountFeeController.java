@@ -36,8 +36,6 @@ import com.edu.report.web.common.service.UserPermissionService;
  * 剩余课时费用表Controller
  * @ClassName: SurplusAmountFeeController
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月12日 下午2:10:46
  *
  */
 @Controller

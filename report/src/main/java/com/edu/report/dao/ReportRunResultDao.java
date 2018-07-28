@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportRunResultDao.java
- * @Package com.edu.report.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午6:44:11
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.dao;
 
 import java.util.List;
@@ -19,9 +12,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: ReportRunResultDao
  * @Description: 报表运行结果
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午6:44:11
- * 
+ *
  */
 @Repository("reportRunResultDao")
 public interface ReportRunResultDao {

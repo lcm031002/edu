@@ -19,8 +19,6 @@ import com.edu.report.web.common.service.AttendanceReportService;
 /**
  * @ClassName: AttendanceReportServiceImpl
  * @Description: 考勤消耗表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月15日 下午7:27:00
  *
  */
 @Service("attendanceReportService")

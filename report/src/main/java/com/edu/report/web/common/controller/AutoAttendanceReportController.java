@@ -33,8 +33,6 @@ import java.util.Map;
 /**
  * @ClassName: AutoAttendanceReportController
  * @Description: 自动考勤报表Controller
- * @author ohs ohs@klxuexi.org
- * @date 2017年9月12日 下午7:40:23
  *
  */
 @Controller

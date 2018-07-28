@@ -21,8 +21,6 @@ import com.edu.report.web.common.service.ReportOrderPerformanceService;
 /**
  * @ClassName: ReportAccountRechargeCashServiceImpl
  * @Description: 课程顾问绩效服务实现类
- * @author Au yeung ohs@klxuexi.org
- * @date 2017年8月24日 下午5:40:13
  *
  */
 @Service("reportOrderPerformanceService")

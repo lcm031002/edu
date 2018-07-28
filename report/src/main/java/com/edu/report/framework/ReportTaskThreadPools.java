@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportTaskThreadPools.java
- * @Package com.edu.report.framework
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:37:51
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework;
 
 import java.util.concurrent.Executors;
@@ -18,8 +11,6 @@ import com.edu.report.framework.tasks.thread.ReportTaskManager;
 /**
  * @ClassName: ReportTaskThreadPools
  * @Description: 报表任务线程池
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午4:37:51
  *
  */
 public class ReportTaskThreadPools {

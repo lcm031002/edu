@@ -1,10 +1,3 @@
-/**  
- * @Title: XMLUtil.java
- * @Package com.edu.report.util
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 上午11:39:30
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.util;
 
 import java.io.File;
@@ -27,9 +20,7 @@ import org.apache.log4j.Logger;
 /**
  * @ClassName: XMLUtil
  * @Description: XML映射工具类
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 上午11:39:30
- * 
+ *
  */
 public class XMLUtil {
 	private static final Logger log = Logger.getLogger(XMLUtil.class);

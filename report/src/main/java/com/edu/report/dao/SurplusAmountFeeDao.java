@@ -12,8 +12,6 @@ import com.edu.report.model.TSurplusAmountFee;
  * 剩余课时费用表
  * @ClassName: SurplusAmountFeeDao
  * @Description: 
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月12日 上午11:25:18
  *
  */
 @Repository(value = "surplusAmountFeeDao")

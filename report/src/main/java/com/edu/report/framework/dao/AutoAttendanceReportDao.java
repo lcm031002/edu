@@ -10,8 +10,6 @@ import java.util.Map;
 /**
  * @ClassName: AutoAttendanceReportDao
  * @Description: 自动考勤报表DAO
- * @author ohs ohs@klxuexi.org
- * @date 2017年9月12日 下午2:42:22
  *
  */
 @Repository(value = "autoAttendanceReportDao")

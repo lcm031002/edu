@@ -27,8 +27,6 @@ import com.edu.report.web.common.service.ReportAccountService;
 /**
  * @ClassName: ReportAccountController
  * @Description: 账户剩余报表控制类
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月2日 下午5:44:41
  *
  */
 @Controller

@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 /**
  * @ClassName: TTeacherWorkloadReport
  * @Description: 培英班教师工作量
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月17日 下午4:04:40
  *
  */
 public class TTeacherWorkloadReport {

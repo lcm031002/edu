@@ -1,10 +1,3 @@
-/**  
- * @Title: TPerformanceDetailsDao.java
- * @Package com.edu.report.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:40:24
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.dao;
 
 import java.util.List;
@@ -19,9 +12,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: TPerformanceDetailsDao
  * @Description: 业绩明细DAO
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:40:24
- * 
+ *
  */
 @Repository("performanceDetailsDao")
 public interface TPerformanceDetailsDao {

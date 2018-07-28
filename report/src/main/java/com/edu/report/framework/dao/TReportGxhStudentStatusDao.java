@@ -10,8 +10,6 @@ import java.util.Map;
 /**
  * @ClassName: TReportGxhStudentStatusDao
  * @Description: 学生状态报表DAO
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月23日 下午2:42:22
  *
  */
 @Repository(value = "reportGxhStudentStatusDao")

@@ -9,8 +9,6 @@ import com.edu.report.web.common.service.AttendanceMonthService;
 /**
  * @ClassName: AttendanceMonthReportTask
  * @Description: 月度消耗表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:38:49
  *
  */
 public class AttendanceMonthReportTask extends AbstactDailyReportTask {

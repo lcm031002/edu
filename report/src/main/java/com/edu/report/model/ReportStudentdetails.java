@@ -3,8 +3,6 @@ package com.edu.report.model;
 /**
  * 艾伦报表
  *
- * @author: linj
- * @create: 2018/3/5  19:16
  */
 public class ReportStudentdetails {
      private Long id;

@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 /**
  * @ClassName: TAutoAttendanceReport
  * @Description: 自动考勤消耗表
- * @author ohs ohs@klxuexi.org
- * @date 2017年9月12日 下午2:44:12
  *
  */
 public class TAutoAttendanceReport {

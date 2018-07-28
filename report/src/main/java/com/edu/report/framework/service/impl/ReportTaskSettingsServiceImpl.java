@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportTaskSettingsServiceImpl.java
- * @Package com.edu.report.framework.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:38:06
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.service.impl;
 
 import java.util.ArrayList;
@@ -44,9 +37,7 @@ import com.edu.report.util.TaskFlowUtils;
 /**
  * @ClassName: ReportTaskSettingsServiceImpl
  * @Description: 报表任务配置服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:38:06
- * 
+ *
  */
 @Service(value = "reportTaskSettingsService")
 public class ReportTaskSettingsServiceImpl implements ReportTaskSettingsService {

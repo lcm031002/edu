@@ -8,8 +8,6 @@ import com.edu.report.api.AbstactDailyReportTask;
 /**
  * @ClassName: TeacherGroupAttendanceTask
  * @Description: 培英班教研组统计任务
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月9日 下午7:44:03
  *
  */
 public class TeacherGroupAttendanceTask extends AbstactDailyReportTask {

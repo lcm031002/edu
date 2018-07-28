@@ -31,8 +31,6 @@ import com.edu.report.util.ReportWriteExcelHandler;
 /**
  * 学员状态报表控制层
  *
- * @author: linj
- * @create: 2018/3/2  10:34
  */
 @Controller
 @RequestMapping("/common")

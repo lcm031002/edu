@@ -1,10 +1,3 @@
-/**  
- * @Title: Task.java
- * @Package com.edu.report.framework.cfg
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午12:05:39
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.cfg;
 
 import java.io.Serializable;
@@ -15,9 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @ClassName: Task
  * @Description: 任务定义对象
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午12:05:39
- * 
+ *
  */
 @XmlRootElement(name = "task")
 public class Task implements Serializable {

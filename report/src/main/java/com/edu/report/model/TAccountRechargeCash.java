@@ -1,17 +1,8 @@
-/**  
- * @Title: TAccountRechargeCash.java
- * @Package com.edu.report.model
- * @author Au yeung ohs@klxuexi.org
- * @date 2017年5月8日 下午4:42:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 /**
  * @ClassName: TAccountRechargeCash
  * @Description: 充值取现表
- * @author ohs@klxuexi.org
- * @date 2017年5月8日 下午4:42:40
  *
  */
 public class TAccountRechargeCash {

@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportTaskSettingsDao.java
- * @Package com.edu.report.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:39:44
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.dao;
 
 import java.util.List;
@@ -17,9 +10,7 @@ import com.edu.report.model.TReportTaskSettings;
 /**
  * @ClassName: ReportTaskSettingsDao
  * @Description: 报表任务设置
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:39:44
- * 
+ *
  */
 @Repository("reportTaskSettingsDao")
 public interface ReportTaskSettingsDao {

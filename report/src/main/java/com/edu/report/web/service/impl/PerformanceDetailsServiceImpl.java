@@ -1,10 +1,3 @@
-/**  
- * @Title: PerformanceDetailsServiceImpl.java
- * @Package com.edu.report.web.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月27日 下午5:19:43
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.web.service.impl;
 
 import java.util.HashMap;
@@ -26,9 +19,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: PerformanceDetailsServiceImpl
  * @Description: 业绩明细服务实现
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月27日 下午5:19:43
- * 
+ *
  */
 @Service(value = "performanceDetailsService")
 public class PerformanceDetailsServiceImpl implements PerformanceDetailsService {

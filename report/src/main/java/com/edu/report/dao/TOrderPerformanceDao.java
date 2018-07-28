@@ -1,10 +1,3 @@
-/**  
- * @Title: TOrderPerformanceDao.java
- * @Package com.edu.report.dao
- * @author ohs ohs@klxuexi.org
- * @date 2017年8月24日 下午5:40:24
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.dao;
 
 import java.util.List;
@@ -17,9 +10,7 @@ import com.edu.report.model.TBusinessStatistics;
 /**
  * @ClassName: TOrderPerformanceDao
  * @Description: 课程顾问绩效DAO
- * @author ohs ohs@klxuexi.org
- * @date 2017年8月24日 下午5:40:24
- * 
+ *
  */
 @Repository("orderPerformanceDao")
 public interface TOrderPerformanceDao {

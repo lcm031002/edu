@@ -1,10 +1,3 @@
-/**  
- * @Title: TaskTableResultService.java
- * @Package com.edu.report.framework.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:37:43
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.service;
 
 import java.util.List;
@@ -16,9 +9,7 @@ import com.edu.report.model.TTaskTableResult;
 /**
  * @ClassName: TaskTableResultService
  * @Description: 查询任务表信息
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:37:43
- * 
+ *
  */
 public interface TaskTableResultService {
 

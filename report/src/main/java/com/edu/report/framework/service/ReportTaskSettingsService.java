@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportTaskSettingsService.java
- * @Package com.edu.report.framework.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:37:34
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.service;
 
 import java.util.List;
@@ -18,9 +11,7 @@ import com.edu.report.model.TReportTaskSettings;
 /**
  * @ClassName: ReportTaskSettingsService
  * @Description: 报表任务配置服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:37:34
- * 
+ *
  */
 public interface ReportTaskSettingsService {
     /**

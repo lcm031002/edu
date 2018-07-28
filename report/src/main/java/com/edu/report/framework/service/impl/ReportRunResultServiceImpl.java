@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportRunResultServiceImpl.java
- * @Package com.edu.report.framework.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午6:53:50
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.service.impl;
 
 import java.util.List;
@@ -26,9 +19,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: ReportRunResultServiceImpl
  * @Description: 任务运算结果服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午6:53:50
- * 
+ *
  */
 @Service(value = "reportRunResultService")
 public class ReportRunResultServiceImpl implements ReportRunResultService {

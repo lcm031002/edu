@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportTaskConfig.java
- * @Package com.edu.report.framework
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:37:35
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework;
 
 import java.net.URL;
@@ -21,9 +14,7 @@ import com.edu.report.util.XMLUtil;
 /**
  * @ClassName: ReportTaskConfig
  * @Description: 报表任务配置
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午4:37:35
- * 
+ *
  */
 public class ReportTaskConfig {
 

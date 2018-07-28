@@ -1,19 +1,10 @@
-/**  
- * @Title: TReportTaskSettings.java
- * @Package com.edu.report.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午5:00:36
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 /**
  * 
  * @ClassName: TReportTaskSettings
  * @Description: 报表任务设置
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午5:00:36
- * 
+ *
  */
 public class TReportTaskSettings {
     private Long id;

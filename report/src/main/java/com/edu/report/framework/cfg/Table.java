@@ -1,10 +1,3 @@
-/**  
- * @Title: Table.java
- * @Package com.edu.report.framework.cfg
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午12:05:19
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.cfg;
 
 import java.io.Serializable;
@@ -16,8 +9,6 @@ import javax.xml.bind.annotation.XmlTransient;
 /**
  * @ClassName: Table
  * @Description: 报表依赖的表定义
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午12:05:19
  *
  */
 @XmlRootElement(name = "table") 

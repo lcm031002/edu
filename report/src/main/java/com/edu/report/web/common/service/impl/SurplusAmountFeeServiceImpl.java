@@ -18,8 +18,6 @@ import com.edu.report.web.common.service.SurplusAmountFeeService;
 /**
  * @ClassName: SurplusAmountFeeServiceImpl
  * @Description: 剩余课时费用表服务
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月12日 下午2:06:55
  *
  */
 @Service("surplusAmountFeeService")

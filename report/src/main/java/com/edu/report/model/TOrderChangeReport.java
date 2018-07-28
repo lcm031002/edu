@@ -1,17 +1,8 @@
-/**  
- * @Title: TPerformanceSum.java
- * @Package com.edu.report.model
- * @author Au yeung ohs@klxuexi.org  
- * @date 2017年5月10日 下午4:42:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.model;
 
 /**
  * @ClassName: TOrderChangeReport
  * @Description: 报退冻转
- * @author Au yeung ohs@klxuexi.org  
- * @date 2017年5月10日 下午4:42:40
  *
  */
 public class TOrderChangeReport {

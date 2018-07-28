@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportPerformanceDetailsController.java
- * @Package com.edu.report.web.common.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:47:19
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.web.common.controller;
 
 import java.util.HashMap;
@@ -43,7 +36,6 @@ import com.github.pagehelper.PageInfo;
 
 /**
  * 在线支付明细报表
- * @author yecb
  *
  */
 @Controller

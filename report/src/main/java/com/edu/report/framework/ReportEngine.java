@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportEngine.java
- * @Package com.edu.report
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月24日 下午4:07:36
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework;
 
 import org.apache.log4j.Logger;
@@ -16,9 +9,7 @@ import org.springframework.stereotype.Service;
  * 
  * @ClassName: ReportEngine
  * @Description: 报表引擎
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月24日 下午4:07:36
- * 
+ *
  */
 @Service
 public class ReportEngine implements ApplicationListener<ContextRefreshedEvent> {

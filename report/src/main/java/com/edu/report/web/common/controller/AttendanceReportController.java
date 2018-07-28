@@ -35,8 +35,6 @@ import com.edu.report.web.common.service.UserPermissionService;
 /**
  * @ClassName: AttendanceReportController
  * @Description: 考勤消耗表Controller
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月15日 下午7:40:23
  *
  */
 @Controller

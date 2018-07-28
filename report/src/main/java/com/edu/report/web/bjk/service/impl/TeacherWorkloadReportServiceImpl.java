@@ -21,8 +21,6 @@ import com.edu.report.web.bjk.service.TeacherWorkloadReportService;
 /**
  * @ClassName: TeacherWorkloadReportServiceImpl
  * @Description: 培英班教师工作量
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月18日 下午2:21:00
  *
  */
 @Service("teacherWorkloadReportService")

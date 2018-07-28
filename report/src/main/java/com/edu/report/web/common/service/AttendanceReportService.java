@@ -9,8 +9,6 @@ import com.edu.report.model.TAttendanceReport;
 /**
  * @ClassName: AttendanceReportService
  * @Description: 考勤消耗表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月15日 下午7:25:24
  *
  */
 public interface AttendanceReportService {

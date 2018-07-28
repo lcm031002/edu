@@ -35,8 +35,6 @@ import com.edu.report.web.common.service.UserPermissionService;
 /**
  * @ClassName: ReportAccountRechargeCashController
  * @Description: 报退冻转报表控制类
- * @author Au yeung ohs@klxuexi.org
- * @date 2017年5月8日 下午5:44:41
  *
  */
 @Controller

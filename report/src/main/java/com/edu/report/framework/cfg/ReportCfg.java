@@ -1,10 +1,3 @@
-/**  
- * @Title: ReportCfg.java
- * @Package com.edu.report.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午12:00:26
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.cfg;
 
 import java.io.Serializable;
@@ -17,8 +10,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @ClassName: ReportCfg
  * @Description: 报表配置文件
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午12:00:26
  *
  */
 @XmlRootElement(name = "report") 

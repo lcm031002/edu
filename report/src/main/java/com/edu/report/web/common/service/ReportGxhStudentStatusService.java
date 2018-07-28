@@ -9,8 +9,6 @@ import java.util.Map;
 /**
  * @ClassName: ReportGxhStudentStatusService
  * @Description: 学生状态报表
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月23日 下午7:25:24
  *
  */
 public interface ReportGxhStudentStatusService {

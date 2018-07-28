@@ -4,8 +4,6 @@ package com.edu.report.model;
  * 满班率报表类
  * @ClassName: TFullClassRate
  * @Description:
- * @author linj linj@klxuexi.org
- * @date 2017年10月17日 下午14:57:59
  *
  */
 public class TFullClassRate {

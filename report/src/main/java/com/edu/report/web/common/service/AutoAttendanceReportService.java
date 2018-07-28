@@ -9,8 +9,6 @@ import java.util.Map;
 /**
  * @ClassName: AutoAttendanceReportService
  * @Description: 自动考勤报表
- * @author ohs ohs@klxuexi.org
- * @date 2017年9月12日 下午7:25:24
  *
  */
 public interface AutoAttendanceReportService {

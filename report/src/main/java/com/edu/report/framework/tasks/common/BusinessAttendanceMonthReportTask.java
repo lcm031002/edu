@@ -9,8 +9,6 @@ import com.edu.report.web.common.service.BusinessAttendanceMonthService;
 /**
  * @ClassName: BusinessAttendanceMonthReportTask
  * @Description: 月度分类考勤表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:38:49
  *
  */
 public class BusinessAttendanceMonthReportTask extends AbstactDailyReportTask {

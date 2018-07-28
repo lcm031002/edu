@@ -35,8 +35,6 @@ import com.edu.report.web.common.service.UserPermissionService;
 /**
  * @ClassName: ReportAccountRechargeCashController
  * @Description: 充值取现表控制类
- * @author ohs@klxuexi.org
- * @date 2017年5月8日 下午5:44:41
  *
  */
 @Controller

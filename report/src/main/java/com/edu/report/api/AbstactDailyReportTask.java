@@ -15,8 +15,6 @@ import com.edu.report.model.TTaskTableResult;
  * 				1、(一次任务只抽取一天的数据,适用于T-1报表) 
  *              2、为了加快期初数据的抽取，优化算法：期初数据一次抽取30天的数据,不足30天的也一次抽取
  *              3、支持T+0的报表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月18日 上午10:02:57
  *
  */
 public abstract class AbstactDailyReportTask implements IReportTask {

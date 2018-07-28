@@ -1,10 +1,3 @@
-/**  
- * @Title: TaskTableResultServiceImpl.java
- * @Package com.edu.report.framework.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年4月26日 下午5:38:22
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework.service.impl;
 
 import java.util.HashMap;
@@ -27,9 +20,7 @@ import com.edu.report.model.TTaskTableResult;
 /**
  * @ClassName: TaskTableResultServiceImpl
  * @Description: 查询任务依赖表数据更新状态服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年4月26日 下午5:38:22
- * 
+ *
  */
 @Service(value = "taskTableResultService")
 public class TaskTableResultServiceImpl implements TaskTableResultService {

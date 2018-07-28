@@ -35,8 +35,6 @@ import com.edu.report.web.common.service.UserPermissionService;
 /**
  * @ClassName: AttendanceMonthController
  * @Description: 月度消耗表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年6月16日 上午11:04:17
  *
  */
 @Controller

@@ -35,8 +35,6 @@ import java.util.Map;
 /**
  * @ClassName: ReportGxhStudentStatusController
  * @Description: 个性化学生状态报表Controller
- * @author ohs ohs@klxuexi.org
- * @date 2017年11月27日 下午7:40:23
  *
  */
 @Controller

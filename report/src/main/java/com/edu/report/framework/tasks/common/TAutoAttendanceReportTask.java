@@ -8,8 +8,6 @@ import com.edu.report.api.AbstactDailyReportTask;
 /**
  * @ClassName: TAutoAttendanceReportTask
  * @Description: 自动考勤报表任务
- * @author ohs ohs@klxuexi.org
- * @date 2017年9月12日 下午7:44:03
  *
  */
 public class TAutoAttendanceReportTask extends AbstactDailyReportTask {

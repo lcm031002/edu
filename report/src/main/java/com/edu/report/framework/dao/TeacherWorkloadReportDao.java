@@ -13,8 +13,6 @@ import com.edu.report.model.TStudentInfo;
 /**
  * @ClassName: TeacherWorkloadReportDao
  * @Description: 培英班教师工作量表
- * @author chenyuanlong chenyl@klxuexi.org
- * @date 2017年5月17日 下午8:10:38
  *
  */
 @Repository(value = "teacherWorkloadReportDao")

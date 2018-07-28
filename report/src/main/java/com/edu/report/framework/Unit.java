@@ -1,18 +1,9 @@
-/**  
- * @Title: Unit.java
- * @Package com.edu.report.framework
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年5月3日 下午12:09:52
- * @version KLXX ERPV4.0  
- */
 package com.edu.report.framework;
 
 /**
  * @ClassName: Unit
  * @Description: 任务单位类型
- * @author zhuliyong zly@entstudy.com
- * @date 2017年5月3日 下午12:09:52
- * 
+ *
  */
 public enum Unit {
 	D(1), H(2), M(3), S(4), MS(5);
