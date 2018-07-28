@@ -1,6 +1,3 @@
-/**
- * @author baiqb@klxuexi.org 2017/03/06
- */
 "use strict";
 angular.module('ework-ui').controller('erp_cameraController', [
     '$rootScope',

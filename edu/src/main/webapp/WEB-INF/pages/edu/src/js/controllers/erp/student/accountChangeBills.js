@@ -1,6 +1,3 @@
-/**
- * @author zenglw@klxuexi.org 2017/03/13
- */
 "use strict";
 angular.module('ework-ui').controller(
     'erp_accountChangeBillsController',

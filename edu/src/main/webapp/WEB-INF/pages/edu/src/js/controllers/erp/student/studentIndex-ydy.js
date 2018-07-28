@@ -1,6 +1,3 @@
-/**
- * @author liufq@klxuexi.org 2017/04/12
- */
 "use strict";
 angular
     .module('ework-ui')

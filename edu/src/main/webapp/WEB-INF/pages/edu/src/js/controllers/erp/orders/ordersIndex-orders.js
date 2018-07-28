@@ -465,8 +465,6 @@ function erp_OrdersIndexOrdersController(
    * business_type: 业务类型，1：班级课，2：一对一，3：晚辅导，目前只选择1
    * @return {[type]} [description]
    * 
-   * @author: baiqb@klxuexi.org
-   * @date: 2017/5/26 21:47:18
    */
   function queryListeningCourseList() {
     $scope.courseListeningList = []

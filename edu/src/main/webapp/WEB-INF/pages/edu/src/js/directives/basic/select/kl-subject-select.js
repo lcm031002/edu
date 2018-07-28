@@ -1,7 +1,5 @@
 /**
  * 科目下拉框
- * @author baiqb@klxuexi.org
- * @date 2017/5/25 20:12:35
  */
 angular.module('ework-ui').directive('klSubjectSelect', [
 	'erp_subjectService',

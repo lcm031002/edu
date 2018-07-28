@@ -1,7 +1,5 @@
 /**
  * 年级下拉框
- * @author baiqb@klxuexi.org
- * @date 2017/5/25 19:58:51
  */
 angular.module('ework-ui').directive('klGradeSelect', [
 	'erp_gradeService',

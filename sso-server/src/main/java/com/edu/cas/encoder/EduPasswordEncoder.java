@@ -6,11 +6,11 @@ import org.inspektr.common.ioc.annotation.NotNull;
 import org.jasig.cas.authentication.handler.PasswordEncoder;
 
 /**
- * @ClassName: KLXXPasswordEncoder
+ * @ClassName: EduPasswordEncoder
  * @Description: 厝边素高密码加密算法
  *
  */
-public class KLXXPasswordEncoder implements PasswordEncoder {
+public class EduPasswordEncoder implements PasswordEncoder {
 
     @NotNull
     private final String encodingAlgorithm;
@@ -18,7 +18,7 @@ public class KLXXPasswordEncoder implements PasswordEncoder {
     @SuppressWarnings("unused")
 	private String characterEncoding;
 
-    public KLXXPasswordEncoder(final String encodingAlgorithm) {
+    public EduPasswordEncoder(final String encodingAlgorithm) {
         this.encodingAlgorithm = encodingAlgorithm;
     }
 

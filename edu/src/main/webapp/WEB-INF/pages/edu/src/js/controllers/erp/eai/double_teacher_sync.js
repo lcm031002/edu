@@ -1,6 +1,3 @@
-/**
- * @author yans@klxuexi.org 2018/02/06
- */
 "use strict";
 angular.module('ework-ui').controller('erp_doubleTeacherSyncCtrl', [
     '$rootScope',

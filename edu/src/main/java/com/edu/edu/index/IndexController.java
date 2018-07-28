@@ -1,10 +1,3 @@
-/**  
- * @Title: IndexController.java
- * @Package com.ebusiness.klxxedu.index
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月6日 下午5:32:19
- * @version KLXX ERPV4.0  
- */
 package com.edu.edu.index;
 
 import com.edu.common.util.PropertiesTools;
@@ -25,9 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @ClassName: IndexController
  * @Description: 全局控制器
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月6日 下午5:32:19
- * 
+ *
  */
 @Controller
 public class IndexController {

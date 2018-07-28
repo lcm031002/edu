@@ -1,7 +1,6 @@
 /**
  * 通用分页处理器
- * @author wCong
- * 	
+ *
  * 初始化
  * var test = new PageObj(.....);
  * test.init();

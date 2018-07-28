@@ -1,6 +1,3 @@
-/**
- * @author liufq@klxuexi.org 2017/04/19
- */
 angular.module('ework-ui')
     .controller('erp_epayWapController', [
         '$rootScope',

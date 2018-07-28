@@ -1,6 +1,3 @@
-/**
- * @author yans@klxuexi.org 2017/11/17
- */
 "use strict";
 angular.module('ework-ui').controller('erp_roomArrangeController', [
     '$rootScope',

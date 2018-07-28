@@ -601,8 +601,6 @@ body {
 
 /**
  * BootStrap样式扩展
- * @version 0.0.1
- * @author baiqb@klxuexi.org
  */
 /**
  * 背景图标颜色
@@ -12681,9 +12679,7 @@ dl.course-conditions dd {
 /**
  * 教室管理
  * 	- 教师安排表
- * @author: yans@klxuexi.org
- * @date:  2017/11/18 17:09:27
- * 
+ *
  */
 @media (min-width: 1200px) {
   .erp.room_arrange .panel .panel-body rd-date-picker-popup input.form-control,
@@ -12934,8 +12930,6 @@ dl.course-conditions dd {
 }
 /**
  * 组件pad端兼容处理
- * @version 0.0.1
- * @author yans@klxuexi.org
  */
 /**
  * 搜索控件rd-date-picker-popup
@@ -12982,9 +12976,7 @@ dl.course-conditions dd {
  * 	- 学员搜索
  * 	- 我的学员
  * 	- 学员分配
- * @author: baiqb@klxuexi.org
- * @date:  2017/5/10 17:09:27
- * 
+ *
  */
 /**
  * TODO 将学员管理下的所有CSS样式都迁移到此文件中

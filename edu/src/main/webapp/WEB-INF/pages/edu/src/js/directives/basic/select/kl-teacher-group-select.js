@@ -1,7 +1,5 @@
 /**
  * 教研组下拉框
- * @author yans@klxuexi.org
- * @date 2017/12/21 16:50:35
  */
 angular.module('ework-ui').directive('klTeacherGroupSelect', [
 	'erp_teacherGroupService',
