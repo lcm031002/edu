@@ -1,10 +1,3 @@
-/**  
- * @Title: LocalProcessService.java
- * @Package com.ebusiness.workflow.modules.index.service
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月1日 下午4:25:03
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.service;
 
 import java.util.List;
@@ -15,8 +8,6 @@ import org.jbpm.api.ProcessDefinition;
 /**
  * @ClassName: LocalProcessService
  * @Description: TODO(这里用一句话描述这个类的作用)
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月1日 下午4:25:03
  *
  */
 public interface LocalProcessService {

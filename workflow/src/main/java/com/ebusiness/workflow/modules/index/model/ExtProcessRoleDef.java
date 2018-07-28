@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtProcessroleDef.java
- * @Package com.ebusiness.workflow.modules.index.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月28日 下午2:46:04
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.model;
 
 import java.io.Serializable;
@@ -13,9 +6,7 @@ import java.util.Set;
 /**
  * @ClassName: ExtProcessroleDef
  * @Description: 流程定义实体类
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月28日 下午2:46:04
- * 
+ *
  */
 public class ExtProcessRoleDef implements Serializable {
 	/**

@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtBusinessrolMapping.java
- * @Package com.ebusiness.workflow.modules.index.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月1日 下午2:42:59
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.model;
 
 import java.io.Serializable;
@@ -12,9 +5,7 @@ import java.io.Serializable;
 /**
  * @ClassName: ExtBusinessrolMapping
  * @Description: 业务角色映射表
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月1日 下午2:42:59
- * 
+ *
  */
 public class ExtBusinessRoleMapping implements Serializable {
 

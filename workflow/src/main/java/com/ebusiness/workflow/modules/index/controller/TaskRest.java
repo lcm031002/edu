@@ -1,10 +1,3 @@
-/**  
- * @Title: TaskRest.java
- * @Package com.ebusiness.workflow.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月28日 下午2:13:42
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.net.URLDecoder;
@@ -57,8 +50,6 @@ import com.github.pagehelper.PageInfo;
 /**
  * @ClassName: TaskRest
  * @Description: 工作任务列表，以及任务处理相关的操作
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月28日 下午2:13:42
  */
 @Controller
 public class TaskRest {

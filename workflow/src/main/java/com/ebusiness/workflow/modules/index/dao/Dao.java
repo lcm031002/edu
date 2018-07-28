@@ -1,10 +1,3 @@
-/**  
- * @Title: Dao.java
- * @Package com.ebusiness.workflow.modules.index.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月30日 下午8:03:09
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.dao;
 
 import java.io.Serializable;
@@ -13,9 +6,7 @@ import java.util.List;
 /**
  * @ClassName: Dao
  * @Description: 持久层的接口
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月30日 下午8:03:09
- * 
+ *
  */
 public interface Dao<T> {
 	

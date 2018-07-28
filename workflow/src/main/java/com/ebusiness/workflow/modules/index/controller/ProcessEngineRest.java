@@ -1,10 +1,3 @@
-/**  
- * @Title: ProcessEngineRest.java
- * @Package com.ebusiness.frontdesk.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月19日 下午5:33:00
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.util.ArrayList;
@@ -38,9 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * @ClassName: ProcessEngineRest
  * @Description: 工作流服务，提供流程起停，任务查询和任务推进等服务
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月19日 下午5:33:00
- * 
+ *
  */
 @Controller
 public class ProcessEngineRest {

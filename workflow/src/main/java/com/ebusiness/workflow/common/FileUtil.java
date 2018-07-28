@@ -1,10 +1,3 @@
-/**  
- * @Title: FileUtil.java
- * @Package com.ebusiness.frontdesk.common
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月11日 下午9:08:41
- * @version DEMO WORKFLOW V1.0 
- */
 package com.ebusiness.workflow.common;
 
 import java.io.File;
@@ -21,9 +14,7 @@ import java.util.zip.ZipInputStream;
 /**
  * @ClassName: FileUtil
  * @Description: 文件解压
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月11日 下午9:08:41
- * 
+ *
  */
 public class FileUtil {
 

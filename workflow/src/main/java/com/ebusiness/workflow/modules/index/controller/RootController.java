@@ -1,10 +1,3 @@
-/**  
- * @Title: RootController.java
- * @Package com.ebusiness.frontdesk.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年10月12日 下午4:08:47
- * @version DEMO WORKFLOW V1.0 
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.io.BufferedReader;
@@ -26,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * @ClassName: RootController
  * @Description: 根访问控制器
- * @author zhuliyong zly@entstudy.com
- * @date 2014年10月12日 下午4:08:47
- * 
+ *
  */
 @Controller
 @RequestMapping(value = { "/workflow" })

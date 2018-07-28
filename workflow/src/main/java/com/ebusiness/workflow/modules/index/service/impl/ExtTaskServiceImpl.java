@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtTaskServiceImpl.java
- * @Package com.ebusiness.workflow.modules.index.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月15日 下午3:50:04
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.service.impl;
 
 import java.util.List;
@@ -23,9 +16,7 @@ import com.ebusiness.workflow.modules.index.service.ExtTaskService;
 /**
  * @ClassName: ExtTaskServiceImpl
  * @Description: 任务查询服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月15日 下午3:50:04
- * 
+ *
  */
 @Repository(value = "extTaskService")
 @Transactional

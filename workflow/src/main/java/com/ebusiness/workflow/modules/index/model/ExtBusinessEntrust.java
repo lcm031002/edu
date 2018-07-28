@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtBusinessEntrust.java
- * @Package com.ebusiness.workflow.modules.index.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月1日 下午2:45:48
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.model;
 
 import java.io.Serializable;
@@ -13,9 +6,7 @@ import java.util.Date;
 /**
  * @ClassName: ExtBusinessEntrust
  * @Description: 委托任务查询表
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月1日 下午2:45:48
- * 
+ *
  */
 public class ExtBusinessEntrust implements Serializable {
 

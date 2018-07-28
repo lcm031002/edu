@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtTask.java
- * @Package com.ebusiness.workflow.modules.index.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月15日 下午3:16:20
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.model;
 
 import java.io.Serializable;
@@ -15,8 +8,6 @@ import java.util.Set;
 /**
  * @ClassName: ExtTask
  * @Description: 与JBPM4_TASK对应的快速查询服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月15日 下午3:16:20
  *
  */
 public class ExtTask  implements Serializable {

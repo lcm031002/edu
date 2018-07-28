@@ -1,10 +1,3 @@
-/**  
- * @Title: WorkflowApps.java
- * @Package com.ebusiness.workflow.common
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月24日 下午2:08:20
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.common;
 
 
@@ -12,9 +5,7 @@ package com.ebusiness.workflow.common;
 /**
  * @ClassName: WorkflowApps
  * @Description: 解压web资源到指定的目录
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月24日 下午2:08:20
- * 
+ *
  */
 public class WorkflowApps {
 	/**

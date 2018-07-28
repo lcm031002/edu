@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtTaskVariable.java
- * @Package com.ebusiness.workflow.modules.index.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月15日 下午4:42:35
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.model;
 
 import java.io.Serializable;
@@ -13,8 +6,6 @@ import java.util.Date;
 /**
  * @ClassName: ExtTaskVariable
  * @Description: 任务参数对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月15日 下午4:42:35
  *
  */
 public class ExtTaskVariable   implements Serializable  {

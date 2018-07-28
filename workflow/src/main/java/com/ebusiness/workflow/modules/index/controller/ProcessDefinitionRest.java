@@ -1,10 +1,3 @@
-/**  
- * @Title: ProcessDefinitionRest.java
- * @Package com.ebusiness.frontdesk.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月17日 下午4:07:25
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.io.File;
@@ -41,9 +34,7 @@ import com.ebusiness.workflow.modules.index.service.ExtProcessDefService;
 /**
  * @ClassName: ProcessDefinitionRest
  * @Description: 流程定义信息
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月17日 下午4:07:25
- * 
+ *
  */
 @Controller
 public class ProcessDefinitionRest {

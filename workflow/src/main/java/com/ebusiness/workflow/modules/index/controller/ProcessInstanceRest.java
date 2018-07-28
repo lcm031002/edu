@@ -1,10 +1,3 @@
-/**  
- * @Title: ProcessInstanceRest.java
- * @Package com.ebusiness.workflow.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月12日 下午4:55:10
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.util.HashMap;
@@ -33,9 +26,7 @@ import com.ebusiness.workflow.ext.ExtAfterTaskDoLog;
 /**
  * @ClassName: ProcessInstanceRest
  * @Description: 流程实例相关的逻辑处理
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月12日 下午4:55:10
- * 
+ *
  */
 @Controller
 public class ProcessInstanceRest {

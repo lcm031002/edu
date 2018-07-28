@@ -1,10 +1,3 @@
-/**  
- * @Title: AssignTask.java
- * @Package com.ebusiness.workflow.modules.assign
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月1日 下午4:46:35
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.assign;
 
 import java.util.Set;
@@ -26,9 +19,7 @@ import com.ebusiness.workflow.modules.index.model.ExtProcessRoleDef;
 /**
  * @ClassName: AssignTask
  * @Description: 默认任务安排
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月1日 下午4:46:35
- * 
+ *
  */
 public class DefaultAssignTask implements AssignmentHandler {
 

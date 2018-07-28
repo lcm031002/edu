@@ -1,10 +1,3 @@
-/**  
- * @Title: BaseDao.java
- * @Package com.ebusiness.workflow.modules.index.dao.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月30日 下午8:03:46
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.dao.impl;
 
 import java.io.Serializable;
@@ -25,9 +18,7 @@ import com.ebusiness.workflow.modules.index.dao.Dao;
 /**
  * @ClassName: BaseDao
  * @Description: 基类
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月30日 下午8:03:46
- * 
+ *
  */
 public abstract class BaseDao<T> implements Dao<T> {
 

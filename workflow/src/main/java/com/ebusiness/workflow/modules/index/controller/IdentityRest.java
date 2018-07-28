@@ -1,10 +1,3 @@
-/**  
- * @Title: IdentityRest.java
- * @Package com.ebusiness.frontdesk.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月17日 下午7:52:21
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.util.HashMap;
@@ -41,9 +34,7 @@ import com.ebusiness.workflow.modules.index.service.ProcessRoleDefService;
 /**
  * @ClassName: IdentityRest
  * @Description: 查询用户信息
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月17日 下午7:52:21
- * 
+ *
  */
 @Controller
 public class IdentityRest {

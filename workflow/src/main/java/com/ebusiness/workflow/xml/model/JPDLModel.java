@@ -1,10 +1,3 @@
-/**  
- * @Title: JPDLModel.java
- * @Package com.ebusiness.workflow.xml
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月3日 上午11:32:21
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.xml.model;
 
 import java.util.List;
@@ -12,9 +5,7 @@ import java.util.List;
 /**
  * @ClassName: JPDLModel
  * @Description: JPDL文件模型
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月3日 上午11:32:21
- * 
+ *
  */
 public class JPDLModel {
 

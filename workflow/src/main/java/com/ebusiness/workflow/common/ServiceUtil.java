@@ -1,10 +1,3 @@
-/**  
- * @Title: ServiceUtil.java
- * @Package com.ebusiness.workflow.common
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月1日 下午5:50:25
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.common;
 
 import com.ebusiness.workflow.modules.index.service.BusinessRoleMappingService;
@@ -14,8 +7,6 @@ import com.ebusiness.workflow.modules.index.service.ProcessRoleDefService;
 /**
  * @ClassName: ServiceUtil
  * @Description: 服务工具类
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月1日 下午5:50:25
  *
  */
 public class ServiceUtil {

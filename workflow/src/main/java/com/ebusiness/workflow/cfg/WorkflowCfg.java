@@ -1,10 +1,3 @@
-/**  
- * @Title: WorkflowCfg.java
- * @Package com.ebusiness.workflow.cfg
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月24日 下午6:22:52
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.cfg;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,9 +5,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @ClassName: WorkflowCfg
  * @Description: 工作流相关的配置文件信息
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月24日 下午6:22:52
- * 
+ *
  */
 public class WorkflowCfg {
 	private static final String FILE_PATH = "/workflow/web/wffile";

@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtProcessDef.java
- * @Package com.ebusiness.workflow.modules.index.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月2日 上午11:56:40
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.model;
 
 import java.io.Serializable;
@@ -14,8 +7,6 @@ import java.util.Set;
 /**
  * @ClassName: ExtProcessDef
  * @Description: 流程定义信息表
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月2日 上午11:56:40
  *
  */
 public class ExtProcessDef implements Serializable{

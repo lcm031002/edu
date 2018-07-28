@@ -1,10 +1,3 @@
-/**  
- * @Title: JaxbReadXml.java
- * @Package com.ebusiness.workflow.xml
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月3日 上午11:29:10
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.xml;
 
 import java.io.File;
@@ -37,9 +30,7 @@ import com.ebusiness.workflow.xml.model.JPDLTaskModel;
 /**
  * @ClassName: JaxbReadXml
  * @Description: jaxb解析xml
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月3日 上午11:29:10
- * 
+ *
  */
 public class JaxbReadXml {
 

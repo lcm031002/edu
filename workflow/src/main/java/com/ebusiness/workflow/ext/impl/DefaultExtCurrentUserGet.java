@@ -1,10 +1,3 @@
-/**  
- * @Title: DefaultExtCurrentUserGet.java
- * @Package com.ebusiness.workflow.ext
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月4日 下午3:21:06
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.ext.impl;
 
 import java.lang.reflect.Field;
@@ -22,9 +15,7 @@ import com.ebusiness.workflow.ext.ExtCurrentUserInfo;
 /**
  * @ClassName: DefaultExtCurrentUserGet
  * @Description: 获取任务处理的当前用户的信息
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月4日 下午3:21:06
- * 
+ *
  */
 public class DefaultExtCurrentUserGet implements ExtCurrentUserInfo {
 

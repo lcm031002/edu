@@ -1,10 +1,3 @@
-/**  
- * @Title: ExtTaskDaoImpl.java
- * @Package com.ebusiness.workflow.modules.index.dao.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年11月15日 下午3:38:55
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.dao.impl;
 
 import java.io.Serializable;
@@ -22,9 +15,7 @@ import com.ebusiness.workflow.modules.index.model.ExtTask;
 /**
  * @ClassName: ExtTaskDaoImpl
  * @Description: 任务列表服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年11月15日 下午3:38:55
- * 
+ *
  */
 @Repository(value = "extTaskDao")
 public class ExtTaskDaoImpl extends BaseDao<ExtTask> implements ExtTaskDao {

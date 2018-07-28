@@ -1,10 +1,3 @@
-/**  
- * @Title: ProcessRest.java
- * @Package com.ebusiness.frontdesk.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月12日 上午12:02:57
- * @version DEMO WORKFLOW V1.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.io.File;
@@ -55,9 +48,7 @@ import com.ebusiness.workflow.xml.model.JPDLTaskModel;
 /**
  * @ClassName: ProcessRest
  * @Description: 发布与流程包发布处理相关的服务
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月12日 上午12:02:57
- * 
+ *
  */
 @Controller
 public class ProcessRest {

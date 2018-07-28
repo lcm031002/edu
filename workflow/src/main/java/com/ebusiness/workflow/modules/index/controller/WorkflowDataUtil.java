@@ -1,10 +1,3 @@
-/**  
- * @Title: Util.java
- * @Package com.ebusiness.workflow.modules.index.controller
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年12月1日 下午4:39:34
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.controller;
 
 import java.util.ArrayList;
@@ -33,9 +26,7 @@ import org.springframework.util.CollectionUtils;
 /**
  * @ClassName: Util
  * @Description: 工具类
- * @author zhuliyong zly@entstudy.com
- * @date 2014年12月1日 下午4:39:34
- * 
+ *
  */
 public class WorkflowDataUtil {
 

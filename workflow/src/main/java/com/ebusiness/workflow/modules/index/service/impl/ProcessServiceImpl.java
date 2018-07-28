@@ -1,10 +1,3 @@
-/**  
- * @Title: ProcessRoleDefServiceImpl.java
- * @Package com.ebusiness.workflow.modules.index.service.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2014年11月28日 下午4:35:04
- * @version KLXX ERPV4.0  
- */
 package com.ebusiness.workflow.modules.index.service.impl;
 
 import java.util.ArrayList;
@@ -45,9 +38,7 @@ import com.ebusiness.workflow.modules.index.service.ProcessRoleDefService;
 /**
  * @ClassName: ProcessRoleDefServiceImpl
  * @Description: 流程节点角色定义服务实现类
- * @author zhuliyong zly@entstudy.com
- * @date 2014年11月28日 下午4:35:04
- * 
+ *
  */
 @Repository(value = "processLocalService")
 @Transactional
