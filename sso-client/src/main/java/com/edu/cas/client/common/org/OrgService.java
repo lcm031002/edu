@@ -1,10 +1,3 @@
-/**  
- * @Title: OrgService.java
- * @Package com.edu.cas.client.common.org
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 上午11:41:13
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.org;
 
 import java.util.List;
@@ -15,9 +8,7 @@ import com.edu.cas.client.common.model.OrgModel;
 /**
  * @ClassName: OrgService
  * @Description: 组织结构树服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 上午11:41:13
- * 
+ *
  */
 public interface OrgService {
 	/**

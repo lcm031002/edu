@@ -17,8 +17,6 @@ import java.util.Map;
 
 /**
  * 操作EXCEL
- * 
- * @author wCong
  *
  */
 public class ExcelReadHandler {

@@ -1,10 +1,3 @@
-/**  
- * @Title: CaptchaErrorCountAction.java
- * @Package com.edu.cas.jcaptcha
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午6:44:26
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.jcaptcha;
 
 
@@ -21,8 +14,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 /**
  * @ClassName: CaptchaErrorCountAction
  * @Description: 验证码错误计数限制
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午6:44:26
  *
  */
 public final class CaptchaErrorCountAction extends AbstractAction {

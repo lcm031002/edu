@@ -15,7 +15,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 /**
  * token拦截器，防止重复提交
  *
- * @author lincm
  */
 public class TokenInterceptor extends HandlerInterceptorAdapter {
 

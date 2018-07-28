@@ -2,8 +2,6 @@ package com.edu.common.mybatis;
 
 /**
  * MySql方言
- * @author Madison
- * @date 2014-7-31
  */
 public class MySQLDialect extends Dialect
 {

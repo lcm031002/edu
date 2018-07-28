@@ -1,10 +1,3 @@
-/**  
- * @Title: ApplicationContextUtil.java
- * @Package com.edu.cas.client.common.util
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 下午12:13:23
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.util;
 
 import org.springframework.beans.BeansException;
@@ -15,8 +8,6 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * @ClassName: ApplicationContextUtil
  * @Description: bean上下文工具类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 下午12:13:23
  *
  */
 public class ApplicationContextUtil  implements ApplicationContextAware

@@ -1,10 +1,3 @@
-/**  
- * @Title: UserRightInterceptor.java
- * @Package com.edu.cas.client.common.interceptor
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月20日 下午2:34:28
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +15,7 @@ import com.edu.cas.client.common.util.WebContextUtils;
 /**
  * @ClassName: UserRightInterceptor
  * @Description: 用户权限拦截器
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月20日 下午2:34:28
- * 
+ *
  */
 public class UserRightInterceptor implements HandlerInterceptor {
 

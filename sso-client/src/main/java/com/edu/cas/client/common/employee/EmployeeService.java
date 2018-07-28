@@ -1,10 +1,3 @@
-/**  
- * @Title: EmployeeService.java
- * @Package com.edu.cas.client.common.employee
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 上午11:40:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.employee;
 
 import java.util.Map;
@@ -15,9 +8,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: EmployeeService
  * @Description: 员工服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 上午11:40:40
- * 
+ *
  */
 public interface EmployeeService {
 

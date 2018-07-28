@@ -1,10 +1,3 @@
-/**  
- * @Title: UserAccountInterceptor.java
- * @Package com.edu.cas.client.common.interceptor
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 下午12:09:39
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +18,6 @@ import com.edu.cas.client.common.util.WebContextUtils;
 /**
  * @ClassName: UserAccountInterceptor
  * @Description: 账户拦截器
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 下午12:09:39
  */
 public class UserAccountInterceptor implements HandlerInterceptor {
 	

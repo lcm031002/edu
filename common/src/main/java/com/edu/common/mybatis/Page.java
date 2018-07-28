@@ -5,8 +5,6 @@ import java.util.Map;
 
 /**
  * 分页对象
- * @author Madison
- * @date 2014-7-30
  */
 public class Page<T> 
 {
@@ -31,8 +29,6 @@ public class Page<T>
 	/**
 	 * 是否进入分页拦截器
 	 * 默认true表示进入,若为false表示不进入
-	 * @author LYK 
-	 * time 2016/7/22
 	 */
 	private boolean needPageIntercept=Boolean.TRUE;
 	

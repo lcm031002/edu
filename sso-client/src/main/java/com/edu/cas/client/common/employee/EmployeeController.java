@@ -1,10 +1,3 @@
-/**  
- * @Title: EmployeeController.java
- * @Package com.edu.cas.client.common.employee
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 下午3:51:52
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.employee;
 
 import java.net.URLDecoder;
@@ -35,9 +28,7 @@ import com.github.pagehelper.PageInfo;
 /**
  * @ClassName: EmployeeController
  * @Description: 员工控制类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 下午3:51:52
- * 
+ *
  */
 @Controller
 public class EmployeeController {

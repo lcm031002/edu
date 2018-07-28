@@ -1,10 +1,3 @@
-/**  
- * @Title: AccountService.java
- * @Package com.edu.cas.client.common.account
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 下午12:19:29
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.account;
 
 import com.edu.cas.client.common.model.Account;
@@ -12,9 +5,7 @@ import com.edu.cas.client.common.model.Account;
 /**
  * @ClassName: AccountService
  * @Description: 账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 下午12:19:29
- * 
+ *
  */
 public interface SSOAccountService {
 	/**

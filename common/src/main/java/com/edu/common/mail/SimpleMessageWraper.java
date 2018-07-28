@@ -1,10 +1,3 @@
-/**  
- * @Title: SimpleMessageWraper.java
- * @Package com.mail
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年4月18日 下午12:03:40
- * @version KLXX ERPV4.0  
- */
 package com.edu.common.mail;
 
 import java.io.File;
@@ -28,9 +21,7 @@ import javax.mail.internet.MimeUtility;
 /**
  * @ClassName: SimpleMessageWraper
  * @Description: 邮件信息对象
- * @author zhuliyong zly@entstudy.com
- * @date 2015年4月18日 下午12:03:40
- * 
+ *
  */
 public class SimpleMessageWraper {
 	private Session session;

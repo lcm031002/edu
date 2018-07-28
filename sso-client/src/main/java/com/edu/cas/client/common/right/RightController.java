@@ -1,10 +1,3 @@
-/**  
- * @Title: RightController.java
- * @Package com.edu.cas.client.common.right
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午8:20:03
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.right;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +15,6 @@ import com.edu.cas.client.common.util.WebContextUtils;
 /**
  * @ClassName: RightController
  * @Description: 权限服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午8:20:03
  *
  */
 @Controller

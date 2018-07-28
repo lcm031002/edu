@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 /**
  * 身份证,和护照工具类
  * 
- * @author chen_fulei
- * @modify zenglw
  */
 public class IdcardUtils extends StringUtils {
     /** 中国公民身份证号码最小长度。 */

@@ -1,10 +1,3 @@
-/**  
- * @Title: Account.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 上午11:45:20
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.io.Serializable;
@@ -13,9 +6,7 @@ import java.util.Date;
 /**
  * @ClassName: Account
  * @Description: 用户账户对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 上午11:45:20
- * 
+ *
  */
 public class Account implements Serializable {
 

@@ -1,10 +1,3 @@
-/**  
- * @Title: RightUtils.java
- * @Package com.edu.cas.client.common.util
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午7:02:14
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.util;
 
 import java.util.ArrayList;
@@ -29,9 +22,7 @@ import com.edu.cas.client.common.model.RightModel;
 /**
  * @ClassName: RightUtils
  * @Description: 权限工具类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午7:02:14
- * 
+ *
  */
 public class RightUtils {
 

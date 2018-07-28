@@ -1,10 +1,3 @@
-/**  
- * @Title: KLXXPasswordEncoder.java
- * @Package org.jasig.cas.authentication.handler
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午5:03:50
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.encoder;
 
 import java.security.MessageDigest;
@@ -15,8 +8,6 @@ import org.jasig.cas.authentication.handler.PasswordEncoder;
 /**
  * @ClassName: KLXXPasswordEncoder
  * @Description: 厝边素高密码加密算法
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午5:03:50
  *
  */
 public class KLXXPasswordEncoder implements PasswordEncoder {

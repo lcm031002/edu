@@ -11,8 +11,6 @@ import org.codehaus.jackson.map.SerializerProvider;
 
 /**
  * 日期时间Json序列化器
- * @author majun
- * @date 2013-12-26
  * 注：此列化器适用yyyy-MM-dd HH:mm:ss格式
  */
 public class DateTimeJsonSerializer extends JsonSerializer<Date>

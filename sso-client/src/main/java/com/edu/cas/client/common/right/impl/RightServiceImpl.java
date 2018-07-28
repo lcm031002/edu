@@ -1,10 +1,3 @@
-/**  
- * @Title: RightServiceImpl.java
- * @Package com.edu.cas.client.common.right.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午3:21:46
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.right.impl;
 
 import java.util.List;
@@ -22,8 +15,6 @@ import com.edu.cas.client.dao.PermissionDao;
 /**
  * @ClassName: RightServiceImpl
  * @Description: 用户权限查询服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午3:21:46
  *
  */
 @Service(value = "rightService")

@@ -1,10 +1,3 @@
-/**  
- * @Title: WebContextUtils.java
- * @Package com.edu.cas.client.common.util
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 下午4:12:54
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.util;
 
 import java.util.ArrayList;
@@ -31,9 +24,7 @@ import com.edu.cas.client.common.right.RightService;
 /**
  * @ClassName: WebContextUtils
  * @Description: Web上下文工具类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 下午4:12:54
- * 
+ *
  */
 public class WebContextUtils {
 	private static final Logger log = Logger.getLogger(WebContextUtils.class);

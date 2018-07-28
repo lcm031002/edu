@@ -1,10 +1,3 @@
-/**  
- * @Title: OrgModelDao.java
- * @Package com.edu.cas.client.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 下午5:55:30
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.dao;
 
 import java.util.List;
@@ -19,9 +12,7 @@ import com.edu.cas.client.common.model.UserPersonalSettings;
 /**
  * @ClassName: OrgModelDao
  * @Description: 组织结构服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 下午5:55:30
- * 
+ *
  */
 @Repository("orgModelDao")
 public interface OrgModelDao {

@@ -1,10 +1,3 @@
-/**  
- * @Title: OrgController.java
- * @Package com.edu.cas.client.common.org
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 下午7:09:06
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.org;
 
 import java.util.ArrayList;
@@ -34,9 +27,7 @@ import com.edu.cas.client.common.util.WebContextUtils;
 /**
  * @ClassName: OrgController
  * @Description: 组织结构查询控制类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 下午7:09:06
- * 
+ *
  */
 @Controller
 public class OrgController {

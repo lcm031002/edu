@@ -1,10 +1,3 @@
-/**  
- * @Title: AccountDao.java
- * @Package com.edu.cas.client.common.account
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 下午3:28:04
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.dao;
 
 import com.edu.cas.client.common.model.Account;
@@ -15,8 +8,6 @@ import com.edu.cas.client.common.model.Account;
 /**
  * @ClassName: AccountDao
  * @Description: 账户持久层服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 下午3:28:04
  *
  */
 @Repository("SSOaccountDao")

@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContextAware;
 
 /**
  * util spring bean tool 
- * @author Liyong.zhu
  *
  */
 public class ApplicationContextUtil   implements ApplicationContextAware

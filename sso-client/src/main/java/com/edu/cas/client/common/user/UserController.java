@@ -1,10 +1,3 @@
-/**  
- * @Title: UserController.java
- * @Package com.edu.cas.client.common.user
- * @author zhuliyong zly@entstudy.com  
- * @date 2017年1月15日 下午3:07:43
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.user;
 
 import java.util.HashMap;
@@ -23,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * @ClassName: UserController
  * @Description: 登出服务
- * @author zhuliyong zly@entstudy.com
- * @date 2017年1月15日 下午3:07:43
- * 
+ *
  */
 @Controller
 public class UserController {

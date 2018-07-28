@@ -26,7 +26,6 @@ import com.edu.common.wx.WxConstants;
 
 /**
  * 数据处理类
- * @author wCong
  *
  */
 public class ModelDataUtils {

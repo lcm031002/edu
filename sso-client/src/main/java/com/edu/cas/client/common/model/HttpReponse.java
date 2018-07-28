@@ -1,10 +1,3 @@
-/**  
- * @Title: HttpReponse.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 上午11:52:58
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.io.Serializable;
@@ -12,8 +5,6 @@ import java.io.Serializable;
 /**
  * @ClassName: HttpReponse
  * @Description: http rest响应对象模型
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 上午11:52:58
  *
  */
 public class HttpReponse implements Serializable {

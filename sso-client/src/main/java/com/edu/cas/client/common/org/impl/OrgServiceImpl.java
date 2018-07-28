@@ -1,10 +1,3 @@
-/**  
- * @Title: OrgServiceImpl.java
- * @Package com.edu.cas.client.common.org.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 下午6:27:57
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.org.impl;
 
 import java.util.HashMap;
@@ -29,9 +22,7 @@ import com.edu.cas.client.dao.UserPersonalSettingsDao;
 /**
  * @ClassName: OrgServiceImpl
  * @Description: 查询用户的组织结构权限
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 下午6:27:57
- * 
+ *
  */
 @Service(value = "orgService")
 public class OrgServiceImpl implements OrgService {

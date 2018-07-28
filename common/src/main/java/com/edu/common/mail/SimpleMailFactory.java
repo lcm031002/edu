@@ -1,10 +1,3 @@
-/**  
- * @Title: SimpleMailFactory.java
- * @Package com.mail
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年4月18日 下午12:07:24
- * @version KLXX ERPV4.0  
- */
 package com.edu.common.mail;
 
 import java.util.Properties;
@@ -15,9 +8,7 @@ import javax.mail.internet.MimeMessage;
 /**
  * @ClassName: SimpleMailFactory
  * @Description: 发送邮件的工程类
- * @author zhuliyong zly@entstudy.com
- * @date 2015年4月18日 下午12:07:24
- * 
+ *
  */
 public class SimpleMailFactory {
 

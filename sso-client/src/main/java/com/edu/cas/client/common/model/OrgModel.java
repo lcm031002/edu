@@ -1,10 +1,3 @@
-/**  
- * @Title: OrgModel.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 下午5:52:59
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.io.Serializable;
@@ -17,9 +10,7 @@ import java.util.Map;
  * 
  * @ClassName: OrgModel
  * @Description: 组织结构模型
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 下午5:52:59
- * 
+ *
  */
 public class OrgModel  implements Serializable{
 	

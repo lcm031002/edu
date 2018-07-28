@@ -1,10 +1,3 @@
-/**  
- * @Title: AccountService.java
- * @Package com.edu.cas.client.common.account
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 上午11:39:46
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.account;
 
 import javax.annotation.Resource;
@@ -26,9 +19,7 @@ import com.edu.cas.client.common.util.WebContextUtils;
 /**
  * @ClassName: AccountService
  * @Description: 账户服务类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 上午11:39:46
- * 
+ *
  */
 @Controller
 public class AccountServiceController {

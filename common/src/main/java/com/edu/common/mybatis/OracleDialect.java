@@ -2,8 +2,6 @@ package com.edu.common.mybatis;
 
 /**
  * Oracle方言
- * @author Madison
- * @date 2014-7-31
  */
 public class OracleDialect extends Dialect 
 {

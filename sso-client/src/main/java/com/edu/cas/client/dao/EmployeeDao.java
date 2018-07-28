@@ -1,10 +1,3 @@
-/**  
- * @Title: EmployeeDao.java
- * @Package com.edu.cas.client.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 上午11:54:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.dao;
 
 import java.util.Map;
@@ -18,9 +11,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: EmployeeDao
  * @Description: 员工信息持久层
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 上午11:54:27
- * 
+ *
  */
 @Repository("employeeDao")
 public interface EmployeeDao {

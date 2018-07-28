@@ -1,10 +1,3 @@
-/**  
- * @Title: BadCaptchaAuthenticationException.java
- * @Package com.edu.cas.exception
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午7:46:28
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.exception;
 
 import org.jasig.cas.authentication.handler.AuthenticationException;
@@ -12,8 +5,6 @@ import org.jasig.cas.authentication.handler.AuthenticationException;
 /**
  * @ClassName: BadCaptchaAuthenticationException
  * @Description: 验证码校验错误异常
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午7:46:28
  *
  */
 public class BadCaptchaAuthenticationException  extends

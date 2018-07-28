@@ -1,10 +1,3 @@
-/**  
- * @Title: JCaptchaEngineEx.java
- * @Package com.edu.cas.jcaptcha
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午6:38:55
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.jcaptcha;
 
 import java.awt.Color;
@@ -30,8 +23,6 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
 /**
  * @ClassName: JCaptchaEngineEx
  * @Description: 校验码算法类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午6:38:55
  *
  */
 public class JCaptchaEngineEx extends ListImageCaptchaEngine {

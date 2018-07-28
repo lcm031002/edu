@@ -1,10 +1,3 @@
-/**  
- * @Title: RightModel.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午3:22:45
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.io.Serializable;
@@ -17,9 +10,7 @@ import java.util.Set;
  * 
  * @ClassName: RightModel
  * @Description: 用户权限树与用户可见菜单对应
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午3:22:45
- * 
+ *
  */
 public class RightModel implements Serializable, Cloneable {
 	/**

@@ -1,10 +1,3 @@
-/**  
- * @Title: RolePermission.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午7:34:49
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.io.Serializable;
@@ -12,8 +5,6 @@ import java.io.Serializable;
 /**
  * @ClassName: RolePermission
  * @Description: 权限许可
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午7:34:49
  *
  */
 public class Permission  implements Serializable{

@@ -1,10 +1,3 @@
-/**  
- * @Title: Employee.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 上午11:29:59
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.util.Date;
@@ -12,9 +5,7 @@ import java.util.Date;
 /**
  * @ClassName: Employee
  * @Description: 员工对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 上午11:29:59
- * 
+ *
  */
 public class Employee {
 	private Long id;

@@ -1,10 +1,3 @@
-/**  
- * @Title: CaptchaValidateAction.java
- * @Package com.edu.cas.jcaptcha
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午6:37:27
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.jcaptcha;
 
 import com.edu.cas.exception.BadCaptchaAuthenticationException;
@@ -24,9 +17,7 @@ import com.octo.captcha.service.image.ImageCaptchaService;
 /**
  * @ClassName: CaptchaValidateAction
  * @Description:校验码验证action
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午6:37:27
- * 
+ *
  */
 public final class CaptchaValidateAction extends AbstractAction {
 	private ImageCaptchaService captchaService;

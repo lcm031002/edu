@@ -1,10 +1,3 @@
-/**  
- * @Title: UserPersonalSettings.java
- * @Package com.edu.cas.client.common.model
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年9月8日 下午8:32:29
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.model;
 
 import java.io.Serializable;
@@ -12,9 +5,7 @@ import java.io.Serializable;
 /**
  * @ClassName: UserPersonalSettings
  * @Description: 用户自定义参数对象
- * @author zhuliyong zly@entstudy.com
- * @date 2016年9月8日 下午8:32:29
- * 
+ *
  */
 public class UserPersonalSettings implements Serializable {
 	private static final long serialVersionUID = 8167598453735911604L;

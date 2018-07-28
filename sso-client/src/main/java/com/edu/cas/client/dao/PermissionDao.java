@@ -1,10 +1,3 @@
-/**  
- * @Title: PermissionDao.java
- * @Package com.edu.cas.client.dao
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午7:37:25
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.dao;
 
 import java.util.List;
@@ -17,9 +10,7 @@ import com.edu.cas.client.common.model.Permission;
 /**
  * @ClassName: PermissionDao
  * @Description: 权限持久层
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午7:37:25
- * 
+ *
  */
 @Repository("permissionDao")
 public interface PermissionDao {

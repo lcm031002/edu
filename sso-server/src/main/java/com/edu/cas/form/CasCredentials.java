@@ -1,10 +1,3 @@
-/**  
- * @Title: CasCredentials.java
- * @Package com.edu.cas.form
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午8:44:16
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.form;
 
 import org.jasig.cas.authentication.principal.Credentials;
@@ -13,9 +6,7 @@ import org.jasig.cas.authentication.principal.UsernamePasswordCredentials;
 /**
  * @ClassName: CasCredentials
  * @Description: TODO(这里用一句话描述这个类的作用)
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午8:44:16
- * 
+ *
  */
 public class CasCredentials extends UsernamePasswordCredentials implements
 		Credentials {

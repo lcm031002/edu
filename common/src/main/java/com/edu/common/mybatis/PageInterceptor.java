@@ -25,8 +25,6 @@ import com.edu.common.mybatis.Dialect.DialectType;
 
 /**
  * 分页拦截器
- * @author Madison
- * @date 2014-7-31
  */
 @Intercepts({@Signature(type=StatementHandler.class,method="prepare",args={Connection.class})})
 public class PageInterceptor implements Interceptor

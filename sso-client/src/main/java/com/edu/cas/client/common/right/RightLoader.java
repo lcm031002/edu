@@ -1,10 +1,3 @@
-/**  
- * @Title: XMLRightLoader.java
- * @Package com.edu.cas.client.common.org
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月14日 下午6:20:24
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.right;
 
 import java.io.File;
@@ -27,9 +20,7 @@ import com.edu.cas.client.common.util.RightUtils;
 /**
  * @ClassName: RightLoader
  * @Description: 权限JSON加载初始化类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月14日 下午6:20:24
- * 
+ *
  */
 @Service(value = "RightLoader")
 @Scope("singleton")

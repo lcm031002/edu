@@ -7,8 +7,6 @@ import org.codehaus.jackson.map.ser.CustomSerializerFactory;
 
 /**
  * 全局Json对象映射
- * @author majun
- * @date 2013-12-27
  */
 public class GlobalObjectMapper extends ObjectMapper 
 {

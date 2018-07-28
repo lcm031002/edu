@@ -1,10 +1,3 @@
-/**  
- * @Title: SimpleMailConfig.java
- * @Package com.mail
- * @author zhuliyong zly@entstudy.com  
- * @date 2015年4月18日 下午12:17:28
- * @version KLXX ERPV4.0  
- */
 package com.edu.common.mail;
 
 import java.io.InputStream;
@@ -15,9 +8,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @ClassName: SimpleMailConfig
  * @Description: 邮件发送配置
- * @author zhuliyong zly@entstudy.com
- * @date 2015年4月18日 下午12:17:28
- * 
+ *
  */
 public class SimpleMailConfig {
 	private String host;

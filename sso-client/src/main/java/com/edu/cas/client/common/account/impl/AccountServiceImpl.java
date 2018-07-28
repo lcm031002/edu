@@ -1,10 +1,3 @@
-/**  
- * @Title: AccountServiceImpl.java
- * @Package com.edu.cas.client.common.account.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月12日 下午3:27:33
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.account.impl;
 
 import javax.annotation.Resource;
@@ -22,9 +15,7 @@ import com.edu.cas.client.dao.AccountDao;
 /**
  * @ClassName: AccountServiceImpl
  * @Description: 账户服务
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月12日 下午3:27:33
- * 
+ *
  */
 @Service(value = "accountSSOService")
 public class AccountServiceImpl implements SSOAccountService {

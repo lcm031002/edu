@@ -1,10 +1,3 @@
-/**  
- * @Title: EmployeeServiceImpl.java
- * @Package com.edu.cas.client.common.employee.impl
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月13日 上午11:54:01
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.client.common.employee.impl;
 
 import java.util.Map;
@@ -24,9 +17,7 @@ import com.github.pagehelper.Page;
 /**
  * @ClassName: EmployeeServiceImpl
  * @Description: 员工服务处理类
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月13日 上午11:54:01
- * 
+ *
  */
 @Service(value = "employeeService")
 public class EmployeeServiceImpl implements EmployeeService {

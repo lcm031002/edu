@@ -1,10 +1,3 @@
-/**  
- * @Title: CaptchaImageCreateController.java
- * @Package com.edu.cas.jcaptcha
- * @author zhuliyong zly@entstudy.com  
- * @date 2016年7月8日 下午6:38:17
- * @version KLXX ERPV4.0  
- */
 package com.edu.cas.jcaptcha;
 
 
@@ -25,8 +18,6 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 /**
  * @ClassName: CaptchaImageCreateController
  * @Description: 校验码图片生成请求
- * @author zhuliyong zly@entstudy.com
- * @date 2016年7月8日 下午6:38:17
  *
  */
 @SuppressWarnings("restriction")

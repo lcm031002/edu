@@ -8,8 +8,6 @@ import org.codehaus.jackson.map.SerializerProvider;
 
 /**
  * 空值Json序列化器
- * @author majun
- * @date 2013-12-30
  */
 public class NullValueJsonSerializer extends JsonSerializer<Object> 
 {

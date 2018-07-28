@@ -2,8 +2,6 @@ package com.edu.common.mybatis;
 
 /**
  * 数据库方言基类
- * @author Madison
- * @date 2014-7-31
  */
 public abstract class Dialect 
 {
