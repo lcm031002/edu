@@ -34,7 +34,7 @@
 	<update id="updateAccount" 
 		parameterType="com.edu.cas.client.common.model.Account">
 		update TAB_USER_INFO set
-		UPDATE_TIME = sysdate
+		UPDATE_TIME = sysdate()
 		<if test="userName!=null">
 			,userName = #{userName}
 		</if>

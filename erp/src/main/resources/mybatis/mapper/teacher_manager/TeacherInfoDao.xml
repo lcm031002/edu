@@ -11,6 +11,7 @@
 		<result property="photo" column="photo" />
 		<result property="description" column="description" />
 		<result property="phone" column="phone" />
+		<result property="coop_org_id" column="coop_org_id" />
 		<result property="status" column="status" />
 		<result property="create_user" column="create_user" />
 		<result property="create_user_name" column="create_user_name" />
@@ -109,6 +110,8 @@
 				a.update_user,
 				a.description,
 				a.phone,
+				a.coop_org_id,
+				a.employee_id,
 				c_emp.employee_name as create_user_name,
 				u_emp.employee_name as update_user_name,
 				(select group_concat(distinct ts.name)

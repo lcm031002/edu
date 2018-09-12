@@ -10,6 +10,8 @@ public class Account extends BaseObject implements Serializable {
     //用户名
     private String accountName;
 
+    private String oldPassword;
+
     private String password;
 
     private String remark;
@@ -26,6 +28,14 @@ public class Account extends BaseObject implements Serializable {
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
     public String getPassword() {

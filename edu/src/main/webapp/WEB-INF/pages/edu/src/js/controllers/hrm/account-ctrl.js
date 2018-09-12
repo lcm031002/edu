@@ -300,7 +300,7 @@ function erp_AccountCtrl($scope,
      */
     function updateAccount(account){
         var param = {};
-        param.user_id=account.id;
+        param.id=account.id;
         param.accountName=account.accountName;
         param.employeeId=account.employeeId;
         param.password=account.password;
