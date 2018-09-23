@@ -249,4 +249,6 @@ public interface EmployeeMgrService {
      */
     String modifyPhoto(Map<String, String> json) throws Exception;
 
+    EmployeeInfo queryEmpInfoByOrgIdAndId(Long id,Long branch_id);
+
 }

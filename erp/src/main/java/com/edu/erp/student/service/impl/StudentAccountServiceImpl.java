@@ -239,7 +239,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			tAccountDynamic.setPay_flag(1L);
 			tAccountDynamic.setPay_mode(param.get("pay_mode") + "");
 			tAccountDynamic.setCreate_user(userId);
-			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 1));
+			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.CZDJ_PREFIX));
 
 			studentAccountDao.saveAccountDynamic(tAccountDynamic);
 
@@ -393,7 +393,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			outTAccountDynamic.setPay_mode("4");
 			outTAccountDynamic.setMoney(Double.parseDouble(paramMap.get("p_transfer_money") + ""));
 			outTAccountDynamic.setCreate_user(userId);
-			outTAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum((long) 7));
+			outTAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.ZZDJ_PREFIX ));
 
 			studentAccountDao.saveAccountDynamic(outTAccountDynamic);
 
@@ -578,7 +578,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			paramMap.put("p_remark", StringUtil.isEmpty(jsonObj.get("remark")) ? ""
 					: jsonObj.get("remark"));
 			paramMap.put("p_encoding",
-					EncodingSequenceUtil.getSequenceNum((long) 5));
+					EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.QKDJ_PREFIX));
 			//studentAccountDao.accountDrawing(paramMap); 取现存储过程
 
 			// 查询是否存在账户，如果没有的话，先创建账户

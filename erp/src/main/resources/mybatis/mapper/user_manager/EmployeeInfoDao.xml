@@ -418,6 +418,17 @@
 		left join Tp_Post tp on tp.id = a.post_id
 	</select>
 
+	<select id="queryEmpInfoByOrgIdAndId" parameterType="page" resultType="com.edu.erp.model.EmployeeInfo">
+		select distinct emp.*
+		from
+		tab_employee_info emp,tab_user_info u,ebs_accountorg_rel ear
+		where emp.id = u.employee_id
+		and u.id = ear.accountid
+		and u.status = 1
+		and emp.id = #{id}
+		and ear.orgid = #{branch_id}
+	</select>
+
 	<!-- 添加员工岗位信息 -->
 	<insert id="addEmpPost" parameterType="java.util.Map">
 		insert into TAB_EMP_ORG_POST

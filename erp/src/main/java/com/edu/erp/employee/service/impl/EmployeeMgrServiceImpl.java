@@ -17,8 +17,8 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @Service("employeeMgrService")
-public class EmployeeMgrMgrServiceImpl implements EmployeeMgrService {
-    private static final Logger log = Logger.getLogger(EmployeeMgrMgrServiceImpl.class);
+public class EmployeeMgrServiceImpl implements EmployeeMgrService {
+    private static final Logger log = Logger.getLogger(EmployeeMgrServiceImpl.class);
 
     @Resource(name = "employeeInfoDao")
     private EmployeeInfoDao employeeInfoDao;
@@ -396,5 +396,15 @@ public class EmployeeMgrMgrServiceImpl implements EmployeeMgrService {
             throw new RuntimeException("照片保存到数据库错误");
         }
         return staff_head;
+    }
+
+    @Override
+    public EmployeeInfo queryEmpInfoByOrgIdAndId(Long id,Long branch_id) {
+        Assert.notNull(id);
+        Assert.notNull(branch_id);
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("id", id);
+        params.put("branch_id", branch_id);
+        return employeeInfoDao.queryEmpInfoByOrgIdAndId(params);
     }
 }

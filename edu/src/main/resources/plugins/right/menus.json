@@ -1014,42 +1014,6 @@
 							"method": "POST"
 						}
 					]
-				},
-				{
-					"index": "A30010",
-					"name": "冻结管理",
-					"key": "classesFrozen",
-					"icon": "iconfont icon-orders_frozen",
-					"type": "$state",
-					"value": "classesFrozen",
-					"path": "/orders/classesFrozen",
-					"href": "templates/erp/orders/order_change_frozen.html",
-					"services": [
-						{
-							"name": "查询学员",
-							"key": " classesFrozen.queryStudents",
-							"url": "/erp/studentservice/students",
-							"method": "GET"
-						},
-						{
-							"name": "查询学员课程剩余",
-							"key": " classesFrozen.queryCourseTimes",
-							"url": "/erp/ordermanager/surplusCount",
-							"method": "GET"
-						},
-						{
-							"name": "查询学员课程",
-							"key": " classesFrozen.queryOrderCourse",
-							"url": "/erp/studentservice/orderCourse",
-							"method": "GET"
-						},
-						{
-							"name": "冻结单新增",
-							"key": " classesFrozen.post",
-							"url": "/erp/ordermanager/frozen",
-							"method": "POST"
-						}
-					]
 				}
 			]
 		},

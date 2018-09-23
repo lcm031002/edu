@@ -589,7 +589,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			TOrderChange orderChange = new TOrderChange();
 			orderChange.setOrder_id(orderId);
 			orderChange.setChange_type(3L);
-			orderChange.setEncoding(EncodingSequenceUtil.getSequenceNum(23L));
+			orderChange.setEncoding(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.DD_ZF_PREFIX));
 			orderChange.setApply_user(userId);
 			orderChange.setApply_time(curDateTime);
 			orderChange.setBranch_id(orderInfo.getBranch_id());
@@ -785,7 +785,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		paramMap.put("p_change_id", changeId);
 		paramMap.put("P_input_user", userId);
 		paramMap.put("p_remark", remark);
-		paramMap.put("p_encoding", EncodingSequenceUtil.getSequenceNum(24L));
+		paramMap.put("p_encoding", EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.TF_ZF_PREFIX));
 
 		tOrderChangeDao.cancelRefund(paramMap);
 		if (!paramMap.get("o_err_code").toString().equals("0")) {
@@ -807,7 +807,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		TOrderChange orderChange=tOrderChangeDao.queryOrderChangeByChangId(changeId);
 		orderChange.setRemark(remark);
 		orderChange.setInput_user(userId);
-		orderChange.setEncoding(EncodingSequenceUtil.getSequenceNum(24L));
+		orderChange.setEncoding(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.TF_ZF_PREFIX ));
 		orderFrozen.cancelFrozenOrder(orderChange, 1L);
 
 	}
@@ -900,7 +900,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			paramMap.put("p_order_id", orderId);
 			paramMap.put("P_input_user", userId);
 			paramMap.put("p_remark", remark);
-			paramMap.put("p_encoding", EncodingSequenceUtil.getSequenceNum(23L));
+			paramMap.put("p_encoding", EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.DD_ZF_PREFIX));
 
 			tOrderChangeDao.doOrderChange_3(paramMap);
 

@@ -113,22 +113,9 @@
                 </dd>
                 <dt>年级：</dt>
                 <dd>
-                    <div class="pos-r">
-                        <input class="form-control" type="text" name="grade" placeholder="输入要查询的年级" ng-model="selectedInfo.grade" typeahead-loading="loadingGrades" typeahead-no-results="gradeNoResults" uib-typeahead="grade as grade.grade_name for grade in getGrades($viewValue)"
-                            required>
-                        <i class="iconfont icon-search form-control-feedback"></i>
-                        <div>
-                            <i ng-show="loadingGrades" class="glyphicon glyphicon-refresh text-primary"></i>
-                            <span ng-show="gradeNoResults" class="text-warning">
-                <i class="glyphicon glyphicon-remove text-warning" ></i>查询不到对应的年级
-              </span>
-                            <div class="text-warning" ng-messages="studentForm.grade.$error" ng-if="studentForm.grade.$touched">
-                                <p ng-message="required">年级必填</p>
-                            </div>
-                        </div>
-                    </div>
+                    <select class=form-control ng-model="selectedInfo.grade" name="grade"
+                            ng-options="grade.id as grade.grade_name for grade in gradeList"></select>
                 </dd>
-
                 <dt>推荐人：</dt>
                 <dd>
                     <div class="form-group">

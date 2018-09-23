@@ -26,36 +26,20 @@ public interface Constants {
      */
     interface EncodingPrefixSeq {
         Long CZDJ_PREFIX = 1L; // 1：充值单据
-        Long JFDJ_PREFIX = 2L; // 2：缴费单据
-        Long ZBDJ_PREFIX = 3L; // 3：转班单据
-        Long TFDJ_PREFIX = 4L; // 4：退费单据
-        Long QKDJ_PREFIX = 5L; // 5：取款单据
-        Long LPDJ_PREFIX = 6L; // 6：理赔单据
-        Long ZZDJ_PREFIX = 7L; // 7：转账单据
-        Long KQDJ_PREFIX = 8L; // 8：考勤单据
-        Long BJK_PREFIX = 9L; // 9：班级课
-        Long YDY_PREFIX = 10L; // 10：一对一
-        Long WFD_PREFIX = 11L; // 11：晚辅导
-        Long TYPE_KM_PREFIX = 12L;// 12：科目
-        Long TYPE_KCMB_PREFIX = 13L;// 13：课程目标
-        Long TYPE_KCMX_PREFIX = 14L;// 14：课程模型
-        Long TYPE_CP_PREFIX = 15L;// 15：产品
-        Long TYPE_XXLX_PREFIX = 16L;// 16：学校类型
-        Long TYPE_XSKSZT_PREFIX = 17L;// 17：学生考勤状态
-        Long TYPE_LSKQZT_PREFIX = 18L;// 18：教师考勤状态
-        Long TYPE_FPTT_PREFIX = 19L;// 19：发票抬头
-        Long CZ_ZF_PREFIX = 20L; // 20：充值作废
-        Long LP_ZF_PREFIX = 21L; // 21：理赔作废
-        Long QK_ZF_PREFIX = 22L; // 22：取款作废
-        Long DD_ZF_PREFIX = 23L; // 23：订单作废
-        Long TF_ZF_PREFIX = 24L; // 24：退费作废
-        Long YYZX_PREFIX = 25L;// 25:一元转校
-        Long YYJZ_PREFIX = 26L;// 26:一元结转
-        Long XYBH_PREFIX = 27L;// 27:学员编号
-        Long ZYBH_PREFIX = 28L;// 28:资源编号
-        Long YHQ_PREFIX = 29L; // 29:优惠券（线上）
-        Long SSA_PREFIX = 30L; // 30:排课申请编号
-        Long YDY_ATTEND_PREFIX = 31L; // 31:考勤单号
+        Long TFDJ_PREFIX = 2L; // 2：退费单据
+        Long QKDJ_PREFIX = 3L; // 3：取款单据
+        Long ZZDJ_PREFIX = 4L; // 4：转账单据
+        Long BJK_PREFIX = 5L; // 5：班级课
+        Long YDY_PREFIX = 6L; // 6：一对一
+        Long WFD_PREFIX = 7L; // 7：晚辅导
+        Long TYPE_FPTT_PREFIX = 8L;// 8：发票抬头
+        Long CZ_ZF_PREFIX = 9L; // 9：充值作废
+        Long QK_ZF_PREFIX = 10L; // 10：取款作废
+        Long DD_ZF_PREFIX = 11L; // 11：订单作废
+        Long TF_ZF_PREFIX = 12L; // 12：退费作废
+        Long XYBH_PREFIX = 13L;// 13:学员编号
+        Long SSA_PREFIX = 14L; // 14:考勤单号
+        Long YDY_ATTEND_PREFIX = 15L; // 15:考勤单号
     }
 
     /**
@@ -124,23 +108,6 @@ public interface Constants {
 
         long WFD_SET_NULL = 30L; // 晚辅导置空
         long WFD_NORMAL_ATTEND = 31L; // 晚辅导正常上课
-    }
-
-    /**
-     * 接口日志
-     */
-    interface logInfo {
-        Integer SUCCESS = 1; // 成功
-        Integer FAIL = 0; // 失败
-
-        String MESSAGEREMIND = "1"; // 订单提醒
-        String STUDENTINFO = "2"; // 学生信息
-        String MTINFO = "3"; // 同步双师系统
-
-        String ERP = "ERP"; // ERP系统
-        String OPENAPI = "OPENAPI"; //  接口系统
-        String GATEWAY = "GATEWAY"; // gateway系统接口
-
     }
 
     /**

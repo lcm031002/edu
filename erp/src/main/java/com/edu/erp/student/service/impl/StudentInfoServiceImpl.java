@@ -520,7 +520,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		studentInfo.setCity_id(orgModel.getCityId());
 		studentInfo.setBranch_id(orgModel.getId());
 		studentInfo.setBu_id(orgModel.getBuId());
-		studentInfo.setEncoding(EncodingSequenceUtil.getSequenceNum(27L));
+		studentInfo.setEncoding(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.XYBH_PREFIX ));
 		studentInfo.setCreate_user(user.getId());
 		studentInfo.setCreate_time(DateUtil.getCurrDateOfDate("yyyy-MM-dd"));
 		addStudentInfo(studentInfo);

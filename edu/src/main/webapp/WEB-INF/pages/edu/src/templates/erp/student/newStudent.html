@@ -73,27 +73,7 @@
               </div>
               <label class="control-label required col-sm-2 col-lg-2">年级{{selectedSudentGrade | json}}</label>
               <div class="col-sm-3 col-lg-3">
-                <input 
-                  class="form-control" 
-                  type="text"
-                  name="grade"
-                  placeholder="输入要查询的年级" 
-                  ng-model="selectedInfo.grade"
-                  typeahead-loading="loadingGrades"
-                  typeahead-select-on-blur="true"
-                  typeahead-no-results="gradeNoResults"
-                  uib-typeahead="grade as grade.grade_name for grade in getGrades($viewValue)"
-                  required>
-                <i class="iconfont icon-search form-control-feedback"></i>
-                <div>
-                  <i ng-show="loadingGrades" class="glyphicon glyphicon-refresh text-primary"></i>
-                  <span ng-show="gradeNoResults" class="text-warning">
-                    <i class="glyphicon glyphicon-remove text-warning" ></i>查询不到对应的年级
-                  </span>
-                  <div class="text-warning" ng-messages="studentForm.grade.$error" ng-if="studentForm.grade.$touched">
-                    <p ng-message="required">年级必填</p>
-                  </div>
-                </div>
+                <select class="form-control" ng-model="selectedInfo.grade" ng-options="grade.id as grade.grade_name for grade in gradeList"></select>
               </div>
             </div>
             <div class="form-group">

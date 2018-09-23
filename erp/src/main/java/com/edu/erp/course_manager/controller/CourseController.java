@@ -533,10 +533,10 @@ public class CourseController extends BaseController {
 						throw new Exception("课程的结束日期"+"["+courseEndDate+"]"+"晚于课程季结束日期"+"["+seasonEndDate+"]");
 					}
 				}
-				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(9L));
+				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.BJK_PREFIX));
 				courseService.toAdd(course);
 			} else if(business_type == (long)TCourse.BusinessTypeEnum.WFD.getCode()) {
-				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(11L));
+				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.WFD_PREFIX));
 				courseService.toAdd(course,null);
 			} else if(business_type == (long)TCourse.BusinessTypeEnum.YDY.getCode()) {
 				//一对一课程新增
@@ -544,7 +544,7 @@ public class CourseController extends BaseController {
 					course.setProduct_type(1L);//设置销售类型1：正价；2：促销；3：赠送
 				}
 				course.setPerformance_belong_type(1);
-				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(10L));
+				course.setCourse_no(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.YDY_PREFIX));
 				courseService.toAddYdy(course,relationIds.toString() );
 			}
 			resultMap.put("error", false);

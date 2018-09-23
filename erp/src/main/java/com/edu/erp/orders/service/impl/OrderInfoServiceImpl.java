@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.edu.common.constants.Constants;
 import com.edu.erp.dao.*;
 import com.edu.erp.model.*;
 import com.edu.erp.orders.service.*;
@@ -240,11 +241,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 	private String genEncoding(Long businessType) {
 		if (businessType == 1L) {
-			return EncodingSequenceUtil.getSequenceNum(9L);
+			return EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.BJK_PREFIX );
 		} else if (businessType == 2L) {
-			return EncodingSequenceUtil.getSequenceNum(10L);
+			return EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.YDY_PREFIX );
 		} else if (businessType == 3L) {
-			return EncodingSequenceUtil.getSequenceNum(11L);
+			return EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.WFD_PREFIX);
 		} else {
 			throw new IllegalArgumentException("error business type");
 		}

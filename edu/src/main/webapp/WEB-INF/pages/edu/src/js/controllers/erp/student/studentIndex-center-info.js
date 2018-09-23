@@ -495,6 +495,18 @@ function erp_studentCenterInfoController(
         });
     }
 
+    $scope.queryStudentGrade = function() {
+        erp_gradeService.querySelectDatas({
+            date_filter: 1
+        }, function(resp) {
+            if (!resp.error) {
+                $scope.gradeList = resp.data;
+            } else {
+                $uibMsgbox.error(resp.message);
+            }
+        })
+    }
+
     $scope.initStudentInfoDialog = function() {
         $('div#studentInfoDialog #_student_id').val($scope.studentId);
     }
@@ -647,6 +659,7 @@ function erp_studentCenterInfoController(
     queryStudentInfo();
     queryIndexCounselors();
     $scope.queryStudentStatus();
+    $scope.queryStudentGrade();
 }
 
 /**

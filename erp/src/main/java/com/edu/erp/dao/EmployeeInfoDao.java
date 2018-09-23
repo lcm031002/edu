@@ -241,4 +241,6 @@ public interface EmployeeInfoDao {
      * @throws Exception
      */
     List<EmployeeInfo> queryOtherEmployeeByParam(EmployeeInfo employee);
+
+    public EmployeeInfo queryEmpInfoByOrgIdAndId(Map<String, Object> param);
 }

@@ -101,15 +101,17 @@ function erp_newStudentController(
       return resp.data
     })
   }
-  $scope.getGrades = function(gradeName) {
-    return erp_gradeService.query({
-      pageSize: 20, // 每页显示条数
-      currentPage: 1, // 要获取的第几页的数据
-      p_grade_name: gradeName
-    }).$promise.then(function(resp) {
-      return resp.data
-    });
-  }
+  $scope.queryStudentGrade = function() {
+        erp_gradeService.querySelectDatas({
+            date_filter: 1
+        }, function(resp) {
+            if (!resp.error) {
+                $scope.gradeList = resp.data;
+            } else {
+                $uibMsgbox.error(resp.message);
+            }
+        })
+    }
   $scope.getRecommender = function(searchInfo) {
     return erp_studentsService.query({
       pageSize: 20,
@@ -484,9 +486,17 @@ function erp_newStudentController(
 
     erp_dictService.getDictData({"typeCode" : "studentStatus", "needProductLineCdtn" : "N"}, function(resp) {
       if (!resp.error) {
-        $scope.studentStatus = resp.data;
+          $scope.studentStatus = resp.data;
+
+          for (var i in $scope.studentStatus) {
+              if($scope.studentStatus[i].name && $scope.studentStatus[i].name == '新生') {
+                  $scope.student.student_status = $scope.studentStatus[i].code;
+                  break
+              }
+          }
       }
     });
   }
   $scope.init();
+  $scope.queryStudentGrade();
  }

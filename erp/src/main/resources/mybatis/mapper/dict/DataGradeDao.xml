@@ -74,7 +74,7 @@
 		 <if test="strict_grade_name != null and strict_grade_name != ''">
 			and  a.grade_name = #{strict_grade_name, jdbcType=VARCHAR}
 		 </if>
-		 order by a.encoding ASC
+		 order by a.sort ASC
 	</select>
 	
 	<!-- 插入年级数据 -->
