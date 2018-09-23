@@ -129,12 +129,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ebusiness.erp.attendance.service.AttendanceService#
-     * attandanceBatchSubmit (java.util.List, org.jbpm.api.ProcessEngine)
-     */
     @Override
     public void attandanceBatchSubmit(List<Map<String, Object>> listMap, ProcessEngine processEngine) throws Exception {
         Assert.notNull(listMap);

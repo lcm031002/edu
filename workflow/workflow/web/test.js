@@ -33,4 +33,4 @@ controllers.controller('MenuController', [ '$scope', function($scope) {
 		$scope.menuId = menu;
 	}
 } ]);
-var webContext = 'ebusiness_front';
+var webContext = 'edu_front';

@@ -3,8 +3,8 @@
       "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
           "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping auto-import="true"
-	package="com.ebusiness.workflow.modules.index.model" default-access="field">
-	<class name="ExtProcessDef" table="JBPM4_EXT_PROCESS_DEF">
+	package="com.edu.workflow.modules.index.model" default-access="field">
+	<class name="com.edu.workflow.modules.index.model.ExtProcessDef" table="JBPM4_EXT_PROCESS_DEF">
 		<id name="id" column="ID" type="long">
 			<generator class="increment" />
 		</id>
@@ -20,11 +20,11 @@
 			type="date" />
 		<set name="processRoleDefSet" inverse="false" lazy="false" cascade="all">
 			<key column="PROCESS_KEY" property-ref="processKey" ></key>
-			<one-to-many class="ExtProcessRoleDef" />
+			<one-to-many class="com.edu.workflow.modules.index.model.ExtProcessRoleDef" />
 		</set>
 	</class>
 
-	<class name="ExtProcessRoleDef" table="JBPM4_EXT_PROCESSROLE_DEF">
+	<class name="com.edu.workflow.modules.index.model.ExtProcessRoleDef" table="JBPM4_EXT_PROCESSROLE_DEF">
 		<id name="id" column="ID" type="long">
 			<generator class="increment" />
 		</id>
@@ -33,11 +33,11 @@
 		<property name="remark" column="REMARK" type="string" />
 		<set name="mappings"  inverse="false" lazy="false" cascade="all" >
 			<key column="PROCESS_ROLE_DEF_ID"></key>
-			<one-to-many class="ExtBusinessRoleMapping" />
+			<one-to-many class="com.edu.workflow.modules.index.model.ExtBusinessRoleMapping" />
 		</set>
 	</class>
 
-	<class name="ExtBusinessRoleMapping" table="JBPM4_EXT_BUSINESSROLE_MAPPING">
+	<class name="com.edu.workflow.modules.index.model.ExtBusinessRoleMapping" table="JBPM4_EXT_BUSINESSROLE_MAPPING">
 		<id name="id" column="ID" type="long">
 			<generator class="increment" />
 		</id>
@@ -48,7 +48,7 @@
 		<property name="isdefault" column="ISDEFAULT" type="integer" />
 	</class>
 
-	<class name="ExtBusinessEntrust" table="JBPM4_EXT_BUSINESS_ENTRUST">
+	<class name="com.edu.workflow.modules.index.model.ExtBusinessEntrust" table="JBPM4_EXT_BUSINESS_ENTRUST">
 		<id name="id" column="ID" type="long">
 			<generator class="increment" />
 		</id>
@@ -62,7 +62,7 @@
 		<property name="beginTime" column="BEGIN_TIME" type="date" not-null="true"/>
 		<property name="endTime" column="END_TIME" type="date" not-null="true"/>
 	</class>
-	<class name="ExtTaskVariable" table="JBPM4_VARIABLE">
+	<class name="com.edu.workflow.modules.index.model.ExtTaskVariable" table="JBPM4_VARIABLE">
 		<id name="dbid_" column="DBID_" type="long">
 			<generator class="assigned" />
 		</id>
@@ -82,7 +82,7 @@
 		<property name="text_value_" column="TEXT_VALUE_" type="string" />
 		<property name="exesys_" column="EXESYS_" type="long" />
 	</class>
-	<class name="ExtTask" table="JBPM4_TASK">
+	<class name="com.edu.workflow.modules.index.model.ExtTask" table="JBPM4_TASK">
 		<id name="dbid_" column="DBID_" type="long">
 			<generator class="assigned" />
 		</id>
@@ -109,7 +109,7 @@
 		<property name="taskdefname_" column="TASKDEFNAME_" type="string" />
 		<set name="variables" inverse="false" lazy="false" cascade="all">
 			<key column="execution_" property-ref="execution_" ></key>
-			<one-to-many class="ExtTaskVariable" />
+			<one-to-many class="com.edu.workflow.modules.index.model.ExtTaskVariable" />
 		</set>
 	</class>
 </hibernate-mapping>

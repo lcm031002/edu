@@ -714,13 +714,6 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.ebusiness.erp.student.service.AttendanceService#updateAttandRemark
-     * (java.util.Map)
-     */
     @Override
     public void updateAttandRemark(Map<String, Object> param) throws Exception {
         attendanceDao.updateAttandRemark(param);
@@ -731,24 +724,11 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         attendanceDao.updateAttendHTRemark(param);
     }
 
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ebusiness.erp.student.service.AttendanceService#
-     * queryStudentAttendanceById(java.util.Map)
-     */
     @Override
     public List<Map<String, Object>> queryStudentAttendanceById(Map<String, Object> param) throws Exception {
         return attendanceDao.queryStudentAttendanceById(param);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ebusiness.erp.student.service.AttendanceService#
-     * checkVideoUploadStatus (java.util.Map)
-     */
     @Override
     public List<Map<String, Object>> checkVideoUploadStatus(Map<String, Object> param) throws Exception {
         Assert.notNull(param);
@@ -757,13 +737,6 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         return attendanceDao.checkVideoUploadStatus(param);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.ebusiness.erp.student.service.AttendanceService#checkSaveExtralesson
-     * (java.util.Map)
-     */
     @Override
     public List<Map<String, Object>> checkSaveExtralesson(Map<String, Object> param) throws Exception {
         Assert.notNull(param);
@@ -774,13 +747,6 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         return attendanceDao.checkSaveExtralesson(param);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.ebusiness.erp.student.service.AttendanceService#saveExtralesson(java
-     * .util.Map)
-     */
     @Override
     public String saveExtralesson(Map<String, Object> param) throws Exception {
         Assert.notNull(param);

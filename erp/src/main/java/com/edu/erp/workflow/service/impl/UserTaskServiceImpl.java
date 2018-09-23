@@ -60,9 +60,6 @@ public class UserTaskServiceImpl implements
 		return row;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.workflow.service.UserTaskService#deleteApplication(java.lang.Long)
-	 */
 	@Override
 	public void deleteApplication(Long applicationId) throws Exception {
 		Assert.notNull(applicationId);

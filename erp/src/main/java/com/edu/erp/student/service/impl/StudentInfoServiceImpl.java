@@ -72,12 +72,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 	
 	private QiNiuCoreCall qiNiuCoreCall = QiNiuCoreCall.getInstance();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#queryStudents
-	 * (java.util.Map)
-	 */
 	@Override
 	public Page<StudentInfo> queryStudents(Map<String, Object> queryParam) throws Exception {
 		Assert.notNull(queryParam);
@@ -104,12 +98,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentPage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentIndexAccount (java.util.Map)
-	 */
 	@Override
 	public Map<String, Object> queryStudentIndexAccount(Map<String, Object> queryParam) throws Exception {
 		Assert.notNull(queryParam);
@@ -118,12 +106,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentIndexAccount(queryParam);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentCurrCounselors(java.util.Map)
-	 */
 	@Override
 	public Map<String, Object> queryStudentCurrCounselors(Map<String, Object> queryParam) throws Exception {
 		Assert.notNull(queryParam);
@@ -132,13 +114,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentCurrCounselors(queryParam);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.student.service.StudentInfoService#queryStudentOrders
-	 * (java.util.Map)
-	 */
 	@Override
 	public List<Map<String, Object>> queryStudentOrders(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -149,12 +124,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentOrders(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentOrdersDetail (java.util.Map)
-	 */
 	@Override
 	public List<Map<String, Object>> queryStudentOrdersDetail(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -163,13 +132,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentOrdersDetail(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.student.service.StudentInfoService#checkStudentName
-	 * (java.util.Map)
-	 */
 	@Override
 	public boolean checkStudentName(Map<String, Object> paramMap) throws Exception {
 		if (StringUtils.isEmpty((String) paramMap.get("studentName"))) {
@@ -203,13 +165,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.student.service.StudentInfoService#updateStudentInfo
-	 * (com.ebusiness.erp.model.StudentInfo)
-	 */
 	@Override
 	public void updateStudentInfo(StudentInfo studentInfo) throws Exception {
 		Assert.notNull(studentInfo);
@@ -337,12 +292,7 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 			}
 		}
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentOrdersBJK (java.util.Map)
-	 */
+
 	@Override
 	public List<Map<String, Object>> queryStudentOrdersBJK(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -351,12 +301,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentOrdersBJK(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentOrdersBJK (java.util.Map)
-	 */
 	@Override
 	public List<Map<String, Object>> queryStudentOrdersWFD(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -365,13 +309,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentOrdersWFD(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.student.service.StudentInfoService#queryStudentCourse
-	 * (java.util.Map)
-	 */
 	@Override
 	public List<Map<String, Object>> queryStudentCourse(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -382,12 +319,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentCourse(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentCourseTimes (java.util.Map)
-	 */
 	@Override
 	public List<Map<String, Object>> queryStudentCourseTimes(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -397,13 +328,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfoDao.queryStudentCourseTimes(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.student.service.StudentInfoService#queryStudentById
-	 * (java.util.Map)
-	 */
 	@Override
 	public StudentInfo queryStudentById(Map<String, Object> queryParam) throws Exception {
 		Assert.notNull(queryParam);
@@ -434,12 +358,6 @@ public class StudentInfoServiceImpl implements StudentInfoService {
 		return studentInfo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.student.service.StudentInfoService#
-	 * queryStudentAllCourseTimes(java.util.Map)
-	 */
 	@Override
 	public Map<String, Object> queryStudentAllCourseTimes(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);

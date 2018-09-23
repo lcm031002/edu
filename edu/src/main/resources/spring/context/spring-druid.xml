@@ -15,7 +15,7 @@
     <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">  
         <property name="patterns">  
             <list>  
-                <value>com.ebusiness.erp..service.*</value>  
+              <value>com.edu.erp..service.*</value>
             </list>  
         </property>  
     </bean>  

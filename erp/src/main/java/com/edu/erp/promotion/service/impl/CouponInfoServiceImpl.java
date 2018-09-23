@@ -30,13 +30,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 	@Resource(name = "couponInfoDao")
 	private CouponInfoDao couponInfoDao;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#queryCouponInfoForPage
-	 * (java.util.Map)
-	 */
 	@Override
 	public Page<CouponInfo> queryCouponInfoForPage(Map<String, Object> page)
 			throws Exception {
@@ -45,13 +38,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#queryCouponInfoForRef
-	 * (java.util.Map)
-	 */
 	@Override
 	public List<CouponInfo> queryCouponInfoForRef(Map<String, Object> params)
 			throws Exception {
@@ -59,13 +45,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#queryCouponInfoForList
-	 * (java.util.Map)
-	 */
 	@Override
 	public List<CouponInfo> queryCouponInfoForList(Map<String, Object> params)
 			throws Exception {
@@ -73,26 +52,12 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 		return couponInfoDao.selectList(params);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#queryCouponInfoForOne
-	 * (java.lang.Long)
-	 */
 	@Override
 	public CouponInfo queryCouponInfoForOne(Long id) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#addCouponInfo(com
-	 * .ebusiness.erp.model.CouponInfo)
-	 */
 	@Override
 	public void addCouponInfo(CouponInfo couponInfo) throws Exception {
 		// 生成编号
@@ -105,13 +70,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#updateCouponInfo
-	 * (com.ebusiness.erp.model.CouponInfo)
-	 */
 	@Override
 	public void updateCouponInfo(CouponInfo couponInfo) throws Exception {
 		Integer ret = couponInfoDao.update(couponInfo);
@@ -121,13 +79,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#changeCouponInfoStatus
-	 * (java.lang.String, java.lang.Integer)
-	 */
 	@Override
 	public void changeCouponInfoStatus(String ids, Integer status)
 			throws Exception {
@@ -135,13 +86,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#queryCouponInfoByCode
-	 * (java.lang.String)
-	 */
 	@Override
 	public CouponInfo queryCouponInfoByCode(String encoding) throws Exception {
 		Assert.notNull(encoding,"请输入优惠码");
@@ -151,13 +95,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 		return couponInfoDao.queryCouponInfoByCode(queryParam);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#queryCouponsByOrderId
-	 * (java.lang.Long)
-	 */
 	@Override
 	public List<CouponInfo> queryCouponsByOrderId(Long orderId)
 			throws Exception {
@@ -167,12 +104,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 		return couponInfoDao.queryCouponsByOrderId(queryParam);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.CouponInfoService#
-	 * queryCouponInfoByCodeStudentId(java.lang.String, java.lang.Long)
-	 */
 	@Override
 	public BigDecimal queryCouponInfoByCodeStudentId(String encoding,
 			Long studentId) throws Exception {
@@ -180,14 +111,6 @@ public class CouponInfoServiceImpl implements CouponInfoService {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#v3UpdateCouponInfo
-	 * (com.ebusiness.erp.model.CouponInfo, java.util.Map, java.lang.String,
-	 * com.ebusiness.cas.client.common.model.OrgModel)
-	 */
 	@Override
 	public Map<String, Object> v3UpdateCouponInfo(
 			CouponInfo couponInfoBusiness, Map<String, Object> result,

@@ -107,13 +107,6 @@ public class OrderServiceImpl implements OrderService {
 	@Resource(name = "studentAttendanceService")
 	private StudentAttendanceService studentAttendanceService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderService#queryOrderInfo(java.lang
-	 * .Long)
-	 */
 	@Override
 	public TOrder queryOrderInfo(Long orderId) throws Exception {
 		Assert.notNull(orderId, "非法访问,订单id不能为空！");
@@ -213,12 +206,6 @@ public class OrderServiceImpl implements OrderService {
 		return tOrder;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderService#
-	 * queryOrderCourseChangeTimesInfo (java.lang.Long)
-	 */
 	@Override
 	public List<TOrderCourseTimesLog> queryOrderCourseChangeTimesInfo(Long orderDetailId) throws Exception {
 		Assert.notNull(orderDetailId);
@@ -228,12 +215,6 @@ public class OrderServiceImpl implements OrderService {
 		return changeTimesLog;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderService#
-	 * queryOrderCourseSurplusCount (java.lang.Long)
-	 */
 	@Override
 	public List<Map<String, Object>> queryOrderCourseSurplusCount(Long orderDetailId) throws Exception {
 		Assert.notNull(orderDetailId);
@@ -323,26 +304,12 @@ public class OrderServiceImpl implements OrderService {
 		return courseSchedulingReturn;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderService#queryOrderChangeInfo(java.
-	 * lang.Long)
-	 */
 	@Override
 	public List<TOrderChange> queryOrderChangeInfo(Long orderId) throws Exception {
 		Assert.notNull(orderId);
 		return tOrderChangeDao.queryOrderChange(orderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderService#queryStudentOrderCourse(
-	 * java.lang.Long, java.lang.Long, java.lang.Long)
-	 */
 	@Override
 	public List<TOrderCourse> queryStudentOrderCourse(Map<String, Object> queryParam)
 			throws Exception {

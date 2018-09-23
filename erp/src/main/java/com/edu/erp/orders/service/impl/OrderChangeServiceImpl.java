@@ -91,13 +91,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	@Resource(name = "studentAccountService")
 	private StudentAccountService studentAccountService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderChangeService#orderChangeTransfer
-	 * (java.util.Map)
-	 */
 	@Override
 	public void orderChangeTransfer(Map<String, Object> transferObj)
 			throws Exception {
@@ -194,13 +187,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		iOrderYDY.transferOrder(orderChange, businessType);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderChangeService#orderChangeRefund
-	 * (java.util.Map)
-	 */
 	@Override
 	public void orderChangeRefund(Map<String, Object> refundObj,
 			ProcessEngine processEngine) throws Exception {
@@ -530,13 +516,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderChangeService#premiumAudit(java
-	 * .util.Map)
-	 */
 	@Override
 	public void premiumAudit(Map<String, Object> refundObj) throws Exception {
 		Assert.notNull(refundObj);

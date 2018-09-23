@@ -73,7 +73,7 @@
 
     <repositories>
         <repository>
-            <id>ebusiness</id>
+            <id>edu</id>
             <name>Team Nexus Repository</name>
             <url>http://maven.fkls.com/nexus/content/groups/public</url>
         </repository>

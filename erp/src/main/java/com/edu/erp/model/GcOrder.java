@@ -6,8 +6,6 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 
-//import com.ebusiness.workflow.common.DateUtil;
-
 //资源记录日志
 public class GcOrder extends BaseObject{
 

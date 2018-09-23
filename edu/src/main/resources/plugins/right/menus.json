@@ -1728,16 +1728,6 @@
 							"value": "sysWorkflowMgrment",
 							"href": "templates/erp/workflow/sysWorkflowMgrment.html",
 							"path": "/systems/sysWorkflowMgr/sysWorkflowMgrment"
-						},
-						{
-							"index": "A5000704",
-							"name": "任务历史",
-							"key": "sysWorkflowTaskHistory",
-							"icon": "fa fa-list-alt",
-							"type": "$state",
-							"value": "sysWorkflowTaskHistory",
-							"href": "templates/erp/workflow/sysWorkflowTaskHistory.html",
-							"path": "/systems/sysWorkflowMgr/sysWorkflowTaskHistory"
 						}
 					]
 				}

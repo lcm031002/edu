@@ -12,16 +12,16 @@
     http://www.springframework.org/schema/mvc  
     http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 	<mvc:annotation-driven />
-	<context:component-scan base-package="com.ebusiness.workflow">
+	<context:component-scan base-package="com.edu.workflow">
 	</context:component-scan>
 	
 	
-	<mvc:resources location="/WEB-INF/classes/com.ebusiness.workflow/workflow/" mapping="/workflow/**"
+	<mvc:resources location="/WEB-INF/classes/com.edu.workflow/workflow/" mapping="/workflow/**"
 	cache-period="31536000" />
 	<mvc:default-servlet-handler />
 
 	<bean id="workflowApps"
-		class="com.ebusiness.workflow.common.WorkflowApps">
+		class="com.edu.workflow.common.WorkflowApps">
 	</bean>
 	
 	
@@ -34,7 +34,7 @@
 	</bean>
 
 	<!-- 配置工作流组件配置信息 -->
-	<bean id="workflowCfg" class="com.ebusiness.workflow.cfg.WorkflowCfg">
+	<bean id="workflowCfg" class="com.edu.workflow.cfg.WorkflowCfg">
 		<!-- 工作流jpdl文件目录 -->
 		<property name="jpdl_zip_dir" value="${workflow.jpdl.zip.dir}" />
 		<!-- 工作流文件解压目录 -->

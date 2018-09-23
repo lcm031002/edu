@@ -36,24 +36,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 	@Resource(name = "tabInvoiceReceiveLogService")
 	private TabInvoiceReceiveLogService tabInvoiceReceiveLogService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.InvoiceService#queryByOrderid(java
-	 * .lang.Long)
-	 */
 	@Override
 	public List<TabDataInvoice> queryByOrderId(Long orderId) throws Exception {
 		Assert.notNull(orderId);
 		return dataInvoiceDao.queryByOrderId(orderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.InvoiceService#queryById(
-	 * java.util.Map)
-	 */
 	@Override
 	public Page<TabDataInvoice> queryForPage(Map<String, Object> paramMap)
 			throws Exception {
@@ -64,37 +52,18 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return dataInvoiceDao.queryForPage(paramMap);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.InvoiceService#queryById(
-	 * java.lang.Long)
-	 */
 	@Override
 	public TabDataInvoice queryById(Long id) throws Exception {
 		Assert.notNull(id);
 		return dataInvoiceDao.queryById(id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.InvoiceService#queryOrderInvoceMoney
-	 * (java.lang.Long)
-	 */
 	@Override
 	public TabDataInvoice queryOrderInvoceMoney(Long orderId) throws Exception {
 		Assert.notNull(orderId);
 		return dataInvoiceDao.queryOrderInvoceMoney(orderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.InvoiceService#save(com.ebusiness
-	 * .erp.model.TabDataInvoice)
-	 */
 	@Override
 	public void save(TabDataInvoice invoice) throws Exception {
 		Assert.notNull(invoice);
@@ -103,12 +72,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 		addInvoiceReceiveLog(invoice);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.InvoiceService#update(com.ebusiness
-	 * .erp.model.TabDataInvoice)
-	 */
 	@Override
 	public void update(TabDataInvoice invoice) throws Exception {
 		Assert.notNull(invoice);

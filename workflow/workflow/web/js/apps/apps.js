@@ -67,7 +67,7 @@ function genWebContext(){
     webroot=webroot.substring(webroot.indexOf('//')+2,webroot.length);
     webroot=webroot.substring(webroot.indexOf('/')+1,webroot.length);
     webroot=webroot.substring(0,webroot.indexOf('/'));
-    return webroot=='webERP'||webroot=='ebusiness_front'?'/'+webroot:'';
+    return webroot=='webERP'||webroot=='edu_front'?'/'+webroot:'';
 };
 var webContext = genWebContext();
 function Format(fmt, date) { // author: meizz

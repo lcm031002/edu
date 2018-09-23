@@ -50,13 +50,6 @@ public class OrderInfoDetailServiceImpl implements OrderInfoDetailService {
 	@Resource(name = "courseSchedulingService")
 	private CourseSchedulingService courseSchedulingService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoDetailService#saveOrderInfoDetail
-	 * (com.ebusiness.erp.model.TabOrderInfoDetail)
-	 */
 	@Override
 	public int saveOrderInfoDetail(TabOrderInfoDetail orderInfoDetail)
 			throws Exception {
@@ -94,13 +87,6 @@ public class OrderInfoDetailServiceImpl implements OrderInfoDetailService {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoDetailService#deleteOrderInfoDetail
-	 * (com.ebusiness.erp.model.TabOrderInfoDetail)
-	 */
 	@Override
 	public int deleteOrderInfoDetail(TabOrderInfoDetail orderInfoDetail)
 			throws Exception {
@@ -116,12 +102,6 @@ public class OrderInfoDetailServiceImpl implements OrderInfoDetailService {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderInfoDetailService#
-	 * queryTabOrderInfoDetail(java.lang.Long)
-	 */
 	@Override
 	public List<TabOrderInfoDetail> queryTabOrderInfoDetail(Long orderId)
 			throws Exception {

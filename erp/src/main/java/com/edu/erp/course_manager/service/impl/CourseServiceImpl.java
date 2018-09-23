@@ -74,36 +74,16 @@ public class CourseServiceImpl implements CourseService {
 	@Resource(name = "orderService")
 	private OrderService orderService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#page(com.github
-	 * .pagehelper.Page)
-	 */
 	@Override
 	public Page<TCourse> page(Page<TCourse> page) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#list(java.util
-	 * .Map)
-	 */
 	@Override
 	public List<TCourse> list(Map<String, Object> param) throws Exception {
 		return tCourseDao.selectList(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#toAdd(com.
-	 * ebusiness .erp.model.TCourse, java.lang.String)
-	 */
 	@Override
 	public void toAdd(TCourse course) throws Exception {
 		Assert.notNull(course);
@@ -146,12 +126,6 @@ public class CourseServiceImpl implements CourseService {
 //		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#toUpdate(com.
-	 * ebusiness .erp.model.TCourse, java.lang.String)
-	 */
 	@Override
 	public void toUpdate(TCourse course) throws Exception {
 		Assert.notNull(course);
@@ -184,13 +158,6 @@ public class CourseServiceImpl implements CourseService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#toChangeStatus
-	 * (java.lang.String, java.lang.Integer)
-	 */
 	@Override
 	public void toChangeStatus(String ids, String status, Long userId) throws Exception {
 		Assert.hasText(ids,"未选中记录");
@@ -206,63 +173,30 @@ public class CourseServiceImpl implements CourseService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#toChgIsApprove
-	 * (java.lang.String, java.lang.Integer)
-	 */
 	@Override
 	public void toChgIsApprove(String ids, Integer status) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#toChangePrice(
-	 * java.lang.Long, java.lang.Double, java.lang.Double)
-	 */
 	@Override
 	public void toChangePrice(Long course_id, Double unit_price, Double total_price) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#queryCourseByPack
-	 * (com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public List<TCourse> queryCourseByPack(TCourse courseBusiness) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryCourseByTearcher (java.lang.Long, java.lang.Long)
-	 */
 	@Override
 	public List<TCourse> queryCourseByTearcher(Long tearcherId, Long studentId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryCourseByBusiness (com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public List<TCourse> queryCourseByBusiness(Map<String, Object> courseCondition) throws Exception {
 		Assert.notNull(courseCondition);
@@ -270,13 +204,6 @@ public class CourseServiceImpl implements CourseService {
 		return tCourseDao.queryCourseByBusiness(courseCondition);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#schedulingCourse
-	 * (java.lang.Long)
-	 */
 	@Override
 	public Map<String, Object> schedulingCourse(Long courseId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -304,38 +231,18 @@ public class CourseServiceImpl implements CourseService {
 		return map;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * deleteSchedulingCourse (java.lang.Long)
-	 */
 	@Override
 	public Map<String, Object> deleteSchedulingCourse(Long courseId) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#updateCoursePeople
-	 * (int, java.lang.Long)
-	 */
 	@Override
 	public int updateCoursePeople(int number, Long course_id) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#queryCourseByID
-	 * (com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public TCourse queryCourseByID(TCourse courseBusiness) throws Exception {
 		Assert.notNull(courseBusiness);
@@ -364,37 +271,18 @@ public class CourseServiceImpl implements CourseService {
 		return tCourse;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryCobnflictCourse (com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public List<TCourse> queryCobnflictCourse(TCourse condition) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#queryYDYCourse
-	 * (com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public List<TCourse> queryYDYCourse(TCourse condition) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * toChangeActualPeople (java.util.Map)
-	 */
 	@Override
 	public Integer toChangeActualPeople(Map<String, Object> param) throws Exception {
 		Assert.notNull(param);
@@ -402,51 +290,24 @@ public class CourseServiceImpl implements CourseService {
 		return tCourseDao.changeActualPeople(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#queryOutCourse
-	 * (java.util.Map)
-	 */
 	@Override
 	public List<Long> queryOutCourse(Map<String, Object> param) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#getAsyn(java.util
-	 * .Map)
-	 */
 	@Override
 	public List<Map<String, Object>> getAsyn(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryOrderCourseList (java.lang.Long)
-	 */
 	@Override
 	public List<TCourse> queryOrderCourseList(Long orderId) throws Exception {
 		Assert.notNull(orderId);
 		return tCourseDao.queryOrderCourseList(orderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.ebusiness.erp.course_manager.service.CourseService#updateTCourse(
-	 * com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public void updateTCourse(TCourse tCourse) throws Exception {
 		Assert.notNull(tCourse);
@@ -585,12 +446,6 @@ public class CourseServiceImpl implements CourseService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * updateCourseScheduling (com.ebusiness.erp.model.TCourse)
-	 */
 	@Override
 	public void updateCourseScheduling(TCourse tCourse) throws Exception {
 		Assert.notNull(tCourse);
@@ -616,25 +471,12 @@ public class CourseServiceImpl implements CourseService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryCourseSchedulingAssist(java.lang.Long)
-	 */
 	@Override
 	public List<TCourseSchedulingAssist> queryCourseSchedulingAssist(Long courseId) throws Exception {
 		Assert.notNull(courseId);
 		return tCourseSchedulingAssistDao.queryCourseSchedulingAssist(courseId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * updateCourseSchedulingAssist(java.util.List, java.lang.Long,
-	 * java.lang.Long)
-	 */
 	@Override
 	public void updateCourseSchedulingAssist(List<TCourseSchedulingAssist> schedulingAssistList, Long userId,
 			Long courseId) throws Exception {
@@ -650,24 +492,12 @@ public class CourseServiceImpl implements CourseService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryCourseTimesAttendance(java.lang.Long)
-	 */
 	@Override
 	public List<Map<String, Object>> queryCourseTimesAttendance(Long courseId) throws Exception {
 		Assert.notNull(courseId);
 		return tCourseDao.queryCourseTimesAttendance(courseId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseService#
-	 * queryCourseTimeSchedulingAssist(java.lang.Long, java.lang.Long)
-	 */
 	@Override
 	public List<TCourseSchedulingAssist> queryCourseTimeSchedulingAssist(Long courseId, Long courseTime)
 			throws Exception {

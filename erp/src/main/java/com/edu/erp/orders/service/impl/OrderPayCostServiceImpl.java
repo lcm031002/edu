@@ -30,13 +30,6 @@ public class OrderPayCostServiceImpl implements OrderPayCostService {
 	@Resource(name = "orderPayCostDetailService")
 	private OrderPayCostDetailService orderPayCostDetailService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderPayCostService#saveOrderPayCost
-	 * (com.ebusiness.erp.model.TabOrderPayCost)
-	 */
 	@Override
 	public int saveOrderPayCost(TabOrderPayCost orderPayCost) throws Exception {
 		Assert.notNull(orderPayCost);
@@ -67,13 +60,6 @@ public class OrderPayCostServiceImpl implements OrderPayCostService {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderPayCostService#deleteOrderPayCost
-	 * (com.ebusiness.erp.model.TabOrderPayCost)
-	 */
 	@Override
 	public void deleteOrderPayCost(TabOrderPayCost orderPayCost)
 			throws Exception {
@@ -84,13 +70,6 @@ public class OrderPayCostServiceImpl implements OrderPayCostService {
 		this.orderPayCostDao.deleteByOrderId(orderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderPayCostService#queryTabOrderPayCost
-	 * (java.lang.Long)
-	 */
 	@Override
 	public TabOrderPayCost queryTabOrderPayCost(Long orderId) throws Exception {
 		Assert.notNull(orderId);

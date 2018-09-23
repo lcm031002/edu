@@ -21,11 +21,11 @@ import org.springframework.util.CollectionUtils;
 import com.edu.common.util.ApplicationContextUtil;
 import com.edu.erp.model.EmployeeInfo;
 import com.edu.erp.workflow.service.UserTaskService;
-import com.ebusiness.workflow.common.ServiceUtil;
-import com.ebusiness.workflow.modules.assign.DefaultAssignTask;
-import com.ebusiness.workflow.modules.index.model.ExtBusinessRoleMapping;
-import com.ebusiness.workflow.modules.index.model.ExtProcessDef;
-import com.ebusiness.workflow.modules.index.model.ExtProcessRoleDef;
+import com.edu.workflow.common.ServiceUtil;
+import com.edu.workflow.modules.assign.DefaultAssignTask;
+import com.edu.workflow.modules.index.model.ExtBusinessRoleMapping;
+import com.edu.workflow.modules.index.model.ExtProcessDef;
+import com.edu.workflow.modules.index.model.ExtProcessRoleDef;
 
 public class OrgBranchAssignTask extends DefaultAssignTask {
 	/**

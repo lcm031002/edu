@@ -102,14 +102,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 	@Resource(name = "couponInfoDao")
 	private CouponInfoDao couponInfoDao;
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#saveOrderInfo(com.ebusiness
-	 * .erp.model.TabOrderInfo)
-	 */
+
 	@Override
 	public int saveOrderInfo(TabOrderInfo orderInfo, Account account,
 			OrgModel orgModel, ProcessEngine processEngine) throws Exception {
@@ -251,15 +244,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#startProcess(com.ebusiness
-	 * .cas.client.common.model.Account,
-	 * com.ebusiness.cas.client.common.model.OrgModel,
-	 * com.ebusiness.erp.model.TabOrderInfo, org.jbpm.api.ProcessEngine)
-	 */
 	@Override
 	public void startProcess(Account account, OrgModel orgModel,
 			TabOrderInfo orderInfo, ProcessEngine processEngine)
@@ -606,13 +590,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 //		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#updateOrderInfo(com
-	 * .ebusiness.erp.model.TabOrderInfo)
-	 */
 	@Override
 	public int updateOrderInfo(TabOrderInfo orderInfo) throws Exception {
 		Assert.notNull(orderInfo);
@@ -683,16 +660,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#updateOrderInfo(com
-	 * .ebusiness.erp.model.TabOrderInfo,
-	 * com.ebusiness.cas.client.common.model.Account,
-	 * com.ebusiness.cas.client.common.model.OrgModel,
-	 * org.jbpm.api.ProcessEngine)
-	 */
 	@Override
 	public int updateOrderInfo(TabOrderInfo orderInfo, Account account,
 			OrgModel orgModel, ProcessEngine processEngine) throws Exception {
@@ -705,13 +672,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#queryTemporaryOrderInfo
-	 * (java.lang.Long)
-	 */
 	@Override
 	public TabOrderInfo queryTemporaryOrderInfo(Long orderId) throws Exception {
 		Assert.notNull(orderId);
@@ -773,13 +733,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		return orderInfo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#createOrder(java.lang
-	 * .Long, java.lang.Long)
-	 */
 	@Override
 	public Map<String, Object> createOrder(Long orderId, Long userId)
 			throws Exception {
@@ -792,12 +745,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderInfoService#
-	 * updatePerformanceAttribution(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public void updatePerformanceAttribution(String order_id, String user_id)
 			throws Exception {
@@ -810,13 +757,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		orderInfoDao.updatePerformanceAttribution(map);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#updateOrderApproved
-	 * (java.util.Map)
-	 */
 	@Override
 	public int updateOrderApproved(TabOrderInfo params) throws Exception {
 		Assert.notNull(params);
@@ -825,13 +765,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		return orderInfoDao.updateOrderApproved(params);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#unpassOrder(java.lang
-	 * .Long, java.lang.Long, java.lang.String)
-	 */
 	@Override
 	public int unpassOrder(Long orderId, Long userId, String remark)
 			throws Exception {
@@ -859,13 +792,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#deleteTemporaryOrderInfo
-	 * (java.lang.Long,java.lang.Long)
-	 */
 	@Override
 	public void deleteTemporaryOrderInfo(Long orderId, Long userId)
 			throws Exception {
@@ -900,13 +826,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		orderInfoDao.updateOrderInfo(orderInfo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#queryUserOrderList(
-	 * java.util.Map)
-	 */
 	@Override
 	public Page<Map<String, Object>> queryUserOrderList(
 			Map<String, Object> param) throws Exception {
@@ -915,13 +834,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 		return orderInfoDao.queryUserOrderList(param);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.orders.service.OrderInfoService#payOrderInfo(com.ebusiness
-	 * .erp.model.TabOrderInfo, java.lang.Long)
-	 */
 	@Override
 	public TabOrderInfo payOrderInfo(TabOrderInfo orderInfo, Long userId)
 			throws Exception {

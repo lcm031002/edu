@@ -28,11 +28,7 @@ public class OrderCourseTimesInfoServiceImpl implements
 	private OrderCourseTimesInfoDao orderCourseTimesInfoDao;
 	@Resource(name = "sortNumInfoDao")
 	private SortNumInfoDao sortNumInfoDao;
-	/*
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderCourseTimesInfoService#
-	 * saveOrderCourseTimesInfo(com.ebusiness.erp.model.TabOrderCourseTimesInfo)
-	 */
+
 	@Override
 	public int saveOrderCourseTimesInfo(
 			TabOrderCourseTimesInfo orderCourseTimesInfo) throws Exception {
@@ -46,13 +42,6 @@ public class OrderCourseTimesInfoServiceImpl implements
 				.saveOrderCourseTimesInfo(orderCourseTimesInfo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderCourseTimesInfoService#
-	 * deleteOrderCourseTimesInfo
-	 * (com.ebusiness.erp.model.TabOrderCourseTimesInfo)
-	 */
 	@Override
 	public int deleteOrderCourseTimesInfo(
 			TabOrderCourseTimesInfo orderCourseTimesInfo) throws Exception {
@@ -62,12 +51,6 @@ public class OrderCourseTimesInfoServiceImpl implements
 				.deleteOrderCourseTimesInfo(orderCourseTimesInfo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderCourseTimesInfoService#
-	 * queryTabOrderCourseTimesInfo(java.lang.Long)
-	 */
 	@Override
 	public List<TabOrderCourseTimesInfo> queryTabOrderCourseTimesInfo(
 			Long orderDetailId) throws Exception {
@@ -78,12 +61,6 @@ public class OrderCourseTimesInfoServiceImpl implements
 				.queryOrderCourseTimesInfo(orderCourseTimesInfoParam);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.orders.service.OrderCourseTimesInfoService#
-	 * queryOrderTimesInfo(java.lang.Long)
-	 */
 	@Override
 	public List<TabOrderCourseTimesInfo> queryOrderTimesInfo(Long orderId)
 			throws Exception {

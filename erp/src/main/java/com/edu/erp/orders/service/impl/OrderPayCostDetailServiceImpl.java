@@ -21,10 +21,7 @@ public class OrderPayCostDetailServiceImpl implements OrderPayCostDetailService 
 	
 	@Resource(name = "orderPayCostDao")
 	private OrderPayCostDao orderPayCostDao;
-	
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.orders.service.OrderPayCostDetailService#saveOrderPayCostDetail(com.ebusiness.erp.model.TabOrderPayCostDetail)
-	 */
+
 	@Override
 	public int saveOrderPayCostDetail(
 			TabOrderPayCostDetail orderPayCostDetail) throws Exception {

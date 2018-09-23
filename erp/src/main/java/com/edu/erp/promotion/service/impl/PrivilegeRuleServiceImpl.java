@@ -47,12 +47,6 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 	@Resource(name = "studentRelService")
 	private StudentRelService studentRelService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * queryPrivilegeRuleForPage(java.util.Map)
-	 */
 	@Override
 	public Page<PrivilegeRule> queryPrivilegeRuleForPage(
 			Map<String, Object> page) throws Exception {
@@ -62,60 +56,30 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * queryPrivilegeRuleForRef(java.util.Map)
-	 */
+
 	@Override
 	public List<PrivilegeRule> queryPrivilegeRuleForRef(
 			Map<String, Object> params) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * queryPrivilegeRuleForList(java.util.Map)
-	 */
 	@Override
 	public List<PrivilegeRule> queryPrivilegeRuleForList(
 			Map<String, Object> param) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * queryPrivilegeRuleForListWithoutBranchs(java.util.Map)
-	 */
 	@Override
 	public List<PrivilegeRule> queryPrivilegeRuleForListWithoutBranchs(
 			Map<String, Object> param) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * queryPrivilegeRuleForOne(java.lang.Long)
-	 */
 	@Override
 	public PrivilegeRule queryPrivilegeRuleForOne(Long id) throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#addPrivilegeRule
-	 * (com.ebusiness.erp.model.PrivilegeRule, java.lang.String)
-	 */
 	@Override
 	public void addPrivilegeRule(PrivilegeRule privilegeRule, String branch_ids)
 			throws Exception {
@@ -131,13 +95,6 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 			privilegeRuleDao.addPrivilegeSchoolRef(rule_branch);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#updatePrivilegeRule
-	 * (com.ebusiness.erp.model.PrivilegeRule, java.lang.String)
-	 */
 	@Override
 	public void updatePrivilegeRule(PrivilegeRule privilegeRule,
 			String branch_ids) throws Exception {
@@ -157,37 +114,17 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 			privilegeRuleDao.addPrivilegeSchoolRef(rule_branch);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * changePrivilegeRuleStatus(java.lang.String, java.lang.Integer)
-	 */
 	@Override
 	public void changePrivilegeRuleStatus(String ids, Integer status)
 			throws Exception {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#queryRuleByBranchId
-	 * (java.lang.Long)
-	 */
 	@Override
 	public List<PrivilegeRule> queryRuleByBranchId(Long branchId)
 			throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#queryByRuleId
-	 * (java.lang.Long)
-	 */
 	@Override
 	public PrivilegeRule queryByRuleId(Long ruleId) throws Exception {
 		Assert.notNull(ruleId);
@@ -196,25 +133,12 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 		return privilegeRuleDao.queryRuleById(params);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.promotion.service.PrivilegeRuleService#
-	 * queryOutPrivilegeRule(java.util.Map)
-	 */
 	@Override
 	public List<Long> queryOutPrivilegeRule(Map<String, Object> param)
 			throws Exception {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#isOrderRuleValid
-	 * (java.lang.Long)
-	 */
 	@Override
 	public Map<String, Object> isOrderRuleValid(Long orderId) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -661,13 +585,6 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#queryRuleByBranchId
-	 * (java.util.Map)
-	 */
 	@Override
 	public List<PrivilegeRule> queryRuleByBranchId(Map<String, Object> params)
 			throws Exception {
@@ -675,13 +592,6 @@ public class PrivilegeRuleServiceImpl implements PrivilegeRuleService {
 		return privilegeRuleDao.queryRuleByBranchId(params);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.PrivilegeRuleService#queryOrderRuleId
-	 * (java.lang.Long)
-	 */
 	@Override
 	public List<PrivilegeRule> queryOrderRule(Long orderId) throws Exception {
 		Assert.notNull(orderId);

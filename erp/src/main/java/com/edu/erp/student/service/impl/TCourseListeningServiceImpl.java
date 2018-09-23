@@ -25,10 +25,7 @@ public class TCourseListeningServiceImpl implements TCourseListeningService {
 	
 	@Resource(name = "tCourseListeningDao")
 	private TCourseListeningDao tCourseListeningDao;
-	
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.student.service.TCourseListeningService#queryListeningPage(java.util.Map)
-	 */
+
 	@Override
 	public Page<Map<String,Object>> queryListeningPage(Map<String, Object> param)
 			throws Exception {
@@ -42,9 +39,6 @@ public class TCourseListeningServiceImpl implements TCourseListeningService {
 		return tCourseListeningDao.queryListeningPage(param);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.student.service.TCourseListeningService#insertTCourseListening(java.util.Map)
-	 */
 	@Override
 	public void insertTCourseListening(Map<String, Object> param)
 			throws Exception {
@@ -70,9 +64,6 @@ public class TCourseListeningServiceImpl implements TCourseListeningService {
 		tCourseListeningDao.insertTCourseListening(param);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.student.service.TCourseListeningService#updateTCourseListening(java.util.Map)
-	 */
 	@Override
 	public void updateTCourseListening(Map<String, Object> param)
 			throws Exception {
@@ -87,9 +78,6 @@ public class TCourseListeningServiceImpl implements TCourseListeningService {
 		tCourseListeningDao.updateTCourseListening(param);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.student.service.TCourseListeningService#queryTCourseListeningSc(java.util.Map)
-	 */
 	@Override
 	public List<Map<String, Object>> queryTCourseListeningSc(
 			Map<String, Object> param) throws Exception {

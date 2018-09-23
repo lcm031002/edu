@@ -24,13 +24,6 @@ public class StudentRelServiceImpl implements StudentRelService {
 	@Resource(name = "studentRelDao")
 	private StudentRelDao studentRelDao;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.student.service.StudentRelService#queryStudentRel(java
-	 * .util.Map)
-	 */
 	@Override
 	public List<StudentRel> queryStudentRel(Map<String, Object> param)
 			throws Exception {
@@ -38,9 +31,6 @@ public class StudentRelServiceImpl implements StudentRelService {
 		return studentRelDao.queryStudentRel(param);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.student.service.StudentRelService#updateStudentRel(com.ebusiness.erp.model.StudentRel)
-	 */
 	@Override
 	public int updateStudentRel(StudentRel rel) throws Exception {
 		Assert.notNull(rel);

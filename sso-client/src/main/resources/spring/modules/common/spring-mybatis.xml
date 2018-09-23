@@ -15,7 +15,7 @@
     http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
     <!-- 扫描basePackage接口 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.ebusiness.cas.client.dao" />
+        <property name="basePackage" value="com.edu.cas.client.dao" />
     </bean>
     
     <!-- 创建SqlSessionFactory -->

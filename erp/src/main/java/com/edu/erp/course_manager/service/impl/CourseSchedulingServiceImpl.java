@@ -153,12 +153,6 @@ public class CourseSchedulingServiceImpl implements CourseSchedulingService {
 		return courseSchedulingDao.update(courseSchedulingObj);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseSchedulingService#
-	 * queryOrderCourseScheduling(java.lang.Long)
-	 */
 	@Override
 	public List<CourseScheduling> queryOrderCourseScheduling(Long orderId)
 			throws Exception {
@@ -166,12 +160,6 @@ public class CourseSchedulingServiceImpl implements CourseSchedulingService {
 		return courseSchedulingDao.queryOrderCourseScheduling(orderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseSchedulingService#
-	 * schedulingCourse(java.lang.Long)
-	 */
 //	@Override
 //	public void schedulingCourse(Long courseId) throws Exception {
 ////		Assert.notNull(courseId);
@@ -180,12 +168,6 @@ public class CourseSchedulingServiceImpl implements CourseSchedulingService {
 ////		courseSchedulingDao.schedulingCourse(map);
 //	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.course_manager.service.CourseSchedulingService#
-	 * queryCourseSchedulingStudents(java.lang.Long, java.lang.Long)
-	 */
 	@Override
 	public List<Map<String, Object>> queryCourseSchedulingStudents(
 			Long courseId, Long courseTime) throws Exception {
@@ -197,9 +179,6 @@ public class CourseSchedulingServiceImpl implements CourseSchedulingService {
 		return courseSchedulingDao.queryCourseSchedulingStudents(params);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.course_manager.service.CourseSchedulingService#querySchedulingAttendanceMakeup(java.lang.Long, java.lang.Long)
-	 */
 	@Override
 	public List<Map<String, Object>> querySchedulingAttendanceMakeup(
 			Long courseId, Long courseTime,String queryInfo) throws Exception {

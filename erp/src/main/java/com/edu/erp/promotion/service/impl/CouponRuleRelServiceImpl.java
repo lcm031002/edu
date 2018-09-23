@@ -23,13 +23,6 @@ public class CouponRuleRelServiceImpl implements CouponRuleRelService {
 	@Resource(name = "couponRuleRelDao")
 	private CouponRuleRelDao couponRuleRelDao;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ebusiness.erp.promotion.service.CouponInfoService#addCouponInfo(com
-	 * .ebusiness.erp.model.CouponInfo)
-	 */
 	@Override
 	public void addCouponRuleRel(CouponRuleRel couponRuleRel) throws Exception {
 		List<Map<String, Long>> one_much = PromotionUtils.getStudentGiftInfoAdd(couponRuleRel.getEncoding(), couponRuleRel.getStudy_ids());

@@ -22,7 +22,7 @@ create table JBPM4_EXT_BUSINESSROL_MAPPING
    primary key (id)
 );
 （4）业务系统对于权限分派存在其他要求的，可以重写下任务分派实现类；
-com.ebusiness.workflow.modules.assign.DefaultAssignTask
+com.edu.workflow.modules.assign.DefaultAssignTask
 默认实现：任务处理，默认取业务角色分配映射表（JBPM4_EXT_BUSINESSROL_MAPPING）中定义的节点角色进行处理；
 如果分配的角色为多个，则自动定义为分组任务；
 如果分配的角色为一个，则分配该角色；

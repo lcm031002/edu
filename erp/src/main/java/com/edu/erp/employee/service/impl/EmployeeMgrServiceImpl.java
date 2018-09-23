@@ -322,9 +322,6 @@ public class EmployeeMgrServiceImpl implements EmployeeMgrService {
         return ret == 1;
     }
 
-    /* (non-Javadoc)
-     * @see com.ebusiness.hrm.employee.EmployeeManageService#queryEmployeeById(java.lang.Long)
-     */
     @Override
     public EmployeeInfo queryEmployeeById(Long employeeId) throws Exception {
         Assert.notNull(employeeId);

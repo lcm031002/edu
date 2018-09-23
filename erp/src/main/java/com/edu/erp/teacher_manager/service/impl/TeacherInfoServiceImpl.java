@@ -271,12 +271,6 @@ public class TeacherInfoServiceImpl implements TeacherInfoService {
 		return failedTeachers.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ebusiness.erp.teacher_manager.service.TeacherInfoService#
-	 * queryOrderTeacher(java.lang.Long)
-	 */
 	@Override
 	public List<Teacher> queryOrderTeacher(Long orderId) throws Exception {
 		Assert.notNull(orderId);

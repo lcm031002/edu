@@ -21,10 +21,7 @@ public class OrderCouponRelServiceImpl implements OrderCouponRelService{
 	
 	@Resource(name = "orderCouponRelDao")
 	private OrderCouponRelDao orderCouponRelDao;
-	
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.orders.service.OrderCouponRelService#saveOrderCouponRel(com.ebusiness.erp.model.OrderCouponRel)
-	 */
+
 	@Override
 	public int saveOrderCouponRel(OrderCouponRel rel) throws Exception {
 		Assert.notNull(rel);
@@ -34,9 +31,6 @@ public class OrderCouponRelServiceImpl implements OrderCouponRelService{
 		return orderCouponRelDao.saveOrderCouponRel(rel);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.orders.service.OrderCouponRelService#deleteOrderCouponRel(com.ebusiness.erp.model.OrderCouponRel)
-	 */
 	@Override
 	public int deleteOrderCouponRel(OrderCouponRel rel) throws Exception {
 		Assert.notNull(rel);
@@ -44,9 +38,6 @@ public class OrderCouponRelServiceImpl implements OrderCouponRelService{
 		return orderCouponRelDao.deleteOrderCouponRel(rel);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ebusiness.erp.orders.service.OrderCouponRelService#queryByOrderId(com.ebusiness.erp.model.OrderCouponRel)
-	 */
 	@Override
 	public List<OrderCouponRel> queryByOrderId(OrderCouponRel rel)
 			throws Exception {
