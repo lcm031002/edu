@@ -2897,25 +2897,148 @@
 			]
 		},
     {
-      "index": "A120001",
-      "name": "工作流管理",
-      "key": "workflow",
+      "index": "A12001",
+      "name": "待办",
+      "key": "RecruitStudents",
       "icon": "fa fa-home",
       "type": "$state",
-      "active": "true",
-      "value": "workflow",
-      "path": "/workflow",
+      "value": "RecruitStudents",
       "href": "templates/workflow/index.html",
-      "menus": [
+      "path": "/task",
+      "menus": [{
+        "index": "A1100103",
+        "name": "欠费报班单",
+        "key": "indexArrearageOrder",
+        "icon": "fa fa-align-justify",
+        "type": "$state",
+        "active": "true",
+        "value": "indexArrearageOrder",
+        "href": "templates/erp/orders/arrearage_order.html",
+        "path": "/task/indexArrearageOrder",
+        "services": [{
+          "name": "我的申请",
+          "key": "indexMyAppication.query",
+          "url": "/erp/workflow/task/myAppication",
+          "method": "GET"
+        },
+          {
+            "name": "申请删除",
+            "key": "indexMyAppication.delete",
+            "url": "/erp/workflow/task/myAppication",
+            "method": "DELETE"
+          },
+          {
+            "name": "流程查询",
+            "key": "indexMyAppication.queryTask",
+            "url": "/erp/workflow/task",
+            "method": "GET"
+          }
+        ]
+      },
         {
-          "index": "A12000101",
-          "name": "待办事项",
-          "key": "mytasks",
-          "icon": "iconfont icon-stdudents_myStudents",
+          "index": "A1100102",
+          "name": "我的审批",
+          "key": "indexMyTask",
+          "icon": "fa fa-align-justify",
           "type": "$state",
-          "value": "mytasks",
-          "href": "templates/workflow/task_list.html",
-          "path": "/workflow/mytasks"
+          "value": "indexMyTask",
+          "href": "templates/erp/workflow/task_todo.html",
+          "path": "/task/indexMyTask",
+          "services": [{
+            "name": "我的审批",
+            "key": "indexMyTask.query",
+            "url": "/erp/workflow/task/todo",
+            "method": "GET"
+          },
+            {
+              "name": "任务查询",
+              "key": "indexMyTask.queryTask",
+              "url": "/erp/workflow/task",
+              "method": "GET"
+            },
+            {
+              "name": "任务提交",
+              "key": "indexMyTask.postOutcomes",
+              "url": "/erp/workflow/task/complete",
+              "method": "POST"
+            },
+            {
+              "name": "员工查询",
+              "key": "indexMyTask.queryEmployee",
+              "url": "/erp/employee/service",
+              "method": "GET"
+            },
+            {
+              "name": "历史委托查询",
+              "key": "indexMyTask.queryEmployee",
+              "url": "/erp/workflow/task/todo_change",
+              "method": "GET"
+            },
+            {
+              "name": "委托设置",
+              "key": "indexMyTask.postChange",
+              "url": "/erp/workflow/task/todo_change",
+              "method": "POST"
+            }
+          ]
+        },
+        {
+          "index": "A1100101",
+          "name": "我的申请",
+          "key": "indexMyAppication",
+          "icon": "fa fa-align-justify",
+          "type": "$state",
+          "value": "indexMyAppication",
+          "href": "templates/erp/workflow/task_appication.html",
+          "path": "/task/indexMyAppication",
+          "services": [{
+            "name": "我的申请",
+            "key": "indexMyAppication.query",
+            "url": "/erp/workflow/task/myAppication",
+            "method": "GET"
+          },
+            {
+              "name": "申请删除",
+              "key": "indexMyAppication.delete",
+              "url": "/erp/workflow/task/myAppication",
+              "method": "DELETE"
+            },
+            {
+              "name": "流程查询",
+              "key": "indexMyAppication.queryTask",
+              "url": "/erp/workflow/task",
+              "method": "GET"
+            }
+          ]
+        },
+        {
+          "index": "A1100104",
+          "name": "校区任务",
+          "key": "indexBranchTask",
+          "icon": "fa fa-align-justify",
+          "type": "$state",
+          "value": "indexBranchTask",
+          "href": "templates/erp/workflow/task_branchapplication.html",
+          "path": "/task/indexBranchTask",
+          "services": [{
+            "name": "我的申请",
+            "key": "indexMyAppication.query",
+            "url": "/erp/workflow/task/myAppication",
+            "method": "GET"
+          },
+            {
+              "name": "申请删除",
+              "key": "indexMyAppication.delete",
+              "url": "/erp/workflow/task/myAppication",
+              "method": "DELETE"
+            },
+            {
+              "name": "流程查询",
+              "key": "indexMyAppication.queryTask",
+              "url": "/erp/workflow/task",
+              "method": "GET"
+            }
+          ]
         }
       ]
     }

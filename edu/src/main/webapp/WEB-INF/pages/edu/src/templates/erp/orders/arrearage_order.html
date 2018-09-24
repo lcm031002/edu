@@ -77,13 +77,13 @@
                     <tr ng-repeat="order in orderPage.resultList" ng-if="orderPage.resultList">
                         <td>
                             <div class="col-lg-9">
-                                <p>【{{order.TYPE}}】{{order.STUDENT_NAME}}{{order.STUENCODING}} <span style="font-size:14px;color: red;text-align: right;">￥{{order.ACTUAL_PRICE}}</span></p>
+                                <p>【{{order.type}}】{{order.student_name}}{{order.StuEncoding}} <span style="font-size:14px;color: red;text-align: right;">￥{{order.actual_price}}</span></p>
                                 <p><span style="font-size:12px;color: #888;">
-                                	<a href="?studentId={{order.STUID}}&orderId={{order.ORDERID}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank">{{order.ORDERENCODING}}</a>，{{order.ORG_NAME}}</span></p>
+                                	<a href="?studentId={{order.stuId}}&orderId={{order.orderId}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank">{{order.orderEncoding}}</a>，{{order.org_name}}</span></p>
                             </div>
                             <div class="col-lg-3" align="right">
                                 <p>
-                                    <a href="?studentId={{order.STUID}}&orderId={{order.ORDERID}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank"><i class="iconfont icon-home_track" style="font-size: 1.2em;"></i></a>
+                                    <a href="?studentId={{order.stuId}}&orderId={{order.orderId}}&orderType=temporaryOrder#/studentMgr/studentMgrCourse/studentMgrOrderDetail" target="_blank"><i class="iconfont icon-home_track" style="font-size: 1.2em;"></i></a>
                                     <!-- <a href="?studentId={{order.STUID}}#/students/studentsTrack" class="btn btn-default" target="_blank" title="电话催缴" ng-click="toCall(order)" ><i class="iconfont icon-home_track" style="font-size: 1.2em;"></i></a> -->
                                 </p>
                             </div>
