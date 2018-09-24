@@ -356,7 +356,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 				mapps.put("application_id", userApplication.get("id") + "");
 				mapps.put("sponsor", account.getId());
 				// 报班流程
-				// workflow.baoban2.11 = true; erpv5.DXB_enter_class_03
+
 				ProcessInstance processInstance = genProcessInstance(orderInfo,
 						mapps, processEngine);
 
@@ -494,18 +494,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	private ProcessInstance genProcessInstance(TabOrderInfo orderBusiness,
 			Map<String, Object> mapps, ProcessEngine processEngine) {
 		ProcessInstance processInstance = null;
-		String prefix_info = "workflow.baoban2." + orderBusiness.getBu_id();
-		String flag = DxbCityCfg.getInstance().getConfigItem(prefix_info,
-				"false");
-		if ("true".equals(flag)) {
-			processInstance = processEngine.getExecutionService()
-					.startProcessInstanceByKey("erpv5.DXB_enter_class_03",
-							mapps);
-		} else {
-			processInstance = processEngine.getExecutionService()
-					.startProcessInstanceByKey("erpv5.DXB_enter_class_02",
-							mapps);
-		}
+
+		processInstance = processEngine.getExecutionService()
+			.startProcessInstanceByKey("erp.enter_order",
+				mapps);
 		return processInstance;
 	}
 
@@ -547,47 +539,35 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 	private boolean isNeedWorkflow(TabOrderInfo tabOrderInfo,
 			ProcessEngine processEngine) throws Exception {
-		tabOrderInfo.setCheck_status(3L);//暂不使用工作流
-		return false;
 		// 立减和优惠规则需要走审批
-//		if (tabOrderInfo.getRule_id() != null
-//				|| (null != tabOrderInfo.getImmediate_reduce() && tabOrderInfo
-//						.getImmediate_reduce() > 0)) {
-//			String prefix_info = "workflow.baoban2." + tabOrderInfo.getBu_id();
-//			String flag = DxbCityCfg.getInstance().getConfigItem(prefix_info,
-//					"false");
-//
-//			if ((!"true".equals(flag))
-//					&& !WorkflowHelper.isDeployed(processEngine,
-//							"erpv5.DXB_enter_class_02")) {
-//				throw new Exception("流程erpv5.DXB_enter_class_02尚未发布！");
-//			}
-//
-//			if (("true".equals(flag))
-//					&& !WorkflowHelper.isDeployed(processEngine,
-//							"erpv5.DXB_enter_class_03")) {
-//				throw new Exception("流程erpv5.DXB_enter_class_03尚未发布！");
-//			}
-//
-//			return true;
-//
-//		} else {
-//			// 判断是否有单科优惠存在
-//			if (!CollectionUtils.isEmpty(tabOrderInfo.getDetails())) {
-//				for (TabOrderInfoDetail orderDetailBusiness : tabOrderInfo.getDetails()) {
-//					if (orderDetailBusiness.getRule_id() != null) {
-//						return true;
-//					} else if (null != orderDetailBusiness.getImmediate_reduce()
-//							&& orderDetailBusiness.getImmediate_reduce() > 0) {
-//						return true;
-//					}
-//				}
-//			}
-//
-//			// 没有优惠
-//			tabOrderInfo.setCheck_status(3L);
-//			return false;
-//		}
+		if (tabOrderInfo.getRule_id() != null
+				|| (null != tabOrderInfo.getImmediate_reduce() && tabOrderInfo
+						.getImmediate_reduce() > 0)) {
+
+			if (!WorkflowHelper.isDeployed(processEngine,
+							"erp.enter_order")) {
+				throw new Exception("流程erp.enter_order尚未发布！");
+			}
+
+			return true;
+
+		} else {
+			// 判断是否有单科优惠存在
+			if (!CollectionUtils.isEmpty(tabOrderInfo.getDetails())) {
+				for (TabOrderInfoDetail orderDetailBusiness : tabOrderInfo.getDetails()) {
+					if (orderDetailBusiness.getRule_id() != null) {
+						return true;
+					} else if (null != orderDetailBusiness.getImmediate_reduce()
+							&& orderDetailBusiness.getImmediate_reduce() > 0) {
+						return true;
+					}
+				}
+			}
+
+			// 没有优惠
+			tabOrderInfo.setCheck_status(3L);
+			return false;
+		}
 	}
 
 	@Override

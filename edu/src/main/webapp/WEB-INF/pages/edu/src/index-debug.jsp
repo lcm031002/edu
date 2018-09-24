@@ -202,8 +202,8 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/directives/kl-table.js"></script>
 
 
-<script type="text/javascript" src="js/controllers/klxxedu/klxxedu_services.js"  ></script>
-<script type="text/javascript" src="js/controllers/klxxedu/index.js"  ></script>
+<script type="text/javascript" src="js/controllers/edu/klxxedu_services.js"  ></script>
+<script type="text/javascript" src="js/controllers/edu/index.js"  ></script>
 
 <script type="text/javascript" src="js/controllers/master-ctrl.js"></script>
 <script type="text/javascript" src="js/controllers/date-ctrl.js"></script>
@@ -213,32 +213,6 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/common/account-security.js" ></script>
 <script type="text/javascript" src="js/controllers/common/employee-info.js" ></script>
 
-<script type="text/javascript" src="js/controllers/crm/service.js"     ></script>
-<script type="text/javascript" src="js/controllers/crm/crm_service.js"     ></script>
-<script type="text/javascript" src="js/controllers/crm/master-ctrl.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/alert-ctrl.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/importantreminder-ctrl.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/index-ctrl.js"   ></script>
-
-<script type="text/javascript" src="js/controllers/crm/performance-ctrl.js"    ></script>
-<script type="text/javascript" src="js/controllers/crm/graderesource-ctrl.js"   ></script>
-<script type="text/javascript" src="js/controllers/crm/gc_rescrec_transfer.js"   ></script>
-<script type="text/javascript" src="js/controllers/crm/gc_rescrec_proc.js"   ></script>
-<script type="text/javascript" src="js/controllers/crm/gc_rescrec_input.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/gc_dict.js"    ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_res_convation.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_achievetotal.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_avgachieve.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_channel.js"   ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_convertrate.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_excavate_gc.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_orderedsort.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_performance_gc.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_palnvisit.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_scene.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_marketanalyse.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/report/gc_rpt_grade_resource.js"  ></script>
-<script type="text/javascript" src="js/controllers/crm/myOrdereds-ctrl.js"  ></script>
 <!-- erp -->
 <script type="text/javascript" src="js/controllers/erp/erp_service.js"     ></script>
 <script type="text/javascript" src="js/controllers/erp/student/students.js"  ></script>

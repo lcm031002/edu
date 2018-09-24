@@ -2895,6 +2895,29 @@
 					]
 				}
 			]
-		}
+		},
+    {
+      "index": "A120001",
+      "name": "工作流管理",
+      "key": "workflow",
+      "icon": "fa fa-home",
+      "type": "$state",
+      "active": "true",
+      "value": "workflow",
+      "path": "/workflow",
+      "href": "templates/workflow/index.html",
+      "menus": [
+        {
+          "index": "A12000101",
+          "name": "待办事项",
+          "key": "mytasks",
+          "icon": "iconfont icon-stdudents_myStudents",
+          "type": "$state",
+          "value": "mytasks",
+          "href": "templates/workflow/task_list.html",
+          "path": "/workflow/mytasks"
+        }
+      ]
+    }
 	]
 }

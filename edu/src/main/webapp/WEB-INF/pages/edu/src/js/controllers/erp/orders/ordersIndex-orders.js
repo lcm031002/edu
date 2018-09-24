@@ -1984,7 +1984,7 @@ function erp_OrdersIndexOrdersController(
    */
   $scope.saveOrder = function() {
     var param = {};
-    // $scope.openPanel = 'saveOrder';
+    $scope.openPanel = 'saveOrder';
     param.saveType = 'saveOrder';
     genOrder(param);
     var _modalInstance = $uibMsgbox.waiting('订单保存中，请稍候...');

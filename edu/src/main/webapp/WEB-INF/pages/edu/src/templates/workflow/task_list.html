@@ -1,0 +1,10 @@
+<div ng-controller="edu_taskController" class="klxx index-block">
+    <div>
+        <div class="col-lg-5">
+            <div ng-include="menu.href" ng-if="$index%2==0" ng-repeat="menu in menus"></div>
+        </div>
+        <div class="col-lg-5">
+            <div ng-include="menu.href" ng-if="$index%2==1" ng-repeat="menu in menus"></div>
+        </div>
+    </div>
+</div>
