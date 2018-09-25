@@ -11,9 +11,9 @@ angular
         '$log',
         'erp_workflowMyAppicationService',
         'erp_workflowTaskService',
-        erp_workflowMgrmentController]);
+      erp_workflowTaskAppication]);
 
-function erp_workflowMgrmentController(
+function erp_workflowTaskAppication(
     $rootScope,
     $scope,
     $cookieStore,
@@ -90,7 +90,7 @@ function erp_workflowMgrmentController(
 			$scope.isLoading = '';
 			if(!resp.error){
 				$.each(resp.data.resultList,function(i,n) {
-					n.APPLICATION = n.APPLICATION.replace(/\[(.+?)\]/g,"【<span style='color:#1b8cf2'>$1</span>】");
+					n.application = n.application.replace(/\[(.+?)\]/g,"【<span style='color:#1b8cf2'>$1</span>】");
 				})
 				$scope.page = resp.data;
 			}else{

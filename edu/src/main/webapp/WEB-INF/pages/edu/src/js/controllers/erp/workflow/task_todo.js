@@ -1,9 +1,3 @@
-/**
- * Created by Liyong.zhu on 2017/1/12.
- */
-/**
- *
- */
 "use strict";
 angular
     .module('ework-ui')

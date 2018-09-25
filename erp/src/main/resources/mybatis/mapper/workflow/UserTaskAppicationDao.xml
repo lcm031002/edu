@@ -74,10 +74,10 @@
 					and uat.current_state = #{auditStatus}
 				</if>
 				<if test="app_info != null and app_info != ''">
-					and uat.application like '%'||#{app_info}||'%'
+					and uat.application like concat('%', #{app_info}, '%')
 				</if>
 				<if test="module != null and module != '' and module != '-1'">
-					and jt.execution_id_ like ''||#{module}||'%'
+					and jt.execution_id_ like concat(#{module}, '%')
 				</if>
 			order by uat.createtime desc
 	</select>
@@ -99,7 +99,7 @@
 				and uat.current_state = #{paramMap.auditStatus}
 			</if>
 			<if test="paramMap.app_info != null and paramMap.app_info != ''">
-				and uat.application like '%${paramMap.app_info}%'
+				and uat.application like concat('%', #{paramMap.app_info}, '%')
 			</if>
 			order by uat.CREATETIME desc
 	</select>
@@ -123,7 +123,7 @@
 				and uat.current_state = #{auditStatus}
 			</if>
 			<if test="app_info != null and app_info != ''">
-				and uat.application like '%${app_info}%'
+				and uat.application like concat('%', #{app_info}, '%')
 			</if>
 			<if test="id != null">
 			    and uat.id = #{id,jdbcType=NUMERIC}

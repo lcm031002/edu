@@ -94,14 +94,14 @@
 					<tr ng-repeat="row in page.resultList">
 						<td>
 							<div class="col-lg-10">
-	                            <p>{{row.CURRENT_STEP}}<small ng-if="row.CURRENT_STATE">：{{row.CURRENT_STATE}}</small>
+	                            <p>{{row.current_step}}<small ng-if="row.current_state">：{{row.current_state}}</small>
 	                            </p>
 	                            <p style="font-size:12px;color: #888;">
-									<p ng-if="row.APPLICATION.indexOf('理赔审批：')!=-1" href="javascript:void(0)" >
-										<span style="color:#333">【{{row.CREATETIME}}】<span ng-bind-html="row.APPLICATION | trustHtml"></span></span>
+									<p ng-if="row.application.indexOf('理赔审批：')!=-1" href="javascript:void(0)" >
+										<span style="color:#333">【{{row.createtime}}】<span ng-bind-html="row.application | trustHtml"></span></span>
 									</p>
-	                            	<a ng-if="row.APPLICATION.indexOf('理赔审批：')==-1" href="{{'?studentId='+row.studentId+'&orderId='+row.orderId+(row.isTemp ? '&orderType=temporaryOrder' : '') + '#/studentMgr/studentMgrCourse/studentMgrOrderDetail'}}" target="_blank" >
-	                                	<span style="color:#333">【{{row.CREATETIME}}】<span ng-bind-html="row.APPLICATION | trustHtml"></span></span>
+	                            	<a ng-if="row.application.indexOf('理赔审批：')==-1" href="{{'?studentId='+row.studentId+'&orderId='+row.orderId+(row.isTemp ? '&orderType=temporaryOrder' : '') + '#/studentMgr/studentMgrCourse/studentMgrOrderDetail'}}" target="_blank" >
+	                                	<span style="color:#333">【{{row.createtime}}】<span ng-bind-html="row.application | trustHtml"></span></span>
 	                            	</a>
 	                            </p>
 	                            <p ng-if="row.remark">
@@ -134,7 +134,7 @@
 	                                        <div class="form-group">
 	                                            <label class="col-lg-4 control-label">申请时间</label>
 	                                            <div class="col-lg-8">
-	                                                <p class="form-control-static">{{selectedRow.UPDATETIME}}</p>
+	                                                <p class="form-control-static">{{selectedRow.updatetime}}</p>
 	                                            </div>
 	                                        </div>
 	                                    </div>
@@ -162,7 +162,7 @@
 	                                        <div class="form-group">
 	                                            <label class="col-lg-4 control-label">当前节点</label>
 	                                            <div class="col-lg-8">
-	                                                <p class="form-control-static">{{selectedRow.CURRENT_STEP}}</p>
+	                                                <p class="form-control-static">{{selectedRow.current_step}}</p>
 	                                            </div>
 	                                        </div>
 	                                    </div>
@@ -170,7 +170,7 @@
 	                                        <div class="form-group">
 	                                            <label class="col-lg-4 control-label">当前处理人</label>
 	                                            <div class="col-lg-8">
-	                                                <p class="form-control-static">{{selectedRow.CURRENT_MAN}}</p>
+	                                                <p class="form-control-static">{{selectedRow.current_man}}</p>
 	                                            </div>
 	                                        </div>
 	                                    </div>
@@ -194,7 +194,7 @@
 						</td>
 					</tr>
 			</table>
-			<div class="row" align="center" ng-if="page.totalCount>5">
+			<div class="row" align="center" ng-if="data.totalCount>5">
 				<div class="btn btn-default" style="margin: 5px; width: 200px;"
 					ng-click="queryMore()">
 					<i class="fa fa-angle-double-down"></i>
