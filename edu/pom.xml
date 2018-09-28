@@ -282,5 +282,17 @@
 				<env>uat</env>
 			</properties>
 		</profile>
+		<profile>
+			<id>prd70</id>
+			<properties>
+				<env>prd70</env>
+			</properties>
+		</profile>
+		<profile>
+			<id>prd152</id>
+			<properties>
+				<env>prd152</env>
+			</properties>
+		</profile>
 	</profiles>
 </project>
