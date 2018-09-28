@@ -36,13 +36,13 @@
 	<!-- 填写退出的URL -->
 	<context-param>
 		<param-name>casServerLogoutUrl</param-name>
-		<param-value>http://39.108.163.70/sso-server/logout</param-value>
+		<param-value>http://sugao.xmzzwy.com/sso-server/logout</param-value>
 	</context-param>
 
 	<!-- 重新登录回调地址 -->
 	<context-param>
 		<param-name>serverName</param-name>
-		<param-value>http://39.108.163.70/erp</param-value>
+		<param-value>http://sugao.xmzzwy.com/erp</param-value>
 	</context-param>
 
 	<servlet>  
@@ -89,12 +89,12 @@
 		<!-- 服务器端登陆地址 -->
 		<init-param>
 			<param-name>casServerLoginUrl</param-name>
-			<param-value>http://39.108.163.70/sso-server/login</param-value>
+			<param-value>http://sugao.xmzzwy.com/sso-server/login</param-value>
 		</init-param>
 		<!-- 客户端服务器 -->
 		<init-param>
 			<param-name>serverName</param-name>
-			<param-value>http://39.108.163.70</param-value>
+			<param-value>http://sugao.xmzzwy.com</param-value>
 		</init-param>
 	</filter>
 
@@ -105,11 +105,11 @@
 		</filter-class>
 		<init-param>
 			<param-name>casServerUrlPrefix</param-name>
-			<param-value>http://39.108.163.70/sso-server</param-value>
+			<param-value>http://sugao.xmzzwy.com/sso-server</param-value>
 		</init-param>
 		<init-param>
 			<param-name>serverName</param-name>
-			<param-value>http://39.108.163.70</param-value>
+			<param-value>http://sugao.xmzzwy.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>redirectAfterValidation</param-name>
