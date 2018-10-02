@@ -109,18 +109,7 @@ function erp_orderChangeRefundController(
     function createConfirmInfo(){
         if($scope.selectedFormulaInfo.selectedFormula){
         	if ($scope.businessType == 2) {
-        		erp_orderChangeService.refundLadder({
-        			p_student_id : $scope.selectedRefundCourse.student_id,
-        			p_course_id : $scope.selectedRefundCourse.course_id,
-        			p_refund_course_times : $scope.selectedRefundCourse.refundCourseTimes,
-        			p_order_create_date : $scope.selectedRefundCourse.order_create_date
-        		}, function(resp) {
-        			if (!resp.error && resp.data) {
-        				$scope.selectedRefundCourse.former_unit_price = resp.data.level_price;
-        				$scope.ladder = resp.data;
-        			}
-        			genConfirmInfo();
-        		});
+                genConfirmInfo();
         	} else {
         		$scope.selectedRefundCourse.refundCourseTimes = $scope.refundCourseTimesList.length;
         		genConfirmInfo();
