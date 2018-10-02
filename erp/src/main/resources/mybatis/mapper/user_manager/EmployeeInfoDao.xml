@@ -34,8 +34,8 @@
           on tdt.id = tdd.type_id
         where tdt.code = 'employee_type'
         <if test="employee_name!=null and employee_name!=''">
-           and (tef.employee_name like '%'||#{employee_name,jdbcType=VARCHAR}||'%'
-            or tef.encoding like '%'||#{employee_name,jdbcType=VARCHAR}||'%')
+           and (tef.employee_name like concat('%', #{employee_name,jdbcType=VARCHAR}, '%')
+            or tef.encoding like concat('%', #{employee_name,jdbcType=VARCHAR}, '%'))
         </if>
         <if test="userType!=null and userType!=-1">
             and tef.user_type=#{userType,jdbcType=NUMERIC}
