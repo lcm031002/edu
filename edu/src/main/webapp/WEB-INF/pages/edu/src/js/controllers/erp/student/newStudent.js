@@ -285,7 +285,7 @@ function erp_newStudentController(
     stu.attend_school_id = $scope.selectedInfo.school.id;
 
 
-    stu.grade_id = $scope.selectedInfo.grade.id;
+    stu.grade_id = $scope.selectedInfo.grade;
     if ($scope.selectedInfo.recommender && $scope.selectedInfo.recommender.id) {
       stu.student_id_old = $scope.selectedInfo.recommender.id;
     }

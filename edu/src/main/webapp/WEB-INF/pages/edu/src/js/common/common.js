@@ -288,12 +288,12 @@ function genNumByString(inputString) {
 
 function getCurrentDate() {
 	var now = new Date();
-	return now.format("yyyy-MM-dd", now);
+	return Format("yyyy-MM-dd", now);
 }
 
 function getLatestWeek() {
 	var now = new Date();
-	return now.format("yyyy-MM-dd", now.setDate(now.getDate() - 7));
+	return Format("yyyy-MM-dd", now.setDate(now.getDate() - 7));
 }
 
 function getLastDayOfMonth(year, month) {
@@ -312,24 +312,24 @@ function getLatestMonth() {
 		now.setDate(date + 1);
 	}
 	
-	return now.format("yyyy-MM-dd", now);
+	return Format("yyyy-MM-dd", now);
 }
 
 function getLatestYear() {
 	var now = new Date();
 	now.setFullYear(now.getFullYear() - 1);
 	now.setDate(now.getDate() + 1);
-	return now.format("yyyy-MM-dd", now);
+	return Format("yyyy-MM-dd", now);
 }
 
 function getNextTwoDays() {
 	var now = new Date();
-	return now.format("yyyy-MM-dd", now.setDate(now.getDate() + 1));
+	return Format("yyyy-MM-dd", now.setDate(now.getDate() + 1));
 }
 
 function getNextWeek() {
 	var now = new Date();
-	return now.format("yyyy-MM-dd", now.setDate(now.getDate() + 7));
+	return Format("yyyy-MM-dd", now.setDate(now.getDate() + 7));
 }
 
 function getNextMonth() {
@@ -343,7 +343,7 @@ function getNextMonth() {
 		now.setDate(date + 1);
 	}
 	
-	return now.format("yyyy-MM-dd", now);
+	return Format("yyyy-MM-dd", now);
 }
 
 function addYear(year) {
@@ -354,6 +354,6 @@ function addYear(year) {
 	} else {
 		now.setDate(now.getDate() - 1);
 	}
-	return now.format("yyyy-MM-dd", now);
+	return Format("yyyy-MM-dd", now);
 }
 

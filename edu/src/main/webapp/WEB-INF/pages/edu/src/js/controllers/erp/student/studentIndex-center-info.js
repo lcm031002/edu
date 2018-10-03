@@ -622,7 +622,7 @@ function erp_studentCenterInfoController(
     $scope.saveModifyDetail = function() {
         $scope.saveCtrl = true;
         $scope.studentCopy.attend_school_id = $scope.selectedInfo.school.id;
-        $scope.studentCopy.grade_id = $scope.selectedInfo.grade.id;
+        $scope.studentCopy.grade_id = $scope.selectedInfo.grade;
         angular.copy($scope.studentCopy, $scope.student);
         $scope.saveStudent(function(student) {
             $scope.disModifyDetail = false;

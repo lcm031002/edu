@@ -45,7 +45,7 @@
 		       TOI2.ID        parentId,
 		       TOI2.ID        AS ID,
 		       TOI2.ORG_NAME  AS TEXT,
-		       toi.org_type||'' as type,
+		       toi.org_type as type,
 		       TOI2.ID        buId,
 		       TOI2.Parent_Id cityId,
 			   TOI3.ORG_NAME AS cityName
@@ -71,7 +71,7 @@
 		       TOI2.ID        parentId,
 		       TOI2.ID        AS ID,
 		       TOI2.ORG_NAME  AS TEXT,
-		       toi2.org_type||'' as type,
+		       toi2.org_type as type,
 		       TOI2.ID        buId,
 		       TOI2.Parent_Id cityId
 		  FROM PUB_USER_SCHOOL PUS
@@ -91,7 +91,7 @@
 			 select distinct TOI.ID AS ID,
 	                TOI.ORG_NAME AS TEXT,
 	                TOI.Parent_Id as parentId,
-	                toi.org_type || '' as type,
+	                toi.org_type  as type,
 	                case
 	                  when toi.org_type = 4 then
 	                   toi.parent_Id
