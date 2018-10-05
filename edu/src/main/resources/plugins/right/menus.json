@@ -1172,20 +1172,6 @@
 					]
 				},
 				{
-					"index": "A40007",
-					"name": "冻结单据",
-					"key": "financeFrozen",
-					"icon": "iconfont icon-financial_refund",
-					"type": "$state",
-					"value": "financeFrozen",
-					"path": "/finance/financeFrozen",
-					"value": "financeFrozen",
-					"href": "templates/erp/finance/frozen.html",
-					"services": [{
-						"name": "冻结订单查询"
-					}]
-				},
-				{
 					"index": "A40008",
 					"name": "欠费订单",
 					"key": "financeOrderUnpay",
@@ -2798,7 +2784,6 @@
 							"url": "/report/common/attendance_output",
 							"method": "GET"
 						},
-
 						{
 							"name": "校区查询",
 							"key": "classesReportAttendance.queryBranch",
@@ -2889,6 +2874,45 @@
 						{
 							"name": "团队查询",
 							"key": "classesWfdTeacherAttendReport.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000114",
+					"name": "考勤结算表",
+					"key": "classesReportSettlementAttendance",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportSettlementAttendance",
+					"path": "/report/classesReportSettlementAttendance",
+					"href": "templates/report/common/settlement_attendance_report.html",
+					"services":
+					[
+						{
+							"name": "考勤结算查询",
+							"key": "classesReportSettlementAttendance.query",
+							"url": "/report/common/attendance",
+							"method": "GET"
+						},
+
+						{
+							"name": "考勤结算导出",
+							"key": "classesReportSettlementAttendance.output",
+							"url": "/report/common/attendance_output",
+							"method": "GET"
+						},
+						{
+							"name": "校区查询",
+							"key": "classesReportSettlementAttendance.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesReportSettlementAttendance.queryBu",
 							"url": "/erp/dictionary/organization/bus",
 							"method": "GET"
 						}

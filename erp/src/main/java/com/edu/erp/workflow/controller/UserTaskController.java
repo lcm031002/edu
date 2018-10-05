@@ -190,7 +190,7 @@ public class UserTaskController extends BaseController {
 				String orderId = null;
 				int index = -1;
 				for(Map<String, Object> rowData : tasks.getResult()) {
-					workUrl = (String)rowData.get("WORKURL");
+					workUrl = (String)rowData.get("workurl");
 					if(StringUtils.isBlank(workUrl)) {
 						continue;
 					}

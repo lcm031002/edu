@@ -4,10 +4,11 @@
         <div class="panel-body">
             <div class="searchbar" style="width: 80vw;">
                 <div class="form form-inline">
-                    <div class="form-group m-0 mr-r20">
-                        <rd-date-picker-range 
-                            ng-start-date="searchParam.p_calcBeginDate" 
-                            ng-end-date="searchParam.p_calcEndDate">
+                    <div class="form-group m-0">
+                        <rd-date-picker-range
+                            ng-start-date="searchParam.p_start_date"
+                            ng-end-date="searchParam.p_end_date"
+                            ng-default-range="'today'">
                         </rd-date-picker-range>
                     </div>
                 </div>

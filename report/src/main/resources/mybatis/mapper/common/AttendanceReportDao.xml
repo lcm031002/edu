@@ -64,7 +64,8 @@
                a.attendance_remark,
                a.chinese_teacher_remark,
                a.foreign_teacher_remark,
-               toi.org_name course_branch_name
+               toi.org_name course_branch_name,
+            a.amount * ifnull(tc.settlement_ratio,0) settlement_amount
         from t_attendance_report a
 		left join t_attendance_ht ht on a.attendance_ht_id = ht.id
 		left join tab_student_info b
@@ -176,7 +177,8 @@
             null attendance_remark,
             null chinese_teacher_remark,
             null foreign_teacher_remark,
-            null course_branch_name
+            null course_branch_name,
+            null settlement_amount
         from t_attendance_report t
 		where
 			t.performance_bu_id = #{bu_id}

@@ -1,5 +1,6 @@
 package com.edu.erp.orders.service.impl;
 
+import com.edu.erp.workflow.service.UserTaskService;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -90,6 +91,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 
 	@Resource(name = "studentAccountService")
 	private StudentAccountService studentAccountService;
+
+	@Resource(name = "userTaskService")
+	private UserTaskService userTaskService;
 
 	@Override
 	public void orderChangeTransfer(Map<String, Object> transferObj)
@@ -291,103 +295,99 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 //			return;
 //		}
 
-//		if (!WorkflowHelper.isDeployed(processEngine, "erpv5.DXB_tuifei")) {
-//			throw new Exception("退费流程尚未发布，请联系管理员发布退费流程!");
-//		}
-		
-//		if (Constants.BusinessType.GXH == businessType) {
-		    this.orderRefund.premium(refundObj, businessType);
-//		} else {
-//		    tOrderChangeDao.premium(refundObj);
-//		}
+		this.orderRefund.premium(refundObj, businessType);
 
-//		if (!CollectionUtils.isEmpty(refundObj)
-//				&& "0".equals(refundObj.get("error_code") + "")) {
-//			refundObj.put("change_id",
-//					Long.parseLong(refundObj.get("v_change_id") + ""));
-//			refundObj.put("order_id", orderId);
-//
-//			Map<String, Object> workflowParam = new HashMap<String, Object>();
-//			workflowParam.put("change_id", Long.parseLong(refundObj.get("v_change_id") + ""));
-//			workflowParam.put("remark_order", refundObj.get("p_remark"));
-//			workflowParam.put("student_id", orderInfo.getStudent_id());
-//			workflowParam.put("student_name", orderInfo.getStudent_name());
-//			workflowParam.put("student_encoding",
-//					orderInfo.getStudent_encoding());
-//			workflowParam.put("order_encoding", orderInfo.getEncoding());
-//			workflowParam.put("order_id", orderInfo.getId());
-//			workflowParam.put("branch_id", orderInfo.getBranch_id());
-//
-//			Map<String, Object> queryParam = new HashMap<String, Object>();
-//			queryParam.put("businessType", orderInfo.getBusiness_type());
-//			queryParam.put("studentId", orderInfo.getStudent_id());
-//			// 查询订单课程时，应该用当前的登录校区，不能用订单的校区（存在转班的情况）
-//			//queryParam.put("branchId", orderInfo.getBranch_id());
-//			queryParam.put("branchId", (Long) refundObj.get("branch_id"));
-//			queryParam.put("id", refundObj.get("order_detail_id"));
-//			queryParam.put("product_line", refundObj.get("product_line"));
-//			List<TOrderCourse> orderDetailCourse = tOrderCourseDao
-//					.queryStudentOrderCourse(queryParam);
-//			if (CollectionUtils.isEmpty(orderDetailCourse)) {
-//				log.error("没有找到订单详情！");
-//				throw new Exception("没有找到订单详情！");
-//			}
-//			refundObj.put("course_name", orderDetailCourse.get(0)
-//					.getCourse_name());
-//			refundObj.put("teacher_name", orderDetailCourse.get(0)
-//					.getTeacher_name());
-//			refundObj.put("premium_deduction_amount",
-//					refundObj.get("p_premium_deduction_amount"));
-//
-//			workflowParam.put("businessDetailInfo",
-//					DetailBusinessInfoFormat.tuifeiString(refundObj));
-//			Map<String, Object> userApplication = new HashMap<String, Object>();
-//			userApplication.put("APPLICATION_ID", refundObj.get("user_id"));
-//			StringBuilder application = new StringBuilder("退费审批：");
-//			if (null != orderInfo.getStudent_id()) {
-//				application.append("学生ID[");
-//				application.append(orderInfo.getStudent_name() + ""
-//						+ orderInfo.getStudent_id());
-//				application.append("]");
-//			}
-//
-//			application.append("订单[");
-//			application.append(orderInfo.getEncoding());
-//			application.append("]");
-//			application.append("详单ID[");
-//			application.append(refundObj.get("order_detail_id"));
-//			application.append("]");
-//			application.append("[" + refundObj.get("premium_result") + "]");
-//
-//			userApplication.put("APPLICATION", application.toString());
-//			userApplication.put("STATUS", 1L);
-//			userApplication.put("CREATETIME",
-//					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
-//			userApplication.put(
-//					"WORKURL",
-//					"#/order-detail/" + orderInfo.getBusiness_type() + "/"
-//							+ orderInfo.getStudent_id() + "/"
-//							+ orderInfo.getId());
-//			userApplication.put("REMARK", refundObj.get("premium_remark"));
-//			userApplication.put("CURRENT_STATE", "申请已提交");
-//			userApplication.put("CURRENT_STEP", "申请提交");
-//
-//			userApplication.put("CURRENT_MAN", refundObj.get("user_name"));
-//
-//			userApplication.put("UPDATETIME",
-//					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
-//			userTaskService.insertApplication(userApplication);
-//			workflowParam.put("application_id", userApplication.get("id"));
-//
-//			ProcessInstance pi = genProcessInstance(processEngine, orderInfo,
-//					workflowParam);
-//
-//			processEngine.getExecutionService().createVariables(pi.getId(),
-//					workflowParam, true);
-//
-//		} else {
-//			throw new Exception(refundObj.get("error_desc") + "");
-//		}
+		if (!WorkflowHelper.isDeployed(processEngine, "tuifei_shenpi")) {
+			throw new Exception("退费流程尚未发布，请联系管理员发布退费流程!");
+		}
+		if (!CollectionUtils.isEmpty(refundObj)
+				&& "0".equals(refundObj.get("error_code") + "")) {
+			refundObj.put("change_id",
+					Long.parseLong(refundObj.get("v_change_id") + ""));
+			refundObj.put("order_id", orderId);
+
+			Map<String, Object> workflowParam = new HashMap<String, Object>();
+			workflowParam.put("change_id", Long.parseLong(refundObj.get("v_change_id") + ""));
+			workflowParam.put("remark_order", refundObj.get("p_remark"));
+			workflowParam.put("student_id", orderInfo.getStudent_id());
+			workflowParam.put("student_name", orderInfo.getStudent_name());
+			workflowParam.put("student_encoding",
+					orderInfo.getStudent_encoding());
+			workflowParam.put("order_encoding", orderInfo.getEncoding());
+			workflowParam.put("order_id", orderInfo.getId());
+			workflowParam.put("branch_id", orderInfo.getBranch_id());
+			workflowParam.put("laststep_user_id", orderInfo.getStudent_id());
+
+			Map<String, Object> queryParam = new HashMap<String, Object>();
+			queryParam.put("businessType", orderInfo.getBusiness_type());
+			queryParam.put("studentId", orderInfo.getStudent_id());
+			// 查询订单课程时，应该用当前的登录校区，不能用订单的校区（存在转班的情况）
+			//queryParam.put("branchId", orderInfo.getBranch_id());
+			queryParam.put("branchId", (Long) refundObj.get("branch_id"));
+			queryParam.put("id", refundObj.get("order_detail_id"));
+			queryParam.put("product_line", refundObj.get("product_line"));
+			List<TOrderCourse> orderDetailCourse = tOrderCourseDao
+					.queryStudentOrderCourse(queryParam);
+			if (CollectionUtils.isEmpty(orderDetailCourse)) {
+				log.error("没有找到订单详情！");
+				throw new Exception("没有找到订单详情！");
+			}
+			refundObj.put("course_name", orderDetailCourse.get(0)
+					.getCourse_name());
+			refundObj.put("teacher_name", orderDetailCourse.get(0)
+					.getTeacher_name());
+			refundObj.put("premium_deduction_amount",
+					refundObj.get("p_premium_deduction_amount"));
+
+			workflowParam.put("businessDetailInfo",
+					DetailBusinessInfoFormat.tuifeiString(refundObj));
+			Map<String, Object> userApplication = new HashMap<String, Object>();
+			userApplication.put("APPLICATION_ID", refundObj.get("user_id"));
+			StringBuilder application = new StringBuilder("退费审批：");
+			if (null != orderInfo.getStudent_id()) {
+				application.append("学生ID[");
+				application.append(orderInfo.getStudent_name() + ""
+						+ orderInfo.getStudent_id());
+				application.append("]");
+			}
+
+			application.append("订单[");
+			application.append(orderInfo.getEncoding());
+			application.append("]");
+			application.append("详单ID[");
+			application.append(refundObj.get("order_detail_id"));
+			application.append("]");
+			application.append("[" + refundObj.get("premium_result") + "]");
+
+			userApplication.put("APPLICATION", application.toString());
+			userApplication.put("STATUS", 1L);
+			userApplication.put("CREATETIME",
+					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
+			userApplication.put(
+					"WORKURL",
+					"#/order-detail/" + orderInfo.getBusiness_type() + "/"
+							+ orderInfo.getStudent_id() + "/"
+							+ orderInfo.getId());
+			userApplication.put("REMARK", refundObj.get("premium_remark"));
+			userApplication.put("CURRENT_STATE", "申请已提交");
+			userApplication.put("CURRENT_STEP", "申请提交");
+
+			userApplication.put("CURRENT_MAN", refundObj.get("user_name"));
+
+			userApplication.put("UPDATETIME",
+					DateUtil.getCurrDate("yyyy-MM-dd HH:mm:ss"));
+			userTaskService.insertApplication(userApplication);
+			workflowParam.put("application_id", userApplication.get("id"));
+
+			ProcessInstance pi = genProcessInstance(processEngine, orderInfo,
+					workflowParam);
+
+			processEngine.getExecutionService().createVariables(pi.getId(),
+					workflowParam, true);
+
+		} else {
+			throw new Exception(refundObj.get("error_desc") + "");
+		}
 	}
 	
 	@Override
@@ -462,16 +462,10 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	private ProcessInstance genProcessInstance(ProcessEngine processEngine,
 			TabOrderInfo orderBusiness, Map<String, Object> mapps) {
 		ProcessInstance processInstance = null;
-		String prefix_info = "workflow.tuifei2." + orderBusiness.getBu_id();
-		String flag = DxbCityCfg.getInstance().getConfigItem(prefix_info,
-				"false");
-		if ("true".equals(flag)) {
-			processInstance = processEngine.getExecutionService()
-					.startProcessInstanceByKey("erpv5.DXB_tuifei2", mapps);
-		} else {
-			processInstance = processEngine.getExecutionService()
-					.startProcessInstanceByKey("erpv5.DXB_tuifei", mapps);
-		}
+
+		processInstance = processEngine.getExecutionService()
+			.startProcessInstanceByKey("tuifei_shenpi", mapps);
+
 		return processInstance;
 	}
 

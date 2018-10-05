@@ -506,14 +506,16 @@ public class ServiceAPI implements Serializable {
 	 */
 	public Map<String, Object> doOrderChangeAudit(Long change_id,
 			String remark, String change_status, Long userId) {
-		String json = "{ " + "\"change_id\":" + change_id + ",\"remark\":\""
-				+ remark + "\",\"change_status\":" + change_status + "}";
+        Map<String, Object> refundObj = new HashMap<String, Object>();
+        refundObj.put("p_change_id", change_id);
+        refundObj.put("p_change_status", change_status);
+        refundObj.put("P_input_user", userId);
+        refundObj.put("p_remark", remark);
 		try {
 			OrderChangeService orderChangeService = (OrderChangeService) ApplicationContextUtil
-					.getBean("orderChangeService");
-			Map<String, Object> result = new HashMap<String,Object>();
-			/*Map<String, Object> result = orderChangeService.doOrderChangeAudit(
-					json, userId);
+				.getBean("orderChangeService");
+
+			orderChangeService.premiumAudit(refundObj);
 			StringBuilder detailInfoStr = new StringBuilder();
 			detailInfoStr.append("退费审批变动ID：");
 			detailInfoStr.append(change_id);
@@ -524,8 +526,9 @@ public class ServiceAPI implements Serializable {
 			detailInfoStr.append("备注信息：");
 			detailInfoStr.append(remark);
 			LogOperateUtil.getInstance().LogOperate("学生退费审批",
-					detailInfoStr.toString(), "用户ID：" + userId, "成功");*/
-			return result;
+				detailInfoStr.toString(), "用户ID：" + userId, "成功");
+
+			return refundObj;
 		} catch (Exception e) {
 			e.printStackTrace();
 			StringBuilder detailInfoStr = new StringBuilder();

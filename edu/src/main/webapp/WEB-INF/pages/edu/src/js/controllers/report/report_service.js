@@ -275,6 +275,18 @@ function report_attendanceReportService($resource) {
             method : 'GET',
             params : {},
             isArray : false
+        },
+        querySettlement : {
+          url : '/report/common/settlementAttendance',
+          method : 'GET',
+          params : {},
+          isArray : false
+        },
+        outputSettlement : {
+          url : '/report/common/settlementAttendance_output',
+          method : 'GET',
+          params : {},
+          isArray : false
         }
     });
 }

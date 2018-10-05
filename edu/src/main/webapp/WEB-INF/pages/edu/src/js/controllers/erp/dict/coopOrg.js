@@ -31,7 +31,6 @@ function erp_CoopOrgController(
     $scope.coopOrg = {
         id: 0,
         coopOrgName: '',
-        percentage:0,
         description: ''
     };
 
@@ -85,7 +84,6 @@ function erp_CoopOrgController(
         $scope.coopOrg = {
             id: coopOrg.id,
             coopOrgName: coopOrg.coopOrgName,
-            percentage: coopOrg.percentage,
             description: coopOrg.description
         };
         $("#erpSystemCommonCoopOrgPanel").modal('show');

@@ -451,6 +451,7 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/report/common/renewal_rate_actual.js"  desc="培英精品班续报率报表"></script>
 <script type="text/javascript" src="js/controllers/report/common/surplus_amount_fee.js"  desc="学员剩余课时费用表"></script>
 <script type="text/javascript" src="js/controllers/report/common/attendance_report.js"  desc="考勤消耗表"></script>
+<script type="text/javascript" src="js/controllers/report/common/settlement_attendance_report.js"  desc="考勤结算表"></script>
 <script type="text/javascript" src="js/controllers/report/bjk/teacher_workload_report.js"  desc="培英班教师工作量表"></script>
 <script type="text/javascript" src="js/controllers/report/wfd/teacher_attend_report.js"  desc="晚辅导教师考勤消耗表"></script>
 <script type="text/javascript" src="js/controllers/report/common/attendance_month_report.js"  desc="月度消耗表"></script>

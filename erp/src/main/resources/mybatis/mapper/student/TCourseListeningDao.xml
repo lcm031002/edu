@@ -58,7 +58,7 @@
 		       tea.teacher_name teacher_name,
 		       tea.id teacher_id,
 		       cou.unit_price unit_price,
-		       to_char(to_date(lis.RECORD_TIME,'yyyy-MM-dd HH24:MI:SS'),'yyyy-MM-dd') listening_date,
+					 str_to_date(date_format(lis.RECORD_TIME,'%Y-%m-%d %T'),'%Y-%m-%d') listening_date,
 		       case lis.pay_status
 		         when 1 then
 		          '成功缴费'
@@ -85,10 +85,10 @@
 				   and lis.branch_id = #{branch_id, jdbcType=NUMERIC}
 			</if>
 			<if test="start_date != null">
-				   and to_char(to_date(lis.RECORD_TIME,'yyyy-MM-dd HH24:MI:SS'),'yyyy-MM-dd') >= #{start_date, jdbcType=VARCHAR}
+				   and str_to_date(date_format(lis.RECORD_TIME,'%Y-%m-%d %T'),'%Y-%m-%d') >= #{start_date, jdbcType=VARCHAR}
 			</if>
 			<if test="end_date != null">
-				   and to_char(to_date(lis.RECORD_TIME,'yyyy-MM-dd HH24:MI:SS'),'yyyy-MM-dd') &lt;= #{end_date, jdbcType=VARCHAR} 
+				   and str_to_date(date_format(lis.RECORD_TIME,'%Y-%m-%d %T'),'%Y-%m-%d') &lt;= #{end_date, jdbcType=VARCHAR}
 			</if>
 		 order by lis.id asc
 	</select>

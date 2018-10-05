@@ -36,6 +36,8 @@ public class TAttendanceReport {
 	private String student_name;			//学生姓名
 	
 	private BigDecimal amount;				//金额
+
+	private BigDecimal settlement_amount;	//结算金额
 	
 	private Long course_hour;				//消耗课时
 	
@@ -594,4 +596,12 @@ public class TAttendanceReport {
 	public String getCourse_branch_name() { return course_branch_name;	}
 
 	public void setCourse_branch_name(String course_branch_name) {	this.course_branch_name = course_branch_name;}
+
+	public BigDecimal getSettlement_amount() {
+		return settlement_amount;
+	}
+
+	public void setSettlement_amount(BigDecimal settlement_amount) {
+		this.settlement_amount = settlement_amount;
+	}
 }

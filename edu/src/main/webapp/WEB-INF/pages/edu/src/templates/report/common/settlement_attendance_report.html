@@ -1,4 +1,4 @@
-<div class="report" ng-controller="report_attendanceReportController">
+<div class="report" ng-controller="report_settlementAttendanceReportController">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="title">考勤消耗表</span>
@@ -7,8 +7,8 @@
             <div class="toolbar">
                 <div class="form form-inline">
                     <div class="form-group m-0">
-                        <rd-date-picker-range 
-                            ng-start-date="searchParam.p_start_date" 
+                        <rd-date-picker-range
+                            ng-start-date="searchParam.p_start_date"
                             ng-end-date="searchParam.p_end_date"
                             ng-default-range="'today'">
                         </rd-date-picker-range>
@@ -59,6 +59,7 @@
             <col width="90"/>
             <col width="90"/>
             <col width="90"/>
+            <col width="90"/>
             <col width="110"/>
             <col width="90"/>
             <col width="90"/>
@@ -84,6 +85,7 @@
                 <th>课程名称</th>
                 <th>课程校区</th>
                 <th>金额</th>
+                <th>结算金额</th>
                 <th>消耗课时</th>
                 <th>报班总次数</th>
                 <th>课次</th>
@@ -119,6 +121,7 @@
                 <td>{{data.course_name}}</td>
                 <td>{{data.course_branch_name}}</td>
                 <td>{{data.amount}}</td>
+                <td>{{data.settlement_amount}}</td>
                 <td>{{data.course_hour}}</td>
                 <td>{{data.course_count}}</td>
                 <td>{{data.course_time}}</td>
