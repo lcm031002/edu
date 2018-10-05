@@ -767,7 +767,7 @@
 									"method": "PUT"
 								}
 							]
-						},
+						}/*,
 						{
 							"index": "A3000702",
 							"name": "1对1排课处理",
@@ -776,7 +776,7 @@
 							"value": "classesScheduleYdyProcess",
 							"path": "/orders/classesSchedule/ydyProcess?studentId&studentName",
 							"href": "templates/erp/course/course_scheduling_ydy_process.html"
-						}
+						}*/
 					]
 				},
 				{

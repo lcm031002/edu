@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TScheduleSplitTimeDao">
+	<insert id="insert" parameterType="com.edu.erp.model.TScheduleSplitTime">
+		insert into t_schedule_splittime
+		(
+			attend_id,
+			times,
+			order_course_id,
+			update_user, 
+        	update_time,
+        	create_user, 
+        	create_time,
+        	attend_amount
+		)
+		VALUES
+		(
+			#{attendId,jdbcType=NUMERIC},
+			#{times,jdbcType=NUMERIC},
+			#{orderCourseId,jdbcType=NUMERIC},
+			#{update_user,jdbcType=NUMERIC},
+			#{update_time,jdbcType=VARCHAR},
+			#{create_user,jdbcType=NUMERIC},
+			#{create_time,jdbcType=VARCHAR},
+			#{attendAmount,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<select id="queryTScheduleSplitTimeList" parameterType="map"  resultType="com.edu.erp.model.TScheduleSplitTime">
+		select attend_id attendId, times, order_course_id orderCourseId
+		from t_schedule_splittime
+		where 1 = 1
+		<if test="attendId != null">
+			and	attend_id= #{attendId}
+		</if>
+		<if test="orderCourseId != null">
+			and	order_course_id = #{orderCourseId}
+		</if>
+	</select>
+
+</mapper>

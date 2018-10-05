@@ -1002,7 +1002,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         String[] attendIdList = attend_ids.split(",");
         for (String attendId : attendIdList) {
             TAttendance tAttendanceTmp = attendanceDao.queryAttendanceInfoById(Long.parseLong(attendId));
-            if(tAttendanceTmp.getAttend_type()==TAttendance.AttendTypeEnum.YJKQ.getCode()){
+            if(tAttendanceTmp.getAttend_type() == TAttendance.AttendTypeEnum.YJKQ.getCode().longValue()){
             	throw new Exception("考勤过的记录不允许取消!");
             }
             tAttendanceTmp.setAttend_type(TAttendance.AttendTypeEnum.QXPK.getCode());
@@ -1017,7 +1017,11 @@ public class AttendanceServiceImpl implements AttendanceService {
                 tOrderCourse.setCourse_schedule_count(course_schedule_count+tScheduleSplitTime.getTimes());
                 tOrderCourseDao.updateOrderCourse(tOrderCourse);
             }
-            attendanceDao.updateAttendanceHt(tAttendanceTmp);
+            Long attendHtId = attendanceDao.queryMaxAttendHtId(tAttendanceTmp.getId());
+            if (attendHtId != null) {
+                tAttendanceTmp.setAttend_ht_id(attendHtId);
+                attendanceDao.updateAttendanceHt(tAttendanceTmp);
+            }
         }
 
     }
@@ -1217,7 +1221,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
     public void updateAttendance(TAttendance attendance) throws Exception {
         this.attendanceDao.updateAttendance(attendance);
-        this.attendanceDao.updateAttendanceHt(attendance);
+        Long attendHtId = attendanceDao.queryMaxAttendHtId(attendance.getId());
+        if (attendHtId != null) {
+            attendance.setAttend_ht_id(attendHtId);
+            attendanceDao.updateAttendanceHt(attendance);
+        }
     }
 
     @Override

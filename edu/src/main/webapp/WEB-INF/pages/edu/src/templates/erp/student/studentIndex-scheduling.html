@@ -20,22 +20,22 @@
 							<button class="btn btn-primary" ng-click="querySchedule()"><i class="iconfont icon-search"></i> 查询</button></rd-branch>
 					</form>
 				</div>
-				<!-- <hr> -->
-				<!-- <div class="toolbar"> -->
-					<!-- <button class="btn btn-primary btn-circle" ng-click="addScheduleCourse()">
+				<hr>
+				<div class="toolbar">
+					<button class="btn btn-primary btn-circle" ng-click="addScheduleCourse()">
 						<i class="fa fa-plus"></i>新增排课
-					</button> -->
-					<!-- <button class="btn btn-primary btn-circle" ng-click="cancelScheduleCourse()">
+					</button>
+					<button class="btn btn-primary btn-circle" ng-click="cancelScheduleCourse()">
 						<i class="fa fa-plus"></i>取消排课
-					</button> -->
-				<!-- </div> -->
+					</button>
+				</div>
 			</div>
 		</div>
 		<div class="table-panel ov-a">
 			<table class="table table-striped" style="min-width: 1600px;">
 				<thead>
 					<tr>
-						<!-- <th><input type="checkbox" ng-model="checkAllFlag" ng-click="onScheduleCheckAll()"></th> -->
+						<th><input type="checkbox" ng-model="checkAllFlag" ng-click="onScheduleCheckAll()"></th>
 						<th width="220">操作</th>
 						<th>课程名称</th>
 						<th>校区</th>
@@ -49,13 +49,12 @@
 						<th>科目</th>
 						<th>考勤状态</th>
 						<th>考勤单号</th>
-						
 						<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="schedule in scheduleList">
-						<!-- <td><input type="checkbox" ng-model="schedule.selectFlag" ng-click="onScheduleChecked(schedule)"></td> -->
+						<td><input type="checkbox" ng-model="schedule.selectFlag" ng-click="onScheduleChecked(schedule)"></td>
 						<td>
 							<span class="cur" ng-click="editSchedule(schedule)" ng-show="schedule.attend_type == 28">
 								<i class="iconfont text-primary icon-view"></i>编辑

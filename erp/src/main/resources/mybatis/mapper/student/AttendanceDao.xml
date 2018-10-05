@@ -111,7 +111,8 @@
 	       start_time,
 	       end_time,
 	       course_times,
-		   encoding
+		   encoding,
+		   attendance_id
 	       )
     	values
 	      (
@@ -139,11 +140,12 @@
 		  #{start_time,jdbcType=VARCHAR},
 		  #{end_time,jdbcType=VARCHAR},
 		  #{courseTimes,jdbcType=VARCHAR},
-		  #{encoding,jdbcType=VARCHAR}
+		  #{encoding,jdbcType=VARCHAR},
+		  #{id, jdbcType=NUMERIC}
 	       )
 	</insert>
 	
-	<insert id="addHtByAttendanceId" parameterType="java.lang.Long">
+	<insert id="addHtByAttendanceId" parameterType="map">
 		insert into t_attendance_ht
 	      (
 	       scheduling_id,
@@ -390,8 +392,8 @@
 		<if test="attend_user != null">
 			attend_user = #{attend_user},
 		</if>
-			update_time = sysdate
-		where t.id = #{id,jdbcType=NUMERIC}
+			update_time = sysdate()
+		where id = #{id,jdbcType=NUMERIC}
 	</update>
 	
 	<update id="updateAttendanceHt"  parameterType="com.edu.erp.model.TAttendance">
@@ -444,9 +446,13 @@
 		<if test="sub_attend_type != null">
 			sub_attend_type = #{sub_attend_type},
 		</if>
-			update_time = sysdate
-		where id = (select max(id) from T_ATTENDANCE_HT where attendance_id=#{id,jdbcType=NUMERIC})
+			update_time = sysdate()
+		where id = #{attend_ht_id, jdbcType=NUMERIC}
 	</update>
+
+	<select id="queryMaxAttendHtId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select max(id) from T_ATTENDANCE_HT where attendance_id = #{attendId,jdbcType=NUMERIC}
+	</select>
 	
 	<select id="queryStudentAttendanceById" parameterType="map" resultType="map">
 		select tat.*
@@ -1139,8 +1145,7 @@
 				</if>
 				<if test="start_date != null and start_date != '' and (end_date != null and end_date != '')">
 				<![CDATA[
-					and date_format(a.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date}
-												 AND #{end_date}
+					and DATE_FORMAT(STR_TO_DATE(concat(a.COURSE_DATE, ''), '%Y%m%d'), '%Y-%m-%d') BETWEEN #{start_date} AND #{end_date}
 				 ]]>
 				</if>
 		order by a.course_date, a.start_time

@@ -134,6 +134,9 @@ public class TAttendance extends BaseObject {
     private Long productLine;//产品线
 
     private Long apply_id;
+
+    private Long attend_ht_id;
+
     public static enum AttendTypeEnum{
         YJKQ(21l, "已经考勤"),
         ZCPK(28l, "正常排课"),
@@ -664,5 +667,13 @@ public class TAttendance extends BaseObject {
 
     public void setForeignTeacherAdvanceParamRemark(String foreignTeacherAdvanceParamRemark) {
         this.foreignTeacherAdvanceParamRemark = foreignTeacherAdvanceParamRemark;
+    }
+
+    public Long getAttend_ht_id() {
+        return attend_ht_id;
+    }
+
+    public void setAttend_ht_id(Long attend_ht_id) {
+        this.attend_ht_id = attend_ht_id;
     }
 }

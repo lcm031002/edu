@@ -62,6 +62,8 @@ public interface AttendanceDao {
      * @throws Exception
      */
     void updateAttendanceHt(TAttendance tAttendance) throws Exception;
+
+    Long queryMaxAttendHtId(Long attendId);
     
 
     /***

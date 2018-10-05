@@ -77,7 +77,7 @@ function klTeacherDropdown(
             search_info: search_info
           }
           scope.searchparam.onlyValidTeacher = 'Y'
-          return erp_teacherService.page(scope.searchparam).$promise;
+          return erp_teacherService.query(scope.searchparam).$promise;
         }
       }
 
