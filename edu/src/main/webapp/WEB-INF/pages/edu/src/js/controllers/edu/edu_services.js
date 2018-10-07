@@ -1,6 +1,3 @@
-/**
- * Created by Liyong.zhu on 2017/1/15.
- */
 'use strict';
 
 //登出服务

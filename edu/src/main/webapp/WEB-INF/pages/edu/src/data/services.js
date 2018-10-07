@@ -103,7 +103,7 @@ angular.module('ework-ui').factory('PUBAccountService', [ '$resource', PUBAccoun
 
 angular.module('ework-ui').factory('JudgePasswordService', [ '$resource', JudgePasswordService ]);
 
-angular.module('ework-ui').factory('klxxedu_LoginEmployeeService', [ '$resource', klxxedu_LoginEmployeeService ]);
+angular.module('ework-ui').factory('edu_LoginEmployeeService', [ '$resource', edu_LoginEmployeeService ]);
 
 
 /**
@@ -1151,7 +1151,7 @@ function PUBEmployeeService($resource){
  * @returns {Object}
  * @constructor
  */
-function klxxedu_LoginEmployeeService($resource){
+function edu_LoginEmployeeService($resource){
     return $resource('common/employeeservice', {}, {
         query:{
             method : 'GET',

@@ -15,7 +15,7 @@ function erp_printService(erp_studentPrintService) {
                     	if(location.href.indexOf('klxuexi.org')>0) {
                             window.open("/printhtml/print_transfer.html?" + printParam.dynamicId + "&" + printParam.printType);
                         }else{
-                            window.open("/klxxedu/printhtml/print_transfer.html?" + printParam.dynamicId + "&" + printParam.printType);
+                            window.open("/edu/printhtml/print_transfer.html?" + printParam.dynamicId + "&" + printParam.printType);
 						}
 					}
                     else {

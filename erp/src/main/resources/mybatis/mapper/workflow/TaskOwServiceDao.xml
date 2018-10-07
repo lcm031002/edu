@@ -87,7 +87,7 @@
 		        and t.execution_id_ like concat('%', #{execution_id}, '%')
 		     </if>
 		     <if test="branch_id !=null and branch_id != ''">
-		        and pkg_workflow_common.f_match_variable(e.dbid_, 'branch_id',#{branch_id,jdbcType=VARCHAR}, 0) = 1 --匹配到了校区了
+		        and f_match_variable(e.dbid_, 'branch_id',#{branch_id,jdbcType=VARCHAR}, 0) = 1 --匹配到了校区了
 		     </if>
 		     <if test="startDate !=null and startDate != '' and endDate !=null and endDate != ''">
 		        and to_char(t.create_,'yyyy-mm-dd') between #{startDate,jdbcType=VARCHAR} and #{endDate,jdbcType=VARCHAR}
@@ -95,7 +95,7 @@
 		     <if test="branch_ids !=null and branch_ids != ''">
 		       and
 		       <foreach collection="branch_ids" item="item" index="index" open="(" close=")" separator="or">
-		           pkg_workflow_common.f_match_variable(e.dbid_, 'branch_id',#{item,jdbcType=VARCHAR}, 0) = 1 --匹配到了校区了
+		           f_match_variable(e.dbid_, 'branch_id',#{item,jdbcType=VARCHAR}, 0) = 1 --匹配到了校区了
                </foreach>		        
 		     </if>
 		     
@@ -114,7 +114,7 @@
 					task.priority_ 		priority,
 					task.execution_ 	executionId   
 		 from  		jbpm4_task task
-		 where 		pkg_workflow_common.f_match_variable(task.execution_, 'branch_id', #{branch_id}, 0) = 1 
+		 where 		f_match_variable(task.execution_, 'branch_id', #{branch_id}, 0) = 1
             <if test="start_date != null and start_date != '' and end_date!=null and end_date!='' ">
 				and 	to_char(task.create_,'yyyy-mm-dd') between #{start_date} and #{end_date}
 			</if>

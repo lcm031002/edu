@@ -458,7 +458,7 @@ function erp_studentAccountRechargeController(
           if(location.href.indexOf('klxuexi.org')>0){
             window.open("/printhtml/print_rechargeXiamen.html?printData=" + printDataStirng);
           }else{
-            window.open("/klxxedu/printhtml/print_rechargeXiamen.html?printData=" + printDataStirng);
+            window.open("/edu/printhtml/print_rechargeXiamen.html?printData=" + printDataStirng);
           }
         }
       if(printData[0].rechargeInfo.CITY_ID==3) {

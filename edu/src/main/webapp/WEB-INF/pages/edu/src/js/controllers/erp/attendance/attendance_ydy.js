@@ -109,7 +109,7 @@ function erp_attendanceYdyController(
                 if(location.href.indexOf('klxuexi.org')>0){
 				window.open("/printhtml/print_ydy.html?attendanceListIds=" + attendanceListIds.join(','));}
 				else{
-                window.open("/klxxedu/printhtml/print_ydy.html?attendanceListIds=" + attendanceListIds.join(','));
+                window.open("/edu/printhtml/print_ydy.html?attendanceListIds=" + attendanceListIds.join(','));
 				}
 			} else {
                 $scope.printMoreYdyAttendance(attendList);
@@ -330,7 +330,7 @@ function erp_attendanceYdyController(
             		if(location.href.indexOf('klxuexi.org')>0){
                     window.open("/printhtml/print_ydy.html?attendanceListIds=" + attendanceListId);}
                     else{
-                    window.open("/klxxedu/printhtml/print_ydy.html?attendanceListIds=" + attendanceListId);
+                    window.open("/edu/printhtml/print_ydy.html?attendanceListIds=" + attendanceListId);
 					}
 				}else {
             		CreatePrintPageYdyAttendance(resp.data);

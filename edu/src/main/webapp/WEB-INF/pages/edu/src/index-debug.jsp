@@ -202,7 +202,7 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/directives/kl-table.js"></script>
 
 
-<script type="text/javascript" src="js/controllers/edu/klxxedu_services.js"  ></script>
+<script type="text/javascript" src="js/controllers/edu/edu_services.js"  ></script>
 <script type="text/javascript" src="js/controllers/edu/index.js"  ></script>
 
 <script type="text/javascript" src="js/controllers/master-ctrl.js"></script>

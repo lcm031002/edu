@@ -1,6 +1,6 @@
 {
-	"name": "快乐学习教育",
-	"key": "klxxedu",
+	"name": "素高教育",
+	"key": "edu",
 	"version": "0.0.1",
 	"error": "false",
 	"rightDir": 
@@ -25,7 +25,7 @@
 			"type": "$state",
 			"active": "true",
 			"value": "index",
-			"href": "templates/klxxedu/index.html",
+			"href": "templates/edu/index.html",
 			"path": "/index",
 			"services": 
 			[
@@ -274,7 +274,7 @@
 							"icon": "fa fa-navicon",
 							"type": "$state",
 							"path": "/RecruitStudents/RecruitStudentsBusiness/RecruitStudentsCustomer",
-							"href": "templates/klxxedu/employee/employee.html",
+							"href": "templates/edu/employee/employee.html",
 							"value": "RecruitStudentsCustomer",
 							"showMenu": "false"
 						},

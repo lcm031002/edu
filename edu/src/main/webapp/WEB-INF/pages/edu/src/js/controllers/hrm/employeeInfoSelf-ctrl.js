@@ -14,7 +14,7 @@ angular.module('ework-ui')
         'EmployeeExtService',
         'EmployeeManageService',
         'hrmEmployeeService',
-        'klxxedu_LoginEmployeeService',
+        'edu_LoginEmployeeService',
         hrmEmployeeInfoSelfCtrl]);
 
 function hrmEmployeeInfoSelfCtrl($scope,
@@ -28,7 +28,7 @@ function hrmEmployeeInfoSelfCtrl($scope,
                   EmployeeExtService,
                   EmployeeManageService,
                   hrmEmployeeService,
-                  klxxedu_LoginEmployeeService
+                  edu_LoginEmployeeService
     ){
 	//员工列表
 	$scope.employeeList = {};
@@ -319,7 +319,7 @@ function hrmEmployeeInfoSelfCtrl($scope,
         //查询当前员工的基本信息
         queryEmployeeInfo();
     }else{
-        klxxedu_LoginEmployeeService.query({},function(resp){
+        edu_LoginEmployeeService.query({},function(resp){
             if(!resp.error && resp.data){
                 $scope.employeeId = resp.data.id;
                 $scope.queryType = 'self';

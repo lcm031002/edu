@@ -191,7 +191,7 @@ function erp_StudentOrdersController(
                         if(location.href.indexOf('klxuexi.org')>0){
                             window.open("/printhtml/print_classlist.html");
                         }else{
-                        window.open("/klxxedu/printhtml/print_classlist.html");
+                        window.open("/edu/printhtml/print_classlist.html");
                         }
                     }else{
                         CreatePrintPageGxhYdyBb($scope.temporaryOrder);
@@ -203,7 +203,7 @@ function erp_StudentOrdersController(
                         if(location.href.indexOf('klxuexi.org')>0){
                             window.open("/printhtml/print_BJKclasslist.html");
                         }else{
-                        window.open("/klxxedu/printhtml/print_BJKclasslist.html");
+                        window.open("/edu/printhtml/print_BJKclasslist.html");
                         }
                     }else{
                     if ($scope.temporaryOrder.city_id == 3) {

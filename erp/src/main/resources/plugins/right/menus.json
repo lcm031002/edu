@@ -1,6 +1,6 @@
 {
     "name": "厝边素高教育",
-    "key": "klxxedu",
+    "key": "edu",
     "version": "0.0.1",
     "error":"false",
     "rightDir":["/templates"],
@@ -15,7 +15,7 @@
             "type":"$state",
             "active":"true",
             "value":"index",
-            "href":"templates/klxxedu/index.html",
+            "href":"templates/edu/index.html",
             "path":"/index"
         },
         {
@@ -70,7 +70,7 @@
                     "icon":"fa fa-navicon",
                     "type":"$state",
                     "path":"/RecruitStudents/RecruitStudentsCustomer",
-                    "href":"templates/klxxedu/employee/employee.html",
+                    "href":"templates/edu/employee/employee.html",
                     "value":"RecruitStudentsCustomer"
                 },{
                     "index":"A12006",
@@ -184,7 +184,7 @@
                     "type":"$state",
                     "value":"classesIndex",
                     "path":"/classes/classesIndex",
-                    "href":"templates/klxxedu/index.html"
+                    "href":"templates/edu/index.html"
                 },{
                     "index":"A14002",
                     "name":"报班管理",

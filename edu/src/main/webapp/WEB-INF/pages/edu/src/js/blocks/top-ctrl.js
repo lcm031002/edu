@@ -98,14 +98,6 @@ function TopHeadCtrl(
             window.location = '?#/students'
             location.reload(true)
 
-            // Comment by baiqb@klxuexi.org
-            // if (resp.changeTeam && location.href && location.href.indexOf('studentId') != -1) {
-            //     window.location = '/klxxedu/#/students/studentsSearch'
-            // } else {
-            //     location.reload(true);
-            // }
-            // End Comment
-            // End Fixed: bug#1723
         })
     }
 

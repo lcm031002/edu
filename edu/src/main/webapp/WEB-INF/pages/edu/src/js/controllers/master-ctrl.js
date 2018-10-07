@@ -3,9 +3,9 @@
  */
 
 angular.module('ework-ui')
-    .controller('MasterCtrl', ['$scope','$rootScope','$location', '$log','$state','ProjectService','MenusService','edu_accountService','klxxedu_LoginEmployeeService', MasterCtrl]);
+    .controller('MasterCtrl', ['$scope','$rootScope','$location', '$log','$state','ProjectService','MenusService','edu_accountService','edu_LoginEmployeeService', MasterCtrl]);
 
-function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,MenusService,edu_accountService,klxxedu_LoginEmployeeService) {
+function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,MenusService,edu_accountService,edu_LoginEmployeeService) {
     $scope.topMenus = {};
     $scope.topBodyURL = 'templates/block/top.html?_='+(new Date()).getTime();
     $scope.leftNavURL = 'templates/block/left_nav.html?_='+(new Date()).getTime();
@@ -28,7 +28,7 @@ function MasterCtrl($scope,$rootScope,$location, $log,$state,ProjectService,Menu
     }
 
     function queryEmployeeInfo(){
-        klxxedu_LoginEmployeeService.query({},function(resp){
+        edu_LoginEmployeeService.query({},function(resp){
             if(!resp.error){
                 $rootScope.curEmployee = resp.data;
             }else{

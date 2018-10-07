@@ -27,11 +27,6 @@
                     <img src="img/erp/loading2.gif">
                 </td>
             </tr>
-            <tr  ng-if="isLoading!='isLoading' && (!courseYDYInfoList||!courseYDYInfoList.length)">
-                <td colspan="11" align="center">
-                    无数据.
-                </td>
-            </tr>
             <tr ng-repeat="courseYDYInfo in courseYDYInfoList" ng-if="isLoading!='isLoading'" >
                 <td>{{courseYDYInfo.course_name}}</td>
                 <td>{{courseYDYInfo.course_no}}</td>

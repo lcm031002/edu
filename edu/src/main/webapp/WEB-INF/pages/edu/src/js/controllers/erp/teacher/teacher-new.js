@@ -217,7 +217,6 @@ function erp_NewTeacherController(
                     $uibMsgbox.success('教师添加成功');
                     // $scope.newTeacher = {};
                     $scope.clearAll();
-                    // window.location.href = "/klxxedu/#/teachers/teacherSearch";
                 } else {
                     $uibMsgbox.error(resp.message);
                 }
