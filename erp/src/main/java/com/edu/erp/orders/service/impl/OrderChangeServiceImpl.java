@@ -204,8 +204,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		refundObj.put("pre_amount", 0);
 		refundObj.put("error_code", 0);
 		refundObj.put("error_desc", "");
-		//String changeNo = new RandomGUID().toString();
-		//refundObj.put("change_no", changeNo);
+		String changeNo = UUID.randomUUID().toString();
+		changeNo = changeNo.replaceAll("-", "");
+		refundObj.put("change_no", changeNo);
 		refundObj.put("change_type", 1);
 		Long orderId = Long.parseLong(refundObj.get("order_id") + "");
 		TabOrderInfo orderInfo = orderInfoService
@@ -214,26 +215,8 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			throw new Exception("订单未找到！orderId is " + orderId);
 		}
 
-//		if (orderInfo.getInvoice_status() != null
-//				&& orderInfo.getInvoice_status().intValue() == 1) {
-//			throw new Exception("订单已经开出发票，请回收发票后再退费！");
-//		}
-
 		Long businessType = orderInfo.getBusiness_type();
-//		if (Constants.BusinessType.GXH == businessType) {
-            this.orderRefund.readyPremium(refundObj, businessType);
-//        }
-//        else {
-//            if ("2".equals(refundObj.get("premiumType"))) {
-//                tOrderChangeDao.readyVIPPremium(refundObj);
-//            } else {
-//                tOrderChangeDao.readyPremium(refundObj);
-//            }
-//
-//            if (!CollectionUtils.isEmpty(refundObj) && !"0".equals(refundObj.get("error_code") + "")) {
-//				throw new Exception("存储过程异常" + refundObj.get("error_desc") + "");
-//			}
-//        }
+		this.orderRefund.readyPremium(refundObj, businessType);
 
 		refundObj.put("p_encoding", EncodingSequenceUtil.getSequenceNum(4L));
 		refundObj.put("v_change_id", 0);

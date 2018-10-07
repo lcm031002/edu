@@ -509,7 +509,7 @@ public class ServiceAPI implements Serializable {
         Map<String, Object> refundObj = new HashMap<String, Object>();
         refundObj.put("p_change_id", change_id);
         refundObj.put("p_change_status", change_status);
-        refundObj.put("P_input_user", userId);
+        refundObj.put("p_input_user", userId);
         refundObj.put("p_remark", remark);
 		try {
 			OrderChangeService orderChangeService = (OrderChangeService) ApplicationContextUtil
