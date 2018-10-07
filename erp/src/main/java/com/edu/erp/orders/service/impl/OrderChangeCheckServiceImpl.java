@@ -30,6 +30,9 @@ public class OrderChangeCheckServiceImpl implements OrderChangeCheckService {
     @Resource(name = "tOrderCourseDao")
     private TOrderCourseDao tOrderCourseDao;
 
+    @Resource(name = "tOrderChangeDao")
+    private TOrderChangeDao tOrderChangeDao;
+
     @Override
     public boolean isOrderLock(Map<String, Object> paramMap) throws Exception {
         int count = this.tLockDao.queryLockOrderFlag(paramMap);
@@ -114,6 +117,15 @@ public class OrderChangeCheckServiceImpl implements OrderChangeCheckService {
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkOrderRefunded(Long changeId) {
+        TOrder tOrder = tOrderChangeDao.queryOrderByChangeId(changeId);
+        if (tOrder != null && tOrder.getOrder_status().longValue() == 0) {
+            return true;
         }
         return false;
     }

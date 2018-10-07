@@ -58,4 +58,6 @@ public interface OrderChangeCheckService {
     boolean hasTransfer(Long orderId, String errorMsg) throws Exception;
 
     boolean checkOrderChangeCount(Long orderId, String errorMsg) throws Exception;
+
+    boolean checkOrderRefunded(Long changeId);
 }

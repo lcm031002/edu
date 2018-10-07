@@ -3,6 +3,7 @@ package com.edu.erp.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.edu.erp.model.TOrder;
 import org.springframework.stereotype.Repository;
 
 import com.edu.erp.model.TCOrderCourse;
@@ -437,4 +438,8 @@ public interface TOrderChangeDao {
 	 * @throws Exception
 	 */
 	Integer queryExpiredChangeCourseTimesCount(Long changeId) throws Exception;
+
+	TOrder queryOrderByChangeId(Long changeId);
+
+	void updateAuditInfo(Map<String, Object> paramMap);
 }

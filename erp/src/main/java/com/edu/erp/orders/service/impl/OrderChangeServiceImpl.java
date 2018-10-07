@@ -95,6 +95,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	@Resource(name = "userTaskService")
 	private UserTaskService userTaskService;
 
+	@Resource(name = "tCOrderCourseDao")
+	private TCOrderCourseDao tcOrderCourseDao;
+
 	@Override
 	public void orderChangeTransfer(Map<String, Object> transferObj)
 			throws Exception {
@@ -514,24 +517,148 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	public void premiumAudit(Map<String, Object> refundObj) throws Exception {
 		Assert.notNull(refundObj);
 		Assert.notNull(refundObj.get("p_change_id"));
-		Assert.notNull(refundObj.get("P_input_user"));
+		Assert.notNull(refundObj.get("p_input_user"));
 		Assert.notNull(refundObj.get("p_change_status"));
-		if (refundObj.get("p_remark") == null) {
-			refundObj.put("p_remark", "");
+
+		Long changeId = NumberUtils.object2Long(refundObj.get("p_change_id"));
+		if (orderChangeCheckService.checkOrderRefunded(changeId)) {
+			throw new Exception("该订单已作废,不能再退费！");
 		}
 
-		refundObj.put("change_id", refundObj.get("p_change_id"));
-		List<TabChangeCourse> changeCourseList = this.tabChangeCourseDao.queryChangeCourseInfo(refundObj);
-		if (!CollectionUtils.isEmpty(changeCourseList)) {
-			TabChangeCourse changeCourse = changeCourseList.get(0);
-			Integer premiumType = changeCourse.getPremium_type();
-			if (2 == premiumType) {
+		Integer changeStatus = NumberUtils.object2Integer(refundObj.get("p_change_status"));
+		if (changeStatus == 0) {
+			premiumNoPass(refundObj);
+		} else {
+			premiumPass(refundObj);
+		}
+	}
 
-			} else {
+	/**
+	 * 退费审批不通过
+	 */
+	private void premiumNoPass(Map<String, Object> refundObj) throws Exception {
+		refundObj.put("changeStatus", 8);
+		tOrderChangeDao.updateAuditInfo(refundObj);
 
+		Long changeId = NumberUtils.object2Long(refundObj.get("p_change_id"));
+		List<TCOrderCourse> tcOrderCourseList = tcOrderCourseDao.queryTcOrderCourseByChangeId(changeId);
+		if (!CollectionUtils.isEmpty(tcOrderCourseList)) {
+			TOrderCourse tOrderCourse = null;
+			for (TCOrderCourse tcOrderCourse : tcOrderCourseList) {
+				tOrderCourse = new TOrderCourse();
+				tOrderCourse.setId(tcOrderCourse.getOrder_course_id());
+				tOrderCourse.setCourse_schedule_count(tcOrderCourse.getCourse_schedule_count() + tcOrderCourse.getCourse_times());
+				tOrderCourse.setUpdate_user(NumberUtils.object2Long(refundObj.get("p_input_user")));
+				tOrderCourseDao.updateOrderCourse(tOrderCourse);
 			}
 		}
+		TLock tLock = new TLock();
+		tLock.setBusiType(5L);
+		tLock.setBusiId(changeId);
+		tLockDao.releaseLock(tLock);
+	}
 
+	/**
+	 * 退费审批通过
+	 */
+	private void premiumPass(Map<String, Object> refundObj) throws Exception {
+		tOrderChangeDao.updateAuditInfo(refundObj);
+		Long changeId = NumberUtils.object2Long(refundObj.get("p_change_id"));
+		List<TCOrderCourse> tcOrderCourseList = tcOrderCourseDao.queryTcOrderCourseByChangeId(changeId);
+		if (!CollectionUtils.isEmpty(tcOrderCourseList)) {
+			Long orderId = null;
+			Long orderCourseId = null;
+			for (TCOrderCourse tcOrderCourse : tcOrderCourseList) {
+				orderCourseId = tcOrderCourse.getOrder_course_id();
+				orderId = tcOrderCourse.getOrder_id();
+				TFeeDetail tFeeDetail = new TFeeDetail();
+				tFeeDetail.setOrder_id(tcOrderCourse.getOrder_id());
+				tFeeDetail.setOrder_detail_id(tcOrderCourse.getOrder_course_id());
+				tFeeDetail.setOperate_type(5L);
+				tFeeDetail.setOperate_no(changeId);
+				tFeeDetail.setFee_amount(tcOrderCourse.getTotal_amount() < 0 ? 0 : tcOrderCourse.getTotal_amount());
+				tFeeDetail.setFee_type(51L);
+				tFeeDetail.setFee_flag(2L);
+				tFeeDetail.setCourse_sum(tcOrderCourse.getCourse_times());
+				feeDetailService.saveFeeDetail(tFeeDetail);
+			}
+
+			TOrderChange tOrderChange = tOrderChangeDao.queryOrderChangeByChangId(changeId);
+			Double feeDeductionAmount = tOrderChange.getFee_deduction_amount() == null ? 0 : tOrderChange.getFee_deduction_amount();
+			if (tOrderChange.getFee_deduction_amount() != null) {
+				TFeeDetail tFeeDetail = new TFeeDetail();
+				tFeeDetail.setFee_type(54L);
+				tFeeDetail.setFee_flag(2L);
+				tFeeDetail.setFee_amount(-1 * feeDeductionAmount);
+				tFeeDetail.setCourse_sum(0L);
+				tFeeDetail.setOrder_detail_id(orderCourseId);
+				feeDetailService.saveFeeDetail(tFeeDetail);
+			}
+
+			TFeeDetail queryDetail = new TFeeDetail();
+			queryDetail.setOperate_no(changeId);
+			queryDetail.setOperate_type(5L);
+			List<TFeeDetail> feeDetailList = feeDetailService.queryFeeDetailByChangeId(queryDetail);
+			if (!CollectionUtils.isEmpty(feeDetailList)) {
+				for (TFeeDetail tFeeDetail : feeDetailList) {
+					TFee tFee = new TFee();
+					tFee.setFee_type(tFeeDetail.getFee_type());
+					tFee.setOrder_id(tFeeDetail.getOrder_id());
+					tFee.setFee_flag(tFeeDetail.getFee_flag());
+					tFee.setFee_amount(tFeeDetail.getFee_amount());
+					feeService.saveFee(tFee);
+					tFeeDetail.setFee_id(tFee.getId());
+					feeDetailService.updateFeeIdByFeeChangeId(tFeeDetail);
+				}
+
+				Map<String, Object> queryMap = new HashMap<String, Object>();
+				queryMap.put("operate_type", 5);
+				queryMap.put("fee_type", "51,54");
+				queryMap.put("operate_no", changeId);
+				TFee tFee = feeService.queryFeeAmountByChangeId(queryMap);
+				if (tFee != null && tFee.getFee_amount() != null) {
+					Double feeAmount = tFee.getFee_amount() < 0 ? 0 : tFee.getFee_amount();
+					TEncoder tEncoder = new TEncoder();
+					tEncoder.setEncoder_no("OC" + changeId);
+					tEncoder.setEncoder_type(7L);
+					tEncoder.setFee_flag(2L);
+					tEncoder.setOrder_id(orderId);
+					tEncoder.setBusi_type(5L);
+					tEncoder.setBusi_id(changeId);
+					tEncoder.setStatus(0);
+					tEncoder.setFee_amount(feeAmount);
+					encoderService.saveTEncoder(tEncoder);
+					queryMap.put("encoder_id", tEncoder.getId());
+					feeService.updateFeeEncoderIdByChangeId(queryMap);
+
+					queryMap.clear();
+					queryMap.put("premium_deduction_amount", feeDeductionAmount);
+					queryMap.put("fee_return_amount", feeAmount + feeDeductionAmount);
+					queryMap.put("fee_amount", feeAmount);
+					queryMap.put("change_id", changeId);
+					tOrderChangeDao.updateAmountsByChangeId(queryMap);
+				}
+			}
+
+			for (TCOrderCourse tcOrderCourse : tcOrderCourseList) {
+				TOrderCourse tOrderCourse = tOrderCourseDao.queryOrderCourseById(tcOrderCourse.getOrder_course_id());
+				tOrderCourse.setCourse_surplus_count(tOrderCourse.getCourse_surplus_count() - tcOrderCourse.getCourse_times());
+				tOrderCourse.setQuit_flag(1L);
+				tOrderCourse.setSurplus_cost((tOrderCourse.getCourse_surplus_count() - tcOrderCourse.getCourse_times()) * tOrderCourse.getDiscount_unit_price());
+				tOrderCourseDao.updateOrderCourse(tOrderCourse);
+			}
+
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("change_id", changeId);
+			orderCourseTimesInfoService.updateValidOrderCourseTimes(paramMap);
+
+			tOrderChange = new TOrderChange();
+			tOrderChange.setId(changeId);
+			tOrderChange.setUpdate_user(NumberUtils.object2Long(refundObj.get("p_input_user")));
+			tOrderChange.setChange_status(5L);
+			tOrderChange.setValidate_time(DateUtil.getCurrDateTime());
+			tOrderChangeDao.updateOrderChange(tOrderChange);
+		}
 	}
 
 	@Override

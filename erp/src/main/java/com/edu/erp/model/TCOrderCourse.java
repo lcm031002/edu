@@ -38,6 +38,7 @@ public class TCOrderCourse extends BaseObject {
 	private String course_name;
 	private String createUserName;
 	private Long course_surplus_count;
+	private Long course_schedule_count;
 	private long root_course_id;
 	private List<TCCourseTimes> tcCourseTimes = new ArrayList<TCCourseTimes>();
 	
@@ -149,5 +150,12 @@ public class TCOrderCourse extends BaseObject {
 	public void setRoot_course_id(long root_course_id) {
 		this.root_course_id = root_course_id;
 	}
-	
+
+	public Long getCourse_schedule_count() {
+		return course_schedule_count;
+	}
+
+	public void setCourse_schedule_count(Long course_schedule_count) {
+		this.course_schedule_count = course_schedule_count;
+	}
 }

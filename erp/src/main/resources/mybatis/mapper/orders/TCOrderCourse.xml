@@ -43,7 +43,7 @@
 	</select>
 	
 	<select id="queryTcOrderCourseByChangeId" resultType="com.edu.erp.model.TCOrderCourse" parameterType="java.lang.Long">
-		    select t.*,o.course_surplus_count, o.surplus_cost,c.course_name,o.root_course_id,o.branch_id 
+		    select t.*,o.course_surplus_count, o.course_schedule_count, o.surplus_cost,c.course_name,o.root_course_id,o.branch_id
              from tc_order_course t, t_order_course o, t_course c where t.change_id =  #{changeId,jdbcType=NUMERIC}  and t.order_course_id = o.id  and o.course_id = c.id
 	</select>
 

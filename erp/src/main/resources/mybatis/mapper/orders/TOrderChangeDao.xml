@@ -542,5 +542,28 @@
 				and date_format(concat(date_format(tcs.course_date, '%Y-%m-%d'), ' ', tcs.start_time), '%Y-%m-%d %H:%m') &lt; sysdate()
 				and toc.change_id = #{changeId}
 	</select>
+
+	<select id="queryOrderByChangeId" parameterType="long" resultType="com.edu.erp.model.TOrder">
+		SELECT
+			tord.id,
+			tord.order_status
+		FROM
+			t_order_change toc,
+			t_order tord
+		WHERE toc.order_id = tord.id
+		  and toc.id = #{changeId, jdbcType=NUMERIC}
+	</select>
+
+	<update id="updateAuditInfo" parameterType="map">
+		UPDATE t_order_change SET
+		   <if test="changeStatus != null">
+			 change_status = #{changeStatus},
+		   </if>
+			 update_user = #{p_input_user},
+			 update_time = sysdate(),
+			 audit_user = #{p_input_user},
+			 audit_time = sysdate()
+			WHERE id = #{p_change_id}
+	</update>
 	
 </mapper>
