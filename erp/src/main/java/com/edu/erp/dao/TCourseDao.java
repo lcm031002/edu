@@ -334,4 +334,17 @@ public interface TCourseDao {
 	 * @throws Exception
 	 */
 	List<Map<String, Object>> querySyncCourseInfoList(Map<String, Object> paramMap) throws Exception;
+
+	/**
+	 *
+	 * @Title: changeStatus
+	 * @Description: 修改课程结算比例
+	 * @param params 参数对象
+	 * courseId：课程id，
+	 * settlement_ratio：课程结算比例
+	 * @throws Exception    设定文件
+	 * void    返回类型
+	 *
+	 */
+	void changeSettlement(Map<String, Object> params) throws Exception;
 }

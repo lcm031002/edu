@@ -1983,6 +1983,12 @@ function erp_courseService($resource){
             params : {},
             isArray : false
         },
+				queryAll : {
+          url:'/erp/coursemanagerment/forall',
+					method : 'GET',
+					params : {},
+					isArray : false
+				},
         add : {
             method : 'POST',
             params : {},
@@ -1999,7 +2005,13 @@ function erp_courseService($resource){
             params : {},
             isArray : false
         },
-        querySchedulingAssist:{
+      	changeSettlement:{
+					url:'/erp/coursemanagerment/changeSettlement',
+					method : 'PUT',
+					params : {},
+					isArray : false
+      },
+      querySchedulingAssist:{
             url:'/erp/coursemanagerment/schedulingAssist',
             method : 'GET',
             params : {},

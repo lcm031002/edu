@@ -297,8 +297,7 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/erp/course/course_scheduling.js"  ></script>
 <script type="text/javascript" src="js/controllers/erp/course/course.js"  ></script>
 <script type="text/javascript" src="js/controllers/erp/course/course-modal.js"  ></script>
-<script type="text/javascript" src="js/controllers/erp/course/mtcourse.js"  ></script>
-<script type="text/javascript" src="js/controllers/erp/course/mtcourse-modal.js"  ></script>
+<script type="text/javascript" src="js/controllers/erp/course/course_settlement.js"  ></script>
 <script type="text/javascript" src="js/controllers/erp/course/fileUpload_bjk.js"  ></script>
  <script type="text/javascript" src="js/controllers/erp/course/fileUpload_bjk-modal.js"  ></script>
 <script type="text/javascript" src="js/controllers/erp/course/fileUpload_wfd.js"  ></script>

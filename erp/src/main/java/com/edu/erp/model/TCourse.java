@@ -157,6 +157,8 @@ public class TCourse extends BaseObject{
 
 	private Long lecturer_id; // 主讲老师ID
 	private String more_teacher_course_type; // 双师课程类型
+
+	private Double settlement_ratio;  // 抽成比例
     
     private List<CourseScheduling> courseSchedulingList = new ArrayList<CourseScheduling>();
 
@@ -1087,4 +1089,8 @@ public class TCourse extends BaseObject{
 	public void setHasOrderCourse(Boolean hasOrderCourse) {
 		this.hasOrderCourse = hasOrderCourse;
 	}
+
+	public Double getSettlement_ratio() { return settlement_ratio;	}
+
+	public void setSettlement_ratio(Double settlement_ratio) {	this.settlement_ratio = settlement_ratio;}
 }

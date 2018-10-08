@@ -865,4 +865,13 @@ public class CourseServiceImpl implements CourseService {
 		return null == tCourseDao.existOrderCourse(courseId)?false:true;
 	}
 
+	@Override
+	public void toChangeSettlement(String id, String settlement_ratio, Long userId) throws Exception {
+		Assert.hasText(id,"未选中记录");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		params.put("settlement_ratio", settlement_ratio);
+		params.put("updateUser", userId);
+		tCourseDao.changeSettlement(params);
+	}
 }

@@ -1,0 +1,173 @@
+<div ng-controller="erp_courseSettlementController">
+	<div class="panel panel-primary">
+		<div class="panel-heading"><span class="title">课程抽成设置</span></div>
+		<div class="panel-body operation-panel">
+			
+			<div class="searchbar">
+				<form class="form-inline">
+					<div class="form-group">
+						<span class="input-label">校区：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.branch_id"
+							ng-options="branch.id as branch.org_name for branch in branchList">
+							</select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">课程季：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.timeSeason_id"
+							ng-options="timeSeason.id as timeSeason.course_season_name for timeSeason in timeSeasonList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">年级：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.grade_id"
+							ng-options="grade.id as grade.grade_name for grade in gradeList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">科目：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.subject_id"
+							ng-options="subject.id as subject.name for subject in subjectList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">状态：</span>	
+						<select class="form-control" 
+							ng-model="searchParam.status"
+							ng-options="status.id as status.name for status in statusList">
+							<option  value="">-- 全部 --</option></select>
+					</div>
+					<div class="form-group">
+						<span class="input-label">教师：</span>	
+						<input type="text" class="form-control" placeholder="可输入教师编码,教师名称,教师ID"
+							ng-model="searchParam.teacher_id" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<span class="input-label">辅导教师：</span>
+						<input type="text" class="form-control" placeholder="可输入教师编码,教师名称,教师ID"
+							ng-model="searchParam.assteacher_id" autocomplete="off">
+					</div>
+					<div class="form-group">
+						<span class="input-label">课程：</span>	
+						<input type="text" class="form-control" placeholder="可输入课程编码,课程名称,课程ID"
+							ng-model="searchParam.course_name" autocomplete="off">
+					</div>
+					<button class="btn btn-primary" ng-click="handleQueryCourse()">搜索</button>
+				</form>
+			</div>
+			<hr>
+		</div>
+	</div>
+	<div class="table-panel">
+		<div class="ov-a">
+			<table class="table table-striped min-width-1600">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" ng-model="checkAllFlag" ng-click="onCheckAll()">
+						</th>
+						<th width="120">操作</th>
+						<th>ID</th>
+						<th width="180">名称</th>
+						<th>编码</th>
+						<th>抽成比例</th>
+						<th>校区</th>
+						<th>课程季</th>
+						<th>年级</th>
+						<th>科目</th>
+						<th>状态</th>
+						<th>教师</th>
+						<th>辅导教师</th>
+						<th>单价</th>
+						<th>开课日期</th>
+						<th>结课日期</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="course in courseList"
+					    ng-if="!loadStatues && courseList && courseList.length">
+						<td>
+							<input type="checkbox" ng-model="course.selectFlag" ng-click="onCourseChecked(course)">
+						</td>
+						<td>
+							<a href="javascript:void(0);" ng-click="handlePutCourse(course)" class="pr-10">修改</a>
+						</td>
+						<td>{{course.id}}</td>
+						<td>{{course.course_name}}</td>
+						<td>{{course.course_no}}</td>
+						<td>{{course.settlement_ratio}}</td>
+						<td>{{course.branch_name}}</td>
+						<td>{{course.season_name}}</td>
+						<td>{{course.grade_name}}</td>
+						<td>{{course.subject_name}}</td>
+						<td>
+							<input type="checkbox" bs-switch 
+							    ng-model="course.status" 
+								ng-true-value="1" 
+								ng-false-value="2" 
+								switch-change="onStatusChange(course)">
+						</td>
+						<td>{{course.teacher_name}}</td>
+						<td>{{course.assteacher_name}}</td>
+						<td>{{course.unit_price}}</td>
+						<td>{{course.start_date | date:'yyyy-MM-dd'}}</td>
+						<td>{{course.end_date | date:'yyyy-MM-dd'}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="text-center" ng-if="loadStatues">
+			<img src="img/erp/loading2.gif">
+		</div>
+		<ng-pagination conf="paginationConf" ng-if="!loadStatues"></ng-pagination>
+
+		<div id="erpSystemCommonCoursePanel" class="modal fade klxx-modal-primary"
+				 tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog" role="document">
+				<form class="klxx-erp-form form-horizontal" name="CourseSettlementForm" novalidate>
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">抽成比例设置</h4>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="hide">
+									<input type="text" ng-model='courseDetail.id'>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">机构名称</label>
+									<div class="col-sm-10" ng-class="{'has-error': courseForm.course_name.$invalid && courseForm.course_name.$dirty}">
+										<input type="text" name="course_name" class="klxx-erp-input form-control"
+													 ng-model='courseDetail.course_name' required>
+										<div ng-show="courseForm.course_name.$invalid && courseForm.course_name.$dirty && courseForm.course_name.$error.required" class="has-error klxx-erp-form-explain">合作机构名称必填</div>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">抽成</label>
+									<div class="col-sm-10" ng-class="{'has-error': courseForm.settlement_ratio.$invalid && courseForm.settlement_ratio.$dirty}">
+										<input type="text" name="settlement_ratio" class="klxx-erp-input form-control"
+													 ng-model='courseDetail.settlement_ratio' required>
+										<div ng-show="courseForm.settlement_ratio.$invalid && courseForm.settlement_ratio.$dirty && courseForm.settlement_ratio.$error.required" class="has-error klxx-erp-form-explain">抽成必填</div>
+									</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger"
+											ng-click="handleModalCancel()">取消</button>
+							<button type="submit" class="btn btn-primary"
+											ng-click="handleModalConfirm()"
+											ng-disabled="courseForm.$invalid"
+							>确定</button>
+						</div>
+					</div><!-- .modal-content end-->
+				</form>
+				<!-- .klxx-erp-from end-->
+			</div>
+		</div>
+	</div>
+</div>

@@ -1820,4 +1820,12 @@
 			  and tcou.id = #{courseId}
 		</if>
 	</select>
+
+	<update id="changeSettlement" parameterType="java.util.Map">
+		UPDATE t_course
+		SET settlement_ratio = #{settlement_ratio,jdbcType=NUMERIC} ,
+		update_time= sysdate(),
+		update_user= #{updateUser,jdbcType=NUMERIC}
+		WHERE id = ${id}
+	</update>
 </mapper>

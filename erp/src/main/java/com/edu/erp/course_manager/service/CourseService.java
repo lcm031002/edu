@@ -414,4 +414,21 @@ public interface CourseService {
 	Double queryHourLen(String startTime,String endTime) throws Exception;
 
 	public Boolean existOrderCourse(Long courseId);
+
+	/**
+	 *
+	 * @Title: toChangeSettlement
+	 * @Description: 修改课程的结算比例
+	 * @param id
+	 *            课程ID
+	 * @param status
+	 *            状态
+	 * @param userId
+	 *            用户id
+	 * @throws Exception
+	 *             设定文件 void 返回类型
+	 *
+	 */
+	void toChangeSettlement(String id, String status, Long userId)
+		throws Exception;
 }

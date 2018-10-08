@@ -506,6 +506,66 @@
 									"method": "PUT"
 								}
 							]
+						},
+						{
+							"index": "A3000311",
+							"name": "课程结算设置",
+							"key": "ordersMgrCourseSettlement",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "ordersMgrCourseSettlement",
+							"path": "/orders/ordersMgr/ordersMgrCourseSettlement",
+							"href": "templates/erp/course/course_settlement.html",
+							"services": [
+								{
+									"name": "课程查询",
+									"key": "ordersMgrCourseSettlement.query",
+									"url": "/erp/coursemanagerment/service",
+									"method": "GET"
+								},
+								{
+									"name": "修改课程",
+									"key": "ordersMgrCourseSettlement.put",
+									"url": "/erp/coursemanagerment/service",
+									"method": "PUT"
+								},
+								{
+									"name": "上架下架课程",
+									"key": "ordersMgrCourseSettlement.putStatus",
+									"url": "/erp/coursemanagerment/changeStatus",
+									"method": "PUT"
+								},
+								{
+									"name": "科目查询",
+									"key": "ordersMgrCourseSettlement.querySubject",
+									"url": "/erp/dictionary/subject/service",
+									"method": "GET"
+								},
+								{
+									"name": "校区查询",
+									"key": "ordersMgrCourseSettlement.queryBranchs",
+									"url": "/erp/dictionary/organization/branchs",
+									"method": "GET"
+								},
+								{
+									"name": "课程季查询",
+									"key": "ordersMgrCourseSettlement.queryTimeSeason",
+									"url": "/erp/dictionary/timeSeason/service",
+									"method": "GET"
+								},
+								{
+									"name": "年级查询",
+									"key": "ordersMgrCourseSettlement.queryGrade",
+									"url": "/erp/dictionary/grade/service",
+									"method": "GET"
+								},
+								{
+									"name": "教师查询",
+									"key": "ordersMgrCourseSettlement.queryTeacher",
+									"url": "/erp/teacherservice/service",
+									"method": "GET"
+								}
+							]
 						}
 					]
 				},

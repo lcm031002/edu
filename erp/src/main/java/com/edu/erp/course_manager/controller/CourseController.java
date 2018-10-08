@@ -141,6 +141,70 @@ public class CourseController extends BaseController {
 	}
 
 	/**
+	 *
+	 * @Title: queryCourses
+	 * @Description: 查询课程服务
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 *             设定文件 Map<String,Object> 返回类型
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/forall" }, method = RequestMethod.GET, headers = { "Accept=application/json" })
+	public Map<String, Object> queryAllCourses(HttpServletRequest request,
+		HttpServletResponse response) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("error", false);
+		try {
+			OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
+			if (orgModel == null || orgModel.getBuId() == null ) {
+				resultMap.put("error", true);
+				resultMap.put("message", "请选择团队或校区!");
+				return resultMap;
+			}
+			Map<String, Object> queryParam = initParamMap(request, false);
+			//queryParam.put("business_type", genLongParameter("business_type", request));
+			queryParam.put("branch_id", genLongParameter("branch_id", request));
+			if(genLongParameter("branch_id", request) != null && genLongParameter("branch_id", request)==-1L ){
+				queryParam.put("per_branch_ids",getAllowedBranchByBuId(request));
+			} else {
+				queryParam.remove("per_branch_ids");
+			}
+			setPageInfo(request);
+			queryParam.put("season_id", genLongParameter("season_id", request));
+			queryParam.put("course_id", genLongParameter("course_id", request));
+			queryParam.put("grade_id", genLongParameter("grade_id", request));
+			queryParam.put("subject_id", genLongParameter("subject_id", request));
+			queryParam.put("teacher_id",request.getParameter("teacher_id"));
+			queryParam.put("assteacher_id",request.getParameter("assteacher_id"));
+			queryParam.put("course_name", request.getParameter("course_name"));
+			String searchInfo = request.getParameter("search_info");
+			queryParam.put("search_info", searchInfo != null ? searchInfo.toLowerCase() : searchInfo); //查询课程控件需要的条件
+			queryParam.put("status", genLongParameter("status", request));
+			queryParam.put("unit_price", NumberUtils.object2Double(request.getParameter("unit_price")));
+			queryParam.put("ydyLadder", request.getParameter("ydyLadder"));
+			String onlyShow = request.getParameter("onlyshow");
+			Page<TCourse> page = null;
+			Calendar calendar=Calendar.getInstance();
+			//获得当前时间的月份，月份从0开始所以结果要加1
+			int month=calendar.get(Calendar.MONTH)+1;
+			int year = calendar.get(Calendar.YEAR);
+
+			page = courseService.queryPage(queryParam);
+
+			setRespDataForPage(request, page, resultMap);
+		} catch(Exception e) {
+			log.error("error found ,see:", e);
+			resultMap.put("error", true);
+			resultMap.put("message", e.getMessage());
+		}
+
+		return resultMap;
+	}
+
+	/**
 	 * 
 	 * @Title: queryCourseTimes
 	 * @Description: 查询课程课次服务
@@ -914,6 +978,47 @@ public class CourseController extends BaseController {
 		Double hourLen = courseService.queryHourLen(startTime,endTime);
         resultMap.put("hour_len",df.format(hourLen));
         return resultMap;
+	}
+
+	/**
+	 *
+	 * @Title: changeSettlement
+	 * @Description: 课程结算设置服务
+	 * @param param
+	 *            课程对象
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 *             设定文件 Map<String,Object> 返回类型
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/changeSettlement" }, method = RequestMethod.PUT, headers = { "Accept=application/json" })
+	public Map<String, Object> changeSettlement(@RequestBody Map<String,Object> param,
+		HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		try {
+			if (StringUtil.isEmpty(String.valueOf(param.get("id"))) ) {
+				log.error("非法访问！未选中课程！");
+				throw new Exception("未选中课程！");
+			}
+			if (StringUtil.isEmpty(param.get("settlement_ratio"))) {
+				log.error("待修改的课程的结算比例不能为空！课程id：" + param.get("id"));
+				throw new Exception("待修改的课程的结算比例不能为空！课程id：" + param.get("id"));
+			}
+			Account account = WebContextUtils.genUser(request);
+			courseService.toChangeSettlement(String.valueOf(param.get("id")), String.valueOf(param.get("settlement_ratio")),account.getId());
+			resultMap.put("error", false);
+			resultMap.put("data", param);
+		} catch (Exception e) {
+			log.error("error found ,see:", e);
+			resultMap.put("error", true);
+			resultMap.put("message", e.getMessage());
+		}
+		return resultMap;
 	}
 
 }
