@@ -439,37 +439,17 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/report/common/account.js"  desc="账户剩余表"></script>
 <script type="text/javascript" src="js/controllers/report/common/accountFlow.js"  desc="账户流水表"></script>
 
-
 <script type="text/javascript" src="js/controllers/report/common/performance_details.js"  desc="业绩明细表"></script>
 <script type="text/javascript" src="js/controllers/report/common/account_recharge_cash.js"  desc="充值取现表"></script>
 <script type="text/javascript" src="js/controllers/report/common/account_cashier.js"  desc="出纳信息表"></script>
 <script type="text/javascript" src="js/controllers/report/common/order_change_report.js"  desc="报冻退转报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/performance_sum.js"  desc="报冻退转报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/renewal_rate.js"  desc="培英精品班续报率报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/renewal_rate_lastbase.js"  desc="培英精品班续报率报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/renewal_rate_estimate.js"  desc="培英精品班续报率报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/renewal_rate_actual.js"  desc="培英精品班续报率报表"></script>
+<script type="text/javascript" src="js/controllers/report/common/performance_sum.js"  desc="业绩汇总报表"></script>
 <script type="text/javascript" src="js/controllers/report/common/surplus_amount_fee.js"  desc="学员剩余课时费用表"></script>
 <script type="text/javascript" src="js/controllers/report/common/attendance_report.js"  desc="考勤消耗表"></script>
+<script type="text/javascript" src="js/controllers/report/common/settlement_performance_details.js"  desc="业绩结算表"></script>
 <script type="text/javascript" src="js/controllers/report/common/settlement_attendance_report.js"  desc="考勤结算表"></script>
 <script type="text/javascript" src="js/controllers/report/bjk/teacher_workload_report.js"  desc="培英班教师工作量表"></script>
 <script type="text/javascript" src="js/controllers/report/wfd/teacher_attend_report.js"  desc="晚辅导教师考勤消耗表"></script>
-<script type="text/javascript" src="js/controllers/report/common/attendance_month_report.js"  desc="月度消耗表"></script>
-<script type="text/javascript" src="js/controllers/report/common/busattend_month_report.js"  desc="月度分类考勤表"></script>
-<script type="text/javascript" src="js/controllers/report/common/onLineOrder_report.js"  desc="电商在线支付明细表"></script>
-<script type="text/javascript" src="js/controllers/report/common/order_performance.js"  desc="课程顾问绩效表"></script>
-<script type="text/javascript" src="js/controllers/report/common/auto_attendance_report.js"  desc="自动考勤报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/fullclass_rate.js"  desc="满班率报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/fullclass_rate_last.js"  desc="满班率报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/business_statistics.js"  desc="培英班运营统计"></script>
-<script type="text/javascript" src="js/controllers/report/common/teacher_group_attendance.js"  desc="培英班教研组统计"></script>
-
-<script type="text/javascript" src="js/controllers/report/bjk/course_analysis_report.js"  desc="班级分析报表"></script>
-<script type="text/javascript" src="js/controllers/report/bjk/teacher_workload_order.js"  desc="培英班教师工作量表应到学生"></script>
-<script type="text/javascript" src="js/controllers/report/bjk/teacher_workload_attend.js"  desc="培英班教师工作量表实到学生"></script>
-<script type="text/javascript" src="js/controllers/report/common/gxh_student_status.js"  desc="个性化学生状态报表"></script>
-<script type="text/javascript" src="js/controllers/report/common/gxh_student_status_branch.js"  desc="个性化学生状态报表按校区"></script>
-<script type="text/javascript" src="js/controllers/report/common/gxh_student_status_detail.js"  desc="个性化学生状态报表学生明细"></script>
 
 <!-- Components 组件 -->
 <!-- 公共组件 -->

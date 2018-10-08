@@ -204,6 +204,12 @@ function report_perfDetailsService($resource) {
             method : 'GET',
             params : {},
             isArray : false
+        },
+        exportSettleExcel : {
+          url : '/report/common/performanceDetails/settlement/output',
+          method : 'GET',
+          params : {},
+          isArray : false
         }
     });
 }

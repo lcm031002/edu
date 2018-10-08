@@ -67,13 +67,13 @@ public class PerformanceDetailsServiceImpl implements PerformanceDetailsService 
 	}
 
     @Override
-    public Page<TPerformanceDetails> selectForPage(Map<String, Object> paramMap) throws Exception {
-        return this.performanceDetailsDao.selectForPage(paramMap);
-    }
-
-    @Override
     public List<TPerformanceDetails> selectForList(Map<String, Object> paramMap) throws Exception {
         return this.performanceDetailsDao.selectForList(paramMap);
     }
+
+	@Override
+	public List<TPerformanceDetails> selectSettlementForList(Map<String, Object> paramMap) throws Exception {
+		return this.performanceDetailsDao.selectSettlementForList(paramMap);
+	}
 
 }

@@ -15,12 +15,12 @@ import com.github.pagehelper.Page;
  */
 public interface PerformanceDetailsService {
     /**
-     * 查询学员业绩明细
+     * 查询学员业绩结算
      * @param paramMap 查询条件  团队、校区、学员姓名、学员编号、开始时间、结束时间
      * @return 学员业绩明细
      * @throws Exception
      */
-    Page<TPerformanceDetails> selectForPage(Map<String, Object> paramMap) throws Exception;
+	List<TPerformanceDetails> selectSettlementForList(Map<String, Object> paramMap) throws Exception;
     
     /**
      * 查询学员业绩明细

@@ -71,18 +71,7 @@
 			"type": "$state",
 			"value": "orders",
 			"path": "/orders",
-			"href": "templates/erp/orders/ordersIndex.html",
 			"menus": [
-				{
-					"index": "A30002",
-					"name": "教务首页",
-					"key": "ordersIndex",
-					"icon": "iconfont icon-orders_home",
-					"type": "$state",
-					"value": "ordersIndex",
-					"path": "/orders/ordersIndex",
-					"href": "templates/erp/orders/ordersIndex.html"
-				},
 				{
 					"index": "A30003",
 					"name": "基础档案",
@@ -2881,6 +2870,45 @@
 				},
 				{
 					"index": "A11000114",
+					"name": "业绩结算表",
+					"key": "classesReportSettlementPerformance",
+					"icon": "iconfont icon-orders_performance",
+					"type": "$state",
+					"value": "classesReportSettlementPerformance",
+					"path": "/report/classesReportSettlementPerformance",
+					"href": "templates/report/common/settlement_performance_details.html",
+					"services":
+					[
+						{
+							"name": "业绩结算查询",
+							"key": "classesReportSettlementPerformance.query",
+							"url": "/report/common/attendance",
+							"method": "GET"
+						},
+
+						{
+							"name": "考勤结算导出",
+							"key": "classesReportSettlementPerformance.output",
+							"url": "/report/common/attendance_output",
+							"method": "GET"
+						},
+						{
+							"name": "校区查询",
+							"key": "classesReportSettlementPerformance.queryBranch",
+							"url": "/erp/dictionary/organization/branchs",
+							"method": "GET"
+						},
+
+						{
+							"name": "团队查询",
+							"key": "classesReportSettlementPerformance.queryBu",
+							"url": "/erp/dictionary/organization/bus",
+							"method": "GET"
+						}
+					]
+				},
+				{
+					"index": "A11000115",
 					"name": "考勤结算表",
 					"key": "classesReportSettlementAttendance",
 					"icon": "iconfont icon-orders_performance",
@@ -2917,7 +2945,7 @@
 							"method": "GET"
 						}
 					]
-				}
+				},
 			]
 		},
     {

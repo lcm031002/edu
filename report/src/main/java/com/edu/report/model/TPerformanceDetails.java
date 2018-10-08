@@ -77,6 +77,7 @@ public class TPerformanceDetails {
     private Long operate_no;
     private String order_rule_name;
     private String course_rule_name;
+    private Double settlement_amount;
 
     public Long getId() {
         return id;
@@ -637,4 +638,8 @@ public class TPerformanceDetails {
     public String getCourse_rule_name() {return course_rule_name;}
 
     public void setCourse_rule_name(String course_rule_name) {this.course_rule_name = course_rule_name;}
+
+    public Double getSettlement_amount() { return settlement_amount; }
+
+    public void setSettlement_amount(Double settlement_amount) { this.settlement_amount = settlement_amount; }
 }
