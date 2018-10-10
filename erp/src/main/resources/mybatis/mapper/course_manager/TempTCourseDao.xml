@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.TempTCourseDao">
+	<!-- 列表查询 -->
+	<select id="selectForList" parameterType="Map" resultType="com.edu.erp.model.TempTCourse">
+		select * from tmp_t_course t
+		where 1 = 1
+		<if test="batch_no != null and batch_no != ''">
+			and t.batch_no = #{batch_no}
+		</if>
+		order by row_no
+	</select>
+
+	<!-- 批量新增 -->
+	<insert id="insertList" parameterType="java.util.List">
+		insert into tmp_t_course
+		(
+			batch_no,
+			row_no,
+			course_no,
+			city_name,
+			branch_name,
+			grade_name,
+			target_name,
+			season_name,
+			subject_name,
+			teacher_code,
+			assteacher_code,
+			type_name,
+			city_id,
+			bu_id,
+			product_line_name,
+			cycle_type_name,
+			class_num,
+			book_num
+		)   
+		values
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+		(
+			#{item.batch_no},
+			#{item.row_no},
+			#{item.course_no},
+			#{item.city_name},
+			#{item.branch_name},
+			#{item.grade_name},
+			#{item.target_name},
+			#{item.season_name},
+			#{item.subject_name},
+			#{item.teacher_code},
+			#{item.assteacher_code},
+			#{item.type_name},
+			#{item.city_id},
+			#{item.bu_id},
+			#{item.product_line_name},
+			#{item.cycle_type_name},
+			#{item.class_num},
+			#{item.book_num}
+		)
+		</foreach>
+	</insert>
+	
+	<!-- 根据编码值设置对应的Id -->
+	<update id="setIdByCode" parameterType="java.util.Map">
+		update tmp_t_course s
+		set 
+			s.branch_id =
+				(select t.id from tab_organization_info t 
+					left join tab_organization_info t1 on t.parent_id = t1.id
+					left join tab_organization_info t2 on t1.parent_id = t2.id
+					where t.org_name = s.branch_name
+					  and t1.id = s.bu_id
+					  and t2.id = s.city_id
+					  and rownum = 1),
+			s.grade_id =
+				(
+					select a.id
+					from tab_data_grade a
+					where a.status = 1 and a.grade_name = s.grade_name and rownum = 1
+				),
+			s.season_id =
+				(select t.id from tab_time_season t where t.status = 1 and t.course_season_name = s.season_name and t.city_id = s.city_id and rownum = 1),
+			s.subject_id =
+				(select t.id from tp_subject t where nvl(t.status,1) = 1 and t.name = s.subject_name and rownum = 1),
+			s.teacher_id =
+				(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.teacher_code) and toi.id = s.city_id and t.org_id = toi.parent_id and t.status = 1 and rownum = 1 ),
+			s.assteacher_id =
+				(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.assteacher_code) and t.teacher_type = 4 and toi.id = t.city_id and t.status = 1 and rownum = 1),
+			s.target =
+				(select t.id from tp_course_goal t where t.name = s.target_name and rownum = 1),
+			s.product_line =
+				(select t.id from tp_product_line t where t.name = s.product_line_name and rownum = 1),
+			s.course_type =
+				(select t.id from tab_course_type t where t.type_name = s.type_name and rownum = 1),
+			s.course_old_id =
+				(select t.id from t_course t where t.course_no = s.course_no and t.status in(1, 2) and rownum = 1),
+			s.cycle_type =
+				(
+					select t.code from vt_dict_data t where t.typeCode = 'cycleType' and t.name = s.cycle_type_name
+				)
+		where 1 = 1
+		<if test="batch_no != null and batch_no != ''">
+			and s.batch_no = #{batch_no}
+		</if>
+	</update>
+
+	<!-- 删除临时表中信息 -->
+	<delete id="deleteByBatchNo" parameterType="java.lang.String">
+		delete from tmp_t_course
+		where batch_no = #{batchNo}
+	</delete>
+
+	<insert id="addListForCourseNameChange">
+			insert into tmp_t_course
+			(
+			course_id,
+			course_name,
+			batch_no
+			)
+			values
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+			(
+			#{item.erpCourseId},
+			#{item.courseTitle},
+			#{batchNo}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="addListForCycleTypeChange">
+			insert into tmp_t_course
+			(
+			course_id,
+			cycle_type,
+			batch_no
+			)
+			values
+			<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+			(
+			#{item.erpCourseId},
+			#{item.period},
+			#{batchNo}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="addMainCourse">
+		insert into tmp_t_course
+		  (id, course_id, course_name, cycle_type, batch_no)
+		  select seq_tmp_t_course.nextval,
+				 tcou.id,
+				 ttc.course_name,
+				 ttc.cycle_type,
+				 ttc.batch_no
+			from tmp_t_course ttc, t_course tcou, t_more_teacher_course tmtc
+		   where ttc.course_id = tmtc.id
+			 and tcou.more_teacher_courseid = tmtc.id
+			 and tmtc.teacher_id = tcou.teacher_id
+			 and tcou.main_flag = 'Y'
+		     and ttc.batch_no = #{batchNo}
+	</insert>
+
+</mapper>
