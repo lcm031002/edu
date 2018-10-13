@@ -31,19 +31,16 @@
 			type_name,
 			city_id,
 			bu_id,
-			product_line_name,
-			cycle_type_name,
-			class_num,
-			book_num
-		)   
+			product_line_name
+		)
 		values
-		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
-		(
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
 			#{item.batch_no},
 			#{item.row_no},
 			#{item.course_no},
 			#{item.city_name},
-			#{item.branch_name},
+			#{item.branch_names},
 			#{item.grade_name},
 			#{item.target_name},
 			#{item.season_name},
@@ -53,52 +50,49 @@
 			#{item.type_name},
 			#{item.city_id},
 			#{item.bu_id},
-			#{item.product_line_name},
-			#{item.cycle_type_name},
-			#{item.class_num},
-			#{item.book_num}
-		)
+			#{item.product_line_name}
+			)
 		</foreach>
 	</insert>
 	
 	<!-- 根据编码值设置对应的Id -->
 	<update id="setIdByCode" parameterType="java.util.Map">
 		update tmp_t_course s
-		set 
-			s.branch_id =
-				(select t.id from tab_organization_info t 
-					left join tab_organization_info t1 on t.parent_id = t1.id
-					left join tab_organization_info t2 on t1.parent_id = t2.id
-					where t.org_name = s.branch_name
-					  and t1.id = s.bu_id
-					  and t2.id = s.city_id
-					  and rownum = 1),
-			s.grade_id =
-				(
-					select a.id
-					from tab_data_grade a
-					where a.status = 1 and a.grade_name = s.grade_name and rownum = 1
-				),
-			s.season_id =
-				(select t.id from tab_time_season t where t.status = 1 and t.course_season_name = s.season_name and t.city_id = s.city_id and rownum = 1),
-			s.subject_id =
-				(select t.id from tp_subject t where nvl(t.status,1) = 1 and t.name = s.subject_name and rownum = 1),
-			s.teacher_id =
-				(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.teacher_code) and toi.id = s.city_id and t.org_id = toi.parent_id and t.status = 1 and rownum = 1 ),
-			s.assteacher_id =
-				(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.assteacher_code) and t.teacher_type = 4 and toi.id = t.city_id and t.status = 1 and rownum = 1),
-			s.target =
-				(select t.id from tp_course_goal t where t.name = s.target_name and rownum = 1),
-			s.product_line =
-				(select t.id from tp_product_line t where t.name = s.product_line_name and rownum = 1),
-			s.course_type =
-				(select t.id from tab_course_type t where t.type_name = s.type_name and rownum = 1),
-			s.course_old_id =
-				(select t.id from t_course t where t.course_no = s.course_no and t.status in(1, 2) and rownum = 1),
-			s.cycle_type =
-				(
-					select t.code from vt_dict_data t where t.typeCode = 'cycleType' and t.name = s.cycle_type_name
-				)
+		set
+		s.branch_id =
+		(select t.id from tab_organization_info t
+		left join tab_organization_info t1 on t.parent_id = t1.id
+		left join tab_organization_info t2 on t1.parent_id = t2.id
+		where t.org_name = s.branch_name
+		and t1.id = s.bu_id
+		and t2.id = s.city_id
+		),
+		s.grade_id =
+		(
+		select a.id
+		from tab_data_grade a
+		where a.status = 1 and a.grade_name = s.grade_name
+		),
+		s.season_id =
+		(select t.id from tab_time_season t where t.status = 1 and t.course_season_name = s.season_name and t.org_city_id = s.city_id ),
+		s.subject_id =
+		(select t.id from tp_subject t where ifnull(t.status,1) = 1 and t.name = s.subject_name ),
+		s.teacher_id =
+		(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.teacher_code) and toi.id = s.city_id and t.city_id = toi.parent_id and t.status = 1 ),
+		s.assteacher_id =
+		(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.assteacher_code) and t.teacher_type = 4 and toi.id = t.city_id and t.status = 1 ),
+		s.target =
+		(select t.id from tp_course_goal t where t.name = s.target_name ),
+		s.product_line =
+		(select t.id from tp_product_line t where t.name = s.product_line_name ),
+		s.course_type =
+		(select t.id from tab_course_type t where t.type_name = s.type_name ),
+		s.course_old_id =
+		(select t.id from t_course t where t.course_no = s.course_no and t.status in(1, 2) ),
+		s.cycle_type =
+		(
+		select t.code from vt_dict_data t where t.typeCode = 'cycleType' and t.name = s.cycle_type_name
+		)
 		where 1 = 1
 		<if test="batch_no != null and batch_no != ''">
 			and s.batch_no = #{batch_no}

@@ -41,23 +41,23 @@ public class TempTCourseServiceImpl implements TempTCourseService {
 		String batchNo = UUID.randomUUID().toString().replaceAll("-", "");
 		Map<String, Object> tempRowMap = new HashMap<>();
 		TempTCourse tempCourse = null;
-		List<TempTCourse> courseList = new ArrayList<>(); 
+		List<TempTCourse> tempTCourseList = new ArrayList<>();
 		for (Map<String, Object> rowMap : dataList) {
 			rowMap.put("batch_no", batchNo);
 			tempRowMap.clear();
 			tempRowMap.putAll(rowMap);
 			tempCourse = ModelDataUtils.getPojoMatch(TempTCourse.class, tempRowMap);
-			courseList.add(tempCourse);
+			tempTCourseList.add(tempCourse);
 		}
 		try{
 			//2.数据插入临时表 
-			tempTCourseDao.insertList(courseList); 
+			tempTCourseDao.insertList(tempTCourseList);
 			//3.根据Excel提供的信息设置相对应的Id值
 			Map<String, Object> paramMap = new HashMap<>();
 			paramMap.put("batch_no", batchNo);
 			tempTCourseDao.setIdByCode(paramMap);
 			//4.获取数据库最新的数据
-			courseList = tempTCourseDao.selectForList(paramMap);
+			tempTCourseList = tempTCourseDao.selectForList(paramMap);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -65,7 +65,7 @@ public class TempTCourseServiceImpl implements TempTCourseService {
 			tempTCourseDao.deleteByBatchNo(batchNo);
 		}
 		
-		return courseList;
+		return tempTCourseList;
 	}
 
 	@Override

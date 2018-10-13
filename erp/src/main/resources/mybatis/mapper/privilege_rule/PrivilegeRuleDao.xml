@@ -165,7 +165,7 @@
 		order by  tpr.status ,tpr.update_time desc,tpr.create_time desc
 	</select>
 	
-	<insert id="insert" parameterType="com.edu.erp.model.PrivilegeRule">
+	<insert id="insert" parameterType="com.edu.erp.model.PrivilegeRule" useGeneratedKeys="true" keyProperty="id">
 		insert into tab_privilege_rule
 		(
 		    rule_name,
@@ -247,7 +247,7 @@
 		DELETE FROM tab_privilege_school_ref
 		WHERE rule_id in
 		<foreach collection="list" item="id" open="" separator="," close="">
-			#{id}
+			(#{id})
 		</foreach>
 	</delete>
 	

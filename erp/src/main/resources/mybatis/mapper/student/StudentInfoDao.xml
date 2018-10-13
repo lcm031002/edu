@@ -702,8 +702,8 @@
 	</select>
 	
 	<select id="queryStudentAllCourseTimes" parameterType="Map" resultType="Map">
-	select nvl(sum(toc.course_total_count), 0) course_total_count,
-	       nvl(sum(toc.course_surplus_count), 0) as course_surplus_count
+	select ifnull(sum(toc.course_total_count), 0) course_total_count,
+	       ifnull(sum(toc.course_surplus_count), 0) as course_surplus_count
 		  from t_order tod
 		  left join t_order_course toc
 		    on tod.id = toc.order_id
