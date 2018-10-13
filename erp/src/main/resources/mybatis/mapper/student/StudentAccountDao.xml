@@ -695,7 +695,7 @@
 	</update>
 	<!--更新退费账户   -->
 	<update id="updateRefundAccount">
-		update t_account t set  t.refund_account = #{amount} where t.id = #{accountId}
+		update t_account set  fee_amount = #{amount} where id = #{accountId}
 	</update>
 	
 	<!-- 账户查询  -->

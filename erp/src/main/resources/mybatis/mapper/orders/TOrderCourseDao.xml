@@ -193,8 +193,10 @@
 	      where (
 	           c.id = #{order_course_id}
 	           or c.root_course_id = #{order_course_id}
+	           <if test="root_course_id != null">
 	           or (${root_course_id} is not null and c.id =${root_course_id}) 
-	           or (${root_course_id} is not null and c.root_course_id = ${root_course_id}) 
+	           or (${root_course_id} is not null and c.root_course_id = ${root_course_id})
+			   </if>
 	      )
 	      and ifnull(c.status, 1) = 1 
 	      and c.manage_fee > 0
@@ -206,8 +208,10 @@
        	  where (
            c.id = #{order_course_id}
            or c.root_course_id = #{order_course_id}
+           <if test="root_course_id">
            or (${root_course_id} is not null and c.id =${root_course_id}) 
-           or (${root_course_id} is not null and c.root_course_id = ${root_course_id}) 
+           or (${root_course_id} is not null and c.root_course_id = ${root_course_id})
+		   </if>
       )
 	</select>
 	
