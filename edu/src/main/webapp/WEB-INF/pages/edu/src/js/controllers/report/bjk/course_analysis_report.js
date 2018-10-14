@@ -36,7 +36,11 @@ function report_courseAnalysisController($rootScope,
 
     $scope.beforeQuery = function() {
           if (!$scope.searchParam.branchId) {
-            $uibMsgbox.error("请选择校区");
+            $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
+              setTimeout(function() {
+                $('.btn-group.sel-org.pull-left').addClass('open');
+              }, 300);
+            })
             return false;
           }
         if (!$scope.searchParam.dateType) {

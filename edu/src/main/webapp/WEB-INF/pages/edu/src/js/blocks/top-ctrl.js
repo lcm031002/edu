@@ -106,13 +106,20 @@ function TopHeadCtrl(
             if(!resp.error){
                 $scope.selectedNode = resp.data;
                 $rootScope.selectedOrg = resp.data;
-                if (!$scope.selectedNode) {
-                    $uibMsgbox.alert('您还没选择校区/团队，请选择校区或团队！', function() {
-                        setTimeout(function() {
-                            $('.btn-group.sel-org.pull-left').addClass('open');
-                        }, 300);
-                    })
-                }
+              if ($scope.selectedOrg && $scope.selectedOrg.id && $scope.selectedOrg.type == "4") {
+                $.each($scope.branchList, function(i, b) {
+                  if (b.id == $scope.selectedOrg.id) {
+                    $scope.searchParam.p_branch_id = b.id;
+                  }
+                });
+              } else {
+                $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
+                  setTimeout(function() {
+                    $('.btn-group.sel-org.pull-left').addClass('open');
+                  }, 300);
+                })
+              }
+
                 if ($scope.selectedNode.text && $scope.selectedNode.text.length > 8) {
                     $scope.selectedNode.text = $scope.selectedNode.text.substring(0, 7) + '...'
                 }

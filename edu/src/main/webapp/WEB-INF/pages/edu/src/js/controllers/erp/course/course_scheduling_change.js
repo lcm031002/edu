@@ -105,7 +105,11 @@ function erp_courseSchduleChangeController(
         $scope.toSelectingCourseList = [];
         if($scope.selectedOrg&&$scope.selectedOrg.id&&$scope.selectedOrg.type=="4"){
         }else{
-            $uibMsgbox.alert("请选择校区!");
+          $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
+            setTimeout(function() {
+              $('.btn-group.sel-org.pull-left').addClass('open');
+            }, 300);
+          })
             return;
         }
         $scope.isQuerySelectingCourse = 'isQuerySelectingCourse';

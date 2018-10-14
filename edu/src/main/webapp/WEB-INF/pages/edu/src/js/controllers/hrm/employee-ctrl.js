@@ -717,7 +717,11 @@ function EmployeeCtrl($scope,
     	if($scope.selectedPost.branch_Id!=null && $scope.selectedPost.branch_Id!=''){
     		param.branch_Id=$scope.selectedPost.branch_Id;
     	}else{
-    		alert("请选择校区");
+        $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
+          setTimeout(function() {
+            $('.btn-group.sel-org.pull-left').addClass('open');
+          }, 300);
+        })
     		return;
     	}
     	if($scope.selectedPost.post_Id!=null && $scope.selectedPost.post_Id!=''){

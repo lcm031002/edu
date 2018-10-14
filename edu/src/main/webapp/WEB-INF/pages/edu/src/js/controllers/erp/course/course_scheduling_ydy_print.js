@@ -117,7 +117,11 @@ function erp_courseSchedulingYdyPrintController(
             }
           });
         } else {
-          $uibMsgbox.confirm("请选择校区!");
+          $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
+            setTimeout(function() {
+              $('.btn-group.sel-org.pull-left').addClass('open');
+            }, 300);
+          })
         }
       } else {
         alert(resp.message);

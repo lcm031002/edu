@@ -447,7 +447,7 @@ pageEncoding="utf-8"%>
 <script type="text/javascript" src="js/controllers/report/common/attendance_report.js"  desc="考勤消耗表"></script>
 <script type="text/javascript" src="js/controllers/report/common/settlement_performance_details.js"  desc="业绩结算表"></script>
 <script type="text/javascript" src="js/controllers/report/common/settlement_attendance_report.js"  desc="考勤结算表"></script>
-<script type="text/javascript" src="js/controllers/report/bjk/teacher_workload_report.js"  desc="培英班教师工作量表"></script>
+<script type="text/javascript" src="js/controllers/report/bjk/teacher_workload_report.js"  desc="教师工作量表"></script>
 <script type="text/javascript" src="js/controllers/report/wfd/teacher_attend_report.js"  desc="晚辅导教师考勤消耗表"></script>
 
 <!-- Components 组件 -->

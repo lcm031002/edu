@@ -241,6 +241,40 @@ public class TeacherInfoController extends BaseController {
     }
 
     /**
+     * 分页表格
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = { "/page" }, headers = { "Accept=application/json" }, method = RequestMethod.GET)
+    public Map<String, Object> page(HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try {
+            OrgModel orgModel = WebContextUtils.genSelectedOriginalOrg(request);
+            Map<String, Object> param = this.initParamMap(request, true, StringUtils.EMPTY);
+            param.put("city_id", orgModel.getCityId());
+            param.put("bu_id", orgModel.getBuId());
+
+            if (param.get("buId") != null) {
+                param.put("bu_id", param.get("buId"));
+            }
+            param.put("orgId", orgModel.getOrgId());
+            if(param.get("status") == null){
+                param.put("status",1);
+            }
+            Page<Teacher> page = new Page<Teacher>();
+            page = teacherInfoService.page(param);
+            setRespDataForPage(request, page.getResult(), resultMap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("error found ,see:", e);
+        }
+        return resultMap;
+    }
+
+    /**
      * 新增
      *
      * @param teacher

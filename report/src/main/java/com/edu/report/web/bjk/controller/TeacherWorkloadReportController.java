@@ -88,7 +88,7 @@ public class TeacherWorkloadReportController{
 		// 模板文件名
 		String templateFileName = "teacher_workload.xlsx";
 		// 临时文件名
-		String tempFileName = "培英班教师工作量表" + "【#bu_name#】_"
+		String tempFileName = "教师工作量表" + "【#bu_name#】_"
 				+ DateUtil.getCurrDate(ERPConstants.DATE_FORMAT_2) + ".xlsx";
 		try {
 			Map<String, Object> paramMap = WebUtils.getParametersStartingWith(request, "p_");

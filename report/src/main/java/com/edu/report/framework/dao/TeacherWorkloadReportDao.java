@@ -12,7 +12,7 @@ import com.edu.report.model.TStudentInfo;
 
 /**
  * @ClassName: TeacherWorkloadReportDao
- * @Description: 培英班教师工作量表
+ * @Description: 教师工作量表
  *
  */
 @Repository(value = "teacherWorkloadReportDao")

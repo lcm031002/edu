@@ -49,7 +49,7 @@ angular.module('ework-ui').factory('report_autoAttendanceReportService',
     [ '$resource', report_autoAttendanceReportService ]);
 
 /**
- * 培英班教师工作量表服务
+ * 教师工作量表服务
  */
 angular.module('ework-ui').factory('report_teacherWorkloadService',
     [ '$resource', report_teacherWorkloadService ]);

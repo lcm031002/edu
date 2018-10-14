@@ -8,7 +8,7 @@ import com.edu.report.web.bjk.service.TeacherWorkloadReportService;
 
 /**
  * @ClassName: TTeacherWorkloadReportTask
- * @Description: 培英班教师工作量表
+ * @Description: 教师工作量表
  *
  */
 public class TTeacherWorkloadReportTask extends AbstactDailyReportTask {

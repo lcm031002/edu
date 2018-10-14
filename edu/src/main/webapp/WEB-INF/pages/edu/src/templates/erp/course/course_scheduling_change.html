@@ -285,25 +285,7 @@
                                 </div>
                             </td>
                             <td ng-if="courseTime.isEdit">{{courseTime.teacher_code}}</td>
-                            <td ng-if="courseTime.isEdit">
-                                <div class="input-group  btn-group">
-                                   <div class="form-control" type="text"  >
-                                        <span class="btn btn-default btn-xs" ng-if="courseTime.assteacher_name">
-                                            {{courseTime.assteacher_name}}
-                                            <i class="iconfont icon-public_defeat i-text-primary cur" ng-click="resetCourseTeacher(courseTime)"></i>
-                                        </span>
-                                  <!-- <span >{{courseTime.assteacher_name}}</span> -->
-                                    </div>
-                                    <span class="input-group-btn"  kl-teacher-dropdown kl-selected="setCourseTeacher(courseTime,teacher)" searchparam="{ teacher_type:4}">
-                                    <button class="btn btn-primary">选择</button>
-                                    </span>
-                                </div>
-                            </td>
-                            <td ng-if="courseTime.isEdit">{{courseTime.assteacher_code}}</td>
                             <td ng-if="courseTime.isEdit">{{courseTime.week_number}}</td>
-                            <td ng-if="courseTime.isEdit">
-                                <input  ng-model="courseTime.title" class="form-control" type="text" />
-                            </td>
                             <td ng-if="courseTime.isEdit">
                                 <textarea ng-model="courseTime.remark" class="form-control"></textarea>
                             </td>

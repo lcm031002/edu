@@ -42,7 +42,7 @@
 				update_user = #{update_user},
 			</if>
 			<if test="update_time!=null">
-				update_time = sysdate,
+				update_time = sysdate(),
 			</if>
 			remark	= #{remark}
 		where id = #{id}

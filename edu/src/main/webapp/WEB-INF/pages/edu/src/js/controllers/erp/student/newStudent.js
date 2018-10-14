@@ -202,7 +202,7 @@ function erp_newStudentController(
         var date=new Date($scope.student.counselor.start_date);
         date.setFullYear(date.getFullYear() + 2);
         date.setDate(date.getDate()-1);
-        $scope.student.counselor.end_date=date.format("yyyy-MM-dd", date);
+        $scope.student.counselor.end_date=Format("yyyy-MM-dd", date);
     })
 
     //  咨询师的结束时间在开始时间上加两年
@@ -210,7 +210,7 @@ function erp_newStudentController(
         var date=new Date($scope.student.govern.start_date);
         date.setFullYear(date.getFullYear() + 2);
         date.setDate(date.getDate()-1);
-        $scope.student.govern.end_date=date.format("yyyy-MM-dd", date);
+        $scope.student.govern.end_date=Format("yyyy-MM-dd", date);
     })
 
   $scope.removeContact = function(contact) {
@@ -282,8 +282,9 @@ function erp_newStudentController(
   };
   $scope.saveStudent = function() {
     var stu = $scope.student;
-    stu.attend_school_id = $scope.selectedInfo.school.id;
-
+    if(!$.isEmptyObject($scope.selectedInfo.school)){
+      stu.attend_school_id = $scope.selectedInfo.school.id;
+    }
 
     stu.grade_id = $scope.selectedInfo.grade;
     if ($scope.selectedInfo.recommender && $scope.selectedInfo.recommender.id) {

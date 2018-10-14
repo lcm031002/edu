@@ -46,7 +46,7 @@
         <uib-tab heading="学员档案">
           <div class="table-panel">
             <div class="form-group">
-              <label class="control-label required col-sm-3 col-lg-2">学校</label>
+              <label class="control-label col-sm-3 col-lg-2">学校</label>
               <div class="col-sm-3 col-lg-3">
                 <input 
                   class="form-control" 
@@ -58,7 +58,7 @@
                   uib-typeahead="school as school.school_name for school in getSchools($viewValue)" 
                   typeahead-loading="loadingSchools" 
                   typeahead-no-results="schoolNoResults" 
-                  required>
+                  >
                 <i class="iconfont icon-search form-control-feedback"></i>
                 <div>
                   <i ng-show="loadingSchools" class="glyphicon glyphicon-refresh text-primary">
@@ -66,9 +66,6 @@
                   <span ng-show="schoolNoResults " class="text-warning">
                     <i class="glyphicon glyphicon-remove text-warning"></i> 查询不到对应的学校
                   </span>
-                  <div class="text-warning" ng-messages="studentForm.school.$error" ng-if="studentForm.school.$touched">
-                    <p ng-message="required">学校必填</p>
-                  </div>
                 </div>
               </div>
               <label class="control-label required col-sm-2 col-lg-2">年级{{selectedSudentGrade | json}}</label>

@@ -28,6 +28,7 @@ public class OrgModel  implements Serializable{
 	private Long productLine;
 	private Integer orgKind;
 	private String cityName;
+	private Long orgId;
 	
 	private Map<String,String> state = new HashMap<String,String>();
 	
@@ -95,6 +96,14 @@ public class OrgModel  implements Serializable{
 
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
+	}
+
+	public Long getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Long orgId) {
+		this.orgId = orgId;
 	}
 
 	@Override

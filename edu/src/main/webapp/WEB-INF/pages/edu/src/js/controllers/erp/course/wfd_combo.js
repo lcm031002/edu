@@ -235,7 +235,11 @@ function erp_wfdComboController(
                         }
                     });
                 } else {
-                    $uibMsgbox.warn("请选择校区!");
+                  $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
+                    setTimeout(function() {
+                      $('.btn-group.sel-org.pull-left').addClass('open');
+                    }, 300);
+                  })
                 }
                 // 查询列表数据
                 $scope.handleQuery();

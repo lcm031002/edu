@@ -331,10 +331,6 @@ public class CourseSchedulingServiceImpl implements CourseSchedulingService {
 
 	@Override
 	public void updateCourseTimes(CourseScheduling courseScheduling) throws Exception {
-		Integer count = this.tCourseDao.isMtSubCourse(courseScheduling.getCourse_id());
-		if (count > 0) {
-			throw new Exception("双师分场不能修改课次信息！");
-		}
 
 		List<CourseScheduling> data = queryCourseScheduling(courseScheduling);
 		//	判断是否有此课程的挂起和考勤记录
