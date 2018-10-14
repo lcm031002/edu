@@ -6,69 +6,70 @@
 	<!-- 查询课程批改信息 -->
 	<select id="queryOrderChange" resultType="com.edu.erp.model.TOrderChange"
 		parameterType="java.lang.Long">
-				with tcoc as
-				 ( select t.change_id as change_id,
-				         t.order_course_id as order_course_id,
-				         t.course_times as course_times,
-				         max(t.courseTimeString)  as courseTimeString,
-				         (t.total_amount) as total_amount,
-                                         (t.transfer_flag) as transfer_flag
-				 from
-				 (
-				 select tcoc.change_id as change_id,
-				         tcoc.order_course_id as order_course_id,
-				         tcoc.course_times as course_times,
-				         group_concat(toct.course_times)  over (partition by  toct.change_id, toct.order_id, toct.order_course_id order by toct.course_times)   as courseTimeString,
-				         tcoc.total_amount as total_amount,
-				         tcoc.transfer_flag as transfer_flag
-				    from t_order_change toc
-				    left join tc_order_course tcoc
-				      on tcoc.change_id = toc.id
-				    left join tc_order_course_times toct
-				      on toct.change_id = tcoc.change_id
-				     and toct.order_id = tcoc.order_id
-				     and toct.order_course_id = tcoc.order_course_id
-				   where toc.order_id = #{orderId,jdbcType=NUMERIC} ) t
-				   
-				   group by t.change_id, t.order_course_id,t.course_times,t.total_amount,t.transfer_flag)
-				   
-				  select distinct toc.*,
-				                 tei.employee_name as createUserName,
-				                 tct.name as changeTypeName,
-				                 tcs.name as changeStatusName,
-				                 tc.course_name as courseName,
-				                 tc.course_no as courseNo,
-				                 tcoc.order_course_id as orderCourseId,
-				                 tcoc.course_times as courseTimes,
-				                 tcoc.courseTimeString,
-				                 toi.org_name as branch_name,
-				                 tod.order_no as order_no,
-				                 to_char(apply_time, 'yyyy-mm-dd') as apply_time_string,
-				                 tcoc.total_amount as total_amount,
-				                 tcoc.transfer_flag,
-				                 tsi.encoding as student_encoding,
-				                 tsi.student_name as student_name
-				   from T_ORDER_CHANGE toc
-				   left join tab_user_info tui
-				     on tui.id = toc.create_User
-				   left join tab_employee_info tei
-				     on tei.id = tui.employee_id
-				   left join tp_change_type tct
-				     on tct.id = toc.change_type
-				   left join tp_change_status tcs
-				     on tcs.id = toc.change_status
-				   left join tcoc
-				     on tcoc.change_id = toc.id
-				   left join t_order_course todc
-				     on todc.id = tcoc.order_course_id
-				   left join t_order tod
-				     on tod.id = todc.order_id
-				   left join t_course tc
-				     on tc.id = todc.course_id
-				   left join tab_organization_info toi
-				     on toi.id = todc.branch_id
-				   left join tab_student_info tsi
-				     on tsi.id = tod.student_id
+				 SELECT DISTINCT
+						toc.*, tei.employee_name AS createUserName,
+						tct.NAME AS changeTypeName,
+						tcs.name AS changeStatusName,
+						tc.course_name AS courseName,
+						tc.course_no AS courseNo,
+						tcoc.order_course_id AS orderCourseId,
+						tcoc.course_times AS courseTimes,
+						tcoc.courseTimeString,
+						toi.org_name AS branch_name,
+						tod.order_no AS order_no,
+						DATE_FORMAT(apply_time, '%Y-%m-%d') AS apply_time_string,
+						tcoc.total_amount AS total_amount,
+						tcoc.transfer_flag,
+						tsi.encoding AS student_encoding,
+						tsi.student_name AS student_name
+					FROM
+						T_ORDER_CHANGE toc
+					LEFT JOIN tab_user_info tui ON tui.id = toc.create_User
+					LEFT JOIN tab_employee_info tei ON tei.id = tui.employee_id
+					LEFT JOIN tp_change_type tct ON tct.id = toc.change_type
+					LEFT JOIN tp_change_status tcs ON tcs.id = toc.change_status
+					left join (
+						SELECT
+							t.change_id AS change_id,
+							t.order_course_id AS order_course_id,
+							t.course_times AS course_times,
+							max(t.courseTimeString) AS courseTimeString,
+							(t.total_amount) AS total_amount,
+							(t.transfer_flag) AS transfer_flag
+						FROM
+							(
+								SELECT
+									tcoc.change_id AS change_id,
+									tcoc.order_course_id AS order_course_id,
+									tcoc.course_times AS course_times,
+									group_concat(toct.course_times)  AS courseTimeString,
+									tcoc.total_amount AS total_amount,
+									tcoc.transfer_flag AS transfer_flag
+								FROM
+									t_order_change toc
+								LEFT JOIN tc_order_course tcoc ON tcoc.change_id = toc.id
+								LEFT JOIN tc_order_course_times toct ON toct.change_id = tcoc.change_id
+								AND toct.order_id = tcoc.order_id
+								AND toct.order_course_id = tcoc.order_course_id
+								WHERE
+									toc.order_id = #{orderId,jdbcType=NUMERIC}
+								group by toct.change_id,
+										toct.order_id,
+										toct.order_course_id
+								order by toct.course_times
+							) t
+						GROUP BY
+							t.change_id,
+							t.order_course_id,
+							t.course_times,
+							t.total_amount,
+							t.transfer_flag
+					) tcoc ON tcoc.change_id = toc.id
+					LEFT JOIN t_order_course todc ON todc.id = tcoc.order_course_id
+					LEFT JOIN t_order tod ON tod.id = todc.order_id
+					LEFT JOIN t_course tc ON tc.id = todc.course_id
+					LEFT JOIN tab_organization_info toi ON toi.id = todc.branch_id
+					LEFT JOIN tab_student_info tsi ON tsi.id = tod.student_id
 				 where toc.order_id = #{orderId,jdbcType=NUMERIC}
 				 order by toc.apply_time desc
 	</select>
