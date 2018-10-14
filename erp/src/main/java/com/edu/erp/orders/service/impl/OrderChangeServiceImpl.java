@@ -565,25 +565,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 				// 财务确认
 				premiumFinConfirm(changeId, userId);
 				premiumValidate(changeId, userId, tabChangeCourse.getPremium_type());
-
-				for (TCOrderCourse tcOrderCourse : tcOrderCourseList) {
-					TOrderCourse tOrderCourse = tOrderCourseDao.queryOrderCourseById(tcOrderCourse.getOrder_course_id());
-					tOrderCourse.setCourse_surplus_count(tOrderCourse.getCourse_surplus_count() - tcOrderCourse.getCourse_times());
-					tOrderCourse.setQuit_flag(1L);
-					tOrderCourse.setSurplus_cost((tOrderCourse.getCourse_surplus_count() - tcOrderCourse.getCourse_times()) * tOrderCourse.getDiscount_unit_price());
-					tOrderCourseDao.updateOrderCourse(tOrderCourse);
-				}
-
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("change_id", changeId);
-				orderCourseTimesInfoService.updateValidOrderCourseTimes(paramMap);
-
-				TOrderChange tOrderChange = new TOrderChange();
-				tOrderChange.setId(changeId);
-				tOrderChange.setUpdate_user(NumberUtils.object2Long(userId));
-				tOrderChange.setChange_status(5L);
-				tOrderChange.setValidate_time(DateUtil.getCurrDateTime());
-				tOrderChangeDao.updateOrderChange(tOrderChange);
 			}
 		}
 	}
