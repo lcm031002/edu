@@ -345,15 +345,6 @@ function hrmEmployeeInfoCtrl($scope,
         	$uibMsgbox.confirm("手机号不能为空");
         	return;
         }
-        queryExtInfo();
-        var retEmp = $scope.retEmp;
-        for (var i = 0; i < retEmp.length; i++) {
-            //过滤，获取填写过的信息，若字段值为null，MyBatis 插入空值时，需要指定JdbcType，否则报错
-            if ($scope.temp[i].fieldKey != null) {
-                var str = retEmp[i].fieldKey;
-                param[str] = $scope.temp[i].fieldKey;
-            }
-        }
         //添加任职信息
         param.work = $scope.selectedEmp;
         erp_employeeMgrService.add(param, function(resp) {
@@ -390,8 +381,7 @@ function hrmEmployeeInfoCtrl($scope,
             return;
         }
         $scope.addEmp = false;
-        queryExtInfo();
-
+        updateEmpParam();
     };
 
 
@@ -400,47 +390,16 @@ function hrmEmployeeInfoCtrl($scope,
      * 将修改的数据放入对象中，该步骤独立出来是为了请求同步
      */
     function updateEmpParam() {
-        var param = {};
-        for (var i = 0; i < $scope.retEmp.length; i++) {
-            var str = $scope.retEmp[i].fieldKey;
-            if ($scope.temp[i].fieldKeys != null) {
-                $scope.employee[0][str] = $scope.temp[i].fieldKeys;
-            }
-        }
-
-        $scope.employee[0].id = $scope.selectedEmp.id;
-        param = $scope.employee[0];
         erp_employeeMgrService.updateEmployeeStatic($scope.selectedEmp, function(resp) {
             if (resp.error == false) {
-                erp_employeeMgrService.update(param, function(resp) {
-                    if (resp.error == false) {
-                        $uibMsgbox.confirm("修改成功", function(res) {
-                            if (res == 'yes') {
-                                $state.go('hrmEmployee')
-                            }
-                        });
-                        getEmployeeInfo($scope.employee[0]);
-                    } else {
-                        $uibMsgbox.confirm("修改失败，失败信息：" + resp.message);
+                $uibMsgbox.confirm("修改成功", function(res) {
+                    if (res == 'yes') {
+                        $state.go('hrmEmployee')
                     }
                 });
+                getEmployeeInfo($scope.employee[0]);
             } else {
                 $uibMsgbox.confirm("修改失败，失败信息：" + resp.message);
-            }
-        })
-
-    }
-
-
-    /**
-     * 再次查询员工定义表中启用的字段信息，获取员工信息的key
-     */
-    function queryExtInfo() {
-        var param = {};
-        EmployeeExtService.queryField(param, function(resp) {
-            if (resp.error == false) {
-                $scope.retEmp = resp.data;
-                updateEmpParam();
             }
         });
     }

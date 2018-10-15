@@ -378,16 +378,11 @@
 		encoding=#{encoding,jdbcType=VARCHAR},
 		phone=#{phone,jdbcType=VARCHAR},
 		dept=#{dept,jdbcType=VARCHAR},
-		post=#{post,jdbcType=NUMERIC},
 		position=#{position,jdbcType=VARCHAR},
-		poslevel=#{poslevel,jdbcType=NUMERIC},
 		email=#{email,jdbcType=VARCHAR},
-		enterType=#{enterType,jdbcType=NUMERIC},
 		id_card=#{id_card,jdbcType=NUMERIC},
-		business=#{business,jdbcType=VARCHAR}
-		<if test="entryDate!=null || entryDate!=''">
-			,entry_date=to_date(#{entryDate}, 'yyyy-mm-dd')
-		</if>
+		sex=#{sex, jdbcType=NUMERIC},
+		user_type=#{user_type, jdbcType=NUMERIC}
 		where id=#{id,jdbcType=NUMERIC}
 	</update>
 

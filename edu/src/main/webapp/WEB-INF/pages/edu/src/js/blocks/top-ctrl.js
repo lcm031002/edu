@@ -107,11 +107,13 @@ function TopHeadCtrl(
                 $scope.selectedNode = resp.data;
                 $rootScope.selectedOrg = resp.data;
               if ($scope.selectedOrg && $scope.selectedOrg.id && $scope.selectedOrg.type == "4") {
-                $.each($scope.branchList, function(i, b) {
-                  if (b.id == $scope.selectedOrg.id) {
-                    $scope.searchParam.p_branch_id = b.id;
+                  if ($scope.branchList && $scope.branchList.length > 0) {
+                      $.each($scope.branchList, function(i, b) {
+                          if (b.id == $scope.selectedOrg.id) {
+                              $scope.searchParam.p_branch_id = b.id;
+                          }
+                      });
                   }
-                });
               } else {
                 $uibMsgbox.warn('您还没选择校区，请选择校区！', function() {
                   setTimeout(function() {
