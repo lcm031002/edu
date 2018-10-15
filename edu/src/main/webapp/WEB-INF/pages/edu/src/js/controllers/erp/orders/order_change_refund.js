@@ -435,7 +435,7 @@ function erp_orderChangeRefundController(
     $scope.checkAllRefundCourseTimes = function(){
         $scope.refundCourseTimesList = [];
         $.each($scope.selectedRefundCourse.orderCourseSurplusCount,function(i,tfoCourse){
-            if(tfoCourse.ATTEND_TYPE==10||!tfoCourse.ATTEND_TYPE){
+            if(tfoCourse.attend_type==10||!tfoCourse.attend_type){
                 tfoCourse.checked = true;
                 $scope.refundCourseTimesList.push(tfoCourse);
             }
@@ -444,7 +444,7 @@ function erp_orderChangeRefundController(
 
     $scope.uncheckAllRefundCourseTimes = function(){
         $.each($scope.selectedRefundCourse.orderCourseSurplusCount,function(i,tfoCourse){
-            if(tfoCourse.ATTEND_TYPE==10||!tfoCourse.ATTEND_TYPE){
+            if(tfoCourse.attend_type==10||!tfoCourse.attend_type){
                 tfoCourse.checked = false;
             }
         });
