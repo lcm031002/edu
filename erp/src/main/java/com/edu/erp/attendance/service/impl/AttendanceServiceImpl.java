@@ -1238,4 +1238,9 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<TAttendance> attendances = attendanceDao.queryPrintAttendanceInfo(ids);
         return attendances;
     }
+
+    @Override
+    public TAttendance queryById(Long id) throws Exception{
+        return this.attendanceDao.queryAttendanceInfoById(id);
+    }
 }

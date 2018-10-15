@@ -190,9 +190,9 @@
 		       ts_flag,
 		       carried,
 		       create_user,
-		       sysdate,
+		       sysdate(),
 		       update_user,
-		       sysdate,
+		       sysdate(),
 		       course_date,
 		       id,
 		       for_quit,
@@ -613,15 +613,12 @@
 		                END) TEACHER_COUNT,
 		                PCWR.REMARK,
 		                PCWR.ID
-		  FROM (SELECT date_format(#{end_date, jdbcType=VARCHAR},
-		                       '%Y-%m-%d') - ROWNUM + 1 AS DATE_TIME,
-		               ROWNUM
-		          FROM DUAL
-		        CONNECT BY ROWNUM &lt;
-		        = (SELECT date_format(#{end_date, jdbcType=VARCHAR}, '%Y-%m-%d') -
-		                  date_format(#{start_date, jdbcType=VARCHAR}, '%Y-%m-%d') + 1
-		            FROM DUAL)
-		           ORDER BY ROWNUM) DT_TIME 
+		  FROM (
+				select
+				cur_date AS DATE_TIME
+				from t_create_calendar where cur_date BETWEEN  #{start_date, jdbcType=VARCHAR} and #{end_date, jdbcType=VARCHAR}
+				order by cur_date
+			) DT_TIME
 		 LEFT JOIN(SELECT date_format(TA.COURSE_DATE || '', '%Y%m%d') AS ATTEND_DATE,
 		                  COUNT(TA.STUDENT_ID) AS STUDENT_COUNT
 		            FROM T_ORDER TOD
@@ -638,7 +635,7 @@
 		             and ta.attend_branch_id = #{branch_id,jdbcType=NUMERIC}
 		             AND date_format(TA.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
 		                 AND #{end_date,jdbcType=VARCHAR}
-		           GROUP BY TA.COURSE_DATE) ST_ATTD ON TO_CHAR(ST_ATTD.ATTEND_DATE, 'YYYY-MM-DD') = DT_TIME.DATE_TIME
+		           GROUP BY TA.COURSE_DATE) ST_ATTD ON date_format(ST_ATTD.ATTEND_DATE, '%Y-%m-%d') = DT_TIME.DATE_TIME
 		 LEFT JOIN(SELECT COUNT(TAT.STUDENT_ID) AS TEACHER_COUNT,
 		                 date_format(TAT.COURSE_DATE || '', '%Y%m%d') AS ATTEND_DATE
 		            FROM T_ATTENDANCE TAT
@@ -673,7 +670,7 @@
 	          student.head_pic ,
 	          ordercourse.id order_detail_id ,
 	          attend.id attend_id,
-	          student.encoding || '-' || course.course_name || '-' || combo.combo_name course_info,
+	          concat(student.encoding , '-' , course.course_name , '-' , combo.combo_name) course_info,
 		       case when (select count(1)
 		                 from user_application_task t
 		                where t.busi_id = attend.id
@@ -693,8 +690,8 @@
 		    on student.id = ci.student_id 
 		    and ci.counselor_type = 2
 		    and ci.is_valid != 0
-            and date_format(ci.start_date, '%Y-%m-%d') &lt;= trunc(sysdate)
-            and date_format(ci.end_date, '%Y-%m-%d') &gt;= trunc(sysdate)
+            and date_format(ci.start_date, '%Y-%m-%d') &lt;= date_format(sysdate(), '%Y-%m-%d')
+            and date_format(ci.end_date, '%Y-%m-%d') &gt;= date_format(sysdate(), '%Y-%m-%d')
 		  left join tab_employee_info ei
 		    on ci.counselor_id = ei.id
 	      left join (select sl.id, slr.student_id 
@@ -717,7 +714,7 @@
 	     left join t_attendance attend on attend.student_id = torder.student_id 
 		        and attend.order_course_id = ordercourse.id
 		        and attend.attend_type = 31 
-		        and attend.course_date = to_number(replace(#{attendance_date,jdbcType=VARCHAR},'-','')) 
+		        and attend.course_date = replace(#{attendance_date,jdbcType=VARCHAR},'-','')
 		 where  course.branch_id = #{branch_id}
 		 		and (
 		 				(combo.id is null 
@@ -725,7 +722,7 @@
 		 					and ordercourse.course_surplus_count > 0) <!-- 无套餐 --> 
 		 		 	 or (combo.id is not null 
 		 		 	 		and combo.combo_type=1 
-		 		 	 		and #{attendance_date} between to_char(combo.start_date, 'yyyy-mm-dd') and to_char(combo.end_date, 'yyyy-mm-dd')
+		 		 	 		and #{attendance_date} between date_format(combo.start_date,'%Y-%m-%d') and date_format(combo.end_date,'%Y-%m-%d')
 		 		 	 		and ordercourse.course_surplus_count > 0) <!-- 套餐  月卡 -->
 		 		 	 or (combo.id is not null 
 		 		 	 		and combo.combo_type=2

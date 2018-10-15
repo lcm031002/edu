@@ -129,4 +129,6 @@ public interface StudentAttendanceService {
 	void updateAttandHTRemark(Map<String, Object> param) throws Exception;
 
     void attendanceBjk(Map<String, Object> param) throws Exception;
+
+	TAttendance queryValidAttendanceId( Long studentId,Long schedualingId);
 }

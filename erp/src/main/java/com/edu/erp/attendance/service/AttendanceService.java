@@ -272,4 +272,5 @@ public interface AttendanceService {
      */
     List<TAttendance> queryPrintAttendanceInfo(String attendListIds) throws Exception;
 
+    TAttendance queryById(Long id)throws Exception;
 }

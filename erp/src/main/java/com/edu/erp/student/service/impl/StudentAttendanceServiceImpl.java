@@ -883,4 +883,9 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         orderCourse.setUpdate_user(userId);
         this.tOrderCourseDao.updateOrderCourse(orderCourse);
     }
+
+    @Override
+    public TAttendance queryValidAttendanceId( Long studentId,Long schedualingId) {
+        return attendanceDao.queryValidAttendanceId(studentId,schedualingId);
+    }
 }
