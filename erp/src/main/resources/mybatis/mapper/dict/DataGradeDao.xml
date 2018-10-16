@@ -28,11 +28,6 @@
 		<!-- 修改用户-->
 		left join tab_user_info u_user on a.update_user = u_user.id
 		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
-		<if test="city_id!=null">
-			inner join BU_DICT_REL bdr on bdr.org_city_id =#{city_id,jdbcType=NUMERIC}
-			and bdr.dict_id = a.id
-			and bdr.dict_type = 'bu_grade_rel'
-		</if>
 		where a.status != 0
 		<if test="grade_name!= null and grade_name!= ''">
 			and	a.grade_name like '%${grade_name}%' 		
