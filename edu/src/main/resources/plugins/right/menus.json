@@ -2607,7 +2607,7 @@
 				},
 				{
 					"index": "A11000105",
-					"name": "报冻退转报表",
+					"name": "报退转报表",
 					"key": "classesReportOrderChange",
 					"icon": "iconfont icon-orders_performance",
 					"type": "$state",
@@ -2617,14 +2617,14 @@
 					"services":
 					[
 						{
-							"name": "报冻退转报表查询",
+							"name": "报退转报表查询",
 							"key": "classesReportOrderChange.query",
 							"url": "/report/common/orderchange",
 							"method": "GET"
 						},
 
 						{
-							"name": "报冻退转报表导出",
+							"name": "报退转报表导出",
 							"key": "classesReportOrderChange.output",
 							"url": "/report/common/orderchange/output",
 							"method": "GET"
