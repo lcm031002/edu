@@ -616,7 +616,7 @@
 			   o.order_no "order_encoding",
 		       oc.id "order_detail_id",
 		       ta.id "attendance_id",
-		       nvl(ta.attend_type, 10) "attend_type",
+		       ifnull(ta.attend_type, 10) "attend_type",
 		       oc.course_id "course_id",
 		       c.course_name "course_name",
 		       c.season_id "season_id",
@@ -627,8 +627,8 @@
 		       tcs.teacher_id "teacher_id",
 		       teach.teacher_name as "teacher_name",
 		       oct.times "course_times",
-		       to_char(to_date(tcs.course_date, 'yyyymmdd'), 'yyyy-mm-dd') "course_date",
-		       to_char(ta.attend_date, 'yyyy-mm-dd') "attend_date",
+		       DATE_FORMAT(str_to_date(tcs.course_date, '%Y%m%d'), '%Y-%m-%d') "course_date",
+		       DATE_FORMAT(ta.attend_date, '%Y-%m-%d') "attend_date",
 		       tcs.start_time "start_time",
 		       tcs.end_time "end_time",
 		       tcs.id as schedulingId,
@@ -637,7 +637,7 @@
 		       vocti.status_type_name,
 		       ta.remark "remark",
 		       tol.STATUS "lock_status",
-		       pkg_utils.check_order_return(oc.id) "is_return",
+		       check_order_return(oc.id) "is_return",
 		       case
 		         when (select count(1)
 		                 from user_application_task t

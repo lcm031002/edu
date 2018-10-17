@@ -121,8 +121,7 @@
 		a.money as money,
 		a.bu_id as bu_id,
 		a.encoding as encoding,
-		a.input_time as
-		input_time,a.dynamic_type as dynamic_type,
+		a.create_time as	input_time,a.dynamic_type as dynamic_type,
 		case
 		when
 		a.dynamic_type = 1 then

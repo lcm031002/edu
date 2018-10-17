@@ -440,7 +440,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 
 			HashMap<String,Object> paramOutAccountMap=new HashMap<String,Object>();
 			paramOutAccountMap.put("accountId",NumberUtils.object2Long(queryOutAccount.get("id")));
-			paramOutAccountMap.put("amount",Double.parseDouble(queryOutAccount.get("fee_amount") + "") + Double.parseDouble(paramMap.get("p_transfer_money") + ""));
+			paramOutAccountMap.put("amount",Double.parseDouble(queryOutAccount.get("fee_amount") + "") - Double.parseDouble(paramMap.get("p_transfer_money") + ""));
 			studentAccountDao.updateFeeAccount(paramOutAccountMap);
 
 			HashMap<String,Object> paramInAccountMap=new HashMap<String,Object>();

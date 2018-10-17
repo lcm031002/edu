@@ -353,7 +353,7 @@
 	<update id="setPhoto" parameterType="java.util.Map">
 		update tab_teacher_info
 		set photo = #{photo}
-		where t.id = #{teacher_id}
+		where id = #{teacher_id}
 	</update>
 
 	<select id="isEncodingExisted" parameterType="com.edu.erp.model.Teacher" resultType="java.lang.Integer">
