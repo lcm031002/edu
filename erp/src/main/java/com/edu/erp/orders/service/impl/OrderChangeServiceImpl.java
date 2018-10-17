@@ -560,11 +560,16 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 				if (tabChangeCourse.getPremium_type() != null && tabChangeCourse.getPremium_type().intValue() == 2) {
 					vipPremiumFee(tcOrderCourseList, changeId, userId);
 				} else { // 标准退费
-
+					normalPremiumFee(tcOrderCourseList, changeId, userId);
 				}
 				// 财务确认
 				premiumFinConfirm(changeId, userId);
 				premiumValidate(changeId, userId, tabChangeCourse.getPremium_type());
+
+				TLock tLock = new TLock();
+				tLock.setBusiType(5L);
+				tLock.setBusiId(changeId);
+				tLockDao.releaseLock(tLock);
 			}
 		}
 	}
@@ -807,7 +812,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 
 		TOrderChange tOrderChange = tOrderChangeDao.queryOrderChangeByChangId(changeId);
 		Double feeDeductionAmount = tOrderChange.getFee_deduction_amount() == null ? 0 : tOrderChange.getFee_deduction_amount();
-		if (feeDeductionAmount > 0) {
+		if (feeDeductionAmount != 0) {
 			TFeeDetail tFeeDetail = new TFeeDetail();
 			tFeeDetail.setFee_type(54L);
 			tFeeDetail.setFee_flag(2L);
@@ -839,6 +844,145 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 			}
 
 			queryMap.clear();
+			queryMap.put("operate_type", 5);
+			queryMap.put("fee_type", "51,54");
+			queryMap.put("operate_no", changeId);
+			TFee tFee = feeService.queryFeeAmountByChangeId(queryMap);
+			if (tFee != null && tFee.getFee_amount() != null) {
+				Double feeAmount = tFee.getFee_amount() < 0 ? 0 : tFee.getFee_amount();
+				TEncoder tEncoder = new TEncoder();
+				tEncoder.setEncoder_no("OC" + changeId);
+				tEncoder.setEncoder_type(7L);
+				tEncoder.setFee_flag(2L);
+				tEncoder.setOrder_id(orderId);
+				tEncoder.setBusi_type(5L);
+				tEncoder.setBusi_id(changeId);
+				tEncoder.setStatus(0);
+				tEncoder.setFee_amount(feeAmount);
+				encoderService.saveTEncoder(tEncoder);
+				queryMap.put("encoder_id", tEncoder.getId());
+				feeService.updateFeeEncoderIdByChangeId(queryMap);
+
+				queryMap.clear();
+				queryMap.put("premium_deduction_amount", feeDeductionAmount);
+				queryMap.put("fee_return_amount", feeAmount + feeDeductionAmount);
+				queryMap.put("fee_amount", feeAmount);
+				queryMap.put("change_id", changeId);
+				tOrderChangeDao.updateAmountsByChangeId(queryMap);
+			}
+		}
+	}
+
+	/**
+	 * 标准退费
+	 * @param  tcOrderCourseList 订单课程变更列表
+	 * @param changeId 变更单ID
+	 * @param userId 用户ID
+	 * @throws Exception
+	 */
+	private void normalPremiumFee(List<TCOrderCourse> tcOrderCourseList, Long changeId, Long userId) throws Exception {
+		TOrderChange tOrderChange = tOrderChangeDao.queryOrderChangeByChangId(changeId);
+		Long orderId = tOrderChange.getOrder_id();
+		Long orderCourseId = null;
+		for (TCOrderCourse tcOrderCourse : tcOrderCourseList) {
+			orderCourseId = tcOrderCourse.getOrder_course_id();
+			Double attendAmount = 0d;
+			if (tOrderChange.getChange_type() != null && tOrderChange.getChange_type().longValue() != 2L) {
+				Map<String, Object> paramMap = new HashMap<>();
+				paramMap.put("order_course_id", orderCourseId);
+				paramMap.put("root_course_id", tcOrderCourse.getRoot_course_id());
+				paramMap.put("branch_id", tcOrderCourse.getBranch_id());
+				int attendCnt = attendanceService.countAttend1ByOrderCourseId(paramMap);
+				int attendCnt2 = attendanceService.countAttend2ByOrderCourseId(paramMap);
+				int attendCnt3 = attendanceService.countAttend3ByOrderCourseId(paramMap);
+
+				TOrderCourse tOrderCourse = tOrderCourseDao.queryOrderCourseById(orderCourseId);
+				attendAmount = (attendCnt + attendCnt2 + attendCnt3) * (tOrderCourse.getFormer_unit_price() - tOrderCourse.getDiscount_unit_price());
+			}
+
+			Double totalAmount = tcOrderCourse.getTotal_amount() == null ? 0d : tcOrderCourse.getTotal_amount();
+			if (totalAmount < 0 && attendAmount > 0) {
+				attendAmount = attendAmount + totalAmount;
+				totalAmount = 0d;
+				if (attendAmount < 0) {
+					attendAmount = 0d;
+				}
+			}
+
+			TFeeDetail tFeeDetail = new TFeeDetail();
+			tFeeDetail.setOrder_id(tcOrderCourse.getOrder_id());
+			tFeeDetail.setOrder_detail_id(orderCourseId);
+			tFeeDetail.setOperate_type(5L);
+			tFeeDetail.setOperate_no(changeId);
+			tFeeDetail.setFee_amount(totalAmount);
+			tFeeDetail.setFee_type(51L);
+			tFeeDetail.setFee_flag(2L);
+			tFeeDetail.setCourse_sum(tcOrderCourse.getCourse_times());
+			feeDetailService.saveFeeDetail(tFeeDetail);
+
+			if (attendAmount > 0) {
+				tFeeDetail = new TFeeDetail();
+				tFeeDetail.setOrder_id(tcOrderCourse.getOrder_id());
+				tFeeDetail.setOrder_detail_id(orderCourseId);
+				tFeeDetail.setOperate_type(5L);
+				tFeeDetail.setOperate_no(changeId);
+				tFeeDetail.setFee_amount(attendAmount);
+				tFeeDetail.setFee_type(62L);
+				tFeeDetail.setFee_flag(1L);
+				tFeeDetail.setCourse_sum(tcOrderCourse.getCourse_times());
+				feeDetailService.saveFeeDetail(tFeeDetail);
+			}
+
+			if (tcOrderCourse.getPre_amount() > 0) {
+				tFeeDetail = new TFeeDetail();
+				tFeeDetail.setOrder_id(tcOrderCourse.getOrder_id());
+				tFeeDetail.setOrder_detail_id(orderCourseId);
+				tFeeDetail.setOperate_type(5L);
+				tFeeDetail.setOperate_no(changeId);
+				tFeeDetail.setFee_amount(-1 * tcOrderCourse.getPre_amount());
+				tFeeDetail.setFee_type(42L);
+				tFeeDetail.setFee_flag(1L);
+				tFeeDetail.setCourse_sum(tcOrderCourse.getCourse_times());
+				feeDetailService.saveFeeDetail(tFeeDetail);
+			}
+		}
+
+		Double feeDeductionAmount = tOrderChange.getFee_deduction_amount() == null ? 0d : tOrderChange.getFee_deduction_amount();
+		if (feeDeductionAmount != 0) {
+			TFeeDetail tFeeDetail = new TFeeDetail();
+			tFeeDetail.setOrder_id(orderId);
+			tFeeDetail.setOrder_detail_id(orderCourseId);
+			tFeeDetail.setOperate_type(5L);
+			tFeeDetail.setOperate_no(changeId);
+			tFeeDetail.setFee_amount(-1 * tOrderChange.getFee_deduction_amount());
+			tFeeDetail.setFee_type(54L);
+			tFeeDetail.setFee_flag(1L);
+			tFeeDetail.setCourse_sum(0L);
+			feeDetailService.saveFeeDetail(tFeeDetail);
+		}
+
+		TFeeDetail queryDetail = new TFeeDetail();
+		queryDetail.setOperate_no(changeId);
+		queryDetail.setOperate_type(5L);
+		List<TFeeDetail> feeDetailList = feeDetailService.queryFeeDetailByChangeId(queryDetail);
+		if (!CollectionUtils.isEmpty(feeDetailList)) {
+			for (TFeeDetail tFeeDetail : feeDetailList) {
+				TFee tFee = new TFee();
+				tFee.setFee_type(tFeeDetail.getFee_type());
+				tFee.setOrder_id(tFeeDetail.getOrder_id());
+				tFee.setFee_flag(tFeeDetail.getFee_flag());
+				tFee.setFee_amount(tFeeDetail.getFee_amount());
+				tFee.setOperate_no(String.valueOf(changeId));
+				tFee.setOperate_type(5L);
+				tFee.setInsert_time(DateUtil.getCurrDateTime());
+				tFee.setFee_status(0L);
+				feeService.saveFee(tFee);
+				tFeeDetail.setFee_id(tFee.getId());
+				tFeeDetail.setOperate_no(changeId);
+				feeDetailService.updateFeeIdByFeeChangeId(tFeeDetail);
+			}
+
+			Map<String, Object> queryMap = new HashMap<>();
 			queryMap.put("operate_type", 5);
 			queryMap.put("fee_type", "51,54");
 			queryMap.put("operate_no", changeId);

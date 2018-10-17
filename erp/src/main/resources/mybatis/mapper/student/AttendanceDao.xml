@@ -284,9 +284,10 @@
 		 select count(1)
 	     from t_attendance t,t_order_course oc
        	 where t.order_course_id = oc.id
-         and (oc.root_course_id = #{order_course_id} or
-                     (#{root_course_id} is not null and
-                      oc.root_course_id = #{root_course_id} ))
+         and (oc.root_course_id = #{order_course_id}
+         		<if test="root_course_id != null">
+					or oc.root_course_id = #{root_course_id}
+				</if>)
          and oc.branch_id = #{branch_id}                   
          <![CDATA[and t.order_course_id <> ${order_course_id}  ]]>
          and t.attend_type in (11, 12, 21, 22, 31)
