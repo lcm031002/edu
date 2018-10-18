@@ -212,8 +212,10 @@
                         <div class="">
                             <div class="btn btn-primary"  ng-if="order.order_status == 1 && (!order.tOrderLock || order.tOrderLock.status == 3)"  ng-click="printOrder(order)">订单打印</div>
                             <div class="btn btn-primary"  ng-if="order.order_status == 1 && (!order.tOrderLock || order.tOrderLock.status == 3)"  ng-click="handleCancelOrder()">订单作废</div>
+                            <!--
                             <div class="btn btn-primary"  ng-if="!order.tOrderLock || order.tOrderLock.status == 3"  ng-click="handleLockOrder()">订单锁定</div>
                             <div class="btn btn-primary" ng-if="order.tOrderLock && order.tOrderLock.status == 1" ng-click="handleUnLockOrder()">申请解锁</div>
+                             -->
                         </div>
                     </div>
                 </div>

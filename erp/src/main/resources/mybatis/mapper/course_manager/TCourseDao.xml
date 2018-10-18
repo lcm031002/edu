@@ -187,7 +187,7 @@
 			and not exists (select 1 from t_course_ladder_rel tclr where tclr.course_id = a.id)
 		</if>
 		<if test="month!=null and year!=null">
-			AND to_number(substr(to_char(tcs.course_date),0,4)) = #{year}
+			AND to_number(substr(to_char(tcs.course_date),1,4)) = #{year}
 			AND to_number(substr(to_char(tcs.course_date),5,2)) = #{month}
 		</if>
 		order by a.course_name asc

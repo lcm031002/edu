@@ -65,7 +65,7 @@
 			    	and uat.APPLICATION_ID = #{APPLICATION_ID,jdbcType=NUMERIC}
 			    </if>
 			    <if test="start_date != null and end_date != null and start_date != '' and end_date != ''">
-					and substr(uat.createtime,0,10) between #{start_date} and #{end_date}
+					and substr(uat.createtime,1,10) between #{start_date} and #{end_date}
 				</if>
 				<if test="auditStatus != null and auditStatus == '待审核'">
 					and uat.current_state is null
@@ -90,7 +90,7 @@
 			WHERE
 			    uat.APPLICATION_ID = #{paramMap.APPLICATION_ID,jdbcType=NUMERIC}
 			<if test="paramMap.start_date != null and paramMap.end_date != null">
-				and substr(uat.createtime,0,10) between #{paramMap.start_date} and #{paramMap.end_date}
+				and substr(uat.createtime,1,10) between #{paramMap.start_date} and #{paramMap.end_date}
 			</if>
 			<if test="paramMap.auditStatus != null and paramMap.auditStatus == '待审核'">
 				and uat.current_state is null
@@ -114,7 +114,7 @@
 			    uat.APPLICATION_ID = #{APPLICATION_ID,jdbcType=NUMERIC}
 			</if>
 			<if test="start_date != null and end_date != null">
-				and substr(uat.createtime,0,10) between #{start_date} and #{end_date}
+				and substr(uat.createtime,1,10) between #{start_date} and #{end_date}
 			</if>
 			<if test="auditStatus != null and auditStatus == '待审核'">
 				and uat.current_state is null

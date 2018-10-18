@@ -69,7 +69,6 @@ function CreatePrintPage(data) {
     strHtml += '<td style="font-weight:900;">优惠金额：'+(data.sum_price-data.actual_price)+'</td>';
     strHtml += '<td style="font-weight:900;">实际需缴费金额：￥'+data.actual_price+'</td>';
     strHtml += '<td style="font-weight:900;">已缴费金额：￥'+data.actual_price+'</td>';
-    strHtml += '<td style="font-weight:900;">APP账号：'+  (data.studentInfo.login_no ? data.studentInfo.login_no : "") +'</td>';
     strHtml += '</tr>';
     strHtml += '</table>';
 

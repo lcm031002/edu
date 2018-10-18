@@ -103,9 +103,9 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 				: remark);
 		Map<String, Object> dynamicInfo = tAccountDynamicDao
 				.queryInfoByDynamicId(dynamicId);
-		int status =  ((BigDecimal)dynamicInfo.get("STATUS")).intValue();
+		int status =  Integer.parseInt(dynamicInfo.get("status").toString());
 
-		int dynamic_type =  ((BigDecimal)dynamicInfo.get("DYNAMIC_TYPE")).intValue();
+		int dynamic_type =  Integer.parseInt(dynamicInfo.get("dynamic_type").toString());
 		if (!(status != 4 || dynamic_type == 1 || dynamic_type == 3 || dynamic_type == 4)) {
 			map.put("error", "true");
 			map.put("message", "该类型的账户变动类型支持修改");

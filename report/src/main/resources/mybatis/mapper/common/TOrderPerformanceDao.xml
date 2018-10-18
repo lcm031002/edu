@@ -133,7 +133,7 @@
 				and not exists (
 					select 1
 					from t_order_performance top where t.order_no = top.order_no and top.operate_type_name = '报班作废'
-				    and substr(top.order_no,5,6) = replace(substr(top.business_date,0,7),'-','')
+				    and substr(top.order_no,5,6) = replace(substr(top.business_date,1,7),'-','')
 				)
 				<if test="start_date != null and start_date != ''">
 					<![CDATA[ and t.business_date >= (#{start_date} || ' 00:00:00') ]]>
@@ -510,7 +510,7 @@
                 and tpd.subject_id = tc.subject_id
                 and toc.root_course_id is null
                 and tod.order_status = 1
-                and substr(tpd.business_date,0,7) > to_char(tod.create_date,'yyyy-MM')
+                and substr(tpd.business_date,1,7) > to_char(tod.create_date,'yyyy-MM')
            ) curr_season_times,
            (select count(0)
 	              from t_attendance ta, t_course_scheduling tcs,t_course tc,tab_student_info tsi,tab_time_season tts
@@ -550,7 +550,7 @@
              and tpd.student_code = tsi.encoding
              and tsr.user_id = tui.id
              and tui.employee_id = tei.id
-             and to_date(substr(tpd.business_date,0,10),'yyyy-MM-dd') between tsr.start_date and tsr.end_date
+             and to_date(substr(tpd.business_date,1,10),'yyyy-MM-dd') between tsr.start_date and tsr.end_date
           ) recorder,
           tpd.performance,
           tpd.id performance_id,

@@ -53,7 +53,7 @@
 			      ts.APPLICATION_ID = #{APPLICATION_ID,jdbcType=NUMERIC}
 			   </if>
 			   <if test="start_date != null and end_date != null">
-				  and substr(ts.createtime,0,10) between #{start_date} and #{end_date}
+				  and substr(ts.createtime,1,10) between #{start_date} and #{end_date}
 			   </if>
 			   <if test="auditStatus != null and auditStatus == '待审核'">
 				  and ts.current_state is null

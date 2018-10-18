@@ -126,8 +126,8 @@
 			<tbody>
 				<tr ng-repeat="order in orderList" ng-if="orderList && orderList">
 					<td><span class="cur" ng-click="queryOrderDetail(order.id)"><i class="iconfont text-primary icon-view"></i>详情</span>&nbsp;&nbsp;
-					       <span class="cur" ng-click="handleCancelOrder(order.id)"><i class="iconfont text-danger icon-cancellation"></i>作废</span>&nbsp;&nbsp;
-						   <span class="cur" ng-click="printOrder(order)"><i class="iconfont text-primary icon-print"></i>打印</span>&nbsp;&nbsp;</td>
+							<span class="cur" ng-click="handleCancelOrder(order.id)" ng-show ="{{order.order_status != 0}}"><i class="iconfont text-danger icon-cancellation"></i>作废</span>&nbsp;&nbsp;
+						<span class="cur" ng-click="printOrder(order)"><i class="iconfont text-primary icon-print"></i>打印</span>&nbsp;&nbsp;</td>
 					<td>{{order.id}}</td>
 					<td>{{order.order_no}}</td>
 					<td>{{orderType(order.order_type)}}</td>

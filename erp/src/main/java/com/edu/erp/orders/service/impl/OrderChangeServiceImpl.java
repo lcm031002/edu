@@ -600,7 +600,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		tAccountChange.setPre_amount(preAmount);
 		tAccountChange.setNext_amount(preAmount + tEncoder.getFee_amount());
 		tAccountChange.setPay_mode(1L);
-		tAccountChange.setAccount_type(3L);
+		tAccountChange.setAccount_type(1L);
 		studentAccountService.saveAccountChange(tAccountChange);
 
 		studentAccountService.updateRefundAccount(tAccount.getId(), tAccountChange.getNext_amount());

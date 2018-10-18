@@ -30,15 +30,15 @@ sum(tp.notpayNum) as notpayNum,sum(tp.moveNum) as moveNum,sum(tp.sleepNum) as sl
                        ELSE NULL
                        END)as lossNum
         from
-       (select t.id,t.bu_id as buId，t.after_status as status,substr(t.update_time,0,7) as changetime,tsi.branch_id as branch_id,toi.org_name as branch_name
+       (select t.id,t.bu_id as buId，t.after_status as status,substr(t.update_time,1,7) as changetime,tsi.branch_id as branch_id,toi.org_name as branch_name
         from student_status_record t
         left join tab_student_info tsi
         on t.student_id = tsi.id
         left join tab_organization_info toi
         on toi.id = tsi.branch_id
-        where substr(t.update_time,0,7)=#{year_month}
+        where substr(t.update_time,1,7)=#{year_month}
         and t.id in(SELECT MAX(id) from student_status_record
-        where substr(update_time,0,7)=#{year_month}
+        where substr(update_time,1,7)=#{year_month}
         group by student_id)
         <if test="bu_id!=null and bu_id!=''">
             and t.bu_id=#{bu_id}
@@ -88,15 +88,15 @@ sum(tp.notpayNum) as notpayNum,sum(tp.moveNum) as moveNum,sum(tp.sleepNum) as sl
         ELSE NULL
         END)as lossNum
         from
-        (select t.id,t.bu_id as buId，t.after_status as status,substr(t.update_time,0,7) as changetime,tsi.branch_id as branch_id,toi.org_name as branch_name
+        (select t.id,t.bu_id as buId，t.after_status as status,substr(t.update_time,1,7) as changetime,tsi.branch_id as branch_id,toi.org_name as branch_name
         from student_status_record t
         left join tab_student_info tsi
         on t.student_id = tsi.id
         left join tab_organization_info toi
         on toi.id = tsi.branch_id
-        where substr(t.update_time,0,7)=#{year_month}
+        where substr(t.update_time,1,7)=#{year_month}
         and t.id in(SELECT MAX(id) from student_status_record
-        where substr(update_time,0,7)=#{year_month}
+        where substr(update_time,1,7)=#{year_month}
         group by student_id)
         <if test="bu_id!=null and bu_id!=''">
             and t.bu_id=#{bu_id}
@@ -115,7 +115,7 @@ sum(tp.notpayNum) as notpayNum,sum(tp.moveNum) as moveNum,sum(tp.sleepNum) as sl
        tsi.encoding as studentEcoding,
        tsi.student_name as studentName,
        t.after_status as status,
-       substr(t.update_time, 0, 7) as changeTime,
+       substr(t.update_time, 1, 7) as changeTime,
        tsi.branch_id as branchId,
        toi.org_name as branchName,
        tdd.name  as studentStatus,
@@ -150,10 +150,10 @@ sum(tp.notpayNum) as notpayNum,sum(tp.moveNum) as moveNum,sum(tp.sleepNum) as sl
 				AND TEI2.STATUS = 1
              left join tp_dict_data tdd
              on t.after_status = tdd.order_no and tdd.product_line=#{productLine}
-        where substr(t.update_time, 0, 7) =#{year_month}
+        where substr(t.update_time, 1, 7) =#{year_month}
         and t.id in (SELECT MAX(id)
                   from student_status_record
-                 where substr(update_time, 0, 7) = #{year_month}
+                 where substr(update_time, 1, 7) = #{year_month}
                  group by student_id)
         and tsi.branch_id = #{branch_id}
         and t.after_status=#{student_status}

@@ -41,7 +41,7 @@
 			and			t3.business_type = #{business_type}
 		</if>		 
 		<if test="start_date != null and end_date != null">
-			and			SUBSTR(t1.record_time, 0 , 10) between #{start_date} and #{end_date}
+			and			SUBSTR(t1.record_time, 1, 10) between #{start_date} and #{end_date}
 		</if>		 
 		order by t1.id DESC
 	</select>
