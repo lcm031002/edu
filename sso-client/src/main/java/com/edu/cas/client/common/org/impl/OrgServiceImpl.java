@@ -35,7 +35,7 @@ public class OrgServiceImpl implements OrgService {
 	@Resource(name = "userPersonalSettingsDao")
 	private UserPersonalSettingsDao userPersonalSettingsDao;
 
-	private static final String PARAM_NAME_ORG = "V5_DEFAULT_ORG";
+	private static final String PARAM_NAME_ORG = "ERP_DEFAULT_ORG";
 
 	/*
 	 * (non-Javadoc)
