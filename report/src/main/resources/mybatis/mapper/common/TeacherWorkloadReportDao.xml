@@ -29,12 +29,12 @@
 	        hour_length,
 	        schedule_date,
 	        course_time,
-	        sum(nvl(attend_students_num,0))				attend_students_num,
-	        sum(nvl(normal_attend_students_num,0))      normal_attend_students_num,
-		    sum(nvl(hangup_students_num,0))           	hangup_students_num, 
-	        max(nvl(tobe_students_num,0))				tobe_students_num,
-	        max(nvl(listening_students_num,0))			listening_students_num,
-	        max(nvl(listen_rejection_students_num,0))	listen_rejection_students_num
+	        sum(ifnull(attend_students_num,0))				attend_students_num,
+	        sum(ifnull(normal_attend_students_num,0))      normal_attend_students_num,
+		      sum(ifnull(hangup_students_num,0))           	hangup_students_num,
+	        max(ifnull(tobe_students_num,0))				tobe_students_num,
+	        max(ifnull(listening_students_num,0))			listening_students_num,
+	        max(ifnull(listen_rejection_students_num,0))	listen_rejection_students_num
 		from t_teacher_workload a
 		where
 			a.bu_id = #{bu_id}
@@ -130,7 +130,7 @@
 				sdl.course_date,
 				att.attend_date,
 				att.student_id,
-				nvl(att.teacher_id,sdl.teacher_id) as teacher_id,
+		    ifnull(att.teacher_id,sdl.teacher_id) as teacher_id,
 				sdl.course_times,
 				sdl.course_id,
 				att.attend_branch_id attend_branch_id,
@@ -151,18 +151,18 @@
 				where sdl.course_id = #{course_id, jdbcType=NUMERIC}
 				<if test="start_date != null and start_date != ''">
 					<if test="isCourseTime == 'true'">
-						and to_char(to_date(sdl.course_date,'yyyyMMdd'),'yyyy-MM-dd') >= #{start_date, jdbcType=VARCHAR}
+						and DATE_FORMAT(STR_TO_DATE(sdl.course_date,'%Y%m%d'),'%Y-%m-%d') >= #{start_date, jdbcType=VARCHAR}
 					</if>
 					<if test="isCourseTime != 'true'">
-						and to_char(att.attend_date, 'yyyy-mm-dd') >= #{start_date, jdbcType=VARCHAR}
+						and DATE_FORMAT(att.attend_date, '%Y-%m-%d') >= #{start_date, jdbcType=VARCHAR}
 					</if>
 				</if>
 				<if test="end_date != null and end_date != ''">
 					<if test="isCourseTime == 'true'">
-						and to_char(to_date(sdl.course_date,'yyyyMMdd'),'yyyy-MM-dd') &lt;= #{end_date, jdbcType=VARCHAR}
+						and DATE_FORMAT(STR_TO_DATE(sdl.course_date,'%Y%m%d'),'%Y-%m-%d') &lt;= #{end_date, jdbcType=VARCHAR}
 					</if>
 					<if test="isCourseTime != 'true'">
-						and to_char(att.attend_date, 'yyyy-mm-dd') &lt;= #{end_date, jdbcType=VARCHAR}
+						and DATE_FORMAT(att.attend_date, '%Y-%m-%d') &lt;= #{end_date, jdbcType=VARCHAR}
 					</if>
 				</if>
 			) t1,tab_student_info tsi
@@ -193,13 +193,13 @@
 	
 	<insert id="insertByTaskFlow" parameterType="Map">
 		insert into t_teacher_workload
-	      ( id,
-			bu_id,
-			bu_name,
-			course_branch_id,
-			course_branch_name,
-			teacher_id,
-			teacher_code,
+	      (
+					bu_id,
+					bu_name,
+					course_branch_id,
+					course_branch_name,
+					teacher_id,
+					teacher_code,
 	        teacher_name,
 	        assteacher_id,
 	        assteacher_code,
@@ -224,8 +224,7 @@
 		    tobe_students_num,
 			task_flow
 	       )
-	      (select 
-	      	seq_t_teacher_workload.nextval	  			id,
+	      (select
 	      	b_bu.id										bu_id,
 	      	b_bu.org_name								bu_name,
 	      	b_course.id 								course_branch_id,
@@ -246,9 +245,9 @@
 			mvtg.group_name								teacher_group_name,
 		    attend.start_time							start_time,
 		    attend.end_time								end_time,
-		    nvl(c.hour_len,0) 							hour_length, 
-		    to_char(to_date(attend.course_date,'YYYYMMDD'), 'yyyy-mm-dd') 	schedule_date,
-		    to_char(attend.attend_date, 'yyyy-mm-dd') 						business_date,
+		    ifnull(c.hour_len,0) 							hour_length,
+		    DATE_FORMAT(STR_TO_DATE(attend.course_date,'%Y%m%d'), '%Y-%m-%d') 	schedule_date,
+		    DATE_FORMAT(attend.attend_date, '%Y-%m-%d') 						business_date,
 		    attend.course_times 						course_time,
 		    attend.attend_students_num 					attend_students_num,
 		    attend.normal_attend_students_num           normal_attend_students_num,
@@ -273,7 +272,7 @@
              from (select 
 		               sdl.course_date,
 		               att.attend_date,
-		               nvl(att.teacher_id,sdl.teacher_id) as teacher_id,
+		               ifnull(att.teacher_id,sdl.teacher_id) as teacher_id,
 		               sdl.assteacher_id,
 		               sdl.course_times,
 		               sdl.course_id,
@@ -285,8 +284,8 @@
 		               sdl.end_time
 		          from 
 		           	  (select * from t_attendance_ht
-				        where attend_date >= to_date(#{minOperateNo},'yyyyMMdd')  
-		       			  and attend_date &lt; to_date(#{maxOperateNo},'yyyyMMdd')+1
+				        where attend_date >= STR_TO_DATE(#{minOperateNo},'%Y%m%d')
+		       			  and attend_date &lt; STR_TO_DATE(#{maxOperateNo},'%Y%m%d')+1
 		       			  and ts_flag = 'S' 
 		              ) att      
 			          join t_order_course ordercourse on att.order_course_id = ordercourse.id
@@ -333,43 +332,9 @@
 	   			on b.parent_id = b_bu.id
    	  		left join tab_organization_info b_course 
    	  			on b_course.id = c.branch_id
-   	  		left join mv_teacher_group mvtg
+   	  		left join t_teacher_group mvtg
 	    		on mvtg.bu_id = b_bu.id	and mvtg.grade_id = tdg.id and mvtg.subject_code = ts.encoding  
 	    )
 	</insert>
-	
-	<!-- 更新应到学生数 -->
-	<update id="updateTobeStudentsByTaskFlow" parameterType="Map">
-		MERGE INTO t_teacher_workload t
-		USING  (select toc.course_id, toct.times, count(1) as cnt
-                from t_order tod
-                left join t_order_course toc
-                	on toc.order_id = tod.id
-                left join t_order_course_times toct
-                	on toct.ocid = toc.id
-              	where tod.order_status = 1
-                	and toct.is_valid = 1
-              	group by toc.course_id, toct.times) t2
-		  	ON (t.course_id = t2.course_id and t.course_time = t2.times)
-		WHEN MATCHED THEN
-		    update SET t.tobe_students_num = t2.cnt
-	</update>
-	
-	<!-- 更新 试听学生数/试听拒缴学生数 -->
-	<update id="updateListeningStudentsByTaskFlow" parameterType="Map">
-		MERGE INTO t_teacher_workload t
-		USING  (select
-					l.course_id, 
-					l.course_times, 
-                    count(id) ttls,
-					sum(decode(l.pay_status, 2, 1, 0)) notpayls
-               	from t_course_listening l
-              	group by l.course_id, l.course_times) t2
-		  	ON (t.course_id = t2.course_id and t.course_time = t2.course_times)
-		WHEN MATCHED THEN
-		    update SET t.listening_students_num = t2.ttls,
-		    		   t.listen_rejection_students_num = t2.notpayls
-		where t.task_flow = #{task_flow}
-	</update>
 	
 </mapper>

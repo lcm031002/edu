@@ -27,11 +27,11 @@ public interface TeacherWorkloadReportDao {
 	List<TStudentInfo> queryForOrderStudents(Map<String, Object> param) throws Exception;
 
 	List<TStudentInfo> queryForAttendanceStudents(Map<String, Object> param) throws Exception;
-	
+
 	/**
-	 * 更新 试听学生数/试听拒缴学生数 
+	 * 更新 试听学生数/试听拒缴学生数
 	 * @param param
 	 * @throws Exception
 	 */
-	void updateListeningStudentsByTaskFlow(Map<String, Object> param) throws Exception;
+	//void updateListeningStudentsByTaskFlow(Map<String, Object> param) throws Exception;
 }

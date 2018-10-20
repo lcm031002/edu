@@ -62,7 +62,7 @@ public class TeacherWorkloadReportServiceImpl implements TeacherWorkloadReportSe
 		//重新插入新数据
 		teacherWorkloadReportDao.insertByTaskFlow(param);
 		//更新 试听学生数/试听拒缴学生数
-		teacherWorkloadReportDao.updateListeningStudentsByTaskFlow(param);
+		//teacherWorkloadReportDao.updateListeningStudentsByTaskFlow(param);
 	}
 
 	@Override

@@ -5,8 +5,7 @@
 <mapper namespace="com.edu.report.dao.TeacherAttendReportDao">
 
 	<select id="queryReport" parameterType="map" resultType="com.edu.report.model.TTeacherAttendReport">
-		with contact_rpt as (
-			select 
+			select
 			id,
 			branch_id,
 			branch_name,
@@ -49,8 +48,7 @@
 					</if>	
 				</if>
 				<if test="search_key !=null and search_key != ''">
-					and teacher_name like '%${search_key}%' 
-					<!-- (teacher_name like '%${search_key}% or teacher_code like '%${search_key}%  or teacher_id like '%${search_key}% ) -->
+					and teacher_name like '%${search_key}%'
 				</if>
 			</trim>
 			<choose>
@@ -61,29 +59,7 @@
 					order by attend_date desc
 				</otherwise>
 			</choose>
-			
-		)
-		select * from contact_rpt 
-		union all (
-			select distinct
-			null id,
-			null branch_id,
-			'合计' branch_name,
-			null bu_id,
-			null bu_name,
-			null teacher_code,
-			null teacher_id,
-			null teacher_name,
-			null teacher_attend_date,
-			sum(nvl(teacher_attend_length,0))teacher_attend_length ,
-			null teacher_attend_type,
-			null teacher_attend_type_name,
-			null attend_date,
-			null attender_id,
-			null attender_name
-	 		from 
-	 		contact_rpt t
-		)
+
 	</select>
 	
 	<delete id="deleteByTaskFlow" parameterType="map">
@@ -131,8 +107,7 @@
 	         when attend.attend_type = 30 then
 	          '置空'
 	       end teacher_attend_type_name,
-	       
-	       to_char(attend.attend_date, 'yyyymmdd') attend_date,
+				 DATE_FORMAT(attend.attend_date, '%Y%m%d') attend_date,
 	       employ.id attender_id,
 	       employ.employee_name attender_name,
 	       #{task_flow}
@@ -149,7 +124,7 @@
 		   <if test="branchId != null and branchId != -1">
 		  	   and  attend.attend_branch_id = #{branchId, jdbcType=NUMERIC}
 			</if>
-			and to_number(to_char(attend.attend_date,'yyyymmdd')) BETWEEN #{minOperateNo} AND #{maxOperateNo}
+			and cast(DATE_FORMAT(attend.attend_date,'%Y%m%d')  as unsigned int) BETWEEN #{minOperateNo} AND #{maxOperateNo}
 			and not exists (select 1 from t_wfdteacher_attend_report war where war.id=attend.id)
 		</trim>
 	)
