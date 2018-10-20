@@ -160,7 +160,6 @@
                                   <img src="img/erp/mx.png" width="44" height="23" ng-click="showAttentDetail(courseTime,course)" class="cur" />
                                   <img src="img/erp/save.png" width="44" height="23" ng-click="saveAttendance(courseTime,course)" class="cur" />
                                   <img ng-if="courseTime.attend_type==11" src="img/erp/buke.png" width="44" height="23" ng-click="extralesson(courseTime,teach)" />
-                                    <button class="btn btn-default" style="    height: 25px;font-size: 12px;padding: 2px 5px;" ng-click="openParamSettingsPanel(courseTime.SCHEDULINGID,courseTime.course_id)">高级参数</button>
                                 </div>
                                 <div align="center" ng-if="courseTime.att_shenpi_status == 1">
                                   <img src="img/erp/mx.png" width="44" height="23" ng-click="attentDetail(courseTime,teach)" /> 暂时无法进行考勤

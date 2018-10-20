@@ -381,7 +381,7 @@ function erp_StudentIndexAttendanceController(
     var attendSubmit = {};
     attendSubmit.attendance_id = attend.attendance_id;
     attendSubmit.attendType = attend.attend_type;
-    attendSubmit.schedulingId = attend.SCHEDULINGID;
+    attendSubmit.schedulingId = attend.schedulingId;
     attendSubmit.courseDate = attend.course_date;
     attendSubmit.lock_status = attend.lock_status;
     attendSubmit.studentId = $scope.studentId;
@@ -415,7 +415,7 @@ function erp_StudentIndexAttendanceController(
     //查询考勤历史数据
     erp_attendanceDetailsService.query({
         student_id: $scope.studentId,
-        scheduling_id: attend.SCHEDULINGID
+        scheduling_id: attend.schedulingId
       },
       function(resp) {
         if (!resp.error) {
@@ -448,7 +448,7 @@ function erp_StudentIndexAttendanceController(
     $scope.selectAttend = attend;
     $scope.selectCourse_id = teach.course_id;
     var param = {};
-    param.scheduling_id = attend.SCHEDULINGID;
+    param.scheduling_id = attend.schedulingId;
     erp_attendanceMakeupService.query(param, function(resp) {
       if (!resp.error) {
         //if (resp.data.length == 0) {
@@ -590,7 +590,7 @@ function erp_StudentIndexAttendanceController(
     var elStartDate = $("#elStartDate").val();
     var elEndDate = $("#elEndDate").val();
     var param = {};
-    param.scheduling_id = $scope.selectAttend.SCHEDULINGID;
+    param.scheduling_id = $scope.selectAttend.schedulingId;
     param.order_course_id = $scope.selectAttend.order_detail_id;
     param.status = '1';
     param.valid_start_date = elStartDate;

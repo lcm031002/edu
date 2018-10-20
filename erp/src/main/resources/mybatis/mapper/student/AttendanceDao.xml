@@ -259,13 +259,13 @@
 	
 	<select id="queryAttendCourseTimesDetails" parameterType="map" resultType="map">
 		select 		att_ht.*,
-					to_char(att_ht.attend_date, 'yyyy-MM-dd HH24:mi') attend_date2,
+					DATE_FORMAT(att_ht.attend_date, '%Y-%c-%d %H:%i:%s') attend_date2,
 					(case att_ht.attend_type when 10 then '置空' when 11 then '挂起' when 12 then '正常上课' end) attend_type_name,
 					emp.employee_name attend_user_name,
 					ti.teacher_name teacher_name
 		from 		t_attendance_ht att_ht
-		left join	tab_user_info use on att_ht.attend_user = use.id
-		left join	tab_employee_info emp on use.employee_id = emp.id 
+		left join	tab_user_info tui on att_ht.attend_user = tui.id
+		left join	tab_employee_info emp on tui.employee_id = emp.id
 		left join tab_teacher_info ti on att_ht.teacher_id = ti.id
 		where		att_ht.student_id = #{student_id}
 			and		att_ht.scheduling_id = #{scheduling_id}
