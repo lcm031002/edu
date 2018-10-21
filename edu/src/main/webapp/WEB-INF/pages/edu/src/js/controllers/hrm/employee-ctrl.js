@@ -85,6 +85,9 @@ function EmployeeCtrl($scope,
     	}else{
     		param.employee_name='';
     	}
+
+      param.pageSize = $scope.paginationConf.itemsPerPage;
+      param.currentPage = $scope.paginationConf.currentPage;
     	$scope.isLoading = 'loading...';
 
     	erp_employeeMgrService.queryEmployeeForPage(param,function(resp){
