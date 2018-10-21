@@ -111,7 +111,7 @@
 
 	<select id="queryInfoByDynamicId" parameterType="long"
 		resultType="map">
-		select id,a.status as status,case
+		select id,student_id,account_id,city_id,branch_id,a.status as status,case
 		when a.status = 4 then
 		'作废'
 		else

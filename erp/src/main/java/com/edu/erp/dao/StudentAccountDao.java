@@ -59,6 +59,8 @@ public interface StudentAccountDao{
 	void createAccount(TAccount tAccount)throws Exception;
 	
 	Map<String, Object> queryAccount(Map<String, Object> param)throws Exception;
+
+	Map<String, Object> queryById(Integer acocuntId)throws Exception;
 	
 	Map<String, Object> queryDynamicAccountInfo(Map<String, Object> param)throws Exception;
 	
@@ -247,6 +249,14 @@ public interface StudentAccountDao{
 	 * @throws Exception
 	 */
 	int saveAccountDynamic(TAccountDynamic tAccountDynamic) throws Exception;
+
+	/**
+	 * 更新账户变动信息
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	int cancelDynamicInfo(HashMap<String, Object> param) throws Exception;
 
 	/**
 	 * 更新储蓄账户金额

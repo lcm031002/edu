@@ -21,6 +21,16 @@
 		WHERE
 		    TA.STUDENT_ID = #{studentId,jdbcType=NUMERIC}
 	</select>
+
+	<!-- 学生账户充值  2014-11-10 -->
+	<select id="queryById" parameterType="java.util.HashMap" resultType="HashMap">
+		SELECT
+		    *
+		FROM
+		    T_ACCOUNT TA
+		WHERE
+		    TA.id = #{accountId,jdbcType=NUMERIC}
+	</select>
 	
 	<!-- 查询订单主表  -->
 	<select id="queryOrder" parameterType="java.util.Map" resultType="java.util.Map">
@@ -684,6 +694,11 @@
 		1
 		)
 	</insert>
+
+	<!--更新账户变动信息  -->
+	<update id="cancelDynamicInfo"  parameterType="java.util.HashMap" >
+		update t_account_dynamic set status = 4 where id = #{dynamicId}
+	</update>
 
 	<!--更新储蓄账户  -->
 	<update id="updateFeeAccount"  parameterType="java.util.HashMap" >

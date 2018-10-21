@@ -1,5 +1,6 @@
 package com.edu.erp.student.service.impl;
 
+import com.edu.common.constants.Constants.EncodingPrefixSeq;
 import com.edu.common.util.DateUtil;
 import com.edu.common.util.NumberUtils;
 import com.edu.erp.dict.service.OrganizationService;
@@ -114,23 +115,116 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 		// 根据账户变动 类型 生成 作废 编号
 		Long dynamicType = 0L;
 		if (dynamic_type==1) {
-			dynamicType = 20L;
-		} else if (dynamic_type== 3) {
-			dynamicType = 21L;
+			dynamicType = 9L;
+			Long accountId = Long.parseLong(dynamicInfo.get("account_id").toString());
+
+			//生成充值作废单
+			TAccountDynamic tAccountDynamic  = new TAccountDynamic();
+			tAccountDynamic.setAccount_id(accountId);
+			tAccountDynamic.setDynamic_type(5L);//充值作废
+			tAccountDynamic.setCity_id(Long.parseLong(dynamicInfo.get("city_id").toString()));
+			tAccountDynamic.setBranch_id(Long.parseLong(dynamicInfo.get("branch_id").toString()));
+			tAccountDynamic.setBu_id(Long.parseLong(dynamicInfo.get("bu_id").toString()));
+			tAccountDynamic.setStudent_id(Long.parseLong(dynamicInfo.get("student_id").toString()));
+			tAccountDynamic.setStatus(3);
+			tAccountDynamic.setMoney(Double.parseDouble(dynamicInfo.get("money") + ""));
+			tAccountDynamic.setPay_flag(2L);
+			tAccountDynamic.setPay_mode(dynamicInfo.get("pay_mode") + "");
+			tAccountDynamic.setDynamic_id(Long.parseLong(dynamicInfo.get("id").toString()));
+			tAccountDynamic.setAccount_type(1L);
+			//tAccountDynamic.setCreate_user(userId);
+			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum(EncodingPrefixSeq.CZ_ZF_PREFIX));
+
+			studentAccountDao.saveAccountDynamic(tAccountDynamic);
+
+			HashMap<String, Object> updateDynamicMap = new HashMap<String, Object>();
+			updateDynamicMap.put("dynamicId",accountId);
+			studentAccountDao.cancelDynamicInfo(updateDynamicMap);
+
+			Map<String, Object> accountMap = new HashMap<String, Object>();
+			accountMap.put("student_id",Long.parseLong(dynamicInfo.get("student_id").toString()));
+			accountMap.put("bu_id",Long.parseLong(dynamicInfo.get("bu_id").toString()));
+
+			Map<String, Object> accountInfo = studentAccountDao.queryById(Integer.parseInt(dynamicInfo.get("account_id").toString()));
+
+			//生成账户变动流水
+			TAccountChange tAccountChange = new TAccountChange();
+			tAccountChange.setAccount_id(accountId);
+			tAccountChange.setChange_flag(1L);
+			tAccountChange.setChange_type(8L);
+			tAccountChange.setChange_amount(Double.parseDouble(dynamicInfo.get("money") + ""));
+			tAccountChange.setPre_amount(Double.parseDouble(accountInfo.get("fee_amount") + ""));
+			tAccountChange.setNext_amount(Double.parseDouble(accountInfo.get("fee_amount") + "") - Double.parseDouble(dynamicInfo.get("money") + ""));
+			tAccountChange.setDynamic_id(tAccountDynamic.getId());
+			tAccountChange.setPay_mode(1L);
+			tAccountChange.setAccount_type(1L);
+			studentAccountDao.saveAccountChange(tAccountChange);
+
+			//修改账户余额
+			HashMap<String, Object> updateAccountMap = new HashMap<String, Object>();
+			updateAccountMap.put("amount",Double.parseDouble(accountInfo.get("fee_amount") + "") - Double.parseDouble(dynamicInfo.get("money") + ""));
+			updateAccountMap.put("accountId",accountId);
+			studentAccountDao.updateFeeAccount(updateAccountMap);
+
 		} else if (dynamic_type== 4) {
-			dynamicType = 22L;
+			dynamicType = 10L;
+
+			Long accountId = Long.parseLong(dynamicInfo.get("account_id").toString());
+
+			//生成充值作废单
+			TAccountDynamic tAccountDynamic  = new TAccountDynamic();
+			tAccountDynamic.setAccount_id(accountId);
+			tAccountDynamic.setDynamic_type(7L);//取款作废
+			tAccountDynamic.setPay_flag(1L);
+			tAccountDynamic.setCity_id(Long.parseLong(dynamicInfo.get("city_id").toString()));
+			tAccountDynamic.setBranch_id(Long.parseLong(dynamicInfo.get("branch_id").toString()));
+			tAccountDynamic.setBu_id(Long.parseLong(dynamicInfo.get("bu_id").toString()));
+			tAccountDynamic.setStudent_id(Long.parseLong(dynamicInfo.get("student_id").toString()));
+			tAccountDynamic.setStatus(3);
+			tAccountDynamic.setMoney(Double.parseDouble(dynamicInfo.get("money") + ""));
+
+			tAccountDynamic.setPay_mode(dynamicInfo.get("pay_mode") + "");
+			tAccountDynamic.setDynamic_id(Long.parseLong(dynamicInfo.get("id").toString()));
+			tAccountDynamic.setAccount_type(1L);
+			//tAccountDynamic.setCreate_user(userId);
+			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum(EncodingPrefixSeq.QK_ZF_PREFIX));
+
+			studentAccountDao.saveAccountDynamic(tAccountDynamic);
+
+            HashMap<String, Object> updateDynamicMap = new HashMap<String, Object>();
+            updateDynamicMap.put("dynamicId",accountId);
+            studentAccountDao.cancelDynamicInfo(updateDynamicMap);
+
+			Map<String, Object> accountMap = new HashMap<String, Object>();
+			accountMap.put("student_id",Long.parseLong(dynamicInfo.get("student_id").toString()));
+			accountMap.put("bu_id",Long.parseLong(dynamicInfo.get("bu_id").toString()));
+
+			Map<String, Object> accountInfo = studentAccountDao.queryById(Integer.parseInt(dynamicInfo.get("account_id").toString()));
+
+			//生成账户变动流水
+			TAccountChange tAccountChange = new TAccountChange();
+			tAccountChange.setAccount_id(accountId);
+			tAccountChange.setChange_flag(0L);
+			tAccountChange.setChange_type(10L);
+			tAccountChange.setChange_amount(Double.parseDouble(dynamicInfo.get("money") + ""));
+			tAccountChange.setPre_amount(Double.parseDouble(accountInfo.get("fee_amount") + ""));
+			tAccountChange.setNext_amount(Double.parseDouble(accountInfo.get("fee_amount") + "") + Double.parseDouble(dynamicInfo.get("money") + ""));
+			tAccountChange.setDynamic_id(tAccountDynamic.getId());
+			tAccountChange.setPay_mode(1L);
+			tAccountChange.setAccount_type(1L);
+			studentAccountDao.saveAccountChange(tAccountChange);
+
+			//修改账户余额
+			HashMap<String, Object> updateAccountMap = new HashMap<String, Object>();
+			updateAccountMap.put("amount",Double.parseDouble(accountInfo.get("fee_amount") + "") + Double.parseDouble(dynamicInfo.get("money") + ""));
+			updateAccountMap.put("accountId",accountId);
+			studentAccountDao.updateFeeAccount(updateAccountMap);
 		} else {
 			map.put("error", "true");
 			map.put("message", "dynamic_type 账户变动类型不能为空！");
 			return map;
 		}
-		String encoding = EncodingSequenceUtil.getSequenceNum(dynamicType);
-		paramMap.put("p_encoding", encoding);
-		paramMap.put("p_input_user", operator);
-		tAccountDynamicDao.accountDynamicCancel(paramMap);
-		if (!paramMap.get("o_err_code").toString().equals("0")) {
-			throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
-		}
+
 		return map;
 	}
 

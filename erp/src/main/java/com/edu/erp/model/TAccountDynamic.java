@@ -1,9 +1,6 @@
 package com.edu.erp.model;
 
-/**
- * 补课信息
- *
- */
+
 public class TAccountDynamic extends BaseObject {
 	private static final long serialVersionUID = 1L;
 	private String student_info;// 学生信息
@@ -35,7 +32,10 @@ public class TAccountDynamic extends BaseObject {
 	private String student_info_entry;//转入用户
 
 	private String in_bu_name; // 转入团队
-	
+
+	private Long account_type;//账户类型
+
+	private Long dynamic_id; //作废关联id
 
 	public Long getBu_id() {
 		return bu_id;
@@ -224,6 +224,14 @@ public class TAccountDynamic extends BaseObject {
 	public Long getPay_flag() { return pay_flag;	}
 
 	public void setPay_flag(Long pay_flag) { this.pay_flag = pay_flag; }
+
+	public Long getAccount_type() { return account_type; }
+
+	public void setAccount_type(Long account_type) { this.account_type = account_type; }
+
+	public Long getDynamic_id() { return dynamic_id; 	}
+
+	public void setDynamic_id(Long dynamic_id) { this.dynamic_id = dynamic_id;	}
 
 	@Override
 	public String toString() {
