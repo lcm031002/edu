@@ -155,8 +155,8 @@
 		<where>
 			 taf.status=1
 			<if test="searchInfo!=null and searchInfo!=''">
-				AND( taf.encoding like '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
-				OR taf.employee_name like '%'||#{searchInfo,jdbcType=VARCHAR}||'%'
+				AND( taf.encoding like concat('%', #{searchInfo,jdbcType=VARCHAR}, '%')
+				OR taf.employee_name like concat('%', #{searchInfo,jdbcType=VARCHAR}, '%')
 				)
 			</if>
 		</where>
