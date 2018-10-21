@@ -500,7 +500,7 @@
 					    tor.order_no					 				 order_no,
 					    tsi_out.id										 transfer_student_id,
 					    tsi_out.student_name   							 transfer_student,
-						case when t5.status = 1 then '审批中' when  t5.status = 2 then '审批拒绝' when t5.status = 3 then '生效' end auditStatusName
+						case when t5.status = 1 then '审批中' when  t5.status = 2 then '审批拒绝' when t5.status = 3 then '生效' when t5.status = 4 then '已作废' end auditStatusName
 			from 		t_account_change t1
 			join		t_account t2 					on t1.account_id = t2.id
 			join		tab_student_info t4 			on t2.student_id = t4.id
