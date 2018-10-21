@@ -138,7 +138,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			studentAccountDao.saveAccountDynamic(tAccountDynamic);
 
 			HashMap<String, Object> updateDynamicMap = new HashMap<String, Object>();
-			updateDynamicMap.put("dynamicId",accountId);
+			updateDynamicMap.put("dynamicId",Long.parseLong(dynamicInfo.get("id").toString()));
 			studentAccountDao.cancelDynamicInfo(updateDynamicMap);
 
 			Map<String, Object> accountMap = new HashMap<String, Object>();
@@ -192,7 +192,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			studentAccountDao.saveAccountDynamic(tAccountDynamic);
 
             HashMap<String, Object> updateDynamicMap = new HashMap<String, Object>();
-            updateDynamicMap.put("dynamicId",accountId);
+            updateDynamicMap.put("dynamicId",Long.parseLong(dynamicInfo.get("id").toString()));
             studentAccountDao.cancelDynamicInfo(updateDynamicMap);
 
 			Map<String, Object> accountMap = new HashMap<String, Object>();
