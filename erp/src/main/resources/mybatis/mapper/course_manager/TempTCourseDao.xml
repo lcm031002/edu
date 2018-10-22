@@ -40,7 +40,7 @@
 			#{item.row_no},
 			#{item.course_no},
 			#{item.city_name},
-			#{item.branch_names},
+			#{item.branch_name},
 			#{item.grade_name},
 			#{item.target_name},
 			#{item.season_name},
@@ -78,7 +78,7 @@
 		s.subject_id =
 		(select t.id from tp_subject t where ifnull(t.status,1) = 1 and t.name = s.subject_name ),
 		s.teacher_id =
-		(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.teacher_code) and toi.id = s.city_id and t.city_id = toi.parent_id and t.status = 1 ),
+		(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.teacher_code) and toi.id = s.city_id and t.city_id = toi.id and t.status = 1 ),
 		s.assteacher_id =
 		(select t.id from tab_teacher_info t, tab_organization_info toi where t.encoding = trim(s.assteacher_code) and t.teacher_type = 4 and toi.id = t.city_id and t.status = 1 ),
 		s.target =

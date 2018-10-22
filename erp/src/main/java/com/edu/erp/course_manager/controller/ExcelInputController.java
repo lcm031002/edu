@@ -388,12 +388,12 @@ public class ExcelInputController extends BaseInputController {
 						Long productLine = organizationInfo.getProduct_line();
 						if(productLine!=11L){
 							if(course.getSeason_id()==null){
-								rowErrorList.add(createErrorMsg("season_name", "课程季不能为空"));
+								//rowErrorList.add(createErrorMsg("season_name", "课程季不能为空"));
 							}
 						}
 					} else if (StringUtil.isEmpty(course.getSeason_id())) {
 						if (StringUtil.isEmpty(tempTCourse.getSeason_id())) {
-							rowErrorList.add(createErrorMsg("season_name", "该城市不存在此课程季"));
+							//rowErrorList.add(createErrorMsg("season_name", "该城市不存在此课程季"));
 						} else {
 							TimeSeason timeSeason = timeSeasonService.queryById(tempTCourse.getSeason_id().toString());
 							String seasonStartDate = timeSeason.getStart_date();
@@ -403,10 +403,10 @@ public class ExcelInputController extends BaseInputController {
 							Long compareStartDate = DateUtil.compareDate(courseStartDate, seasonStartDate, 0);
 							Long compareEndDate = DateUtil.compareDate(seasonEndDate, courseEndDate, 0);
 							if (compareStartDate > 0) {
-								rowErrorList.add(createErrorMsg("season_name", "课程的开始日期"+"["+courseStartDate+"]"+"早于课程季开始日期"+"["+seasonStartDate+"]"));
+								//rowErrorList.add(createErrorMsg("season_name", "课程的开始日期"+"["+courseStartDate+"]"+"早于课程季开始日期"+"["+seasonStartDate+"]"));
 							}
 							if (compareEndDate > 0) {
-								rowErrorList.add(createErrorMsg("season_name", "课程的结束日期"+"["+courseEndDate+"]"+"晚于课程季结束日期"+"["+seasonEndDate+"]"));
+								//rowErrorList.add(createErrorMsg("season_name", "课程的结束日期"+"["+courseEndDate+"]"+"晚于课程季结束日期"+"["+seasonEndDate+"]"));
 							}
 							course.setSeason_id(tempTCourse.getSeason_id());
 						}
