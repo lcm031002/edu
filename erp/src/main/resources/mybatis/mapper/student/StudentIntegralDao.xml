@@ -60,7 +60,7 @@
            and branch_id = #{branchId,jdbcType=NUMERIC}
     </select>
 
-    <insert id="saveIntegral" parameterType="com.edu.erp.model.StudentIntegral">
+    <insert id="saveIntegral" parameterType="com.edu.erp.model.StudentIntegral" useGeneratedKeys="true" keyProperty="id">
         insert into tab_student_integral
         (
         student_id,<!--学生id-->

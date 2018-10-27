@@ -27,10 +27,10 @@
 			and t.branch_id = #{branch_id,jdbcType=NUMERIC}
 		</if>
 		<if test="start_date != null and start_date != ''">
-			and to_char(t.datetime, 'yyyy-mm-dd') >= #{start_date, jdbcType=VARCHAR}
+			and DATE_FORMAT(t.datetime, '%Y-%m-%d') >= #{start_date, jdbcType=VARCHAR}
 		</if>
 		<if test="end_date != null and end_date != ''">
-			and to_char(t.datetime, 'yyyy-mm-dd') &lt;= #{end_date, jdbcType=VARCHAR}
+			and DATE_FORMAT(t.datetime, '%Y-%m-%d') &lt;= #{end_date, jdbcType=VARCHAR}
 		</if>
 		<if test="bu_id != null and bu_id > -1">
 			and b.parent_id = #{bu_id,jdbcType=NUMERIC}
