@@ -133,7 +133,7 @@ public class ReportPerformanceDetailsController {
             String tempFileName = "业绩结算表" + DateUtil.getCurrDate(ERPConstants.DATE_FORMAT_2) + ".xlsx";
             // 导出文件目录
             ReportWriteExcelHandler.writeDataToExcelBySxssf(performanceDetails, rootPath, "settlement_performace.xlsx", tempFileName,1,
-                new ExcelMergePerformanceDetailStrategy("order_number",new Integer[]{8,9,10,11,12,13,14,15}));
+                new ExcelMergePerformanceDetailStrategy("order_number",new Integer[]{11,12,13,14,15,16}));
             resultMap.put("data", tempFileName);
             resultMap.put("error", false);
         } catch (Exception e) {

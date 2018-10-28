@@ -26,8 +26,8 @@
 		       a.course_time,
 		       a.teacher_id,
 		       a.teacher_name,
-               a.coop_org_id,
-               a.coop_org_name,
+           tc.coop_org_id,
+           tco.coop_org_name,
 		       a.grade_id,
 		       a.grade_name,
 		       a.subject_id,
@@ -43,39 +43,37 @@
 		       a.attend_type_last_name,
 		       a.is_next_month,
 		       a.is_next_month_name,
-               a.order_discount,
+           a.order_discount,
 		       a.counselor_id,
-               ifnull(a.counselor_name,a.chinese_teacher_name) counselor_name,
+           ifnull(a.counselor_name,a.chinese_teacher_name) counselor_name,
 		       a.chinese_teacher_id,
 		       a.chinese_teacher_name,
 		       a.chinese_teacher_length,
 		       a.foreign_teacher_id,
 		       a.foreign_teacher_name,
 		       a.foreign_teacher_length,
-               a.spoken_language_hour,
+           a.spoken_language_hour,
 		       a.business_type,
 		       a.task_flow,
 		       a.assteacher_id,
 		       a.assteacher_name,
 		       a.attend_encoding,
 		       c.grade_name as now_grade,
-               a.room_name,
-               a.order_remark,
-               a.attendance_remark,
-               a.chinese_teacher_remark,
-               a.foreign_teacher_remark,
-               toi.org_name course_branch_name,
-            a.amount * ifnull(tc.settlement_ratio,0) settlement_amount
+           a.room_name,
+           a.order_remark,
+           a.attendance_remark,
+           a.chinese_teacher_remark,
+           a.foreign_teacher_remark,
+           toi.org_name course_branch_name,
+           a.amount * ifnull(tc.settlement_ratio,0) settlement_amount
         from t_attendance_report a
-		left join t_attendance_ht ht on a.attendance_ht_id = ht.id
-		left join tab_student_info b
-		on ht.student_id=b.id
-		left join tab_data_grade c
-		on b.grade_id=c.id
+		    left join t_attendance_ht ht on a.attendance_ht_id = ht.id
+		    left join tab_student_info b		on ht.student_id=b.id
+		    left join tab_data_grade c		on b.grade_id=c.id
         left join  t_course tc on  a.course_id = tc.id
         left join tab_organization_info toi on tc.branch_id = toi.id
-        where
-			a.performance_bu_id = #{bu_id}
+        left join tab_coop_org tco on tc.coop_org_id = tco.id
+        where		a.performance_bu_id = #{bu_id}
 		<if test="branch_id != null and branch_id != '' and branch_id > -1">
             <if test="branch_name == '个性化'">
                 and a.branch_id = #{branch_id}
@@ -139,8 +137,8 @@
 	        null course_time,
 	        null teacher_id,
 	        null teacher_name,
-            null coop_org_id,
-            null coop_org_name,
+          null coop_org_id,
+          null coop_org_name,
 	        null grade_id,
 	        null grade_name,
 	        null subject_id,
@@ -156,7 +154,7 @@
 	        null attend_type_last_name,
 	        null is_next_month,
 	        null is_next_month_name,
-            null order_discount,
+          null order_discount,
 	        null counselor_id,
 	        null counselor_name,
 	        null chinese_teacher_id,
@@ -165,20 +163,20 @@
 	        null foreign_teacher_id,
 	        null foreign_teacher_name,
 	        null foreign_teacher_length,
-            null spoken_language_hour,
+          null spoken_language_hour,
 	        null business_type,
-			null task_flow,
-			null assteacher_id,
-			null assteacher_name,
-		    null attend_encoding,
-		    null now_grade,
-            null room_name,
-            null order_remark,
-            null attendance_remark,
-            null chinese_teacher_remark,
-            null foreign_teacher_remark,
-            null course_branch_name,
-            null settlement_amount
+			    null task_flow,
+			    null assteacher_id,
+			    null assteacher_name,
+		      null attend_encoding,
+		      null now_grade,
+          null room_name,
+          null order_remark,
+          null attendance_remark,
+          null chinese_teacher_remark,
+          null foreign_teacher_remark,
+          null course_branch_name,
+          null settlement_amount
         from t_attendance_report t
 		where
 			t.performance_bu_id = #{bu_id}

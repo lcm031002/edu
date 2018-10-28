@@ -67,6 +67,7 @@
 		tpd.task_flow                 ,
 		tpd.order_rule_name      ,
 		tpd.course_rule_name      ,
+		tco.coop_org_name,
 		sum(tpd.transfer_out) transfer_out              ,
 		sum(tpd.transfer_in) transfer_in               ,
 		sum(tpd.refund) refund               ,
@@ -74,6 +75,7 @@
 		sum(tpd.course_time) course_time,
 		sum(tpd.performance*IFNULL(tc.settlement_ratio,0)) settlement_amount
 		from t_performance_details tpd,tab_order_info toi,tab_order_info_detail toid,t_course tc
+		left join tab_coop_org tco on tc.coop_org_id = tco.id
 		where tpd.bu_id = #{bu_id}
 		and tpd.ORDER_NO = toi.ENCODING
 		and toi.id = toid.ORDER_ID
@@ -162,8 +164,8 @@
 		tpd.city_id                   ,
 		tpd.city_name                 ,
 		tpd.operate_no                ,
-		tpd.task_flow
-
+		tpd.task_flow,
+		tco.coop_org_name
 	</select>
 
 	<select id="selectForList" parameterType="map"

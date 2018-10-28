@@ -924,6 +924,36 @@
 							]
 						},
 						{
+							"index": "A3000806",
+							"name": "1对1考勤",
+							"key": "attendanceMgrYDY",
+							"icon": "fa fa-bars",
+							"type": "$state",
+							"value": "attendanceMgrYDY",
+							"path": "/orders/attendanceMgr/attendanceMgrYDY",
+							"href": "templates/erp/attendance/attendance_ydy.html",
+							"services": [
+								{
+									"name": "1对1排课信息查询",
+									"key": "studentMgrAttendance.queryYDY",
+									"url": "/erp/studentservice/scheduling",
+									"method": "GET"
+								},
+								{
+									"name": "1对1排课取消",
+									"key": "studentMgrAttendance.deleteYDY",
+									"url": "/erp/studentservice/scheduling",
+									"method": "DELETE"
+								},
+								{
+									"name": "1对1排课考勤",
+									"key": "studentMgrAttendance.postYDY",
+									"url": "/erp/attendanceservice/ydy",
+									"method": "POST"
+								}
+							]
+						},
+						{
 							"index": "A3000804",
 							"name": "晚辅导考勤",
 							"key": "attendanceMgrWFD",
@@ -993,36 +1023,6 @@
 									"key": " classesAttendance.updateCfg",
 									"url": "/erp/attendance/coursetimes/cfg",
 									"method": "PUT"
-								}
-							]
-						},
-						{
-							"index": "A3000806",
-							"name": "1对1考勤",
-							"key": "attendanceMgrYDY",
-							"icon": "fa fa-bars",
-							"type": "$state",
-							"value": "attendanceMgrYDY",
-							"path": "/orders/attendanceMgr/attendanceMgrYDY",
-							"href": "templates/erp/attendance/attendance_ydy.html",
-							"services": [
-								{
-									"name": "1对1排课信息查询",
-									"key": "studentMgrAttendance.queryYDY",
-									"url": "/erp/studentservice/scheduling",
-									"method": "GET"
-								},
-								{
-									"name": "1对1排课取消",
-									"key": "studentMgrAttendance.deleteYDY",
-									"url": "/erp/studentservice/scheduling",
-									"method": "DELETE"
-								},
-								{
-									"name": "1对1排课考勤",
-									"key": "studentMgrAttendance.postYDY",
-									"url": "/erp/attendanceservice/ydy",
-									"method": "POST"
 								}
 							]
 						}

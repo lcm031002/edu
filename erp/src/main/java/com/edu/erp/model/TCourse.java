@@ -198,6 +198,10 @@ public class TCourse extends BaseObject{
 
     private Long next_class_room_id;
 
+    private Long coop_org_id;
+
+    private String coop_org_name;
+
     //是否包含订单课程，临时订单课程，作废订单课程等
     private Boolean hasOrderCourse;
     
@@ -1093,4 +1097,12 @@ public class TCourse extends BaseObject{
 	public Double getSettlement_ratio() { return settlement_ratio;	}
 
 	public void setSettlement_ratio(Double settlement_ratio) {	this.settlement_ratio = settlement_ratio;}
+
+	public Long getCoop_org_id() {	return coop_org_id;	}
+
+	public void setCoop_org_id(Long coop_org_id) { this.coop_org_id = coop_org_id;}
+
+	public String getCoop_org_name() {	return coop_org_name; }
+
+	public void setCoop_org_name(String coop_org_name) { this.coop_org_name = coop_org_name; }
 }

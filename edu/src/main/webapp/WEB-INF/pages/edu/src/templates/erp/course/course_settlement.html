@@ -73,6 +73,7 @@
 						<th>ID</th>
 						<th width="180">名称</th>
 						<th>编码</th>
+						<th>合作机构</th>
 						<th>抽成比例</th>
 						<th>校区</th>
 						<th>课程季</th>
@@ -98,6 +99,7 @@
 						<td>{{course.id}}</td>
 						<td>{{course.course_name}}</td>
 						<td>{{course.course_no}}</td>
+						<td>{{course.coop_org_name}}</td>
 						<td>{{course.settlement_ratio}}</td>
 						<td>{{course.branch_name}}</td>
 						<td>{{course.season_name}}</td>
@@ -140,11 +142,20 @@
 									<input type="text" ng-model='courseDetail.id'>
 								</div>
 								<div class="klxx-erp-form-item-label form-group">
-									<label class="klxx-erp-form-item-required col-sm-2 control-label">机构名称</label>
+									<label class="klxx-erp-form-item-required col-sm-2 control-label">课程名称</label>
 									<div class="col-sm-10" ng-class="{'has-error': courseForm.course_name.$invalid && courseForm.course_name.$dirty}">
 										<input type="text" name="course_name" class="klxx-erp-input form-control"
 													 ng-model='courseDetail.course_name' required>
 										<div ng-show="courseForm.course_name.$invalid && courseForm.course_name.$dirty && courseForm.course_name.$error.required" class="has-error klxx-erp-form-explain">合作机构名称必填</div>
+									</div>
+								</div>
+								<div class="klxx-erp-form-item-label form-group">
+									<label class="klxx-erp-form-item col-sm-2 control-label">合作机构</label>
+									<div class="col-sm-10" ng-class="{'has-error': courseForm.coop_org_id.$invalid && courseForm.coop_org_id.$dirty}">
+										<select class="form-control"
+														ng-model="courseDetail.coop_org_id"
+														ng-options="coopOrg.id as coopOrg.coopOrgName for coopOrg in coopOrgList">
+										</select>
 									</div>
 								</div>
 								<div class="klxx-erp-form-item-label form-group">

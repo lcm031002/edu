@@ -1006,11 +1006,12 @@ public class CourseController extends BaseController {
 				throw new Exception("未选中课程！");
 			}
 			if (StringUtil.isEmpty(param.get("settlement_ratio"))) {
-				log.error("待修改的课程的结算比例不能为空！课程id：" + param.get("id"));
-				throw new Exception("待修改的课程的结算比例不能为空！课程id：" + param.get("id"));
+				log.error("待修改的课程的结算比例不能为空！" );
+				throw new Exception("待修改的课程的结算比例不能为空！" );
 			}
 			Account account = WebContextUtils.genUser(request);
-			courseService.toChangeSettlement(String.valueOf(param.get("id")), String.valueOf(param.get("settlement_ratio")),account.getId());
+			param.put("updateUser", account.getId());
+			courseService.toChangeSettlement(param);
 			resultMap.put("error", false);
 			resultMap.put("data", param);
 		} catch (Exception e) {

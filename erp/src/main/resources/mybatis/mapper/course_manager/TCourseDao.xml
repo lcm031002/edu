@@ -85,7 +85,8 @@
 		<!-- e.grade_name, f.data_name as subject_name, g.teacher_name, j.type_name, -->
 		e.grade_name, f.name as subject_name, g.teacher_name, tti.teacher_name assteacher_name,tti.encoding assteacher_code,g.encoding teacher_code,
 		c_emp.employee_name as create_user_name, u_emp.employee_name as
-		update_user_name
+		update_user_name,
+		tco.coop_org_name
 		from t_course a
 		join tab_organization_info b on
 		a.city_id = b.id and b.status = 1
@@ -105,7 +106,8 @@
 		left join tab_user_info u_user on a.update_user = u_user.id
 		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
 		left join t_course_scheduling tcs on tcs.course_id = a.id
-		where (a.status != 0 or a.status is null)
+    left join tab_coop_org tco on a.coop_org_id = tco.id
+    where (a.status != 0 or a.status is null)
 		AND a.city_id = #{city_id}
 		<if test="course_name != null and course_name != ''">
 			<!-- 课程商品名称 -->
@@ -1824,6 +1826,9 @@
 	<update id="changeSettlement" parameterType="java.util.Map">
 		UPDATE t_course
 		SET settlement_ratio = #{settlement_ratio,jdbcType=NUMERIC} ,
+		<if test="coop_org_id != null and coop_org_id != ''">
+			coop_org_id = #{coop_org_id,jdbcType=NUMERIC} ,
+		</if>
 		update_time= sysdate(),
 		update_user= #{updateUser,jdbcType=NUMERIC}
 		WHERE id = ${id}

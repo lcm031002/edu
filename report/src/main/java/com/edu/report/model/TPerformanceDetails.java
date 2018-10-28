@@ -78,6 +78,7 @@ public class TPerformanceDetails {
     private String order_rule_name;
     private String course_rule_name;
     private Double settlement_amount;
+    private String coop_org_name;
 
     public Long getId() {
         return id;
@@ -642,4 +643,8 @@ public class TPerformanceDetails {
     public Double getSettlement_amount() { return settlement_amount; }
 
     public void setSettlement_amount(Double settlement_amount) { this.settlement_amount = settlement_amount; }
+
+    public String getCoop_org_name() { return coop_org_name; }
+
+    public void setCoop_org_name(String coop_org_name) { this.coop_org_name = coop_org_name; }
 }

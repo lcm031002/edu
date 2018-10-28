@@ -14,6 +14,7 @@ angular.module('ework-ui').controller('erp_courseSettlementController', [
     'erp_timeSeasonService',
     'PUBORGSelectedService',
     'erp_teacherService',
+    'erp_CoopOrgService',
   erp_courseSettlementController
 ]);
 
@@ -31,7 +32,8 @@ function erp_courseSettlementController(
     erp_TeacherSearchService,
     erp_timeSeasonService,
     PUBORGSelectedService,
-    erp_teacherService
+    erp_teacherService,
+    erp_CoopOrgService
 ) {
     $scope.checkAllFlag = false;
     // 表单操作类型，添加： add，修改：put
@@ -50,6 +52,8 @@ function erp_courseSettlementController(
 
     // 课程列表
     $scope.courseList = [];
+
+    $scope.coopOrgList = [];
 
     $scope.selectedCourseList = []
 
@@ -441,6 +445,16 @@ function erp_courseSettlementController(
         });
     }
 
+  function queryCoopOrg() {
+    erp_CoopOrgService.queryList({}, function(resp) {
+      if (!resp.error) {
+        $scope.coopOrgList = resp.data;
+      } else {
+        $uibMsgbox.error(resp.message);
+      }
+    })
+  }
+
     $scope.changeSearchInfo = function() {
         queryTeacher();
     }
@@ -488,4 +502,5 @@ function erp_courseSettlementController(
     queryBuOrgs();
     queryTimeSeason();
     queryTeacher();
+    queryCoopOrg();
 }

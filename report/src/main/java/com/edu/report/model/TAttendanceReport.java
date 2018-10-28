@@ -604,4 +604,8 @@ public class TAttendanceReport {
 	public void setSettlement_amount(BigDecimal settlement_amount) {
 		this.settlement_amount = settlement_amount;
 	}
+
+	public String getCoop_org_name() {	return coop_org_name; }
+
+	public void setCoop_org_name(String coop_org_name) { this.coop_org_name = coop_org_name; }
 }
