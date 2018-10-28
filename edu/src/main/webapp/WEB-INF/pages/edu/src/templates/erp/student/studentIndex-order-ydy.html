@@ -1,11 +1,14 @@
-<div class="erp" ng-controller="erp_StudentOrdersYdyController">
+<div class="erp table-panel" ng-controller="erp_StudentOrdersYdyController">
 
-    <div class="trend-top-tit">
-        <select class="trend-topt selectMonth"  >
-            <option value="{{item.value}}" ng-repeat="item in selectMonthModel" ng-click="selectMonth(item)">{{item.label}}</option>
-        </select>
+    <div class="form-inline">
+        <div class="form-group">
+            时间范围：
+            <select class="form-control selectMonth"  >
+                <option value="{{item.value}}" ng-repeat="item in selectMonthModel" ng-click="selectMonth(item)">{{item.label}}</option>
+            </select>
+        </div>
     </div>
-    <table class="table table-striped table-hover table-bordered">
+    <table class="table table-striped table-hover mt15">
         <thead>
             <tr>
                 <th>名称</th>
@@ -42,5 +45,4 @@
             </tr>
         </tbody>
     </table>
-    <ng-pagination conf="paginationConf"></ng-pagination>
 </div>
