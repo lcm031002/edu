@@ -43,7 +43,7 @@
 	  	where a.status != 0
 	  	  and a.org_city_id = #{city_id}
 	  	<if test="school_name != null and school_name != ''">
-	  		and a.school_name like '%${school_name}%'
+	  		and a.school_name like concat('%', #{school_name}, '%')
 	  	</if>	
 	  	order by a.update_time DESC, a.id DESC
 	</select>
@@ -84,7 +84,7 @@
   			and a.org_city_id = #{org_city_id}
   		</if>
   		<if test="school_name != null and school_name != ''">
-  			and a.school_name like '%${school_name}%'
+  			and a.school_name like concat('%', #{school_name}, '%')
   		</if>
   		<if test="_school_name != null and _school_name != ''">
   			and a.school_name = #{_school_name}

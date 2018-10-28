@@ -152,7 +152,7 @@
 		
 		WHERE a.status != 0 and a.bu_id = #{bu_id}
 		<if test="searchInfo != null and searchInfo != ''">
-			AND (a.name like '%'||#{searchInfo}||'%' or a.encoding like '%'||#{searchInfo}||'%') 
+			AND (a.name like concat('%', #{searchInfo}, '%') or a.encoding like concat('%', #{searchInfo}, '%'))
 		</if> 
 		order by a.update_time DESC, a.id DESC
 	</select>

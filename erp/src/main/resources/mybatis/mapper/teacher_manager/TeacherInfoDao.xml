@@ -129,16 +129,16 @@
 		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
 		where a.status != 0
 		<if test="teacher_name != null and teacher_name != ''">
-			and a.teacher_name like '%' || #{teacher_name} || '%'
+			and a.teacher_name like concat('%', #{teacher_name}, '%')
 		</if>
 		<if test="encoding != null and encoding != ''">
-			and a.encoding like '%' || #{encoding} || '%'
+			and a.encoding like concat('%', #{encoding}, '%')
 		</if>
 		<if test="employee_name != null and employee_name != ''">
-			and c.employee_name like '%' || #{employee_name} || '%'
+			and c.employee_name like concat('%', #{employee_name}, '%')
 		</if>
 		<if test="employee_no != null and employee_no != ''">
-			and c.encoding like '%' || #{employee_no} || '%'
+			and c.encoding like concat('%', #{employee_no}, '%')
 		</if>
 		<if test="teacher_type != null and teacher_type  != ''">
 			and a.teacher_type =#{teacher_type}

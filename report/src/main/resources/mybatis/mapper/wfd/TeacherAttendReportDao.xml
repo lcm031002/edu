@@ -48,7 +48,7 @@
 					</if>	
 				</if>
 				<if test="search_key !=null and search_key != ''">
-					and teacher_name like '%${search_key}%'
+					and teacher_name like concat('%', #{search_key}, '%')
 				</if>
 			</trim>
 			<choose>

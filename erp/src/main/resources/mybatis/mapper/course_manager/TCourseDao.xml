@@ -159,14 +159,14 @@
 			and a.course_type = #{course_type}
 		</if>
 		<if test="teacher_id != null and teacher_id != ''">
-			and (g.id like '%${teacher_id}%' or g.encoding like
-			'%${teacher_id}%' or
-			g.teacher_name like '%${teacher_id}%')
+			and (g.id like concat('%', #{teacher_id}, '%') or g.encoding like
+			concat('%', #{teacher_id}, '%') or
+			g.teacher_name like concat('%', #{teacher_id}, '%'))
 		</if>
 		<if test="assteacher_id != null and assteacher_id != ''">
-			and (tti.id like '%${assteacher_id}%' or tti.encoding like
-			'%${assteacher_id}%' or
-			tti.teacher_name like '%${assteacher_id}%')
+			and (tti.id like concat('%', #{assteacher_id}, '%') or tti.encoding like
+			concat('%', #{assteacher_id}, '%') or
+			tti.teacher_name like concat('%', #{assteacher_id}, '%'))
 		</if>
 		<if test="subject_id != null and subject_id != '' and subject_id != -1 ">
 			and a.subject_id = #{subject_id}
@@ -279,14 +279,14 @@
 			and a.course_type = #{course_type}
 		</if>
 		<if test="teacher_id != null and teacher_id != ''">
-			and (g.id like '%${teacher_id}%' or g.encoding like
-			'%${teacher_id}%' or
-			g.teacher_name like '%${teacher_id}%')
+			and (g.id like concat('%', #{teacher_id}, '%') or g.encoding like
+			concat('%', #{teacher_id}, '%') or
+			g.teacher_name like concat('%', #{teacher_id}, '%'))
 		</if>
 		<if test="assteacher_id != null and assteacher_id != ''">
-			and (tti.id like '%${assteacher_id}%' or tti.encoding like
-			'%${assteacher_id}%' or
-			tti.teacher_name like '%${assteacher_id}%')
+			and (tti.id like concat('%', #{assteacher_id}, '%') or tti.encoding like
+			concat('%', #{assteacher_id}, '%') or
+			tti.teacher_name like concat('%', #{assteacher_id}, '%'))
 		</if>
 		<if test="subject_id != null and subject_id != '' and subject_id != -1 ">
 			and a.subject_id = #{subject_id}
@@ -981,7 +981,7 @@
 			and tc.city_id = #{city_id,jdbcType=NUMERIC}
 		</if>
 		<if test="searchInfo != null">
-			and tc.course_name like '%'||#{searchInfo}||'%'
+			and tc.course_name like concat('%', #{searchInfo}, '%')
 		</if>
 		<if test="student_num != null and student_num == 'true'">
 			and course_count_num.count_num > 0
@@ -1360,8 +1360,8 @@
 		AND tc.city_id = #{city_id}
 		<if test="course_name != null and course_name != ''">
 			<!-- 课程商品名称 -->
-			and (tc.course_name like '%${course_name}%' or tc.course_no like
-			'%${course_name}%' or tc.id like '%${course_name}%')
+			and (tc.course_name like concat('%', #{course_name}, '%') or tc.course_no like
+			concat('%', #{course_name}, '%') or tc.id like concat('%', #{course_name}, '%'))
 		</if>
 		<if test="search_info!= null and search_info != ''">
 			<!-- 课程商品名称 -->
@@ -1402,14 +1402,14 @@
 			and tc.course_type = #{course_type}
 		</if>
 		<if test="teacher_id != null and teacher_id != ''">
-			and (ti1.id like '%${teacher_id}%' or ti1.encoding like
-			'%${teacher_id}%' or
-			ti1.teacher_name like '%${teacher_id}%')
+			and (ti1.id like concat('%', #{teacher_id}, '%') or ti1.encoding like
+			concat('%', #{teacher_id}, '%') or
+			ti1.teacher_name like concat('%', #{teacher_id}, '%'))
 		</if>
 		<if test="assteacher_id != null and assteacher_id != ''">
-			and (ti2.id like '%${assteacher_id}%' or ti2.encoding like
-			'%${assteacher_id}%' or
-			ti2.teacher_name like '%${assteacher_id}%')
+			and (ti2.id like concat('%', #{assteacher_id}, '%') or ti2.encoding like
+			concat('%', #{assteacher_id}, '%') or
+			ti2.teacher_name like concat('%', #{assteacher_id}, '%'))
 		</if>
 		<if test="subject_id != null and subject_id != '' and subject_id != -1 ">
 			and tc.subject_id = #{subject_id}
@@ -1420,8 +1420,8 @@
 		</if>
 		<if test="id_no_name != null and id_no_name != ''">
 			<!-- 课程商品名称 -->
-			and (tc.course_name like '%${id_no_name}%' or tc.course_no like
-			'%${id_no_name}%' or tc.id like '%${id_no_name}%')
+			and (tc.course_name like concat('%', #{id_no_name}, '%') or tc.course_no like
+			concat('%', #{id_no_name}, '%') or tc.id like concat('%', #{id_no_name}, '%'))
 		</if>
 		<if test="unit_price != null and unit_price != '' and unit_price > 0 ">
 			and tc.unit_price = #{unit_price}

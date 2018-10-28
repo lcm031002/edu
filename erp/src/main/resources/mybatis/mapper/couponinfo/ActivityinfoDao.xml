@@ -22,7 +22,7 @@
 		WHERE a.status != 0
 		AND a.bu_id = #{bu_id}
 		<if test="searchInfo != null and searchInfo != ''">
-			AND a.activity_name like '%${searchInfo}%'
+			AND a.activity_name like concat('%', #{searchInfo}, '%')
 		</if>
 		order by a.update_time DESC, a.id DESC
 	</select>

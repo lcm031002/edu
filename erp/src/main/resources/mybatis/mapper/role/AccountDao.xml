@@ -35,13 +35,13 @@
 		  and tuf.status != 0
 			<!-- 账户名查询 -->
 			<if test="accountName!=null and accountName!=''">
-				and tuf.userName like '%'||#{accountName,jdbcType=VARCHAR}||'%'
+				and tuf.userName like concat('%', #{accountName}, '%')
 			</if>
 			<if test="employeeId!=null and employeeId!=-1">
 				and tuf.employee_id=#{employeeId,jdbcType=NUMERIC}
 			</if>
 			<if test="employeeName!=null and employeeName!=''">
-				and tef.employee_name like '%'||#{employeeName,jdbcType=VARCHAR}||'%'
+				and tef.employee_name like concat('%', #{employeeName}, '%')
 			</if>
 		order by tuf.create_time  desc
 

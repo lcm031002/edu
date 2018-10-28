@@ -11,7 +11,7 @@
 	<select id="list" resultType="com.edu.erp.model.TabRegion" parameterType="java.util.Map">
 		select * from tab_region where 1 = 1
 		<if test="rname != null">
-			and  rname like '%${rname}%'
+			and  rname like concat('%', #{rname}, '%')
 		</if> 
 	</select>
 	

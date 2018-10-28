@@ -82,7 +82,7 @@
 			and tof.org_type = #{org_type}
 		</if>
 		<if test="org_name != null and org_name != ''">
-			and tof.org_name like '%${org_name}%'
+			and tof.org_name like concat('%', #{org_name}, '%')
 		</if>
 		<!-- 严格匹配 -->
 		<if test="strict_org_name != null and strict_org_name != ''">

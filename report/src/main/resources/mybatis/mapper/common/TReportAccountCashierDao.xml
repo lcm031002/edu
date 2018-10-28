@@ -118,10 +118,10 @@
 			<![CDATA[ and t.input_time <= #{end_date} ]]>
 		</if>		
 		<if test="student_name != null and student_name != ''">
-            <![CDATA[ and t.student_name like '%${student_name}%']]>
+            <![CDATA[ and t.student_name like concat('%', #{student_name}, '%') ]]>
 		</if>
 		<if test="input_user_name != null and input_user_name != ''">
-            <![CDATA[ and t.input_user_name like '%${input_user_name}%']]>
+            <![CDATA[ and t.input_user_name like concat('%', #{input_user_name}, '%')]]>
 		</if>
           group by t.input_time,t.opt_encoding,t.pay_cash,t.pay_card,t.pay_trans,t.pay_ebprice,t.pay_onlineprice,t.pay_account
       ) temp2

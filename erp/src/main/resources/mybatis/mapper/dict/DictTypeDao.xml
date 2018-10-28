@@ -12,12 +12,12 @@
             and ty.id = '${paramMap.id}'
         </if>
         <if test="paramMap.name != null and paramMap.name != ''">
-            and ty.name like '%${paramMap.name}%'
+            and ty.name like concat('%', #{paramMap.name}, '%')
         </if>
         <if test="paramMap.name_code_desc != null and paramMap.name_code_desc != ''">
-            and (ty.name like '%${paramMap.name_code_desc}%'
-            or ty.code like '%${paramMap.name_code_desc}%'
-            or ty.descdtl like '%${paramMap.name_code_desc}%'
+            and (ty.name like concat('%', #{paramMap.name_code_desc}, '%')
+            or ty.code like concat('%', #{paramMap.name_code_desc}, '%')
+            or ty.descdtl like concat('%', #{paramMap.name_code_desc}, '%')
             )
         </if>
     </select>

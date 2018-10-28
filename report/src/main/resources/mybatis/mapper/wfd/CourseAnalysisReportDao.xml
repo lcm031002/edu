@@ -108,7 +108,7 @@
 			and tcou.end_date between #{startDate} and #{endDate}
 		</if>
 		<if test="courseInfo != null and courseInfo != ''">
-			and (tcou.course_no like '%${courseInfo}%' or tcou.course_name like '%${courseInfo}%')
+			and (tcou.course_no like concat('%', #{courseInfo}, '%') or tcou.course_name like concat('%', #{courseInfo}, '%'))
 		</if>
 		<if test="teacherId != null and teacherId != ''">
 			and tcou.teacher_id = #{teacherId}

@@ -58,7 +58,7 @@
 		from TP_POST ep
 		where status != 0
 		<if test="searchInfo != null and searchInfo != ''">
-			and (ep.post_code like '%${searchInfo}%' or ep.post_name like '%${searchInfo}%')
+			and (ep.post_code like concat('%', #{searchInfo}, '%') or ep.post_name like concat('%', #{searchInfo}, '%'))
 		</if> 
 		order by ep.post_code
 	</select>

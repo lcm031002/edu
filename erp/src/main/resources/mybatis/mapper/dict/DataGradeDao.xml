@@ -30,7 +30,7 @@
 		left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
 		where a.status != 0
 		<if test="grade_name!= null and grade_name!= ''">
-			and	a.grade_name like '%${grade_name}%' 		
+			and	a.grade_name like concat('%', #{grade_name}, '%')
 		</if>
 		order by a.update_time DESC
 	</select>

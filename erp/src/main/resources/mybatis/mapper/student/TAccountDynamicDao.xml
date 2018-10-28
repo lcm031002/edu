@@ -97,10 +97,10 @@
 			and a.dynamic_type in (1,3,4)
 		</if>
 		<if test="student_name != null and student_name != ''">
-			and (b.student_name like '%${student_name}%' or
+			and (b.student_name like concat('%', #{student_name}, '%') or
 			b.encoding
-			like '%${student_name}%' or b.id like
-			'%${student_name}%')
+			like concat('%', #{student_name}, '%') or b.id like
+			concat('%', #{student_name}, '%'))
 		</if>
 		<if test="encoding != null and encoding != ''">
 			and a.encoding like '%${encoding}%'

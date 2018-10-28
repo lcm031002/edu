@@ -524,7 +524,7 @@
             and tc.season_id = #{season_id}
         </if>
         <if test="student_info != null and student_info != ''">
-            and (tsi.encoding like '%${student_info}%' or tsi.student_name like '%${student_info}%')
+            and (tsi.encoding like concat('%', #{student_info}, '%') or tsi.student_name like concat('%', #{student_info}, '%'))
         </if>
         <if test="payment_Way != null and payment_Way!=''">
             and topcd.payment_way = #{payment_Way}

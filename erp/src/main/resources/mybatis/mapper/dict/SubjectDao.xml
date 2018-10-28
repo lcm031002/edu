@@ -28,7 +28,7 @@
 		 </if>
 		  where 1 = 1
 		 <if test="subjectName != null and subjectName != ''">
-			 and t1.name like '%${subjectName}%'
+			 and t1.name like concat('%', #{subjectName}, '%')
 		 </if>
 		 ORDER BY t1.update_time DESC, t1.id DESC
 	</select>
@@ -57,7 +57,7 @@
 	 	   and t.id = #{id,jdbcTyper=NUMERIC}
 	 	</if>
 	    <if test="name != null">
-	 	   and t.name like '%'||#{name,jdbcType=VARCHAR}||'%'
+	 	   and t.name like concat('%', #{name}, '%')
 	 	</if>
 	 	<if test="season_id != null and season_id > 0">
 	 	   and tc.season_id = #{season_id,jdbcType=NUMERIC}

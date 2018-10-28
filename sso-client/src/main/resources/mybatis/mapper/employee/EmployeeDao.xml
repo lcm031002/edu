@@ -106,13 +106,13 @@
 		 where 
 		    tei.STATUS = 1
 		    <if test="searchName!=null">
-			 	and (tei.EMPLOYEE_NAME like '%' || #{searchName} || '%'
-				    or tei.PHONE like '%' || #{searchName} || '%'
-				    or tei.ENCODING like '%' || #{searchName} || '%'
-				    or tei.ID_CARD like '%' || #{searchName} || '%'
-				    or tei.EMAIL like '%' || #{searchName} || '%'
-				    or tei.ADDRESS like '%' || #{searchName} || '%'
-				    or tei.DESCRIPTION like '%' || #{searchName} || '%'
+			 	and (tei.EMPLOYEE_NAME like concat('%', #{searchName}, '%')
+				    or tei.PHONE like concat('%', #{searchName}, '%')
+				    or tei.ENCODING like concat('%', #{searchName}, '%')
+				    or tei.ID_CARD like concat('%', #{searchName}, '%')
+				    or tei.EMAIL like concat('%', #{searchName}, '%')
+				    or tei.ADDRESS like concat('%', #{searchName}, '%')
+				    or tei.DESCRIPTION like concat('%', #{searchName}, '%')
 			    )
 		 	</if>
 	</select>

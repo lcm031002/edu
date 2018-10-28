@@ -52,7 +52,7 @@
 		WHERE a.rule_id = b.id and b.status != 0 and a.status != 0
 		 and b.bu_id = #{bu_id,jdbcType=NUMERIC}
 		 <if test="searchInfo != null and searchInfo != ''">
-			AND (a.NAME like '%'||#{searchInfo}||'%' or b.rule_name like '%'||#{searchInfo}||'%')
+			AND (a.NAME like concat('%', #{searchInfo}, '%') or b.rule_name like concat('%', #{searchInfo}, '%'))
 		 </if>
 		order by a.update_time DESC, a.id DESC
 	</select>

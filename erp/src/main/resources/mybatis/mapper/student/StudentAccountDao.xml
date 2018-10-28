@@ -302,12 +302,12 @@
 		</if>
 		<if test="queryStudentString != null and queryStudentString != ''">
 			AND (
-		    b.student_name LIKE '%${queryStudentString}%'
-		    OR  b.encoding LIKE '%${queryStudentString}%'
-		    OR  b.id LIKE '%${queryStudentString}%') 
+		    b.student_name LIKE concat('%', #{queryStudentString}, '%')
+		    OR  b.encoding LIKE concat('%', #{queryStudentString}, '%')
+		    OR  b.id LIKE concat('%', #{queryStudentString}, '%'))
 		</if>
 		<if test="encoding != null and encoding != ''">
-			AND a.encoding LIKE '%${encoding}%' 
+			AND a.encoding LIKE concat('%', #{encoding}, '%')
 		</if>
 		ORDER BY a.id DESC
 		]]>
