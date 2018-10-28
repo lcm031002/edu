@@ -768,7 +768,7 @@
 			        ON TTI.ID = TATGR.TEACHER_ID LEFT JOIN T_ATTENDANCE TA
 			        ON TA.STUDENT_ID = TATGR.TEACHER_ID and TA.attend_branch_id = TATG.BRANCH_ID
 			    AND TA.TS_FLAG = 'T'
-			    AND TA.COURSE_DATE = to_number(replace(#{attendance_date, jdbcType=VARCHAR},'-', ''))
+			    AND TA.COURSE_DATE = cast(replace(#{attendance_date, jdbcType=VARCHAR},'-', '') as unsigned int)
 			WHERE
 				TATG.BRANCH_ID = #{branch_id, jdbcType=NUMERIC}
 			    AND TATG.STATUS = 1
