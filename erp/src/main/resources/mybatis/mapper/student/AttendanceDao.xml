@@ -802,7 +802,7 @@
 				        ON tti.ID = tc.TEACHER_ID LEFT JOIN T_ATTENDANCE ta
 				        ON TA.STUDENT_ID = tc.TEACHER_ID and ta.attend_branch_id = tod.BRANCH_ID
 				    AND TA.TS_FLAG = 'T'
-				    AND TA.COURSE_DATE = to_number(replace(#{attendance_date,jdbcType=VARCHAR}, '-', ''))
+				    AND TA.COURSE_DATE = cast(replace(#{attendance_date,jdbcType=VARCHAR}, '-', '') as unsigned int)
 				WHERE
 				    tod.BRANCH_ID = #{branch_id,jdbcType=NUMERIC}
 				    AND tc.BUSINESS_TYPE = 3
