@@ -456,7 +456,7 @@
 				 where tcs.course_id = #{courseId}
 				   and tcs.course_times = #{courseTime}
 				   <if test="queryInfo!=null and queryInfo!=''">
-				   		and tsi.student_name like '%'||#{queryInfo}||'%'
+				   		and tsi.student_name like concat('%', #{queryInfo}, '%')
 				   </if>
 	</select>
 	

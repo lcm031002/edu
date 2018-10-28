@@ -314,7 +314,7 @@
 			and to_char(toi.create_time,'yyyy-MM-dd') between #{startDate} and #{endDate}
 		 </if>
 		 <if test="app_info != null">
-			and stu.student_name like '%'||#{app_info}||'%'
+			and stu.student_name like concat('%', #{app_info}, '%')
 		 </if>
 	</select>
 	

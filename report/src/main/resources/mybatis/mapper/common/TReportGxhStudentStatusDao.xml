@@ -190,7 +190,7 @@
 			and branch_id in (${branch_id})
 		</if>
 		<if test="counselor_name != null">
-			and counselor_name like '%${counselor_name}%'
+			and counselor_name like concat('%', #{counselor_name}, '%')
 		</if>
 		order by branch_name,counselor_name,student_name
 	</select>

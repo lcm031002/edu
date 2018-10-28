@@ -35,7 +35,7 @@
     		 and a.status = #{status}
     	</if>
     	<if test="encoding != null and encoding != ''">
-    		and (a.encoding like '%${encoding}%' or a.pos_name like '%${encoding}%')
+    		and (a.encoding like concat('%', #{encoding}, '%') or a.pos_name like concat('%', #{encoding}, '%'))
     	</if>
     	<if test="account_num != null and account_num != ''">
     		and c.account_num like '%${account_num}%'

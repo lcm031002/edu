@@ -160,7 +160,7 @@
 		and tpr.status !=0
 		and tpr.bu_id = #{bu_id,jdbcType=NUMERIC}
 		 <if test="searchInfo != null and searchInfo != ''">
-			AND (tpr.RULE_NAME like '%'||#{searchInfo}||'%') 
+			AND (tpr.RULE_NAME like concat('%', #{searchInfo}, '%'))
 		 </if>
 		order by  tpr.status ,tpr.update_time desc,tpr.create_time desc
 	</select>

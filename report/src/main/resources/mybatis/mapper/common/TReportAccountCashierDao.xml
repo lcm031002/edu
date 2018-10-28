@@ -53,10 +53,10 @@
 			<![CDATA[ and t.input_time <= #{end_date} ]]>
 		</if>	
 		<if test="student_name != null and student_name != ''">
-			<![CDATA[ and t.student_name like '%${student_name}%']]>
+			<![CDATA[ and t.student_name like concat('%', #{student_name}, '%')]]>
 		</if>
 		<if test="input_user_name != null and input_user_name != ''">
-			<![CDATA[ and t.input_user_name like '%${input_user_name}%' ]]>
+			<![CDATA[ and t.input_user_name like concat('%', #{input_user_name}, '%') ]]>
 		</if>
 		order by t.input_time,t.opt_encoding ) temp1
 		union all

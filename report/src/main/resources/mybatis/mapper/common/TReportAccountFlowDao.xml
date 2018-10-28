@@ -13,7 +13,7 @@
 			and t.branch_id = #{branch_id}
 		</if>
 		<if test="student_code != null and student_code != ''">
-			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
+			and (t.student_code like concat('%', #{student_code}, '%') or t.student_name like concat('%', #{student_code}, '%'))
 		</if>
 		<if test="start_date != null and start_date != ''">
 			<![CDATA[ and DATE_FORMAT(t.operate_time,'%Y-%m-%d') >= #{start_date} ]]>
@@ -36,7 +36,7 @@
 			and t.branch_id in (${validBranchIds})
 		</if>
 		<if test="student_code != null and student_code != ''">
-			and (t.student_code like '%${student_code}%' or t.student_name like '%${student_code}%')
+			and (t.student_code like concat('%', #{student_code}, '%') or t.student_name like concat('%', #{student_code}, '%'))
 		</if>
 		<if test="start_date != null and start_date != ''">
 			<![CDATA[ and DATE_FORMAT(t.operate_time,'%Y-%m-%d') >= #{start_date} ]]>

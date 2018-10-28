@@ -42,7 +42,7 @@
 		 where t.status = 1
 		  and t.bu_id = #{bu_id}
 		 <if test = "teach_group_name != null and teach_group_name != ''">
-		 	and t.teach_group_name like '%${teach_group_name}%'
+		 	and t.teach_group_name like concat('%', #{teach_group_name}, '%')
 		 </if>
 	</select>
 	
@@ -93,7 +93,7 @@
 		 where t.status = 1
 		  and t.bu_id = #{bu_id}
 		 <if test = "teach_group_name != null and teach_group_name != ''">
-		 	and t.teach_group_name like '%${teach_group_name}%'
+		 	and t.teach_group_name like concat('%', #{teach_group_name}, '%')
 		 </if>
 		 <if test="ids != null and ids != ''">
 			 and t.id in (${ids})

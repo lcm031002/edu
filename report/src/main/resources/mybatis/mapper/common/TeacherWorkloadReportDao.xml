@@ -61,7 +61,7 @@
 			</if>	
 		</if>
 		<if test="course_name != null and course_name !=''">
-			and a.course_name like '%${course_name}%'
+			and a.course_name like concat('%', #{course_name}, '%')
 		</if>
 		<if test="teacher_type == 2">
 			and a.assteacher_id is not null

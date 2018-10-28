@@ -49,7 +49,7 @@
 			<![CDATA[ and t.calc_date <= #{end_date} ]]>
 		</if>
 		<if test="input_user_name != null and input_user_name != ''">
-			<![CDATA[ and t.creatmaker like '%${input_user_name}%' ]]>
+			<![CDATA[ and t.creatmaker like concat('%', #{input_user_name}, '%') ]]>
 		</if>
 		order by t.opt_encoding ) t
 		union all
@@ -101,7 +101,7 @@
 			<![CDATA[ and t.calc_date <= #{end_date} ]]>
 		</if>
 		<if test="input_user_name != null and input_user_name != ''">
-			<![CDATA[ and t.creatmaker like '%${input_user_name}%' ]]>
+			<![CDATA[ and t.creatmaker like concat('%', #{input_user_name}, '%') ]]>
 		</if>
 		group by  t.calc_date,t.opt_encoding,fee_amount,pay_cash,pay_card,pay_trans)temp
 	</select>

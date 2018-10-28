@@ -16,8 +16,8 @@
 			   and a.performance_branch_id in (${validBranchIds})
 	    </if>
 		<if test="student_info != null and student_info != ''">
-			and (a.student_code like '%${student_info}%'
-			or a.student_name like '%${student_info}%')
+			and (a.student_code like concat('%', #{student_info}, '%')
+			or a.student_name like concat('%', #{student_info}, '%'))
 		</if>
 		<if test="business_type != null and business_type != '' and business_type > -1">
 			and a.business_type = #{business_type}
@@ -51,8 +51,8 @@
 			and t.performance_branch_id = #{branch_id}
 		</if>
 		<if test="student_info != null and student_info != ''">
-			and (t.student_code like '%${student_info}%'
-			or t.student_name like '%${student_info}%')
+			and (t.student_code like concat('%', #{student_info}, '%')
+			or t.student_name like concat('%', #{student_info}, '%'))
 		</if>
         <if test="validBranchIds != null and validBranchIds !='' ">
 			   and t.performance_branch_id in (${validBranchIds})

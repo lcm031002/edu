@@ -36,7 +36,7 @@
 		 left join tab_employee_info u_emp on u_user.employee_id = u_emp.id
 		  where t1.status != 0
 		 <if test="course_season_name != null and course_season_name != ''">
-			 and t1.course_season_name like '%${course_season_name}%'
+			 and t1.course_season_name like concat('%', #{course_season_name}, '%')
 		 </if>
 		<if test="city_id!=null">
 			and t1.org_city_id = #{city_id}

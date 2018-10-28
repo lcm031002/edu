@@ -136,7 +136,7 @@
 	           and t.grade_id = #{grade_id, jdbcType=NUMERIC}
 		   </if>
 		   <if test="teacher_name != null">
-	           and t.teacher_name like '%${teacher_name}%'
+	           and t.teacher_name like concat('%', #{teacher_name}, '%')
 		   </if>
 			and t.season_id = mdd.season_id
 			and t.last_season_id = mdd.last_season_id
@@ -169,7 +169,7 @@
 	           and last_season.grade_id = #{grade_id, jdbcType=VARCHAR}
 		   </if>
 		   <if test="teacher_name != null">
-	           and last_season.teacher_name like '%${teacher_name}%'
+	           and last_season.teacher_name like concat('%', #{teacher_name}, '%')
 		   </if>
 			and last_season.season_id = mdd.season_id
 			and last_season.last_season_id = mdd.last_season_id
@@ -202,7 +202,7 @@
 	           and last_season.grade_id = #{grade_id, jdbcType=VARCHAR}
 		   </if>
 		   <if test="teacher_name != null">
-	           and last_season.teacher_name like '%${teacher_name}%'
+	           and last_season.teacher_name like concat('%', #{teacher_name}, '%')
 		   </if>
 			and last_season.season_id = mdd.season_id
 			and last_season.last_season_id = mdd.last_season_id

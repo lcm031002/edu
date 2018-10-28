@@ -99,7 +99,7 @@
 			and tpd.season_id = #{season_id}
 		</if>
 		<if test="student_info != null and student_info != ''">
-			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
+			and (tpd.student_code like concat('%', #{student_info}, '%') or tpd.student_name like concat('%', #{student_info}, '%'))
 		</if>
 		<if test="agent_name != null and agent_name != ''">
 			and tpd.agent_name = #{agent_name}
@@ -261,7 +261,7 @@
 			and (t.business_type=1 or t.business_type is null)
 		</if>
 		<if test="student_info != null and student_info != ''">
-			and (t.student_code like '%${student_info}%' or t.student_name like '%${student_info}%')
+			and (t.student_code like concat('%', #{student_info}, '%') or t.student_name like concat('%', #{student_info}, '%'))
 		</if>
 		<if test="agent_name != null and agent_name != ''">
 			and t.agent_name = #{agent_name}
@@ -438,7 +438,7 @@
 			and (tpd.business_type=1 or tpd.business_type is null)
 		</if>
 		<if test="student_info != null and student_info != ''">
-			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
+			and (tpd.student_code like concat('%', #{student_info}, '%') or tpd.student_name like concat('%', #{student_info}, '%'))
 		</if>
 		<if test="start_date != null and start_date != ''">
 			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') >= #{start_date} ]]>
@@ -487,7 +487,7 @@
 			and (tpd.business_type=1 or tpd.business_type is null)
 		</if>
 		<if test="student_info != null and student_info != ''">
-			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
+			and (tpd.student_code like concat('%', #{student_info}, '%') or tpd.student_name like concat('%', #{student_info}, '%'))
 		</if>
 		<if test="start_date != null and start_date != ''">
 			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') >= #{start_date} ]]>
@@ -520,7 +520,7 @@
 			and (tpd.business_type=1 or tpd.business_type is null)
 		</if>
 		<if test="student_info != null and student_info != ''">
-			and (tpd.student_code like '%${student_info}%' or tpd.student_name like '%${student_info}%')
+			and (tpd.student_code like concat('%', #{student_info}, '%') or tpd.student_name like concat('%', #{student_info}, '%'))
 		</if>
 		<if test="start_date != null and start_date != ''">
 			<![CDATA[ and date_format(tpd.business_date,'%Y-%m-%d') >= #{start_date} ]]>

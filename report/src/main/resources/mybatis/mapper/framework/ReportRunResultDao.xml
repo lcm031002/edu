@@ -52,7 +52,7 @@
 		   and t2.type = #{type}
 		 </if>
 		 <if test="task_flow != null and task_flow != ''">
-		   and t1.task_flow like '${task_flow}%'
+		   and t1.task_flow like concat('%', #{task_flow}, '%')
 		 </if>
 		 <if test="run_result != null and run_result != ''">
 		   and t1.run_result = #{run_result}

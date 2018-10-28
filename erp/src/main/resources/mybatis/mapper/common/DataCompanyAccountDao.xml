@@ -32,10 +32,10 @@
 		where tdca.STATUS != 0
 		  and tdca.org_city_id = #{city_id}
 		<if test="account_name != null and account_name != ''">
-			and tdca.account_name like '%' || #{account_name} || '%'
+			and tdca.account_name like concat('%', #{account_name}, '%')
 		</if>
 		<if test="account_num != null and account_num != ''">
-			and tdca.account_num like '%' || #{account_num} || '%'
+			and tdca.account_num like concat('%', #{account_num}, '%')
 		</if>
 		<if test="status != null and status != 0">
 			and tdca.STATUS =#{status,jdbcType=NUMERIC}

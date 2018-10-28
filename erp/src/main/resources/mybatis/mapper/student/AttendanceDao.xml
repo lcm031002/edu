@@ -740,7 +740,7 @@
 		 		and lab.id is null	
 		 </if>
 		 <if test="search_info != null and search_info != ''">
-		 		and (student.encoding like '%${search_info}%' or student.student_name like '%${search_info}%')
+		 		and (student.encoding like concat('%', #{search_info}, '%') or student.student_name like concat('%', #{search_info}, '%'))
 		 </if>
 		 order by student.student_name ASC    
 	</select>
@@ -774,7 +774,7 @@
 			    AND TATG.STATUS = 1
 			    AND TATG.ID = #{label_id, jdbcType=NUMERIC}
 				 <if test="search_info != null and search_info != ''">
-			 			and (TTI.ENCODING like '%${search_info}%' or TTI.TEACHER_NAME like '%${search_info}%')
+			 			and (TTI.ENCODING like  concat('%', #{search_info}, '%') or TTI.TEACHER_NAME like concat('%', #{search_info}, '%'))
 				 </if>
 				 order by TTI.TEACHER_NAME ASC			    
 			</if>
@@ -1139,7 +1139,7 @@
 					and a.apply_id = #{apply_id}
 				</if>
 				<if test="student_info != null and student_info != ''">
-					and (stu.encoding like '%${student_info}%' or stu.student_name like '%${student_info}%')
+					and (stu.encoding like concat('%', #{student_info}, '%') or stu.student_name like concat('%', #{student_info}, '%'))
 				</if>
 				<if test="start_date != null and start_date != '' and (end_date != null and end_date != '')">
 				<![CDATA[

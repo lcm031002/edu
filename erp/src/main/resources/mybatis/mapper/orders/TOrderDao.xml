@@ -35,10 +35,10 @@
 		 	and			a.business_type = #{business_type}
 		 </if>
 		 <if test="student_name != null and student_name != ''">
-		 	and			(b.student_name like '%${student_name}%' or b.encoding like '%${student_name}%' or b.phone like '%${student_name}%')
+		 	and			(b.student_name like concat('%', #{student_name}, '%') or b.encoding like concat('%', #{student_name}, '%') or b.phone like concat('%', #{student_name}, '%'))
 		 </if>
 		 <if test="order_no != null and order_no != ''">
-		 	and			(a.order_no like '%${order_no}%' or a.id like '%${order_no}%')
+		 	and			(a.order_no like concat('%', #{order_no}, '%') or a.id like concat('%', #{order_no}, '%'))
 		 </if>
 		 order by a.id DESC		
 	</select>

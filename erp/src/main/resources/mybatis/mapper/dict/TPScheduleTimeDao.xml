@@ -29,7 +29,7 @@
 			and a.branch_id = #{branchId}
 		</if>
 		<if test="name != null and name != ''">
-			and a.name like '%${name}%'
+			and a.name like concat('%', #{name}, '%')
 		</if>
 	  	order by a.update_time DESC, a.id DESC
 	</select>
@@ -51,7 +51,7 @@
   			and a.branch_id = #{branchId}
   		</if>
   		<if test="name != null and name != ''">
-  			and a.name like '%${name}%'
+  			and a.name like concat('%', #{name}, '%')
   		</if>
 		order by a.name ASC
 	</select>

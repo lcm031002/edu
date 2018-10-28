@@ -111,13 +111,13 @@
 		AND a.city_id = #{city_id}
 		<if test="course_name != null and course_name != ''">
 			<!-- 课程商品名称 -->
-			and (a.course_name like '%${course_name}%' or a.course_no like
-			'%${course_name}%' or a.id like '%${course_name}%')
+			and (a.course_name like concat('%', #{course_name}, '%') or a.course_no like
+			concat('%', #{course_name}, '%') or a.id like concat('%', #{course_name}, '%'))
 		</if>
 		<if test="search_info!= null and search_info != ''">
 			<!-- 课程商品名称 -->
-			and (lower(a.course_name) like '%${search_info}%' or lower(a.course_no) like
-			'%${search_info}%' or lower(a.id) like '%${search_info}%')
+			and (lower(a.course_name) like concat('%', #{search_info}, '%') or lower(a.course_no) like
+			concat('%', #{search_info}, '%') or lower(a.id) like concat('%', #{search_info}, '%'))
 		</if>
 
 		<if
@@ -178,8 +178,8 @@
 		</if>
 		<if test="id_no_name != null and id_no_name != ''">
 			<!-- 课程商品名称 -->
-			and (a.course_name like '%${id_no_name}%' or a.course_no like
-			'%${id_no_name}%' or a.id like '%${id_no_name}%')
+			and (a.course_name like concat('%', #{id_no_name}, '%') or a.course_no like
+			concat('%', #{id_no_name}, '%') or a.id like concat('%', #{id_no_name}, '%'))
 		</if>
 		<if test="unit_price != null and unit_price != '' and unit_price > 0 ">
 			and a.unit_price = #{unit_price}
@@ -236,13 +236,13 @@
 		AND a.city_id = #{city_id}
 		<if test="course_name != null and course_name != ''">
 			<!-- 课程商品名称 -->
-			and (a.course_name like '%${course_name}%' or a.course_no like
-			'%${course_name}%' or a.id like '%${course_name}%')
+			and (a.course_name like concat('%', #{course_name}, '%') or a.course_no like
+			concat('%', #{course_name}, '%') or a.id like concat('%', #{course_name}, '%'))
 		</if>
 		<if test="search_info!= null and search_info != ''">
 			<!-- 课程商品名称 -->
-			and (lower(a.course_name) like '%${search_info}%' or lower(a.course_no) like
-			'%${search_info}%' or lower(a.id) like '%${search_info}%')
+			and (lower(a.course_name) like concat('%', #{search_info}, '%') or lower(a.course_no) like
+			concat('%', #{search_info}, '%') or lower(a.id) like concat('%', #{search_info}, '%'))
 		</if>
 
 		<if test="business_type != null and business_type != -1 and business_type != ''">
@@ -297,8 +297,8 @@
 		</if>
 		<if test="id_no_name != null and id_no_name != ''">
 			<!-- 课程商品名称 -->
-			and (a.course_name like '%${id_no_name}%' or a.course_no like
-			'%${id_no_name}%' or a.id like '%${id_no_name}%')
+			and (a.course_name like concat('%', #{id_no_name}, '%') or a.course_no like
+			concat('%', #{id_no_name}, '%') or a.id like concat('%', #{id_no_name}, '%'))
 		</if>
 		<if test="unit_price != null and unit_price != '' and unit_price > 0 ">
 			and a.unit_price = #{unit_price}
@@ -1365,8 +1365,8 @@
 		</if>
 		<if test="search_info!= null and search_info != ''">
 			<!-- 课程商品名称 -->
-			and (tc.course_name like '%${search_info}%' or tc.course_no like
-			'%${search_info}%' or tc.id like '%${search_info}%')
+			and (tc.course_name like concat('%', #{search_info}, '%') or tc.course_no like
+			concat('%', #{search_info}, '%') or tc.id like concat('%', #{search_info}, '%'))
 		</if>
 		<if
 				test="business_type != null and business_type != -1 and business_type != ''">

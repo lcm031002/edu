@@ -333,13 +333,13 @@
 			and			a.change_type = #{change_type}		
 		</if>
 		<if test="order_no != null and order_no != ''">
-			and			(b.order_no like '%${order_no}%' or b.id like '%${order_no}%')		
+			and			(b.order_no like concat('%', #{order_no}, '%') or b.id like concat('%', #{order_no}, '%'))
 		</if>
 		<if test="encoding != null and encoding != ''">
-			and			a.encoding like '%${encoding}%'		
+			and			a.encoding like concat('%', #{encoding}, '%')
 		</if>
 		<if test="studentInfo != null and studentInfo != ''">
-			and (f.student_name like '%${studentInfo}%' or f.encoding like '%${studentInfo}%')
+			and (f.student_name like concat('%', #{studentInfo}, '%') or f.encoding like concat('%', #{studentInfo}, '%'))
 		</if>
 		
 		order by a.create_time DESC, a.id DESC	

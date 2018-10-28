@@ -96,7 +96,7 @@
 		    AND tdi.status = #{status,jdbcType=NUMERIC}
 		    </if>
 		    <if test="invoice_code != null and invoice_code != ''">
-		    	AND (tdi.invoice_code like '%'||#{invoice_code}||'%' or torder.ORDER_NO like '%'||#{invoice_code}||'%' or tsi.id like '%'||#{invoice_code}||'%' or tsi.ENCODING like '%'||#{invoice_code}||'%' or tsi.STUDENT_NAME like '%'||#{invoice_code}||'%' or tdic.COMPANY_NAME like '%'||#{invoice_code}||'%')
+		    	AND (tdi.invoice_code like concat('%', #{invoice_code}, '%') or torder.ORDER_NO like concat('%', #{invoice_code}, '%') or tsi.id like concat('%', #{invoice_code}, '%') or tsi.ENCODING like concat('%', #{invoice_code}, '%') or tsi.STUDENT_NAME like concat('%', #{invoice_code}, '%') or tdic.COMPANY_NAME like concat('%', #{invoice_code}, '%'))
 		    </if>
 		    <if test="branch_id != null">
 		    	AND torder.branch_id = #{branch_id,jdbcType=NUMERIC}

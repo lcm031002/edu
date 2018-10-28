@@ -22,16 +22,16 @@
 			and t1.type_id in (${paramMap.type_ids})
 		</if>
 		<if test="paramMap.dictTypeName != null and paramMap.dictTypeName != ''">
-			and ty.name like '%${paramMap.dictTypeName}%'
+			and ty.name like concat('%', #{paramMap.dictTypeName}, '%')
 		</if>
 		<if test="paramMap.bu_id!=null and paramMap.bu_id > 0">
 			and (t1.bu_id = #{paramMap.bu_id} or t1.bu_id is null )
 		</if>
 		<if
 			test="paramMap.name_code_desc != null and paramMap.name_code_desc != ''">
-			and (t1.name like '%${paramMap.name_code_desc}%'
-			or t1.code like '%${paramMap.name_code_desc}%'
-			or t1.descdtl like '%${paramMap.name_code_desc}%'
+			and (t1.name like concat('%', #{paramMap.name_code_desc}, '%')
+			or t1.code like concat('%', #{paramMap.name_code_desc}, '%')
+			or t1.descdtl like concat('%', #{paramMap.name_code_desc}, '%')
 			)
 		</if>
 		order by t1.type_id ASC, t1.order_no ASC

@@ -32,7 +32,7 @@
 			c.post_code =
 			'LearningManagementDivision_admin')
 			<if test="emp_name != null and emp_name != ''">
-				and a.employee_name like '%' || #{emp_name} || '%'
+				and a.employee_name like concat('%', #{emp_name}, '%')
 			</if>
 			<if test="bu_id != null and bu_id != ''">
 				and b.bu_id = #{bu_id}
@@ -54,7 +54,7 @@
 			and a.bu_id = #{bu_id}
 		</if>
 		<if test="emp_name != null and emp_name != ''">
-			and b.employee_name like '%' || #{emp_name} || '%'
+			and b.employee_name like concat('%', #{emp_name}, '%')
 		</if>
 		order by b.employee_name asc
 	</select>
@@ -170,7 +170,7 @@
 		  and tss.bu_id = #{bu_id}
 		  and tdg.grade_name not like '%高中毕业%'
 		<if test="student_name != null and student_name != ''">
-			and tsi.student_name like '%${student_name}%'
+			and tsi.student_name like concat('%', #{student_name}, '%')
 		</if>
 		and course_surplus_count>0
 		group by tei.id, tsi.id, tsci.counselor_type) t
@@ -222,7 +222,7 @@
 			and a.counselor_type = #{counselor_type}
 		</if>
 		<if test="counselor_name != null and counselor_name != ''">
-			and d.employee_name like '%${counselor_name}%'
+			and d.employee_name like concat('%', #{counselor_name}, '%')
 		</if>
 		<if test="cur_date != null">
 			and date_format(sysdate(),'%Y-%m-%d') between a.start_date and

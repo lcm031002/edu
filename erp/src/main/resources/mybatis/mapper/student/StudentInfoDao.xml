@@ -601,9 +601,9 @@
 	   AND TC.BUSINESS_TYPE = #{businessType, jdbcType=NUMERIC}
 	   <if test="seacherName != null">
 		   AND (
-			   TC.COURSE_NAME like '%' || #{seacherName} || '%'
-			   OR TTI.TEACHER_NAME LIKE '%' || #{seacherName} || '%'  
-			   OR TOD.ORDER_NO LIKE '%' || #{seacherName} || '%'  
+			   TC.COURSE_NAME like concat('%', #{seacherName}, '%')
+			   OR TTI.TEACHER_NAME LIKE concat('%', #{seacherName}, '%')
+			   OR TOD.ORDER_NO LIKE concat('%', #{seacherName}, '%')
 		   )
 	   </if>
 		   group by tc.id) temp
