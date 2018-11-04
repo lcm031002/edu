@@ -1,6 +1,3 @@
-/**
- * Created by Liyong.zhu on 2017/2/14.
- */
 "use strict";
 angular
     .module('ework-ui')
@@ -99,7 +96,7 @@ function erp_attendanceWfdDetailsController($scope,
                     $scope.studentList = resp.data;
                     //将studentList中的已考勤学员和未考勤学员分离
                     for (var i in $scope.studentList) {
-                        if ($scope.studentList[i].ATTEND_ == 1) {
+                        if ($scope.studentList[i].attend_ == 1) {
                             $scope.studentList_attend.push($scope.studentList[i]);
                         } else {
                             $scope.studentList_no_attend.push($scope.studentList[i]);
@@ -176,8 +173,8 @@ function erp_attendanceWfdDetailsController($scope,
                 student = $scope.studentList_no_attend[i];
                 if (student.selectFlag == true) {
                     var temp = {};
-                    temp.student_id = student.STUDENT_ID;
-                    temp.order_course_id = student.ORDER_DETAIL_ID;
+                    temp.student_id = student.student_id;
+                    temp.order_course_id = student.order_detail_id;
                     temp.course_date = $("#rootIndex_attendance_date").val();
                     temp.attend_type = 31;
                     requestParam.push(temp);
@@ -185,8 +182,8 @@ function erp_attendanceWfdDetailsController($scope,
             }
         } else {//单个学员考勤
             var temp = {};
-            temp.student_id = cancleStudent.STUDENT_ID;
-            temp.order_course_id = cancleStudent.ORDER_DETAIL_ID;
+            temp.student_id = cancleStudent.student_id;
+            temp.order_course_id = cancleStudent.order_detail_id;
             temp.course_date = $("#rootIndex_attendance_date").val();
             if (flag == 'attend') {
                 temp.attend_type = 31;
@@ -243,14 +240,14 @@ function erp_attendanceWfdDetailsController($scope,
                 teacher = $scope.teacherList_no_attend[i];
                 if (teacher.selectFlag == true) {
                     var temp = {};
-                    temp.teacher_id = teacher.TEACHER_ID;
+                    temp.teacher_id = teacher.teacher_id;
                     temp.attend_type = 31;
                     requestParam.push(temp);
                 }
             }
         } else {//单个教师考勤
             var temp = {};
-            temp.teacher_id = cancleTeacher.TEACHER_ID;
+            temp.teacher_id = cancleTeacher.teacher_id;
             if (flag == 'attend') {
                 temp.attend_type = 31;
             } else {//flag == 'cancle'

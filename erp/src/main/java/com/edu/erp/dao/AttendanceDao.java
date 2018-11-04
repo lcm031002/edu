@@ -374,4 +374,8 @@ public interface AttendanceDao {
 
     Integer getOrderAttendCourseTimes(Long orderId);
 
+    Integer getStudentWfdAttndance(Long orderId);
+
+    Integer getTeacherWfdAttndance(Map<String, Object> param) throws Exception;
+
 }

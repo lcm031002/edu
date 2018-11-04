@@ -224,5 +224,55 @@
 			<!--common；bjk；ydy；wfd -->
 			<type>common</type>
 		</task>
+		<task>
+			<!--任务id -->
+			<taskId>bjk.t_teacher_workload</taskId>
+			<!--任务名称 -->
+			<name>培英班教师工作量表</name>
+			<!--任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.bjk.TTeacherWorkloadReportTask
+			</classImpl>
+			<!--开始日期 -->
+			<startDate>2018-05-01</startDate>
+			<!--截止日期 -->
+			<endDate>2020-12-31</endDate>
+			<!--运行周期单位 -->
+			<unit>M</unit>
+			<!--运行周期 -->
+			<period>30</period>
+			<!--开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!--一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!--开始运行的起止id -->
+			<startId>20150430</startId>
+			<!--common；bjk；ydy；wfd -->
+			<type>bjk</type>
+		</task>
+		<task>
+			<!-- 任务id -->
+			<taskId>common.t_teacher_workload_wfd</taskId>
+			<!-- 任务名称 -->
+			<name>晚辅导教师考勤记录</name>
+			<!-- 任务实现类 -->
+			<classImpl>com.edu.report.framework.tasks.wfd.WfdAttendTeacherReportTask
+			</classImpl>
+			<!-- 开始日期 -->
+			<startDate>2017-04-21</startDate>
+			<!-- 截止日期 -->
+			<endDate>2018-04-21</endDate>
+			<!-- 运行周期单位 -->
+			<unit>M</unit>
+			<!-- 运行周期 -->
+			<period>30</period>
+			<!-- 开始执行时间 -->
+			<runTime>00:00</runTime>
+			<!-- 一批次的key间隔值 -->
+			<pageSize>1</pageSize>
+			<!-- 开始运行的起止id -->
+			<startId>20150430</startId>
+			<!-- common；bjk；ydy；wfd -->
+			<type>wfd</type>
+		</task>
 	</tasks>
 </report>

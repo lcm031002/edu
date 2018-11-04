@@ -26,9 +26,9 @@
 	<insert id="saveAttandance"   parameterType="com.edu.erp.model.TAttendance" useGeneratedKeys="true" keyProperty="id">
 		 insert into t_attendance
 	      (
-	       scheduling_id, 
-	       student_id, 
-	       order_course_id, 
+	       scheduling_id,
+	       student_id,
+	       order_course_id,
 	       attend_user, 
 	       attend_date, 
 	       attend_branch_id, 
@@ -41,7 +41,7 @@
 	       create_time, 
 	       update_user, 
 	       update_time,
-	       course_date, 
+	       course_date,
 	       remark,
 	       counselor_id,
 	       teacher_id,
@@ -620,7 +620,7 @@
 				from t_create_calendar where cur_date BETWEEN  #{start_date, jdbcType=VARCHAR} and #{end_date, jdbcType=VARCHAR}
 				order by cur_date
 			) DT_TIME
-		 LEFT JOIN(SELECT date_format(TA.COURSE_DATE || '', '%Y%m%d') AS ATTEND_DATE,
+		 LEFT JOIN(SELECT date_format(TA.COURSE_DATE, '%Y%m%d') AS ATTEND_DATE,
 		                  COUNT(TA.STUDENT_ID) AS STUDENT_COUNT
 		            FROM T_ORDER TOD
 		            JOIN T_ORDER_COURSE TOC
@@ -634,16 +634,16 @@
 		             and (toc.status != 2 or toc.status is null)
 		             and ta.attend_type = 31
 		             and ta.attend_branch_id = #{branch_id,jdbcType=NUMERIC}
-		             AND date_format(TA.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
+		             AND date_format(TA.COURSE_DATE, '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
 		                 AND #{end_date,jdbcType=VARCHAR}
 		           GROUP BY TA.COURSE_DATE) ST_ATTD ON date_format(ST_ATTD.ATTEND_DATE, '%Y-%m-%d') = DT_TIME.DATE_TIME
 		 LEFT JOIN(SELECT COUNT(TAT.STUDENT_ID) AS TEACHER_COUNT,
-		                 date_format(TAT.COURSE_DATE || '', '%Y%m%d') AS ATTEND_DATE
+		                 date_format(TAT.COURSE_DATE, '%Y%m%d') AS ATTEND_DATE
 		            FROM T_ATTENDANCE TAT
 		           WHERE TAT.ATTEND_BRANCH_ID = #{branch_id, jdbcType=NUMERIC}
 		             AND TS_FLAG = 'T'
 		             AND TAT.ATTEND_TYPE = 31
-		             AND date_format(TAT.COURSE_DATE || '', '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
+		             AND date_format(TAT.COURSE_DATE, '%Y-%m-%d') BETWEEN #{start_date, jdbcType=VARCHAR}
 		                 AND #{end_date, jdbcType=VARCHAR}
 		           GROUP BY TAT.COURSE_DATE) TCH_ATTD ON date_format(TCH_ATTD.ATTEND_DATE, '%Y-%m-%d') = DT_TIME.DATE_TIME
 		 LEFT JOIN P_COURSE_WFD_REMARK PCWR ON PCWR.BRANCH_ID = #{branch_id, jdbcType=NUMERIC}
@@ -1346,14 +1346,14 @@
         teacher_id = #{teacher_id,jdbcType=NUMERIC},
         remark = #{remark,jdbcType=VARCHAR},
         <if test="(attend_type == 12 or attend_type == 11) and productLine == 11">
-            course_manager = #{courseManagerAdvancedParam,jdbcType=NUMERIC},
-			course_tearcher_cn = #{chineseTeacherAdvanceParam,jdbcType=NUMERIC},
-			course_tearcher_en = #{foreignTeacherAdvanceParam,jdbcType=NUMERIC},
-			course_tearcher_cn_hour = #{chineseTeacherAdvanceParamHourLength,jdbcType=NUMERIC},
-			course_tearcher_en_hour = #{foreignTeacherAdvanceParamHourLength,jdbcType=NUMERIC},
-			spoken_language_hour = #{spokenLanguageHourLength,jdbcType=NUMERIC},
-			course_tearcher_cn_remark=#{chineseTeacherAdvanceParamRemark,jdbcType=VARCHAR},
-			course_tearcher_en_remark=#{foreignTeacherAdvanceParamRemark,jdbcType=VARCHAR},
+					  course_manager = #{courseManagerAdvancedParam,jdbcType=NUMERIC},
+						course_tearcher_cn = #{chineseTeacherAdvanceParam,jdbcType=NUMERIC},
+						course_tearcher_en = #{foreignTeacherAdvanceParam,jdbcType=NUMERIC},
+						course_tearcher_cn_hour = #{chineseTeacherAdvanceParamHourLength,jdbcType=NUMERIC},
+						course_tearcher_en_hour = #{foreignTeacherAdvanceParamHourLength,jdbcType=NUMERIC},
+						spoken_language_hour = #{spokenLanguageHourLength,jdbcType=NUMERIC},
+						course_tearcher_cn_remark=#{chineseTeacherAdvanceParamRemark,jdbcType=VARCHAR},
+						course_tearcher_en_remark=#{foreignTeacherAdvanceParamRemark,jdbcType=VARCHAR},
         </if>
         update_time = sysdate()
         where id =  #{id,jdbcType=NUMERIC}
@@ -1450,4 +1450,27 @@
        where t3.attend_type in (11, 12, 21, 22,28, 31)
          and t1.id = #{orderId}
 	</select>
+
+	<select id="getStudentWfdAttndance" parameterType="long" resultType="integer">
+			select count(1)
+			from t_attendance t1
+			join t_order_course t2 on t1.order_course_id = t2.id and (t2.status &lt;&gt; 2 or t2.status is null)
+			join t_order t3 on t2.order_id = t3.id and t3.order_status = 1
+			where t1.student_id = 1
+			and t3.business_type = 3
+			and t1.attend_type = 31
+			and t1.ts_flag = 'S'
+			and t1.course_date = #{courseDate}
+	</select>
+
+	<select id="getTeacherWfdAttndance" parameterType="map" resultType="integer">
+      select count(1)
+        from t_attendance t
+       where t.student_id = #{teacher_id}
+         and t.course_date =  #{course_date}
+         and t.ts_flag = 'T'
+         and t.attend_branch_id = #{branch_id}
+         and t.attend_type = 31
+	</select>
+
 </mapper>

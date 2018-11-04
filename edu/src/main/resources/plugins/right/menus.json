@@ -1722,7 +1722,54 @@
 							"path": "/teachers",
 							"href": "templates/erp/tearchers/teacherSearch.html",
 							"value": "teachers"
-						}
+						},
+            {
+              "index": "A5000602",
+              "name": "考勤教师组",
+              "key": "attendanceGroup",
+              "icon": "iconfont icon-teachers_checking-in",
+              "type": "$state",
+              "value": "attendanceGroup",
+              "path": "/teachers/attendanceGroup",
+              "href": "templates/erp/tearchers/attendanceGroup.html",
+              "services": [{
+                "name": "老师组查询",
+                "key": "attendanceGroup.query",
+                "url": "/erp/attendancegroup/service",
+                "method": "GET"
+              },
+                {
+                  "name": "老师组添加",
+                  "key": "attendanceGroup.post",
+                  "url": "/erp/attendancegroup/service",
+                  "method": "POST"
+                },
+                {
+                  "name": "老师组修改",
+                  "key": "attendanceGroup.put",
+                  "url": "/erp/attendancegroup/service",
+                  "method": "PUT"
+                },
+                {
+                  "name": "老师组删除",
+                  "key": "attendanceGroup.delete",
+                  "url": "/erp/attendancegroup/service",
+                  "method": "DELETE"
+                },
+                {
+                  "name": "老师查询",
+                  "key": "attendanceGroup.queryTeacher",
+                  "url": "/erp/teacherservice/service",
+                  "method": "DELETE"
+                },
+                {
+                  "name": "校区查询",
+                  "key": "attendanceGroup.queryBranchs",
+                  "url": "/erp/dictionary/organization/branchs",
+                  "method": "GET"
+                }
+              ]
+            }
 					]
 				},
 				{

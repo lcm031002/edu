@@ -16,7 +16,7 @@
       <div ng-show="selectedTab == 'student'">
         <div class="table-panel" style="min-height:50px;">
           <button class="btn mr15" ng-repeat="student in studentList_attend" ng-if="studentList_attend && studentList_attend.length" title="{{student.COURSE_INFO}}" ng-click="submitStudentAttend('cancel',student)">
-            {{student.STUDENT_NAME}}
+            {{student.student_name}}
             <span class="badge" title="取消考勤">X</span>
           </button>
         </div>

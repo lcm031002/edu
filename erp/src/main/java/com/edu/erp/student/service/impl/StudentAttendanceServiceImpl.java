@@ -658,23 +658,61 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
         Assert.notNull(jsonObj.getString("course_date"), "yyyy-MM-dd");
         JSONArray jsonArray = jsonObj.getJSONArray("teachers");
         Map<String, Object> paramMap = null;
+        String courseDate = jsonObj.getString("course_date").replaceAll("-","");
+        Date date = new Date();
+
         for (int i = 0; i < jsonArray.size(); i++) {
             paramMap = new HashMap<String, Object>();
             Assert.notNull(jsonArray.getJSONObject(i).get("teacher_id"));
             Assert.notNull(jsonArray.getJSONObject(i).get("attend_type"));
-            paramMap.put("p_attend_id", jsonArray.getJSONObject(i).get("attend_id"));
-            paramMap.put("p_teacher_id", jsonArray.getJSONObject(i).get("teacher_id"));
-            paramMap.put("p_attend_type", jsonArray.getJSONObject(i).get("attend_type"));
-            paramMap.put("p_attend_date", DateUtil.stringToDate(jsonObj.getString("course_date"), "yyyy-MM-dd"));
-            paramMap.put("p_remark", jsonObj.getString("remark"));
-            paramMap.put("p_input_user", userId);
-            paramMap.put("p_branch_id", branchId);
-            paramMap.put("o_err_code", null);
-            paramMap.put("o_err_desc", null);
-            attendanceDao.teacherAttend(paramMap);
-            if (!paramMap.get("o_err_code").toString().equals("0")) {
-                throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
+
+            Long teacherId = jsonArray.getJSONObject(i).getLong("teacher_id");
+            Long attendType = jsonArray.getJSONObject(i).getLong("attend_type");
+
+            paramMap.put("teacher_id",teacherId);
+            paramMap.put("course_date",courseDate);
+            paramMap.put("branch_id",branchId);
+
+            Integer attendCount = this.attendanceDao.getTeacherWfdAttndance(paramMap);
+
+            if(attendCount > 0){
+                logger.error("老师一天只能考勤一次");
+                break;
             }
+
+            TAttendance attendance = new TAttendance();
+            attendance.setStudent_id(teacherId);
+            attendance.setAttend_user(userId);
+            attendance.setAttend_date(date);
+            attendance.setCreate_time(date);
+            attendance.setUpdate_time(date);
+            attendance.setAttend_branch_id(branchId);
+            attendance.setAttend_type(attendType);
+            attendance.setCourse_date(Long.parseLong(courseDate));
+            attendance.setTs_flag("T");
+
+            attendance.setCreate_user(userId);
+            attendance.setUpdate_user(userId);
+
+            attendanceDao.saveAttandance(attendance);
+
+            TAttendanceHt attendanceht = new TAttendanceHt();
+            attendanceht.setStudent_id(teacherId);
+
+            attendanceht.setAttend_user(userId);
+            attendanceht.setAttend_date(date);
+            attendanceht.setCreate_time(date);
+            attendanceht.setUpdate_time(date);
+            attendanceht.setAttend_branch_id(branchId);
+            attendanceht.setAttend_type(attendType);
+            attendanceht.setCourse_date(Long.parseLong(courseDate));
+            attendanceht.setTs_flag("T");
+
+            attendanceht.setCreate_user(userId);
+            attendanceht.setUpdate_user(userId);
+            attendanceht.setId(attendance.getId());
+
+            attendanceDao.saveAttandanceHt(attendanceht);
         }
     }
 
@@ -770,30 +808,140 @@ public class StudentAttendanceServiceImpl implements StudentAttendanceService {
 
     @Override
     public void wfdAttend(JSONObject jsonObj, Long userId, Long branchId) throws Exception {
+        String courseDate = jsonObj.getString("course_date").replaceAll("-","");
+        Integer attendCount = this.attendanceDao.getStudentWfdAttndance(Long.parseLong(courseDate));
+        TOrderCourse orderCourse = tOrderCourseDao.queryOrderCourseById(jsonObj.getLong("order_course_id"));
+        Date date = new Date();
 
-        Assert.notNull(jsonObj.getLong("student_id"));
-        Assert.notNull(jsonObj.getLong("attend_type"));
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("p_order_course_id", jsonObj.getLong("order_course_id"));
-        Object attend_id = jsonObj.get("attend_id");
-        if (null != attend_id && !(attend_id instanceof JSONNull)) {
-            paramMap.put("p_attend_id", jsonObj.getLong("attend_id"));
+        if(attendCount > 0){
+            logger.error("学生一天只能考勤一次");
+        }
+
+        TAttendance attendance = new TAttendance();
+        attendance.setStudent_id(jsonObj.getLong("student_id"));
+        attendance.setOrder_course_id(jsonObj.getLong("order_course_id"));
+        attendance.setAttend_user(userId);
+        attendance.setAttend_date(date);
+        attendance.setCreate_time(date);
+        attendance.setUpdate_time(date);
+        attendance.setAttend_branch_id(branchId);
+        attendance.setAttend_type(jsonObj.getLong("attend_type"));
+        attendance.setCourse_date(Long.parseLong(courseDate));
+        attendance.setTs_flag("S");
+        attendance.setCarried("Y");
+        attendance.setCreate_user(userId);
+        attendance.setUpdate_user(userId);
+        attendance.setAttend_amount(orderCourse.getDiscount_unit_price());
+
+        attendanceDao.saveAttandance(attendance);
+
+        TAttendanceHt attendanceht = new TAttendanceHt();
+        attendanceht.setStudent_id(jsonObj.getLong("student_id"));
+        attendanceht.setOrder_course_id(jsonObj.getLong("order_course_id"));
+        attendanceht.setAttend_user(userId);
+        attendanceht.setAttend_date(date);
+        attendanceht.setCreate_time(date);
+        attendanceht.setUpdate_time(date);
+        attendanceht.setAttend_branch_id(branchId);
+        attendanceht.setAttend_type(jsonObj.getLong("attend_type"));
+        attendanceht.setCourse_date(Long.parseLong(courseDate));
+        attendanceht.setTs_flag("S");
+        attendanceht.setCarried("Y");
+        attendanceht.setCreate_user(userId);
+        attendanceht.setUpdate_user(userId);
+        attendanceht.setId(attendance.getId());
+        attendanceht.setAttend_amount(orderCourse.getDiscount_unit_price());
+
+        attendanceDao.saveAttandanceHt(attendanceht);
+
+        // 7.处理预结转
+        Double changeMoney = attendance.getAttend_amount();
+        TFee fee = new TFee();
+        fee.setOrder_id(orderCourse.getOrder_id());
+        fee.setFee_type(61L);
+        fee.setFee_flag(1L);
+        fee.setFee_amount(changeMoney);
+        fee.setFee_status(1L);
+        fee.setInsert_time(new Date());
+        fee.setFinish_time(new Date());
+        fee.setOperate_type(6L);
+        fee.setOperate_no(attendance.getId().toString());
+        feeService.saveFee(fee);
+
+        TFeeDetail feeDetail = new TFeeDetail();
+        feeDetail.setFee_id(fee.getId());
+        feeDetail.setOrder_id(fee.getOrder_id());
+        feeDetail.setOrder_detail_id(orderCourse.getId());
+        feeDetail.setFee_type(fee.getFee_type());
+        feeDetail.setFee_flag(fee.getFee_flag());
+        feeDetail.setFee_amount(fee.getFee_amount());
+        feeDetail.setCourse_sum((orderCourse.getCourse_total_count() == null ? 1 : orderCourse.getCourse_total_count()));
+        feeDetail.setOperate_type(fee.getOperate_type());
+        feeDetail.setOperate_no(attendance.getId());
+        feeDetailService.saveFeeDetail(feeDetail);
+
+        // 8.考勤更新订单课程
+        TOrderCourse orderCourseForUpdate = new TOrderCourse();
+        orderCourseForUpdate.setId(orderCourse.getId());
+        orderCourseForUpdate.setCourse_surplus_count(orderCourse.getCourse_surplus_count() - 1 );
+        orderCourseForUpdate.setSurplus_cost(orderCourseForUpdate.getCourse_surplus_count() * orderCourse.getDiscount_unit_price());
+        orderCourseForUpdate.setUpdate_user(attendance.getUpdate_user());
+        tOrderCourseDao.updateOrderCourseForBjkAttandence(orderCourseForUpdate);
+
+        // 9.处理积分
+        StudentIntegral currentIntegral = studentIntegralDao.getIntegral(attendance.getStudent_id(), attendance.getAttend_branch_id());
+        StudentIntegralDetails studentIntegralDetails = new StudentIntegralDetails();
+        if (currentIntegral == null) {
+            // 新增积分
+            currentIntegral = new StudentIntegral();
+            currentIntegral.setStudent_id(attendance.getStudent_id());
+            currentIntegral.setBranch_id(orderCourse.getBranch_id());
+            currentIntegral.setLast_integral(0L);
+            currentIntegral.setLast_attend_amount(0L);
+            currentIntegral.setAttend_amount(changeMoney.longValue());
+            currentIntegral.setCrrent_integral(changeMoney.longValue() / 100);
+            currentIntegral.setUpdate_user(attendance.getUpdate_user());
+            studentIntegralDao.saveIntegral(currentIntegral);
+
+            // - 积分流水
+            //studentIntegralDetails.setDatetime();
+            studentIntegralDetails.setAccount_id(currentIntegral.getId());
+            studentIntegralDetails.setLast_attend_amount(0L);
+            studentIntegralDetails.setChange_amount(currentIntegral.getAttend_amount());
+            studentIntegralDetails.setAttend_amount(currentIntegral.getAttend_amount());
+            studentIntegralDetails.setCrrent_integral(0L);
+            studentIntegralDetails.setChange_integral(currentIntegral.getCrrent_integral());
+            studentIntegralDetails.setAfter_integral(currentIntegral.getCrrent_integral() );
+            studentIntegralDetails.setUpdate_user(attendance.getUpdate_user());
+            studentIntegralDetails.setChange_type(1L);
+            studentIntegralDetails.setBranch_id(currentIntegral.getBranch_id());
+            studentIntegralDetails.setChange_val(String.valueOf(attendance.getAttend_type()));
         } else {
-            paramMap.put("p_attend_id", null);
+            // - 积分流水
+            //studentIntegralDetails.setDatetime();
+            studentIntegralDetails.setAccount_id(currentIntegral.getId());
+            studentIntegralDetails.setLast_attend_amount(currentIntegral.getAttend_amount());
+            studentIntegralDetails.setChange_amount(changeMoney.longValue());
+            studentIntegralDetails.setAttend_amount(currentIntegral.getAttend_amount() + changeMoney.longValue());
+            studentIntegralDetails.setCrrent_integral(currentIntegral.getCrrent_integral());
+            studentIntegralDetails.setChange_integral(studentIntegralDetails.getAttend_amount() / 100 - studentIntegralDetails.getCrrent_integral());
+            studentIntegralDetails.setAfter_integral(studentIntegralDetails.getAttend_amount() / 100);
+            studentIntegralDetails.setUpdate_user(attendance.getUpdate_user());
+            studentIntegralDetails.setChange_type(1L);
+            studentIntegralDetails.setBranch_id(currentIntegral.getBranch_id());
+            studentIntegralDetails.setChange_val(String.valueOf(attendance.getAttend_type()));
+
+            //修改积分
+            StudentIntegral studentIntegralForUpdate = new StudentIntegral();
+            studentIntegralForUpdate.setId(currentIntegral.getId());
+            studentIntegralForUpdate.setLast_integral(currentIntegral.getCrrent_integral());
+            studentIntegralForUpdate.setCrrent_integral(studentIntegralDetails.getAfter_integral());
+            studentIntegralForUpdate.setAttend_amount(studentIntegralDetails.getAttend_amount());
+            studentIntegralForUpdate.setUpdate_user(studentIntegralDetails.getUpdate_user());
+            studentIntegralForUpdate.setLast_attend_amount(currentIntegral.getAttend_amount());
+            studentIntegralDao.updateIntegral(studentIntegralForUpdate);
+
         }
-        paramMap.put("p_student_id", jsonObj.getLong("student_id"));
-        paramMap.put("p_attend_type", jsonObj.getLong("attend_type"));
-        paramMap.put("p_course_date", DateUtil.stringToDate(jsonObj.getString("course_date"), "yyyy-MM-dd"));
-        paramMap.put("p_remark", jsonObj.getString("remark"));
-        paramMap.put("p_input_user", userId);
-        paramMap.put("p_branch_id", branchId);
-        paramMap.put("o_err_code", null);
-        paramMap.put("o_err_desc", null);
-        attendanceDao.wfdAttend(paramMap);
-        if (!paramMap.get("o_err_code").toString().equals("0")) {
-            throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
-        }
-        updateAttandRemark(paramMap);
     }
 
     @Override

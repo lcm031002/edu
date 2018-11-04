@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.erp.dao.AttendTeacherGroupDao">
+
+	<select id="page" resultType="com.edu.erp.model.AttendTeacherGroup"
+		parameterType="java.util.Map">
+		select
+		a.*,
+		b.org_name as city_name,
+		c.org_name as branch_name
+
+		from t_attend_teacher_group a
+		join tab_organization_info b on a.city_id = b.id and b.status = 1
+		left join tab_organization_info c on a.branch_id = c.id and c.status = 1
+		where
+		a.city_id = #{city_id} and a.bu_id=#{bu_id}
+		<if test="teach_group_name != null and teach_group_name != ''">
+			and a.name like '%${teach_group_name}%'
+		</if>
+		order by a.id DESC
+	</select>
+
+	<insert id="toAdd" parameterType="com.edu.erp.model.AttendTeacherGroup" useGeneratedKeys="true" keyProperty="id">
+		insert into t_attend_teacher_group
+		(
+		name,
+		city_id,
+		bu_id,
+		branch_id,
+		status
+		)
+		values
+		(
+		#{name, jdbcType=VARCHAR},
+		#{city_id, jdbcType=NUMERIC},
+		#{bu_id, jdbcType=NUMERIC},
+		#{branch_id, jdbcType=NUMERIC},
+		#{status, jdbcType=NUMERIC}
+		)
+	</insert>
+	<update id="toUpdate" parameterType="com.edu.erp.model.AttendTeacherGroup">
+		update
+		t_attend_teacher_group
+		set
+		name = #{name, jdbcType=VARCHAR},
+		branch_id = #{branch_id, jdbcType=NUMERIC}
+		where
+		id = #{id}
+	</update>
+	<delete id="toChangeStatus" parameterType="java.util.Map"
+		statementType="STATEMENT">
+		delete from t_attend_teacher_group t
+		where t.id in
+		(${ids})
+	</delete>
+
+	<insert id="toAddTeacherRef" parameterType="java.util.List">
+			insert into t_attend_teacher_group_ref
+			(
+			group_id,
+			teacher_id
+			)
+			values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.major_id},
+			#{item.foreign_id}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="toRemoveTeacherRef" parameterType="java.util.Map">
+		delete from
+		t_attend_teacher_group_ref
+		where group_id in (${teach_group_id})
+	</delete>
+
+	<resultMap type="com.edu.erp.model.AttendTeacherGroup"
+		id="attendTeacherGroupMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="branch_id" column="branch_id" />
+		<result property="branch_name" column="branch_name" />
+		<collection property="groupTeacherList" column="group_id"
+			javaType="ArrayList" ofType="com.edu.erp.model.AttendTeacherGroupRef">
+			<id property="id" column="f_id" />
+			<association property="teacher" column="teacher_id"
+				javaType="com.edu.erp.model.Teacher">
+				<id property="id" column="g_id" />
+				<result property="encoding" column="g_encoding" />
+				<result property="teacher_name" column="teacher_name" />
+				<result property="is_pluralistic" column="is_pluralistic" />
+				<result property="status" column="g_status" />
+			</association>
+		</collection>
+	</resultMap>
+	<select id="selectList" parameterType="java.util.Map" resultMap="attendTeacherGroupMap">
+		select
+		a.*,
+		b.org_name as city_name,
+		c.org_name as branch_name,
+		f.id as f_id,
+		f.group_id,
+		f.teacher_id,
+		g.id as g_id,
+		g.encoding as g_encoding,
+		g.teacher_name,
+		g.is_pluralistic,
+		g.status as g_status
+
+		from t_attend_teacher_group a
+		join tab_organization_info b on a.city_id = b.id and b.status = 1
+		left join tab_organization_info c on a.branch_id = c.id and c.status = 1
+		left join t_attend_teacher_group_ref f on a.id = f.group_id
+		left join tab_teacher_info g on f.teacher_id = g.id and g.status = 1
+		where
+		a.city_id = #{city_id}
+		<if test="group_id != null and group_id != ''">
+			and a.id = #{group_id}
+		</if>
+		order by a.id DESC
+	</select>
+	<select id="queryTeacherLabelsPage"  parameterType="map" resultType="HashMap">
+		SELECT
+		        DISTINCT tatg.ID ,
+			    case when tatg.NAME is null then '未分组' else tatg.NAME end NAME,
+			    tatg.CITY_ID ,
+			    tatg.BU_ID ,
+			    tatg.BRANCH_ID ,
+			    tatg.STATUS
+		FROM
+		    t_course tc left JOIN t_attend_teacher_group tatg
+		        ON tatg.BRANCH_ID = tc.BRANCH_ID
+		    AND tatg.STATUS = 1
+		WHERE
+		    tc.BRANCH_ID = #{branch_id,jdbcType=NUMERIC}
+		    and tc.business_type = 3
+	</select>
+</mapper>
