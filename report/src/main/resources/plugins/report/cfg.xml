@@ -245,7 +245,7 @@
 			<!--一批次的key间隔值 -->
 			<pageSize>1</pageSize>
 			<!--开始运行的起止id -->
-			<startId>20150430</startId>
+			<startId>20180501</startId>
 			<!--common；bjk；ydy；wfd -->
 			<type>bjk</type>
 		</task>
@@ -258,9 +258,9 @@
 			<classImpl>com.edu.report.framework.tasks.wfd.WfdAttendTeacherReportTask
 			</classImpl>
 			<!-- 开始日期 -->
-			<startDate>2017-04-21</startDate>
-			<!-- 截止日期 -->
-			<endDate>2018-04-21</endDate>
+			<startDate>2018-05-01</startDate>
+			<!--截止日期 -->
+			<endDate>2020-12-31</endDate>
 			<!-- 运行周期单位 -->
 			<unit>M</unit>
 			<!-- 运行周期 -->
@@ -270,7 +270,7 @@
 			<!-- 一批次的key间隔值 -->
 			<pageSize>1</pageSize>
 			<!-- 开始运行的起止id -->
-			<startId>20150430</startId>
+			<startId>20180501</startId>
 			<!-- common；bjk；ydy；wfd -->
 			<type>wfd</type>
 		</task>
