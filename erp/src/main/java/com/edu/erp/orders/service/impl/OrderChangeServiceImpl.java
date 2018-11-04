@@ -98,6 +98,9 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 	@Resource(name = "tCOrderCourseDao")
 	private TCOrderCourseDao tcOrderCourseDao;
 
+	@Resource(name = "tOrderCourseLogDao")
+	private TOrderCourseLogDao tOrderCourseLogDao;
+
 	@Override
 	public void orderChangeTransfer(Map<String, Object> transferObj)
 			throws Exception {
@@ -554,6 +557,11 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		List<TabChangeCourse> tabChangeCourseList = tabChangeCourseDao.queryChangeCourseInfo(queryMap);
 		if (!CollectionUtils.isEmpty(tabChangeCourseList)) {
 			TabChangeCourse tabChangeCourse = tabChangeCourseList.get(0);
+			// 备份订单课程数据
+			queryMap.put("changeId", changeId);
+			tOrderCourseLogDao.insertOrderCourseLog(queryMap);
+			tOrderCourseLogDao.insertOrderCourseTimesLog(queryMap);
+
 			List<TCOrderCourse> tcOrderCourseList = tcOrderCourseDao.queryTcOrderCourseByChangeId(changeId);
 			if (!CollectionUtils.isEmpty(tcOrderCourseList)) {
 				// vip退费
@@ -1238,7 +1246,7 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		paramMap.put("p_remark", remark);
 		paramMap.put("p_encoding", EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.TF_ZF_PREFIX));
 
-		tOrderChangeDao.cancelRefund(paramMap);
+
 		if (!paramMap.get("o_err_code").toString().equals("0")) {
             throw new Exception("存储过程异常" + paramMap.get("o_err_desc"));
         }
@@ -1260,7 +1268,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
 		orderChange.setInput_user(userId);
 		orderChange.setEncoding(EncodingSequenceUtil.getSequenceNum(Constants.EncodingPrefixSeq.TF_ZF_PREFIX ));
 		orderFrozen.cancelFrozenOrder(orderChange, 1L);
-
 	}
 
 	/**

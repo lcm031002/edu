@@ -750,7 +750,7 @@ public class OrderFrozenImpl implements IOrderFrozen{
 		}finally{
 			//释放锁
 			TLock tLock=new TLock();
-			tLock.setBusiId(5l);
+			tLock.setBusiId(5L);
 			tLock.setBusiType(cancelOrderChange.getId());
 			tLockDao.releaseLock(tLock);
 		}
