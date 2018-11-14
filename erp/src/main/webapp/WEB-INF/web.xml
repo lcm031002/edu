@@ -84,7 +84,7 @@
 	<!-- 客户端CAS认证过滤器 -->
 	<filter>
 		<filter-name>CAS Authentication Filter</filter-name>
-		<filter-class>org.jasig.cas.client.authentication.AuthenticationFilter
+		<filter-class>com.edu.common.filter.AuthenticationFilter
 		</filter-class>
 		<!-- 服务器端登陆地址 -->
 		<init-param>
@@ -95,6 +95,10 @@
 		<init-param>
 			<param-name>serverName</param-name>
 			<param-value>http://localhost</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ignorePattern</param-name>
+			<param-value>/erp/openapi/</param-value>
 		</init-param>
 	</filter>
 
