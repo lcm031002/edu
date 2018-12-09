@@ -132,7 +132,7 @@ public class StudentAccountServiceImpl implements StudentAccountService {
 			tAccountDynamic.setPay_mode(dynamicInfo.get("pay_mode") + "");
 			tAccountDynamic.setDynamic_id(Long.parseLong(dynamicInfo.get("id").toString()));
 			tAccountDynamic.setAccount_type(1L);
-			//tAccountDynamic.setCreate_user(userId);
+			tAccountDynamic.setCreate_user(operator);
 			tAccountDynamic.setEncoding(EncodingSequenceUtil.getSequenceNum(EncodingPrefixSeq.CZ_ZF_PREFIX));
 
 			studentAccountDao.saveAccountDynamic(tAccountDynamic);

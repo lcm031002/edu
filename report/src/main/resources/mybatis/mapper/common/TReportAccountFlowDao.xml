@@ -164,7 +164,7 @@
 		     <![CDATA[ and t1.change_time >= str_to_date(#{minOperateNo}, '%Y%m%d') ]]>
 		   </if>
 		   <if test="maxOperateNo != null">
-		     <![CDATA[ and t1.change_time < str_to_date(#{maxOperateNo}, '%Y%m%d') + 1 ]]>
+		     <![CDATA[ and t1.change_time <= str_to_date(#{maxOperateNo}, '%Y%m%d') ]]>
 		   </if>
 	</insert>
 </mapper>
